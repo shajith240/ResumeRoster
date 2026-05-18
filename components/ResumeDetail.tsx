@@ -201,6 +201,35 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
     );
   }
 
+  function getHelpfulState(roast: Roast) {
+    if (!user) {
+      return { disabled: false, label: `^ Helpful - ${roast.helpful_votes}` };
+    }
+
+    if (isOwner) {
+      return {
+        disabled: true,
+        label: `Owner cannot vote - ${roast.helpful_votes}`,
+      };
+    }
+
+    if (roast.author_id === user.id) {
+      return {
+        disabled: true,
+        label: `Your roast - ${roast.helpful_votes}`,
+      };
+    }
+
+    if (votedRoastIds.has(roast.id)) {
+      return {
+        disabled: true,
+        label: `Voted helpful - ${roast.helpful_votes}`,
+      };
+    }
+
+    return { disabled: false, label: `^ Helpful - ${roast.helpful_votes}` };
+  }
+
   async function closeResume() {
     setMessage("");
 
@@ -330,7 +359,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
             <h2>{isOwner ? "Owner view" : "Roasts closed"}</h2>
             <p>
               {isOwner
-                ? "You can read feedback here, but the owner cannot roast or vote on this thread."
+                ? "You own this resume, so you can read feedback here but cannot mark roasts helpful. Sign in with a different account to test voting."
                 : "This thread is visible for learning, but no new roasts can be added."}
             </p>
             {message ? <p className="form-message">{message}</p> : null}
@@ -354,33 +383,38 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
         )}
 
         <div className="roast-list">
-          {sortedRoasts.map((roast) => (
-            <article className="comment-card" key={roast.id}>
-              <div className="comment-line" aria-hidden="true" />
-              <div className="comment-body">
-                <div className="post-meta">
-                  <span>anonymous roaster</span>
-                  <time dateTime={roast.created_at}>
-                    {new Intl.DateTimeFormat("en", {
-                      month: "short",
-                      day: "numeric",
-                    }).format(new Date(roast.created_at))}
-                  </time>
+          {sortedRoasts.map((roast) => {
+            const helpfulState = getHelpfulState(roast);
+
+            return (
+              <article className="comment-card" key={roast.id}>
+                <div className="comment-line" aria-hidden="true" />
+                <div className="comment-body">
+                  <div className="post-meta">
+                    <span>anonymous roaster</span>
+                    <time dateTime={roast.created_at}>
+                      {new Intl.DateTimeFormat("en", {
+                        month: "short",
+                        day: "numeric",
+                      }).format(new Date(roast.created_at))}
+                    </time>
+                  </div>
+                  <p>{roast.content}</p>
+                  <div className="comment-actions">
+                    <button
+                      className="helpful-button"
+                      disabled={helpfulState.disabled}
+                      onClick={() => void voteHelpful(roast)}
+                      title={helpfulState.disabled ? helpfulState.label : "Mark this roast helpful"}
+                    >
+                      {helpfulState.label}
+                    </button>
+                    <span>Reply later</span>
+                  </div>
                 </div>
-                <p>{roast.content}</p>
-                <div className="comment-actions">
-                  <button
-                    className="helpful-button"
-                    disabled={votedRoastIds.has(roast.id) || roast.author_id === user?.id || isOwner}
-                    onClick={() => void voteHelpful(roast)}
-                  >
-                    ▲ Helpful - {roast.helpful_votes}
-                  </button>
-                  <span>Reply later</span>
-                </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
           {!sortedRoasts.length ? (
             <p className="muted-text">No roasts yet. First useful feedback wins the room.</p>
           ) : null}
