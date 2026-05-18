@@ -540,7 +540,6 @@ button {
 .reddit-post-card,
 .thread-post-shell {
   display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
   overflow: hidden;
   border: 1px solid rgba(17, 17, 17, 0.09);
   border-radius: 8px;
@@ -574,7 +573,7 @@ button {
 
 .post-content {
   min-width: 0;
-  padding: 16px 18px;
+  padding: 16px;
 }
 
 .post-meta {
@@ -608,6 +607,32 @@ button {
   line-height: 1;
 }
 
+.feed-resume-preview {
+  display: block;
+  overflow: hidden;
+  width: min(100%, 620px);
+  height: 470px;
+  margin-top: 12px;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.feed-resume-preview iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+}
+
+.resume-preview-fallback {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: #766e63;
+  font-size: 14px;
+}
+
 .post-actions {
   display: flex;
   flex-wrap: wrap;
@@ -623,6 +648,51 @@ button {
   color: #4e4840;
   font-size: 12px;
   font-weight: 800;
+}
+
+.reddit-actions {
+  gap: 10px;
+}
+
+.post-vote-pill,
+.post-action-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.06);
+  color: #34302a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.post-vote-pill {
+  overflow: hidden;
+}
+
+.post-vote-pill button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  color: #4f4942;
+  font-weight: 900;
+}
+
+.post-vote-pill button:hover,
+.post-action-button:hover {
+  background: rgba(17, 17, 17, 0.1);
+}
+
+.post-vote-pill strong {
+  min-width: 22px;
+  text-align: center;
+}
+
+.post-action-button {
+  border: 0;
+  padding: 0 13px;
 }
 
 .resume-status {
@@ -2391,9 +2461,12 @@ button {
     flex-direction: column;
   }
 
-  .reddit-post-card,
   .thread-post-shell {
     grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .feed-resume-preview {
+    height: 380px;
   }
 
   .resume-viewer iframe {
