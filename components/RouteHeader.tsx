@@ -11,7 +11,6 @@ export default function RouteHeader() {
         <Link href="/feed">Feed</Link>
         <Link href="/submit">Submit</Link>
         <Link href="/leaderboard">Leaderboard</Link>
-        <Link href="/profile/me">My profile</Link>
       </nav>
       <AuthButton />
     </header>

@@ -10,6 +10,7 @@ export default function AuthButton() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -34,7 +35,7 @@ export default function AuthButton() {
   }, []);
 
   if (loading) {
-    return <button className="app-button ghost">Checking session</button>;
+    return <div className="avatar-skeleton" aria-label="Checking session" />;
   }
 
   if (!user) {
@@ -45,19 +46,63 @@ export default function AuthButton() {
     );
   }
 
+  const displayName =
+    user.user_metadata?.full_name || user.email?.split("@")[0] || "Resume roaster";
+  const avatarUrl = user.user_metadata?.avatar_url as string | undefined;
+
   async function handleSignOut() {
     await signOut();
+    setOpen(false);
     router.replace("/");
   }
 
   return (
-    <div className="auth-actions">
-      <Link className="app-button ghost" href="/profile/me">
-        My profile
-      </Link>
-      <button className="app-button ghost" onClick={() => void handleSignOut()}>
-        Sign out
+    <div className="profile-menu">
+      <button
+        className="avatar-button"
+        type="button"
+        aria-expanded={open}
+        aria-label="Open profile menu"
+        onClick={() => setOpen((current) => !current)}
+      >
+        {avatarUrl ? (
+          <img src={avatarUrl} alt="" />
+        ) : (
+          <span>{displayName.slice(0, 1).toUpperCase()}</span>
+        )}
       </button>
+
+      {open ? (
+        <div className="profile-dropdown">
+          <Link className="profile-menu-item profile-menu-user" href="/profile/me" onClick={() => setOpen(false)}>
+            <span className="mini-avatar">
+              {avatarUrl ? <img src={avatarUrl} alt="" /> : displayName.slice(0, 1).toUpperCase()}
+            </span>
+            <span>
+              <strong>View Profile</strong>
+              <small>{displayName}</small>
+            </span>
+          </Link>
+
+          <Link className="profile-menu-item" href="/submit" onClick={() => setOpen(false)}>
+            <span>+</span>
+            Post resume
+          </Link>
+          <Link className="profile-menu-item" href="/leaderboard" onClick={() => setOpen(false)}>
+            <span>↟</span>
+            Leaderboard
+          </Link>
+          <Link className="profile-menu-item" href="/profile/me" onClick={() => setOpen(false)}>
+            <span>⚙</span>
+            Edit profile
+          </Link>
+
+          <button className="profile-menu-item" type="button" onClick={() => void handleSignOut()}>
+            <span>↩</span>
+            Log Out
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }
