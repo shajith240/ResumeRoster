@@ -59,9 +59,9 @@ export default function ResumeFeed() {
       {resumes.map((resume) => (
         <Link className="reddit-post-card" href={`/resume/${resume.id}`} key={resume.id}>
           <div className="vote-rail" aria-hidden="true">
-            <span>▲</span>
+            <span>^</span>
             <strong>{resume.roast_count}</strong>
-            <span>▼</span>
+            <span>v</span>
           </div>
           <div className="post-content">
             <div className="post-meta">
@@ -87,3 +87,4 @@ export default function ResumeFeed() {
     </section>
   );
 }
+
