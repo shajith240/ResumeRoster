@@ -17,6 +17,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
   const [roasts, setRoasts] = useState<Roast[]>([]);
   const [votedRoastIds, setVotedRoastIds] = useState<Set<string>>(new Set());
   const [signedUrl, setSignedUrl] = useState("");
+  const [signedUrlError, setSignedUrlError] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -28,6 +29,30 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
   );
   const isOwner = Boolean(user && resume?.user_id === user.id);
   const isClosed = resume?.status === "closed";
+
+  async function openResumeFile(activeResume = resume) {
+    setSignedUrlError("");
+
+    const { data: userData } = await supabase.auth.getUser();
+    const activeUser = userData.user;
+    setUser(activeUser);
+
+    if (!activeUser || !activeResume) {
+      return;
+    }
+
+    const signed = await supabase.storage
+      .from("resumes")
+      .createSignedUrl(activeResume.file_path, 60 * 20);
+
+    if (signed.error) {
+      setSignedUrl("");
+      setSignedUrlError(signed.error.message);
+      return;
+    }
+
+    setSignedUrl(signed.data.signedUrl);
+  }
 
   useEffect(() => {
     async function load() {
@@ -50,13 +75,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
       setResume(resumeResult.data);
 
       if (activeUser) {
-        const signed = await supabase.storage
-          .from("resumes")
-          .createSignedUrl(resumeResult.data.file_path, 60 * 20);
-
-        if (!signed.error) {
-          setSignedUrl(signed.data.signedUrl);
-        }
+        await openResumeFile(resumeResult.data);
       }
 
       const roastResult = await supabase
@@ -279,6 +298,18 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
         {signedUrl ? (
           <iframe title={resume.title} src={signedUrl} />
+        ) : user ? (
+          <div className="locked-file">
+            <p>
+              {signedUrlError
+                ? "We could not open this private resume file yet. If this is a different account, update the Supabase Storage read policy and retry."
+                : "Opening the private resume PDF for your signed-in account."}
+            </p>
+            <button className="app-button" onClick={() => void openResumeFile()}>
+              Retry opening PDF
+            </button>
+            {signedUrlError ? <p className="form-message">{signedUrlError}</p> : null}
+          </div>
         ) : (
           <div className="locked-file">
             <p>Sign in to open the private resume PDF.</p>

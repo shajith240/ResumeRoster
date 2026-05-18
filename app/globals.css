@@ -439,8 +439,16 @@ button {
   display: grid;
   gap: 16px;
   justify-items: start;
+  align-content: start;
+  align-items: start;
   min-height: 380px;
   padding: 28px;
+}
+
+.locked-file .app-button {
+  width: auto;
+  align-self: start;
+  justify-self: start;
 }
 
 .roast-panel {
