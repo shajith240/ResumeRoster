@@ -92,6 +92,10 @@ button {
   font-size: 26px;
 }
 
+.app-header-spacer {
+  min-height: 1px;
+}
+
 .app-nav {
   display: flex;
   gap: 6px;

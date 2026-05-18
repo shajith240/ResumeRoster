@@ -7,11 +7,7 @@ export default function RouteHeader() {
       <Link href="/feed" className="app-logo">
         ResumeRoster
       </Link>
-      <nav className="app-nav" aria-label="App routes">
-        <Link href="/feed">Feed</Link>
-        <Link href="/submit">Submit</Link>
-        <Link href="/leaderboard">Leaderboard</Link>
-      </nav>
+      <div className="app-header-spacer" aria-hidden="true" />
       <AuthButton />
     </header>
   );
