@@ -301,14 +301,15 @@ export default function Home() {
           <div className="nav-links">
             <Link href="/feed">Feed</Link>
             <Link href="/leaderboard">Leaderboard</Link>
-            <a href="#">Blog</a>
+            <Link href="/submit">Submit</Link>
             <Link href="/feed">Roast Wall</Link>
-            <Link href="/profile/demo">Roasters</Link>
+            <Link href="/leaderboard">Roasters</Link>
+            <Link href="/profile/me">My Profile</Link>
           </div>
 
-          <button className="nav-button" type="button">
+          <Link className="nav-button" href="/submit">
             Submit anonymously
-          </button>
+          </Link>
         </div>
       </nav>
 
@@ -335,9 +336,9 @@ export default function Home() {
               sharpest feedback to the top before recruiters ever see it.
             </p>
 
-            <button className="hero-btn" type="button">
+            <Link className="hero-btn" href="/submit">
               Submit anonymously
-            </button>
+            </Link>
           </div>
         </section>
 
@@ -397,7 +398,7 @@ export default function Home() {
             <div className="showcase-info">
               <h3>{feature.title}</h3>
               <p>{feature.copy}</p>
-              <button type="button">Open the feed</button>
+              <Link className="showcase-link" href="/feed">Open the feed</Link>
             </div>
 
             <div className="showcase-video">
@@ -556,7 +557,7 @@ export default function Home() {
               Post it anonymously, let the community roast it, and climb the
               most-improved board before your next application.
             </p>
-            <button type="button">Join the roast feed</button>
+            <Link className="cta-link" href="/submit">Join the roast feed</Link>
           </div>
           <video className="cta-video" autoPlay muted loop playsInline aria-label="Resume first scan preview">
             <source src={asset("Your resume should survive the first scan.webm")} type="video/webm" />
@@ -579,18 +580,18 @@ function Footer() {
       </div>
       <div className="footer-columns">
         <div className="footer-links">
-          <a href="#">Our Mission</a>
+          <Link href="/">Our Mission</Link>
           <Link href="/feed">Roast Feed</Link>
           <Link href="/leaderboard">Leaderboard</Link>
-          <Link href="/profile/demo">Top Roasters</Link>
-          <a href="#">Invite Roasters!</a>
+          <Link href="/leaderboard">Top Roasters</Link>
+          <Link href="/submit">Invite Roasters!</Link>
         </div>
         <div className="footer-links">
-          <a href="#">Blog</a>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Usage</a>
-          <a href="#">Cookie Policy</a>
-          <a href="#">Contact Us</a>
+          <Link href="/feed">Blog</Link>
+          <Link href="/submit">Privacy Policy</Link>
+          <Link href="/submit">Terms of Usage</Link>
+          <Link href="/feed">Cookie Policy</Link>
+          <Link href="/submit">Contact Us</Link>
         </div>
         <div className="socials" aria-label="Social links">
           <div className="social-links">

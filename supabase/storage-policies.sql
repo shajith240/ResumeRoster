@@ -8,12 +8,11 @@ create policy "Users can upload resumes into their own folder"
     and (storage.foldername(name))[1] = auth.uid()::text
   );
 
-create policy "Users can read resumes in their own folder"
+create policy "Authenticated users can read resume files"
   on storage.objects for select
   to authenticated
   using (
     bucket_id = 'resumes'
-    and (storage.foldername(name))[1] = auth.uid()::text
   );
 
 create policy "Users can update resumes in their own folder"

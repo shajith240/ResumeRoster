@@ -1,8 +1,20 @@
+import ResumeFeed from "@/components/ResumeFeed";
+import RouteHeader from "@/components/RouteHeader";
+
 export default function FeedPage() {
   return (
-    <main className="route-shell">
-      <h1>Community Roast Feed</h1>
-      <p>Phase 1 will list open anonymous resume submissions here.</p>
-    </main>
+    <>
+      <RouteHeader />
+      <main className="route-shell wide-route">
+        <div className="route-intro">
+          <h1>Community Roast Feed</h1>
+          <p>
+            Anonymous resumes people are brave enough to put in public. Read,
+            roast, and vote for the feedback that actually helps.
+          </p>
+        </div>
+        <ResumeFeed />
+      </main>
+    </>
   );
 }

@@ -1,8 +1,20 @@
+import Leaderboard from "@/components/Leaderboard";
+import RouteHeader from "@/components/RouteHeader";
+
 export default function LeaderboardPage() {
   return (
-    <main className="route-shell">
-      <h1>Leaderboard</h1>
-      <p>Phase 2 will show top roasters and most-improved resumes here.</p>
-    </main>
+    <>
+      <RouteHeader />
+      <main className="route-shell wide-route">
+        <div className="route-intro">
+          <h1>Leaderboard</h1>
+          <p>
+            The people writing the most useful feedback and the resume threads getting
+            the most attention from the community.
+          </p>
+        </div>
+        <Leaderboard />
+      </main>
+    </>
   );
 }

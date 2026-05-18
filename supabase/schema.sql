@@ -78,10 +78,10 @@ create policy "Users can insert their own profile"
   to authenticated
   with check (auth.uid() = id);
 
-create policy "Open resumes are readable by authenticated users"
+create policy "Visible resumes are publicly readable"
   on public.resumes for select
-  to authenticated
-  using (status = 'open' or auth.uid() = user_id);
+  to anon, authenticated
+  using (status in ('open', 'closed') or auth.uid() = user_id);
 
 create policy "Users can create their own resumes"
   on public.resumes for insert
@@ -99,15 +99,24 @@ create policy "Users can delete their own resumes"
   to authenticated
   using (auth.uid() = user_id);
 
-create policy "Roasts are readable by authenticated users"
+create policy "Roasts are publicly readable"
   on public.roasts for select
-  to authenticated
+  to anon, authenticated
   using (true);
 
 create policy "Authenticated users can create roasts"
   on public.roasts for insert
   to authenticated
-  with check (auth.uid() = author_id);
+  with check (
+    auth.uid() = author_id
+    and exists (
+      select 1
+      from public.resumes
+      where resumes.id = roasts.resume_id
+        and resumes.status = 'open'
+        and resumes.user_id <> auth.uid()
+    )
+  );
 
 create policy "Roast authors can update their own roasts"
   on public.roasts for update
@@ -128,7 +137,17 @@ create policy "Votes are readable by authenticated users"
 create policy "Authenticated users can vote once per roast"
   on public.votes for insert
   to authenticated
-  with check (auth.uid() = voter_id);
+  with check (
+    auth.uid() = voter_id
+    and exists (
+      select 1
+      from public.roasts
+      join public.resumes on resumes.id = roasts.resume_id
+      where roasts.id = votes.roast_id
+        and roasts.author_id <> auth.uid()
+        and resumes.user_id <> auth.uid()
+    )
+  );
 
 create policy "Users can remove their own votes"
   on public.votes for delete
@@ -157,6 +176,205 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+create or replace function public.increment_resume_roast_count()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update public.resumes
+  set roast_count = roast_count + 1
+  where id = new.resume_id;
+
+  update public.profiles
+  set roast_count = roast_count + 1
+  where id = new.author_id;
+
+  return new;
+end;
+$$;
+
+create or replace function public.decrement_resume_roast_count()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update public.resumes
+  set roast_count = greatest(roast_count - 1, 0)
+  where id = old.resume_id;
+
+  update public.profiles
+  set roast_count = greatest(roast_count - 1, 0)
+  where id = old.author_id;
+
+  return old;
+end;
+$$;
+
+drop trigger if exists on_roast_created on public.roasts;
+create trigger on_roast_created
+  after insert on public.roasts
+  for each row execute procedure public.increment_resume_roast_count();
+
+drop trigger if exists on_roast_deleted on public.roasts;
+create trigger on_roast_deleted
+  after delete on public.roasts
+  for each row execute procedure public.decrement_resume_roast_count();
+
+create or replace function public.increment_roast_helpful_votes()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update public.roasts
+  set helpful_votes = helpful_votes + 1
+  where id = new.roast_id;
+
+  update public.profiles
+  set helpful_votes = helpful_votes + 1
+  where id = (
+    select author_id
+    from public.roasts
+    where id = new.roast_id
+  );
+
+  return new;
+end;
+$$;
+
+create or replace function public.decrement_roast_helpful_votes()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update public.roasts
+  set helpful_votes = greatest(helpful_votes - 1, 0)
+  where id = old.roast_id;
+
+  update public.profiles
+  set helpful_votes = greatest(helpful_votes - 1, 0)
+  where id = (
+    select author_id
+    from public.roasts
+    where id = old.roast_id
+  );
+
+  return old;
+end;
+$$;
+
+drop trigger if exists on_vote_created on public.votes;
+create trigger on_vote_created
+  after insert on public.votes
+  for each row execute procedure public.increment_roast_helpful_votes();
+
+drop trigger if exists on_vote_deleted on public.votes;
+create trigger on_vote_deleted
+  after delete on public.votes
+  for each row execute procedure public.decrement_roast_helpful_votes();
+
+create or replace function public.get_roaster_leaderboard(limit_count int default 10)
+returns table (
+  id uuid,
+  username text,
+  college text,
+  target_role text,
+  roast_count int,
+  helpful_votes int
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    profiles.id,
+    profiles.username,
+    profiles.college,
+    profiles.target_role,
+    profiles.roast_count,
+    profiles.helpful_votes
+  from public.profiles
+  where profiles.roast_count > 0 or profiles.helpful_votes > 0
+  order by profiles.helpful_votes desc, profiles.roast_count desc, profiles.created_at asc
+  limit greatest(1, least(limit_count, 50));
+$$;
+
+grant execute on function public.get_roaster_leaderboard(int) to anon, authenticated;
+
+create or replace function public.get_public_profile(profile_id uuid)
+returns table (
+  id uuid,
+  username text,
+  college text,
+  target_role text,
+  roast_count int,
+  helpful_votes int,
+  created_at timestamptz
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    profiles.id,
+    profiles.username,
+    profiles.college,
+    profiles.target_role,
+    profiles.roast_count,
+    profiles.helpful_votes,
+    profiles.created_at
+  from public.profiles
+  where profiles.id = profile_id
+  limit 1;
+$$;
+
+grant execute on function public.get_public_profile(uuid) to anon, authenticated;
+
+create or replace function public.get_public_profile_roasts(
+  profile_id uuid,
+  limit_count int default 12
+)
+returns table (
+  id uuid,
+  resume_id uuid,
+  resume_title text,
+  resume_status text,
+  content text,
+  helpful_votes int,
+  created_at timestamptz
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    roasts.id,
+    roasts.resume_id,
+    resumes.title as resume_title,
+    resumes.status as resume_status,
+    roasts.content,
+    roasts.helpful_votes,
+    roasts.created_at
+  from public.roasts
+  join public.resumes on resumes.id = roasts.resume_id
+  where roasts.author_id = profile_id
+    and resumes.status in ('open', 'closed')
+  order by roasts.created_at desc
+  limit greatest(1, least(limit_count, 50));
+$$;
+
+grant execute on function public.get_public_profile_roasts(uuid, int) to anon, authenticated;
 
 -- Storage setup:
 -- 1. Create a private bucket named "resumes" in Supabase Storage.
