@@ -10,10 +10,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function signInWithGoogle(nextPath = "/feed") {
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem("resumeroster.auth.next", nextPath);
+  }
+
   const redirectTo =
     typeof window === "undefined"
       ? undefined
-      : `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`;
+      : `${window.location.origin}/auth/callback`;
 
   return supabase.auth.signInWithOAuth({
     provider: "google",

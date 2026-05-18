@@ -9,7 +9,10 @@ function AuthCallbackContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const nextPath = searchParams.get("next") || "/feed";
+    const storedNextPath = window.localStorage.getItem("resumeroster.auth.next");
+    window.localStorage.removeItem("resumeroster.auth.next");
+
+    const nextPath = searchParams.get("next") || storedNextPath || "/feed";
     const safeNextPath =
       nextPath.startsWith("/") && !nextPath.startsWith("//") ? nextPath : "/feed";
 
