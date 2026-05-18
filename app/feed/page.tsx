@@ -1,9 +1,10 @@
+import AuthGate from "@/components/AuthGate";
 import ResumeFeed from "@/components/ResumeFeed";
 import RouteHeader from "@/components/RouteHeader";
 
 export default function FeedPage() {
   return (
-    <>
+    <AuthGate>
       <RouteHeader />
       <main className="route-shell wide-route">
         <div className="route-intro">
@@ -15,6 +16,6 @@ export default function FeedPage() {
         </div>
         <ResumeFeed />
       </main>
-    </>
+    </AuthGate>
   );
 }

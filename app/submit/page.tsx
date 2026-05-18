@@ -1,9 +1,10 @@
+import AuthGate from "@/components/AuthGate";
 import RouteHeader from "@/components/RouteHeader";
 import SubmitResumeForm from "@/components/SubmitResumeForm";
 
 export default function SubmitPage() {
   return (
-    <>
+    <AuthGate>
       <RouteHeader />
       <main className="route-shell compact-route">
         <div className="route-intro">
@@ -15,6 +16,6 @@ export default function SubmitPage() {
         </div>
         <SubmitResumeForm />
       </main>
-    </>
+    </AuthGate>
   );
 }

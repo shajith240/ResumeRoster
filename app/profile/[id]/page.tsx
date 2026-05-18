@@ -1,3 +1,4 @@
+import AuthGate from "@/components/AuthGate";
 import ProfileDetail from "@/components/ProfileDetail";
 import RouteHeader from "@/components/RouteHeader";
 
@@ -9,11 +10,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const { id } = await params;
 
   return (
-    <>
+    <AuthGate>
       <RouteHeader />
       <main className="route-shell wide-route">
         <ProfileDetail profileId={id} />
       </main>
-    </>
+    </AuthGate>
   );
 }

@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { signInWithGoogle, supabase } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 
 function cleanFileName(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9.]+/g, "-").replace(/-+/g, "-");
@@ -35,7 +35,7 @@ export default function SubmitResumeForm() {
     setMessage("");
 
     if (!user) {
-      await signInWithGoogle();
+      setMessage("Your session expired. Sign in again from the landing page.");
       return;
     }
 
@@ -112,7 +112,7 @@ export default function SubmitResumeForm() {
       </label>
 
       <button className="app-button" disabled={submitting || !title.trim()}>
-        {submitting ? "Uploading..." : user ? "Submit for roasting" : "Sign in to submit"}
+        {submitting ? "Uploading..." : "Submit for roasting"}
       </button>
 
       {message ? <p className="form-message">{message}</p> : null}
