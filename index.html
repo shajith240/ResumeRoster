@@ -9,96 +9,102 @@
 			href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@300;400;500;600&display=swap"
 			rel="stylesheet"
 		/>
-		<title>Resume Roast AI</title>
+		<title>ResumeRoster</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
 		<nav class="navbar">
 			<div class="container nav-content">
 				<div class="logo">
-					<img src="assets/logo.png" alt="Resume Roast AI" />
+					<img src="assets/logo.png" alt="ResumeRoster" />
 				</div>
 
 				<div class="nav-links">
-					<a href="#">Pricing</a>
-					<a href="#">Examples</a>
+					<a href="#">Feed</a>
+					<a href="#">Leaderboard</a>
 					<a href="#">Blog</a>
 					<a href="#">Roast Wall</a>
-					<a href="#">Guide</a>
+					<a href="#">Roasters</a>
 				</div>
 
-				<button class="nav-button" type="button">Get started free</button>
+				<button class="nav-button" type="button">Submit anonymously</button>
 			</div>
 		</nav>
 
 		<main>
 			<section class="hero">
 				<div class="container hero-content">
-					<video
-						class="hero-illustration"
-						autoplay
-						muted
-						loop
-						playsinline
-						aria-label="Resume Roast AI preview"
-					>
-						<source src="assets/Hero_section_animation.webm" type="video/webm" />
-					</video>
+					<div class="hero-visual">
+						<video
+							class="hero-illustration"
+							autoplay
+							muted
+							loop
+							playsinline
+							aria-label="ResumeRoster preview"
+						>
+							<source src="assets/Hero_section_animation.webm" type="video/webm" />
+						</video>
+					</div>
                     <!-- <img class="hero-illustration" src="assets/lv_0_20260518014512.gif" alt="ResumeRoster mascot animation"> -->
 
 					<h1>Get your resume roasted before recruiters do</h1>
 
 					<p class="hero-subtext">
-						Upload your resume or CV, paste the job description, and get a blunt
-						AI roast that shows why you are getting skipped and what to fix.
+						Post your resume anonymously, let the community roast it, and vote
+						the sharpest feedback to the top before recruiters ever see it.
 					</p>
 
-					<button class="hero-btn" type="button">Try for free</button>
+					<button class="hero-btn" type="button">Submit anonymously</button>
 				</div>
 			</section>
 
-			<section class="trust-section" aria-label="Trusted by students from">
+			<section class="trust-section" aria-label="ResumeRoster use cases">
 				<div class="logos-track">
-					<span>Yale</span>
-					<span>Vanderbilt</span>
-					<span>Caltech</span>
-					<span>Stanford</span>
-					<span>Carnegie Mellon University</span>
-					<span>MIT</span>
-					<span>UCLA</span>
-					<span>Georgia Tech</span>
-					<span>Yale</span>
-					<span>Vanderbilt</span>
-					<span>Caltech</span>
-					<span>Stanford</span>
-					<span>Carnegie Mellon University</span>
-					<span>MIT</span>
-					<span>UCLA</span>
-					<span>Georgia Tech</span>
+					<div class="logos-group">
+						<img src="assets/campus placement tag.png" alt="Campus Placements">
+						<img src="assets/internship application tag.png" alt="Internship Applications">
+						<img src="assets/firstjob hunt tag.png" alt="First Job Hunt">
+						<img src="assets/career Switches tag.png" alt="Career Switches">
+						<img src="assets/ats updates tag.png" alt="ATS Uploads">
+						<img src="assets/jd matching tag.png" alt="JD Matching">
+						<img src="assets/recruter screenig tag.png" alt="Recruiter Screening">
+						<img src="assets/linkedin easy apply tag.png" alt="LinkedIn Easy Apply">
+					</div>
+					<div class="logos-group" aria-hidden="true">
+						<img src="assets/campus placement tag.png" alt="">
+						<img src="assets/internship application tag.png" alt="">
+						<img src="assets/firstjob hunt tag.png" alt="">
+						<img src="assets/career Switches tag.png" alt="">
+						<img src="assets/ats updates tag.png" alt="">
+						<img src="assets/jd matching tag.png" alt="">
+						<img src="assets/recruter screenig tag.png" alt="">
+						<img src="assets/linkedin easy apply tag.png" alt="">
+					</div>
 				</div>
 			</section>
 
 			<section class="feature-header">
-				<h2>Everything your application needs in one place</h2>
+				<h2>Make your resume roast public</h2>
 
-				<div class="feature-tabs" role="tablist" aria-label="Resume Roast features">
-					<button class="feature-tab active" type="button" role="tab" aria-selected="true" data-feature="ats">ATS Analysis</button>
-					<button class="feature-tab" type="button" role="tab" aria-selected="false" data-feature="jd">JD Matching</button>
-					<button class="feature-tab" type="button" role="tab" aria-selected="false" data-feature="roast">Recruiter Roast</button>
-					<button class="feature-tab" type="button" role="tab" aria-selected="false" data-feature="skills">Skill Gap Detection</button>
-					<button class="feature-tab" type="button" role="tab" aria-selected="false" data-feature="optimize">Resume Optimization</button>
+				<div class="feature-tabs" role="tablist" aria-label="ResumeRoster community features">
+					<button class="feature-tab active" type="button" role="tab" aria-selected="true" data-feature="ats">Anonymous Feed</button>
+					<button class="feature-tab" type="button" role="tab" aria-selected="false" data-feature="jd">Peer Roasts</button>
+					<button class="feature-tab" type="button" role="tab" aria-selected="false" data-feature="roast">Helpful Votes</button>
+					<button class="feature-tab" type="button" role="tab" aria-selected="false" data-feature="skills">Roaster Reputation</button>
+					<button class="feature-tab" type="button" role="tab" aria-selected="false" data-feature="optimize">Improvement Board</button>
 				</div>
 			</section>
 
 			<section class="feature-showcase" data-feature-section data-theme="ats">
 				<div class="showcase-wrapper">
 					<div class="showcase-info">
-						<h3 data-feature-title>ATS Analysis</h3>
+						<h3 data-feature-title>Anonymous Resume Feed</h3>
 						<p data-feature-copy>
-							Check whether your resume can be parsed, searched, and ranked
-							against the job before you apply.
+							Post your resume without your identity and let the community
+							roast what recruiters will notice first.
 						</p>
-						<button type="button">Try for free</button>
+						<button type="button">Open the feed</button>
 					</div>
 
 					<div class="showcase-video">
@@ -110,29 +116,29 @@
 							</div>
 							<div class="score-strip">
 								<div>
-									<strong data-feature-score>78%</strong>
-									<span data-feature-score-label>ATS readiness</span>
+									<strong data-feature-score>42</strong>
+									<span data-feature-score-label>live roasts</span>
 								</div>
-								<p data-feature-insight>Missing role keywords and weak sections detected</p>
+								<p data-feature-insight>New anonymous resume is trending in the feed</p>
 							</div>
 							<div class="resume-grid">
 								<div class="resume-page">
-									<h4 data-feature-panel-title>Resume Roast</h4>
+									<h4 data-feature-panel-title>Public Roast Feed</h4>
 									<p class="line wide"></p>
 									<p class="line"></p>
 									<p class="line short"></p>
-									<div class="note good" data-feature-good>Project impact is visible</div>
-									<div class="note warn" data-feature-warn>Too many vague bullets</div>
+									<div class="note good" data-feature-good>Identity hidden</div>
+									<div class="note warn" data-feature-warn>Impact bullets getting roasted</div>
 									<p class="line wide"></p>
 									<p class="line"></p>
 									<p class="line short"></p>
 								</div>
 								<div class="insight-panel">
-									<h4 data-feature-list-title>Recruiter notes</h4>
+									<h4 data-feature-list-title>Community notes</h4>
 									<ul>
-										<li data-feature-point-one>Show the keywords the JD is actually asking for.</li>
-										<li data-feature-point-two>Flag bullets that sound like responsibilities, not proof.</li>
-										<li data-feature-point-three>Prioritize fixes before you apply.</li>
+										<li data-feature-point-one>Hide personal details before the resume goes public.</li>
+										<li data-feature-point-two>Collect feedback from students, freshers, and people already hired.</li>
+										<li data-feature-point-three>Keep the best comments attached to each resume version.</li>
 									</ul>
 								</div>
 							</div>
@@ -153,36 +159,36 @@
 					</div>
 					<div class="sticky-heading">
 						<h2>
-							AI that helps you<br />
-							understand, not just answer
+							Real people roast better<br />
+							when everyone can vote
 						</h2>
 					</div>
 
 					<div class="feature-cards" data-pin-track>
 						<div class="feature-card">
 							<div class="sketch-icon magnifier"></div>
-							<h3>Reads the resume and the role</h3>
+							<h3>Post without exposing yourself</h3>
 							<p>
-								Understands your CV, projects, skills, and the JD you are
-								targeting before it gives feedback.
+								Upload a redacted resume to the public feed so the work gets
+								judged, not your name, college, or phone number.
 							</p>
 						</div>
 
 						<div class="feature-card">
 							<div class="sketch-icon compass"></div>
-							<h3>Roasts the weak spots</h3>
+							<h3>Let the crowd find the weak spots</h3>
 							<p>
-								Calls out vague bullets, missing proof, keyword gaps, and
-								sections a recruiter would skip.
+								Students, job seekers, and recent hires point out vague bullets,
+								missing proof, and recruiter red flags.
 							</p>
 						</div>
 
 						<div class="feature-card">
 							<div class="sketch-icon flag"></div>
-							<h3>Tells you what to fix first</h3>
+							<h3>The best feedback rises</h3>
 							<p>
-								Turns the roast into clear edits so you know what matters before
-								the next application.
+								Votes push the most useful roasts upward, while trusted roasters
+								build reputation for feedback that actually helps.
 							</p>
 						</div>
 					</div>
@@ -192,66 +198,66 @@
 			<section class="quote-section">
 				<div class="stars">*****</div>
 				<blockquote>
-					"I thought my resume was fine. The roast showed I was listing work,
-					not proving I was a fit for the job."
+					"I trusted the roast more because other students voted on the exact
+					comment that helped me rewrite my projects."
 				</blockquote>
-				<p>Riya, final-year student</p>
+				<p>Anonymous final-year student</p>
 			</section>
 
 			<section class="benefits">
 				<div class="benefits-copy">
-					<h2>Built for the way people actually apply</h2>
+					<h2>Built for public resume feedback</h2>
 					<div class="benefit-item active" data-benefit="students">
 						<button class="benefit-toggle" type="button" aria-expanded="true">
 							<span>For students</span>
 						</button>
-						<p>Turn coursework, internships, and projects into bullets that prove skill instead of just naming it.</p>
+						<p>Post anonymously before placements and learn what seniors, peers, and recent hires would fix first.</p>
 					</div>
 					<div class="benefit-item" data-benefit="jobseekers">
 						<button class="benefit-toggle" type="button" aria-expanded="false">
 							<span>For job seekers</span>
 						</button>
-						<p>Compare your resume with each JD and stop sending the same version to every role.</p>
+						<p>Get public feedback from people applying to similar roles, then share your improved version back to the feed.</p>
 					</div>
 					<div class="benefit-item" data-benefit="switchers">
 						<button class="benefit-toggle" type="button" aria-expanded="false">
 							<span>For career switchers</span>
 						</button>
-						<p>Translate past work into role language so recruiters can understand the move quickly.</p>
+						<p>Test whether strangers understand your career shift before a recruiter has to guess the story.</p>
 					</div>
 				</div>
 				<figure class="benefit-image-card">
-					<img data-benefit-image src="assets/students.png" alt="Student resume guidance illustration">
+					<img data-benefit-image src="assets/students.png" alt="Student public resume feedback illustration">
 				</figure>
 			</section>
 
 			<section class="cards-stack">
-				<h2>Stop guessing why no one replies</h2>
+				<h2>From anonymous upload to public improvement</h2>
 				<div class="stack-list">
 					<article class="stack-card notes-card">
 						<img class="stack-art" src="assets/Resume_upload.png" alt="" aria-hidden="true">
-						<h3>Resume Upload</h3>
-						<p>Drop in your resume or CV and let the tool read the structure, bullets, and proof.</p>
+						<h3>Anonymous Upload</h3>
+						<p>Remove personal details and post your resume to the public roast feed.</p>
 					</article>
 					<article class="stack-card chat-card">
 						<img class="stack-art" src="assets/JD match.png" alt="" aria-hidden="true">
-						<h3>JD Match</h3>
-						<p>Paste the job description and see what the role is really asking for.</p>
+						<h3>Community Feed</h3>
+						<p>Your resume appears beside other anonymous submissions waiting for feedback.</p>
 					</article>
 					<article class="stack-card recorder-card">
 						<img class="stack-art" src="assets/Recruter_roast.png" alt="" aria-hidden="true">
 						<h3>Recruiter Roast</h3>
-						<p>Get blunt feedback on what sounds weak, generic, or irrelevant.</p>
+						<p>Other students and job seekers call out weak, generic, or confusing parts.</p>
 					</article>
 					<article class="stack-card tutorials-card">
 						<img class="stack-art" src="assets/fix_plan.png" alt="" aria-hidden="true">
-						<h3>Fix Plan</h3>
-						<p>Know which bullets, keywords, and sections to fix before applying.</p>
+						<h3>Helpful Votes</h3>
+						<p>The strongest roasts rise through votes so you know which fixes matter.</p>
 					</article>
 					<article class="stack-card tools-card">
 						<img class="stack-art" src="assets/ats.png" alt="" aria-hidden="true">
-						<h3>ATS Check</h3>
-						<p>Catch parsing issues, keyword gaps, and formatting risks before upload.</p>
+						<h3>Leaderboard</h3>
+						<p>Improved resumes and trusted roasters get featured every week.</p>
 					</article>
 				</div>
 			</section>
@@ -259,16 +265,17 @@
 			<section class="quote-section second-quote">
 				<div class="stars">*****</div>
 				<blockquote>
-					"I stopped changing random words and started fixing the exact gaps between my resume and the JD."
+					"My best feedback came from someone who had just cracked the same role,
+					not from a generic private report."
 				</blockquote>
-				<p>Rahul, software job seeker</p>
+				<p>Anonymous software job seeker</p>
 			</section>
 
 			<section class="cta-banner">
 				<div>
 					<h2>Your resume should survive the first scan</h2>
-					<p>Upload your resume, add the JD, and get the roast before the rejection email does.</p>
-					<button type="button">Try for free</button>
+					<p>Post it anonymously, let the community roast it, and climb the most-improved board before your next application.</p>
+					<button type="button">Join the roast feed</button>
 				</div>
 				<video class="cta-video" autoplay muted loop playsinline aria-label="Resume first scan preview">
 					<source src="assets/Your resume should survive the first scan.webm" type="video/webm">
@@ -285,10 +292,10 @@
 			<div class="footer-columns">
 				<div class="footer-links">
 					<a href="#">Our Mission</a>
-					<a href="#">Pricing</a>
-					<a href="#">Community</a>
-					<a href="#">Careers</a>
-					<a href="#">Invite and Earn!</a>
+					<a href="#">Roast Feed</a>
+					<a href="#">Leaderboard</a>
+					<a href="#">Top Roasters</a>
+					<a href="#">Invite Roasters!</a>
 				</div>
 				<div class="footer-links">
 					<a href="#">Blog</a>
@@ -320,13 +327,14 @@
 							</svg>
 						</a>
 					</div>
-					<video class="footer-brand-video" autoplay muted loop playsinline aria-label="Resume Roast AI">
+					<video class="footer-brand-video" autoplay muted loop playsinline aria-label="ResumeRoster">
 						<source src="assets/nav_bar_animation_transpirant.webm" type="video/webm">
 					</video>
 				</div>
 			</div>
-			<p>© 2026 Resume Roast AI. All rights reserved.</p>
+			<p>&copy; 2026 ResumeRoster. All rights reserved.</p>
 		</footer>
 		<script src="script.js"></script>
 	</body>
 </html>
+
