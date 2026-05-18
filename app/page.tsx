@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import LandingCta from "@/components/LandingCta";
 import { supabase } from "@/lib/supabase/client";
 
 type FeatureKey = "ats" | "jd" | "roast" | "skills" | "optimize";
@@ -359,9 +360,9 @@ export default function Home() {
             )}
           </div>
 
-          <Link className="nav-button" href={isSignedIn ? "/feed" : "/submit"}>
+          <LandingCta className="nav-button" href={isSignedIn ? "/feed" : "/submit"} isSignedIn={isSignedIn}>
             {authReady && isSignedIn ? "Enter app" : "Post your resume"}
-          </Link>
+          </LandingCta>
         </div>
       </nav>
 
@@ -388,9 +389,9 @@ export default function Home() {
               sharpest feedback to the top before recruiters ever see it.
             </p>
 
-            <Link className="hero-btn" href={isSignedIn ? "/feed" : "/submit"}>
+            <LandingCta className="hero-btn" href={isSignedIn ? "/feed" : "/submit"} isSignedIn={isSignedIn}>
               {authReady && isSignedIn ? "Go to roast feed" : "Post your resume"}
-            </Link>
+            </LandingCta>
           </div>
         </section>
 
@@ -609,7 +610,7 @@ export default function Home() {
               Post it anonymously, let the community roast it, and climb the
               most-improved board before your next application.
             </p>
-            <Link className="cta-link" href="/submit">Join the roast feed</Link>
+            <LandingCta className="cta-link" href="/submit" isSignedIn={isSignedIn}>Join the roast feed</LandingCta>
           </div>
           <video className="cta-video" autoPlay muted loop playsInline aria-label="Resume first scan preview">
             <source src={asset("Your resume should survive the first scan.webm")} type="video/webm" />

@@ -9,14 +9,16 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(nextPath = "/feed") {
+  const redirectTo =
+    typeof window === "undefined"
+      ? undefined
+      : `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`;
+
   return supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo:
-        typeof window === "undefined"
-          ? undefined
-          : `${window.location.origin}/auth/callback`,
+      redirectTo,
     },
   });
 }
