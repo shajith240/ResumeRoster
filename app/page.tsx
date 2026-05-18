@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase/client";
 
@@ -210,6 +211,7 @@ function isSmallScreen() {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [activeFeature, setActiveFeature] = useState<FeatureKey>("ats");
   const [activeBenefit, setActiveBenefit] = useState<BenefitKey>("students");
   const [navHidden, setNavHidden] = useState(false);
@@ -233,6 +235,9 @@ export default function Home() {
       if (!active) return;
       setUser(data.user);
       setAuthReady(true);
+      if (data.user) {
+        router.replace("/feed");
+      }
     });
 
     const {
@@ -240,13 +245,16 @@ export default function Home() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setAuthReady(true);
+      if (session?.user) {
+        router.replace("/feed");
+      }
     });
 
     return () => {
       active = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     function updateNavbarVisibility() {
@@ -316,6 +324,14 @@ export default function Home() {
       window.removeEventListener("resize", updatePinnedFeature);
     };
   }, []);
+
+  if (authReady && isSignedIn) {
+    return (
+      <main className="route-shell compact-route">
+        <p className="muted-text">Opening your feed...</p>
+      </main>
+    );
+  }
 
   return (
     <>

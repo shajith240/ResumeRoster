@@ -4,7 +4,7 @@ import AuthButton from "./AuthButton";
 export default function RouteHeader() {
   return (
     <header className="app-header">
-      <Link href="/" className="app-logo">
+      <Link href="/feed" className="app-logo">
         ResumeRoster
       </Link>
       <nav className="app-nav" aria-label="App routes">
