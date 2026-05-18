@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase/client";
 
 type FeatureKey = "ats" | "jd" | "roast" | "skills" | "optimize";
 type BenefitKey = "students" | "jobseekers" | "switchers";
@@ -211,6 +213,8 @@ export default function Home() {
   const [activeFeature, setActiveFeature] = useState<FeatureKey>("ats");
   const [activeBenefit, setActiveBenefit] = useState<BenefitKey>("students");
   const [navHidden, setNavHidden] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [authReady, setAuthReady] = useState(false);
   const pinSectionRef = useRef<HTMLElement | null>(null);
   const pinTrackRef = useRef<HTMLDivElement | null>(null);
   const pinHeadingRef = useRef<HTMLDivElement | null>(null);
@@ -220,6 +224,29 @@ export default function Home() {
   const benefitImage = benefitImages[activeBenefit];
 
   const repeatedTags = useMemo(() => [tagAssets, tagAssets], []);
+  const isSignedIn = Boolean(user);
+
+  useEffect(() => {
+    let active = true;
+
+    supabase.auth.getUser().then(({ data }) => {
+      if (!active) return;
+      setUser(data.user);
+      setAuthReady(true);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setAuthReady(true);
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     function updateNavbarVisibility() {
@@ -299,16 +326,25 @@ export default function Home() {
           </div>
 
           <div className="nav-links">
-            <Link href="/feed">Feed</Link>
-            <Link href="/leaderboard">Leaderboard</Link>
-            <Link href="/submit">Submit</Link>
-            <Link href="/feed">Roast Wall</Link>
-            <Link href="/leaderboard">Roasters</Link>
-            <Link href="/profile/me">My Profile</Link>
+            {isSignedIn ? (
+              <>
+                <Link href="/feed">Feed</Link>
+                <Link href="/submit">Post resume</Link>
+                <Link href="/leaderboard">Leaderboard</Link>
+                <Link href="/profile/me">My profile</Link>
+              </>
+            ) : (
+              <>
+                <Link href="/feed">Roast Wall</Link>
+                <Link href="/leaderboard">Top Roasters</Link>
+                <Link href="/submit">Join</Link>
+                <a href="#how-it-works">How it works</a>
+              </>
+            )}
           </div>
 
-          <Link className="nav-button" href="/submit">
-            Submit anonymously
+          <Link className="nav-button" href={isSignedIn ? "/feed" : "/submit"}>
+            {authReady && isSignedIn ? "Enter app" : "Post your resume"}
           </Link>
         </div>
       </nav>
@@ -336,8 +372,8 @@ export default function Home() {
               sharpest feedback to the top before recruiters ever see it.
             </p>
 
-            <Link className="hero-btn" href="/submit">
-              Submit anonymously
+            <Link className="hero-btn" href={isSignedIn ? "/feed" : "/submit"}>
+              {authReady && isSignedIn ? "Go to roast feed" : "Post your resume"}
             </Link>
           </div>
         </section>
@@ -362,7 +398,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="feature-header">
+        <section className="feature-header" id="how-it-works">
           <h2>Make your resume roast public</h2>
 
           <div
