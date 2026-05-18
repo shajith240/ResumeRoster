@@ -352,10 +352,10 @@ export default function Home() {
               </>
             ) : (
               <>
-                <Link href="/feed">Roast Wall</Link>
-                <Link href="/leaderboard">Top Roasters</Link>
-                <Link href="/submit">Join</Link>
                 <a href="#how-it-works">How it works</a>
+                <a href="#features">Features</a>
+                <a href="#use-cases">Use cases</a>
+                <a href="#proof">Proof</a>
               </>
             )}
           </div>
@@ -494,7 +494,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="sticky-feature-section" data-pin-section ref={pinSectionRef}>
+        <section className="sticky-feature-section" id="features" data-pin-section ref={pinSectionRef}>
           <div className="sticky-content">
             <div className="stack-doodle-layer" aria-hidden="true">
               <img className="stack-doodle doodle-trash" src={asset("trashcan_doodle.png")} alt="" />
@@ -543,7 +543,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="quote-section">
+        <section className="quote-section" id="proof">
           <div className="stars">*****</div>
           <blockquote>
             &quot;I trusted the roast more because other students voted on the exact
@@ -552,7 +552,7 @@ export default function Home() {
           <p>Anonymous final-year student</p>
         </section>
 
-        <section className="benefits">
+        <section className="benefits" id="use-cases">
           <div className="benefits-copy">
             <h2>Built for public resume feedback</h2>
             {benefits.map((benefit) => {
