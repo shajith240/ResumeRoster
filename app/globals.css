@@ -1538,6 +1538,33 @@ textarea:focus {
   }
 }
 
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-root > main,
+.app-root > :is(header, nav) + main,
+.route-shell,
+.feed-app-shell,
+.submit-route,
+.leaderboard-route,
+.profile-route,
+.resume-detail-route {
+  flex: 1 0 auto;
+  min-height: calc(100vh - 52px);
+}
+
 html {
   scroll-behavior: smooth;
 }
