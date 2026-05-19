@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { Bell } from "lucide-react";
 import { UserDropdown } from "@/components/ui/user-dropdown";
 import { signInWithGoogle, signOut, supabase } from "@/lib/supabase/client";
 
@@ -75,7 +74,6 @@ export default function AuthButton() {
       profile: "/profile/me",
       submit: "/submit",
       leaderboard: "/leaderboard",
-      notifications: "/profile/me",
       saved: "/feed",
       help: "/feed",
       feedback: "/feed",
@@ -86,10 +84,6 @@ export default function AuthButton() {
 
   return (
     <div className="profile-menu">
-      <button className="notification-button" type="button" aria-label="Notifications">
-        <Bell size={16} strokeWidth={2} aria-hidden="true" />
-      </button>
-
       <UserDropdown
         selectedStatus={status}
         user={{
