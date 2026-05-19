@@ -1565,6 +1565,60 @@ body {
   min-height: calc(100vh - 52px);
 }
 
+/* Wide desktop feed composition: use the canvas instead of floating a narrow island. */
+@media (min-width: 1180px) {
+  .secondary-nav-inner {
+    width: min(1480px, calc(100% - 96px));
+  }
+
+  .feed-app-shell {
+    grid-template-columns: 260px minmax(680px, 1fr) 320px;
+    gap: 32px;
+    width: min(1480px, calc(100% - 96px));
+    padding-top: 26px;
+    padding-bottom: 112px;
+  }
+
+  .feed-center {
+    min-width: 0;
+  }
+
+  .feed-community-header {
+    align-items: center;
+    padding-bottom: 18px;
+  }
+
+  .feed-community-header h1 {
+    font-size: 40px;
+  }
+
+  .feed-community-header p {
+    max-width: 640px;
+  }
+
+  .feed-community-header .btn-primary {
+    flex: 0 0 auto;
+    min-width: 116px;
+    white-space: nowrap;
+  }
+
+  .resume-card .post-content {
+    padding: 18px 18px 14px;
+  }
+
+  .feed-snippet {
+    max-width: 680px;
+  }
+
+  .feed-right-rail section {
+    padding: 20px;
+  }
+
+  .sidebar-stats-card {
+    padding: 18px;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
