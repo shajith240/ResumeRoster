@@ -32,9 +32,11 @@
   }
 
   .feed-app-shell {
+    display: grid !important;
     grid-template-columns:
       minmax(720px, 1fr)
       clamp(320px, 24vw, 440px) !important;
+    align-items: start !important;
     gap: clamp(28px, 2.8vw, 52px) !important;
     width: min(1680px, calc(100vw - 3.05rem - 48px)) !important;
     max-width: none !important;
@@ -84,6 +86,8 @@
   }
 
   .feed-right-rail {
+    display: grid !important;
+    align-content: start !important;
     width: 100% !important;
   }
 
