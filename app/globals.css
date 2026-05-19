@@ -867,6 +867,12 @@ textarea:focus {
   margin-bottom: 28px;
 }
 
+.leaderboard-stack-shell {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .leaderboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
