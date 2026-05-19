@@ -2650,14 +2650,14 @@ button {
 .trust-section {
   position: relative;
   overflow: visible;
-  padding: 26px 0 62px;
+  padding: 34px 0 92px;
   isolation: isolate;
 }
 
 .trust-section::before {
   position: absolute;
-  inset: -26px -8vw 0;
-  z-index: -1;
+  inset: -34px -8vw -88px;
+  z-index: 0;
   background:
     radial-gradient(circle at 18% 50%, rgba(255, 198, 56, 0.18), transparent 28%),
     radial-gradient(circle at 42% 48%, rgba(255, 106, 176, 0.11), transparent 28%),
@@ -2665,26 +2665,31 @@ button {
     radial-gradient(circle at 88% 48%, rgba(109, 147, 255, 0.1), transparent 26%);
   filter: blur(42px);
   opacity: 0.72;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 68%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 68%, transparent 100%);
   content: "";
 }
 
 .trust-section::after {
   position: absolute;
-  inset: 0;
-  z-index: 0;
+  inset: auto 0 -1px;
+  z-index: 1;
+  height: 118px;
+  background: linear-gradient(to bottom, rgba(247, 245, 242, 0), #f7f5f2 78%);
   pointer-events: none;
   content: "";
 }
 
 .logos-track {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   width: max-content;
+  padding: 10px 0 16px;
   animation: scrollLogos 34s linear infinite;
   will-change: transform;
-  clip-path: inset(-120px 0 -120px 0);
+  overflow: visible;
 }
 
 .logos-group {
@@ -2696,8 +2701,10 @@ button {
 }
 
 .logos-track img {
+  box-sizing: content-box;
   width: clamp(124px, 13vw, 188px);
   height: auto;
+  padding: 4px 0 8px;
   flex: 0 0 auto;
   opacity: 0.88;
   object-fit: contain;
@@ -3860,7 +3867,7 @@ button {
   }
 
   .trust-section::before {
-    inset: 16px 0 34px;
+    inset: -14px -12vw -72px;
     opacity: 0.68;
     filter: blur(24px);
   }
