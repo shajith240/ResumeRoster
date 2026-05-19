@@ -2,7 +2,19 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
+import {
+  BriefcaseBusiness,
+  Building2,
+  FileText,
+  GraduationCap,
+  Mail,
+  MapPin,
+  ShieldCheck,
+  Trophy,
+  Users,
+} from "lucide-react";
 import type { User } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ToastProvider";
 import { supabase } from "@/lib/supabase/client";
 import type { PublicProfile, PublicProfileRoast } from "@/lib/supabase/types";
@@ -110,7 +122,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
           }
         : current,
     );
-    setSaveMessage("Saved ✓");
+    setSaveMessage("Saved");
     showToast("Profile saved.");
   }
 
@@ -155,92 +167,162 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
   }
 
   const name = profile.username || "Anonymous roaster";
+  const displayHandle = name.startsWith("@") ? name : `@${name}`;
+  const profileInitial = name.slice(0, 1).toUpperCase();
+  const profileContext =
+    [profile.target_role, profile.college].filter(Boolean).join(" / ") ||
+    "Community reviewer";
 
   return (
-    <section className="profile-layout page-enter">
-      <aside className="profile-card">
-        <span className="profile-badge">Roaster profile</span>
-        <div className="profile-avatar" aria-hidden="true">{name.slice(0, 1).toUpperCase()}</div>
-        <h1>{name}</h1>
-        <p>
-          {[profile.target_role, profile.college].filter(Boolean).join(" · ") ||
-            "Community reviewer"}
-        </p>
+    <section className="profile-page-shell page-enter">
+      <div className="profile-cover" aria-hidden="true" />
 
-        <div className="profile-stats">
-          <div>
-            <strong>{profile.helpful_votes}</strong>
-            <span>Helpful votes</span>
-          </div>
-          <div>
-            <strong>{profile.roast_count}</strong>
-            <span>Roasts written</span>
-          </div>
-        </div>
+      <div className="profile-layout">
+        <aside className="profile-card">
+          <div className="profile-avatar" aria-hidden="true">{profileInitial}</div>
+          <h1>{name}</h1>
+          <p>{profileContext}</p>
 
-        {isOwnProfile ? (
-          <form className="profile-edit-form" onSubmit={saveProfile}>
-            <label>
-              Username
-              <input
-                value={username}
-                maxLength={32}
-                onChange={(event) => setUsername(event.target.value)}
-                placeholder="resumecritic"
-              />
-            </label>
-            <label>
-              College
-              <input
-                value={college}
-                maxLength={80}
-                onChange={(event) => setCollege(event.target.value)}
-                placeholder="Your college"
-              />
-            </label>
-            <label>
-              Target role
-              <input
-                value={targetRole}
-                maxLength={80}
-                onChange={(event) => setTargetRole(event.target.value)}
-                placeholder="SDE intern"
-              />
-            </label>
-            <button className="btn-primary" disabled={saving}>
-              {saving ? "Saving..." : saveMessage || "Save profile"}
-            </button>
-            {saveMessage && saveMessage !== "Saved ✓" ? <p className="form-message">{saveMessage}</p> : null}
-          </form>
-        ) : null}
-      </aside>
-
-      <div className="roasts-panel">
-        <div className="roasts-panel-header">
-          <h2>Recent roasts</h2>
-          <p>Feedback this roaster has contributed</p>
-        </div>
-
-        <div className="profile-roast-list">
-          {roasts.map((roast) => (
-            <Link className="profile-roast-card" href={`/resume/${roast.resume_id}`} key={roast.id}>
-              <h3>{roast.resume_title}</h3>
-              <p>{roast.content}</p>
-              <span>
-                <strong>{roast.helpful_votes} helpful votes</strong> ·{" "}
-                {new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(new Date(roast.created_at))}
-              </span>
-            </Link>
-          ))}
-          {!roasts.length ? (
-            <div className="profile-empty">
-              <span className="empty-icon">C</span>
-              <strong>No public roasts yet.</strong>
-              <p>Start roasting resumes to build your reputation.</p>
-              <Link href="/feed">Browse feed -&gt;</Link>
-            </div>
+          {isOwnProfile ? (
+            <Button className="profile-manage-button" variant="secondary" type="button">
+              Manage your account
+            </Button>
           ) : null}
-        </div>
+
+          <section className="profile-info-panel" aria-label="Profile details">
+            <h2>About</h2>
+            <div className="profile-info-row">
+              <BriefcaseBusiness aria-hidden="true" />
+              <span>{profile.target_role || "Target role not set"}</span>
+            </div>
+            <div className="profile-info-row">
+              <GraduationCap aria-hidden="true" />
+              <span>{profile.college || "College not set"}</span>
+            </div>
+            <div className="profile-info-row">
+              <Building2 aria-hidden="true" />
+              <span>ResumeRoster community</span>
+            </div>
+            <div className="profile-info-row">
+              <MapPin aria-hidden="true" />
+              <span>Public roaster profile</span>
+            </div>
+
+            <h2>Contact</h2>
+            <div className="profile-info-row">
+              <Mail aria-hidden="true" />
+              <span>{displayHandle}</span>
+            </div>
+
+            <h2>Teams</h2>
+            <Link className="profile-team-link" href="/leaderboard">
+              <Users aria-hidden="true" />
+              Resume roast leaderboard
+            </Link>
+          </section>
+
+          <div className="profile-stats">
+            <div>
+              <strong>{profile.helpful_votes}</strong>
+              <span>Helpful votes</span>
+            </div>
+            <div>
+              <strong>{profile.roast_count}</strong>
+              <span>Roasts written</span>
+            </div>
+          </div>
+
+          {isOwnProfile ? (
+            <form className="profile-edit-form" onSubmit={saveProfile}>
+              <label>
+                Username
+                <input
+                  value={username}
+                  maxLength={32}
+                  onChange={(event) => setUsername(event.target.value)}
+                  placeholder="resumecritic"
+                />
+              </label>
+              <label>
+                College
+                <input
+                  value={college}
+                  maxLength={80}
+                  onChange={(event) => setCollege(event.target.value)}
+                  placeholder="Your college"
+                />
+              </label>
+              <label>
+                Target role
+                <input
+                  value={targetRole}
+                  maxLength={80}
+                  onChange={(event) => setTargetRole(event.target.value)}
+                  placeholder="SDE intern"
+                />
+              </label>
+              <Button disabled={saving}>
+                {saving ? "Saving..." : saveMessage || "Save profile"}
+              </Button>
+              {saveMessage && saveMessage !== "Saved" ? <p className="form-message">{saveMessage}</p> : null}
+            </form>
+          ) : null}
+        </aside>
+
+        <main className="profile-workspace">
+          <section className="roasts-panel">
+            <div className="roasts-panel-header">
+              <div>
+                <h2>Worked on</h2>
+                <p>Others will only see feedback they can access.</p>
+              </div>
+              <Link href="/feed">View all</Link>
+            </div>
+
+            <div className="profile-roast-list">
+              {roasts.map((roast) => (
+                <Link className="profile-roast-card" href={`/resume/${roast.resume_id}`} key={roast.id}>
+                  <FileText aria-hidden="true" />
+                  <div>
+                    <h3>{roast.resume_title}</h3>
+                    <p>{roast.content}</p>
+                    <span>
+                      {profile.username || "Roaster"} &middot; {roast.helpful_votes} helpful votes &middot;{" "}
+                      {new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(new Date(roast.created_at))}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+              {!roasts.length ? (
+                <div className="profile-empty">
+                  <span className="empty-icon">C</span>
+                  <strong>No public roasts yet.</strong>
+                  <p>Start roasting resumes to build your reputation.</p>
+                  <Link href="/feed">Browse feed -&gt;</Link>
+                </div>
+              ) : null}
+            </div>
+          </section>
+
+          <section className="profile-project-panel">
+            <h2>Places you work in</h2>
+            <Link className="profile-project-card" href="/feed">
+              <ShieldCheck aria-hidden="true" />
+              <div>
+                <span>ResumeRoster</span>
+                <strong>Community Roast Feed</strong>
+              </div>
+            </Link>
+          </section>
+
+          <section className="profile-project-panel">
+            <h2>Works with</h2>
+            <div className="profile-team-pill">
+              <Trophy aria-hidden="true" />
+              Feedback contributors
+            </div>
+          </section>
+        </main>
       </div>
     </section>
   );
