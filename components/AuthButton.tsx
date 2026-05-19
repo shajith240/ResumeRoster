@@ -4,27 +4,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import {
-  Bell,
-  FileText,
-  LogOut,
-  Trophy,
-  UserRound,
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Bell } from "lucide-react";
+import { UserDropdown } from "@/components/ui/user-dropdown";
 import { signInWithGoogle, signOut, supabase } from "@/lib/supabase/client";
 
 export default function AuthButton() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [status, setStatus] = useState("online");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -66,15 +53,35 @@ export default function AuthButton() {
     );
   }
 
-  const displayName =
-    user.user_metadata?.full_name || user.email?.split("@")[0] || "Resume roaster";
-  const email = user.email || "Signed in";
+  const displayName = String(
+    user.user_metadata?.full_name || user.email?.split("@")[0] || "Resume roaster",
+  );
   const avatarUrl = user.user_metadata?.avatar_url as string | undefined;
-  const initial = displayName.slice(0, 1).toUpperCase();
+  const initials = displayName
+    .split(/\s+/)
+    .map((part: string) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
-  async function handleSignOut() {
-    await signOut();
-    router.replace("/");
+  async function handleAction(action: string) {
+    if (action === "logout") {
+      await signOut();
+      router.replace("/");
+      return;
+    }
+
+    const routes: Record<string, string> = {
+      profile: "/profile/me",
+      submit: "/submit",
+      leaderboard: "/leaderboard",
+      notifications: "/profile/me",
+      saved: "/feed",
+      help: "/feed",
+      feedback: "/feed",
+    };
+
+    router.push(routes[action] || "/feed");
   }
 
   return (
@@ -83,52 +90,18 @@ export default function AuthButton() {
         <Bell size={16} strokeWidth={2} aria-hidden="true" />
       </button>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button className="avatar-button" type="button" aria-label="Open account menu">
-            {avatarUrl ? <img src={avatarUrl} alt="" /> : <span>{initial}</span>}
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" sideOffset={12} className="z-[1000] w-72">
-          <DropdownMenuLabel className="flex items-start gap-3">
-            <span className="mini-avatar h-9 w-9 shrink-0">
-              {avatarUrl ? <img src={avatarUrl} alt="" /> : initial}
-            </span>
-            <span className="flex min-w-0 flex-col">
-              <span className="truncate text-sm font-medium text-foreground">{displayName}</span>
-              <span className="truncate text-xs font-normal text-muted-foreground">
-                {email}
-              </span>
-            </span>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem asChild>
-              <Link href="/profile/me">
-                <UserRound size={16} strokeWidth={2} className="opacity-60" aria-hidden="true" />
-                <span>Profile</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/submit">
-                <FileText size={16} strokeWidth={2} className="opacity-60" aria-hidden="true" />
-                <span>My resumes</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/leaderboard">
-                <Trophy size={16} strokeWidth={2} className="opacity-60" aria-hidden="true" />
-                <span>Leaderboard</span>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => void handleSignOut()}>
-            <LogOut size={16} strokeWidth={2} className="opacity-60" aria-hidden="true" />
-            <span>Log out</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <UserDropdown
+        selectedStatus={status}
+        user={{
+          name: displayName,
+          username: user.email ? `@${user.email.split("@")[0]}` : "@resumeroster",
+          avatar: avatarUrl,
+          initials: initials || "RR",
+          status: status as "online" | "focus" | "offline" | "busy",
+        }}
+        onAction={(action) => void handleAction(action)}
+        onStatusChange={setStatus}
+      />
     </div>
   );
 }
