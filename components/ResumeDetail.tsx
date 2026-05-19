@@ -277,7 +277,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
   return (
     <section className="resume-thread">
-      <article className="thread-viewer-card">
+      <article className="thread-viewer-card resume-preview-pane">
         <header className="thread-header">
           <div className="post-meta">
             <span>posted anonymously</span>
@@ -333,6 +333,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
         )}
       </article>
 
+      <aside className="thread-roast-panel" aria-label="Resume roasts">
       {isClosed || isOwner ? (
         <div className="closed-note">
           <h2>{isOwner ? "Owner view" : "Roasts closed"}</h2>
@@ -406,6 +407,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
           <p className="muted-text">No roasts yet. First useful feedback wins the room.</p>
         ) : null}
       </div>
+      </aside>
     </section>
   );
 }
