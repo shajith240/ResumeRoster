@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
+import SecureResumePreview from "@/components/SecureResumePreview";
 import { useToast } from "@/components/ToastProvider";
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle, supabase } from "@/lib/supabase/client";
@@ -484,7 +485,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
         </div>
 
         {signedUrl ? (
-          <iframe className="resume-pdf-frame" title={resume.title} src={signedUrl} />
+          <SecureResumePreview fileUrl={signedUrl} title={resume.title} />
         ) : user ? (
           <div className="locked-file">
             <p>

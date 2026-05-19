@@ -1216,6 +1216,98 @@ textarea:focus {
 	background: white;
 }
 
+.secure-resume-preview {
+	overflow: hidden;
+	margin-top: 18px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-lg);
+	background: #242321;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.secure-resume-preview:focus-visible {
+	outline: 2px solid rgba(232, 93, 38, 0.45);
+	outline-offset: 3px;
+}
+
+.secure-resume-preview-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	padding: 11px 14px;
+	background: #1b1a18;
+	color: white;
+}
+
+.secure-resume-preview-bar div {
+	display: grid;
+	gap: 2px;
+	min-width: 0;
+}
+
+.secure-resume-preview-bar strong {
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.secure-resume-preview-bar span {
+	color: rgba(255, 255, 255, 0.68);
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+.secure-resume-pages {
+	display: grid;
+	max-height: 640px;
+	gap: 18px;
+	overflow: auto;
+	padding: 18px;
+	background:
+		linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 18px, transparent calc(100% - 18px), rgba(0, 0, 0, 0.18)),
+		#242321;
+	overscroll-behavior: contain;
+}
+
+.secure-resume-page {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	min-height: 180px;
+}
+
+.secure-resume-page canvas {
+	max-width: 100%;
+	height: auto;
+	background: white;
+	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+	pointer-events: auto;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.secure-resume-page-loader,
+.secure-resume-loading,
+.secure-resume-error {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 180px;
+	padding: 24px;
+	color: rgba(255, 255, 255, 0.76);
+	font-size: 13px;
+	text-align: center;
+}
+
+.secure-resume-page-loader {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: #242321;
+}
+
 .owner-actions {
 	margin: 16px 0 0;
 }
@@ -1447,6 +1539,17 @@ textarea:focus {
 
 	.resume-pdf-frame {
 		height: 400px;
+	}
+
+	.secure-resume-pages {
+		max-height: 420px;
+		padding: 12px;
+	}
+
+	.secure-resume-preview-bar {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 6px;
 	}
 
 	.thread-header,
