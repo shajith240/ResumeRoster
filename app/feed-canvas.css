@@ -182,6 +182,29 @@
   .thread-viewer-card h1 {
     font-size: clamp(34px, 2vw, 44px) !important;
   }
+
+  .thread-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  .thread-header-actions .owner-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .owner-delete-button {
+    border-radius: 999px;
+    background: var(--danger);
+    color: white;
+    box-shadow: var(--shadow-sm);
+  }
 }
 
 @media (min-width: 1440px) {
@@ -247,6 +270,25 @@
     flex-wrap: wrap;
     gap: 8px;
     width: 100%;
+  }
+
+  .thread-header {
+    align-items: flex-start;
+  }
+
+  .thread-header-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .thread-header-actions .owner-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    margin: 0;
   }
 }
 

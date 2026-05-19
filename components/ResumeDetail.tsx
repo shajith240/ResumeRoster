@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ThumbsDown, ThumbsUp } from "lucide-react";
+import { ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { useToast } from "@/components/ToastProvider";
 import { Button } from "@/components/ui/button";
@@ -448,9 +448,33 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
             <span>posted anonymously</span>
             <time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
           </div>
-          <span className={`badge ${isClosed ? "badge-closed" : "badge-open"}`}>
-            {isClosed ? "Closed" : "Open for roasting"}
-          </span>
+          <div className="thread-header-actions">
+            <span className={`badge ${isClosed ? "badge-closed" : "badge-open"}`}>
+              {isClosed ? "Closed" : "Open for roasting"}
+            </span>
+            {isOwner ? (
+              <div className="owner-actions">
+                <Button
+                  className="rounded-full"
+                  disabled={isClosed}
+                  onClick={() => void closeResume()}
+                  type="button"
+                  variant="outline"
+                >
+                  {isClosed ? "Closed" : "Close roasts"}
+                </Button>
+                <Button
+                  className="owner-delete-button"
+                  onClick={() => void deleteResume()}
+                  type="button"
+                  variant="destructive"
+                >
+                  <Trash className="-ms-1 me-2 opacity-70" size={16} strokeWidth={2} aria-hidden="true" />
+                  Delete submission
+                </Button>
+              </div>
+            ) : null}
+          </div>
         </header>
 
         <h1>{resume.title}</h1>
@@ -458,21 +482,6 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
           <span className="badge role-badge">Resume thread</span>
           <span className="badge neutral-badge">Anonymous upload</span>
         </div>
-
-        {isOwner ? (
-          <div className="owner-actions">
-            <button
-              className="btn-primary btn-ghost"
-              disabled={isClosed}
-              onClick={() => void closeResume()}
-            >
-              {isClosed ? "Closed" : "Close roasts"}
-            </button>
-            <button className="danger-button" onClick={() => void deleteResume()}>
-              Delete submission
-            </button>
-          </div>
-        ) : null}
 
         {signedUrl ? (
           <iframe className="resume-pdf-frame" title={resume.title} src={signedUrl} />
