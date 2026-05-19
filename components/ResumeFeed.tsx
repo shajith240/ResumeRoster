@@ -112,7 +112,7 @@ export default function ResumeFeed() {
       <div className="feed-sortbar pill-tabs" aria-label="Feed sort">
         <button className="active" type="button">Best</button>
         <button type="button">New</button>
-        <button type="button">Most Roasted</button>
+        <button type="button">Top rated</button>
       </div>
       {resumes.map((resume, index) => {
         const heated = resume.roast_count > 5;
@@ -121,7 +121,6 @@ export default function ResumeFeed() {
           <article className="resume-card" style={{ animationDelay: `${index * 50}ms` }} key={resume.id}>
             <div className="post-content">
               <div className="post-meta">
-                <span>r/resumeroast</span>
                 <span>posted anonymously</span>
                 <time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
                 <span>3 min read</span>
@@ -143,7 +142,7 @@ export default function ResumeFeed() {
                 clearer proof, and fewer weak first impressions.
               </p>
 
-              <div className="post-actions reddit-actions">
+              <div className="post-actions">
                 <Link className="post-action-button" href={`/resume/${resume.id}`}>
                   <span aria-hidden="true">C</span>
                   {resume.roast_count} {resume.roast_count === 1 ? "Roast" : "Roasts"}
