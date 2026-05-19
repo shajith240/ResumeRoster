@@ -27,11 +27,6 @@ function FeedSkeleton() {
     <div className="feed-skeleton-list" aria-label="Loading feed">
       {[0, 1, 2].map((item) => (
         <article className="resume-card skeleton-card" key={item}>
-          <div className="vote-strip">
-            <span className="skeleton skeleton-dot" />
-            <span className="skeleton skeleton-count" />
-            <span className="skeleton skeleton-dot" />
-          </div>
           <div className="post-content">
             <span className="skeleton skeleton-line meta" />
             <span className="skeleton skeleton-line title" />
@@ -51,7 +46,6 @@ export default function ResumeFeed() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [copiedId, setCopiedId] = useState("");
-  const [votedIds, setVotedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     async function loadResumes() {
@@ -93,20 +87,6 @@ export default function ResumeFeed() {
     window.setTimeout(() => setCopiedId(""), 1400);
   }
 
-  function vote(resumeId: string) {
-    setVotedIds((current) => {
-      const next = new Set(current);
-      if (next.has(resumeId)) {
-        next.delete(resumeId);
-        showToast("Vote removed.");
-      } else {
-        next.add(resumeId);
-        showToast("Vote registered.");
-      }
-      return next;
-    });
-  }
-
   if (loading) {
     return <FeedSkeleton />;
   }
@@ -135,26 +115,10 @@ export default function ResumeFeed() {
         <button type="button">Most Roasted</button>
       </div>
       {resumes.map((resume, index) => {
-        const voted = votedIds.has(resume.id);
         const heated = resume.roast_count > 5;
 
         return (
           <article className="resume-card" style={{ animationDelay: `${index * 50}ms` }} key={resume.id}>
-            <div className="vote-strip">
-              <button
-                className={voted ? "voted" : ""}
-                type="button"
-                aria-label="Upvote resume"
-                onClick={() => vote(resume.id)}
-              >
-                ▲
-              </button>
-              <strong className={voted ? "voted bump" : ""}>{resume.roast_count + (voted ? 1 : 0)}</strong>
-              <button type="button" aria-label="Downvote resume" onClick={() => vote(resume.id)}>
-                ▼
-              </button>
-            </div>
-
             <div className="post-content">
               <div className="post-meta">
                 <span>r/resumeroast</span>

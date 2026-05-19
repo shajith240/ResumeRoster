@@ -52,6 +52,11 @@
     min-width: 0 !important;
   }
 
+  .community-feed .resume-card,
+  .feed-skeleton-list .resume-card {
+    grid-template-columns: 1fr !important;
+  }
+
   .feed-community-header {
     align-items: center !important;
     padding-bottom: 18px !important;
