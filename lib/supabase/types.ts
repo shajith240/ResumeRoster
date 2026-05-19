@@ -17,6 +17,7 @@ export type Roast = {
   author_id: string;
   content: string;
   helpful_votes: number;
+  dislike_count?: number;
   created_at: string;
 };
 

@@ -13,6 +13,8 @@ type ResumeDetailProps = {
   resumeId: string;
 };
 
+type Reaction = "like" | "dislike";
+
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", {
     month: "short",
@@ -28,7 +30,6 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
   const [roasts, setRoasts] = useState<Roast[]>([]);
   const [votedRoastIds, setVotedRoastIds] = useState<Set<string>>(new Set());
   const [dislikedRoastIds, setDislikedRoastIds] = useState<Set<string>>(new Set());
-  const [dislikeCounts, setDislikeCounts] = useState<Record<string, number>>({});
   const [signedUrl, setSignedUrl] = useState("");
   const [signedUrlError, setSignedUrlError] = useState("");
   const [content, setContent] = useState("");
@@ -92,25 +93,61 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
         await openResumeFile(resumeResult.data);
       }
 
-      const roastResult = await supabase
+      const roastResultWithReactions = await supabase
         .from("roasts")
-        .select("id,resume_id,author_id,content,helpful_votes,created_at")
+        .select("id,resume_id,author_id,content,helpful_votes,dislike_count,created_at")
         .eq("resume_id", resumeId)
         .order("created_at", { ascending: false });
 
+      const roastResult =
+        roastResultWithReactions.error && roastResultWithReactions.error.message.includes("dislike_count")
+          ? await supabase
+          .from("roasts")
+          .select("id,resume_id,author_id,content,helpful_votes,created_at")
+              .eq("resume_id", resumeId)
+              .order("created_at", { ascending: false })
+          : roastResultWithReactions;
+
       if (!roastResult.error) {
-        setRoasts(roastResult.data ?? []);
+        setRoasts(
+          ((roastResult.data ?? []) as Roast[]).map((roast) => ({
+            ...roast,
+            dislike_count: roast.dislike_count ?? 0,
+          })),
+        );
 
         const roastIds = roastResult.data?.map((roast) => roast.id) ?? [];
         if (activeUser && roastIds.length) {
-          const voteResult = await supabase
+          const voteResultWithReactions = await supabase
             .from("votes")
-            .select("roast_id")
+            .select("roast_id,reaction")
             .eq("voter_id", activeUser.id)
             .in("roast_id", roastIds);
 
+          const voteResult =
+            voteResultWithReactions.error && voteResultWithReactions.error.message.includes("reaction")
+              ? await supabase
+              .from("votes")
+              .select("roast_id")
+                  .eq("voter_id", activeUser.id)
+                  .in("roast_id", roastIds)
+              : voteResultWithReactions;
+
           if (!voteResult.error) {
-            setVotedRoastIds(new Set(voteResult.data.map((vote) => vote.roast_id)));
+            setVotedRoastIds(
+              new Set(
+                voteResult.data
+                  .filter((vote) => !("reaction" in vote) || vote.reaction === "like")
+                  .map((vote) => vote.roast_id),
+              ),
+            );
+            setDislikedRoastIds(
+              new Set(
+                voteResult.data
+                  .filter((vote) => "reaction" in vote && vote.reaction === "dislike")
+                  .map((vote) => vote.roast_id),
+              ),
+            );
           }
         }
       }
@@ -174,7 +211,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
     showToast("Roast submitted.");
   }
 
-  async function voteHelpful(targetRoast: Roast) {
+  async function reactToRoast(targetRoast: Roast, reaction: Reaction) {
     setMessage("");
 
     if (!user) {
@@ -188,59 +225,95 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
     }
 
     if (isOwner) {
-      setMessage("Resume owners cannot vote on roasts for their own resume.");
+      setMessage("Resume owners cannot react to roasts for their own resume.");
       return;
     }
 
-    if (votedRoastIds.has(targetRoast.id)) {
-      setMessage("You already marked that roast as helpful.");
+    const currentReaction = votedRoastIds.has(targetRoast.id)
+      ? "like"
+      : dislikedRoastIds.has(targetRoast.id)
+        ? "dislike"
+        : null;
+
+    const applyLocalReaction = (nextReaction: Reaction | null) => {
+      setVotedRoastIds((current) => {
+        const next = new Set(current);
+        if (nextReaction === "like") {
+          next.add(targetRoast.id);
+        } else {
+          next.delete(targetRoast.id);
+        }
+        return next;
+      });
+      setDislikedRoastIds((current) => {
+        const next = new Set(current);
+        if (nextReaction === "dislike") {
+          next.add(targetRoast.id);
+        } else {
+          next.delete(targetRoast.id);
+        }
+        return next;
+      });
+      setRoasts((current) =>
+        current.map((roast) => {
+          if (roast.id !== targetRoast.id) return roast;
+
+          const removeLike = currentReaction === "like" ? -1 : 0;
+          const addLike = nextReaction === "like" ? 1 : 0;
+          const removeDislike = currentReaction === "dislike" ? -1 : 0;
+          const addDislike = nextReaction === "dislike" ? 1 : 0;
+
+          return {
+            ...roast,
+            helpful_votes: Math.max(0, roast.helpful_votes + removeLike + addLike),
+            dislike_count: Math.max(0, (roast.dislike_count ?? 0) + removeDislike + addDislike),
+          };
+        }),
+      );
+    };
+
+    if (currentReaction === reaction) {
+      const { error } = await supabase
+        .from("votes")
+        .delete()
+        .eq("roast_id", targetRoast.id)
+        .eq("voter_id", user.id);
+
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      applyLocalReaction(null);
+      showToast(reaction === "like" ? "Like removed." : "Dislike removed.");
       return;
     }
 
-    const { error } = await supabase.from("votes").insert({
-      roast_id: targetRoast.id,
-      voter_id: user.id,
-    });
+    const voteQuery = currentReaction
+      ? supabase
+          .from("votes")
+          .update({ reaction })
+          .eq("roast_id", targetRoast.id)
+          .eq("voter_id", user.id)
+      : supabase.from("votes").insert({
+          roast_id: targetRoast.id,
+          voter_id: user.id,
+          reaction,
+        });
+
+    const { error } = await voteQuery;
 
     if (error) {
-      setMessage(error.message);
+      setMessage(
+        error.message.includes("reaction")
+          ? "Run the reaction SQL migration in Supabase, then try again."
+          : error.message,
+      );
       return;
     }
 
-    setVotedRoastIds((current) => new Set(current).add(targetRoast.id));
-    setRoasts((current) =>
-      current.map((roast) =>
-        roast.id === targetRoast.id
-          ? { ...roast, helpful_votes: roast.helpful_votes + 1 }
-          : roast,
-      ),
-    );
-    showToast("Vote registered.");
-  }
-
-  async function dislikeRoast(targetRoast: Roast) {
-    setMessage("");
-
-    if (!user) {
-      await signInWithGoogle();
-      return;
-    }
-
-    if (targetRoast.author_id === user.id) {
-      setMessage("You cannot dislike your own roast.");
-      return;
-    }
-
-    if (dislikedRoastIds.has(targetRoast.id)) {
-      setMessage("You already disliked that roast.");
-      return;
-    }
-
-    setDislikedRoastIds((current) => new Set(current).add(targetRoast.id));
-    setDislikeCounts((current) => ({
-      ...current,
-      [targetRoast.id]: (current[targetRoast.id] ?? 0) + 1,
-    }));
+    applyLocalReaction(reaction);
+    showToast(reaction === "like" ? "Liked roast." : "Disliked roast.");
   }
 
   async function closeResume() {
@@ -397,10 +470,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
       </div>
 
       <div className="roast-list">
-        {sortedRoasts.map((roast, index) => {
-          const voted = votedRoastIds.has(roast.id);
+          {sortedRoasts.map((roast, index) => {
+            const voted = votedRoastIds.has(roast.id);
+            const disliked = dislikedRoastIds.has(roast.id);
 
-          return (
+            return (
             <article className="thread-roast" style={{ animationDelay: `${index * 40}ms` }} key={roast.id}>
               <div className="thread-roast-body">
                 <header>
@@ -415,10 +489,9 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
                     <Button
                       className="reaction-button py-0 pe-0"
                       variant={voted ? "secondary" : "outline"}
-                      disabled={voted}
-                      onClick={() => void voteHelpful(roast)}
+                      onClick={() => void reactToRoast(roast, "like")}
                       type="button"
-                      aria-label="Like this roast"
+                      aria-label={voted ? "Remove like from this roast" : "Like this roast"}
                     >
                       <ThumbsUp className="me-2 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
                       Like
@@ -426,15 +499,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
                     </Button>
                     <Button
                       className="reaction-button py-0 pe-0"
-                      variant={dislikedRoastIds.has(roast.id) ? "secondary" : "outline"}
-                      disabled={dislikedRoastIds.has(roast.id)}
-                      onClick={() => void dislikeRoast(roast)}
+                      variant={disliked ? "secondary" : "outline"}
+                      onClick={() => void reactToRoast(roast, "dislike")}
                       type="button"
-                      aria-label="Dislike this roast"
+                      aria-label={disliked ? "Remove dislike from this roast" : "Dislike this roast"}
                     >
                       <ThumbsDown className="me-2 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
                       Dislike
-                      <span className="reaction-count">{dislikeCounts[roast.id] ?? 0}</span>
+                      <span className="reaction-count">{roast.dislike_count ?? 0}</span>
                     </Button>
                   </div>
                   <button type="button">Reply</button>
