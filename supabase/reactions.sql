@@ -118,6 +118,10 @@ create policy "Users can change their own votes"
     )
   );
 
+-- Reaction counters are maintained by security-definer triggers.
+-- Do not let roast authors directly update their own roast rows and tamper with counts.
+drop policy if exists "Roast authors can update their own roasts" on public.roasts;
+
 update public.roasts
 set
   helpful_votes = coalesce(reaction_counts.like_count, 0),

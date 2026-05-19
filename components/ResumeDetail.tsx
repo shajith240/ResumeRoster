@@ -22,6 +22,24 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
+function getReactionBlockReason(
+  activeUser: User | null,
+  activeResume: ResumeSummary | null,
+  roast: Roast,
+) {
+  if (!activeUser) return null;
+
+  if (activeResume?.user_id === activeUser.id) {
+    return "Resume owners cannot react to roasts on their own resume.";
+  }
+
+  if (roast.author_id === activeUser.id) {
+    return "You cannot react to your own roast.";
+  }
+
+  return null;
+}
+
 export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
   const router = useRouter();
   const { showToast } = useToast();
@@ -102,8 +120,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
       const roastResult =
         roastResultWithReactions.error && roastResultWithReactions.error.message.includes("dislike_count")
           ? await supabase
-          .from("roasts")
-          .select("id,resume_id,author_id,content,helpful_votes,created_at")
+              .from("roasts")
+              .select("id,resume_id,author_id,content,helpful_votes,created_at")
               .eq("resume_id", resumeId)
               .order("created_at", { ascending: false })
           : roastResultWithReactions;
@@ -127,8 +145,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
           const voteResult =
             voteResultWithReactions.error && voteResultWithReactions.error.message.includes("reaction")
               ? await supabase
-              .from("votes")
-              .select("roast_id")
+                  .from("votes")
+                  .select("roast_id")
                   .eq("voter_id", activeUser.id)
                   .in("roast_id", roastIds)
               : voteResultWithReactions;
@@ -220,7 +238,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
     }
 
     if (targetRoast.author_id === user.id) {
-      setMessage("You cannot mark your own roast as helpful.");
+      setMessage("You cannot react to your own roast.");
       return;
     }
 
@@ -473,6 +491,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
           {sortedRoasts.map((roast, index) => {
             const voted = votedRoastIds.has(roast.id);
             const disliked = dislikedRoastIds.has(roast.id);
+            const reactionBlockReason = getReactionBlockReason(user, resume, roast);
+            const reactionDisabled = Boolean(reactionBlockReason);
 
             return (
             <article className="thread-roast" style={{ animationDelay: `${index * 40}ms` }} key={roast.id}>
@@ -489,9 +509,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
                     <Button
                       className="reaction-button py-0 pe-0"
                       variant={voted ? "secondary" : "outline"}
+                      disabled={reactionDisabled}
                       onClick={() => void reactToRoast(roast, "like")}
                       type="button"
                       aria-label={voted ? "Remove like from this roast" : "Like this roast"}
+                      title={reactionBlockReason ?? undefined}
                     >
                       <ThumbsUp className="me-2 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
                       Like
@@ -500,9 +522,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
                     <Button
                       className="reaction-button py-0 pe-0"
                       variant={disliked ? "secondary" : "outline"}
+                      disabled={reactionDisabled}
                       onClick={() => void reactToRoast(roast, "dislike")}
                       type="button"
                       aria-label={disliked ? "Remove dislike from this roast" : "Dislike this roast"}
+                      title={reactionBlockReason ?? undefined}
                     >
                       <ThumbsDown className="me-2 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
                       Dislike
