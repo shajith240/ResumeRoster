@@ -89,7 +89,7 @@ export default function AuthButton() {
             {avatarUrl ? <img src={avatarUrl} alt="" /> : <span>{initial}</span>}
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-72">
+        <DropdownMenuContent align="end" sideOffset={12} className="z-[1000] w-72">
           <DropdownMenuLabel className="flex items-start gap-3">
             <span className="mini-avatar h-9 w-9 shrink-0">
               {avatarUrl ? <img src={avatarUrl} alt="" /> : initial}
