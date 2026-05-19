@@ -2,8 +2,10 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { useToast } from "@/components/ToastProvider";
+import { Button } from "@/components/ui/button";
 import { signInWithGoogle, supabase } from "@/lib/supabase/client";
 import type { ResumeSummary, Roast } from "@/lib/supabase/types";
 
@@ -25,6 +27,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
   const [resume, setResume] = useState<ResumeSummary | null>(null);
   const [roasts, setRoasts] = useState<Roast[]>([]);
   const [votedRoastIds, setVotedRoastIds] = useState<Set<string>>(new Set());
+  const [dislikedRoastIds, setDislikedRoastIds] = useState<Set<string>>(new Set());
+  const [dislikeCounts, setDislikeCounts] = useState<Record<string, number>>({});
   const [signedUrl, setSignedUrl] = useState("");
   const [signedUrlError, setSignedUrlError] = useState("");
   const [content, setContent] = useState("");
@@ -214,6 +218,31 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
     showToast("Vote registered.");
   }
 
+  async function dislikeRoast(targetRoast: Roast) {
+    setMessage("");
+
+    if (!user) {
+      await signInWithGoogle();
+      return;
+    }
+
+    if (targetRoast.author_id === user.id) {
+      setMessage("You cannot dislike your own roast.");
+      return;
+    }
+
+    if (dislikedRoastIds.has(targetRoast.id)) {
+      setMessage("You already disliked that roast.");
+      return;
+    }
+
+    setDislikedRoastIds((current) => new Set(current).add(targetRoast.id));
+    setDislikeCounts((current) => ({
+      ...current,
+      [targetRoast.id]: (current[targetRoast.id] ?? 0) + 1,
+    }));
+  }
+
   async function closeResume() {
     setMessage("");
 
@@ -373,29 +402,41 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
           return (
             <article className="thread-roast" style={{ animationDelay: `${index * 40}ms` }} key={roast.id}>
-              <div className="vote-strip compact">
-                <button
-                  className={voted ? "voted" : ""}
-                  disabled={voted}
-                  onClick={() => void voteHelpful(roast)}
-                  type="button"
-                  aria-label="Mark roast helpful"
-                >
-                  ▲
-                </button>
-                <strong className={voted ? "voted bump" : ""}>{roast.helpful_votes}</strong>
-                <button type="button" aria-label="Downvote roast">▼</button>
-              </div>
-
               <div className="thread-roast-body">
                 <header>
                   <span className="mini-avatar">A</span>
                   <a href={`/profile/${roast.author_id}`}>anonymous roaster</a>
-                  <time dateTime={roast.created_at}>· {formatDate(roast.created_at)}</time>
+                  <time dateTime={roast.created_at}>&middot; {formatDate(roast.created_at)}</time>
                   {roast.helpful_votes > 5 ? <span className="badge badge-open">Verified helpful</span> : null}
                 </header>
                 <p>{roast.content}</p>
                 <footer>
+                  <div className="comment-reactions">
+                    <Button
+                      className="reaction-button py-0 pe-0"
+                      variant={voted ? "secondary" : "outline"}
+                      disabled={voted}
+                      onClick={() => void voteHelpful(roast)}
+                      type="button"
+                      aria-label="Like this roast"
+                    >
+                      <ThumbsUp className="me-2 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
+                      Like
+                      <span className="reaction-count">{roast.helpful_votes}</span>
+                    </Button>
+                    <Button
+                      className="reaction-button py-0 pe-0"
+                      variant={dislikedRoastIds.has(roast.id) ? "secondary" : "outline"}
+                      disabled={dislikedRoastIds.has(roast.id)}
+                      onClick={() => void dislikeRoast(roast)}
+                      type="button"
+                      aria-label="Dislike this roast"
+                    >
+                      <ThumbsDown className="me-2 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
+                      Dislike
+                      <span className="reaction-count">{dislikeCounts[roast.id] ?? 0}</span>
+                    </Button>
+                  </div>
                   <button type="button">Reply</button>
                   <button type="button">Report</button>
                 </footer>
