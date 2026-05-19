@@ -1,22 +1,34 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, DragEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import { useToast } from "@/components/ToastProvider";
 import { supabase } from "@/lib/supabase/client";
+
+const roles = ["SDE Intern", "Full-time SDE", "MBA", "Data Analyst", "Product Manager", "Other"];
 
 function cleanFileName(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9.]+/g, "-").replace(/-+/g, "-");
 }
 
+function fileSize(size: number) {
+  return `${(size / 1024 / 1024).toFixed(2)} MB`;
+}
+
 export default function SubmitResumeForm() {
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [title, setTitle] = useState("");
+  const [targetRole, setTargetRole] = useState(roles[0]);
   const [file, setFile] = useState<File | null>(null);
   const [isAnonymous, setIsAnonymous] = useState(true);
+  const [dragging, setDragging] = useState(false);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
@@ -29,6 +41,35 @@ export default function SubmitResumeForm() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  function pickFile(nextFile: File | undefined) {
+    setMessage("");
+    if (!nextFile) return;
+
+    if (nextFile.type !== "application/pdf") {
+      setMessage("PDF only. Your resume deserves standards.");
+      showToast("Upload error: PDF only.");
+      return;
+    }
+
+    if (nextFile.size > 5 * 1024 * 1024) {
+      setMessage("Keep the PDF under 5MB.");
+      showToast("Upload error: file is larger than 5MB.");
+      return;
+    }
+
+    setFile(nextFile);
+  }
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    pickFile(event.target.files?.[0]);
+  }
+
+  function handleDrop(event: DragEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    setDragging(false);
+    pickFile(event.dataTransfer.files?.[0]);
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -55,8 +96,14 @@ export default function SubmitResumeForm() {
     if (upload.error) {
       setSubmitting(false);
       setMessage(upload.error.message);
+      showToast("Upload failed.");
       return;
     }
+
+    await supabase
+      .from("profiles")
+      .update({ target_role: targetRole })
+      .eq("id", user.id);
 
     const insert = await supabase
       .from("resumes")
@@ -73,16 +120,19 @@ export default function SubmitResumeForm() {
 
     if (insert.error) {
       setMessage(insert.error.message);
+      showToast("Upload failed.");
       return;
     }
 
-    router.push(`/resume/${insert.data.id}`);
+    setSuccess(true);
+    showToast("Resume posted.");
+    window.setTimeout(() => router.push(`/resume/${insert.data.id}`), 500);
   }
 
   return (
-    <form className="app-form" onSubmit={handleSubmit}>
-      <label>
-        Resume title
+    <form className="submit-form" onSubmit={handleSubmit}>
+      <label className="field-block">
+        <span>Resume title</span>
         <input
           value={title}
           onChange={(event) => setTitle(event.target.value)}
@@ -90,29 +140,87 @@ export default function SubmitResumeForm() {
           maxLength={120}
           placeholder="Fresh grad applying for SDE roles"
         />
+        <small>Give context so roasters know what you are targeting</small>
       </label>
 
-      <label>
-        Resume PDF
+      <fieldset className="field-block role-picker">
+        <legend>Target role</legend>
+        <div>
+          {roles.map((role) => (
+            <button
+              className={targetRole === role ? "selected" : ""}
+              type="button"
+              onClick={() => setTargetRole(role)}
+              key={role}
+            >
+              {role}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      <div className="field-block">
+        <span>Resume PDF</span>
         <input
+          className="hidden-file-input"
           accept="application/pdf"
           required
+          ref={inputRef}
           type="file"
-          onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+          onChange={handleFileChange}
         />
-      </label>
+        <button
+          className={`dropzone${dragging ? " drag-over" : ""}${file ? " has-file" : ""}`}
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(event) => {
+            event.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+        >
+          {file ? (
+            <>
+              <span className="file-check">✓</span>
+              <strong>{file.name}</strong>
+              <small>{fileSize(file.size)}</small>
+              <em
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setFile(null);
+                  if (inputRef.current) inputRef.current.value = "";
+                }}
+              >
+                Remove x
+              </em>
+            </>
+          ) : (
+            <>
+              <span className="upload-icon" aria-hidden="true" />
+              <strong>Drop your PDF here</strong>
+              <small>or click to browse</small>
+              <em>Max 5MB · PDF only</em>
+            </>
+          )}
+        </button>
+      </div>
 
-      <label className="checkbox-line">
+      <label className="anonymous-toggle">
+        <span className="toggle-copy">
+          <strong>Post anonymously</strong>
+          <small>Your name will not appear on the post</small>
+        </span>
         <input
           checked={isAnonymous}
           type="checkbox"
           onChange={(event) => setIsAnonymous(event.target.checked)}
         />
-        Post anonymously
+        <span className="toggle-ui" aria-hidden="true" />
       </label>
 
-      <button className="app-button" disabled={submitting || !title.trim()}>
-        {submitting ? "Uploading..." : "Submit for roasting"}
+      <button className="btn-primary submit-button" disabled={submitting || success || !title.trim() || !file}>
+        {success ? "✓ Posted! Redirecting..." : submitting ? <><span className="button-spinner" />Uploading...</> : "Submit for roasting"}
       </button>
 
       {message ? <p className="form-message">{message}</p> : null}

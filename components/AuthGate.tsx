@@ -17,15 +17,15 @@ export default function AuthGate({ children }: AuthGateProps) {
   useEffect(() => {
     let active = true;
 
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getSession().then(({ data }) => {
       if (!active) return;
 
-      if (!data.user) {
+      if (!data.session?.user) {
         router.replace("/");
         return;
       }
 
-      setUser(data.user);
+      setUser(data.session.user);
       setChecking(false);
     });
 

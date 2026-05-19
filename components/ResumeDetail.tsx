@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import { useToast } from "@/components/ToastProvider";
 import { signInWithGoogle, supabase } from "@/lib/supabase/client";
 import type { ResumeSummary, Roast } from "@/lib/supabase/types";
 
@@ -10,8 +11,16 @@ type ResumeDetailProps = {
   resumeId: string;
 };
 
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+  }).format(new Date(value));
+}
+
 export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [resume, setResume] = useState<ResumeSummary | null>(null);
   const [roasts, setRoasts] = useState<Roast[]>([]);
@@ -56,6 +65,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
   useEffect(() => {
     async function load() {
+      const started = Date.now();
       const { data: userData } = await supabase.auth.getUser();
       const activeUser = userData.user;
       setUser(activeUser);
@@ -101,7 +111,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
         }
       }
 
-      setLoading(false);
+      const elapsed = Date.now() - started;
+      window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
     }
 
     void load();
@@ -156,6 +167,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
       current ? { ...current, roast_count: current.roast_count + 1 } : current,
     );
     setContent("");
+    showToast("Roast submitted.");
   }
 
   async function voteHelpful(targetRoast: Roast) {
@@ -199,35 +211,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
           : roast,
       ),
     );
-  }
-
-  function getHelpfulState(roast: Roast) {
-    if (!user) {
-      return { disabled: false, label: `^ Helpful - ${roast.helpful_votes}` };
-    }
-
-    if (isOwner) {
-      return {
-        disabled: true,
-        label: `Owner cannot vote - ${roast.helpful_votes}`,
-      };
-    }
-
-    if (roast.author_id === user.id) {
-      return {
-        disabled: true,
-        label: `Your roast - ${roast.helpful_votes}`,
-      };
-    }
-
-    if (votedRoastIds.has(roast.id)) {
-      return {
-        disabled: true,
-        label: `Voted helpful - ${roast.helpful_votes}`,
-      };
-    }
-
-    return { disabled: false, label: `^ Helpful - ${roast.helpful_votes}` };
+    showToast("Vote registered.");
   }
 
   async function closeResume() {
@@ -276,7 +260,15 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
   }
 
   if (loading) {
-    return <p className="muted-text">Loading resume thread...</p>;
+    return (
+      <section className="resume-thread">
+        <div className="thread-viewer-card">
+          <span className="skeleton skeleton-line title" />
+          <span className="skeleton skeleton-line copy" />
+          <span className="skeleton skeleton-line actions" />
+        </div>
+      </section>
+    );
   }
 
   if (!resume) {
@@ -284,36 +276,28 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
   }
 
   return (
-    <section className="detail-layout">
-      <div className="resume-viewer">
-        <div className="thread-post-shell">
-          <div className="vote-rail" aria-hidden="true">
-            <span>▲</span>
-            <strong>{resume.roast_count}</strong>
-            <span>▼</span>
+    <section className="resume-thread">
+      <article className="thread-viewer-card">
+        <header className="thread-header">
+          <div className="post-meta">
+            <span>posted anonymously</span>
+            <time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
           </div>
-          <div className="post-content">
-            <div className="post-meta">
-              <span>r/resumeroast</span>
-              <span>posted anonymously</span>
-              <time dateTime={resume.created_at}>
-                {new Intl.DateTimeFormat("en", {
-                  month: "short",
-                  day: "numeric",
-                }).format(new Date(resume.created_at))}
-              </time>
-            </div>
-            <span className={`resume-status ${isClosed ? "closed" : ""}`}>
-              {isClosed ? "Closed roast" : "Anonymous resume"}
-            </span>
-            <h1>{resume.title}</h1>
-          </div>
+          <span className={`badge ${isClosed ? "badge-closed" : "badge-open"}`}>
+            {isClosed ? "Closed" : "Open for roasting"}
+          </span>
+        </header>
+
+        <h1>{resume.title}</h1>
+        <div className="post-tags">
+          <span className="badge role-badge">Resume thread</span>
+          <span className="badge neutral-badge">Anonymous upload</span>
         </div>
 
         {isOwner ? (
           <div className="owner-actions">
             <button
-              className="app-button ghost"
+              className="btn-primary btn-ghost"
               disabled={isClosed}
               onClick={() => void closeResume()}
             >
@@ -326,7 +310,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
         ) : null}
 
         {signedUrl ? (
-          <iframe title={resume.title} src={signedUrl} />
+          <iframe className="resume-pdf-frame" title={resume.title} src={signedUrl} />
         ) : user ? (
           <div className="locked-file">
             <p>
@@ -334,7 +318,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
                 ? "We could not open this private resume file yet. If this is a different account, update the Supabase Storage read policy and retry."
                 : "Opening the private resume PDF for your signed-in account."}
             </p>
-            <button className="app-button" onClick={() => void openResumeFile()}>
+            <button className="btn-primary" onClick={() => void openResumeFile()}>
               Retry opening PDF
             </button>
             {signedUrlError ? <p className="form-message">{signedUrlError}</p> : null}
@@ -342,84 +326,86 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
         ) : (
           <div className="locked-file">
             <p>Sign in to open the private resume PDF.</p>
-            <button className="app-button" onClick={() => void signInWithGoogle()}>
+            <button className="btn-primary" onClick={() => void signInWithGoogle()}>
               Sign in with Google
             </button>
           </div>
         )}
+      </article>
+
+      {isClosed || isOwner ? (
+        <div className="closed-note">
+          <h2>{isOwner ? "Owner view" : "Roasts closed"}</h2>
+          <p>
+            {isOwner
+              ? "You own this resume, so you can read feedback here but cannot mark roasts helpful."
+              : "This thread is visible for learning, but no new roasts can be added."}
+          </p>
+          {message ? <p className="form-message">{message}</p> : null}
+        </div>
+      ) : (
+        <form className="roast-form thread-roast-form" onSubmit={handleRoastSubmit}>
+          <textarea
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            placeholder="Be specific. What should they rewrite, reorder, quantify, or remove?"
+            rows={7}
+          />
+          <div className="roast-form-footer">
+            <span>Roast the resume, not the person</span>
+            <button className="btn-primary btn-brand" disabled={submitting}>
+              {submitting ? "Posting..." : user ? "Submit roast" : "Sign in to roast"}
+            </button>
+          </div>
+          {message ? <p className="form-message">{message}</p> : null}
+        </form>
+      )}
+
+      <div className="thread-list-header">
+        <h2>Roast thread</h2>
+        <span>{roasts.length} comments</span>
       </div>
 
-      <aside className="roast-panel">
-        <div className="comment-sortbar">
-          <span>Best roasts</span>
-          <span>{roasts.length} comments</span>
-        </div>
-        {isClosed || isOwner ? (
-          <div className="closed-note">
-            <h2>{isOwner ? "Owner view" : "Roasts closed"}</h2>
-            <p>
-              {isOwner
-                ? "You own this resume, so you can read feedback here but cannot mark roasts helpful. Sign in with a different account to test voting."
-                : "This thread is visible for learning, but no new roasts can be added."}
-            </p>
-            {message ? <p className="form-message">{message}</p> : null}
-          </div>
-        ) : (
-          <form className="roast-form" onSubmit={handleRoastSubmit}>
-            <label>
-              Leave a roast
-              <textarea
-                value={content}
-                onChange={(event) => setContent(event.target.value)}
-                placeholder="Be specific. What should they cut, rewrite, reorder, or prove better?"
-                rows={7}
-              />
-            </label>
-            <button className="app-button" disabled={submitting}>
-              {submitting ? "Posting..." : user ? "Post roast" : "Sign in to roast"}
-            </button>
-            {message ? <p className="form-message">{message}</p> : null}
-          </form>
-        )}
+      <div className="roast-list">
+        {sortedRoasts.map((roast, index) => {
+          const voted = votedRoastIds.has(roast.id);
 
-        <div className="roast-list">
-          {sortedRoasts.map((roast) => {
-            const helpfulState = getHelpfulState(roast);
+          return (
+            <article className="thread-roast" style={{ animationDelay: `${index * 40}ms` }} key={roast.id}>
+              <div className="vote-strip compact">
+                <button
+                  className={voted ? "voted" : ""}
+                  disabled={voted}
+                  onClick={() => void voteHelpful(roast)}
+                  type="button"
+                  aria-label="Mark roast helpful"
+                >
+                  ▲
+                </button>
+                <strong className={voted ? "voted bump" : ""}>{roast.helpful_votes}</strong>
+                <button type="button" aria-label="Downvote roast">▼</button>
+              </div>
 
-            return (
-              <article className="comment-card" key={roast.id}>
-                <div className="comment-line" aria-hidden="true" />
-                <div className="comment-body">
-                  <div className="post-meta">
-                    <span>anonymous roaster</span>
-                    <time dateTime={roast.created_at}>
-                      {new Intl.DateTimeFormat("en", {
-                        month: "short",
-                        day: "numeric",
-                      }).format(new Date(roast.created_at))}
-                    </time>
-                  </div>
-                  <p>{roast.content}</p>
-                  <div className="comment-actions">
-                    <button
-                      className="helpful-button"
-                      disabled={helpfulState.disabled}
-                      onClick={() => void voteHelpful(roast)}
-                      title={helpfulState.disabled ? helpfulState.label : "Mark this roast helpful"}
-                    >
-                      {helpfulState.label}
-                    </button>
-                    <span>Reply later</span>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-          {!sortedRoasts.length ? (
-            <p className="muted-text">No roasts yet. First useful feedback wins the room.</p>
-          ) : null}
-        </div>
-      </aside>
+              <div className="thread-roast-body">
+                <header>
+                  <span className="mini-avatar">A</span>
+                  <a href={`/profile/${roast.author_id}`}>anonymous roaster</a>
+                  <time dateTime={roast.created_at}>· {formatDate(roast.created_at)}</time>
+                  {roast.helpful_votes > 5 ? <span className="badge badge-open">Verified helpful</span> : null}
+                </header>
+                <p>{roast.content}</p>
+                <footer>
+                  <button type="button">Reply</button>
+                  <button type="button">Report</button>
+                </footer>
+              </div>
+            </article>
+          );
+        })}
+        {!sortedRoasts.length ? (
+          <p className="muted-text">No roasts yet. First useful feedback wins the room.</p>
+        ) : null}
+      </div>
     </section>
   );
 }

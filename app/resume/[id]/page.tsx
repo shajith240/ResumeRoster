@@ -12,7 +12,7 @@ export default async function ResumePage({ params }: ResumePageProps) {
   return (
     <AuthGate>
       <RouteHeader />
-      <main className="route-shell detail-route">
+      <main className="resume-detail-route page-enter">
         <ResumeDetail resumeId={id} />
       </main>
     </AuthGate>

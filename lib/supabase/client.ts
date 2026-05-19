@@ -7,7 +7,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    persistSession: true,
+  },
+});
 
 export async function signInWithGoogle(nextPath = "/feed") {
   if (typeof window !== "undefined") {
@@ -19,12 +25,22 @@ export async function signInWithGoogle(nextPath = "/feed") {
       ? undefined
       : `${window.location.origin}/auth/callback`;
 
-  return supabase.auth.signInWithOAuth({
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
       redirectTo,
     },
   });
+
+  if (error) {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("resumeroster.auth.next");
+    }
+
+    throw error;
+  }
+
+  return data;
 }
 
 export async function signOut() {

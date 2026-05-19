@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
+import { useToast } from "@/components/ToastProvider";
 import { supabase } from "@/lib/supabase/client";
 import type { PublicProfile, PublicProfileRoast } from "@/lib/supabase/types";
 
@@ -17,6 +18,7 @@ function isUuid(value: string) {
 }
 
 export default function ProfileDetail({ profileId }: ProfileDetailProps) {
+  const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [roasts, setRoasts] = useState<PublicProfileRoast[]>([]);
@@ -32,6 +34,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 
   useEffect(() => {
     async function loadProfile() {
+      const started = Date.now();
       if (!isUuid(profileId)) {
         setMessage("Open a real roaster profile from the leaderboard.");
         setLoading(false);
@@ -63,7 +66,8 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
         setRoasts(roastsResult.data ?? []);
       }
 
-      setLoading(false);
+      const elapsed = Date.now() - started;
+      window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
     }
 
     void loadProfile();
@@ -106,11 +110,24 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
           }
         : current,
     );
-    setSaveMessage("Profile updated.");
+    setSaveMessage("Saved ✓");
+    showToast("Profile saved.");
   }
 
   if (loading) {
-    return <p className="muted-text">Loading roaster profile...</p>;
+    return (
+      <section className="profile-layout">
+        <div className="profile-card">
+          <span className="skeleton skeleton-line title" />
+          <span className="skeleton skeleton-line copy" />
+          <span className="skeleton skeleton-line actions" />
+        </div>
+        <div className="roasts-panel">
+          <span className="skeleton skeleton-line title" />
+          <span className="skeleton skeleton-line copy" />
+        </div>
+      </section>
+    );
   }
 
   if (message) {
@@ -118,7 +135,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
       <div className="empty-state">
         <h2>Profile unavailable</h2>
         <p>{message}</p>
-        <Link className="app-button" href="/leaderboard">
+        <Link className="btn-primary" href="/leaderboard">
           View leaderboard
         </Link>
       </div>
@@ -130,20 +147,23 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
       <div className="empty-state">
         <h2>Profile not found</h2>
         <p>This roaster does not have public reputation yet.</p>
-        <Link className="app-button" href="/leaderboard">
+        <Link className="btn-primary" href="/leaderboard">
           View leaderboard
         </Link>
       </div>
     );
   }
 
+  const name = profile.username || "Anonymous roaster";
+
   return (
-    <section className="profile-layout">
+    <section className="profile-layout page-enter">
       <aside className="profile-card">
-        <span className="resume-status">Roaster profile</span>
-        <h1>{profile.username || "Anonymous roaster"}</h1>
+        <span className="profile-badge">Roaster profile</span>
+        <div className="profile-avatar" aria-hidden="true">{name.slice(0, 1).toUpperCase()}</div>
+        <h1>{name}</h1>
         <p>
-          {[profile.target_role, profile.college].filter(Boolean).join(" - ") ||
+          {[profile.target_role, profile.college].filter(Boolean).join(" · ") ||
             "Community reviewer"}
         </p>
 
@@ -187,35 +207,38 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
                 placeholder="SDE intern"
               />
             </label>
-            <button className="app-button" disabled={saving}>
-              {saving ? "Saving..." : "Save profile"}
+            <button className="btn-primary" disabled={saving}>
+              {saving ? "Saving..." : saveMessage || "Save profile"}
             </button>
-            {saveMessage ? <p className="form-message">{saveMessage}</p> : null}
+            {saveMessage && saveMessage !== "Saved ✓" ? <p className="form-message">{saveMessage}</p> : null}
           </form>
         ) : null}
       </aside>
 
-      <div className="profile-activity">
-        <div className="leaderboard-panel-header">
-          <span>Recent roasts</span>
+      <div className="roasts-panel">
+        <div className="roasts-panel-header">
+          <h2>Recent roasts</h2>
           <p>Feedback this roaster has contributed</p>
         </div>
 
         <div className="profile-roast-list">
           {roasts.map((roast) => (
             <Link className="profile-roast-card" href={`/resume/${roast.resume_id}`} key={roast.id}>
-              <div>
-                <span className={`resume-status ${roast.resume_status === "closed" ? "closed" : ""}`}>
-                  {roast.resume_status === "closed" ? "Closed roast" : "Open roast"}
-                </span>
-                <h2>{roast.resume_title}</h2>
-              </div>
+              <h3>{roast.resume_title}</h3>
               <p>{roast.content}</p>
-              <strong>{roast.helpful_votes} helpful</strong>
+              <span>
+                <strong>{roast.helpful_votes} helpful votes</strong> ·{" "}
+                {new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(new Date(roast.created_at))}
+              </span>
             </Link>
           ))}
           {!roasts.length ? (
-            <p className="muted-text">No public roasts from this profile yet.</p>
+            <div className="profile-empty">
+              <span className="empty-icon">C</span>
+              <strong>No public roasts yet.</strong>
+              <p>Start roasting resumes to build your reputation.</p>
+              <Link href="/feed">Browse feed -&gt;</Link>
+            </div>
           ) : null}
         </div>
       </div>

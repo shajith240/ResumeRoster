@@ -6,13 +6,13 @@ export default function LeaderboardPage() {
   return (
     <AuthGate>
       <RouteHeader />
-      <main className="route-shell wide-route">
-        <div className="route-intro">
+      <main className="leaderboard-route page-enter">
+        <div className="leaderboard-header">
           <h1>Leaderboard</h1>
-          <p>
-            The people writing the most useful feedback and the resume threads getting
-            the most attention from the community.
+          <p className="week-stat">
+            <span className="big-number">247</span> helpful votes given this week
           </p>
+          <p className="subtitle">The people writing the most useful feedback.</p>
         </div>
         <Leaderboard />
       </main>

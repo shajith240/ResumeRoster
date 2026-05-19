@@ -2,17 +2,60 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useToast } from "@/components/ToastProvider";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeSummary } from "@/lib/supabase/types";
 
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+  }).format(new Date(value));
+}
+
+function roleFromTitle(title: string) {
+  const lower = title.toLowerCase();
+  if (lower.includes("data")) return "Data Analyst";
+  if (lower.includes("product")) return "Product Manager";
+  if (lower.includes("mba")) return "MBA";
+  if (lower.includes("intern")) return "SDE Intern";
+  return "Full-time SDE";
+}
+
+function FeedSkeleton() {
+  return (
+    <div className="feed-skeleton-list" aria-label="Loading feed">
+      {[0, 1, 2].map((item) => (
+        <article className="resume-card skeleton-card" key={item}>
+          <div className="vote-strip">
+            <span className="skeleton skeleton-dot" />
+            <span className="skeleton skeleton-count" />
+            <span className="skeleton skeleton-dot" />
+          </div>
+          <div className="post-content">
+            <span className="skeleton skeleton-line meta" />
+            <span className="skeleton skeleton-line title" />
+            <span className="skeleton skeleton-line tags" />
+            <span className="skeleton skeleton-line copy" />
+            <span className="skeleton skeleton-line actions" />
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export default function ResumeFeed() {
+  const { showToast } = useToast();
   const [resumes, setResumes] = useState<ResumeSummary[]>([]);
-  const [signedUrls, setSignedUrls] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [copiedId, setCopiedId] = useState("");
+  const [votedIds, setVotedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     async function loadResumes() {
+      const started = Date.now();
       const { data, error } = await supabase
         .from("resumes")
         .select("id,user_id,title,file_path,is_anonymous,status,roast_count,created_at")
@@ -21,23 +64,11 @@ export default function ResumeFeed() {
       if (error) {
         setMessage(error.message);
       } else {
-        const loadedResumes = data ?? [];
-        setResumes(loadedResumes);
-
-        const signedEntries = await Promise.all(
-          loadedResumes.map(async (resume) => {
-            const signed = await supabase.storage
-              .from("resumes")
-              .createSignedUrl(resume.file_path, 60 * 20);
-
-            return [resume.id, signed.error ? "" : signed.data.signedUrl] as const;
-          }),
-        );
-
-        setSignedUrls(Object.fromEntries(signedEntries));
+        setResumes(data ?? []);
       }
 
-      setLoading(false);
+      const elapsed = Date.now() - started;
+      window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
     }
 
     void loadResumes();
@@ -52,14 +83,32 @@ export default function ResumeFeed() {
         text: "Roast this resume on ResumeRoster",
         url,
       });
+      showToast("Share sheet opened.");
       return;
     }
 
     await navigator.clipboard.writeText(url);
+    setCopiedId(resume.id);
+    showToast("Link copied.");
+    window.setTimeout(() => setCopiedId(""), 1400);
+  }
+
+  function vote(resumeId: string) {
+    setVotedIds((current) => {
+      const next = new Set(current);
+      if (next.has(resumeId)) {
+        next.delete(resumeId);
+        showToast("Vote removed.");
+      } else {
+        next.add(resumeId);
+        showToast("Vote registered.");
+      }
+      return next;
+    });
   }
 
   if (loading) {
-    return <p className="muted-text">Loading public roast feed...</p>;
+    return <FeedSkeleton />;
   }
 
   if (message) {
@@ -71,7 +120,7 @@ export default function ResumeFeed() {
       <div className="empty-state">
         <h2>No resumes yet</h2>
         <p>Be the first person brave enough to put a resume in the public roast pit.</p>
-        <Link className="app-button" href="/submit">
+        <Link className="btn-primary" href="/submit">
           Submit a resume
         </Link>
       </div>
@@ -79,64 +128,79 @@ export default function ResumeFeed() {
   }
 
   return (
-    <section className="community-feed" aria-label="Open resumes">
-      <div className="feed-sortbar" aria-label="Feed sort">
-        <span>Best</span>
-        <span>New</span>
-        <span>Most roasted</span>
+    <section className="community-feed stagger-children" aria-label="Open resumes">
+      <div className="feed-sortbar pill-tabs" aria-label="Feed sort">
+        <button className="active" type="button">Best</button>
+        <button type="button">New</button>
+        <button type="button">Most Roasted</button>
       </div>
-      {resumes.map((resume) => (
-        <article className="reddit-post-card" key={resume.id}>
-          <div className="post-content">
-            <div className="post-meta">
-              <span>r/resumeroast</span>
-              <span>posted anonymously</span>
-              <time dateTime={resume.created_at}>
-                {new Intl.DateTimeFormat("en", {
-                  month: "short",
-                  day: "numeric",
-                }).format(new Date(resume.created_at))}
-              </time>
+      {resumes.map((resume, index) => {
+        const voted = votedIds.has(resume.id);
+        const heated = resume.roast_count > 5;
+
+        return (
+          <article className="resume-card" style={{ animationDelay: `${index * 50}ms` }} key={resume.id}>
+            <div className="vote-strip">
+              <button
+                className={voted ? "voted" : ""}
+                type="button"
+                aria-label="Upvote resume"
+                onClick={() => vote(resume.id)}
+              >
+                ▲
+              </button>
+              <strong className={voted ? "voted bump" : ""}>{resume.roast_count + (voted ? 1 : 0)}</strong>
+              <button type="button" aria-label="Downvote resume" onClick={() => vote(resume.id)}>
+                ▼
+              </button>
             </div>
-            <Link href={`/resume/${resume.id}`}>
-              <h2>{resume.title}</h2>
-            </Link>
 
-            <Link className="feed-resume-preview" href={`/resume/${resume.id}`}>
-              {signedUrls[resume.id] ? (
-                <iframe title={`${resume.title} resume preview`} src={`${signedUrls[resume.id]}#toolbar=0&navpanes=0`} />
-              ) : (
-                <div className="resume-preview-fallback">Resume preview unavailable</div>
-              )}
-            </Link>
-
-            <div className="post-actions reddit-actions">
-              <div className="post-vote-pill" aria-label={`${resume.roast_count} post score`}>
-                <button type="button" aria-label="Upvote resume">
-                  ^
-                </button>
-                <strong>{resume.roast_count}</strong>
-                <button type="button" aria-label="Downvote resume">
-                  v
-                </button>
+            <div className="post-content">
+              <div className="post-meta">
+                <span>r/resumeroast</span>
+                <span>posted anonymously</span>
+                <time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
+                <span>3 min read</span>
               </div>
-              <Link className="post-action-button" href={`/resume/${resume.id}`}>
-                {resume.roast_count} {resume.roast_count === 1 ? "roast" : "roasts"}
+              <Link className="post-title-link" href={`/resume/${resume.id}`}>
+                <h2>{resume.title}</h2>
               </Link>
-              <button className="post-action-button" type="button" aria-label="React to resume">
-                React
-              </button>
-              <button className="post-action-button" type="button" onClick={() => void shareResume(resume)}>
-                Share
-              </button>
-              <span className={`resume-status ${resume.status === "closed" ? "closed" : ""}`}>
-                {resume.status === "closed" ? "Closed" : "Open"}
-              </span>
+
+              <div className="post-tags">
+                <span className="badge role-badge">{roleFromTitle(resume.title)}</span>
+                <span className="badge neutral-badge">Anonymous college</span>
+                <span className={`badge ${heated ? "badge-hot" : resume.status === "closed" ? "badge-closed" : "badge-open"}`}>
+                  {heated ? "Heated" : resume.status === "closed" ? "Closed" : "Open"}
+                </span>
+              </div>
+
+              <p className="feed-snippet">
+                Targeting recruiter screens with a resume that needs sharper bullets,
+                clearer proof, and fewer weak first impressions.
+              </p>
+
+              <div className="post-actions reddit-actions">
+                <Link className="post-action-button" href={`/resume/${resume.id}`}>
+                  <span aria-hidden="true">C</span>
+                  {resume.roast_count} {resume.roast_count === 1 ? "Roast" : "Roasts"}
+                </Link>
+                <button className="post-action-button copy-button" type="button" onClick={() => void shareResume(resume)}>
+                  <span aria-hidden="true">S</span>
+                  Share
+                  {copiedId === resume.id ? <em>Copied!</em> : null}
+                </button>
+                <button className="post-action-button" type="button">
+                  <span aria-hidden="true">B</span>
+                  Save
+                </button>
+                <span className={`resume-status ${resume.status === "closed" ? "closed" : ""}`}>
+                  {resume.status === "closed" ? "Closed" : "Open for roasting"}
+                </span>
+              </div>
             </div>
-          </div>
-        </article>
-      ))}
+          </article>
+        );
+      })}
     </section>
   );
 }
-

@@ -6,12 +6,13 @@ export default function SubmitPage() {
   return (
     <AuthGate>
       <RouteHeader />
-      <main className="route-shell compact-route">
-        <div className="route-intro">
+      <main className="submit-route page-enter">
+        <div className="submit-header">
+          <div className="submit-icon" aria-hidden="true" />
           <h1>Submit Anonymously</h1>
           <p>
-            Upload a PDF, give people context, and let the community roast the weak
-            spots before recruiters do.
+            Upload a PDF, give context, and let the community find the weak spots
+            before recruiters do.
           </p>
         </div>
         <SubmitResumeForm />

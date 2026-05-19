@@ -11,10 +11,10 @@ export default function MyProfilePage() {
 
   useEffect(() => {
     async function loadProfile() {
-      const { data } = await supabase.auth.getUser();
+      const { data } = await supabase.auth.getSession();
 
-      if (data.user) {
-        router.replace(`/profile/${data.user.id}`);
+      if (data.session?.user) {
+        router.replace(`/profile/${data.session.user.id}`);
         return;
       }
 

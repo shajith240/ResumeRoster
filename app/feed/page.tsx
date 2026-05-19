@@ -7,32 +7,43 @@ export default function FeedPage() {
   return (
     <AuthGate>
       <RouteHeader />
-      <main className="feed-app-shell">
+      <main className="feed-app-shell page-enter">
         <aside className="feed-sidebar" aria-label="Primary feed navigation">
+          <p className="sidebar-label">Navigate</p>
           <nav>
             <Link className="active" href="/feed">
-              <span>⌂</span>
+              <span>H</span>
               Home
             </Link>
-            <Link href="/submit">
+            <Link className="brand-nav-item" href="/submit">
               <span>+</span>
-              Post resume
+              Post Resume
             </Link>
             <Link href="/leaderboard">
-              <span>↟</span>
+              <span>#</span>
               Leaderboard
             </Link>
             <Link href="/profile/me">
-              <span>◉</span>
-              My profile
+              <span>@</span>
+              My Profile
             </Link>
           </nav>
 
           <div className="feed-sidebar-group">
-            <p>COMMUNITIES</p>
-            <Link href="/feed">r/resumeroast</Link>
+            <p>Communities</p>
+            <Link href="/feed">
+              <span className="live-dot" />
+              r/resumeroast
+            </Link>
             <Link href="/leaderboard">Top roasters</Link>
             <Link href="/submit">Anonymous uploads</Link>
+          </div>
+
+          <div className="sidebar-stats-card">
+            <span>Resumes roasted this week</span>
+            <strong>42</strong>
+            <span>Active roasters</span>
+            <strong>18</strong>
           </div>
         </aside>
 
@@ -42,11 +53,10 @@ export default function FeedPage() {
               <span>r/resumeroast</span>
               <h1>Community Roast Feed</h1>
               <p>
-                Anonymous resumes, public feedback, and the sharpest roasts voted to
-                the top.
+                Anonymous resumes. Public feedback. Sharpest roasts voted to the top.
               </p>
             </div>
-            <Link className="app-button" href="/submit">
+            <Link className="btn-primary" href="/submit">
               Post resume
             </Link>
           </div>
@@ -60,6 +70,7 @@ export default function FeedPage() {
               Post a redacted resume, get specific feedback, and vote for the roast
               that actually helps someone improve.
             </p>
+            <div className="rail-meta">Created May 2026</div>
           </section>
 
           <section>
@@ -74,9 +85,8 @@ export default function FeedPage() {
           <section>
             <h2>Quick actions</h2>
             <div className="quick-actions">
-              <Link href="/submit">Submit anonymously</Link>
-              <Link href="/leaderboard">View leaderboard</Link>
-              <Link href="/profile/me">Edit profile</Link>
+              <Link className="btn-primary" href="/submit">Submit anonymously</Link>
+              <Link className="btn-primary btn-ghost" href="/leaderboard">View leaderboard</Link>
             </div>
           </section>
         </aside>

@@ -40,9 +40,14 @@ export default function AuthButton() {
 
   if (!user) {
     return (
-      <button className="app-button" onClick={() => void signInWithGoogle()}>
-        Sign in with Google
-      </button>
+      <div className="auth-actions">
+        <button className="btn-primary btn-ghost nav-login" onClick={() => void signInWithGoogle()}>
+          Log in
+        </button>
+        <Link className="btn-primary btn-brand" href="/submit">
+          Post resume
+        </Link>
+      </div>
     );
   }
 
@@ -58,6 +63,10 @@ export default function AuthButton() {
 
   return (
     <div className="profile-menu">
+      <button className="notification-button" type="button" aria-label="Notifications">
+        <span aria-hidden="true" />
+      </button>
+
       <button
         className="avatar-button"
         type="button"
@@ -79,27 +88,23 @@ export default function AuthButton() {
               {avatarUrl ? <img src={avatarUrl} alt="" /> : displayName.slice(0, 1).toUpperCase()}
             </span>
             <span>
-              <strong>View Profile</strong>
+              <strong>Profile</strong>
               <small>{displayName}</small>
             </span>
           </Link>
 
           <Link className="profile-menu-item" href="/submit" onClick={() => setOpen(false)}>
             <span>+</span>
-            Post resume
+            My resumes
           </Link>
           <Link className="profile-menu-item" href="/leaderboard" onClick={() => setOpen(false)}>
-            <span>↟</span>
+            <span>#</span>
             Leaderboard
-          </Link>
-          <Link className="profile-menu-item" href="/profile/me" onClick={() => setOpen(false)}>
-            <span>⚙</span>
-            Edit profile
           </Link>
 
           <button className="profile-menu-item" type="button" onClick={() => void handleSignOut()}>
-            <span>↩</span>
-            Log Out
+            <span>&lt;</span>
+            Log out
           </button>
         </div>
       ) : null}
