@@ -30,27 +30,22 @@ export default function RouteHeader() {
         <AuthButton />
       </header>
 
-      <nav className="secondary-nav" aria-label="ResumeRoster sections">
-        <div className="secondary-nav-inner">
-          {navLinks.map((link) => {
-            const isActive = link.href === pathname;
-
-            return (
-              <Link className={isActive ? "active" : ""} href={link.href} key={link.label}>
-                {link.label}
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-
       <nav className="bottom-nav" aria-label="Mobile navigation">
-        {navLinks.map((link) => (
-          <Link className={pathname === link.href ? "active" : ""} href={link.href} key={link.label}>
-            <span>{link.icon}</span>
-            {link.label === "Top Roasted" ? "Top" : link.label}
-          </Link>
-        ))}
+        {navLinks.map((link) => {
+          const isFeedMatch = pathname === "/feed" && link.href === "/feed";
+          const isRouteMatch = link.href === pathname;
+
+          return (
+            <Link
+              className={isFeedMatch || isRouteMatch ? "active" : ""}
+              href={link.href}
+              key={link.label}
+            >
+              <span>{link.icon}</span>
+              {link.label === "Top Roasted" ? "Top" : link.label}
+            </Link>
+          );
+        })}
       </nav>
     </>
   );

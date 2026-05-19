@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase/client";
+import { SessionNavBar } from "@/components/ui/sidebar";
 
 type AuthGateProps = {
   children: React.ReactNode;
@@ -55,5 +56,10 @@ export default function AuthGate({ children }: AuthGateProps) {
     );
   }
 
-  return children;
+  return (
+    <>
+      <SessionNavBar />
+      <div className="app-with-sidebar">{children}</div>
+    </>
+  );
 }

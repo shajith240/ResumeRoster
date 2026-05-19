@@ -1,23 +1,38 @@
 /* Feed canvas overrides.
    Loaded after globals.css so the feed cannot be collapsed by older duplicated rules. */
 
+.app-with-sidebar {
+  min-height: 100vh;
+}
+
+.session-sidebar {
+  display: none;
+}
+
 @media (min-width: 1025px) {
-  .secondary-nav-inner {
-    width: calc(100vw - 64px) !important;
-    max-width: none !important;
+  .app-with-sidebar {
+    padding-left: 3.05rem;
+  }
+
+  .session-sidebar {
+    display: block;
+  }
+
+  .secondary-nav,
+  .bottom-nav {
+    display: none !important;
   }
 
   .feed-app-shell {
     grid-template-columns:
-      clamp(240px, 16vw, 300px)
       minmax(720px, 1fr)
-      clamp(300px, 20vw, 380px) !important;
-    gap: clamp(24px, 2vw, 40px) !important;
-    width: calc(100vw - 64px) !important;
+      clamp(320px, 24vw, 440px) !important;
+    gap: clamp(28px, 2.8vw, 52px) !important;
+    width: min(1680px, calc(100vw - 3.05rem - 48px)) !important;
     max-width: none !important;
     margin-right: auto !important;
     margin-left: auto !important;
-    padding-top: 28px !important;
+    padding-top: clamp(26px, 2vw, 42px) !important;
   }
 
   .feed-center,
@@ -55,34 +70,35 @@
     max-width: 780px !important;
   }
 
-  .feed-sidebar,
   .feed-right-rail {
     width: 100% !important;
   }
 }
 
 @media (min-width: 1440px) {
-  .secondary-nav-inner,
   .feed-app-shell {
-    width: calc(100vw - 48px) !important;
+    width: min(1760px, calc(100vw - 3.05rem - 32px)) !important;
   }
 
   .feed-app-shell {
     grid-template-columns:
-      clamp(270px, 16vw, 320px)
-      minmax(820px, 1fr)
-      clamp(340px, 20vw, 420px) !important;
+      minmax(920px, 1fr)
+      clamp(360px, 24vw, 460px) !important;
   }
 }
 
 @media (min-width: 1800px) {
   .feed-app-shell {
-    grid-template-columns: 320px minmax(940px, 1fr) 440px !important;
-    gap: 44px !important;
+    grid-template-columns: minmax(1040px, 1fr) 460px !important;
+    gap: 56px !important;
   }
 }
 
 @media (max-width: 1024px) {
+  .app-with-sidebar {
+    padding-left: 0;
+  }
+
   .feed-app-shell {
     width: min(92%, 820px) !important;
   }

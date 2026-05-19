@@ -8,45 +8,6 @@ export default function FeedPage() {
     <AuthGate>
       <RouteHeader />
       <main className="feed-app-shell page-enter">
-        <aside className="feed-sidebar" aria-label="Primary feed navigation">
-          <p className="sidebar-label">Navigate</p>
-          <nav>
-            <Link className="active" href="/feed">
-              <span>H</span>
-              Home
-            </Link>
-            <Link className="brand-nav-item" href="/submit">
-              <span>+</span>
-              Post Resume
-            </Link>
-            <Link href="/leaderboard">
-              <span>#</span>
-              Leaderboard
-            </Link>
-            <Link href="/profile/me">
-              <span>@</span>
-              My Profile
-            </Link>
-          </nav>
-
-          <div className="feed-sidebar-group">
-            <p>Communities</p>
-            <Link href="/feed">
-              <span className="live-dot" />
-              r/resumeroast
-            </Link>
-            <Link href="/leaderboard">Top roasters</Link>
-            <Link href="/submit">Anonymous uploads</Link>
-          </div>
-
-          <div className="sidebar-stats-card">
-            <span>Resumes roasted this week</span>
-            <strong>42</strong>
-            <span>Active roasters</span>
-            <strong>18</strong>
-          </div>
-        </aside>
-
         <section className="feed-center">
           <div className="feed-community-header">
             <div>
