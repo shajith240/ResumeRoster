@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useToast } from "@/components/ToastProvider";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeSummary } from "@/lib/supabase/types";
@@ -22,6 +22,43 @@ function roleFromTitle(title: string) {
   return "Full-time SDE";
 }
 
+export type FeedSort = "best" | "new" | "top";
+
+const sortOptions: Array<{ href: string; label: string; value: FeedSort }> = [
+  { href: "/feed", label: "Best", value: "best" },
+  { href: "/feed?sort=new", label: "New", value: "new" },
+  { href: "/feed?sort=top", label: "Top rated", value: "top" },
+];
+
+function getBestScore(resume: ResumeSummary) {
+  const ageHours = Math.max(
+    1,
+    (Date.now() - new Date(resume.created_at).getTime()) / 3_600_000,
+  );
+
+  return resume.roast_count * 8 + 48 / Math.pow(ageHours + 2, 1.2);
+}
+
+function sortResumes(resumes: ResumeSummary[], sort: FeedSort) {
+  return [...resumes].sort((a, b) => {
+    if (sort === "new") {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    }
+
+    if (sort === "top") {
+      return (
+        b.roast_count - a.roast_count ||
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    }
+
+    return (
+      getBestScore(b) - getBestScore(a) ||
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+  });
+}
+
 function FeedSkeleton() {
   return (
     <div className="feed-skeleton-list" aria-label="Loading feed">
@@ -40,7 +77,11 @@ function FeedSkeleton() {
   );
 }
 
-export default function ResumeFeed() {
+type ResumeFeedProps = {
+  activeSort?: FeedSort;
+};
+
+export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
   const { showToast } = useToast();
   const [resumes, setResumes] = useState<ResumeSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,25 +89,52 @@ export default function ResumeFeed() {
   const [copiedId, setCopiedId] = useState("");
 
   useEffect(() => {
+    let active = true;
+
     async function loadResumes() {
+      setLoading(true);
+      setMessage("");
       const started = Date.now();
-      const { data, error } = await supabase
+      let query = supabase
         .from("resumes")
-        .select("id,user_id,title,file_path,is_anonymous,status,roast_count,created_at")
-        .order("created_at", { ascending: false });
+        .select("id,user_id,title,file_path,is_anonymous,status,roast_count,created_at");
+
+      if (activeSort === "top") {
+        query = query
+          .order("roast_count", { ascending: false })
+          .order("created_at", { ascending: false });
+      } else {
+        query = query.order("created_at", { ascending: false });
+      }
+
+      const { data, error } = await query;
+
+      if (!active) return;
 
       if (error) {
         setMessage(error.message);
       } else {
-        setResumes(data ?? []);
+        setResumes(sortResumes(data ?? [], activeSort));
       }
 
       const elapsed = Date.now() - started;
-      window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
+      window.setTimeout(() => {
+        if (active) {
+          setLoading(false);
+        }
+      }, Math.max(0, 300 - elapsed));
     }
 
     void loadResumes();
-  }, []);
+    return () => {
+      active = false;
+    };
+  }, [activeSort]);
+
+  const sortedResumes = useMemo(
+    () => sortResumes(resumes, activeSort),
+    [activeSort, resumes],
+  );
 
   async function shareResume(resume: ResumeSummary) {
     const url = `${window.location.origin}/resume/${resume.id}`;
@@ -109,12 +177,19 @@ export default function ResumeFeed() {
 
   return (
     <section className="community-feed stagger-children" aria-label="Open resumes">
-      <div className="feed-sortbar pill-tabs" aria-label="Feed sort">
-        <button className="active" type="button">Best</button>
-        <button type="button">New</button>
-        <button type="button">Top rated</button>
-      </div>
-      {resumes.map((resume, index) => {
+      <nav className="feed-sortbar pill-tabs" aria-label="Feed sort">
+        {sortOptions.map((option) => (
+          <Link
+            aria-current={activeSort === option.value ? "page" : undefined}
+            className={activeSort === option.value ? "active" : ""}
+            href={option.href}
+            key={option.value}
+          >
+            {option.label}
+          </Link>
+        ))}
+      </nav>
+      {sortedResumes.map((resume, index) => {
         const heated = resume.roast_count > 5;
 
         return (

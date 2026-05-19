@@ -473,6 +473,7 @@ textarea:focus {
 .pill-tabs {
 	position: relative;
 	display: inline-flex;
+	align-items: center;
 	gap: 2px;
 	width: auto;
 	border: 1px solid var(--border-subtle);
@@ -481,7 +482,17 @@ textarea:focus {
 	background: var(--bg-surface);
 }
 
-.pill-tabs button {
+.feed-sortbar {
+	justify-self: start;
+	width: max-content;
+	max-width: 100%;
+}
+
+.pill-tabs button,
+.pill-tabs a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	border-radius: var(--radius-pill);
 	padding: 7px 12px;
 	background: transparent;
@@ -493,11 +504,13 @@ textarea:focus {
 		background 0.2s;
 }
 
-.pill-tabs button:hover {
+.pill-tabs button:hover,
+.pill-tabs a:hover {
 	color: var(--text-primary);
 }
 
-.pill-tabs button.active {
+.pill-tabs button.active,
+.pill-tabs a.active {
 	background: var(--text-primary);
 	color: white;
 }

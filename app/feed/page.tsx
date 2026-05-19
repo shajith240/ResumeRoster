@@ -1,9 +1,24 @@
 import AuthGate from "@/components/AuthGate";
-import ResumeFeed from "@/components/ResumeFeed";
+import ResumeFeed, { type FeedSort } from "@/components/ResumeFeed";
 import RouteHeader from "@/components/RouteHeader";
 import Link from "next/link";
 
-export default function FeedPage() {
+type FeedPageProps = {
+  searchParams?: Promise<{
+    sort?: string | string[];
+  }>;
+};
+
+function normalizeSort(value: string | string[] | undefined): FeedSort {
+  const sort = Array.isArray(value) ? value[0] : value;
+
+  return sort === "new" || sort === "top" ? sort : "best";
+}
+
+export default async function FeedPage({ searchParams }: FeedPageProps) {
+  const params = await searchParams;
+  const activeSort = normalizeSort(params?.sort);
+
   return (
     <AuthGate>
       <RouteHeader />
@@ -20,7 +35,7 @@ export default function FeedPage() {
               Post resume
             </Link>
           </div>
-          <ResumeFeed />
+          <ResumeFeed activeSort={activeSort} />
         </section>
 
         <aside className="feed-right-rail" aria-label="Community context">
