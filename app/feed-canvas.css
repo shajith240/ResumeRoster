@@ -219,7 +219,11 @@
   }
 
   .profile-cover {
-    height: clamp(150px, 16vw, 230px);
+    height: clamp(170px, 15vw, 220px);
+    width: min(1280px, calc(100% - 48px));
+    margin: 0 auto;
+    border-right: 1px solid var(--border-subtle);
+    border-left: 1px solid var(--border-subtle);
     border-bottom: 1px solid var(--border-subtle);
     background:
       radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.88), transparent 28%),
@@ -231,17 +235,17 @@
 
   .profile-page-shell .profile-layout {
     display: grid !important;
-    grid-template-columns: clamp(280px, 24vw, 360px) minmax(620px, 1fr) !important;
+    grid-template-columns: clamp(300px, 24vw, 360px) minmax(640px, 1fr) !important;
     align-items: start !important;
-    gap: clamp(32px, 4vw, 72px) !important;
-    width: min(1120px, calc(100% - 64px)) !important;
+    gap: clamp(40px, 4vw, 76px) !important;
+    width: min(1120px, calc(100% - 72px)) !important;
     margin: 0 auto !important;
   }
 
   .profile-page-shell .profile-card {
     position: relative !important;
     top: auto !important;
-    margin-top: -86px !important;
+    margin-top: -72px !important;
     border: 0 !important;
     border-radius: 0 !important;
     padding: 0 0 36px !important;
@@ -253,13 +257,22 @@
   .profile-page-shell .profile-avatar {
     width: 112px !important;
     height: 112px !important;
-    margin: 0 auto 16px !important;
+    margin: 0 auto 18px !important;
     border: 4px solid var(--bg-base) !important;
     border-radius: 999px !important;
     background: radial-gradient(circle at 30% 20%, #ffd4bd, var(--brand)) !important;
     box-shadow: var(--shadow-lg) !important;
     color: white !important;
     font-size: 42px !important;
+    line-height: 1 !important;
+    overflow: hidden !important;
+  }
+
+  .profile-page-shell .profile-avatar img,
+  .profile-edit-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .profile-page-shell .profile-card h1 {
@@ -268,6 +281,7 @@
     font-size: 28px !important;
     font-weight: 700 !important;
     line-height: 1.15 !important;
+    letter-spacing: 0 !important;
   }
 
   .profile-page-shell .profile-card > p {
@@ -280,7 +294,18 @@
   .profile-manage-button {
     width: 100%;
     margin-bottom: 22px;
-    border-radius: 4px;
+    border: 1px solid rgba(17, 17, 17, 0.16) !important;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.76) !important;
+    color: var(--text-primary) !important;
+    box-shadow: var(--shadow-xs) !important;
+    font-weight: 700;
+  }
+
+  .profile-manage-button:hover {
+    border-color: rgba(232, 93, 38, 0.30) !important;
+    background: rgba(255, 246, 241, 0.96) !important;
+    color: var(--brand) !important;
   }
 
   .profile-edit-dialog .profile-edit-form {
@@ -312,6 +337,7 @@
     font-size: 30px;
     font-weight: 800;
     box-shadow: var(--shadow-sm);
+    overflow: hidden;
   }
 
   .profile-edit-fields {
@@ -325,7 +351,7 @@
     gap: 18px;
     border: 1px solid var(--border-subtle);
     border-radius: 6px;
-    padding: 22px;
+    padding: 24px;
     background: rgba(255, 255, 255, 0.68);
     text-align: left;
     box-shadow: var(--shadow-xs);
@@ -377,7 +403,7 @@
   .profile-workspace {
     display: grid;
     gap: 28px;
-    padding-top: 34px;
+    padding-top: 36px;
   }
 
   .profile-page-shell .roasts-panel,
@@ -392,6 +418,7 @@
   .profile-page-shell .roasts-panel-header {
     align-items: flex-start !important;
     margin-bottom: 14px;
+    min-height: 42px;
   }
 
   .profile-page-shell .roasts-panel-header h2 {
@@ -418,6 +445,7 @@
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.78);
     box-shadow: var(--shadow-xs);
+    overflow: hidden;
   }
 
   .profile-page-shell .profile-roast-card {
@@ -489,6 +517,7 @@
     padding: 14px 18px;
     background: rgba(255, 255, 255, 0.78);
     box-shadow: var(--shadow-xs);
+    min-height: 76px;
   }
 
   .profile-project-card svg,
@@ -620,6 +649,10 @@
 
   .profile-page-shell .profile-card {
     margin-top: -76px !important;
+  }
+
+  .profile-cover {
+    width: calc(100% - 32px);
   }
 
   .profile-workspace {

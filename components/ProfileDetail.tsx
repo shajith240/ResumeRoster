@@ -186,6 +186,10 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
   const profileContext =
     [profile.target_role, profile.college].filter(Boolean).join(" / ") ||
     "Community reviewer";
+  const googleAvatarUrl = isOwnProfile
+    ? (user?.user_metadata?.avatar_url as string | undefined) ||
+      (user?.user_metadata?.picture as string | undefined)
+    : undefined;
 
   return (
     <section className="profile-page-shell page-enter">
@@ -193,7 +197,13 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 
       <div className="profile-layout">
         <aside className="profile-card">
-          <div className="profile-avatar" aria-hidden="true">{profileInitial}</div>
+          <div className="profile-avatar" aria-hidden={googleAvatarUrl ? undefined : true}>
+            {googleAvatarUrl ? (
+              <img src={googleAvatarUrl} alt={`${name} profile photo`} width={112} height={112} />
+            ) : (
+              profileInitial
+            )}
+          </div>
           <h1>{name}</h1>
           <p>{profileContext}</p>
 
@@ -215,7 +225,13 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
                 </DialogDescription>
                 <form className="profile-edit-form" onSubmit={saveProfile}>
                   <div className="profile-edit-banner" aria-hidden="true" />
-                  <div className="profile-edit-avatar" aria-hidden="true">{profileInitial}</div>
+                  <div className="profile-edit-avatar" aria-hidden={googleAvatarUrl ? undefined : true}>
+                    {googleAvatarUrl ? (
+                      <img src={googleAvatarUrl} alt={`${name} profile photo`} width={80} height={80} />
+                    ) : (
+                      profileInitial
+                    )}
+                  </div>
                   <div className="profile-edit-fields">
                     <div className="space-y-2">
                       <Label htmlFor="profile-username">Username</Label>
