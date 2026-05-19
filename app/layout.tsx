@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import ToastProvider from "@/components/ToastProvider";
 import "./globals.css";
+import "./feed-canvas.css";
 
 export const metadata: Metadata = {
   title: "ResumeRoster",

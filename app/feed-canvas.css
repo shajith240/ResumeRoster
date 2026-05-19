@@ -1,0 +1,95 @@
+/* Feed canvas overrides.
+   Loaded after globals.css so the feed cannot be collapsed by older duplicated rules. */
+
+@media (min-width: 1025px) {
+  .secondary-nav-inner {
+    width: calc(100vw - 64px) !important;
+    max-width: none !important;
+  }
+
+  .feed-app-shell {
+    grid-template-columns:
+      clamp(240px, 16vw, 300px)
+      minmax(720px, 1fr)
+      clamp(300px, 20vw, 380px) !important;
+    gap: clamp(24px, 2vw, 40px) !important;
+    width: calc(100vw - 64px) !important;
+    max-width: none !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    padding-top: 28px !important;
+  }
+
+  .feed-center,
+  .community-feed,
+  .resume-card {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .feed-community-header {
+    align-items: center !important;
+    padding-bottom: 18px !important;
+  }
+
+  .feed-community-header h1 {
+    font-size: clamp(40px, 2.35vw, 50px) !important;
+  }
+
+  .feed-community-header p {
+    max-width: 720px !important;
+  }
+
+  .feed-community-header .btn-primary {
+    flex: 0 0 auto !important;
+    min-width: 124px !important;
+    white-space: nowrap !important;
+  }
+
+  .resume-card .post-content {
+    padding: 18px 20px 14px !important;
+  }
+
+  .feed-snippet {
+    max-width: 780px !important;
+  }
+
+  .feed-sidebar,
+  .feed-right-rail {
+    width: 100% !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .secondary-nav-inner,
+  .feed-app-shell {
+    width: calc(100vw - 48px) !important;
+  }
+
+  .feed-app-shell {
+    grid-template-columns:
+      clamp(270px, 16vw, 320px)
+      minmax(820px, 1fr)
+      clamp(340px, 20vw, 420px) !important;
+  }
+}
+
+@media (min-width: 1800px) {
+  .feed-app-shell {
+    grid-template-columns: 320px minmax(940px, 1fr) 440px !important;
+    gap: 44px !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .feed-app-shell {
+    width: min(92%, 820px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .feed-app-shell {
+    width: calc(100% - 32px) !important;
+  }
+}
