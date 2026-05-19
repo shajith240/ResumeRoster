@@ -1538,6 +1538,85 @@ textarea:focus {
   }
 }
 
+/* Final feed canvas calibration. This intentionally lives at the end of the
+   file so older landing/app feed rules cannot collapse the desktop layout. */
+@media (min-width: 1180px) {
+  .secondary-nav-inner {
+    width: min(1760px, calc(100vw - 64px));
+  }
+
+  .feed-app-shell {
+    grid-template-columns:
+      clamp(230px, 15vw, 280px)
+      minmax(680px, 1fr)
+      clamp(300px, 20vw, 360px);
+    gap: clamp(24px, 1.8vw, 36px);
+    width: min(1760px, calc(100vw - 64px));
+    max-width: none;
+    padding-top: 28px;
+    padding-bottom: 112px;
+  }
+
+  .feed-center,
+  .community-feed {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .feed-community-header {
+    align-items: center;
+    padding-bottom: 18px;
+  }
+
+  .feed-community-header h1 {
+    font-size: clamp(40px, 2.4vw, 48px);
+  }
+
+  .feed-community-header p {
+    max-width: 720px;
+  }
+
+  .feed-community-header .btn-primary {
+    flex: 0 0 auto;
+    min-width: 120px;
+    white-space: nowrap;
+  }
+
+  .resume-card {
+    width: 100%;
+  }
+
+  .resume-card .post-content {
+    padding: 18px 20px 14px;
+  }
+
+  .feed-snippet {
+    max-width: 760px;
+  }
+
+  .feed-sidebar,
+  .feed-right-rail {
+    width: 100%;
+  }
+
+  .feed-right-rail section {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .secondary-nav-inner,
+  .feed-app-shell {
+    width: min(1840px, calc(100vw - 48px));
+  }
+
+  .feed-app-shell {
+    grid-template-columns: 300px minmax(820px, 1fr) 380px;
+    gap: 38px;
+  }
+}
+
 html,
 body {
   min-height: 100%;
