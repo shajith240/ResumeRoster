@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
@@ -14,6 +15,12 @@ type ResumeDetailProps = {
 };
 
 type Reaction = "like" | "dislike";
+
+type AuthorProfile = {
+  id: string;
+  username: string | null;
+  full_name: string | null;
+};
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", {
@@ -40,12 +47,23 @@ function getReactionBlockReason(
   return null;
 }
 
+function getAuthorHandle(authorId: string, profile?: AuthorProfile) {
+  const name = profile?.username || profile?.full_name || `roaster-${authorId.slice(0, 8)}`;
+  return name.startsWith("@") ? name : `@${name}`;
+}
+
+function getAuthorAvatar(authorId: string, profile?: AuthorProfile) {
+  const seed = profile?.full_name || profile?.username || authorId;
+  return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}`;
+}
+
 export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
   const router = useRouter();
   const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [resume, setResume] = useState<ResumeSummary | null>(null);
   const [roasts, setRoasts] = useState<Roast[]>([]);
+  const [authorProfiles, setAuthorProfiles] = useState<Record<string, AuthorProfile>>({});
   const [votedRoastIds, setVotedRoastIds] = useState<Set<string>>(new Set());
   const [dislikedRoastIds, setDislikedRoastIds] = useState<Set<string>>(new Set());
   const [signedUrl, setSignedUrl] = useState("");
@@ -133,6 +151,25 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
             dislike_count: roast.dislike_count ?? 0,
           })),
         );
+
+        const authorIds = Array.from(
+          new Set((roastResult.data ?? []).map((roast) => roast.author_id)),
+        );
+
+        if (authorIds.length) {
+          const profileResult = await supabase
+            .from("profiles")
+            .select("id,username,full_name")
+            .in("id", authorIds);
+
+          if (!profileResult.error) {
+            setAuthorProfiles(
+              Object.fromEntries(
+                (profileResult.data ?? []).map((profile) => [profile.id, profile]),
+              ),
+            );
+          }
+        }
 
         const roastIds = roastResult.data?.map((roast) => roast.id) ?? [];
         if (activeUser && roastIds.length) {
@@ -222,6 +259,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
     }
 
     setRoasts((current) => [data, ...current]);
+    setAuthorProfiles((current) => ({
+      ...current,
+      [user.id]: {
+        id: user.id,
+        username: user.email?.split("@")[0] ?? null,
+        full_name: user.user_metadata?.full_name ?? null,
+      },
+    }));
     setResume((current) =>
       current ? { ...current, roast_count: current.roast_count + 1 } : current,
     );
@@ -491,6 +536,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
           {sortedRoasts.map((roast, index) => {
             const voted = votedRoastIds.has(roast.id);
             const disliked = dislikedRoastIds.has(roast.id);
+            const authorProfile = authorProfiles[roast.author_id];
+            const authorHandle = getAuthorHandle(roast.author_id, authorProfile);
             const reactionBlockReason = getReactionBlockReason(user, resume, roast);
             const reactionDisabled = Boolean(reactionBlockReason);
 
@@ -498,8 +545,21 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
             <article className="thread-roast" style={{ animationDelay: `${index * 40}ms` }} key={roast.id}>
               <div className="thread-roast-body">
                 <header>
-                  <span className="mini-avatar">A</span>
-                  <a href={`/profile/${roast.author_id}`}>anonymous roaster</a>
+                  <Button asChild className="comment-author-chip rounded-full py-0 ps-0" size="sm">
+                    <Link href={`/profile/${roast.author_id}`}>
+                      <span className="me-0.5 flex aspect-square h-full p-1.5">
+                        <img
+                          className="h-auto w-full rounded-full"
+                          src={getAuthorAvatar(roast.author_id, authorProfile)}
+                          alt=""
+                          width={24}
+                          height={24}
+                          aria-hidden="true"
+                        />
+                      </span>
+                      {authorHandle}
+                    </Link>
+                  </Button>
                   <time dateTime={roast.created_at}>&middot; {formatDate(roast.created_at)}</time>
                   {roast.helpful_votes > 5 ? <span className="badge badge-open">Verified helpful</span> : null}
                 </header>
