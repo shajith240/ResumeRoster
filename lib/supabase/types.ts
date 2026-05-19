@@ -14,10 +14,12 @@ export type ResumeSummary = {
 export type Roast = {
   id: string;
   resume_id: string;
+  parent_id?: string | null;
   author_id: string;
   content: string;
   helpful_votes: number;
   dislike_count?: number;
+  reply_count?: number;
   created_at: string;
 };
 
