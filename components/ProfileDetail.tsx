@@ -15,6 +15,18 @@ import {
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ToastProvider";
 import { supabase } from "@/lib/supabase/client";
 import type { PublicProfile, PublicProfileRoast } from "@/lib/supabase/types";
@@ -39,6 +51,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
   const [targetRole, setTargetRole] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [saveMessage, setSaveMessage] = useState("");
 
@@ -123,6 +136,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
         : current,
     );
     setSaveMessage("Saved");
+    setEditOpen(false);
     showToast("Profile saved.");
   }
 
@@ -184,9 +198,72 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
           <p>{profileContext}</p>
 
           {isOwnProfile ? (
-            <Button className="profile-manage-button" variant="secondary" type="button">
-              Manage your account
-            </Button>
+            <Dialog open={editOpen} onOpenChange={setEditOpen}>
+              <DialogTrigger asChild>
+                <Button className="profile-manage-button" variant="outline" type="button">
+                  Edit profile
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="profile-edit-dialog flex flex-col gap-0 overflow-y-visible p-0 sm:max-w-lg [&>button:last-child]:top-3.5">
+                <DialogHeader className="contents space-y-0 text-left">
+                  <DialogTitle className="border-b border-border px-6 py-4 text-base">
+                    Edit profile
+                  </DialogTitle>
+                </DialogHeader>
+                <DialogDescription className="sr-only">
+                  Update your public ResumeRoster profile details.
+                </DialogDescription>
+                <form className="profile-edit-form" onSubmit={saveProfile}>
+                  <div className="profile-edit-banner" aria-hidden="true" />
+                  <div className="profile-edit-avatar" aria-hidden="true">{profileInitial}</div>
+                  <div className="profile-edit-fields">
+                    <div className="space-y-2">
+                      <Label htmlFor="profile-username">Username</Label>
+                      <Input
+                        id="profile-username"
+                        value={username}
+                        maxLength={32}
+                        onChange={(event) => setUsername(event.target.value)}
+                        placeholder="resumecritic"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="profile-college">College</Label>
+                      <Input
+                        id="profile-college"
+                        value={college}
+                        maxLength={80}
+                        onChange={(event) => setCollege(event.target.value)}
+                        placeholder="Your college"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="profile-target-role">Target role</Label>
+                      <Input
+                        id="profile-target-role"
+                        value={targetRole}
+                        maxLength={80}
+                        onChange={(event) => setTargetRole(event.target.value)}
+                        placeholder="SDE intern"
+                      />
+                    </div>
+                    {saveMessage && saveMessage !== "Saved" ? (
+                      <p className="form-message">{saveMessage}</p>
+                    ) : null}
+                  </div>
+                  <DialogFooter className="border-t border-border px-6 py-4">
+                    <DialogClose asChild>
+                      <Button type="button" variant="outline">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button disabled={saving}>
+                      {saving ? "Saving..." : "Save profile"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
           ) : null}
 
           <section className="profile-info-panel" aria-label="Profile details">
@@ -232,41 +309,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
             </div>
           </div>
 
-          {isOwnProfile ? (
-            <form className="profile-edit-form" onSubmit={saveProfile}>
-              <label>
-                Username
-                <input
-                  value={username}
-                  maxLength={32}
-                  onChange={(event) => setUsername(event.target.value)}
-                  placeholder="resumecritic"
-                />
-              </label>
-              <label>
-                College
-                <input
-                  value={college}
-                  maxLength={80}
-                  onChange={(event) => setCollege(event.target.value)}
-                  placeholder="Your college"
-                />
-              </label>
-              <label>
-                Target role
-                <input
-                  value={targetRole}
-                  maxLength={80}
-                  onChange={(event) => setTargetRole(event.target.value)}
-                  placeholder="SDE intern"
-                />
-              </label>
-              <Button disabled={saving}>
-                {saving ? "Saving..." : saveMessage || "Save profile"}
-              </Button>
-              {saveMessage && saveMessage !== "Saved" ? <p className="form-message">{saveMessage}</p> : null}
-            </form>
-          ) : null}
         </aside>
 
         <main className="profile-workspace">
