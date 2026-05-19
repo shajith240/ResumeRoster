@@ -27,7 +27,6 @@
     z-index: 80;
   }
 
-  .secondary-nav,
   .bottom-nav {
     display: none !important;
   }
