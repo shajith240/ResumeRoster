@@ -7,6 +7,8 @@ create table if not exists public.profiles (
   id uuid references auth.users on delete cascade primary key,
   username text unique,
   full_name text,
+  avatar_url text,
+  avatar_path text,
   college text,
   target_role text,
   roast_count int not null default 0,
@@ -19,6 +21,8 @@ create table if not exists public.resumes (
   user_id uuid not null references public.profiles(id) on delete cascade,
   title text not null,
   file_path text not null,
+  job_description text check (job_description is null or char_length(job_description) between 20 and 8000),
+  post_description text check (post_description is null or char_length(post_description) between 10 and 4000),
   is_anonymous boolean not null default true,
   status text not null default 'open' check (status in ('open', 'roasted', 'closed')),
   roast_count int not null default 0,
@@ -162,13 +166,20 @@ security definer
 set search_path = public
 as $$
 begin
-  insert into public.profiles (id, full_name, username)
+  insert into public.profiles (id, full_name, username, avatar_url)
   values (
     new.id,
     new.raw_user_meta_data ->> 'full_name',
-    split_part(new.email, '@', 1)
+    split_part(new.email, '@', 1),
+    coalesce(
+      new.raw_user_meta_data ->> 'avatar_url',
+      new.raw_user_meta_data ->> 'picture'
+    )
   )
-  on conflict (id) do nothing;
+  on conflict (id) do update
+  set
+    full_name = coalesce(public.profiles.full_name, excluded.full_name),
+    avatar_url = coalesce(public.profiles.avatar_url, excluded.avatar_url);
   return new;
 end;
 $$;
@@ -286,6 +297,9 @@ create or replace function public.get_roaster_leaderboard(limit_count int defaul
 returns table (
   id uuid,
   username text,
+  full_name text,
+  avatar_url text,
+  avatar_path text,
   college text,
   target_role text,
   roast_count int,
@@ -299,13 +313,20 @@ as $$
   select
     profiles.id,
     profiles.username,
+    profiles.full_name,
+    profiles.avatar_url,
+    profiles.avatar_path,
     profiles.college,
     profiles.target_role,
     profiles.roast_count,
     profiles.helpful_votes
   from public.profiles
   where profiles.roast_count > 0 or profiles.helpful_votes > 0
-  order by profiles.helpful_votes desc, profiles.roast_count desc, profiles.created_at asc
+  order by
+    (profiles.helpful_votes * 120 + profiles.roast_count * 60) desc,
+    profiles.helpful_votes desc,
+    profiles.roast_count desc,
+    profiles.created_at asc
   limit greatest(1, least(limit_count, 50));
 $$;
 

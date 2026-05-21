@@ -60,6 +60,7 @@ as $$
   from public.roasts
   join public.resumes on resumes.id = roasts.resume_id
   where roasts.author_id = profile_id
+    and roasts.is_deleted = false
     and resumes.status in ('open', 'closed')
   order by roasts.created_at desc
   limit greatest(1, least(limit_count, 50));

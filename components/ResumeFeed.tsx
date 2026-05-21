@@ -10,6 +10,8 @@ import { MessageCircleIcon } from "@/components/ui/message-circle";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeSummary } from "@/lib/supabase/types";
 
+const RESUME_SELECT_WITH_CONTEXT =
+  "id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,job_description,post_description,created_at";
 const RESUME_SELECT_WITH_READS =
   "id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
 const RESUME_SELECT_BASE =
@@ -38,10 +40,26 @@ function isReadCountFeatureError(error: { message?: string } | null) {
   return /read_count|schema cache|column/i.test(error?.message ?? "");
 }
 
-function withReadCount(resume: Omit<ResumeSummary, "read_count"> & { read_count?: number }) {
+function isResumeContextFeatureError(error: { message?: string } | null) {
+  return /job_description|post_description|read_count|schema cache|column/i.test(
+    error?.message ?? "",
+  );
+}
+
+function withResumeDefaults(
+  resume: Omit<
+    ResumeSummary,
+    "read_count" | "job_description" | "post_description"
+  > &
+    Partial<
+      Pick<ResumeSummary, "read_count" | "job_description" | "post_description">
+    >,
+): ResumeSummary {
   return {
     ...resume,
     read_count: resume.read_count ?? 0,
+    job_description: resume.job_description ?? null,
+    post_description: resume.post_description ?? null,
   };
 }
 
@@ -94,10 +112,19 @@ function sortResumes(resumes: ResumeSummary[], sort: FeedSort) {
 async function mergeLiveRoastCounts(resumeRows: ResumeSummary[]) {
   if (!resumeRows.length) return resumeRows;
 
-  const { data, error } = await supabase
+  const activeRoastResult = await supabase
     .from("roasts")
     .select("resume_id")
-    .in("resume_id", resumeRows.map((resume) => resume.id));
+    .in("resume_id", resumeRows.map((resume) => resume.id))
+    .eq("is_deleted", false);
+
+  const { data, error } =
+    activeRoastResult.error && /is_deleted|schema cache|column/i.test(activeRoastResult.error.message)
+      ? await supabase
+          .from("roasts")
+          .select("resume_id")
+          .in("resume_id", resumeRows.map((resume) => resume.id))
+      : activeRoastResult;
 
   if (error) return resumeRows;
 
@@ -152,7 +179,7 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
       const started = Date.now();
       let query = supabase
         .from("resumes")
-        .select(RESUME_SELECT_WITH_READS);
+        .select(RESUME_SELECT_WITH_CONTEXT);
 
       if (activeSort === "top") {
         query = query
@@ -164,13 +191,13 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
 
       const { data, error } = await query;
 
-      let resumeRows = (data ?? []).map(withReadCount);
+      let resumeRows = (data ?? []).map(withResumeDefaults);
       let resumeError = error;
 
-      if (error && isReadCountFeatureError(error)) {
+      if (error && isResumeContextFeatureError(error)) {
         let fallbackQuery = supabase
           .from("resumes")
-          .select(RESUME_SELECT_BASE);
+          .select(RESUME_SELECT_WITH_READS);
 
         if (activeSort === "top") {
           fallbackQuery = fallbackQuery
@@ -181,8 +208,26 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
         }
 
         const fallbackResult = await fallbackQuery;
-        resumeRows = (fallbackResult.data ?? []).map(withReadCount);
+        resumeRows = (fallbackResult.data ?? []).map(withResumeDefaults);
         resumeError = fallbackResult.error;
+
+        if (fallbackResult.error && isReadCountFeatureError(fallbackResult.error)) {
+          let baseQuery = supabase
+            .from("resumes")
+            .select(RESUME_SELECT_BASE);
+
+          if (activeSort === "top") {
+            baseQuery = baseQuery
+              .order("roast_count", { ascending: false })
+              .order("created_at", { ascending: false });
+          } else {
+            baseQuery = baseQuery.order("created_at", { ascending: false });
+          }
+
+          const baseResult = await baseQuery;
+          resumeRows = (baseResult.data ?? []).map(withResumeDefaults);
+          resumeError = baseResult.error;
+        }
       }
 
       if (!active) return;
@@ -269,6 +314,9 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
       </nav>
       {sortedResumes.map((resume, index) => {
         const heated = resume.roast_count > 5;
+        const snippet =
+          resume.post_description?.trim() ||
+          "Targeting recruiter screens with a resume that needs sharper bullets, clearer proof, and fewer weak first impressions.";
 
         return (
           <article className="resume-card" style={{ animationDelay: `${index * 50}ms` }} key={resume.id}>
@@ -294,8 +342,7 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
               </div>
 
               <p className="feed-snippet">
-                Targeting recruiter screens with a resume that needs sharper bullets,
-                clearer proof, and fewer weak first impressions.
+                {snippet}
               </p>
 
               <div className="post-actions">

@@ -8,6 +8,10 @@ security definer
 set search_path = public
 as $$
 begin
+  if new.is_deleted then
+    return new;
+  end if;
+
   update public.resumes
   set roast_count = roast_count + 1
   where id = new.resume_id;
@@ -27,6 +31,10 @@ security definer
 set search_path = public
 as $$
 begin
+  if old.is_deleted then
+    return old;
+  end if;
+
   update public.resumes
   set roast_count = greatest(roast_count - 1, 0)
   where id = old.resume_id;
@@ -54,6 +62,7 @@ set roast_count = coalesce(roast_counts.total, 0)
 from (
   select resume_id, count(*)::int as total
   from public.roasts
+  where is_deleted = false
   group by resume_id
 ) as roast_counts
 where resumes.id = roast_counts.resume_id;
@@ -64,6 +73,7 @@ where not exists (
   select 1
   from public.roasts
   where roasts.resume_id = resumes.id
+    and roasts.is_deleted = false
 );
 
 update public.profiles
@@ -71,6 +81,7 @@ set roast_count = coalesce(roast_counts.total, 0)
 from (
   select author_id, count(*)::int as total
   from public.roasts
+  where is_deleted = false
   group by author_id
 ) as roast_counts
 where profiles.id = roast_counts.author_id;
@@ -81,4 +92,5 @@ where not exists (
   select 1
   from public.roasts
   where roasts.author_id = profiles.id
+    and roasts.is_deleted = false
 );

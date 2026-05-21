@@ -113,6 +113,7 @@ create policy "Users can change their own votes"
       from public.roasts
       join public.resumes on resumes.id = roasts.resume_id
       where roasts.id = votes.roast_id
+        and roasts.is_deleted = false
         and roasts.author_id <> auth.uid()
         and resumes.user_id <> auth.uid()
     )

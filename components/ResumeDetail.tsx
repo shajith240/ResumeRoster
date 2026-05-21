@@ -35,12 +35,29 @@ type ThreadRoast = Roast & {
 	depth: number;
 };
 
+type ResumeRowWithDefaults = Omit<
+	ResumeSummary,
+	"read_count" | "job_description" | "post_description"
+> &
+	Partial<
+		Pick<ResumeSummary, "read_count" | "job_description" | "post_description">
+	>;
+
+type ResumeQueryResult = {
+	data: ResumeRowWithDefaults | null;
+	error: { message?: string } | null;
+};
+
 const ROAST_SELECT_WITH_THREADS =
+	"id,resume_id,parent_id,author_id,content,helpful_votes,dislike_count,reply_count,is_deleted,deleted_at,created_at";
+const ROAST_SELECT_WITH_THREADS_LEGACY =
 	"id,resume_id,parent_id,author_id,content,helpful_votes,dislike_count,reply_count,created_at";
 const ROAST_SELECT_WITH_REACTIONS =
 	"id,resume_id,author_id,content,helpful_votes,dislike_count,created_at";
 const ROAST_SELECT_BASE =
 	"id,resume_id,author_id,content,helpful_votes,created_at";
+const RESUME_SELECT_WITH_CONTEXT =
+	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,job_description,post_description,created_at";
 const RESUME_SELECT_WITH_READS =
 	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
 const RESUME_SELECT_BASE =
@@ -94,13 +111,49 @@ function isReadCountFeatureError(error: { message?: string } | null) {
 	);
 }
 
-function withReadCount(
-	resume: Omit<ResumeSummary, "read_count"> & { read_count?: number },
-) {
+function isDeleteFeatureError(error: { message?: string } | null) {
+	return /is_deleted|deleted_at|delete_roast|schema cache|column|function/i.test(
+		error?.message ?? "",
+	);
+}
+
+function isResumeContextFeatureError(error: { message?: string } | null) {
+	return /job_description|post_description|read_count|schema cache|column/i.test(
+		error?.message ?? "",
+	);
+}
+
+function withResumeDefaults(resume: ResumeRowWithDefaults): ResumeSummary {
 	return {
 		...resume,
 		read_count: resume.read_count ?? 0,
+		job_description: resume.job_description ?? null,
+		post_description: resume.post_description ?? null,
 	};
+}
+
+function ResumeContextCard({
+	eyebrow,
+	title,
+	content,
+	emptyMessage,
+}: {
+	eyebrow: string;
+	title: string;
+	content: string;
+	emptyMessage: string;
+}) {
+	const normalizedContent = content.trim();
+
+	return (
+		<section
+			className={`resume-context-card${normalizedContent ? "" : " is-empty"}`}
+		>
+			<span>{eyebrow}</span>
+			<h2>{title}</h2>
+			<p>{normalizedContent || emptyMessage}</p>
+		</section>
+	);
 }
 
 function normalizeRoast(roast: Roast): Roast {
@@ -109,6 +162,8 @@ function normalizeRoast(roast: Roast): Roast {
 		parent_id: roast.parent_id ?? null,
 		dislike_count: roast.dislike_count ?? 0,
 		reply_count: roast.reply_count ?? 0,
+		is_deleted: roast.is_deleted ?? false,
+		deleted_at: roast.deleted_at ?? null,
 	};
 }
 
@@ -190,10 +245,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [replyContent, setReplyContent] = useState("");
 	const [replyingToId, setReplyingToId] = useState<string | null>(null);
 	const [submittingReplyId, setSubmittingReplyId] = useState("");
+	const [deletingRoastId, setDeletingRoastId] = useState("");
 	const [collapsedRoastIds, setCollapsedRoastIds] = useState<Set<string>>(
 		new Set(),
 	);
 	const [replySchemaReady, setReplySchemaReady] = useState(true);
+	const [deleteSchemaReady, setDeleteSchemaReady] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
 	const [message, setMessage] = useState("");
@@ -269,6 +326,137 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 	}
 
+	async function loadRoastThread(activeUser: User | null) {
+		const roastResultWithThreads = await supabase
+			.from("roasts")
+			.select(ROAST_SELECT_WITH_THREADS)
+			.eq("resume_id", resumeId)
+			.order("created_at", { ascending: false });
+
+		const roastResultWithDeleteFallback =
+			roastResultWithThreads.error &&
+			isDeleteFeatureError(roastResultWithThreads.error)
+				? await supabase
+						.from("roasts")
+						.select(ROAST_SELECT_WITH_THREADS_LEGACY)
+						.eq("resume_id", resumeId)
+						.order("created_at", { ascending: false })
+				: roastResultWithThreads;
+
+		setDeleteSchemaReady(
+			!(
+				roastResultWithThreads.error &&
+				isDeleteFeatureError(roastResultWithThreads.error)
+			),
+		);
+
+		const roastResultWithReactions =
+			roastResultWithDeleteFallback.error &&
+			(isMissingColumnError(roastResultWithDeleteFallback.error, "parent_id") ||
+				isMissingColumnError(roastResultWithDeleteFallback.error, "reply_count"))
+				? await supabase
+						.from("roasts")
+						.select(ROAST_SELECT_WITH_REACTIONS)
+						.eq("resume_id", resumeId)
+						.order("created_at", { ascending: false })
+				: roastResultWithDeleteFallback;
+
+		setReplySchemaReady(
+			!(
+				roastResultWithDeleteFallback.error &&
+				(isMissingColumnError(roastResultWithDeleteFallback.error, "parent_id") ||
+					isMissingColumnError(roastResultWithDeleteFallback.error, "reply_count"))
+			),
+		);
+
+		const roastResult =
+			roastResultWithReactions.error &&
+			isMissingColumnError(roastResultWithReactions.error, "dislike_count")
+				? await supabase
+						.from("roasts")
+						.select(ROAST_SELECT_BASE)
+						.eq("resume_id", resumeId)
+						.order("created_at", { ascending: false })
+				: roastResultWithReactions;
+
+		if (roastResult.error) {
+			return;
+		}
+
+		const loadedRoasts = ((roastResult.data ?? []) as Roast[]).map((roast) =>
+			normalizeRoast(roast),
+		);
+		setRoasts(loadedRoasts);
+
+		const authorIds = Array.from(
+			new Set(
+				loadedRoasts
+					.filter((roast) => !roast.is_deleted)
+					.map((roast) => roast.author_id),
+			),
+		);
+
+		if (authorIds.length) {
+			const profileResult = await supabase
+				.from("profiles")
+				.select("id,username,full_name")
+				.in("id", authorIds);
+
+			if (!profileResult.error) {
+				setAuthorProfiles(
+					Object.fromEntries(
+						(profileResult.data ?? []).map((profile) => [
+							profile.id,
+							profile,
+						]),
+					),
+				);
+			}
+		}
+
+		const roastIds = loadedRoasts
+			.filter((roast) => !roast.is_deleted)
+			.map((roast) => roast.id);
+
+		if (activeUser && roastIds.length) {
+			const voteResultWithReactions = await supabase
+				.from("votes")
+				.select("roast_id,reaction")
+				.eq("voter_id", activeUser.id)
+				.in("roast_id", roastIds);
+
+			const voteResult =
+				voteResultWithReactions.error &&
+				voteResultWithReactions.error.message.includes("reaction")
+					? await supabase
+							.from("votes")
+							.select("roast_id")
+							.eq("voter_id", activeUser.id)
+							.in("roast_id", roastIds)
+					: voteResultWithReactions;
+
+			if (!voteResult.error) {
+				setVotedRoastIds(
+					new Set(
+						voteResult.data
+							.filter((vote) => !("reaction" in vote) || vote.reaction === "like")
+							.map((vote) => vote.roast_id),
+					),
+				);
+				setDislikedRoastIds(
+					new Set(
+						voteResult.data
+							.filter((vote) => "reaction" in vote && vote.reaction === "dislike")
+							.map((vote) => vote.roast_id),
+					),
+				);
+			}
+		} else {
+			setVotedRoastIds(new Set());
+			setDislikedRoastIds(new Set());
+		}
+	}
+
 	useEffect(() => {
 		async function load() {
 			const started = Date.now();
@@ -276,29 +464,51 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			const activeUser = userData.user;
 			setUser(activeUser);
 
-			const resumeResultWithReads = await supabase
+			const resumeResultWithContext = await supabase
 				.from("resumes")
-				.select(RESUME_SELECT_WITH_READS)
+				.select(RESUME_SELECT_WITH_CONTEXT)
 				.eq("id", resumeId)
 				.single();
 
-			const resumeResult =
-				resumeResultWithReads.error &&
-				isReadCountFeatureError(resumeResultWithReads.error)
-					? await supabase
-							.from("resumes")
-							.select(RESUME_SELECT_BASE)
-							.eq("id", resumeId)
-							.single()
-					: resumeResultWithReads;
+			let resumeResult = resumeResultWithContext as ResumeQueryResult;
+
+			if (
+				resumeResultWithContext.error &&
+				isResumeContextFeatureError(resumeResultWithContext.error)
+			) {
+				const resumeResultWithReads = (await supabase
+					.from("resumes")
+					.select(RESUME_SELECT_WITH_READS)
+					.eq("id", resumeId)
+					.single()) as ResumeQueryResult;
+
+				if (
+					resumeResultWithReads.error &&
+					isReadCountFeatureError(resumeResultWithReads.error)
+				) {
+					resumeResult = (await supabase
+						.from("resumes")
+						.select(RESUME_SELECT_BASE)
+						.eq("id", resumeId)
+						.single()) as ResumeQueryResult;
+				} else {
+					resumeResult = resumeResultWithReads;
+				}
+			}
 
 			if (resumeResult.error) {
-				setMessage(resumeResult.error.message);
+				setMessage(resumeResult.error.message ?? "Resume could not be loaded.");
 				setLoading(false);
 				return;
 			}
 
-			const loadedResume = withReadCount(resumeResult.data);
+			if (!resumeResult.data) {
+				setMessage("Resume not found.");
+				setLoading(false);
+				return;
+			}
+
+			const loadedResume = withResumeDefaults(resumeResult.data);
 			setResume(loadedResume);
 
 			if (activeUser) {
@@ -306,110 +516,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				void recordResumeRead(loadedResume, activeUser);
 			}
 
-			const roastResultWithThreads = await supabase
-				.from("roasts")
-				.select(ROAST_SELECT_WITH_THREADS)
-				.eq("resume_id", resumeId)
-				.order("created_at", { ascending: false });
-
-			const roastResultWithReactions =
-				roastResultWithThreads.error &&
-				(isMissingColumnError(roastResultWithThreads.error, "parent_id") ||
-					isMissingColumnError(roastResultWithThreads.error, "reply_count"))
-					? await supabase
-							.from("roasts")
-							.select(ROAST_SELECT_WITH_REACTIONS)
-							.eq("resume_id", resumeId)
-							.order("created_at", { ascending: false })
-					: roastResultWithThreads;
-
-			setReplySchemaReady(
-				!(
-					roastResultWithThreads.error &&
-					(isMissingColumnError(roastResultWithThreads.error, "parent_id") ||
-						isMissingColumnError(roastResultWithThreads.error, "reply_count"))
-				),
-			);
-
-			const roastResult =
-				roastResultWithReactions.error &&
-				isMissingColumnError(roastResultWithReactions.error, "dislike_count")
-					? await supabase
-							.from("roasts")
-							.select(ROAST_SELECT_BASE)
-							.eq("resume_id", resumeId)
-							.order("created_at", { ascending: false })
-					: roastResultWithReactions;
-
-			if (!roastResult.error) {
-				setRoasts(
-					((roastResult.data ?? []) as Roast[]).map((roast) => ({
-						...normalizeRoast(roast),
-					})),
-				);
-
-				const authorIds = Array.from(
-					new Set((roastResult.data ?? []).map((roast) => roast.author_id)),
-				);
-
-				if (authorIds.length) {
-					const profileResult = await supabase
-						.from("profiles")
-						.select("id,username,full_name")
-						.in("id", authorIds);
-
-					if (!profileResult.error) {
-						setAuthorProfiles(
-							Object.fromEntries(
-								(profileResult.data ?? []).map((profile) => [
-									profile.id,
-									profile,
-								]),
-							),
-						);
-					}
-				}
-
-				const roastIds = roastResult.data?.map((roast) => roast.id) ?? [];
-				if (activeUser && roastIds.length) {
-					const voteResultWithReactions = await supabase
-						.from("votes")
-						.select("roast_id,reaction")
-						.eq("voter_id", activeUser.id)
-						.in("roast_id", roastIds);
-
-					const voteResult =
-						voteResultWithReactions.error &&
-						voteResultWithReactions.error.message.includes("reaction")
-							? await supabase
-									.from("votes")
-									.select("roast_id")
-									.eq("voter_id", activeUser.id)
-									.in("roast_id", roastIds)
-							: voteResultWithReactions;
-
-					if (!voteResult.error) {
-						setVotedRoastIds(
-							new Set(
-								voteResult.data
-									.filter(
-										(vote) => !("reaction" in vote) || vote.reaction === "like",
-									)
-									.map((vote) => vote.roast_id),
-							),
-						);
-						setDislikedRoastIds(
-							new Set(
-								voteResult.data
-									.filter(
-										(vote) => "reaction" in vote && vote.reaction === "dislike",
-									)
-									.map((vote) => vote.roast_id),
-							),
-						);
-					}
-				}
-			}
+			await loadRoastThread(activeUser);
 
 			const elapsed = Date.now() - started;
 			window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
@@ -495,8 +602,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		if (isOwner) {
-			reportError("Resume owners cannot reply in their own roast thread.");
+		if (parentRoast.author_id === user.id) {
+			reportError("You cannot reply to your own roast.");
 			return;
 		}
 
@@ -746,6 +853,74 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		router.push("/feed");
 	}
 
+	async function deleteRoast(targetRoast: Roast) {
+		setMessage("");
+
+		if (!deleteSchemaReady) {
+			reportError("Run supabase/roast-deletes.sql in Supabase, then refresh to enable comment deletes.");
+			return;
+		}
+
+		if (!user) {
+			await signInWithGoogle();
+			return;
+		}
+
+		if (targetRoast.author_id !== user.id) {
+			reportError("You can only delete roasts or replies you wrote.");
+			return;
+		}
+
+		if (targetRoast.is_deleted) {
+			reportError("This roast has already been deleted.");
+			return;
+		}
+
+		const confirmed = window.confirm(
+			targetRoast.parent_id
+				? "Delete this reply?"
+				: "Delete this roast? Replies from other users will stay visible.",
+		);
+
+		if (!confirmed) {
+			return;
+		}
+
+		setDeletingRoastId(targetRoast.id);
+
+		const { error } = await supabase.rpc("delete_roast", {
+			target_roast_id: targetRoast.id,
+		});
+
+		setDeletingRoastId("");
+
+		if (error) {
+			if (isDeleteFeatureError(error)) {
+				setDeleteSchemaReady(false);
+				reportError("Run supabase/roast-deletes.sql in Supabase, then refresh to enable comment deletes.");
+				return;
+			}
+
+			reportError(error.message);
+			return;
+		}
+
+		setReplyingToId((current) =>
+			current === targetRoast.id ? null : current,
+		);
+		setReplyContent("");
+		await loadRoastThread(user);
+		setResume((current) =>
+			current
+				? {
+						...current,
+						roast_count: Math.max(current.roast_count - 1, 0),
+					}
+				: current,
+		);
+		toast.success(targetRoast.parent_id ? "Reply deleted." : "Roast deleted.");
+	}
+
 	if (loading) {
 		return (
 			<section className="resume-thread">
@@ -761,6 +936,10 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	if (!resume) {
 		return <p className="form-message">{message || "Resume not found."}</p>;
 	}
+
+	const jobDescription = resume.job_description ?? "";
+	const postDescription = resume.post_description ?? "";
+	const visibleRoastCount = roasts.filter((roast) => !roast.is_deleted).length;
 
 	return (
 		<section className="resume-thread">
@@ -845,53 +1024,75 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				)}
 			</article>
 
-			<aside className="thread-roast-panel" aria-label="Resume roasts">
-				{isClosed || isOwner ? (
-					<div className="closed-note">
-						<h2>{isOwner ? "Owner view" : "Roasts closed"}</h2>
-						<p>
-							{isOwner
-								? "You own this resume, so you can read feedback here but cannot mark roasts helpful."
-								: "This thread is visible for learning, but no new roasts can be added."}
-						</p>
-						{message ? <p className="form-message">{message}</p> : null}
-					</div>
-				) : (
-					<form
-						className="roast-form thread-roast-form"
-						onSubmit={handleRoastSubmit}
-					>
-						<textarea
-							value={content}
-							onChange={(event) => setContent(event.target.value)}
-							placeholder="Be specific. What should they rewrite, reorder, quantify, or remove?"
-							rows={7}
-						/>
-						<div className="roast-form-footer">
-							<span>Roast the resume, not the person</span>
-							<button className="btn-primary btn-brand" disabled={submitting}>
-								{submitting
-									? "Posting..."
-									: user
-										? "Submit roast"
-										: "Sign in to roast"}
-							</button>
-						</div>
-						{message ? <p className="form-message">{message}</p> : null}
-					</form>
-				)}
-
-				<div className="thread-list-header">
-					<h2>Roast thread</h2>
-					<span>{roasts.length} comments</span>
+			<aside className="thread-context-panel" aria-label="Resume context">
+				<div className="thread-context-grid" aria-label="Resume context">
+					<ResumeContextCard
+						eyebrow="JD"
+						title="Job description"
+						content={jobDescription}
+						emptyMessage="No JD was attached to this older post."
+					/>
+					<ResumeContextCard
+						eyebrow="Ask"
+						title="What they want help with"
+						content={postDescription}
+						emptyMessage="No post description was attached to this older post."
+					/>
 				</div>
-				{!replySchemaReady ? (
-					<p className="form-message">
-						Run supabase/replies.sql in Supabase, then refresh to enable nested replies.
-					</p>
-				) : null}
+			</aside>
 
-				<div className="roast-list">
+			<section className="thread-discussion-panel" aria-label="Roast discussion">
+					{isClosed || isOwner ? (
+						<div className="closed-note">
+							<h2>{isOwner ? "Owner view" : "Roasts closed"}</h2>
+							<p>
+								{isOwner
+									? "You own this resume. You can reply for clarification, but you cannot mark roasts helpful."
+									: "This thread is visible for learning, but no new roasts can be added."}
+							</p>
+							{message ? <p className="form-message">{message}</p> : null}
+						</div>
+					) : (
+						<form
+							className="roast-form thread-roast-form"
+							onSubmit={handleRoastSubmit}
+						>
+							<textarea
+								value={content}
+								onChange={(event) => setContent(event.target.value)}
+								placeholder="Be specific. What should they rewrite, reorder, quantify, or remove?"
+								rows={4}
+							/>
+							<div className="roast-form-footer">
+								<span>Roast the resume, not the person</span>
+								<button className="btn-primary btn-brand" disabled={submitting}>
+									{submitting
+										? "Posting..."
+										: user
+											? "Submit roast"
+											: "Sign in to roast"}
+								</button>
+							</div>
+							{message ? <p className="form-message">{message}</p> : null}
+						</form>
+					)}
+
+					<div className="thread-list-header">
+						<h2>Roast thread</h2>
+						<span>{visibleRoastCount} comments</span>
+					</div>
+					{!replySchemaReady ? (
+						<p className="form-message">
+							Run supabase/replies.sql in Supabase, then refresh to enable nested replies.
+						</p>
+					) : null}
+					{!deleteSchemaReady ? (
+						<p className="form-message">
+							Run supabase/roast-deletes.sql in Supabase, then refresh to enable comment deletes.
+						</p>
+					) : null}
+
+					<div className="roast-list">
 					{threadRoasts.map((roast, index) => {
 						const voted = votedRoastIds.has(roast.id);
 						const disliked = dislikedRoastIds.has(roast.id);
@@ -908,7 +1109,18 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						const reactionDisabled = Boolean(reactionBlockReason);
 						const replyCount = Math.max(roast.reply_count ?? 0, roast.childCount);
 						const isCollapsed = collapsedRoastIds.has(roast.id);
-						const canReply = replySchemaReady && !isClosed && !isOwner;
+						const isDeleted = Boolean(roast.is_deleted);
+						const isOwnRoast = user?.id === roast.author_id;
+						const replyBlockReason = isClosed
+								? "This resume is closed for new replies."
+								: isDeleted
+									? "Deleted roasts cannot receive new replies."
+								: isOwnRoast
+									? "You cannot reply to your own roast."
+									: !replySchemaReady
+										? "Run supabase/replies.sql to enable replies."
+										: null;
+						const canReply = !replyBlockReason;
 						const roastStyle = {
 							"--reply-depth": Math.min(roast.depth, 8),
 							animationDelay: `${index * 40}ms`,
@@ -916,44 +1128,53 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 						return (
 							<article
-								className={`thread-roast ${roast.depth ? "is-reply" : ""}`}
+								className={`thread-roast ${roast.depth ? "is-reply" : ""}${isDeleted ? " is-deleted" : ""}`}
 								style={roastStyle}
 								key={roast.id}
 							>
 								<div className="thread-roast-body">
 									<header>
-										<Button
-											asChild
-											className="comment-author-chip py-0 ps-0"
-											size="sm"
-										>
-											<Link href={`/profile/${roast.author_id}`}>
-												<span className="me-0.5 flex aspect-square h-full p-1.5">
-													<img
-														className="h-auto w-full rounded-full"
-														src={getAuthorAvatar(
-															roast.author_id,
-															authorProfile,
-														)}
-														alt=""
-														width={24}
-														height={24}
-														aria-hidden="true"
-													/>
-												</span>
-												{authorHandle}
-											</Link>
-										</Button>
+										{isDeleted ? (
+											<span className="deleted-author-chip">Deleted roaster</span>
+										) : (
+											<Button
+												asChild
+												className="comment-author-chip py-0 ps-0"
+												size="sm"
+											>
+												<Link href={`/profile/${roast.author_id}`}>
+													<span className="me-0.5 flex aspect-square h-full p-1.5">
+														<img
+															className="h-auto w-full rounded-full"
+															src={getAuthorAvatar(
+																roast.author_id,
+																authorProfile,
+															)}
+															alt=""
+															width={24}
+															height={24}
+															aria-hidden="true"
+														/>
+													</span>
+													{authorHandle}
+												</Link>
+											</Button>
+										)}
 										<time dateTime={roast.created_at}>
 											&middot; {formatDate(roast.created_at)}
 										</time>
-										{roast.helpful_votes > 5 ? (
+										{!isDeleted && roast.helpful_votes > 5 ? (
 											<span className="badge badge-open">Verified helpful</span>
 										) : null}
 									</header>
-									<p>{roast.content}</p>
+									<p className={isDeleted ? "deleted-roast-copy" : undefined}>
+										{isDeleted
+											? "This roast was deleted by its author."
+											: roast.content}
+									</p>
 									<footer>
-										<div className="comment-reactions">
+										{isDeleted ? null : (
+											<div className="comment-reactions">
 											<Button
 												className="reaction-button py-0 pe-0"
 												variant={voted ? "secondary" : "outline"}
@@ -1002,20 +1223,24 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 													{roast.dislike_count ?? 0}
 												</span>
 											</Button>
-										</div>
-										<button
-											disabled={!canReply}
-											onClick={() => {
-												if (!canReply) return;
-												setReplyingToId((current) =>
-													current === roast.id ? null : roast.id,
-												);
-												setReplyContent("");
-											}}
-											type="button"
-										>
-											Reply
-										</button>
+											</div>
+										)}
+										{isDeleted ? null : (
+											<button
+												disabled={!canReply}
+												title={replyBlockReason ?? undefined}
+												onClick={() => {
+													if (!canReply) return;
+													setReplyingToId((current) =>
+														current === roast.id ? null : roast.id,
+													);
+													setReplyContent("");
+												}}
+												type="button"
+											>
+												Reply
+											</button>
+										)}
 										{replyCount > 0 ? (
 											<button
 												className="reply-collapse-button"
@@ -1027,9 +1252,26 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 													: "Hide replies"}
 											</button>
 										) : null}
-										<button type="button">Report</button>
+										{!isDeleted && isOwnRoast ? (
+											<button
+												className="comment-delete-button"
+												disabled={
+													!deleteSchemaReady || deletingRoastId === roast.id
+												}
+												onClick={() => void deleteRoast(roast)}
+												title={
+													deleteSchemaReady
+														? undefined
+														: "Run supabase/roast-deletes.sql to enable deletes."
+												}
+												type="button"
+											>
+												{deletingRoastId === roast.id ? "Deleting..." : "Delete"}
+											</button>
+										) : null}
+										{isDeleted ? null : <button type="button">Report</button>}
 									</footer>
-									{replyingToId === roast.id ? (
+									{!isDeleted && replyingToId === roast.id ? (
 										<form
 											className="inline-reply-form"
 											onSubmit={(event) => handleReplySubmit(event, roast)}
@@ -1043,6 +1285,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 											/>
 											<div>
 												<button
+													className="reply-cancel-button"
 													onClick={() => {
 														setReplyingToId(null);
 														setReplyContent("");
@@ -1052,7 +1295,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 													Cancel
 												</button>
 												<button
-													className="btn-primary"
+													className="btn-primary btn-brand reply-submit-button"
 													disabled={submittingReplyId === roast.id}
 													type="submit"
 												>
@@ -1070,8 +1313,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							No roasts yet. First useful feedback wins the room.
 						</p>
 					) : null}
-				</div>
-			</aside>
+					</div>
+				</section>
 		</section>
 	);
 }

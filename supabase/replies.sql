@@ -1,5 +1,5 @@
 -- ResumeRoster nested roast replies.
--- Run this once in the Supabase SQL editor before deploying comment replies.
+-- Run or rerun this in the Supabase SQL editor before deploying comment replies.
 
 alter table public.roasts
   add column if not exists parent_id uuid references public.roasts(id) on delete cascade;
@@ -20,6 +20,28 @@ create index if not exists roasts_resume_parent_created_at_idx
 create index if not exists roasts_parent_created_at_idx
   on public.roasts (parent_id, created_at asc);
 
+drop policy if exists "Authenticated users can create roasts" on public.roasts;
+
+create policy "Authenticated users can create roasts"
+  on public.roasts for insert
+  to authenticated
+  with check (
+    auth.uid() = author_id
+    and exists (
+      select 1
+      from public.resumes
+      where resumes.id = roasts.resume_id
+        and resumes.status = 'open'
+        and (
+          (
+            roasts.parent_id is null
+            and resumes.user_id <> auth.uid()
+          )
+          or roasts.parent_id is not null
+        )
+    )
+  );
+
 create or replace function public.validate_roast_parent()
 returns trigger
 language plpgsql
@@ -28,13 +50,14 @@ set search_path = public
 as $$
 declare
   parent_resume_id uuid;
+  parent_author_id uuid;
 begin
   if new.parent_id is null then
     return new;
   end if;
 
-  select roasts.resume_id
-  into parent_resume_id
+  select roasts.resume_id, roasts.author_id
+  into parent_resume_id, parent_author_id
   from public.roasts
   where roasts.id = new.parent_id;
 
@@ -44,6 +67,10 @@ begin
 
   if parent_resume_id <> new.resume_id then
     raise exception 'Replies must belong to the same resume thread as their parent.';
+  end if;
+
+  if parent_author_id = new.author_id then
+    raise exception 'You cannot reply to your own roast.';
   end if;
 
   return new;

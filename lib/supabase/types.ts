@@ -9,6 +9,8 @@ export type ResumeSummary = {
   status: ResumeStatus;
   roast_count: number;
   read_count: number;
+  job_description: string | null;
+  post_description: string | null;
   created_at: string;
 };
 
@@ -21,6 +23,8 @@ export type Roast = {
   helpful_votes: number;
   dislike_count?: number;
   reply_count?: number;
+  is_deleted?: boolean;
+  deleted_at?: string | null;
   created_at: string;
 };
 
@@ -29,6 +33,7 @@ export type RoasterLeaderboardEntry = {
   username: string | null;
   full_name?: string | null;
   avatar_url?: string | null;
+  avatar_path?: string | null;
   college: string | null;
   target_role: string | null;
   roast_count: number;

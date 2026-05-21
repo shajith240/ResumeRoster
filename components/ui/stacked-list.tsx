@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { ArrowRight, Flame } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { resolveAvatarUrl } from "@/lib/supabase/avatars";
 import type { RoasterLeaderboardEntry } from "@/lib/supabase/types";
 
 export type LeaderboardRoastPreview = {
@@ -37,16 +38,19 @@ const rowSpring = {
 };
 
 function initials(name: string) {
-	return name
+	const letters = name
 		.split(/\s+/)
+		.filter(Boolean)
 		.map((part) => part[0])
 		.join("")
 		.slice(0, 2)
 		.toUpperCase();
+
+	return letters || "#";
 }
 
 function roasterName(roaster: LeaderboardRoaster) {
-	return roaster.username || "Anonymous roaster";
+	return roaster.full_name || roaster.username || "Anonymous roaster";
 }
 
 function roleTag(roaster: LeaderboardRoaster) {
@@ -92,16 +96,28 @@ function tableQuote(roaster: LeaderboardRoaster) {
 	return roaster.top_roast?.content ?? "Helpful feedback in progress.";
 }
 
-function LeaderboardAvatar({ name }: { name: string }) {
+function LeaderboardAvatar({
+	name,
+	roaster,
+}: {
+	name: string;
+	roaster: LeaderboardRoaster;
+}) {
+	const avatarUrl = resolveAvatarUrl(roaster.avatar_url, roaster.avatar_path);
+
 	return (
 		<div className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-[rgba(214,179,100,0.72)] bg-[var(--bg-elevated)] shadow-sm">
-			<img
-				src="/assets/logo.png"
-				alt=""
-				className="h-full w-full object-cover grayscale"
-				aria-hidden="true"
-			/>
-			<span className="sr-only">{initials(name)}</span>
+			{avatarUrl ? (
+				<img
+					src={avatarUrl}
+					alt={`${name} profile photo`}
+					className="h-full w-full object-cover"
+				/>
+			) : (
+				<span className="font-[var(--font-body)] text-sm font-bold text-[var(--text-primary)]">
+					{initials(name)}
+				</span>
+			)}
 		</div>
 	);
 }
@@ -133,7 +149,7 @@ function LeaderboardRow({
 				href={`/profile/${roaster.id}`}
 				className="flex min-w-0 items-center gap-3 text-[var(--text-primary)]"
 			>
-				<LeaderboardAvatar name={name} />
+				<LeaderboardAvatar name={name} roaster={roaster} />
 				<div className="min-w-0">
 					<strong className="block truncate text-sm font-bold">{name}</strong>
 					<span className="block truncate text-xs text-[var(--text-secondary)]">

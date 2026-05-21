@@ -17,6 +17,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { resolveAvatarUrl } from "@/lib/supabase/avatars";
 import { supabase } from "@/lib/supabase/client";
 import type { RoasterLeaderboardEntry } from "@/lib/supabase/types";
 import styles from "./Leaderboard.module.css";
@@ -26,6 +27,12 @@ type TimeRange = "week" | "month" | "all";
 type RoastRow = LeaderboardRoastPreview & {
 	author_id: string;
 };
+
+const ROAST_SELECT = "id,resume_id,author_id,content,helpful_votes,created_at";
+const PROFILE_SELECT =
+	"id,username,full_name,avatar_url,avatar_path,college,target_role,roast_count,helpful_votes";
+const PROFILE_FALLBACK_SELECT =
+	"id,username,college,target_role,roast_count,helpful_votes";
 
 const rangeLabels: Record<TimeRange, string> = {
 	week: "This Week",
@@ -64,7 +71,19 @@ function improvement(helpfulVotes: number, roastCount: number) {
 }
 
 function nameFor(roaster: LeaderboardRoaster) {
-	return roaster.username || "Anonymous roaster";
+	return roaster.full_name || roaster.username || "Anonymous roaster";
+}
+
+function initials(name: string) {
+	const letters = name
+		.split(/\s+/)
+		.filter(Boolean)
+		.map((part) => part[0])
+		.join("")
+		.slice(0, 2)
+		.toUpperCase();
+
+	return letters || "#";
 }
 
 function sortRoasters(roasters: LeaderboardRoaster[]) {
@@ -88,6 +107,106 @@ function matchesSearch(roaster: LeaderboardRoaster, query: string) {
 	]
 		.filter(Boolean)
 		.some((value) => value!.toLowerCase().includes(query));
+}
+
+function isMissingSoftDeleteColumn(message: string) {
+	return /is_deleted|schema cache|column/i.test(message);
+}
+
+function isMissingProfileMetadataColumn(message: string) {
+	return /full_name|avatar_url|avatar_path|schema cache|column/i.test(message);
+}
+
+async function fetchRoastRows({
+	authorIds,
+	since,
+}: {
+	authorIds?: string[];
+	since?: string;
+}) {
+	async function run(filterDeleted: boolean) {
+		let query = supabase.from("roasts").select(ROAST_SELECT);
+
+		if (filterDeleted) {
+			query = query.eq("is_deleted", false);
+		}
+
+		if (since) {
+			query = query.gte("created_at", since);
+		}
+
+		if (authorIds?.length) {
+			query = query.in("author_id", authorIds);
+		}
+
+		return query
+			.order("helpful_votes", { ascending: false })
+			.order("created_at", { ascending: false })
+			.limit(250);
+	}
+
+	const activeRoasts = await run(true);
+
+	if (
+		activeRoasts.error &&
+		isMissingSoftDeleteColumn(activeRoasts.error.message)
+	) {
+		return run(false);
+	}
+
+	return activeRoasts;
+}
+
+async function fetchProfilesById(authorIds: string[]) {
+	if (!authorIds.length) {
+		return { profiles: [] as RoasterLeaderboardEntry[], errorMessage: "" };
+	}
+
+	const profileResult = await supabase
+		.from("profiles")
+		.select(PROFILE_SELECT)
+		.in("id", authorIds);
+
+	if (!profileResult.error) {
+		return {
+			profiles: (profileResult.data ?? []) as RoasterLeaderboardEntry[],
+			errorMessage: "",
+		};
+	}
+
+	if (!isMissingProfileMetadataColumn(profileResult.error.message)) {
+		return {
+			profiles: [] as RoasterLeaderboardEntry[],
+			errorMessage: profileResult.error.message,
+		};
+	}
+
+	const fallbackResult = await supabase
+		.from("profiles")
+		.select(PROFILE_FALLBACK_SELECT)
+		.in("id", authorIds);
+
+	return {
+		profiles: (fallbackResult.data ?? []) as RoasterLeaderboardEntry[],
+		errorMessage: fallbackResult.error?.message ?? "",
+	};
+}
+
+function mergeProfileMetadata(
+	roaster: RoasterLeaderboardEntry,
+	profile?: RoasterLeaderboardEntry,
+) {
+	if (!profile) return roaster;
+
+	return {
+		...roaster,
+		full_name: profile.full_name ?? roaster.full_name ?? null,
+		avatar_url: profile.avatar_url ?? roaster.avatar_url ?? null,
+		avatar_path: profile.avatar_path ?? roaster.avatar_path ?? null,
+		username: profile.username ?? roaster.username,
+		college: profile.college ?? roaster.college,
+		target_role: profile.target_role ?? roaster.target_role,
+	};
 }
 
 function bestRoastMap(roasts: RoastRow[]) {
@@ -155,13 +274,9 @@ export default function Leaderboard() {
 			const since = getRangeStart(range);
 
 			if (since) {
-				const { data: periodRoasts, error: roastError } = await supabase
-					.from("roasts")
-					.select("id,resume_id,author_id,content,helpful_votes,created_at")
-					.gte("created_at", since)
-					.order("helpful_votes", { ascending: false })
-					.order("created_at", { ascending: false })
-					.limit(250);
+				const { data: periodRoasts, error: roastError } = await fetchRoastRows({
+					since,
+				});
 
 				if (roastError) {
 					setMessage(roastError.message);
@@ -173,13 +288,10 @@ export default function Leaderboard() {
 					if (!authorIds.length) {
 						setRoasters([]);
 					} else {
-						const { data: profiles, error: profileError } = await supabase
-							.from("profiles")
-							.select("id,username,college,target_role,roast_count,helpful_votes")
-							.in("id", authorIds);
+						const { profiles, errorMessage } = await fetchProfilesById(authorIds);
 
-						if (profileError) {
-							setMessage(profileError.message);
+						if (errorMessage) {
+							setMessage(errorMessage);
 							setRoasters([]);
 						} else {
 							const stats = roasts.reduce<
@@ -194,7 +306,7 @@ export default function Leaderboard() {
 
 							setRoasters(
 								sortRoasters(
-									((profiles ?? []) as RoasterLeaderboardEntry[]).map((profile) =>
+									profiles.map((profile) =>
 										enhanceRoaster(profile, topRoasts[profile.id], stats[profile.id]),
 									),
 								),
@@ -215,16 +327,18 @@ export default function Leaderboard() {
 				} else {
 					const baseRoasters = (data ?? []) as RoasterLeaderboardEntry[];
 					const authorIds = baseRoasters.map((roaster) => roaster.id);
+					const { profiles, errorMessage } = await fetchProfilesById(authorIds);
+					const profilesById = Object.fromEntries(
+						profiles.map((profile) => [profile.id, profile]),
+					);
 					let topRoasts: Record<string, RoastRow> = {};
 
+					if (errorMessage) {
+						setMessage(errorMessage);
+					}
+
 					if (authorIds.length) {
-						const { data: roasts } = await supabase
-							.from("roasts")
-							.select("id,resume_id,author_id,content,helpful_votes,created_at")
-							.in("author_id", authorIds)
-							.order("helpful_votes", { ascending: false })
-							.order("created_at", { ascending: false })
-							.limit(250);
+						const { data: roasts } = await fetchRoastRows({ authorIds });
 
 						topRoasts = bestRoastMap((roasts ?? []) as RoastRow[]);
 					}
@@ -232,7 +346,10 @@ export default function Leaderboard() {
 					setRoasters(
 						sortRoasters(
 							baseRoasters.map((roaster) =>
-								enhanceRoaster(roaster, topRoasts[roaster.id]),
+								enhanceRoaster(
+									mergeProfileMetadata(roaster, profilesById[roaster.id]),
+									topRoasts[roaster.id],
+								),
 							),
 						),
 					);
@@ -252,8 +369,8 @@ export default function Leaderboard() {
 		[query, roasters],
 	);
 	const topRoasters = visibleRoasters.slice(0, 3);
-	const listRoasters = visibleRoasters.slice(3);
-	const listStartRank = topRoasters.length + 1;
+	const listRoasters = visibleRoasters;
+	const listStartRank = 1;
 	const totalPoints = roasters.reduce(
 		(total, roaster) => total + (roaster.roast_points ?? 0),
 		0,
@@ -357,10 +474,10 @@ export default function Leaderboard() {
 					<h2>Roaster list</h2>
 					<p>
 						{listRoasters.length
-							? `Showing ranks ${listStartRank}-${visibleRoasters.length}`
-							: topRoasters.length
-								? "Top roasters currently fill this view"
-								: "No roasters match this view"}
+							? `Showing ${visibleRoasters.length} ranked ${
+									visibleRoasters.length === 1 ? "roaster" : "roasters"
+								}`
+							: "No roasters match this view"}
 					</p>
 				</div>
 			</div>
@@ -383,14 +500,20 @@ function PodiumCard({
 	roaster: LeaderboardRoaster;
 }) {
 	const isWinner = rank === 1;
+	const name = nameFor(roaster);
+	const avatarUrl = resolveAvatarUrl(roaster.avatar_url, roaster.avatar_path);
 
 	return (
 		<article className={`${styles.podiumCard} ${isWinner ? styles.winnerCard : ""}`}>
 			<div className={styles.rankBadge}>#{rank}</div>
 			<div className={styles.avatar}>
-				<img src="/assets/logo.png" alt="" aria-hidden="true" />
+				{avatarUrl ? (
+					<img src={avatarUrl} alt={`${name} profile photo`} />
+				) : (
+					<span>{initials(name)}</span>
+				)}
 			</div>
-			<h2>{nameFor(roaster)}</h2>
+			<h2>{name}</h2>
 			<span className={styles.rolePill}>{roaster.role_tag}</span>
 			<strong>
 				<Flame aria-hidden="true" />

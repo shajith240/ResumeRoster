@@ -138,7 +138,9 @@ as $$
       count(roasts.id)::int as received_roast_count,
       coalesce(sum(roasts.helpful_votes), 0)::int as received_helpful_votes
     from public.resumes
-    left join public.roasts on roasts.resume_id = resumes.id
+    left join public.roasts
+      on roasts.resume_id = resumes.id
+      and roasts.is_deleted = false
     where resumes.user_id = profile_id
   ),
   best_roasts as (
@@ -153,6 +155,7 @@ as $$
         roasts.helpful_votes
       from public.roasts
       where roasts.helpful_votes > 0
+        and roasts.is_deleted = false
     ) ranked_roasts
     where ranked_roasts.author_id = profile_id
       and ranked_roasts.roast_rank = 1
