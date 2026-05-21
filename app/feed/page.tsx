@@ -62,13 +62,35 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
             </div>
           </section>
 
-          <section>
-            <h2>Community rules</h2>
-            <ol>
-              <li>Roast the resume, not the person.</li>
-              <li>Give fixes, not just insults.</li>
-              <li>Never post personal details.</li>
-            </ol>
+          <section className="feed-rules-panel" aria-labelledby="feed-rules-title">
+            <div className="feed-rules-copy">
+              <span className="feed-rules-eyebrow">Roast coach says</span>
+              <h2 id="feed-rules-title">Community rules</h2>
+              <ol className="feed-rules-list">
+                <li>
+                  <strong>Redact first.</strong>
+                  <span>Hide names, emails, phone numbers, links, and IDs.</span>
+                </li>
+                <li>
+                  <strong>Roast the resume.</strong>
+                  <span>Attack weak bullets, unclear impact, and messy structure.</span>
+                </li>
+                <li>
+                  <strong>Give a fix.</strong>
+                  <span>Point out what to rewrite, reorder, quantify, or remove.</span>
+                </li>
+                <li>
+                  <strong>Keep it useful.</strong>
+                  <span>No personal shots, spam, or private details in comments.</span>
+                </li>
+              </ol>
+            </div>
+            <img
+              className="feed-rules-guide"
+              src="/assets/rules%20explaining%20image.png"
+              alt=""
+              aria-hidden="true"
+            />
           </section>
         </aside>
       </main>
