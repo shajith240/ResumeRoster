@@ -273,6 +273,7 @@
 		position: sticky;
 		top: 76px;
 		display: grid;
+		align-content: start;
 		min-width: 0;
 		gap: 16px;
 		container-name: thread-panel;
@@ -285,9 +286,17 @@
 		min-width: 0;
 	}
 
+	.thread-context-grid {
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)) !important;
+	}
+
+	.resume-context-card {
+		min-height: clamp(156px, 13vw, 210px) !important;
+	}
+
 	@container thread-panel (max-width: 460px) {
 		.thread-context-grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: 1fr !important;
 		}
 	}
 
@@ -476,6 +485,7 @@
 		grid-column: 1;
 		grid-row: 3;
 		display: grid;
+		align-content: start;
 		gap: 16px;
 	}
 

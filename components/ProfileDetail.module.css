@@ -157,7 +157,7 @@
 	gap: 6px;
 	color: var(--text-primary);
 	font-size: 12px;
-	font-weight: 800;
+	font-weight: 650;
 	text-decoration: none;
 }
 
@@ -175,6 +175,7 @@
 	border-radius: var(--button-radius);
 	background: var(--bg-inverse);
 	color: var(--text-inverse);
+	font-weight: 600;
 }
 
 .statsGrid {
@@ -454,8 +455,24 @@
 .editHeader {
 	flex: 0 0 auto;
 	border-bottom: 1px solid var(--border-subtle);
-	padding: 20px 24px 16px;
+	padding: 22px 24px 16px;
 	text-align: left;
+}
+
+.editTitle {
+	margin: 0;
+	font-family: var(--font-display);
+	font-size: 26px;
+	font-weight: 400;
+	letter-spacing: 0;
+	line-height: 1;
+}
+
+.editDescription {
+	margin-top: 8px;
+	color: var(--text-secondary);
+	font-size: 13px;
+	line-height: 1.45;
 }
 
 .editForm {
@@ -489,7 +506,7 @@
 	background: var(--bg-elevated);
 	color: var(--text-primary);
 	font-size: 12px;
-	font-weight: 800;
+	font-weight: 650;
 	cursor: pointer;
 	user-select: none;
 	transition:
@@ -600,8 +617,69 @@
 	gap: 14px !important;
 }
 
+.fieldLabelRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 6px;
+}
+
+.fieldLimit {
+	color: var(--text-tertiary);
+	font-size: 11px;
+	font-weight: 550;
+	line-height: 1;
+}
+
+.usernameAssist {
+	display: grid;
+	gap: 7px;
+	min-height: 18px;
+	margin-top: 7px;
+	color: var(--text-tertiary);
+	font-size: 11px;
+	font-weight: 500;
+	line-height: 1.35;
+}
+
+.usernameAssistError {
+	color: #fda4af;
+}
+
+.usernameAssistSuccess {
+	color: var(--success);
+}
+
+.usernameSuggestions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.usernameSuggestions button {
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius-sm);
+	padding: 5px 8px;
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+	font-size: 11px;
+	font-weight: 550;
+	line-height: 1;
+	transition:
+		background-color 0.2s var(--button-ease),
+		border-color 0.2s var(--button-ease),
+		color 0.2s var(--button-ease);
+}
+
+.usernameSuggestions button:hover {
+	border-color: rgba(255, 138, 77, 0.34);
+	background: var(--brand-muted);
+	color: var(--brand);
+}
+
 .editTextarea,
-.highlightSelect {
+.highlightSelectTrigger {
 	width: 100%;
 	border: 1px solid hsl(var(--input));
 	border-radius: var(--button-radius-sm);
@@ -610,6 +688,7 @@
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 	font: inherit;
 	font-size: 14px;
+	font-weight: 500;
 	outline: none;
 	transition:
 		border-color 0.15s,
@@ -630,15 +709,30 @@
 	min-height: 138px;
 }
 
-.highlightSelect {
+.highlightSelectTrigger {
 	height: 40px;
 	padding: 0 12px;
+	text-align: left;
 }
 
 .editTextarea:focus,
-.highlightSelect:focus {
+.highlightSelectTrigger:focus {
 	border-color: hsl(var(--ring));
 	box-shadow: 0 0 0 3px hsl(var(--ring) / 0.2);
+}
+
+.highlightSelectContent {
+	z-index: 130;
+	border-color: var(--border-default);
+	border-radius: var(--button-radius);
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+}
+
+.highlightSelectItem {
+	border-radius: var(--button-radius-sm);
+	font-size: 13px;
+	font-weight: 550;
 }
 
 .skillEditorHeader {
@@ -686,7 +780,7 @@
 	background: var(--bg-elevated);
 	color: var(--text-primary);
 	font-size: 12px;
-	font-weight: 800;
+	font-weight: 650;
 	line-height: 1;
 	transition:
 		background-color 0.2s var(--button-ease),
@@ -750,7 +844,7 @@
 
 .footerButton {
 	min-width: 116px;
-	font-weight: 800;
+	font-weight: 600;
 }
 
 .emptyState {

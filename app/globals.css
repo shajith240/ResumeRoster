@@ -1220,16 +1220,16 @@ body.main-app-dark .feed-stats-grid div {
 .submit-route {
 	display: grid;
 	justify-items: center;
-	width: min(1080px, calc(100% - 48px));
+	width: min(1280px, calc(100% - 48px));
 	margin: 0 auto;
-	padding: 54px 0 90px;
+	padding: clamp(24px, 4.8vh, 42px) 0 clamp(34px, 6vh, 72px);
 }
 
 .submit-header {
 	display: grid;
 	justify-items: center;
 	width: 100%;
-	margin-bottom: 30px;
+	margin-bottom: clamp(18px, 3vh, 28px);
 	text-align: center;
 }
 
@@ -1238,47 +1238,38 @@ body.main-app-dark .feed-stats-grid div {
 }
 
 .submit-header h1 {
-	font-size: 42px;
+	font-size: clamp(38px, 4.2vw, 54px);
 	line-height: 1;
-}
-
-.submit-header p {
-	max-width: 520px;
-	margin-top: 10px;
-	color: var(--text-secondary);
-	font-size: 16px;
-	line-height: 1.6;
 }
 
 .submit-form {
 	display: grid;
-	gap: 24px;
+	gap: clamp(16px, 2vh, 22px);
 	width: 100%;
 	border: 1px solid var(--border-subtle);
 	border-radius: var(--radius-xl);
-	padding: 32px;
+	padding: clamp(20px, 2.6vw, 32px);
 	background: var(--bg-surface);
 	box-shadow: var(--shadow-md);
 	animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .submit-form-wide {
-	max-width: 1040px;
-	padding: clamp(24px, 2.2vw, 32px);
+	max-width: 1240px;
 }
 
 .submit-form-grid {
 	display: grid;
-	grid-template-columns: minmax(300px, 0.9fr) minmax(420px, 1.1fr);
-	align-items: start;
-	gap: clamp(22px, 3vw, 36px);
+	grid-template-columns: minmax(330px, 0.85fr) minmax(460px, 1.15fr);
+	align-items: stretch;
+	gap: clamp(18px, 2.4vw, 30px);
 	min-width: 0;
 }
 
 .submit-form-column {
 	display: grid;
 	align-content: start;
-	gap: 20px;
+	gap: clamp(13px, 1.7vh, 18px);
 	min-width: 0;
 }
 
@@ -1301,7 +1292,7 @@ body.main-app-dark .feed-stats-grid div {
 }
 
 .role-picker legend {
-	margin-bottom: 8px;
+	margin-bottom: 7px;
 	font-size: 13px;
 	font-weight: 500;
 }
@@ -1309,7 +1300,7 @@ body.main-app-dark .feed-stats-grid div {
 .role-picker div {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 8px;
+	gap: 7px;
 }
 
 .role-picker button {
@@ -1335,11 +1326,11 @@ body.main-app-dark .feed-stats-grid div {
 	display: grid;
 	justify-items: center;
 	align-content: center;
-	gap: 7px;
-	min-height: 168px;
+	gap: 6px;
+	min-height: clamp(138px, 20vh, 184px);
 	border: 2px dashed var(--border-default);
 	border-radius: var(--radius-lg);
-	padding: 32px;
+	padding: clamp(18px, 3vh, 30px);
 	background: var(--bg-base);
 	color: var(--text-primary);
 	text-align: center;
@@ -1368,9 +1359,9 @@ body.main-app-dark .feed-stats-grid div {
 
 .upload-icon {
 	display: grid;
-	width: 38px;
-	height: 38px;
-	margin-bottom: 3px;
+	width: 36px;
+	height: 36px;
+	margin-bottom: 2px;
 	place-items: center;
 	border: 1px solid var(--border-subtle);
 	border-radius: var(--button-radius);
@@ -1391,24 +1382,24 @@ body.main-app-dark .feed-stats-grid div {
 }
 
 .submit-context-textarea {
-	min-height: 176px;
+	min-height: 132px;
 	resize: vertical;
 	line-height: 1.55;
 }
 
 .submit-jd-textarea {
-	min-height: 276px;
+	min-height: clamp(186px, 27vh, 288px);
 }
 
 .submit-help-textarea {
-	min-height: 184px;
+	min-height: clamp(116px, 15vh, 172px);
 }
 
 .submit-form-actions {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) auto;
 	align-items: center;
-	gap: 16px;
+	gap: clamp(12px, 1.8vw, 16px);
 }
 
 .anonymous-toggle {
@@ -1418,7 +1409,7 @@ body.main-app-dark .feed-stats-grid div {
 	justify-content: space-between;
 	border: 1px solid var(--border-subtle);
 	border-radius: var(--radius-md);
-	padding: 14px 16px;
+	padding: 12px 14px;
 	background: var(--bg-base);
 }
 
@@ -1725,7 +1716,7 @@ body.main-app-dark .toggle-ui::after {
 
 .thread-context-grid {
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
 	gap: 12px;
 	min-width: 0;
 }
@@ -1734,7 +1725,7 @@ body.main-app-dark .toggle-ui::after {
 	display: grid;
 	grid-template-rows: auto auto minmax(0, 1fr);
 	gap: 8px;
-	min-height: 190px;
+	min-height: clamp(156px, 14vw, 210px);
 	overflow: hidden;
 	padding: 16px;
 	background:
@@ -1775,6 +1766,7 @@ body.main-app-dark .toggle-ui::after {
 	color: var(--text-secondary);
 	font-size: 13px;
 	line-height: 1.58;
+	overflow-wrap: anywhere;
 	white-space: pre-wrap;
 	scrollbar-width: thin;
 }
@@ -2110,6 +2102,41 @@ body.main-app-dark .bottom-nav {
 	}
 }
 
+@media (min-width: 901px) and (max-height: 820px) {
+	.submit-route {
+		padding-top: 24px;
+		padding-bottom: 34px;
+	}
+
+	.submit-header {
+		margin-bottom: 18px;
+	}
+
+	.submit-form {
+		gap: 16px;
+	}
+
+	.submit-form-column {
+		gap: 13px;
+	}
+
+	.field-block small {
+		font-size: 11px;
+	}
+
+	.dropzone {
+		min-height: 136px;
+	}
+
+	.submit-jd-textarea {
+		min-height: 184px;
+	}
+
+	.submit-help-textarea {
+		min-height: 112px;
+	}
+}
+
 @media (max-width: 640px) {
 	.app-header {
 		grid-template-columns: 1fr auto;
@@ -2144,18 +2171,24 @@ body.main-app-dark .bottom-nav {
 
 	.submit-route {
 		width: calc(100% - 32px);
-		padding-top: 36px;
+		padding-top: 26px;
 		padding-bottom: 86px;
 	}
 
 	.submit-form {
-		padding: 22px;
+		padding: 18px;
 	}
 
-	.submit-context-textarea,
-	.submit-jd-textarea,
-	.submit-help-textarea {
+	.submit-jd-textarea {
 		min-height: 160px;
+	}
+
+	.submit-help-textarea {
+		min-height: 132px;
+	}
+
+	.dropzone {
+		min-height: 136px;
 	}
 
 	.leaderboard-header h1,

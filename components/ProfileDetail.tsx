@@ -44,6 +44,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { supabase } from "@/lib/supabase/client";
 import type {
 	PublicProfile,
@@ -67,8 +75,26 @@ type ActivityItem = {
 	timestamp: number;
 };
 
+type UsernameAvailability = {
+	status: "idle" | "checking" | "available" | "taken";
+	message: string;
+	suggestions: string[];
+};
+
 const fallbackAvatar = "/assets/logo.png";
 const PROFILE_CHANGE_EVENT = "resumeroster-profile-change";
+const LATEST_RESUME_VALUE = "__latest_public_resume__";
+const PROFILE_FIELD_LIMITS = {
+	fullName: 64,
+	username: 32,
+	tagline: 90,
+	currentPosition: 64,
+	college: 90,
+	collegeLocation: 90,
+	about: 280,
+	skill: 32,
+	skills: 12,
+};
 const SKILL_OPTIONS = [
 	"ATS",
 	"Clarity",
@@ -115,6 +141,103 @@ function cleanFileName(value: string) {
 		.replace(/[^a-z0-9.]+/g, "-")
 		.replace(/^-+|-+$/g, "")
 		.slice(0, 80);
+}
+
+function limitText(value: string, limit: number) {
+	return value.slice(0, limit);
+}
+
+function normalizeUsername(value: string) {
+	return value
+		.replace(/^@+/, "")
+		.replace(/[^a-zA-Z0-9_-]/g, "")
+		.toLowerCase();
+}
+
+function isUsernameConstraintError(error: { code?: string; message?: string }) {
+	return (
+		error.code === "23505" ||
+		/profiles_username_key|duplicate key|username/i.test(error.message ?? "")
+	);
+}
+
+function buildUsernameCandidates(username: string) {
+	const base =
+		normalizeUsername(username).replace(/[_-]+$/g, "") ||
+		"roaster";
+	const year = new Date().getFullYear().toString().slice(-2);
+	const suffixes = ["24", "240", "dev", "hq", year, "01", "roast"];
+	const candidates: string[] = [];
+
+	for (const suffix of suffixes) {
+		const stem = base.slice(0, PROFILE_FIELD_LIMITS.username - suffix.length);
+		const candidate = `${stem}${suffix}`;
+		if (candidate !== username && candidate.length >= 3) {
+			candidates.push(candidate);
+		}
+	}
+
+	for (let suffix = 2; candidates.length < 10 && suffix < 100; suffix += 1) {
+		const textSuffix = String(suffix);
+		const stem = base.slice(0, PROFILE_FIELD_LIMITS.username - textSuffix.length);
+		const candidate = `${stem}${textSuffix}`;
+		if (candidate !== username) {
+			candidates.push(candidate);
+		}
+	}
+
+	return Array.from(new Set(candidates)).slice(0, 10);
+}
+
+async function getUsernameAvailability(username: string, profileOwnerId: string) {
+	const normalizedUsername = normalizeUsername(username);
+	if (!normalizedUsername || normalizedUsername.length < 3) {
+		return { taken: false, suggestions: [] };
+	}
+
+	const { data: matches, error } = await supabase
+		.from("profiles")
+		.select("id, username")
+		.ilike("username", normalizedUsername)
+		.limit(4);
+
+	if (error) {
+		throw error;
+	}
+
+	const isTakenByAnotherUser = Boolean(
+		(matches ?? []).some((profile) => profile.id !== profileOwnerId),
+	);
+
+	if (!isTakenByAnotherUser) {
+		return { taken: false, suggestions: [] };
+	}
+
+	const candidates = buildUsernameCandidates(normalizedUsername);
+	const { data: takenCandidates } = await supabase
+		.from("profiles")
+		.select("username")
+		.in("username", candidates);
+	const takenNames = new Set(
+		(takenCandidates ?? [])
+			.map((profile) => normalizeUsername(profile.username ?? ""))
+			.filter(Boolean),
+	);
+
+	return {
+		taken: true,
+		suggestions: candidates.filter((candidate) => !takenNames.has(candidate)).slice(0, 3),
+	};
+}
+
+function usernameTakenMessage(suggestions: string[]) {
+	if (!suggestions.length) {
+		return "That username is already taken. Try another name.";
+	}
+
+	return `That username is already taken. Try ${suggestions
+		.map((suggestion) => `@${suggestion}`)
+		.join(", ")}.`;
 }
 
 function formatDate(value: string) {
@@ -179,14 +302,17 @@ function parseSkills(value: string) {
 	return value
 		.split(/[,\n]/)
 		.map((skill) => skill.trim())
-		.filter((skill) => skill.length >= 2 && skill.length <= 32)
+		.filter(
+			(skill) =>
+				skill.length >= 2 && skill.length <= PROFILE_FIELD_LIMITS.skill,
+		)
 		.filter((skill) => {
 			const key = skill.toLowerCase();
 			if (seen.has(key)) return false;
 			seen.add(key);
 			return true;
 		})
-		.slice(0, 12);
+		.slice(0, PROFILE_FIELD_LIMITS.skills);
 }
 
 function fallbackSkills(profile: PublicProfile) {
@@ -442,15 +568,34 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			setProfile(loadedProfile);
 			setRoasts(loadedRoasts);
 			setResumes(loadedResumes);
-			setFullName(loadedProfile.full_name ?? getMetadataName(activeUser) ?? "");
-			setUsername(loadedProfile.username ?? "");
-			setTagline(loadedProfile.tagline ?? "");
-			setCurrentPosition(
-				loadedProfile.current_position ?? loadedProfile.target_role ?? "",
+			setFullName(
+				limitText(
+					loadedProfile.full_name ?? getMetadataName(activeUser) ?? "",
+					PROFILE_FIELD_LIMITS.fullName,
+				),
 			);
-			setCollege(loadedProfile.college ?? "");
-			setCollegeLocation(loadedProfile.college_location ?? "");
-			setAbout(loadedProfile.about ?? "");
+			setUsername(
+				limitText(loadedProfile.username ?? "", PROFILE_FIELD_LIMITS.username),
+			);
+			setTagline(
+				limitText(loadedProfile.tagline ?? "", PROFILE_FIELD_LIMITS.tagline),
+			);
+			setCurrentPosition(
+				limitText(
+					loadedProfile.current_position ?? loadedProfile.target_role ?? "",
+					PROFILE_FIELD_LIMITS.currentPosition,
+				),
+			);
+			setCollege(
+				limitText(loadedProfile.college ?? "", PROFILE_FIELD_LIMITS.college),
+			);
+			setCollegeLocation(
+				limitText(
+					loadedProfile.college_location ?? "",
+					PROFILE_FIELD_LIMITS.collegeLocation,
+				),
+			);
+			setAbout(limitText(loadedProfile.about ?? "", PROFILE_FIELD_LIMITS.about));
 			setSkillsInput((loadedProfile.skills ?? []).join(", "));
 			setResumeHighlightId(
 				loadedProfile.resume_highlight_id ||
@@ -536,23 +681,42 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		setSaving(true);
 
 		try {
-			const avatarUpdate = await uploadAvatar(user);
 			const nextSkills = parseSkills(skillsInput);
-			const nextPosition = currentPosition.trim() || null;
+			const nextUsername = limitText(
+				normalizeUsername(username),
+				PROFILE_FIELD_LIMITS.username,
+			).trim();
+			const currentUsername = normalizeUsername(profile?.username ?? "");
+
+			if (nextUsername && nextUsername !== currentUsername) {
+				const availability = await getUsernameAvailability(nextUsername, user.id);
+				if (availability.taken) {
+					throw new Error(usernameTakenMessage(availability.suggestions));
+				}
+			}
+
+			const avatarUpdate = await uploadAvatar(user);
+			const nextPosition =
+				limitText(currentPosition, PROFILE_FIELD_LIMITS.currentPosition).trim() ||
+				null;
 			const selectedHighlight =
 				resumes.some((resume) => resume.id === resumeHighlightId) && resumeHighlightId
 					? resumeHighlightId
 					: null;
 
 			const nextProfile = {
-				full_name: fullName.trim() || null,
-				username: username.trim().replace(/^@+/, "") || null,
-				tagline: tagline.trim() || null,
+				full_name:
+					limitText(fullName, PROFILE_FIELD_LIMITS.fullName).trim() || null,
+				username: nextUsername || null,
+				tagline:
+					limitText(tagline, PROFILE_FIELD_LIMITS.tagline).trim() || null,
 				current_position: nextPosition,
 				target_role: nextPosition,
-				college: college.trim() || null,
-				college_location: collegeLocation.trim() || null,
-				about: about.trim() || null,
+				college: limitText(college, PROFILE_FIELD_LIMITS.college).trim() || null,
+				college_location:
+					limitText(collegeLocation, PROFILE_FIELD_LIMITS.collegeLocation).trim() ||
+					null,
+				about: limitText(about, PROFILE_FIELD_LIMITS.about).trim() || null,
 				skills: nextSkills,
 				resume_highlight_id: selectedHighlight,
 				...(avatarUpdate ?? {}),
@@ -564,6 +728,10 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				.eq("id", user.id);
 
 			if (error) {
+				if (isUsernameConstraintError(error)) {
+					throw new Error("That username is already taken. Try another name.");
+				}
+
 				throw new Error(
 					isProfileFeatureError(error.message)
 						? "Run supabase/profile-features.sql in Supabase, then refresh this page."
@@ -761,11 +929,13 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								onCollegeLocationChange={setCollegeLocation}
 								onCurrentPositionChange={setCurrentPosition}
 								onFullNameChange={setFullName}
+								profileOwnerId={profile.id}
 								onResumeHighlightChange={setResumeHighlightId}
 								onSave={saveProfile}
 								onSkillsChange={setSkillsInput}
 								onTaglineChange={setTagline}
 								onUsernameChange={setUsername}
+								originalUsername={profile.username ?? ""}
 								resumeHighlightId={resumeHighlightId}
 								resumes={resumes}
 								saveMessage={saveMessage}
@@ -950,6 +1120,29 @@ function RoastRow({ roast }: { roast: PublicProfileRoast }) {
 	);
 }
 
+function FieldHeader({
+	children,
+	htmlFor,
+	max,
+	value,
+}: {
+	children: string;
+	htmlFor: string;
+	max?: number;
+	value?: string;
+}) {
+	return (
+		<div className={styles.fieldLabelRow}>
+			<Label htmlFor={htmlFor}>{children}</Label>
+			{max ? (
+				<span className={styles.fieldLimit}>
+					{(value ?? "").length}/{max}
+				</span>
+			) : null}
+		</div>
+	);
+}
+
 function ProfileEditDialog({
 	about,
 	avatarPreview,
@@ -965,11 +1158,13 @@ function ProfileEditDialog({
 	onCollegeLocationChange,
 	onCurrentPositionChange,
 	onFullNameChange,
+	profileOwnerId,
 	onResumeHighlightChange,
 	onSave,
 	onSkillsChange,
 	onTaglineChange,
 	onUsernameChange,
+	originalUsername,
 	resumeHighlightId,
 	resumes,
 	saveMessage,
@@ -992,11 +1187,13 @@ function ProfileEditDialog({
 	onCollegeLocationChange: (value: string) => void;
 	onCurrentPositionChange: (value: string) => void;
 	onFullNameChange: (value: string) => void;
+	profileOwnerId: string;
 	onResumeHighlightChange: (value: string) => void;
 	onSave: (event: FormEvent<HTMLFormElement>) => void;
 	onSkillsChange: (value: string) => void;
 	onTaglineChange: (value: string) => void;
 	onUsernameChange: (value: string) => void;
+	originalUsername: string;
 	resumeHighlightId: string;
 	resumes: PublicProfileResume[];
 	saveMessage: string;
@@ -1006,7 +1203,17 @@ function ProfileEditDialog({
 	username: string;
 }) {
 	const [skillQuery, setSkillQuery] = useState("");
+	const [usernameAvailability, setUsernameAvailability] =
+		useState<UsernameAvailability>({
+			status: "idle",
+			message: "",
+			suggestions: [],
+		});
 	const selectedSkills = useMemo(() => parseSkills(skillsInput), [skillsInput]);
+	const normalizedUsername = normalizeUsername(username);
+	const normalizedOriginalUsername = normalizeUsername(originalUsername);
+	const usernameChanged =
+		Boolean(normalizedUsername) && normalizedUsername !== normalizedOriginalUsername;
 	const normalizedSkillQuery = skillQuery.trim().replace(/\s+/g, " ");
 	const selectedSkillKeys = useMemo(
 		() => new Set(selectedSkills.map((skill) => skill.toLowerCase())),
@@ -1021,13 +1228,80 @@ function ProfileEditDialog({
 		}).slice(0, 8);
 	}, [normalizedSkillQuery, selectedSkillKeys]);
 	const canAddCustomSkill =
-		selectedSkills.length < 12 &&
+		selectedSkills.length < PROFILE_FIELD_LIMITS.skills &&
 		normalizedSkillQuery.length >= 2 &&
-		normalizedSkillQuery.length <= 32 &&
+		normalizedSkillQuery.length <= PROFILE_FIELD_LIMITS.skill &&
 		!selectedSkillKeys.has(normalizedSkillQuery.toLowerCase()) &&
 		!SKILL_OPTIONS.some(
 			(skill) => skill.toLowerCase() === normalizedSkillQuery.toLowerCase(),
 		);
+
+	useEffect(() => {
+		let active = true;
+		const nextUsername = normalizedUsername;
+
+		if (!nextUsername) {
+			setUsernameAvailability({
+				status: "idle",
+				message: "Use letters, numbers, underscores, or hyphens.",
+				suggestions: [],
+			});
+			return;
+		}
+
+		if (nextUsername.length < 3) {
+			setUsernameAvailability({
+				status: "idle",
+				message: "Use at least 3 characters.",
+				suggestions: [],
+			});
+			return;
+		}
+
+		if (!usernameChanged) {
+			setUsernameAvailability({ status: "idle", message: "", suggestions: [] });
+			return;
+		}
+
+		setUsernameAvailability({
+			status: "checking",
+			message: "Checking username...",
+			suggestions: [],
+		});
+
+		const timeout = window.setTimeout(() => {
+			void getUsernameAvailability(nextUsername, profileOwnerId)
+				.then((availability) => {
+					if (!active) return;
+					setUsernameAvailability(
+						availability.taken
+							? {
+									status: "taken",
+									message: "That username is taken. Try another name.",
+									suggestions: availability.suggestions,
+								}
+							: {
+									status: "available",
+									message: "Username is available.",
+									suggestions: [],
+								},
+					);
+				})
+				.catch(() => {
+					if (!active) return;
+					setUsernameAvailability({
+						status: "idle",
+						message: "",
+						suggestions: [],
+					});
+				});
+		}, 300);
+
+		return () => {
+			active = false;
+			window.clearTimeout(timeout);
+		};
+	}, [normalizedUsername, profileOwnerId, usernameChanged]);
 
 	function commitSkills(nextSkills: string[]) {
 		onSkillsChange(nextSkills.join(", "));
@@ -1037,9 +1311,9 @@ function ProfileEditDialog({
 		const cleanedSkill = skill.trim().replace(/\s+/g, " ");
 		if (
 			cleanedSkill.length < 2 ||
-			cleanedSkill.length > 32 ||
+			cleanedSkill.length > PROFILE_FIELD_LIMITS.skill ||
 			selectedSkillKeys.has(cleanedSkill.toLowerCase()) ||
-			selectedSkills.length >= 12
+			selectedSkills.length >= PROFILE_FIELD_LIMITS.skills
 		) {
 			return;
 		}
@@ -1068,11 +1342,22 @@ function ProfileEditDialog({
 		}
 	}
 
+	const usernameBlocksSave =
+		usernameAvailability.status === "checking" ||
+		usernameAvailability.status === "taken";
+	const usernameAssistClass = [
+		styles.usernameAssist,
+		usernameAvailability.status === "taken" ? styles.usernameAssistError : "",
+		usernameAvailability.status === "available" ? styles.usernameAssistSuccess : "",
+	]
+		.filter(Boolean)
+		.join(" ");
+
 	return (
 		<DialogContent className={styles.editDialog}>
 			<DialogHeader className={styles.editHeader}>
-				<DialogTitle>Edit profile</DialogTitle>
-				<DialogDescription>
+				<DialogTitle className={styles.editTitle}>Edit profile</DialogTitle>
+				<DialogDescription className={styles.editDescription}>
 					Update the public details shown on your ResumeRoster profile.
 				</DialogDescription>
 			</DialogHeader>
@@ -1104,33 +1389,84 @@ function ProfileEditDialog({
 					<div className={styles.editColumn}>
 						<div className={styles.editFieldGrid}>
 							<div>
-								<Label htmlFor="profile-full-name">Display name</Label>
+								<FieldHeader
+									htmlFor="profile-full-name"
+									max={PROFILE_FIELD_LIMITS.fullName}
+									value={fullName}
+								>
+									Display name
+								</FieldHeader>
 								<Input
 									id="profile-full-name"
-									maxLength={80}
-									onChange={(event) => onFullNameChange(event.target.value)}
+									maxLength={PROFILE_FIELD_LIMITS.fullName}
+									onChange={(event) =>
+										onFullNameChange(
+											limitText(event.target.value, PROFILE_FIELD_LIMITS.fullName),
+										)
+									}
 									placeholder="Shajith Bathina"
 									value={fullName}
 								/>
 							</div>
 							<div>
-								<Label htmlFor="profile-username">Username</Label>
+								<FieldHeader
+									htmlFor="profile-username"
+									max={PROFILE_FIELD_LIMITS.username}
+									value={username}
+								>
+									Username
+								</FieldHeader>
 								<Input
 									id="profile-username"
-									maxLength={32}
-									onChange={(event) => onUsernameChange(event.target.value)}
+									maxLength={PROFILE_FIELD_LIMITS.username}
+									onChange={(event) =>
+										onUsernameChange(
+											limitText(
+												normalizeUsername(event.target.value),
+												PROFILE_FIELD_LIMITS.username,
+											),
+										)
+									}
 									placeholder="shajith240"
 									value={username}
 								/>
+								<div className={usernameAssistClass} aria-live="polite">
+									{usernameAvailability.message ? (
+										<span>{usernameAvailability.message}</span>
+									) : null}
+									{usernameAvailability.suggestions.length ? (
+										<div className={styles.usernameSuggestions}>
+											{usernameAvailability.suggestions.map((suggestion) => (
+												<button
+													key={suggestion}
+													onClick={() => onUsernameChange(suggestion)}
+													type="button"
+												>
+													@{suggestion}
+												</button>
+											))}
+										</div>
+									) : null}
+								</div>
 							</div>
 						</div>
 
 						<div>
-							<Label htmlFor="profile-tagline">Tagline</Label>
+							<FieldHeader
+								htmlFor="profile-tagline"
+								max={PROFILE_FIELD_LIMITS.tagline}
+								value={tagline}
+							>
+								Tagline
+							</FieldHeader>
 							<Input
 								id="profile-tagline"
-								maxLength={120}
-								onChange={(event) => onTaglineChange(event.target.value)}
+								maxLength={PROFILE_FIELD_LIMITS.tagline}
+								onChange={(event) =>
+									onTaglineChange(
+										limitText(event.target.value, PROFILE_FIELD_LIMITS.tagline),
+									)
+								}
 								placeholder="Building better resumes, one roast at a time."
 								value={tagline}
 							/>
@@ -1138,23 +1474,44 @@ function ProfileEditDialog({
 
 						<div className={styles.editFieldGrid}>
 							<div>
-								<Label htmlFor="profile-current-position">Current position</Label>
+								<FieldHeader
+									htmlFor="profile-current-position"
+									max={PROFILE_FIELD_LIMITS.currentPosition}
+									value={currentPosition}
+								>
+									Current position
+								</FieldHeader>
 								<Input
 									id="profile-current-position"
-									maxLength={80}
+									maxLength={PROFILE_FIELD_LIMITS.currentPosition}
 									onChange={(event) =>
-										onCurrentPositionChange(event.target.value)
+										onCurrentPositionChange(
+											limitText(
+												event.target.value,
+												PROFILE_FIELD_LIMITS.currentPosition,
+											),
+										)
 									}
 									placeholder="SDE intern"
 									value={currentPosition}
 								/>
 							</div>
 							<div>
-								<Label htmlFor="profile-college">College</Label>
+								<FieldHeader
+									htmlFor="profile-college"
+									max={PROFILE_FIELD_LIMITS.college}
+									value={college}
+								>
+									College
+								</FieldHeader>
 								<Input
 									id="profile-college"
-									maxLength={100}
-									onChange={(event) => onCollegeChange(event.target.value)}
+									maxLength={PROFILE_FIELD_LIMITS.college}
+									onChange={(event) =>
+										onCollegeChange(
+											limitText(event.target.value, PROFILE_FIELD_LIMITS.college),
+										)
+									}
 									placeholder="IIT(ISM) Dhanbad"
 									value={college}
 								/>
@@ -1162,42 +1519,88 @@ function ProfileEditDialog({
 						</div>
 
 						<div>
-							<Label htmlFor="profile-college-location">College location</Label>
+							<FieldHeader
+								htmlFor="profile-college-location"
+								max={PROFILE_FIELD_LIMITS.collegeLocation}
+								value={collegeLocation}
+							>
+								College location
+							</FieldHeader>
 							<Input
 								id="profile-college-location"
-								maxLength={100}
-								onChange={(event) => onCollegeLocationChange(event.target.value)}
+								maxLength={PROFILE_FIELD_LIMITS.collegeLocation}
+								onChange={(event) =>
+									onCollegeLocationChange(
+										limitText(
+											event.target.value,
+											PROFILE_FIELD_LIMITS.collegeLocation,
+										),
+									)
+								}
 								placeholder="Dhanbad, Jharkhand"
 								value={collegeLocation}
 							/>
 						</div>
 
 						<div>
-							<Label htmlFor="profile-resume-highlight">Resume highlight</Label>
-							<select
-								className={styles.highlightSelect}
-								id="profile-resume-highlight"
-								onChange={(event) => onResumeHighlightChange(event.target.value)}
-								value={resumeHighlightId}
+							<FieldHeader htmlFor="profile-resume-highlight">
+								Resume highlight
+							</FieldHeader>
+							<Select
+								onValueChange={(value) =>
+									onResumeHighlightChange(
+										value === LATEST_RESUME_VALUE ? "" : value,
+									)
+								}
+								value={resumeHighlightId || LATEST_RESUME_VALUE}
 							>
-								<option value="">Latest public resume</option>
-								{resumes.map((resume) => (
-									<option key={resume.id} value={resume.id}>
-										{resume.title}
-									</option>
-								))}
-							</select>
+								<SelectTrigger
+									className={styles.highlightSelectTrigger}
+									id="profile-resume-highlight"
+								>
+									<SelectValue placeholder="Latest public resume" />
+								</SelectTrigger>
+								<SelectContent className={styles.highlightSelectContent}>
+									<SelectGroup>
+										<SelectItem
+											className={styles.highlightSelectItem}
+											value={LATEST_RESUME_VALUE}
+										>
+											Latest public resume
+										</SelectItem>
+										{resumes.map((resume) => (
+											<SelectItem
+												className={styles.highlightSelectItem}
+												key={resume.id}
+												value={resume.id}
+											>
+												{resume.title}
+											</SelectItem>
+										))}
+									</SelectGroup>
+								</SelectContent>
+							</Select>
 						</div>
 					</div>
 
 					<div className={styles.editColumn}>
 						<div>
-							<Label htmlFor="profile-about">About me</Label>
+							<FieldHeader
+								htmlFor="profile-about"
+								max={PROFILE_FIELD_LIMITS.about}
+								value={about}
+							>
+								About me
+							</FieldHeader>
 							<textarea
 								className={`${styles.editTextarea} ${styles.aboutTextarea}`}
 								id="profile-about"
-								maxLength={360}
-								onChange={(event) => onAboutChange(event.target.value)}
+								maxLength={PROFILE_FIELD_LIMITS.about}
+								onChange={(event) =>
+									onAboutChange(
+										limitText(event.target.value, PROFILE_FIELD_LIMITS.about),
+									)
+								}
 								placeholder="A short description about your goals, background, and review style."
 								value={about}
 							/>
@@ -1206,7 +1609,9 @@ function ProfileEditDialog({
 						<div>
 							<div className={styles.skillEditorHeader}>
 								<Label htmlFor="profile-skills">Skills</Label>
-								<span>{selectedSkills.length}/12</span>
+								<span>
+									{selectedSkills.length}/{PROFILE_FIELD_LIMITS.skills}
+								</span>
 							</div>
 							<div className={styles.skillEditor}>
 								<div className={styles.selectedSkillList}>
@@ -1230,7 +1635,7 @@ function ProfileEditDialog({
 									<Search aria-hidden="true" />
 									<Input
 										id="profile-skills"
-										maxLength={32}
+										maxLength={PROFILE_FIELD_LIMITS.skill}
 										onChange={(event) => setSkillQuery(event.target.value)}
 										onKeyDown={handleSkillKeyDown}
 										placeholder="Search or add a skill"
@@ -1249,7 +1654,7 @@ function ProfileEditDialog({
 									) : null}
 									{skillSuggestions.map((skill) => (
 										<button
-											disabled={selectedSkills.length >= 12}
+											disabled={selectedSkills.length >= PROFILE_FIELD_LIMITS.skills}
 											key={skill}
 											onClick={() => addSkill(skill)}
 											type="button"
@@ -1274,7 +1679,10 @@ function ProfileEditDialog({
 							Cancel
 						</Button>
 					</DialogClose>
-					<Button className={styles.footerButton} disabled={saving}>
+					<Button
+						className={styles.footerButton}
+						disabled={saving || usernameBlocksSave}
+					>
 						<Upload data-icon="inline-start" aria-hidden="true" />
 						{saving ? "Saving..." : "Save profile"}
 					</Button>

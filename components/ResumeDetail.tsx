@@ -13,6 +13,16 @@ import { ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import SecureResumePreview from "@/components/SecureResumePreview";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle, supabase } from "@/lib/supabase/client";
 import type { ResumeSummary, Roast } from "@/lib/supabase/types";
@@ -246,6 +256,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [replyingToId, setReplyingToId] = useState<string | null>(null);
 	const [submittingReplyId, setSubmittingReplyId] = useState("");
 	const [deletingRoastId, setDeletingRoastId] = useState("");
+	const [deleteTargetRoast, setDeleteTargetRoast] = useState<Roast | null>(null);
 	const [collapsedRoastIds, setCollapsedRoastIds] = useState<Set<string>>(
 		new Set(),
 	);
@@ -853,7 +864,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		router.push("/feed");
 	}
 
-	async function deleteRoast(targetRoast: Roast) {
+	async function requestDeleteRoast(targetRoast: Roast) {
 		setMessage("");
 
 		if (!deleteSchemaReady) {
@@ -876,13 +887,18 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		const confirmed = window.confirm(
-			targetRoast.parent_id
-				? "Delete this reply?"
-				: "Delete this roast? Replies from other users will stay visible.",
-		);
+		setDeleteTargetRoast(targetRoast);
+	}
 
-		if (!confirmed) {
+	async function deleteRoast(targetRoast: Roast | null) {
+		setMessage("");
+
+		if (!targetRoast) {
+			return;
+		}
+
+		if (!user) {
+			await signInWithGoogle();
 			return;
 		}
 
@@ -893,6 +909,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		});
 
 		setDeletingRoastId("");
+		setDeleteTargetRoast(null);
 
 		if (error) {
 			if (isDeleteFeatureError(error)) {
@@ -940,8 +957,10 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const jobDescription = resume.job_description ?? "";
 	const postDescription = resume.post_description ?? "";
 	const visibleRoastCount = roasts.filter((roast) => !roast.is_deleted).length;
+	const deleteTargetIsReply = Boolean(deleteTargetRoast?.parent_id);
 
 	return (
+		<>
 		<section className="resume-thread">
 			<article className="thread-viewer-card resume-preview-pane">
 				<header className="thread-header">
@@ -1258,7 +1277,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 												disabled={
 													!deleteSchemaReady || deletingRoastId === roast.id
 												}
-												onClick={() => void deleteRoast(roast)}
+												onClick={() => void requestDeleteRoast(roast)}
 												title={
 													deleteSchemaReady
 														? undefined
@@ -1316,5 +1335,45 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					</div>
 				</section>
 		</section>
+		<AlertDialog
+			open={Boolean(deleteTargetRoast)}
+			onOpenChange={(open) => {
+				if (!open && !deletingRoastId) {
+					setDeleteTargetRoast(null);
+				}
+			}}
+		>
+			<AlertDialogContent size="sm">
+				<AlertDialogHeader>
+					<AlertDialogTitle>
+						{deleteTargetIsReply ? "Delete reply?" : "Delete roast?"}
+					</AlertDialogTitle>
+					<AlertDialogDescription>
+						{deleteTargetIsReply
+							? "This reply will be removed from the thread. The rest of the conversation will stay visible."
+							: "This roast will be removed. Replies from other users will stay visible so the thread still makes sense."}
+					</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogCancel disabled={Boolean(deletingRoastId)}>
+						Cancel
+					</AlertDialogCancel>
+					<AlertDialogAction
+						disabled={Boolean(deletingRoastId)}
+						onClick={(event) => {
+							event.preventDefault();
+							void deleteRoast(deleteTargetRoast);
+						}}
+					>
+						{deletingRoastId
+							? "Deleting..."
+							: deleteTargetIsReply
+								? "Delete reply"
+								: "Delete roast"}
+					</AlertDialogAction>
+				</AlertDialogFooter>
+			</AlertDialogContent>
+		</AlertDialog>
+		</>
 	);
 }

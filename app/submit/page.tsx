@@ -9,10 +9,6 @@ export default function SubmitPage() {
       <main className="submit-route page-enter">
         <div className="submit-header">
           <h1>Submit Anonymously</h1>
-          <p>
-            Upload a PDF, paste the JD, and tell roasters exactly what kind of
-            feedback will help before recruiters see it.
-          </p>
         </div>
         <SubmitResumeForm />
       </main>

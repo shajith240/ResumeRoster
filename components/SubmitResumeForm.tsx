@@ -201,7 +201,7 @@ export default function SubmitResumeForm() {
 		<form className="submit-form submit-form-wide" onSubmit={handleSubmit}>
 			<div className="submit-form-grid">
 				<section className="submit-form-column" aria-label="Resume basics">
-					<label className="field-block">
+					<label className="field-block submit-title-field">
 						<span>Resume title</span>
 						<input
 							value={title}
@@ -213,7 +213,7 @@ export default function SubmitResumeForm() {
 						<small>Make the goal clear in one line.</small>
 					</label>
 
-					<fieldset className="field-block role-picker">
+					<fieldset className="field-block role-picker submit-role-field">
 						<legend>Target role</legend>
 						<div>
 							{roles.map((role) => (
@@ -229,7 +229,7 @@ export default function SubmitResumeForm() {
 						</div>
 					</fieldset>
 
-					<div className="field-block">
+					<div className="field-block submit-upload-field">
 						<span>Resume PDF</span>
 						<input
 							className="hidden-file-input"
@@ -283,7 +283,7 @@ export default function SubmitResumeForm() {
 					className="submit-form-column submit-context-column"
 					aria-label="Post context"
 				>
-					<label className="field-block">
+					<label className="field-block submit-jd-field">
 						<span>Job description</span>
 						<textarea
 							className="submit-context-textarea submit-jd-textarea"
@@ -299,7 +299,7 @@ export default function SubmitResumeForm() {
 						</small>
 					</label>
 
-					<label className="field-block">
+					<label className="field-block submit-help-field">
 						<span>What should the community help with?</span>
 						<textarea
 							className="submit-context-textarea submit-help-textarea"
