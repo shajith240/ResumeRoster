@@ -11,6 +11,8 @@
 
 @media (min-width: 1025px) {
   .app-with-sidebar {
+    --feed-canvas-edge: 24px;
+    --feed-canvas-gutter: clamp(32px, 2.8vw, 52px);
     padding-left: var(--session-sidebar-width);
   }
 
@@ -166,14 +168,20 @@
   .feed-app-shell {
     display: grid !important;
     grid-template-columns:
-      minmax(720px, 1fr)
-      clamp(320px, 24vw, 440px) !important;
+      minmax(0, 1fr)
+      clamp(300px, 24vw, 440px) !important;
     align-items: start !important;
-    gap: clamp(28px, 2.8vw, 52px) !important;
-    width: min(1680px, calc(100vw - var(--session-sidebar-width) - 48px)) !important;
+    gap: var(--feed-canvas-gutter) !important;
+    width: min(
+      1680px,
+      calc(
+        100vw - var(--session-sidebar-width) - var(--feed-canvas-gutter) -
+          var(--feed-canvas-edge)
+      )
+    ) !important;
     max-width: none !important;
-    margin-right: auto !important;
-    margin-left: auto !important;
+    margin-right: var(--feed-canvas-edge) !important;
+    margin-left: var(--feed-canvas-gutter) !important;
     padding-top: clamp(26px, 2vw, 42px) !important;
   }
 
@@ -369,13 +377,19 @@
 
 @media (min-width: 1440px) {
   .feed-app-shell {
-    width: min(1760px, calc(100vw - var(--session-sidebar-width) - 32px)) !important;
+    width: min(
+      1760px,
+      calc(
+        100vw - var(--session-sidebar-width) - var(--feed-canvas-gutter) -
+          var(--feed-canvas-edge)
+      )
+    ) !important;
   }
 
   .feed-app-shell {
     grid-template-columns:
-      minmax(920px, 1fr)
-      clamp(360px, 24vw, 460px) !important;
+      minmax(860px, 1fr)
+      clamp(340px, 24vw, 460px) !important;
   }
 
   .resume-detail-route {
@@ -388,9 +402,14 @@
 }
 
 @media (min-width: 1800px) {
+  .app-with-sidebar {
+    --feed-canvas-edge: 32px;
+    --feed-canvas-gutter: 56px;
+  }
+
   .feed-app-shell {
     grid-template-columns: minmax(1040px, 1fr) 460px !important;
-    gap: 56px !important;
+    gap: var(--feed-canvas-gutter) !important;
   }
 
   .resume-thread {

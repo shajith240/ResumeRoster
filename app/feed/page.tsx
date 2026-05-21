@@ -63,12 +63,6 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
           </section>
 
           <section className="feed-rules-panel" aria-labelledby="feed-rules-title">
-            <img
-              className="feed-rules-guide"
-              src="/assets/rules%20explaining%20image.png"
-              alt=""
-              aria-hidden="true"
-            />
             <div className="feed-rules-copy">
               <span className="feed-rules-eyebrow">Roast coach says</span>
               <h2 id="feed-rules-title">Community rules</h2>
@@ -90,6 +84,13 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
                   <span>No personal shots, spam, or private details in comments.</span>
                 </li>
               </ol>
+            </div>
+            <div className="feed-rules-visual" aria-hidden="true">
+              <img
+                className="feed-rules-guide"
+                src="/assets/rules%20explaining%20image.png"
+                alt=""
+              />
             </div>
           </section>
         </aside>

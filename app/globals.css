@@ -796,22 +796,19 @@ body.main-app-dark .app-header {
 	position: relative;
 	isolation: isolate;
 	overflow: hidden;
-	min-height: 360px;
+	display: grid;
+	min-height: 348px;
+	grid-template-columns: minmax(0, 1.08fr) minmax(150px, 0.92fr);
+	align-items: stretch;
 	padding: 18px 18px 16px;
 	background:
 		linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface) 52%, rgba(232, 93, 38, 0.09) 100%);
 }
 
-.feed-right-rail .feed-rules-panel::after {
-	display: block;
-	clear: both;
-	content: "";
-}
-
 .feed-rules-copy {
 	position: relative;
 	z-index: 1;
-	text-wrap: pretty;
+	min-width: 0;
 }
 
 .feed-rules-eyebrow {
@@ -871,7 +868,6 @@ body.main-app-dark .app-header {
 	color: var(--text-primary);
 	font-size: 13px;
 	line-height: 1.25;
-	text-wrap: balance;
 }
 
 .feed-rules-list span {
@@ -879,18 +875,24 @@ body.main-app-dark .app-header {
 	color: var(--text-secondary);
 	font-size: 12px;
 	line-height: 1.45;
-	text-wrap: pretty;
+}
+
+.feed-rules-visual {
+	position: relative;
+	align-self: stretch;
+	min-width: 0;
+	pointer-events: none;
 }
 
 .feed-rules-guide {
-	float: right;
-	width: clamp(260px, 78%, 390px);
-	margin: -24px -112px -34px 8px;
+	position: absolute;
+	right: -82px;
+	bottom: -18px;
+	width: auto;
+	height: min(104%, 354px);
+	max-width: none;
 	pointer-events: none;
 	filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.18));
-	shape-image-threshold: 0.12;
-	shape-margin: 10px;
-	shape-outside: url("/assets/rules%20explaining%20image.png");
 }
 
 body.main-app-dark .feed-right-rail .feed-rules-panel {
@@ -3190,13 +3192,24 @@ body.main-app-dark .form-message {
 
 	.feed-right-rail .feed-rules-panel {
 		min-height: 330px;
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.feed-rules-copy {
+		max-width: 100%;
+	}
+
+	.feed-rules-visual {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
 	}
 
 	.feed-rules-guide {
-		width: clamp(220px, 76%, 310px);
-		margin-right: -92px;
-		opacity: 0.24;
-		shape-outside: polygon(54% 0, 100% 0, 100% 100%, 46% 100%, 58% 75%, 28% 58%, 52% 38%);
+		right: -66px;
+		bottom: -16px;
+		height: min(96%, 280px);
+		opacity: 0.22;
 	}
 
 	.detail-layout {
