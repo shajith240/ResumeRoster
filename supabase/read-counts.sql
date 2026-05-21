@@ -6,10 +6,34 @@ alter table public.resumes
 
 create table if not exists public.resume_reads (
   resume_id uuid not null references public.resumes(id) on delete cascade,
-  reader_id uuid not null references public.profiles(id) on delete cascade,
+  reader_id uuid not null,
   created_at timestamptz not null default now(),
   primary key (resume_id, reader_id)
 );
+
+do $$
+begin
+  if exists (
+    select 1
+    from pg_constraint
+    where conname = 'resume_reads_reader_id_fkey'
+      and conrelid = 'public.resume_reads'::regclass
+  ) then
+    alter table public.resume_reads
+      drop constraint resume_reads_reader_id_fkey;
+  end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'resume_reads_reader_id_auth_users_fkey'
+      and conrelid = 'public.resume_reads'::regclass
+  ) then
+    alter table public.resume_reads
+      add constraint resume_reads_reader_id_auth_users_fkey
+      foreign key (reader_id) references auth.users(id) on delete cascade;
+  end if;
+end $$;
 
 create index if not exists resume_reads_reader_id_idx
   on public.resume_reads (reader_id, created_at desc);

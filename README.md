@@ -1,25 +1,72 @@
 # ResumeRoster
 
-ResumeRoster is a public, anonymous resume-roasting community. Users submit redacted resumes, other students and job seekers leave feedback, the community votes on the most helpful roasts, and improved resumes can climb a weekly leaderboard.
+![ResumeRoster hero](public/assets/readme_hero%20image.png)
 
-## Stack
+ResumeRoster is a Next.js community app for anonymous resume feedback. Users sign in with Google, upload a redacted resume, receive structured feedback from other students and job seekers, reply in discussion threads, and discover strong roasters through public profiles and a leaderboard.
 
-- **Frontend:** Next.js App Router, React, TypeScript
-- **Backend:** Supabase Auth, Postgres, Realtime-ready tables
-- **Storage:** Supabase Storage private `resumes` bucket
-- **Hosting:** Vercel
-- **Email later:** Resend, deferred until notification features
+The product idea is simple: make resume feedback faster, more honest, and more useful without exposing the applicant's identity.
 
-## Step 0 Status
+## What It Does
 
-This repo has been migrated from a static HTML/CSS/JS landing page into a Next.js TypeScript app.
+- Anonymous resume submissions with private PDF storage
+- Community feed of resumes open for feedback
+- Resume detail pages with secure previews and threaded roast discussions
+- Like and dislike reactions on comments, with owner/self-reaction guards
+- Public roaster profiles with avatars, skills, bio, highlights, and activity
+- Professional leaderboard based on roast quality and contribution
+- Real read counts for resume views
+- Light and dark app themes
+- Google OAuth through Supabase
 
-- Landing page lives in `app/page.tsx`
-- Global styles live in `app/globals.css`
-- Static assets live in `public/assets`
-- Supabase browser client lives in `lib/supabase/client.ts`
-- Initial SQL lives in `supabase/schema.sql`
-- Storage policies live in `supabase/storage-policies.sql`
+## Why It Exists
+
+Most resume feedback is either too polite, too vague, or too slow. ResumeRoster gives job seekers a place to get direct feedback from peers while keeping submissions anonymous. The goal is not to roast people. The goal is to sharpen resumes until they survive a real recruiter screen.
+
+For recruiters or engineering reviewers visiting this repo: the project demonstrates a full-stack product flow with authentication, database rules, file storage, optimistic UI, profile systems, interactive comment threads, and production-minded frontend polish.
+
+## Tech Stack
+
+- **Framework:** Next.js 15 App Router
+- **UI:** React 19, TypeScript, Tailwind CSS
+- **Components:** shadcn-style `components/ui` structure with Radix primitives
+- **Backend:** Supabase Auth, Postgres, RPC functions, Row Level Security
+- **Storage:** Supabase Storage for private resume PDFs and public avatars
+- **Feedback:** Sonner toast notifications
+- **Icons:** lucide-react and selected animated icon components
+- **Fonts:** Instrument Serif for identity headings, Work Sans for body text
+
+## Product Flow
+
+1. A user signs in with Google.
+2. They upload a redacted PDF resume.
+3. The resume appears in the community feed.
+4. Other signed-in users open the private preview and leave feedback.
+5. The resume owner can read feedback but cannot react to comments on their own resume.
+6. Roasters build public profiles and leaderboard reputation through useful feedback.
+
+## Project Structure
+
+```text
+app/
+  feed/              Community feed route
+  resume/[id]/       Resume detail and roast thread route
+  profile/[id]/      Public roaster profile route
+  submit/            Resume submission route
+components/
+  ResumeFeed.tsx     Feed cards, sorting, sharing, read-count display
+  ResumeDetail.tsx   Secure preview, read tracking, comments, replies, reactions
+  ProfileDetail.tsx  Public profile and edit profile experience
+  Leaderboard.tsx    Ranked roaster view
+  ui/                Shared shadcn-style UI components
+lib/supabase/
+  client.ts          Supabase browser client
+  types.ts           Shared app types
+supabase/
+  schema.sql         Core database schema
+  *.sql              Feature migrations and storage policies
+public/assets/
+  Visual assets used by the app and README
+```
 
 ## Local Setup
 
@@ -36,34 +83,72 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-Run locally:
+Run the app:
 
 ```bash
 npm run dev
 ```
 
+Open [http://localhost:3000](http://localhost:3000).
+
 ## Supabase Setup
 
 1. Create a Supabase project.
 2. Enable Google OAuth in Supabase Auth.
-3. Add auth redirect URLs:
+3. Add redirect URLs:
    - Local: `http://localhost:3000/auth/callback`
-   - Production: `https://your-vercel-domain.vercel.app/auth/callback`
-4. Run `supabase/schema.sql` in the SQL editor.
-5. Create a private Storage bucket named `resumes`.
-6. Run `supabase/storage-policies.sql`.
+   - Production: `https://your-domain.com/auth/callback`
+4. Create a private Storage bucket named `resumes`.
+5. Run the SQL files in `supabase/` from the Supabase SQL editor.
 
-## Phase 1 Product Loop
+Recommended migration order for a fresh project:
 
-Build only the core loop first:
+```text
+supabase/schema.sql
+supabase/storage-policies.sql
+supabase/storage-read-fix.sql
+supabase/reactions.sql
+supabase/replies.sql
+supabase/profile-features.sql
+supabase/leaderboard.sql
+supabase/read-counts.sql
+```
 
-1. Google login
-2. Anonymous resume upload
-3. Community feed of open resumes
-4. Resume detail page with roast thread
-5. Roast submission
-6. Helpful voting
+`supabase/read-counts.sql` is required for persistent resume read counts. The frontend has fallback behavior, but real counts need that migration.
 
-## Interview Architecture Summary
+## Available Scripts
 
-The app uses Next.js for routing and UI, Supabase Auth for identity, Supabase Postgres for public resume/roast/vote data, and Supabase Storage for private resume PDFs. Row Level Security protects ownership and voting rules at the database layer, while the frontend focuses on the community workflow: submit, roast, vote, improve.
+```bash
+npm run dev        # Start the local development server
+npm run typecheck  # Run TypeScript checks
+npm run lint       # Run ESLint
+npm run build      # Create a production build
+npm run start      # Start the production server
+```
+
+## Design Direction
+
+ResumeRoster is designed to feel like LinkedIn meets a creative design startup: professional, direct, and polished without gamified clutter. The landing page has its own visual system, while the authenticated app focuses on clean layouts, readable threads, careful spacing, and productive feedback workflows.
+
+## Contributing
+
+Contributions are welcome. Good first areas to explore:
+
+- Improve accessibility and keyboard behavior
+- Add tests around Supabase data flows
+- Refine mobile layouts for feed, profile, and resume detail pages
+- Improve moderation, reporting, and safety features
+- Expand profile and leaderboard insights
+
+Before opening a pull request:
+
+```bash
+npm run typecheck
+npm run lint
+```
+
+Please keep changes focused, preserve existing Supabase flows, and avoid unrelated redesigns unless the issue or PR is specifically about design.
+
+## Status
+
+ResumeRoster is an active product build. The core loop is in place: authenticate, submit, browse, read, roast, reply, react, and build a public roaster profile. The next priorities are production hardening, better moderation tools, stronger tests, and deployment polish.

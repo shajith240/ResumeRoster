@@ -246,13 +246,23 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		});
 
 		if (error) {
+			if (process.env.NODE_ENV !== "production") {
+				console.warn("Resume read tracking failed:", error.message);
+			}
 			return;
 		}
 
-		if (typeof data === "number") {
+		const nextReadCount =
+			typeof data === "number"
+				? data
+				: typeof data === "string"
+					? Number(data)
+					: Number.NaN;
+
+		if (Number.isFinite(nextReadCount)) {
 			setResume((current) =>
 				current?.id === activeResume.id
-					? { ...current, read_count: data }
+					? { ...current, read_count: nextReadCount }
 					: current,
 			);
 		}

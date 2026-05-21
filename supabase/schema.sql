@@ -22,6 +22,7 @@ create table if not exists public.resumes (
   is_anonymous boolean not null default true,
   status text not null default 'open' check (status in ('open', 'roasted', 'closed')),
   roast_count int not null default 0,
+  read_count int not null default 0,
   created_at timestamptz not null default now()
 );
 
