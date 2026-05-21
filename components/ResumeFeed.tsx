@@ -217,7 +217,7 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
 
   if (!resumes.length) {
     return (
-      <div className="empty-state">
+      <div className="empty-state feed-empty-state">
         <h2>No resumes yet</h2>
         <p>Be the first person brave enough to put a resume in the public roast pit.</p>
         <Link className="btn-primary" href="/submit">

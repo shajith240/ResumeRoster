@@ -871,6 +871,35 @@
 	}
 }
 
+@media (max-width: 760px) {
+	.editDialog {
+		top: 8px !important;
+		width: calc(100vw - 20px);
+		max-width: calc(100vw - 20px);
+		max-height: calc(100dvh - 16px);
+	}
+
+	.editHeader {
+		padding: 16px 18px 12px;
+	}
+
+	.editPreview {
+		align-items: flex-start;
+		flex-wrap: wrap;
+		padding: 16px 18px;
+	}
+
+	.avatarUploadButton {
+		justify-content: center;
+		width: 100%;
+		margin-left: 0;
+	}
+
+	.editFields {
+		padding: 16px 18px 20px;
+	}
+}
+
 @media (max-width: 560px) {
 	.shell {
 		padding: 10px;

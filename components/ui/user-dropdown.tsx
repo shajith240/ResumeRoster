@@ -204,7 +204,7 @@ export function UserDropdown({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Avatar className="size-10 cursor-pointer border border-white/20 shadow-sm">
+				<Avatar className="size-10 cursor-pointer border border-[var(--border-default)] shadow-sm">
 					<AvatarImage src={user.avatar} alt={user.name} />
 					<AvatarFallback className="bg-[var(--brand)] text-[var(--text-inverse)]">
 						{user.initials}

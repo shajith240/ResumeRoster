@@ -68,6 +68,7 @@ type ActivityItem = {
 };
 
 const fallbackAvatar = "/assets/logo.png";
+const PROFILE_CHANGE_EVENT = "resumeroster-profile-change";
 const SKILL_OPTIONS = [
 	"ATS",
 	"Clarity",
@@ -579,6 +580,20 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							resume_highlight_id: selectedHighlight,
 						}
 					: current,
+			);
+			window.dispatchEvent(
+				new CustomEvent(PROFILE_CHANGE_EVENT, {
+					detail: {
+						id: user.id,
+						full_name: nextProfile.full_name,
+						username: nextProfile.username,
+						avatar_url:
+							avatarUpdate?.avatar_url ||
+							profile?.avatar_url ||
+							getMetadataAvatar(user) ||
+							null,
+					},
+				}),
 			);
 			setAvatarFile(null);
 			setAvatarPreview("");

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, type MouseEvent } from "react";
 import {
 	FlameIcon,
 	HomeIcon,
@@ -36,12 +36,19 @@ function SidebarNavItem({ item }: { item: NavItem }) {
 		iconRef.current?.stopAnimation();
 	}
 
+	function releasePointerFocus(event: MouseEvent<HTMLAnchorElement>) {
+		if (event.detail > 0) {
+			event.currentTarget.blur();
+		}
+	}
+
 	return (
 		<Link
 			href={item.href}
 			key={item.label}
 			aria-label={item.label}
 			onBlur={stopIconAnimation}
+			onClick={releasePointerFocus}
 			onFocus={startIconAnimation}
 			onMouseEnter={startIconAnimation}
 			onMouseLeave={stopIconAnimation}

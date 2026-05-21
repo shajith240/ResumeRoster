@@ -3,6 +3,7 @@
 
 .app-with-sidebar {
   min-height: 100vh;
+  background: var(--app-canvas-bg);
 }
 
 .session-sidebar {
@@ -28,7 +29,9 @@
     display: block;
     z-index: 80;
     inline-size: var(--session-sidebar-width);
-    box-shadow: 12px 0 36px rgba(0, 0, 0, 0.08);
+    border-right-color: var(--app-chrome-border);
+    background: var(--app-chrome-solid);
+    box-shadow: none;
     contain: layout paint style;
     transform: translateZ(0);
     transition:
@@ -43,7 +46,7 @@
     pointer-events: none;
     content: "";
     opacity: 0;
-    box-shadow: 18px 0 48px rgba(0, 0, 0, 0.18);
+    box-shadow: 14px 0 34px rgba(0, 0, 0, 0.12);
     transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -82,7 +85,7 @@
 
   .session-sidebar-link:hover,
   .session-sidebar-link:focus-visible {
-    background: var(--bg-elevated);
+    background: color-mix(in srgb, var(--bg-elevated) 76%, transparent);
     color: var(--text-primary);
   }
 
@@ -475,5 +478,109 @@
 @media (max-width: 640px) {
   .feed-app-shell {
     width: calc(100% - 32px) !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1320px) {
+  .app-with-sidebar {
+    --feed-canvas-edge: 20px;
+    --feed-canvas-gutter: clamp(22px, 2.2vw, 34px);
+  }
+
+  .feed-app-shell {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 320px) !important;
+  }
+
+  .feed-community-header {
+    align-items: flex-start !important;
+    gap: 18px !important;
+  }
+
+  .feed-community-header h1 {
+    font-size: clamp(34px, 3.2vw, 42px) !important;
+  }
+
+  .feed-community-header p {
+    max-width: 620px !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1180px) {
+  .app-with-sidebar {
+    --feed-canvas-edge: 20px;
+    --feed-canvas-gutter: 20px;
+  }
+
+  .feed-app-shell {
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: min(1040px, calc(100vw - var(--session-sidebar-width) - 40px)) !important;
+    margin-right: 20px !important;
+    margin-left: 20px !important;
+  }
+
+  .feed-right-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .feed-right-rail .feed-rules-panel {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1240px) {
+  .resume-detail-route {
+    width: min(1060px, calc(100vw - var(--session-sidebar-width) - 40px)) !important;
+  }
+
+  .resume-thread {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .thread-roast-panel {
+    position: static !important;
+    max-height: none !important;
+  }
+
+  .thread-roast-panel .roast-list {
+    overflow: visible !important;
+    padding-right: 0 !important;
+  }
+
+  .resume-pdf-frame,
+  .secure-resume-pages {
+    min-height: 520px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .feed-community-header .btn-primary {
+    width: 100% !important;
+  }
+
+  .feed-sortbar,
+  .pill-tabs {
+    width: 100% !important;
+  }
+
+  .pill-tabs a,
+  .pill-tabs button {
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .post-actions {
+    align-items: stretch;
+  }
+
+  .post-action-button {
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
+  }
+
+  .post-actions .resume-status {
+    width: 100%;
+    margin-left: 0 !important;
+    text-align: center;
   }
 }
