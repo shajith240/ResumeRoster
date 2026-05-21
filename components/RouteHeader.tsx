@@ -19,7 +19,6 @@ export default function RouteHeader() {
 		<>
 			<header className="app-header">
 				<Link href="/feed" className="app-logo" aria-label="ResumeRoster home">
-					<span className="brand-flame" aria-hidden="true" />
 					ResumeRoster
 				</Link>
 

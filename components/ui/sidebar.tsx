@@ -62,7 +62,7 @@ function SidebarNavItem({ item }: { item: NavItem }) {
 				<Icon
 					ref={iconRef}
 					className="session-sidebar-icon"
-					size={18}
+					size={21}
 					aria-hidden="true"
 				/>
 			</span>

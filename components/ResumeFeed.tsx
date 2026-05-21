@@ -91,6 +91,30 @@ function sortResumes(resumes: ResumeSummary[], sort: FeedSort) {
   });
 }
 
+async function mergeLiveRoastCounts(resumeRows: ResumeSummary[]) {
+  if (!resumeRows.length) return resumeRows;
+
+  const { data, error } = await supabase
+    .from("roasts")
+    .select("resume_id")
+    .in("resume_id", resumeRows.map((resume) => resume.id));
+
+  if (error) return resumeRows;
+
+  const countsByResume = new Map<string, number>();
+  for (const roast of data ?? []) {
+    countsByResume.set(
+      roast.resume_id,
+      (countsByResume.get(roast.resume_id) ?? 0) + 1,
+    );
+  }
+
+  return resumeRows.map((resume) => ({
+    ...resume,
+    roast_count: countsByResume.get(resume.id) ?? 0,
+  }));
+}
+
 function FeedSkeleton() {
   return (
     <div className="feed-skeleton-list" aria-label="Loading feed">
@@ -166,7 +190,9 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
       if (resumeError) {
         setMessage(resumeError.message);
       } else {
-        setResumes(sortResumes(resumeRows, activeSort));
+        const rowsWithLiveCounts = await mergeLiveRoastCounts(resumeRows);
+        if (!active) return;
+        setResumes(sortResumes(rowsWithLiveCounts, activeSort));
       }
 
       const elapsed = Date.now() - started;

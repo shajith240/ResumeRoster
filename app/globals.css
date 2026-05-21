@@ -443,13 +443,14 @@ body.main-app-dark .app-header {
 .app-logo {
 	display: inline-flex;
 	align-items: center;
-	gap: 8px;
+	min-width: 0;
 	color: var(--text-primary);
-	font-size: 20px;
-	line-height: 1;
+	font-size: 25px;
+	letter-spacing: 0;
+	line-height: 0.95;
+	white-space: nowrap;
 }
 
-.brand-flame,
 .submit-icon {
 	display: inline-block;
 	width: 15px;
@@ -1662,6 +1663,35 @@ body.main-app-dark .toggle-ui::after {
 	resize: vertical;
 }
 
+.closed-note {
+	display: grid;
+	gap: 8px;
+	padding: 18px 20px;
+}
+
+.closed-note h2 {
+	margin: 0;
+	color: var(--text-secondary);
+	font-family: var(--font-body);
+	font-size: 12px;
+	font-weight: 650;
+	letter-spacing: 0;
+	line-height: 1.2;
+}
+
+.closed-note p {
+	margin: 0;
+	color: var(--text-primary);
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 1.5;
+}
+
+.closed-note .form-message {
+	color: var(--danger);
+	font-size: 13px;
+}
+
 .roast-form-footer span {
 	color: var(--text-secondary);
 	font-size: 12px;
@@ -2155,16 +2185,21 @@ body.main-app-dark .form-message {
 	height: 68px;
 }
 
-.logo img {
-	width: 98px;
-	object-fit: contain;
+.landing-wordmark {
+	color: #17130f;
+	font-family: var(--font-display);
+	font-size: 28px;
+	font-weight: 400;
+	letter-spacing: 0;
+	line-height: 1;
+	white-space: nowrap;
 	transition:
-		opacity 0.2s ease,
+		color 0.2s ease,
 		transform 0.2s ease;
 }
 
-.logo:hover img {
-	opacity: 0.82;
+.landing-wordmark:hover {
+	color: #4a3528;
 	transform: translateY(-1px);
 }
 
@@ -3320,15 +3355,6 @@ body.main-app-dark .form-message {
 	color: #4f4942;
 }
 
-.footer-brand-video {
-	display: block;
-	width: 360px;
-	height: auto;
-	margin-top: 8px;
-	margin-left: -130px;
-	object-fit: contain;
-}
-
 .footer-columns {
 	position: relative;
 	z-index: 1;
@@ -3709,12 +3735,6 @@ body.main-app-dark .form-message {
 		min-height: 460px;
 		margin-top: var(--app-header-height);
 		padding-top: 72px;
-	}
-
-	.footer-brand-video {
-		width: 170px;
-		margin-top: 24px;
-		margin-left: 0;
 	}
 
 	.footer-columns {

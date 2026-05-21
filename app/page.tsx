@@ -339,9 +339,9 @@ export default function Home() {
     <>
       <nav className={`navbar${navHidden ? " nav-hidden" : ""}`}>
         <div className="container nav-content">
-          <div className="logo">
-            <img src={asset("logo.png")} alt="ResumeRoster" />
-          </div>
+          <Link className="landing-wordmark" href="/" aria-label="ResumeRoster home">
+            ResumeRoster
+          </Link>
 
           <div className="nav-links">
             {isSignedIn ? (
@@ -670,9 +670,6 @@ function Footer() {
               </svg>
             </a>
           </div>
-          <video className="footer-brand-video" autoPlay muted loop playsInline aria-label="ResumeRoster">
-            <source src={asset("nav_bar_animation_transpirant.webm")} type="video/webm" />
-          </video>
         </div>
       </div>
       <p>&copy; 2026 ResumeRoster. All rights reserved.</p>
