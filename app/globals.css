@@ -274,7 +274,7 @@ h2,
 	justify-content: center;
 	gap: 8px;
 	border: none;
-	border-radius: var(--radius-pill);
+	border-radius: var(--button-radius);
 	padding: 10px 20px;
 	background: var(--text-primary);
 	color: var(--text-inverse);
@@ -1423,7 +1423,7 @@ body.main-app-dark .toggle-ui::after {
 }
 
 .inline-reply-form button {
-	border-radius: var(--radius-pill);
+	border-radius: var(--button-radius);
 	padding: 8px 12px;
 	color: var(--text-secondary);
 	font-size: 13px;
