@@ -25,6 +25,138 @@
   .session-sidebar {
     display: block;
     z-index: 80;
+    inline-size: var(--session-sidebar-width);
+    box-shadow: 12px 0 36px rgba(0, 0, 0, 0.08);
+    contain: layout paint style;
+    transform: translateZ(0);
+    transition:
+      inline-size 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 180ms ease;
+    will-change: inline-size;
+  }
+
+  .session-sidebar::after {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    opacity: 0;
+    box-shadow: 18px 0 48px rgba(0, 0, 0, 0.18);
+    transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .session-sidebar-nav {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 8px 8px;
+  }
+
+  .session-sidebar-link {
+    display: grid;
+    min-height: 58px;
+    width: 100%;
+    grid-template-columns: 36px minmax(0, 1fr);
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    column-gap: 2px;
+    padding: 8px 10px 8px 18px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1;
+    text-decoration: none;
+    transform: translateZ(0);
+    transition:
+      background-color 160ms var(--button-ease),
+      border-color 160ms var(--button-ease),
+      color 160ms var(--button-ease),
+      transform 180ms var(--button-ease);
+  }
+
+  .session-sidebar-link:hover,
+  .session-sidebar-link:focus-visible {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+  }
+
+  .session-sidebar-link:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+
+  .session-sidebar-link.is-active {
+    border-color: rgba(255, 138, 77, 0.28);
+    background: var(--brand-muted);
+    color: var(--brand);
+  }
+
+  .session-sidebar-link.is-primary {
+    color: var(--brand);
+  }
+
+  .session-sidebar-link.is-primary:hover,
+  .session-sidebar-link.is-primary:focus-visible {
+    border-color: rgba(255, 138, 77, 0.22);
+    background: var(--brand-muted);
+    color: var(--brand);
+  }
+
+  .session-sidebar-icon-slot {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border-radius: 10px;
+  }
+
+  .session-sidebar-icon {
+    display: grid;
+    width: 18px;
+    height: 18px;
+    place-items: center;
+    transform: translateZ(0);
+  }
+
+  .session-sidebar-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate3d(-6px, 0, 0);
+    transition:
+      opacity 150ms var(--button-ease),
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .session-sidebar:hover,
+  .session-sidebar:focus-within {
+    inline-size: var(--session-sidebar-expanded-width);
+  }
+
+  .session-sidebar:hover::after,
+  .session-sidebar:focus-within::after {
+    opacity: 1;
+  }
+
+  .session-sidebar:hover .session-sidebar-label,
+  .session-sidebar:focus-within .session-sidebar-label {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .session-sidebar,
+    .session-sidebar::after,
+    .session-sidebar-link,
+    .session-sidebar-label {
+      transition-duration: 0.01ms;
+    }
   }
 
   .bottom-nav {
