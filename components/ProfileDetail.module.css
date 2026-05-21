@@ -1,15 +1,15 @@
 .shell {
 	min-height: calc(100vh - var(--app-header-height));
 	padding: clamp(14px, 2vw, 30px);
-	background: #efeae1;
-	color: #211e1a;
+	background: var(--bg-base);
+	color: var(--text-primary);
 }
 
 .canvas {
 	display: grid;
 	gap: clamp(16px, 1.55vw, 24px);
 	width: 100%;
-	min-height: calc(100vh - 92px);
+	min-height: calc(100vh - var(--app-header-height) - 44px);
 	padding: clamp(8px, 1vw, 16px) clamp(10px, 2vw, 34px) clamp(22px, 2vw, 34px);
 }
 
@@ -26,10 +26,10 @@
 	position: relative;
 	width: clamp(170px, 13vw, 220px);
 	aspect-ratio: 1;
-	border: 2px solid #c79a39;
+	border: 2px solid rgba(199, 154, 57, 0.86);
 	border-radius: 50%;
 	padding: 8px;
-	background: #f6efe4;
+	background: color-mix(in srgb, var(--bg-surface) 92%, var(--brand) 8%);
 }
 
 .avatarFrame img {
@@ -48,10 +48,22 @@
 	place-items: center;
 	width: 44px;
 	height: 44px;
-	border: 2px solid #f3eadc;
+	border: 2px solid var(--bg-base);
 	border-radius: 50%;
-	background: #262420;
-	color: #f8f0e2;
+	background: var(--bg-inverse);
+	color: var(--text-inverse);
+	transition:
+		background-color 0.2s var(--button-ease),
+		color 0.2s var(--button-ease),
+		transform 0.16s var(--button-ease);
+}
+
+.avatarEdit:hover {
+	transform: translateY(-1px);
+}
+
+.avatarEdit:active {
+	transform: translateY(1px);
 }
 
 .avatarEdit svg,
@@ -72,11 +84,11 @@
 
 .identity h1 {
 	margin: 0;
-	font-family: var(--font-body);
-	font-size: clamp(38px, 4vw, 64px);
-	font-weight: 800;
-	letter-spacing: -0.035em;
-	line-height: 0.98;
+	font-family: var(--font-display);
+	font-size: clamp(46px, 4.6vw, 74px);
+	font-weight: 400;
+	letter-spacing: 0;
+	line-height: 0.92;
 }
 
 .identityHeader svg {
@@ -90,7 +102,7 @@
 	display: inline-flex;
 	align-items: center;
 	width: fit-content;
-	margin-top: 14px;
+	margin-top: 12px;
 	border: 1px solid rgba(92, 72, 180, 0.2);
 	border-radius: 999px;
 	padding: 6px 12px;
@@ -102,16 +114,17 @@
 
 .identity p {
 	margin-top: 12px;
-	color: #24211d;
+	color: var(--text-primary);
+	font-family: var(--font-body);
 	font-size: clamp(18px, 1.35vw, 24px);
-	font-weight: 650;
+	font-weight: 500;
 }
 
 .metaList {
 	display: grid;
 	gap: 10px;
 	margin-top: 18px;
-	color: #403a33;
+	color: var(--text-secondary);
 	font-size: 14px;
 }
 
@@ -126,7 +139,15 @@
 	flex: 0 0 auto;
 	width: 17px;
 	height: 17px;
-	color: #746f66;
+	color: var(--text-tertiary);
+}
+
+.panelHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 14px;
 }
 
 .panelHeader a,
@@ -134,7 +155,7 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	color: #161410;
+	color: var(--text-primary);
 	font-size: 12px;
 	font-weight: 800;
 	text-decoration: none;
@@ -150,19 +171,19 @@
 	top: 4px;
 	right: 0;
 	gap: 8px;
-	border: 1px solid rgba(255, 255, 255, 0.16);
-	border-radius: 8px;
-	background: #262420;
-	color: #fbf3e7;
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius);
+	background: var(--bg-inverse);
+	color: var(--text-inverse);
 }
 
 .statsGrid {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
-	border: 1px solid rgba(26, 25, 22, 0.1);
-	border-radius: 12px;
-	background: #f8f4ed;
 	overflow: hidden;
+	border: 1px solid var(--border-subtle);
+	border-radius: 12px;
+	background: var(--bg-surface);
 }
 
 .statCard {
@@ -171,7 +192,7 @@
 	gap: 2px 14px;
 	align-items: center;
 	padding: clamp(16px, 1.4vw, 22px);
-	border-right: 1px solid rgba(26, 25, 22, 0.09);
+	border-right: 1px solid var(--border-subtle);
 }
 
 .statCard:last-child {
@@ -187,11 +208,11 @@
 }
 
 .statPrimary svg {
-	color: #e85d26;
+	color: var(--brand);
 }
 
 .statCard strong {
-	color: #1f1c18;
+	color: var(--text-primary);
 	font-family: var(--font-body);
 	font-size: clamp(28px, 2.5vw, 38px);
 	font-weight: 800;
@@ -199,17 +220,14 @@
 }
 
 .statCard span {
-	color: #5e574e;
+	color: var(--text-secondary);
 	font-size: 12px;
 	font-weight: 750;
 }
 
 .profileGrid {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr) minmax(
-			360px,
-			1.25fr
-		);
+	grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr) minmax(360px, 1.25fr);
 	gap: clamp(14px, 1.35vw, 22px);
 }
 
@@ -224,72 +242,32 @@
 .highlightPanel,
 .activityPanel,
 .roastsPanel {
-	border: 1px solid rgba(26, 25, 22, 0.11);
+	border: 1px solid var(--border-subtle);
 	border-radius: 12px;
 	padding: 18px;
-	background: #f8f4ed;
+	background: var(--bg-surface);
 	box-shadow: none;
-}
-
-.panelHeader {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 16px;
-	margin-bottom: 14px;
 }
 
 .panelHeader h2,
 .aboutPanel h2,
 .skillsPanel h2 {
 	margin: 0;
-	font-family: var(--font-body);
-	font-size: 16px;
-	font-weight: 800;
-	letter-spacing: -0.01em;
+	font-family: var(--font-display);
+	font-size: 25px;
+	font-weight: 400;
+	letter-spacing: 0;
 }
 
 .aboutPanel p,
 .mutedCopy {
-	color: #413c35;
+	color: var(--text-secondary);
 	font-size: 13px;
 	line-height: 1.65;
 }
 
 .aboutPanel p {
-	margin: 14px 0 18px;
-}
-
-.aboutDetails {
-	display: grid;
-	gap: 12px;
-	border-left: 1px solid rgba(26, 25, 22, 0.12);
-	padding-left: 18px;
-}
-
-.aboutDetails div {
-	display: grid;
-	gap: 3px;
-}
-
-.aboutDetails strong {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	color: #24201c;
-	font-size: 12px;
-}
-
-.aboutDetails svg {
-	width: 15px;
-	height: 15px;
-	color: #6a7384;
-}
-
-.aboutDetails span {
-	color: #5e574e;
-	font-size: 12px;
-	line-height: 1.35;
+	margin: 14px 0 0;
 }
 
 .skillCloud {
@@ -300,47 +278,13 @@
 }
 
 .skillCloud span {
-	border: 1px solid rgba(26, 25, 22, 0.14);
+	border: 1px solid var(--border-default);
 	border-radius: 7px;
 	padding: 8px 10px;
-	background: #fffaf2;
-	color: #302b25;
+	background: var(--bg-elevated);
+	color: var(--text-primary);
 	font-size: 12px;
 	font-weight: 750;
-}
-
-.focusArea {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	margin-top: 18px;
-	border: 1px solid rgba(180, 126, 39, 0.18);
-	border-radius: 10px;
-	padding: 14px;
-	background: #fff6e6;
-	color: #2f2a24;
-}
-
-.focusArea svg {
-	flex: 0 0 auto;
-	width: 20px;
-	height: 20px;
-	color: #9f7529;
-}
-
-.focusArea strong,
-.focusArea span {
-	display: block;
-}
-
-.focusArea strong {
-	font-size: 12px;
-}
-
-.focusArea span {
-	margin-top: 2px;
-	color: #5e574e;
-	font-size: 12px;
 }
 
 .resumeHighlight {
@@ -355,13 +299,13 @@
 	place-items: center;
 	width: 92px;
 	height: 120px;
-	border: 1px solid rgba(26, 25, 22, 0.14);
+	border: 1px solid var(--border-default);
 	border-radius: 8px;
 	background:
-		linear-gradient(#fff 0 0) padding-box,
+		linear-gradient(var(--bg-elevated) 0 0) padding-box,
 		repeating-linear-gradient(
 			180deg,
-			rgba(26, 25, 22, 0.16) 0 1px,
+			color-mix(in srgb, var(--text-primary) 16%, transparent) 0 1px,
 			transparent 1px 13px
 		);
 }
@@ -379,7 +323,7 @@
 
 .resumeHighlight strong {
 	overflow: hidden;
-	color: #24201c;
+	color: var(--text-primary);
 	font-size: 14px;
 	font-weight: 850;
 	text-overflow: ellipsis;
@@ -388,17 +332,30 @@
 
 .resumeHighlight span {
 	margin-top: 6px;
-	color: #6a645b;
+	color: var(--text-secondary);
 	font-size: 12px;
 }
 
 .resumeHighlight a {
 	width: fit-content;
 	margin-top: 14px;
-	border: 1px solid rgba(26, 25, 22, 0.14);
-	border-radius: 999px;
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius);
 	padding: 8px 12px;
-	background: #fffaf2;
+	background: var(--bg-elevated);
+	transition:
+		background-color 0.2s var(--button-ease),
+		border-color 0.2s var(--button-ease),
+		color 0.2s var(--button-ease),
+		transform 0.16s var(--button-ease);
+}
+
+.resumeHighlight a:hover {
+	transform: translateY(-1px);
+}
+
+.resumeHighlight a:active {
+	transform: translateY(1px);
 }
 
 .activityList,
@@ -411,7 +368,7 @@
 .roastRow {
 	display: grid;
 	align-items: center;
-	border-bottom: 1px solid rgba(26, 25, 22, 0.08);
+	border-bottom: 1px solid var(--border-subtle);
 	color: inherit;
 	text-decoration: none;
 }
@@ -439,9 +396,9 @@
 	place-items: center;
 	width: 30px;
 	height: 30px;
-	border: 1px solid rgba(26, 25, 22, 0.12);
+	border: 1px solid var(--border-default);
 	border-radius: 7px;
-	background: #fffaf2;
+	background: var(--bg-elevated);
 	color: #ad751f;
 }
 
@@ -455,7 +412,7 @@
 .roastRow p {
 	display: block;
 	overflow: hidden;
-	color: #24201c;
+	color: var(--text-primary);
 	font-size: 12px;
 	font-weight: 800;
 	text-overflow: ellipsis;
@@ -466,13 +423,13 @@
 .roastRow span {
 	display: block;
 	margin-top: 2px;
-	color: #6a645b;
+	color: var(--text-secondary);
 	font-size: 11px;
 }
 
 .activityRow em,
 .roastRow strong {
-	color: #24201c;
+	color: var(--text-primary);
 	font-size: 11px;
 	font-style: normal;
 	font-weight: 800;
@@ -485,8 +442,8 @@
 	left: 50%;
 	display: flex;
 	flex-direction: column;
-	width: min(720px, calc(100vw - 32px));
-	max-width: min(720px, calc(100vw - 32px));
+	width: min(1120px, calc(100vw - 32px));
+	max-width: min(1120px, calc(100vw - 32px));
 	max-height: calc(100dvh - var(--app-header-height) - 32px);
 	transform: translateX(-50%) !important;
 	overflow: hidden;
@@ -518,7 +475,7 @@
 	padding: 18px 24px;
 	background:
 		linear-gradient(135deg, rgba(232, 93, 38, 0.12), rgba(212, 165, 56, 0.16)),
-		#f5ecdc;
+		var(--bg-surface);
 }
 
 .avatarUploadButton {
@@ -527,13 +484,28 @@
 	gap: 8px;
 	margin-left: auto;
 	border: 1px solid var(--border-default);
-	border-radius: 999px;
+	border-radius: var(--button-radius);
 	padding: 9px 13px;
 	background: var(--bg-elevated);
 	color: var(--text-primary);
 	font-size: 12px;
 	font-weight: 800;
 	cursor: pointer;
+	user-select: none;
+	transition:
+		background-color 0.2s var(--button-ease),
+		border-color 0.2s var(--button-ease),
+		color 0.2s var(--button-ease),
+		transform 0.16s var(--button-ease);
+}
+
+.avatarUploadButton:hover {
+	border-color: var(--border-strong);
+	transform: translateY(-1px);
+}
+
+.avatarUploadButton:active {
+	transform: translateY(1px);
 }
 
 .avatarUploadButton svg {
@@ -556,13 +528,13 @@
 	place-items: center;
 	width: 64px;
 	height: 64px;
-	border: 3px solid #fff7ea;
+	overflow: hidden;
+	border: 3px solid color-mix(in srgb, var(--bg-elevated) 80%, var(--brand) 20%);
 	border-radius: 50%;
 	background: var(--brand);
 	color: white;
 	font-size: 22px;
 	font-weight: 900;
-	overflow: hidden;
 }
 
 .editAvatar img {
@@ -589,6 +561,7 @@
 .editFields {
 	display: grid;
 	flex: 1;
+	grid-template-columns: minmax(320px, 0.9fr) minmax(420px, 1.1fr);
 	gap: 16px;
 	min-height: 0;
 	overflow-y: auto;
@@ -614,7 +587,15 @@
 	gap: 8px;
 }
 
+.editColumn {
+	display: grid;
+	align-content: start;
+	gap: 16px !important;
+	min-width: 0;
+}
+
 .editFieldGrid {
+	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 14px !important;
 }
@@ -623,7 +604,7 @@
 .highlightSelect {
 	width: 100%;
 	border: 1px solid hsl(var(--input));
-	border-radius: 10px;
+	border-radius: var(--button-radius);
 	background: hsl(var(--background));
 	color: hsl(var(--foreground));
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -641,6 +622,10 @@
 	resize: vertical;
 }
 
+.aboutTextarea {
+	min-height: 138px;
+}
+
 .highlightSelect {
 	height: 40px;
 	padding: 0 12px;
@@ -652,21 +637,127 @@
 	box-shadow: 0 0 0 3px hsl(var(--ring) / 0.2);
 }
 
+.skillEditorHeader {
+	display: flex !important;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.skillEditorHeader span {
+	color: var(--text-tertiary);
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.skillEditor {
+	display: grid;
+	gap: 12px;
+	border: 1px solid hsl(var(--input));
+	border-radius: var(--button-radius);
+	padding: 12px;
+	background: hsl(var(--background));
+}
+
+.selectedSkillList,
+.skillSuggestions {
+	display: flex !important;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.selectedSkillList span {
+	color: var(--text-tertiary);
+	font-size: 13px;
+}
+
+.selectedSkillList button,
+.skillSuggestions button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius-sm);
+	padding: 8px 10px;
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+	font-size: 12px;
+	font-weight: 800;
+	line-height: 1;
+	transition:
+		background-color 0.2s var(--button-ease),
+		border-color 0.2s var(--button-ease),
+		color 0.2s var(--button-ease),
+		transform 0.16s var(--button-ease);
+}
+
+.selectedSkillList button:hover,
+.skillSuggestions button:hover {
+	border-color: var(--border-strong);
+	transform: translateY(-1px);
+}
+
+.selectedSkillList button:active,
+.skillSuggestions button:active {
+	transform: translateY(1px);
+}
+
+.selectedSkillList svg,
+.skillSuggestions svg {
+	width: 13px;
+	height: 13px;
+	color: var(--brand);
+}
+
+.skillSearch {
+	position: relative;
+}
+
+.skillSearch > svg {
+	position: absolute;
+	top: 50%;
+	left: 12px;
+	z-index: 1;
+	width: 15px;
+	height: 15px;
+	color: var(--text-tertiary);
+	transform: translateY(-50%);
+}
+
+.skillSearch input {
+	padding-left: 36px;
+}
+
+.skillSuggestions button:disabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+	transform: none;
+}
+
 .editFooter {
 	flex: 0 0 auto;
 	border-top: 1px solid var(--border-subtle);
 	padding: 16px 24px;
 }
 
+.editFields :global(.form-message) {
+	grid-column: 1 / -1;
+}
+
+.footerButton {
+	min-width: 116px;
+	font-weight: 800;
+}
+
 .emptyState {
 	display: grid;
+	align-content: center;
 	justify-items: center;
 	gap: 12px;
 	min-height: 420px;
-	align-content: center;
-	border: 1px solid rgba(26, 25, 22, 0.12);
+	border: 1px solid var(--border-subtle);
 	border-radius: 10px;
-	background: #f8f4ed;
+	background: var(--bg-surface);
 	text-align: center;
 }
 
@@ -688,9 +779,9 @@
 	border-radius: 10px;
 	background: linear-gradient(
 		90deg,
-		rgba(255, 255, 255, 0.28),
-		rgba(255, 255, 255, 0.72),
-		rgba(255, 255, 255, 0.28)
+		color-mix(in srgb, var(--bg-surface) 72%, transparent),
+		color-mix(in srgb, var(--bg-elevated) 90%, transparent),
+		color-mix(in srgb, var(--bg-surface) 72%, transparent)
 	);
 	background-size: 220% 100%;
 	animation: profileShimmer 1.2s linear infinite;
@@ -706,7 +797,7 @@
 .loadingHero span {
 	height: 28px;
 	border-radius: 999px;
-	background: rgba(255, 255, 255, 0.55);
+	background: color-mix(in srgb, var(--bg-elevated) 65%, transparent);
 }
 
 .loadingHero span:first-child {
@@ -772,7 +863,11 @@
 	}
 
 	.statCard:nth-child(-n + 2) {
-		border-bottom: 1px solid rgba(26, 25, 22, 0.08);
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	.editFields {
+		grid-template-columns: 1fr;
 	}
 }
 
@@ -795,7 +890,7 @@
 
 	.statCard {
 		border-right: 0;
-		border-bottom: 1px solid rgba(26, 25, 22, 0.08);
+		border-bottom: 1px solid var(--border-subtle);
 	}
 
 	.statCard:last-child {
@@ -815,23 +910,6 @@
 	}
 }
 
-:global(body.main-app-dark) .shell {
-	background: var(--bg-base);
-	color: var(--text-primary);
-}
-
-:global(body.main-app-dark) .avatarFrame,
-:global(body.main-app-dark) .statsGrid,
-:global(body.main-app-dark) .aboutPanel,
-:global(body.main-app-dark) .skillsPanel,
-:global(body.main-app-dark) .highlightPanel,
-:global(body.main-app-dark) .activityPanel,
-:global(body.main-app-dark) .roastsPanel,
-:global(body.main-app-dark) .emptyState {
-	border-color: var(--border-subtle);
-	background: var(--bg-surface);
-}
-
 :global(body.main-app-dark) .avatarFrame {
 	border-color: rgba(255, 184, 95, 0.55);
 }
@@ -843,33 +921,9 @@
 	color: var(--text-primary);
 }
 
-:global(body.main-app-dark) .identity h1,
-:global(body.main-app-dark) .identity p,
-:global(body.main-app-dark) .statCard strong,
-:global(body.main-app-dark) .aboutDetails strong,
-:global(body.main-app-dark) .resumeHighlight strong,
-:global(body.main-app-dark) .activityRow strong,
-:global(body.main-app-dark) .roastRow p,
-:global(body.main-app-dark) .activityRow em,
-:global(body.main-app-dark) .roastRow strong {
-	color: var(--text-primary);
-}
-
-:global(body.main-app-dark) .metaList,
-:global(body.main-app-dark) .aboutPanel p,
-:global(body.main-app-dark) .mutedCopy {
-	color: var(--text-secondary);
-}
-
-:global(body.main-app-dark) .metaList svg,
-:global(body.main-app-dark) .aboutDetails svg {
-	color: var(--text-tertiary);
-}
-
 :global(body.main-app-dark) .identityHeader svg,
 :global(body.main-app-dark) .statCard svg,
 :global(body.main-app-dark) .statPrimary svg,
-:global(body.main-app-dark) .focusArea svg,
 :global(body.main-app-dark) .resumePreview svg,
 :global(body.main-app-dark) .activityIcon,
 :global(body.main-app-dark) .activityIcon svg,
@@ -881,49 +935,6 @@
 	border-color: rgba(169, 149, 255, 0.24);
 	background: rgba(169, 149, 255, 0.12);
 	color: #cfc3ff;
-}
-
-:global(body.main-app-dark) .statCard span,
-:global(body.main-app-dark) .aboutDetails span,
-:global(body.main-app-dark) .focusArea span,
-:global(body.main-app-dark) .resumeHighlight span,
-:global(body.main-app-dark) .activityRow span,
-:global(body.main-app-dark) .roastRow span,
-:global(body.main-app-dark) .emptyState p {
-	color: var(--text-secondary);
-}
-
-:global(body.main-app-dark) .panelHeader a,
-:global(body.main-app-dark) .resumeHighlight a {
-	color: var(--text-primary);
-}
-
-:global(body.main-app-dark) .statCard,
-:global(body.main-app-dark) .aboutDetails,
-:global(body.main-app-dark) .activityRow,
-:global(body.main-app-dark) .roastRow {
-	border-color: var(--border-subtle);
-}
-
-:global(body.main-app-dark) .skillCloud span,
-:global(body.main-app-dark) .focusArea,
-:global(body.main-app-dark) .resumeHighlight a,
-:global(body.main-app-dark) .activityIcon,
-:global(body.main-app-dark) .roastRow > svg {
-	border-color: var(--border-default);
-	background: var(--bg-elevated);
-	color: var(--text-primary);
-}
-
-:global(body.main-app-dark) .resumePreview {
-	border-color: var(--border-default);
-	background:
-		linear-gradient(var(--bg-elevated) 0 0) padding-box,
-		repeating-linear-gradient(
-			180deg,
-			rgba(239, 226, 208, 0.16) 0 1px,
-			transparent 1px 13px
-		);
 }
 
 :global(body.main-app-dark) .editDialog {
@@ -944,27 +955,4 @@
 :global(body.main-app-dark) .editAvatar {
 	border-color: var(--border-default);
 	color: var(--text-inverse);
-}
-
-:global(body.main-app-dark) .avatarUploadButton,
-:global(body.main-app-dark) .editTextarea,
-:global(body.main-app-dark) .highlightSelect {
-	border-color: var(--border-default);
-	background: var(--bg-elevated);
-	color: var(--text-primary);
-}
-
-:global(body.main-app-dark) .loadingHero,
-:global(body.main-app-dark) .loadingGrid span {
-	background: linear-gradient(
-		90deg,
-		var(--bg-surface),
-		var(--bg-elevated),
-		var(--bg-surface)
-	);
-	background-size: 220% 100%;
-}
-
-:global(body.main-app-dark) .loadingHero span {
-	background: rgba(255, 255, 255, 0.08);
 }

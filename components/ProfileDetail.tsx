@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
 	ChangeEvent,
 	FormEvent,
+	KeyboardEvent,
 	useEffect,
 	useMemo,
 	useState,
@@ -14,18 +15,19 @@ import {
 	BriefcaseBusiness,
 	CalendarDays,
 	Camera,
-	CheckCircle2,
 	FileText,
 	Flame,
 	GraduationCap,
-	Mail,
 	MapPin,
 	MessageSquareText,
 	Pencil,
+	Plus,
+	Search,
 	ShieldCheck,
 	TrendingUp,
 	Trophy,
 	Upload,
+	X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
@@ -66,6 +68,35 @@ type ActivityItem = {
 };
 
 const fallbackAvatar = "/assets/logo.png";
+const SKILL_OPTIONS = [
+	"ATS",
+	"Clarity",
+	"Communication",
+	"Cover Letters",
+	"Data Analysis",
+	"DSA",
+	"Frontend",
+	"Git",
+	"Interview Prep",
+	"Java",
+	"JavaScript",
+	"Leadership",
+	"LinkedIn",
+	"Metrics",
+	"Node.js",
+	"Proofreading",
+	"Python",
+	"React",
+	"Recruiter Screen",
+	"Resume Review",
+	"SQL",
+	"Storytelling",
+	"System Design",
+	"Tailoring",
+	"TypeScript",
+	"UX Writing",
+	"Web Development",
+];
 const uuidPattern =
 	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -571,7 +602,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		const metadataAvatar = isOwnProfile ? getMetadataAvatar(user) : "";
 		const displayName =
 			profile.full_name || metadataName || profile.username || "Anonymous roaster";
-		const handle = profile.username ? `@${profile.username.replace(/^@+/, "")}` : "@roaster";
 		const currentRole =
 			profile.current_position ||
 			profile.target_role ||
@@ -586,7 +616,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			collegeLocation: profile.college_location || "College location not set",
 			currentRole,
 			displayName,
-			handle,
 			initials: getInitials(displayName) || "R",
 			resumeHighlight,
 			roleTag: roleTag(profile),
@@ -765,36 +794,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							{profile.about ||
 								"Resume reviewer focused on practical feedback, sharper proof, and cleaner first impressions."}
 						</p>
-						<div className={styles.aboutDetails}>
-							<div>
-								<strong>
-									<BriefcaseBusiness aria-hidden="true" />
-									Current position
-								</strong>
-								<span>{profileView.currentRole}</span>
-							</div>
-							<div>
-								<strong>
-									<GraduationCap aria-hidden="true" />
-									College
-								</strong>
-								<span>{profileView.collegeLabel}</span>
-							</div>
-							<div>
-								<strong>
-									<MapPin aria-hidden="true" />
-									Location
-								</strong>
-								<span>{profileView.collegeLocation}</span>
-							</div>
-							<div>
-								<strong>
-									<Mail aria-hidden="true" />
-									Contact
-								</strong>
-								<span>{profileView.handle}</span>
-							</div>
-						</div>
 					</section>
 
 					<section className={styles.skillsPanel}>
@@ -803,13 +802,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							{profileView.skills.map((skill) => (
 								<span key={skill}>{skill}</span>
 							))}
-						</div>
-						<div className={styles.focusArea}>
-							<CheckCircle2 aria-hidden="true" />
-							<div>
-								<strong>Focus Area</strong>
-								<span>{profileView.currentRole}</span>
-							</div>
 						</div>
 					</section>
 
@@ -998,6 +990,69 @@ function ProfileEditDialog({
 	tagline: string;
 	username: string;
 }) {
+	const [skillQuery, setSkillQuery] = useState("");
+	const selectedSkills = useMemo(() => parseSkills(skillsInput), [skillsInput]);
+	const normalizedSkillQuery = skillQuery.trim().replace(/\s+/g, " ");
+	const selectedSkillKeys = useMemo(
+		() => new Set(selectedSkills.map((skill) => skill.toLowerCase())),
+		[selectedSkills],
+	);
+	const skillSuggestions = useMemo(() => {
+		const query = normalizedSkillQuery.toLowerCase();
+
+		return SKILL_OPTIONS.filter((skill) => {
+			const key = skill.toLowerCase();
+			return !selectedSkillKeys.has(key) && (!query || key.includes(query));
+		}).slice(0, 8);
+	}, [normalizedSkillQuery, selectedSkillKeys]);
+	const canAddCustomSkill =
+		selectedSkills.length < 12 &&
+		normalizedSkillQuery.length >= 2 &&
+		normalizedSkillQuery.length <= 32 &&
+		!selectedSkillKeys.has(normalizedSkillQuery.toLowerCase()) &&
+		!SKILL_OPTIONS.some(
+			(skill) => skill.toLowerCase() === normalizedSkillQuery.toLowerCase(),
+		);
+
+	function commitSkills(nextSkills: string[]) {
+		onSkillsChange(nextSkills.join(", "));
+	}
+
+	function addSkill(skill: string) {
+		const cleanedSkill = skill.trim().replace(/\s+/g, " ");
+		if (
+			cleanedSkill.length < 2 ||
+			cleanedSkill.length > 32 ||
+			selectedSkillKeys.has(cleanedSkill.toLowerCase()) ||
+			selectedSkills.length >= 12
+		) {
+			return;
+		}
+
+		commitSkills([...selectedSkills, cleanedSkill]);
+		setSkillQuery("");
+	}
+
+	function removeSkill(skill: string) {
+		commitSkills(
+			selectedSkills.filter(
+				(selectedSkill) => selectedSkill.toLowerCase() !== skill.toLowerCase(),
+			),
+		);
+	}
+
+	function handleSkillKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			addSkill(skillSuggestions[0] ?? normalizedSkillQuery);
+			return;
+		}
+
+		if (event.key === "Backspace" && !skillQuery && selectedSkills.length) {
+			commitSkills(selectedSkills.slice(0, -1));
+		}
+	}
+
 	return (
 		<DialogContent className={styles.editDialog}>
 			<DialogHeader className={styles.editHeader}>
@@ -1031,115 +1086,166 @@ function ProfileEditDialog({
 				</div>
 
 				<div className={styles.editFields}>
-					<div className={styles.editFieldGrid}>
-						<div>
-							<Label htmlFor="profile-full-name">Display name</Label>
-							<Input
-								id="profile-full-name"
-								maxLength={80}
-								onChange={(event) => onFullNameChange(event.target.value)}
-								placeholder="Shajith Bathina"
-								value={fullName}
-							/>
+					<div className={styles.editColumn}>
+						<div className={styles.editFieldGrid}>
+							<div>
+								<Label htmlFor="profile-full-name">Display name</Label>
+								<Input
+									id="profile-full-name"
+									maxLength={80}
+									onChange={(event) => onFullNameChange(event.target.value)}
+									placeholder="Shajith Bathina"
+									value={fullName}
+								/>
+							</div>
+							<div>
+								<Label htmlFor="profile-username">Username</Label>
+								<Input
+									id="profile-username"
+									maxLength={32}
+									onChange={(event) => onUsernameChange(event.target.value)}
+									placeholder="shajith240"
+									value={username}
+								/>
+							</div>
 						</div>
-						<div>
-							<Label htmlFor="profile-username">Username</Label>
-							<Input
-								id="profile-username"
-								maxLength={32}
-								onChange={(event) => onUsernameChange(event.target.value)}
-								placeholder="shajith240"
-								value={username}
-							/>
-						</div>
-					</div>
 
-					<div>
-						<Label htmlFor="profile-tagline">Tagline</Label>
-						<Input
-							id="profile-tagline"
-							maxLength={120}
-							onChange={(event) => onTaglineChange(event.target.value)}
-							placeholder="Building better resumes, one roast at a time."
-							value={tagline}
-						/>
-					</div>
-
-					<div className={styles.editFieldGrid}>
 						<div>
-							<Label htmlFor="profile-current-position">Current position</Label>
+							<Label htmlFor="profile-tagline">Tagline</Label>
 							<Input
-								id="profile-current-position"
-								maxLength={80}
-								onChange={(event) =>
-									onCurrentPositionChange(event.target.value)
-								}
-								placeholder="SDE intern"
-								value={currentPosition}
+								id="profile-tagline"
+								maxLength={120}
+								onChange={(event) => onTaglineChange(event.target.value)}
+								placeholder="Building better resumes, one roast at a time."
+								value={tagline}
 							/>
 						</div>
+
+						<div className={styles.editFieldGrid}>
+							<div>
+								<Label htmlFor="profile-current-position">Current position</Label>
+								<Input
+									id="profile-current-position"
+									maxLength={80}
+									onChange={(event) =>
+										onCurrentPositionChange(event.target.value)
+									}
+									placeholder="SDE intern"
+									value={currentPosition}
+								/>
+							</div>
+							<div>
+								<Label htmlFor="profile-college">College</Label>
+								<Input
+									id="profile-college"
+									maxLength={100}
+									onChange={(event) => onCollegeChange(event.target.value)}
+									placeholder="IIT(ISM) Dhanbad"
+									value={college}
+								/>
+							</div>
+						</div>
+
 						<div>
-							<Label htmlFor="profile-college">College</Label>
+							<Label htmlFor="profile-college-location">College location</Label>
 							<Input
-								id="profile-college"
+								id="profile-college-location"
 								maxLength={100}
-								onChange={(event) => onCollegeChange(event.target.value)}
-								placeholder="IIT(ISM) Dhanbad"
-								value={college}
+								onChange={(event) => onCollegeLocationChange(event.target.value)}
+								placeholder="Dhanbad, Jharkhand"
+								value={collegeLocation}
 							/>
+						</div>
+
+						<div>
+							<Label htmlFor="profile-resume-highlight">Resume highlight</Label>
+							<select
+								className={styles.highlightSelect}
+								id="profile-resume-highlight"
+								onChange={(event) => onResumeHighlightChange(event.target.value)}
+								value={resumeHighlightId}
+							>
+								<option value="">Latest public resume</option>
+								{resumes.map((resume) => (
+									<option key={resume.id} value={resume.id}>
+										{resume.title}
+									</option>
+								))}
+							</select>
 						</div>
 					</div>
 
-					<div>
-						<Label htmlFor="profile-college-location">College location</Label>
-						<Input
-							id="profile-college-location"
-							maxLength={100}
-							onChange={(event) => onCollegeLocationChange(event.target.value)}
-							placeholder="Dhanbad, Jharkhand"
-							value={collegeLocation}
-						/>
-					</div>
+					<div className={styles.editColumn}>
+						<div>
+							<Label htmlFor="profile-about">About me</Label>
+							<textarea
+								className={`${styles.editTextarea} ${styles.aboutTextarea}`}
+								id="profile-about"
+								maxLength={360}
+								onChange={(event) => onAboutChange(event.target.value)}
+								placeholder="A short description about your goals, background, and review style."
+								value={about}
+							/>
+						</div>
 
-					<div>
-						<Label htmlFor="profile-about">About me</Label>
-						<textarea
-							className={styles.editTextarea}
-							id="profile-about"
-							maxLength={360}
-							onChange={(event) => onAboutChange(event.target.value)}
-							placeholder="A short description about your goals, background, and review style."
-							value={about}
-						/>
-					</div>
-
-					<div>
-						<Label htmlFor="profile-skills">Skills</Label>
-						<textarea
-							className={styles.editTextarea}
-							id="profile-skills"
-							maxLength={240}
-							onChange={(event) => onSkillsChange(event.target.value)}
-							placeholder="Python, React, DSA, ATS, Resume Review"
-							value={skillsInput}
-						/>
-					</div>
-
-					<div>
-						<Label htmlFor="profile-resume-highlight">Resume highlight</Label>
-						<select
-							className={styles.highlightSelect}
-							id="profile-resume-highlight"
-							onChange={(event) => onResumeHighlightChange(event.target.value)}
-							value={resumeHighlightId}
-						>
-							<option value="">Latest public resume</option>
-							{resumes.map((resume) => (
-								<option key={resume.id} value={resume.id}>
-									{resume.title}
-								</option>
-							))}
-						</select>
+						<div>
+							<div className={styles.skillEditorHeader}>
+								<Label htmlFor="profile-skills">Skills</Label>
+								<span>{selectedSkills.length}/12</span>
+							</div>
+							<div className={styles.skillEditor}>
+								<div className={styles.selectedSkillList}>
+									{selectedSkills.length ? (
+										selectedSkills.map((skill) => (
+											<button
+												aria-label={`Remove ${skill}`}
+												key={skill}
+												onClick={() => removeSkill(skill)}
+												type="button"
+											>
+												{skill}
+												<X aria-hidden="true" />
+											</button>
+										))
+									) : (
+										<span>Add skills that describe your review style.</span>
+									)}
+								</div>
+								<div className={styles.skillSearch}>
+									<Search aria-hidden="true" />
+									<Input
+										id="profile-skills"
+										maxLength={32}
+										onChange={(event) => setSkillQuery(event.target.value)}
+										onKeyDown={handleSkillKeyDown}
+										placeholder="Search or add a skill"
+										value={skillQuery}
+									/>
+								</div>
+								<div className={styles.skillSuggestions}>
+									{canAddCustomSkill ? (
+										<button
+											onClick={() => addSkill(normalizedSkillQuery)}
+											type="button"
+										>
+											<Plus aria-hidden="true" />
+											Add "{normalizedSkillQuery}"
+										</button>
+									) : null}
+									{skillSuggestions.map((skill) => (
+										<button
+											disabled={selectedSkills.length >= 12}
+											key={skill}
+											onClick={() => addSkill(skill)}
+											type="button"
+										>
+											<Plus aria-hidden="true" />
+											{skill}
+										</button>
+									))}
+								</div>
+							</div>
+						</div>
 					</div>
 
 					{saveMessage && saveMessage !== "Saved" ? (
@@ -1149,12 +1255,12 @@ function ProfileEditDialog({
 
 				<DialogFooter className={styles.editFooter}>
 					<DialogClose asChild>
-						<Button type="button" variant="outline">
+						<Button className={styles.footerButton} type="button" variant="outline">
 							Cancel
 						</Button>
 					</DialogClose>
-					<Button disabled={saving}>
-						<Upload aria-hidden="true" />
+					<Button className={styles.footerButton} disabled={saving}>
+						<Upload data-icon="inline-start" aria-hidden="true" />
 						{saving ? "Saving..." : "Save profile"}
 					</Button>
 				</DialogFooter>

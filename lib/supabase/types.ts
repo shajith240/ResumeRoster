@@ -8,6 +8,7 @@ export type ResumeSummary = {
   is_anonymous: boolean;
   status: ResumeStatus;
   roast_count: number;
+  read_count: number;
   created_at: string;
 };
 

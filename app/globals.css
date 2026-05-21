@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800;900&family=Work+Sans:wght@400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -33,6 +33,7 @@
 	--ring: 18 81% 53%;
 	--font-display: "Instrument Serif", serif;
 	--font-body: "Inter", sans-serif;
+	--font-app-body: "Work Sans", sans-serif;
 	--app-header-height: 60px;
 	--session-sidebar-width: 5.5rem;
 	--session-sidebar-expanded-width: 15rem;
@@ -68,6 +69,9 @@
 	--radius-lg: 16px;
 	--radius-xl: 24px;
 	--radius-pill: 9999px;
+	--button-radius: 10px;
+	--button-radius-sm: 8px;
+	--button-ease: cubic-bezier(0.16, 1, 0.3, 1);
 	--shadow-sm:
 		0 1px 3px rgba(26, 25, 22, 0.08), 0 1px 2px rgba(26, 25, 22, 0.04);
 	--shadow-md:
@@ -119,6 +123,10 @@ body.main-app-dark {
 	--shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.34);
 	--shadow-focus: 0 0 0 3px rgba(255, 138, 77, 0.28);
 	color-scheme: dark;
+}
+
+body.main-app {
+	--font-body: var(--font-app-body);
 }
 
 @keyframes fadeUp {
@@ -596,6 +604,7 @@ body.main-app-dark .app-header {
 }
 
 .post-content {
+	grid-column: 1 / -1;
 	min-width: 0;
 	padding: 14px 16px 12px;
 }
@@ -619,6 +628,32 @@ body.main-app-dark .app-header {
 	margin-right: 7px;
 	color: var(--text-tertiary);
 	content: "\2022";
+}
+
+.post-read-count,
+.post-meta-icon,
+.post-action-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.post-read-count {
+	gap: 4px;
+}
+
+.post-meta-icon,
+.post-action-icon {
+	flex: 0 0 auto;
+	width: 16px;
+	height: 16px;
+	color: currentColor;
+}
+
+.post-meta-icon svg,
+.post-action-icon svg {
+	width: 100%;
+	height: 100%;
 }
 
 .post-title-link h2 {

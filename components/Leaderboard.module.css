@@ -43,7 +43,7 @@
 	width: 184px;
 	height: 42px;
 	border: 1px solid var(--border-default);
-	border-radius: 999px;
+	border-radius: var(--button-radius);
 	background: var(--bg-surface);
 	color: var(--text-secondary);
 	font-size: 13px;
@@ -64,7 +64,7 @@
 }
 
 .rangeItem {
-	border-radius: 10px;
+	border-radius: var(--button-radius-sm);
 	color: var(--text-primary);
 	font-size: 13px;
 	font-weight: 700;
@@ -176,8 +176,9 @@
 
 .podiumCard h2 {
 	margin: 0;
+	font-family: var(--font-display);
 	font-size: 22px;
-	font-weight: 850;
+	font-weight: 400;
 	letter-spacing: 0;
 }
 
@@ -234,13 +235,27 @@
 .podiumCard a {
 	margin-top: 14px;
 	border: 1px solid var(--border-default);
-	border-radius: 999px;
+	border-radius: var(--button-radius);
 	padding: 8px 12px;
 	background: var(--bg-elevated);
 	color: var(--text-primary);
 	font-size: 12px;
 	font-weight: 800;
 	text-decoration: none;
+	transition:
+		background-color 0.2s var(--button-ease),
+		border-color 0.2s var(--button-ease),
+		color 0.2s var(--button-ease),
+		transform 0.16s var(--button-ease);
+}
+
+.podiumCard a:hover {
+	border-color: var(--border-strong);
+	transform: translateY(-1px);
+}
+
+.podiumCard a:active {
+	transform: translateY(1px);
 }
 
 .infoStack {
@@ -272,9 +287,9 @@
 
 .noteCard p {
 	color: var(--text-primary);
-	font-family: var(--font-body);
+	font-family: var(--font-display);
 	font-size: 18px;
-	font-weight: 650;
+	font-weight: 400;
 	line-height: 1.45;
 }
 
@@ -294,8 +309,9 @@
 
 .pointsCard h2 {
 	margin: 0;
-	font-size: 17px;
-	font-weight: 850;
+	font-family: var(--font-display);
+	font-size: 24px;
+	font-weight: 400;
 }
 
 .pointsCard p {
@@ -321,9 +337,9 @@
 
 .listHeader h2 {
 	margin: 0;
-	font-family: var(--font-body);
-	font-size: 28px;
-	font-weight: 800;
+	font-family: var(--font-display);
+	font-size: 36px;
+	font-weight: 400;
 	letter-spacing: 0;
 }
 

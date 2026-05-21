@@ -3,14 +3,46 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { BookmarkIcon } from "@/components/ui/bookmark";
+import { EyeIcon } from "@/components/ui/eye";
+import { LinkIcon } from "@/components/ui/link";
+import { MessageCircleIcon } from "@/components/ui/message-circle";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeSummary } from "@/lib/supabase/types";
+
+const RESUME_SELECT_WITH_READS =
+  "id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
+const RESUME_SELECT_BASE =
+  "id,user_id,title,file_path,is_anonymous,status,roast_count,created_at";
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
   }).format(new Date(value));
+}
+
+function formatCount(value: number) {
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(value >= 10_000_000 ? 0 : 1)}M`;
+  }
+
+  if (value >= 1_000) {
+    return `${(value / 1_000).toFixed(value >= 10_000 ? 0 : 1)}K`;
+  }
+
+  return value.toLocaleString();
+}
+
+function isReadCountFeatureError(error: { message?: string } | null) {
+  return /read_count|schema cache|column/i.test(error?.message ?? "");
+}
+
+function withReadCount(resume: Omit<ResumeSummary, "read_count"> & { read_count?: number }) {
+  return {
+    ...resume,
+    read_count: resume.read_count ?? 0,
+  };
 }
 
 function roleFromTitle(title: string) {
@@ -96,7 +128,7 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
       const started = Date.now();
       let query = supabase
         .from("resumes")
-        .select("id,user_id,title,file_path,is_anonymous,status,roast_count,created_at");
+        .select(RESUME_SELECT_WITH_READS);
 
       if (activeSort === "top") {
         query = query
@@ -108,12 +140,33 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
 
       const { data, error } = await query;
 
+      let resumeRows = (data ?? []).map(withReadCount);
+      let resumeError = error;
+
+      if (error && isReadCountFeatureError(error)) {
+        let fallbackQuery = supabase
+          .from("resumes")
+          .select(RESUME_SELECT_BASE);
+
+        if (activeSort === "top") {
+          fallbackQuery = fallbackQuery
+            .order("roast_count", { ascending: false })
+            .order("created_at", { ascending: false });
+        } else {
+          fallbackQuery = fallbackQuery.order("created_at", { ascending: false });
+        }
+
+        const fallbackResult = await fallbackQuery;
+        resumeRows = (fallbackResult.data ?? []).map(withReadCount);
+        resumeError = fallbackResult.error;
+      }
+
       if (!active) return;
 
-      if (error) {
-        setMessage(error.message);
+      if (resumeError) {
+        setMessage(resumeError.message);
       } else {
-        setResumes(sortResumes(data ?? [], activeSort));
+        setResumes(sortResumes(resumeRows, activeSort));
       }
 
       const elapsed = Date.now() - started;
@@ -197,7 +250,10 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
               <div className="post-meta">
                 <span>posted anonymously</span>
                 <time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
-                <span>3 min read</span>
+                <span className="post-read-count">
+                  <EyeIcon className="post-meta-icon" size={15} aria-hidden="true" />
+                  {formatCount(resume.read_count)} reads
+                </span>
               </div>
               <Link className="post-title-link" href={`/resume/${resume.id}`}>
                 <h2>{resume.title}</h2>
@@ -217,17 +273,17 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
               </p>
 
               <div className="post-actions">
-                <Link className="post-action-button" href={`/resume/${resume.id}`}>
-                  <span aria-hidden="true">C</span>
-                  {resume.roast_count} {resume.roast_count === 1 ? "Roast" : "Roasts"}
+                <Link className="post-action-button" href={`/resume/${resume.id}`} aria-label={`Open ${resume.roast_count} roasts`}>
+                  <MessageCircleIcon className="post-action-icon" size={16} aria-hidden="true" />
+                  {formatCount(resume.roast_count)} {resume.roast_count === 1 ? "Roast" : "Roasts"}
                 </Link>
-                <button className="post-action-button copy-button" type="button" onClick={() => void shareResume(resume)}>
-                  <span aria-hidden="true">S</span>
+                <button className="post-action-button copy-button" type="button" onClick={() => void shareResume(resume)} aria-label="Share resume">
+                  <LinkIcon className="post-action-icon" size={16} aria-hidden="true" />
                   Share
                   {copiedId === resume.id ? <em>Copied!</em> : null}
                 </button>
-                <button className="post-action-button" type="button">
-                  <span aria-hidden="true">B</span>
+                <button className="post-action-button" type="button" aria-label="Save resume">
+                  <BookmarkIcon className="post-action-icon" size={16} aria-hidden="true" />
                   Save
                 </button>
                 <span className={`resume-status ${resume.status === "closed" ? "closed" : ""}`}>

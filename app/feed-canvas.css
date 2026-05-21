@@ -138,7 +138,7 @@
 
   .reaction-button {
     height: 34px;
-    border-radius: 999px;
+    border-radius: var(--button-radius);
     color: var(--text-secondary);
   }
 
@@ -169,11 +169,12 @@
   .comment-author-chip {
     height: 30px;
     border: 1px solid var(--border-subtle);
+    border-radius: var(--button-radius);
     background: rgba(255, 255, 255, 0.72);
     color: var(--text-primary);
     font-size: 12px;
     font-weight: 600;
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-sm);
   }
 
   .comment-author-chip:hover {
@@ -226,7 +227,7 @@
   }
 
   .owner-delete-button {
-    border-radius: 999px;
+    border-radius: var(--button-radius);
     background: var(--danger);
     color: var(--text-inverse);
     box-shadow: var(--shadow-sm);

@@ -35,6 +35,7 @@ export default function AuthGate({ children }: AuthGateProps) {
 	const [checking, setChecking] = useState(true);
 
 	useEffect(() => {
+		document.body.classList.add("main-app");
 		applyAppTheme(getStoredAppTheme());
 
 		function handleThemeChange(event: Event) {
@@ -46,6 +47,7 @@ export default function AuthGate({ children }: AuthGateProps) {
 
 		return () => {
 			window.removeEventListener(APP_THEME_CHANGE_EVENT, handleThemeChange);
+			document.body.classList.remove("main-app");
 			document.body.classList.remove("main-app-dark");
 			document.documentElement.classList.remove("dark");
 			delete document.documentElement.dataset.appTheme;

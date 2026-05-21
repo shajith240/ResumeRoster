@@ -40,6 +40,10 @@ const ROAST_SELECT_WITH_REACTIONS =
 	"id,resume_id,author_id,content,helpful_votes,dislike_count,created_at";
 const ROAST_SELECT_BASE =
 	"id,resume_id,author_id,content,helpful_votes,created_at";
+const RESUME_SELECT_WITH_READS =
+	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
+const RESUME_SELECT_BASE =
+	"id,user_id,title,file_path,is_anonymous,status,roast_count,created_at";
 
 function formatDate(value: string) {
 	return new Intl.DateTimeFormat("en", {
@@ -81,6 +85,21 @@ function getAuthorAvatar(authorId: string, profile?: AuthorProfile) {
 
 function isMissingColumnError(error: { message?: string } | null, column: string) {
 	return Boolean(error?.message?.toLowerCase().includes(column.toLowerCase()));
+}
+
+function isReadCountFeatureError(error: { message?: string } | null) {
+	return /read_count|record_resume_read|schema cache|column|function/i.test(
+		error?.message ?? "",
+	);
+}
+
+function withReadCount(
+	resume: Omit<ResumeSummary, "read_count"> & { read_count?: number },
+) {
+	return {
+		...resume,
+		read_count: resume.read_count ?? 0,
+	};
 }
 
 function normalizeRoast(roast: Roast): Roast {
@@ -214,6 +233,31 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setSignedUrl(signed.data.signedUrl);
 	}
 
+	async function recordResumeRead(
+		activeResume: ResumeSummary,
+		activeUser: User | null,
+	) {
+		if (!activeUser || activeResume.user_id === activeUser.id) {
+			return;
+		}
+
+		const { data, error } = await supabase.rpc("record_resume_read", {
+			target_resume_id: activeResume.id,
+		});
+
+		if (error) {
+			return;
+		}
+
+		if (typeof data === "number") {
+			setResume((current) =>
+				current?.id === activeResume.id
+					? { ...current, read_count: data }
+					: current,
+			);
+		}
+	}
+
 	useEffect(() => {
 		async function load() {
 			const started = Date.now();
@@ -221,13 +265,21 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			const activeUser = userData.user;
 			setUser(activeUser);
 
-			const resumeResult = await supabase
+			const resumeResultWithReads = await supabase
 				.from("resumes")
-				.select(
-					"id,user_id,title,file_path,is_anonymous,status,roast_count,created_at",
-				)
+				.select(RESUME_SELECT_WITH_READS)
 				.eq("id", resumeId)
 				.single();
+
+			const resumeResult =
+				resumeResultWithReads.error &&
+				isReadCountFeatureError(resumeResultWithReads.error)
+					? await supabase
+							.from("resumes")
+							.select(RESUME_SELECT_BASE)
+							.eq("id", resumeId)
+							.single()
+					: resumeResultWithReads;
 
 			if (resumeResult.error) {
 				setMessage(resumeResult.error.message);
@@ -235,10 +287,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				return;
 			}
 
-			setResume(resumeResult.data);
+			const loadedResume = withReadCount(resumeResult.data);
+			setResume(loadedResume);
 
 			if (activeUser) {
-				await openResumeFile(resumeResult.data);
+				await openResumeFile(loadedResume);
+				void recordResumeRead(loadedResume, activeUser);
 			}
 
 			const roastResultWithThreads = await supabase
@@ -715,7 +769,6 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						{isOwner ? (
 							<div className="owner-actions">
 								<Button
-									className="rounded-full"
 									disabled={isClosed}
 									onClick={() => void closeResume()}
 									type="button"
@@ -859,7 +912,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 									<header>
 										<Button
 											asChild
-											className="comment-author-chip rounded-full py-0 ps-0"
+											className="comment-author-chip py-0 ps-0"
 											size="sm"
 										>
 											<Link href={`/profile/${roast.author_id}`}>

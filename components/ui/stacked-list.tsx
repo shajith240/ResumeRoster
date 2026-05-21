@@ -172,7 +172,7 @@ function LeaderboardRow({
 						? `/resume/${roaster.top_roast.resume_id}`
 						: `/profile/${roaster.id}`
 				}
-				className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--border-default)] bg-[var(--bg-elevated)] px-3 py-2 text-xs font-bold text-[var(--text-primary)] transition hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)]"
+				className="inline-flex w-fit select-none items-center gap-2 rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-3 py-2 text-xs font-bold text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px"
 			>
 				View Roast
 				<ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
