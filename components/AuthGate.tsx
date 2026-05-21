@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
 import { SessionNavBar } from "@/components/ui/sidebar";
 
@@ -89,8 +90,8 @@ export default function AuthGate({ children }: AuthGateProps) {
 
 	if (checking || !user) {
 		return (
-			<main className="route-shell compact-route">
-				<p className="muted-text">Opening your workspace...</p>
+			<main className="full-page-loader">
+				<LoadingScreen variant="plain" />
 			</main>
 		);
 	}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import LandingCta from "@/components/LandingCta";
+import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
 
 type FeatureKey = "ats" | "jd" | "roast" | "skills" | "optimize";
@@ -328,8 +329,8 @@ export default function Home() {
 
   if (authReady && isSignedIn) {
     return (
-      <main className="route-shell compact-route">
-        <p className="muted-text">Opening your feed...</p>
+      <main className="full-page-loader">
+        <LoadingScreen variant="plain" />
       </main>
     );
   }

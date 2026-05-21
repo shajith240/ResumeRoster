@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { UserDropdown } from "@/components/ui/user-dropdown";
 import { signInWithGoogle, signOut, supabase } from "@/lib/supabase/client";
 
@@ -94,7 +95,9 @@ export default function AuthButton() {
 			feedback: "/feed",
 		};
 
-		router.push(routes[action] || "/feed");
+		const nextRoute = routes[action] || "/feed";
+		announceRouteTransition(nextRoute);
+		router.push(nextRoute);
 	}
 
 	function handleThemeChange(nextTheme: AppTheme) {

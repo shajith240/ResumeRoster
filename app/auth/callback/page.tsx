@@ -1,17 +1,15 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
 
 function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [message, setMessage] = useState("Redirecting you back to ResumeRoster.");
 
   useEffect(() => {
-    let active = true;
-
     async function finishSignIn() {
       const storedNextPath = window.localStorage.getItem("resumeroster.auth.next");
       window.localStorage.removeItem("resumeroster.auth.next");
@@ -25,7 +23,6 @@ function AuthCallbackContent() {
         searchParams.get("error_description") || searchParams.get("error");
 
       if (errorDescription) {
-        if (active) setMessage("Google sign-in was cancelled or blocked.");
         router.replace(`/?auth_error=${encodeURIComponent(errorDescription)}`);
         return;
       }
@@ -34,7 +31,6 @@ function AuthCallbackContent() {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (error) {
-          if (active) setMessage("We could not finish Google sign-in.");
           router.replace(`/?auth_error=${encodeURIComponent(error.message)}`);
           return;
         }
@@ -43,7 +39,6 @@ function AuthCallbackContent() {
       const { data } = await supabase.auth.getSession();
 
       if (!data.session) {
-        if (active) setMessage("No sign-in session was created. Please try again.");
         router.replace("/?auth_error=no_session");
         return;
       }
@@ -52,16 +47,11 @@ function AuthCallbackContent() {
     }
 
     void finishSignIn();
-
-    return () => {
-      active = false;
-    };
   }, [router, searchParams]);
 
   return (
-    <main className="route-shell compact-route">
-      <h1>Signing you in</h1>
-      <p>{message}</p>
+    <main className="full-page-loader">
+      <LoadingScreen variant="plain" />
     </main>
   );
 }
@@ -70,9 +60,8 @@ export default function AuthCallbackPage() {
   return (
     <Suspense
       fallback={
-        <main className="route-shell compact-route">
-          <h1>Signing you in</h1>
-          <p>Preparing your workspace.</p>
+        <main className="full-page-loader">
+          <LoadingScreen variant="plain" />
         </main>
       }
     >

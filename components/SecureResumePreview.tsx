@@ -9,10 +9,9 @@ import type {
 	TextMarkedContent,
 } from "pdfjs-dist/types/src/display/api";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-	"pdfjs-dist/build/pdf.worker.min.mjs",
-	import.meta.url,
-).toString();
+const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
+
+pdfjs.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
 
 type SecureResumePreviewProps = {
 	fileUrl: string;

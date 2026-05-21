@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
+import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import SecureResumePreview from "@/components/SecureResumePreview";
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle, supabase } from "@/lib/supabase/client";
@@ -741,6 +742,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		toast.success("Resume deleted.");
+		announceRouteTransition("/feed");
 		router.push("/feed");
 	}
 

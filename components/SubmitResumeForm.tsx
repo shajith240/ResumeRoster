@@ -11,6 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
+import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { supabase } from "@/lib/supabase/client";
 
 const roles = [
@@ -153,7 +154,11 @@ export default function SubmitResumeForm() {
 
 		setSuccess(true);
 		toast.success("Resume posted.");
-		window.setTimeout(() => router.push(`/resume/${insert.data.id}`), 500);
+		window.setTimeout(() => {
+			const resumeRoute = `/resume/${insert.data.id}`;
+			announceRouteTransition(resumeRoute);
+			router.push(resumeRoute);
+		}, 500);
 	}
 
 	return (

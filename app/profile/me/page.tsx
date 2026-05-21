@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import RouteHeader from "@/components/RouteHeader";
+import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
 
 export default function MyProfilePage() {
@@ -25,15 +24,8 @@ export default function MyProfilePage() {
   }, [router]);
 
   return (
-    <>
-      <RouteHeader />
-      <main className="route-shell compact-route">
-        <div className="empty-state">
-          <h1>Opening your profile</h1>
-          <p>Checking your session and sending you to your public roaster profile.</p>
-          <Link href="/leaderboard">View public leaderboard</Link>
-        </div>
-      </main>
-    </>
+    <main className="full-page-loader">
+      <LoadingScreen variant="plain" />
+    </main>
   );
 }

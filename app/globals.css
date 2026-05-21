@@ -544,6 +544,178 @@ body.main-app-dark .app-header {
 	max-width: 100%;
 }
 
+.loading-screen {
+	--loader-bg-base: var(--bg-base);
+	--loader-surface: var(--bg-surface);
+	--loader-border: var(--border-subtle);
+	--loader-text: var(--text-secondary);
+	--loader-brand-glow: rgba(232, 93, 38, 0.12);
+	display: grid;
+	place-items: center;
+	gap: 14px;
+	min-height: 220px;
+	border: 1px solid var(--loader-border);
+	border-radius: var(--radius-lg);
+	background:
+		radial-gradient(circle at 50% 32%, var(--loader-brand-glow), transparent 42%),
+		var(--loader-surface);
+	box-shadow: var(--shadow-sm);
+	color: var(--loader-text);
+	text-align: center;
+}
+
+.loading-screen[data-loader-theme="light"],
+html[data-app-theme="light"] .loading-screen[data-loader-theme="auto"] {
+	--loader-bg-base: #f2efe9;
+	--loader-surface: #fafaf8;
+	--loader-border: rgba(26, 25, 22, 0.08);
+	--loader-text: #6b6860;
+	--loader-brand-glow: rgba(232, 93, 38, 0.12);
+	color-scheme: light;
+}
+
+.loading-screen[data-loader-theme="dark"],
+html[data-app-theme="dark"] .loading-screen[data-loader-theme="auto"] {
+	--loader-bg-base: #101114;
+	--loader-surface: #17191d;
+	--loader-border: rgba(239, 226, 208, 0.09);
+	--loader-text: #c8bfb2;
+	--loader-brand-glow: rgba(255, 138, 77, 0.16);
+	color-scheme: dark;
+}
+
+.loading-screen-plain {
+	border-color: transparent;
+	background: transparent;
+	box-shadow: none;
+}
+
+.loading-screen-compact {
+	min-height: 156px;
+	border-radius: var(--radius-md);
+	background:
+		radial-gradient(circle at 50% 32%, rgba(232, 93, 38, 0.14), transparent 46%),
+		color-mix(in srgb, var(--bg-surface) 88%, transparent);
+	box-shadow: none;
+}
+
+.loading-screen-video {
+	width: min(220px, 58vw);
+	max-width: 100%;
+	aspect-ratio: 1;
+	object-fit: contain;
+	filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.16));
+}
+
+.loading-screen-compact .loading-screen-video {
+	width: min(140px, 46vw);
+}
+
+.loading-screen p {
+	max-width: 320px;
+	margin: 0;
+	color: var(--loader-text);
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.5;
+}
+
+.route-transition-loader {
+	--route-loader-bg:
+		radial-gradient(circle at 50% 42%, rgba(232, 93, 38, 0.1), transparent 38%),
+		rgba(242, 239, 233, 0.94);
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+	background: var(--route-loader-bg);
+	backdrop-filter: blur(22px) saturate(130%);
+	animation: route-transition-enter 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+	pointer-events: auto;
+}
+
+.route-transition-loader[data-loader-theme="light"] {
+	--route-loader-bg:
+		radial-gradient(circle at 50% 42%, rgba(232, 93, 38, 0.1), transparent 38%),
+		rgba(242, 239, 233, 0.94);
+	color-scheme: light;
+}
+
+.route-transition-loader[data-loader-theme="dark"] {
+	--route-loader-bg:
+		radial-gradient(circle at 50% 42%, rgba(255, 138, 77, 0.12), transparent 38%),
+		rgba(16, 17, 20, 0.94);
+	color-scheme: dark;
+}
+
+.route-transition-content {
+	width: min(360px, 100%);
+	min-height: auto;
+	gap: 18px;
+}
+
+.route-transition-content .loading-screen-video {
+	width: min(260px, 66vw);
+	filter: drop-shadow(0 24px 34px rgba(0, 0, 0, 0.24));
+}
+
+.route-transition-content p {
+	color: var(--text-primary);
+	font-size: 15px;
+}
+
+.full-page-loader {
+	display: grid;
+	place-items: center;
+	width: 100%;
+	min-height: 100svh;
+	padding: 24px;
+	background: #101114;
+}
+
+html[data-app-theme="light"] .full-page-loader {
+	background:
+		radial-gradient(circle at 50% 42%, rgba(232, 93, 38, 0.1), transparent 38%),
+		#f2efe9;
+}
+
+html[data-app-theme="dark"] .full-page-loader {
+	background:
+		radial-gradient(circle at 50% 42%, rgba(255, 138, 77, 0.12), transparent 38%),
+		#101114;
+}
+
+.full-page-loader .loading-screen {
+	width: min(360px, 100%);
+	min-height: auto;
+}
+
+.full-page-loader .loading-screen-video {
+	width: min(260px, 66vw);
+}
+
+@keyframes route-transition-enter {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.route-transition-loader {
+		animation: none;
+		backdrop-filter: none;
+	}
+
+	.route-transition-content .loading-screen-video {
+		display: none;
+	}
+}
+
 .pill-tabs button,
 .pill-tabs a {
 	display: inline-flex;
