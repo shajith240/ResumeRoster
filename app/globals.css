@@ -796,16 +796,22 @@ body.main-app-dark .app-header {
 	position: relative;
 	isolation: isolate;
 	overflow: hidden;
-	min-height: 318px;
-	padding: 18px;
+	min-height: 360px;
+	padding: 18px 18px 16px;
 	background:
 		linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface) 52%, rgba(232, 93, 38, 0.09) 100%);
+}
+
+.feed-right-rail .feed-rules-panel::after {
+	display: block;
+	clear: both;
+	content: "";
 }
 
 .feed-rules-copy {
 	position: relative;
 	z-index: 1;
-	max-width: min(68%, 300px);
+	text-wrap: pretty;
 }
 
 .feed-rules-eyebrow {
@@ -822,8 +828,6 @@ body.main-app-dark .app-header {
 }
 
 .feed-rules-list {
-	display: grid;
-	gap: 10px;
 	margin-top: 14px;
 	padding: 0;
 	list-style: none;
@@ -833,6 +837,10 @@ body.main-app-dark .app-header {
 .feed-rules-list li {
 	position: relative;
 	padding-left: 30px;
+}
+
+.feed-rules-list li + li {
+	margin-top: 10px;
 }
 
 .feed-rules-list li::before {
@@ -863,6 +871,7 @@ body.main-app-dark .app-header {
 	color: var(--text-primary);
 	font-size: 13px;
 	line-height: 1.25;
+	text-wrap: balance;
 }
 
 .feed-rules-list span {
@@ -870,19 +879,18 @@ body.main-app-dark .app-header {
 	color: var(--text-secondary);
 	font-size: 12px;
 	line-height: 1.45;
+	text-wrap: pretty;
 }
 
 .feed-rules-guide {
-	position: absolute;
-	right: -42px;
-	bottom: -12px;
-	z-index: 0;
-	width: min(62%, 270px);
-	max-height: 95%;
-	object-fit: contain;
-	object-position: right bottom;
+	float: right;
+	width: clamp(260px, 78%, 390px);
+	margin: -24px -112px -34px 8px;
 	pointer-events: none;
 	filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.18));
+	shape-image-threshold: 0.12;
+	shape-margin: 10px;
+	shape-outside: url("/assets/rules%20explaining%20image.png");
 }
 
 body.main-app-dark .feed-right-rail .feed-rules-panel {
@@ -3181,17 +3189,14 @@ body.main-app-dark .form-message {
 	}
 
 	.feed-right-rail .feed-rules-panel {
-		min-height: 300px;
-	}
-
-	.feed-rules-copy {
-		max-width: 100%;
+		min-height: 330px;
 	}
 
 	.feed-rules-guide {
-		right: -52px;
-		width: min(76%, 250px);
-		opacity: 0.22;
+		width: clamp(220px, 76%, 310px);
+		margin-right: -92px;
+		opacity: 0.24;
+		shape-outside: polygon(54% 0, 100% 0, 100% 100%, 46% 100%, 58% 75%, 28% 58%, 52% 38%);
 	}
 
 	.detail-layout {
