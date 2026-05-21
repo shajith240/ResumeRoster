@@ -23,14 +23,6 @@ export default function RouteHeader() {
 					ResumeRoster
 				</Link>
 
-				<label className="app-search">
-					<span className="sr-only">Search</span>
-					<input
-						placeholder="Search resumes, roles, colleges..."
-						type="search"
-					/>
-				</label>
-
 				<AuthButton />
 			</header>
 

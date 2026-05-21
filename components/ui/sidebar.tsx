@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { useMemo } from "react";
+import type { ComponentType } from "react";
 import {
 	Flame,
 	Home,
@@ -12,59 +12,17 @@ import {
 	Trophy,
 } from "lucide-react";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-
-const sidebarVariants = {
-	open: { width: "15rem" },
-	closed: { width: "3.05rem" },
-};
-
-const contentVariants = {
-	open: { display: "block", opacity: 1 },
-	closed: { display: "block", opacity: 1 },
-};
-
-const labelVariants = {
-	open: {
-		x: 0,
-		opacity: 1,
-		transition: {
-			x: { stiffness: 1000, velocity: -100 },
-		},
-	},
-	closed: {
-		x: -14,
-		opacity: 0,
-		transition: {
-			x: { stiffness: 100 },
-		},
-	},
-};
-
-const transitionProps = {
-	type: "tween",
-	ease: "easeOut",
-	duration: 0.2,
-	staggerChildren: 0.1,
-} as const;
-
-const staggerVariants = {
-	open: {
-		transition: { staggerChildren: 0.03, delayChildren: 0.02 },
-	},
-};
 
 type NavItem = {
 	href: string;
 	label: string;
-	icon: React.ComponentType<{ className?: string }>;
+	icon: ComponentType<{ className?: string }>;
 	active: boolean;
 	tone?: "primary";
 };
 
 export function SessionNavBar() {
-	const [isCollapsed, setIsCollapsed] = useState(true);
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const sort = searchParams.get("sort");
@@ -107,55 +65,38 @@ export function SessionNavBar() {
 	);
 
 	return (
-		<motion.aside
+		<aside
 			aria-label="Primary navigation"
-			className="session-sidebar fixed left-0 top-[52px] z-40 h-[calc(100vh-52px)] shrink-0 border-r border-border bg-background text-muted-foreground shadow-[8px_0_26px_rgba(23,20,15,0.04)]"
-			initial={isCollapsed ? "closed" : "open"}
-			animate={isCollapsed ? "closed" : "open"}
-			variants={sidebarVariants}
-			transition={transitionProps}
-			onMouseEnter={() => setIsCollapsed(false)}
-			onMouseLeave={() => setIsCollapsed(true)}
+			className="session-sidebar group/sidebar fixed left-0 top-[var(--app-header-height)] z-40 h-[calc(100vh_-_var(--app-header-height))] w-[var(--session-sidebar-width)] shrink-0 overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-tertiary)] shadow-[12px_0_36px_rgba(0,0,0,0.08)] transition-[width,box-shadow] duration-200 ease-out hover:w-[var(--session-sidebar-expanded-width)] hover:shadow-[18px_0_48px_rgba(0,0,0,0.18)]"
 		>
-			<motion.div
-				className="relative z-40 flex h-full shrink-0 flex-col bg-background transition-all"
-				variants={contentVariants}
-			>
-				<motion.div variants={staggerVariants} className="flex h-full flex-col">
-					<ScrollArea className="min-h-0 flex-1 p-2 pt-3">
-						<nav className="flex w-full flex-col gap-1">
-							{items.map((item) => {
-								const Icon = item.icon;
+			<nav className="flex h-full w-full flex-col gap-2 p-2 pt-3">
+				{items.map((item) => {
+					const Icon = item.icon;
+					const isPrimaryInactive = item.tone === "primary" && !item.active;
 
-								return (
-									<Link
-										href={item.href}
-										key={item.label}
-										className={cn(
-											"flex h-9 w-full flex-row items-center rounded-md px-2 py-1.5 text-sm transition hover:bg-muted hover:text-primary",
-											item.active && "bg-muted text-primary",
-											item.tone === "primary" &&
-												"bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800",
-										)}
-									>
-										<Icon className="h-4 w-4 shrink-0" />
-										<motion.span
-											variants={labelVariants}
-											className="ml-2 flex min-w-0 flex-1 items-center gap-2"
-										>
-											{!isCollapsed && (
-												<span className="truncate font-medium">
-													{item.label}
-												</span>
-											)}
-										</motion.span>
-									</Link>
-								);
-							})}
-						</nav>
-					</ScrollArea>
-				</motion.div>
-			</motion.div>
-		</motion.aside>
+					return (
+						<Link
+							href={item.href}
+							key={item.label}
+							aria-label={item.label}
+							className={cn(
+								"flex min-h-[58px] w-full items-center justify-center overflow-hidden rounded-xl border border-transparent px-0 py-2 text-[13px] font-semibold leading-none transition-[background-color,border-color,color,padding] duration-150 hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)] group-hover/sidebar:justify-start group-hover/sidebar:px-3",
+								item.active &&
+									"border-[rgba(255,138,77,0.28)] bg-[var(--brand-muted)] text-[var(--brand)]",
+								isPrimaryInactive &&
+									"text-[var(--brand)] hover:border-[rgba(255,138,77,0.22)] hover:bg-[var(--brand-muted)] hover:text-[var(--brand)]",
+							)}
+						>
+							<span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg">
+								<Icon className="h-[18px] w-[18px]" aria-hidden="true" />
+							</span>
+							<span className="ml-0 max-w-0 -translate-x-1 overflow-hidden whitespace-nowrap opacity-0 transition-[max-width,opacity,transform,margin] duration-150 group-hover/sidebar:ml-1 group-hover/sidebar:max-w-[11rem] group-hover/sidebar:translate-x-0 group-hover/sidebar:opacity-100">
+								{item.label}
+							</span>
+						</Link>
+					);
+				})}
+			</nav>
+		</aside>
 	);
 }

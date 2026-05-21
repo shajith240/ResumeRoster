@@ -26,6 +26,8 @@ export type Roast = {
 export type RoasterLeaderboardEntry = {
   id: string;
   username: string | null;
+  full_name?: string | null;
+  avatar_url?: string | null;
   college: string | null;
   target_role: string | null;
   roast_count: number;
@@ -33,7 +35,30 @@ export type RoasterLeaderboardEntry = {
 };
 
 export type PublicProfile = RoasterLeaderboardEntry & {
+  avatar_path: string | null;
+  tagline: string | null;
+  current_position: string | null;
+  college_location: string | null;
+  about: string | null;
+  skills: string[] | null;
+  resume_highlight_id: string | null;
+  roast_points: number;
+  resume_improvement: number;
+  resumes_submitted_count: number;
+  resumes_roasted_count: number;
+  best_roast_count: number;
+  received_roast_count: number;
+  received_helpful_votes: number;
   created_at: string;
+};
+
+export type PublicProfileResume = {
+  id: string;
+  title: string;
+  status: ResumeStatus;
+  roast_count: number;
+  created_at: string;
+  is_highlight: boolean;
 };
 
 export type PublicProfileRoast = {

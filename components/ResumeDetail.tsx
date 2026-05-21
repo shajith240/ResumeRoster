@@ -12,10 +12,10 @@ import { useRouter } from "next/navigation";
 import { ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import SecureResumePreview from "@/components/SecureResumePreview";
-import { useToast } from "@/components/ToastProvider";
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle, supabase } from "@/lib/supabase/client";
 import type { ResumeSummary, Roast } from "@/lib/supabase/types";
+import { toast } from "sonner";
 
 type ResumeDetailProps = {
 	resumeId: string;
@@ -154,7 +154,6 @@ function buildThreadRoasts(
 
 export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const router = useRouter();
-	const { showToast } = useToast();
 	const [user, setUser] = useState<User | null>(null);
 	const [resume, setResume] = useState<ResumeSummary | null>(null);
 	const [roasts, setRoasts] = useState<Roast[]>([]);
@@ -185,6 +184,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	);
 	const isOwner = Boolean(user && resume?.user_id === user.id);
 	const isClosed = resume?.status === "closed";
+
+	function reportError(errorMessage: string) {
+		setMessage(errorMessage);
+		toast.error(errorMessage);
+	}
 
 	async function openResumeFile(activeResume = resume) {
 		setSignedUrlError("");
@@ -359,18 +363,18 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (isOwner) {
-			setMessage("You cannot roast your own resume. Let the community cook.");
+			reportError("You cannot roast your own resume. Let the community cook.");
 			return;
 		}
 
 		if (isClosed) {
-			setMessage("This resume is closed for new roasts.");
+			reportError("This resume is closed for new roasts.");
 			return;
 		}
 
 		const roastContent = content.trim();
 		if (roastContent.length < 10) {
-			setMessage("Give at least 10 characters of useful feedback.");
+			reportError("Give at least 10 characters of useful feedback.");
 			return;
 		}
 
@@ -389,7 +393,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setSubmitting(false);
 
 		if (error) {
-			setMessage(error.message);
+			reportError(error.message);
 			return;
 		}
 
@@ -406,7 +410,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			current ? { ...current, roast_count: current.roast_count + 1 } : current,
 		);
 		setContent("");
-		showToast("Roast submitted.");
+		toast.success("Roast submitted.");
 	}
 
 	async function handleReplySubmit(
@@ -417,7 +421,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setMessage("");
 
 		if (!replySchemaReady) {
-			setMessage("Run supabase/replies.sql in Supabase, then refresh to enable replies.");
+			reportError("Run supabase/replies.sql in Supabase, then refresh to enable replies.");
 			return;
 		}
 
@@ -427,18 +431,18 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (isOwner) {
-			setMessage("Resume owners cannot reply in their own roast thread.");
+			reportError("Resume owners cannot reply in their own roast thread.");
 			return;
 		}
 
 		if (isClosed) {
-			setMessage("This resume is closed for new replies.");
+			reportError("This resume is closed for new replies.");
 			return;
 		}
 
 		const replyText = replyContent.trim();
 		if (replyText.length < 10) {
-			setMessage("Give at least 10 characters of useful reply context.");
+			reportError("Give at least 10 characters of useful reply context.");
 			return;
 		}
 
@@ -463,13 +467,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				isMissingColumnError(error, "reply_count")
 			) {
 				setReplySchemaReady(false);
-				setMessage(
-					"Run supabase/replies.sql in Supabase, then refresh to enable replies.",
-				);
+				reportError("Run supabase/replies.sql in Supabase, then refresh to enable replies.");
 				return;
 			}
 
-			setMessage(error.message);
+			reportError(error.message);
 			return;
 		}
 
@@ -500,7 +502,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		);
 		setReplyingToId(null);
 		setReplyContent("");
-		showToast("Reply posted.");
+		toast.success("Reply posted.");
 	}
 
 	function toggleRoastReplies(roastId: string) {
@@ -524,12 +526,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (targetRoast.author_id === user.id) {
-			setMessage("You cannot react to your own roast.");
+			reportError("You cannot react to your own roast.");
 			return;
 		}
 
 		if (isOwner) {
-			setMessage("Resume owners cannot react to roasts for their own resume.");
+			reportError("Resume owners cannot react to roasts for their own resume.");
 			return;
 		}
 
@@ -590,12 +592,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				.eq("voter_id", user.id);
 
 			if (error) {
-				setMessage(error.message);
+				reportError(error.message);
 				return;
 			}
 
 			applyLocalReaction(null);
-			showToast(reaction === "like" ? "Like removed." : "Dislike removed.");
+			toast.info(reaction === "like" ? "Like removed." : "Dislike removed.");
 			return;
 		}
 
@@ -614,7 +616,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		const { error } = await voteQuery;
 
 		if (error) {
-			setMessage(
+			reportError(
 				error.message.includes("reaction")
 					? "Run the reaction SQL migration in Supabase, then try again."
 					: error.message,
@@ -623,14 +625,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		applyLocalReaction(reaction);
-		showToast(reaction === "like" ? "Liked roast." : "Disliked roast.");
+		toast.success(reaction === "like" ? "Liked roast." : "Disliked roast.");
 	}
 
 	async function closeResume() {
 		setMessage("");
 
 		if (!resume || !isOwner) {
-			setMessage("Only the resume owner can close this thread.");
+			reportError("Only the resume owner can close this thread.");
 			return;
 		}
 
@@ -640,19 +642,20 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			.eq("id", resume.id);
 
 		if (error) {
-			setMessage(error.message);
+			reportError(error.message);
 			return;
 		}
 
 		setResume({ ...resume, status: "closed" });
 		setMessage("This resume is now closed for new roasts.");
+		toast.success("Resume thread closed.");
 	}
 
 	async function deleteResume() {
 		setMessage("");
 
 		if (!resume || !isOwner) {
-			setMessage("Only the resume owner can delete this submission.");
+			reportError("Only the resume owner can delete this submission.");
 			return;
 		}
 
@@ -660,7 +663,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			.from("resumes")
 			.remove([resume.file_path]);
 		if (removeFile.error) {
-			setMessage(removeFile.error.message);
+			reportError(removeFile.error.message);
 			return;
 		}
 
@@ -669,10 +672,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			.delete()
 			.eq("id", resume.id);
 		if (error) {
-			setMessage(error.message);
+			reportError(error.message);
 			return;
 		}
 
+		toast.success("Resume deleted.");
 		router.push("/feed");
 	}
 

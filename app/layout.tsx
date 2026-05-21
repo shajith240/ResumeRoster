@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import ToastProvider from "@/components/ToastProvider";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import "./feed-canvas.css";
 
@@ -18,9 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <ToastProvider>
-          <div className="app-root">{children}</div>
-        </ToastProvider>
+        <div className="app-root">{children}</div>
+        <Toaster />
       </body>
     </html>
   );

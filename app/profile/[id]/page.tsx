@@ -12,7 +12,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   return (
     <AuthGate>
       <RouteHeader />
-      <main className="profile-route">
+      <main>
         <ProfileDetail profileId={id} />
       </main>
     </AuthGate>

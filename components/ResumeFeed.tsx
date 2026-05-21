@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useToast } from "@/components/ToastProvider";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeSummary } from "@/lib/supabase/types";
 
@@ -82,7 +82,6 @@ type ResumeFeedProps = {
 };
 
 export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
-  const { showToast } = useToast();
   const [resumes, setResumes] = useState<ResumeSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -145,13 +144,13 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
         text: "Roast this resume on ResumeRoster",
         url,
       });
-      showToast("Share sheet opened.");
+      toast.success("Share sheet opened.");
       return;
     }
 
     await navigator.clipboard.writeText(url);
     setCopiedId(resume.id);
-    showToast("Link copied.");
+    toast.success("Link copied.");
     window.setTimeout(() => setCopiedId(""), 1400);
   }
 

@@ -7,59 +7,96 @@ import { supabase } from "@/lib/supabase/client";
 import { SessionNavBar } from "@/components/ui/sidebar";
 
 type AuthGateProps = {
-  children: React.ReactNode;
+	children: React.ReactNode;
 };
 
+type AppTheme = "dark" | "light";
+
+const APP_THEME_STORAGE_KEY = "resumeroster-theme";
+const APP_THEME_CHANGE_EVENT = "resumeroster-theme-change";
+
+function getStoredAppTheme(): AppTheme {
+	if (typeof window === "undefined") return "dark";
+	return window.localStorage.getItem(APP_THEME_STORAGE_KEY) === "light"
+		? "light"
+		: "dark";
+}
+
+function applyAppTheme(theme: AppTheme) {
+	const isDark = theme === "dark";
+	document.body.classList.toggle("main-app-dark", isDark);
+	document.documentElement.classList.toggle("dark", isDark);
+	document.documentElement.dataset.appTheme = theme;
+}
+
 export default function AuthGate({ children }: AuthGateProps) {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [checking, setChecking] = useState(true);
+	const router = useRouter();
+	const [user, setUser] = useState<User | null>(null);
+	const [checking, setChecking] = useState(true);
 
-  useEffect(() => {
-    let active = true;
+	useEffect(() => {
+		applyAppTheme(getStoredAppTheme());
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (!active) return;
+		function handleThemeChange(event: Event) {
+			const theme = (event as CustomEvent<AppTheme>).detail;
+			applyAppTheme(theme === "light" ? "light" : "dark");
+		}
 
-      if (!data.session?.user) {
-        router.replace("/");
-        return;
-      }
+		window.addEventListener(APP_THEME_CHANGE_EVENT, handleThemeChange);
 
-      setUser(data.session.user);
-      setChecking(false);
-    });
+		return () => {
+			window.removeEventListener(APP_THEME_CHANGE_EVENT, handleThemeChange);
+			document.body.classList.remove("main-app-dark");
+			document.documentElement.classList.remove("dark");
+			delete document.documentElement.dataset.appTheme;
+		};
+	}, []);
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) {
-        router.replace("/");
-        return;
-      }
+	useEffect(() => {
+		let active = true;
 
-      setUser(session.user);
-      setChecking(false);
-    });
+		supabase.auth.getSession().then(({ data }) => {
+			if (!active) return;
 
-    return () => {
-      active = false;
-      subscription.unsubscribe();
-    };
-  }, [router]);
+			if (!data.session?.user) {
+				router.replace("/");
+				return;
+			}
 
-  if (checking || !user) {
-    return (
-      <main className="route-shell compact-route">
-        <p className="muted-text">Opening your workspace...</p>
-      </main>
-    );
-  }
+			setUser(data.session.user);
+			setChecking(false);
+		});
 
-  return (
-    <>
-      <SessionNavBar />
-      <div className="app-with-sidebar">{children}</div>
-    </>
-  );
+		const {
+			data: { subscription },
+		} = supabase.auth.onAuthStateChange((_event, session) => {
+			if (!session?.user) {
+				router.replace("/");
+				return;
+			}
+
+			setUser(session.user);
+			setChecking(false);
+		});
+
+		return () => {
+			active = false;
+			subscription.unsubscribe();
+		};
+	}, [router]);
+
+	if (checking || !user) {
+		return (
+			<main className="route-shell compact-route">
+				<p className="muted-text">Opening your workspace...</p>
+			</main>
+		);
+	}
+
+	return (
+		<>
+			<SessionNavBar />
+			<div className="app-with-sidebar">{children}</div>
+		</>
+	);
 }

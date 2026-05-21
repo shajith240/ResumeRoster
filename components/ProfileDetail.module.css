@@ -1,0 +1,970 @@
+.shell {
+	min-height: calc(100vh - var(--app-header-height));
+	padding: clamp(14px, 2vw, 30px);
+	background: #efeae1;
+	color: #211e1a;
+}
+
+.canvas {
+	display: grid;
+	gap: clamp(16px, 1.55vw, 24px);
+	width: 100%;
+	min-height: calc(100vh - 92px);
+	padding: clamp(8px, 1vw, 16px) clamp(10px, 2vw, 34px) clamp(22px, 2vw, 34px);
+}
+
+.hero {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(170px, 220px) minmax(0, 1fr);
+	gap: clamp(24px, 3vw, 54px);
+	align-items: center;
+	min-height: 240px;
+}
+
+.avatarFrame {
+	position: relative;
+	width: clamp(170px, 13vw, 220px);
+	aspect-ratio: 1;
+	border: 2px solid #c79a39;
+	border-radius: 50%;
+	padding: 8px;
+	background: #f6efe4;
+}
+
+.avatarFrame img {
+	width: 100%;
+	height: 100%;
+	border-radius: inherit;
+	object-fit: cover;
+	filter: saturate(0.94) contrast(1.02);
+}
+
+.avatarEdit {
+	position: absolute;
+	right: 2px;
+	bottom: 16px;
+	display: grid;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	border: 2px solid #f3eadc;
+	border-radius: 50%;
+	background: #262420;
+	color: #f8f0e2;
+}
+
+.avatarEdit svg,
+.editButton svg {
+	width: 16px;
+	height: 16px;
+}
+
+.identity {
+	min-width: 0;
+}
+
+.identityHeader {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.identity h1 {
+	margin: 0;
+	font-family: var(--font-body);
+	font-size: clamp(38px, 4vw, 64px);
+	font-weight: 800;
+	letter-spacing: -0.035em;
+	line-height: 0.98;
+}
+
+.identityHeader svg {
+	width: 24px;
+	height: 24px;
+	color: #d4a538;
+	fill: rgba(212, 165, 56, 0.22);
+}
+
+.roleTag {
+	display: inline-flex;
+	align-items: center;
+	width: fit-content;
+	margin-top: 14px;
+	border: 1px solid rgba(92, 72, 180, 0.2);
+	border-radius: 999px;
+	padding: 6px 12px;
+	background: rgba(104, 82, 205, 0.1);
+	color: #4230a3;
+	font-size: 13px;
+	font-weight: 750;
+}
+
+.identity p {
+	margin-top: 12px;
+	color: #24211d;
+	font-size: clamp(18px, 1.35vw, 24px);
+	font-weight: 650;
+}
+
+.metaList {
+	display: grid;
+	gap: 10px;
+	margin-top: 18px;
+	color: #403a33;
+	font-size: 14px;
+}
+
+.metaList span {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+.metaList svg {
+	flex: 0 0 auto;
+	width: 17px;
+	height: 17px;
+	color: #746f66;
+}
+
+.panelHeader a,
+.resumeHighlight a {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: #161410;
+	font-size: 12px;
+	font-weight: 800;
+	text-decoration: none;
+}
+
+.panelHeader svg {
+	width: 14px;
+	height: 14px;
+}
+
+.editButton {
+	position: absolute;
+	top: 4px;
+	right: 0;
+	gap: 8px;
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	border-radius: 8px;
+	background: #262420;
+	color: #fbf3e7;
+}
+
+.statsGrid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	border: 1px solid rgba(26, 25, 22, 0.1);
+	border-radius: 12px;
+	background: #f8f4ed;
+	overflow: hidden;
+}
+
+.statCard {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: 2px 14px;
+	align-items: center;
+	padding: clamp(16px, 1.4vw, 22px);
+	border-right: 1px solid rgba(26, 25, 22, 0.09);
+}
+
+.statCard:last-child {
+	border-right: 0;
+}
+
+.statCard svg {
+	grid-row: span 2;
+	width: 34px;
+	height: 34px;
+	color: #9f7529;
+	stroke-width: 1.7;
+}
+
+.statPrimary svg {
+	color: #e85d26;
+}
+
+.statCard strong {
+	color: #1f1c18;
+	font-family: var(--font-body);
+	font-size: clamp(28px, 2.5vw, 38px);
+	font-weight: 800;
+	line-height: 1;
+}
+
+.statCard span {
+	color: #5e574e;
+	font-size: 12px;
+	font-weight: 750;
+}
+
+.profileGrid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr) minmax(
+			360px,
+			1.25fr
+		);
+	gap: clamp(14px, 1.35vw, 22px);
+}
+
+.activityGrid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(420px, 1.2fr);
+	gap: clamp(14px, 1.35vw, 22px);
+}
+
+.aboutPanel,
+.skillsPanel,
+.highlightPanel,
+.activityPanel,
+.roastsPanel {
+	border: 1px solid rgba(26, 25, 22, 0.11);
+	border-radius: 12px;
+	padding: 18px;
+	background: #f8f4ed;
+	box-shadow: none;
+}
+
+.panelHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 14px;
+}
+
+.panelHeader h2,
+.aboutPanel h2,
+.skillsPanel h2 {
+	margin: 0;
+	font-family: var(--font-body);
+	font-size: 16px;
+	font-weight: 800;
+	letter-spacing: -0.01em;
+}
+
+.aboutPanel p,
+.mutedCopy {
+	color: #413c35;
+	font-size: 13px;
+	line-height: 1.65;
+}
+
+.aboutPanel p {
+	margin: 14px 0 18px;
+}
+
+.aboutDetails {
+	display: grid;
+	gap: 12px;
+	border-left: 1px solid rgba(26, 25, 22, 0.12);
+	padding-left: 18px;
+}
+
+.aboutDetails div {
+	display: grid;
+	gap: 3px;
+}
+
+.aboutDetails strong {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: #24201c;
+	font-size: 12px;
+}
+
+.aboutDetails svg {
+	width: 15px;
+	height: 15px;
+	color: #6a7384;
+}
+
+.aboutDetails span {
+	color: #5e574e;
+	font-size: 12px;
+	line-height: 1.35;
+}
+
+.skillCloud {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 14px;
+}
+
+.skillCloud span {
+	border: 1px solid rgba(26, 25, 22, 0.14);
+	border-radius: 7px;
+	padding: 8px 10px;
+	background: #fffaf2;
+	color: #302b25;
+	font-size: 12px;
+	font-weight: 750;
+}
+
+.focusArea {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 18px;
+	border: 1px solid rgba(180, 126, 39, 0.18);
+	border-radius: 10px;
+	padding: 14px;
+	background: #fff6e6;
+	color: #2f2a24;
+}
+
+.focusArea svg {
+	flex: 0 0 auto;
+	width: 20px;
+	height: 20px;
+	color: #9f7529;
+}
+
+.focusArea strong,
+.focusArea span {
+	display: block;
+}
+
+.focusArea strong {
+	font-size: 12px;
+}
+
+.focusArea span {
+	margin-top: 2px;
+	color: #5e574e;
+	font-size: 12px;
+}
+
+.resumeHighlight {
+	display: grid;
+	grid-template-columns: 92px minmax(0, 1fr);
+	gap: 16px;
+	align-items: center;
+}
+
+.resumePreview {
+	display: grid;
+	place-items: center;
+	width: 92px;
+	height: 120px;
+	border: 1px solid rgba(26, 25, 22, 0.14);
+	border-radius: 8px;
+	background:
+		linear-gradient(#fff 0 0) padding-box,
+		repeating-linear-gradient(
+			180deg,
+			rgba(26, 25, 22, 0.16) 0 1px,
+			transparent 1px 13px
+		);
+}
+
+.resumePreview svg {
+	width: 30px;
+	height: 30px;
+	color: #9f7529;
+}
+
+.resumeHighlight strong,
+.resumeHighlight span {
+	display: block;
+}
+
+.resumeHighlight strong {
+	overflow: hidden;
+	color: #24201c;
+	font-size: 14px;
+	font-weight: 850;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.resumeHighlight span {
+	margin-top: 6px;
+	color: #6a645b;
+	font-size: 12px;
+}
+
+.resumeHighlight a {
+	width: fit-content;
+	margin-top: 14px;
+	border: 1px solid rgba(26, 25, 22, 0.14);
+	border-radius: 999px;
+	padding: 8px 12px;
+	background: #fffaf2;
+}
+
+.activityList,
+.roastList {
+	display: grid;
+	gap: 0;
+}
+
+.activityRow,
+.roastRow {
+	display: grid;
+	align-items: center;
+	border-bottom: 1px solid rgba(26, 25, 22, 0.08);
+	color: inherit;
+	text-decoration: none;
+}
+
+.activityRow {
+	grid-template-columns: 36px minmax(0, 1fr) auto;
+	gap: 10px;
+	padding: 10px 0;
+}
+
+.roastRow {
+	grid-template-columns: 34px minmax(0, 1fr) auto;
+	gap: 12px;
+	padding: 14px 0;
+}
+
+.activityRow:last-child,
+.roastRow:last-child {
+	border-bottom: 0;
+}
+
+.activityIcon,
+.roastRow > svg {
+	display: grid;
+	place-items: center;
+	width: 30px;
+	height: 30px;
+	border: 1px solid rgba(26, 25, 22, 0.12);
+	border-radius: 7px;
+	background: #fffaf2;
+	color: #ad751f;
+}
+
+.activityIcon svg {
+	width: 16px;
+	height: 16px;
+	color: #ad751f;
+}
+
+.activityRow strong,
+.roastRow p {
+	display: block;
+	overflow: hidden;
+	color: #24201c;
+	font-size: 12px;
+	font-weight: 800;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.activityRow span,
+.roastRow span {
+	display: block;
+	margin-top: 2px;
+	color: #6a645b;
+	font-size: 11px;
+}
+
+.activityRow em,
+.roastRow strong {
+	color: #24201c;
+	font-size: 11px;
+	font-style: normal;
+	font-weight: 800;
+	white-space: nowrap;
+}
+
+.editDialog {
+	top: calc(var(--app-header-height) + 16px) !important;
+	bottom: auto;
+	left: 50%;
+	display: flex;
+	flex-direction: column;
+	width: min(720px, calc(100vw - 32px));
+	max-width: min(720px, calc(100vw - 32px));
+	max-height: calc(100dvh - var(--app-header-height) - 32px);
+	transform: translateX(-50%) !important;
+	overflow: hidden;
+	border-radius: 14px;
+	padding: 0;
+}
+
+.editHeader {
+	flex: 0 0 auto;
+	border-bottom: 1px solid var(--border-subtle);
+	padding: 20px 24px 16px;
+	text-align: left;
+}
+
+.editForm {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 0;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.editPreview {
+	display: flex;
+	flex: 0 0 auto;
+	align-items: center;
+	gap: 14px;
+	padding: 18px 24px;
+	background:
+		linear-gradient(135deg, rgba(232, 93, 38, 0.12), rgba(212, 165, 56, 0.16)),
+		#f5ecdc;
+}
+
+.avatarUploadButton {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: auto;
+	border: 1px solid var(--border-default);
+	border-radius: 999px;
+	padding: 9px 13px;
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+	font-size: 12px;
+	font-weight: 800;
+	cursor: pointer;
+}
+
+.avatarUploadButton svg {
+	width: 15px;
+	height: 15px;
+	color: var(--brand);
+}
+
+.avatarUploadButton input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+}
+
+.editAvatar {
+	display: grid;
+	place-items: center;
+	width: 64px;
+	height: 64px;
+	border: 3px solid #fff7ea;
+	border-radius: 50%;
+	background: var(--brand);
+	color: white;
+	font-size: 22px;
+	font-weight: 900;
+	overflow: hidden;
+}
+
+.editAvatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.editPreview strong,
+.editPreview span {
+	display: block;
+}
+
+.editPreview strong {
+	font-size: 15px;
+}
+
+.editPreview span {
+	margin-top: 3px;
+	color: var(--text-secondary);
+	font-size: 12px;
+}
+
+.editFields {
+	display: grid;
+	flex: 1;
+	gap: 16px;
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding: 20px 24px 24px;
+	scrollbar-color: var(--border-strong) transparent;
+	scrollbar-width: thin;
+}
+
+.editFields::-webkit-scrollbar {
+	width: 10px;
+}
+
+.editFields::-webkit-scrollbar-thumb {
+	border: 3px solid transparent;
+	border-radius: 999px;
+	background: var(--border-strong);
+	background-clip: padding-box;
+}
+
+.editFields > div {
+	display: grid;
+	gap: 8px;
+}
+
+.editFieldGrid {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px !important;
+}
+
+.editTextarea,
+.highlightSelect {
+	width: 100%;
+	border: 1px solid hsl(var(--input));
+	border-radius: 10px;
+	background: hsl(var(--background));
+	color: hsl(var(--foreground));
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	font: inherit;
+	font-size: 14px;
+	outline: none;
+	transition:
+		border-color 0.15s,
+		box-shadow 0.15s;
+}
+
+.editTextarea {
+	min-height: 92px;
+	padding: 10px 12px;
+	resize: vertical;
+}
+
+.highlightSelect {
+	height: 40px;
+	padding: 0 12px;
+}
+
+.editTextarea:focus,
+.highlightSelect:focus {
+	border-color: hsl(var(--ring));
+	box-shadow: 0 0 0 3px hsl(var(--ring) / 0.2);
+}
+
+.editFooter {
+	flex: 0 0 auto;
+	border-top: 1px solid var(--border-subtle);
+	padding: 16px 24px;
+}
+
+.emptyState {
+	display: grid;
+	justify-items: center;
+	gap: 12px;
+	min-height: 420px;
+	align-content: center;
+	border: 1px solid rgba(26, 25, 22, 0.12);
+	border-radius: 10px;
+	background: #f8f4ed;
+	text-align: center;
+}
+
+.emptyState h1 {
+	font-size: clamp(32px, 5vw, 52px);
+}
+
+.emptyState p {
+	max-width: 520px;
+	color: var(--text-secondary);
+}
+
+.loadingBoard {
+	min-height: 760px;
+}
+
+.loadingHero,
+.loadingGrid span {
+	border-radius: 10px;
+	background: linear-gradient(
+		90deg,
+		rgba(255, 255, 255, 0.28),
+		rgba(255, 255, 255, 0.72),
+		rgba(255, 255, 255, 0.28)
+	);
+	background-size: 220% 100%;
+	animation: profileShimmer 1.2s linear infinite;
+}
+
+.loadingHero {
+	display: grid;
+	gap: 16px;
+	min-height: 260px;
+	padding: 32px;
+}
+
+.loadingHero span {
+	height: 28px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.55);
+}
+
+.loadingHero span:first-child {
+	width: 44%;
+}
+
+.loadingHero span:nth-child(2) {
+	width: 62%;
+}
+
+.loadingHero span:nth-child(3) {
+	width: 30%;
+}
+
+.loadingGrid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 14px;
+}
+
+.loadingGrid span {
+	min-height: 180px;
+}
+
+@keyframes profileShimmer {
+	to {
+		background-position: -220% 0;
+	}
+}
+
+@media (max-width: 1280px) {
+	.hero,
+	.profileGrid,
+	.activityGrid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 900px) {
+	.shell {
+		padding: 14px;
+	}
+
+	.canvas {
+		padding: 6px 4px 22px;
+	}
+
+	.avatarFrame {
+		width: 164px;
+	}
+
+	.editButton {
+		position: static;
+		justify-self: start;
+	}
+
+	.statsGrid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.statCard:nth-child(2) {
+		border-right: 0;
+	}
+
+	.statCard:nth-child(-n + 2) {
+		border-bottom: 1px solid rgba(26, 25, 22, 0.08);
+	}
+}
+
+@media (max-width: 560px) {
+	.shell {
+		padding: 10px;
+	}
+
+	.identity h1 {
+		font-size: 34px;
+	}
+
+	.metaList span {
+		align-items: flex-start;
+	}
+
+	.statsGrid {
+		grid-template-columns: 1fr;
+	}
+
+	.statCard {
+		border-right: 0;
+		border-bottom: 1px solid rgba(26, 25, 22, 0.08);
+	}
+
+	.statCard:last-child {
+		border-bottom: 0;
+	}
+
+	.resumeHighlight,
+	.activityRow,
+	.roastRow,
+	.editFieldGrid {
+		grid-template-columns: 1fr;
+	}
+
+	.activityRow em,
+	.roastRow strong {
+		justify-self: start;
+	}
+}
+
+:global(body.main-app-dark) .shell {
+	background: var(--bg-base);
+	color: var(--text-primary);
+}
+
+:global(body.main-app-dark) .avatarFrame,
+:global(body.main-app-dark) .statsGrid,
+:global(body.main-app-dark) .aboutPanel,
+:global(body.main-app-dark) .skillsPanel,
+:global(body.main-app-dark) .highlightPanel,
+:global(body.main-app-dark) .activityPanel,
+:global(body.main-app-dark) .roastsPanel,
+:global(body.main-app-dark) .emptyState {
+	border-color: var(--border-subtle);
+	background: var(--bg-surface);
+}
+
+:global(body.main-app-dark) .avatarFrame {
+	border-color: rgba(255, 184, 95, 0.55);
+}
+
+:global(body.main-app-dark) .avatarEdit,
+:global(body.main-app-dark) .editButton {
+	border-color: var(--border-default);
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+}
+
+:global(body.main-app-dark) .identity h1,
+:global(body.main-app-dark) .identity p,
+:global(body.main-app-dark) .statCard strong,
+:global(body.main-app-dark) .aboutDetails strong,
+:global(body.main-app-dark) .resumeHighlight strong,
+:global(body.main-app-dark) .activityRow strong,
+:global(body.main-app-dark) .roastRow p,
+:global(body.main-app-dark) .activityRow em,
+:global(body.main-app-dark) .roastRow strong {
+	color: var(--text-primary);
+}
+
+:global(body.main-app-dark) .metaList,
+:global(body.main-app-dark) .aboutPanel p,
+:global(body.main-app-dark) .mutedCopy {
+	color: var(--text-secondary);
+}
+
+:global(body.main-app-dark) .metaList svg,
+:global(body.main-app-dark) .aboutDetails svg {
+	color: var(--text-tertiary);
+}
+
+:global(body.main-app-dark) .identityHeader svg,
+:global(body.main-app-dark) .statCard svg,
+:global(body.main-app-dark) .statPrimary svg,
+:global(body.main-app-dark) .focusArea svg,
+:global(body.main-app-dark) .resumePreview svg,
+:global(body.main-app-dark) .activityIcon,
+:global(body.main-app-dark) .activityIcon svg,
+:global(body.main-app-dark) .roastRow > svg {
+	color: var(--brand);
+}
+
+:global(body.main-app-dark) .roleTag {
+	border-color: rgba(169, 149, 255, 0.24);
+	background: rgba(169, 149, 255, 0.12);
+	color: #cfc3ff;
+}
+
+:global(body.main-app-dark) .statCard span,
+:global(body.main-app-dark) .aboutDetails span,
+:global(body.main-app-dark) .focusArea span,
+:global(body.main-app-dark) .resumeHighlight span,
+:global(body.main-app-dark) .activityRow span,
+:global(body.main-app-dark) .roastRow span,
+:global(body.main-app-dark) .emptyState p {
+	color: var(--text-secondary);
+}
+
+:global(body.main-app-dark) .panelHeader a,
+:global(body.main-app-dark) .resumeHighlight a {
+	color: var(--text-primary);
+}
+
+:global(body.main-app-dark) .statCard,
+:global(body.main-app-dark) .aboutDetails,
+:global(body.main-app-dark) .activityRow,
+:global(body.main-app-dark) .roastRow {
+	border-color: var(--border-subtle);
+}
+
+:global(body.main-app-dark) .skillCloud span,
+:global(body.main-app-dark) .focusArea,
+:global(body.main-app-dark) .resumeHighlight a,
+:global(body.main-app-dark) .activityIcon,
+:global(body.main-app-dark) .roastRow > svg {
+	border-color: var(--border-default);
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+}
+
+:global(body.main-app-dark) .resumePreview {
+	border-color: var(--border-default);
+	background:
+		linear-gradient(var(--bg-elevated) 0 0) padding-box,
+		repeating-linear-gradient(
+			180deg,
+			rgba(239, 226, 208, 0.16) 0 1px,
+			transparent 1px 13px
+		);
+}
+
+:global(body.main-app-dark) .editDialog {
+	border-color: var(--border-default);
+	background: var(--bg-surface);
+	color: var(--text-primary);
+}
+
+:global(body.main-app-dark) .editHeader,
+:global(body.main-app-dark) .editFooter {
+	border-color: var(--border-subtle);
+}
+
+:global(body.main-app-dark) .editPreview {
+	background: var(--bg-elevated);
+}
+
+:global(body.main-app-dark) .editAvatar {
+	border-color: var(--border-default);
+	color: var(--text-inverse);
+}
+
+:global(body.main-app-dark) .avatarUploadButton,
+:global(body.main-app-dark) .editTextarea,
+:global(body.main-app-dark) .highlightSelect {
+	border-color: var(--border-default);
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+}
+
+:global(body.main-app-dark) .loadingHero,
+:global(body.main-app-dark) .loadingGrid span {
+	background: linear-gradient(
+		90deg,
+		var(--bg-surface),
+		var(--bg-elevated),
+		var(--bg-surface)
+	);
+	background-size: 220% 100%;
+}
+
+:global(body.main-app-dark) .loadingHero span {
+	background: rgba(255, 255, 255, 0.08);
+}
