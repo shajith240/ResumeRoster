@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { RealtimeChannel } from "@supabase/supabase-js";
 import {
-	APP_PRESENCE_CHANNEL,
+	APP_PRESENCE_CHANGE_EVENT,
 	PROFILE_CHANGE_EVENT,
 	normalizeAppStatus,
-	type AppPresencePayload,
 } from "@/lib/app-presence";
 import { supabase } from "@/lib/supabase/client";
 import type { AppStatus } from "@/lib/supabase/types";
@@ -14,6 +12,9 @@ import type { AppStatus } from "@/lib/supabase/types";
 type AppPresenceProps = {
 	userId: string;
 };
+
+const HEARTBEAT_INTERVAL_MS = 30_000;
+const PRESENCE_SESSION_KEY = "resumeroster.presence.session";
 
 async function getSavedStatus(userId: string): Promise<AppStatus> {
 	const result = await supabase
@@ -27,85 +28,102 @@ async function getSavedStatus(userId: string): Promise<AppStatus> {
 	return normalizeAppStatus(result.data?.app_status);
 }
 
-function buildPresencePayload(
-	userId: string,
-	status: AppStatus,
-): AppPresencePayload | null {
-	if (status === "offline") return null;
+function getPresenceSessionId(userId: string) {
+	if (typeof window === "undefined") return userId;
 
-	return {
-		user_id: userId,
-		status,
-		online_at: new Date().toISOString(),
-	};
+	const stored = window.sessionStorage.getItem(PRESENCE_SESSION_KEY);
+	if (stored?.startsWith(`${userId}:`)) return stored;
+
+	const randomId =
+		typeof window.crypto?.randomUUID === "function"
+			? window.crypto.randomUUID()
+			: `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+	const sessionId = `${userId}:${randomId}`;
+	window.sessionStorage.setItem(PRESENCE_SESSION_KEY, sessionId);
+	return sessionId;
+}
+
+function announcePresenceChange() {
+	window.dispatchEvent(new CustomEvent(APP_PRESENCE_CHANGE_EVENT));
 }
 
 export default function AppPresence({ userId }: AppPresenceProps) {
-	const channelRef = useRef<RealtimeChannel | null>(null);
-	const subscribedRef = useRef(false);
+	const sessionIdRef = useRef("");
 	const statusRef = useRef<AppStatus>("online");
+	const heartbeatTimerRef = useRef<number | null>(null);
 
 	useEffect(() => {
 		let mounted = true;
+		sessionIdRef.current = getPresenceSessionId(userId);
 
-		async function syncPresence(status: AppStatus) {
+		async function recordPresence(status = statusRef.current) {
 			statusRef.current = status;
-			const channel = channelRef.current;
-			if (!channel || !subscribedRef.current) return;
 
-			const payload = buildPresencePayload(userId, status);
-			if (!payload) {
-				await channel.untrack();
-				return;
+			const { error } = await supabase.rpc("record_app_presence", {
+				app_status: status,
+				session_id: sessionIdRef.current,
+			});
+
+			if (!error && mounted) {
+				announcePresenceChange();
+			}
+		}
+
+		function scheduleHeartbeat() {
+			if (heartbeatTimerRef.current) {
+				window.clearInterval(heartbeatTimerRef.current);
 			}
 
-			await channel.track(payload);
+			heartbeatTimerRef.current = window.setInterval(() => {
+				void recordPresence();
+			}, HEARTBEAT_INTERVAL_MS);
 		}
 
 		async function startPresence() {
 			const savedStatus = await getSavedStatus(userId);
 			if (!mounted) return;
 
-			statusRef.current = savedStatus;
-			const channel = supabase.channel(APP_PRESENCE_CHANNEL, {
-				config: {
-					presence: {
-						key: userId,
-					},
-				},
-			});
-			channelRef.current = channel;
-
-			channel.subscribe((subscriptionStatus) => {
-				if (subscriptionStatus !== "SUBSCRIBED" || !mounted) return;
-				subscribedRef.current = true;
-				void syncPresence(statusRef.current);
-			});
+			await recordPresence(savedStatus);
+			if (!mounted) return;
+			scheduleHeartbeat();
 		}
 
 		function handleProfileChange(event: Event) {
 			const detail = (event as CustomEvent<{ id?: string; app_status?: string }>)
 				.detail;
 			if (!detail?.app_status || (detail.id && detail.id !== userId)) return;
-			void syncPresence(normalizeAppStatus(detail.app_status));
+			void recordPresence(normalizeAppStatus(detail.app_status));
+		}
+
+		function handleVisibilityChange() {
+			if (document.visibilityState === "visible") {
+				void recordPresence();
+			}
+		}
+
+		function clearPresence() {
+			void supabase.rpc("clear_app_presence", {
+				session_id: sessionIdRef.current,
+			});
 		}
 
 		window.addEventListener(PROFILE_CHANGE_EVENT, handleProfileChange);
+		document.addEventListener("visibilitychange", handleVisibilityChange);
+		window.addEventListener("pagehide", clearPresence);
 		void startPresence();
 
 		return () => {
 			mounted = false;
 			window.removeEventListener(PROFILE_CHANGE_EVENT, handleProfileChange);
-			const channel = channelRef.current;
-			if (channel) {
-				void channel.untrack();
-				void supabase.removeChannel(channel);
+			document.removeEventListener("visibilitychange", handleVisibilityChange);
+			window.removeEventListener("pagehide", clearPresence);
+			if (heartbeatTimerRef.current) {
+				window.clearInterval(heartbeatTimerRef.current);
+				heartbeatTimerRef.current = null;
 			}
-			channelRef.current = null;
-			subscribedRef.current = false;
+			clearPresence();
 		};
 	}, [userId]);
 
 	return null;
 }
-

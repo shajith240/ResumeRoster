@@ -1017,6 +1017,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	return (
 		<>
 		<section className="resume-thread">
+			<div className="resume-detail-main-scroll">
 			<article className="thread-viewer-card resume-preview-pane">
 				<header className="thread-header">
 					<div className="post-meta">
@@ -1110,23 +1111,6 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					</div>
 				)}
 			</article>
-
-			<aside className="thread-context-panel" aria-label="Resume context">
-				<div className="thread-context-grid" aria-label="Resume context">
-					<ResumeContextCard
-						eyebrow="Ask"
-						title="What they want help with"
-						content={postDescription}
-						emptyMessage="No post description was attached to this older post."
-					/>
-					<ResumeContextCard
-						eyebrow="JD"
-						title="Job description"
-						content={jobDescription}
-						emptyMessage="No JD was attached to this older post."
-					/>
-				</div>
-			</aside>
 
 			<section className="thread-discussion-panel" aria-label="Roast discussion">
 					{isClosed || isOwner ? (
@@ -1402,6 +1386,23 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					) : null}
 					</div>
 				</section>
+			</div>
+			<aside className="thread-context-panel" aria-label="Resume context">
+				<div className="thread-context-grid" aria-label="Resume context">
+					<ResumeContextCard
+						eyebrow="Ask"
+						title="What they want help with"
+						content={postDescription}
+						emptyMessage="No post description was attached to this older post."
+					/>
+					<ResumeContextCard
+						eyebrow="JD"
+						title="Job description"
+						content={jobDescription}
+						emptyMessage="No JD was attached to this older post."
+					/>
+				</div>
+			</aside>
 		</section>
 		<AlertDialog
 			open={Boolean(deleteTargetRoast)}

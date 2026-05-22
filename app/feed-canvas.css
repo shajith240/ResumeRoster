@@ -10,6 +10,12 @@
 	display: none;
 }
 
+.resume-detail-main-scroll {
+	display: grid;
+	gap: 20px;
+	min-width: 0;
+}
+
 @media (min-width: 1025px) {
 	.app-with-sidebar {
 		--feed-canvas-edge: 24px;
@@ -181,8 +187,11 @@
 		grid-template-columns:
 			minmax(0, 1fr)
 			clamp(300px, 24vw, 440px) !important;
-		align-items: start !important;
+		align-items: stretch !important;
 		gap: var(--feed-canvas-gutter) !important;
+		height: calc(100svh - var(--app-header-height)) !important;
+		min-height: 0 !important;
+		overflow: hidden !important;
 		width: min(
 			1680px,
 			calc(
@@ -194,6 +203,18 @@
 		margin-right: var(--feed-canvas-edge) !important;
 		margin-left: var(--feed-canvas-gutter) !important;
 		padding-top: clamp(26px, 2vw, 42px) !important;
+		padding-bottom: clamp(20px, 2vw, 32px) !important;
+	}
+
+	.feed-center {
+		align-self: stretch !important;
+		height: 100% !important;
+		min-height: 0 !important;
+		overflow-x: hidden !important;
+		overflow-y: auto !important;
+		overscroll-behavior: contain;
+		padding-right: clamp(2px, 0.45vw, 8px);
+		scrollbar-gutter: stable;
 	}
 
 	.feed-center,
@@ -239,7 +260,14 @@
 	.feed-right-rail {
 		display: grid !important;
 		align-content: start !important;
+		align-self: stretch !important;
+		height: 100% !important;
+		max-height: 100% !important;
+		overflow-x: hidden !important;
+		overflow-y: auto !important;
+		overscroll-behavior: contain;
 		width: 100% !important;
+		scrollbar-gutter: stable;
 	}
 
 	.resume-detail-route {
@@ -250,7 +278,11 @@
 		max-width: none !important;
 		margin-right: var(--feed-canvas-edge) !important;
 		margin-left: var(--feed-canvas-gutter) !important;
+		height: calc(100svh - var(--app-header-height)) !important;
+		min-height: 0 !important;
+		overflow: hidden !important;
 		padding-top: clamp(26px, 2vw, 42px) !important;
+		padding-bottom: clamp(20px, 2vw, 32px) !important;
 	}
 
 	.resume-thread {
@@ -258,10 +290,27 @@
 		grid-template-columns:
 			minmax(0, 1fr)
 			minmax(340px, clamp(360px, 28%, 500px)) !important;
-		align-items: start !important;
+		align-items: stretch !important;
 		gap: var(--feed-canvas-gutter) !important;
+		height: 100% !important;
+		min-height: 0 !important;
 		width: 100% !important;
 		min-width: 0 !important;
+	}
+
+	.resume-detail-main-scroll {
+		grid-column: 1;
+		grid-row: 1;
+		display: grid;
+		align-content: start;
+		gap: 20px;
+		min-width: 0;
+		min-height: 0;
+		overflow-x: hidden;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		padding-right: clamp(2px, 0.45vw, 8px);
+		scrollbar-gutter: stable;
 	}
 
 	.resume-preview-pane {
@@ -271,16 +320,16 @@
 	.thread-context-panel {
 		grid-column: 2;
 		grid-row: 1;
-		position: sticky;
-		top: 76px;
+		position: static;
 		display: grid;
 		align-content: stretch;
-		align-self: start;
-		height: clamp(560px, calc(100vh - 112px), 860px);
-		max-height: calc(100vh - 112px);
+		align-self: stretch;
+		height: 100%;
+		max-height: 100%;
 		min-width: 0;
 		width: 100%;
 		max-width: 100%;
+		overflow: hidden;
 		gap: 16px;
 		container-name: thread-panel;
 		container-type: inline-size;
@@ -490,7 +539,7 @@
 
 	.thread-context-panel {
 		grid-column: 1;
-		grid-row: 3;
+		grid-row: 2;
 		display: grid;
 		align-content: start;
 		height: auto;
@@ -572,12 +621,24 @@
 
 	.feed-app-shell {
 		grid-template-columns: minmax(0, 1fr) !important;
+		align-items: start !important;
+		height: auto !important;
+		min-height: calc(100vh - var(--app-header-height)) !important;
+		overflow: visible !important;
 		width: min(
 			1040px,
 			calc(100vw - var(--session-sidebar-width) - 40px)
 		) !important;
 		margin-right: 20px !important;
 		margin-left: 20px !important;
+	}
+
+	.feed-center,
+	.feed-right-rail {
+		height: auto !important;
+		max-height: none !important;
+		overflow: visible !important;
+		padding-right: 0;
 	}
 
 	.feed-right-rail {
@@ -591,6 +652,9 @@
 
 @media (min-width: 1025px) and (max-width: 1240px) {
 	.resume-detail-route {
+		height: auto !important;
+		min-height: calc(100vh - var(--app-header-height)) !important;
+		overflow: visible !important;
 		width: min(
 			1060px,
 			calc(100vw - var(--session-sidebar-width) - 40px)
@@ -599,12 +663,23 @@
 
 	.resume-thread {
 		grid-template-columns: minmax(0, 1fr) !important;
+		align-items: start !important;
+		height: auto !important;
+	}
+
+	.resume-detail-main-scroll {
+		height: auto !important;
+		overflow: visible !important;
+		padding-right: 0;
 	}
 
 	.thread-context-panel {
 		grid-column: 1 !important;
-		grid-row: 3 !important;
+		grid-row: 2 !important;
 		position: static !important;
+		height: auto !important;
+		max-height: none !important;
+		overflow: visible !important;
 	}
 
 	.thread-context-grid {
