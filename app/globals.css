@@ -886,6 +886,48 @@ html[data-app-theme="dark"] .full-page-loader {
 	color: var(--success);
 }
 
+.auth-form-notice p {
+	margin: 0;
+}
+
+.auth-notice-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.auth-notice-actions button {
+	border: 1px solid rgba(45, 122, 79, 0.24);
+	border-radius: var(--button-radius-sm);
+	padding: 7px 10px;
+	background: rgba(45, 122, 79, 0.1);
+	color: var(--success);
+	font-family: var(--font-app-body);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1;
+	transition:
+		background 0.18s var(--button-ease),
+		border-color 0.18s var(--button-ease),
+		transform 0.18s var(--button-ease);
+}
+
+.auth-notice-actions button:hover {
+	border-color: rgba(45, 122, 79, 0.38);
+	background: rgba(45, 122, 79, 0.16);
+}
+
+.auth-notice-actions button:active {
+	transform: translateY(1px);
+}
+
+.auth-notice-actions button:disabled {
+	cursor: not-allowed;
+	opacity: 0.65;
+	transform: none;
+}
+
 .auth-submit-button {
 	margin-top: 2px;
 	background: var(--brand);

@@ -12,7 +12,7 @@ import { signInWithProvider, supabase } from "@/lib/supabase/client";
 
 type AuthMode = "signin" | "signup";
 type OAuthProvider = "google" | "github";
-type SubmitState = AuthMode | OAuthProvider | null;
+type SubmitState = AuthMode | OAuthProvider | "resend-confirmation" | null;
 type AppTheme = "dark" | "light";
 
 const APP_THEME_STORAGE_KEY = "resumeroster-theme";
@@ -71,6 +71,10 @@ function authErrorMessage(error: unknown) {
 	return rawMessage;
 }
 
+function confirmationNotice() {
+	return "If this is a new email signup, check your inbox for the confirmation link. If this email already uses Google or GitHub, continue with that provider instead.";
+}
+
 function GoogleIcon() {
 	return (
 		<svg aria-hidden="true" height="18" viewBox="0 0 256 262" width="18">
@@ -123,6 +127,7 @@ export function SignUp() {
 	const [message, setMessage] = useState("");
 	const [notice, setNotice] = useState("");
 	const [submitting, setSubmitting] = useState<SubmitState>(null);
+	const [confirmationEmail, setConfirmationEmail] = useState("");
 
 	useEffect(() => {
 		document.body.classList.add("main-app");
@@ -168,12 +173,14 @@ export function SignUp() {
 		setMode(nextMode);
 		setMessage("");
 		setNotice("");
+		setConfirmationEmail("");
 	}
 
 	async function handleProvider(provider: OAuthProvider) {
 		setSubmitting(provider);
 		setMessage("");
 		setNotice("");
+		setConfirmationEmail("");
 
 		try {
 			await signInWithProvider(provider, nextPath);
@@ -187,6 +194,7 @@ export function SignUp() {
 		event.preventDefault();
 		setMessage("");
 		setNotice("");
+		setConfirmationEmail("");
 
 		const trimmedEmail = email.trim().toLowerCase();
 		const trimmedFullName = fullName.trim();
@@ -242,14 +250,48 @@ export function SignUp() {
 		}
 
 		setSubmitting(null);
-		setNotice(
-			mode === "signup"
-				? "Check your email to confirm your account, then come back to sign in."
-				: "Check your email before continuing.",
-		);
+		if (mode === "signup") {
+			setConfirmationEmail(trimmedEmail);
+			setNotice(confirmationNotice());
+			return;
+		}
+
+		setNotice("Check your email before continuing.");
+	}
+
+	async function handleResendConfirmation() {
+		const trimmedEmail = email.trim().toLowerCase();
+
+		if (!trimmedEmail) {
+			setMessage("Enter your email address first.");
+			return;
+		}
+
+		setSubmitting("resend-confirmation");
+		setMessage("");
+
+		const { error } = await supabase.auth.resend({
+			type: "signup",
+			email: trimmedEmail,
+			options: {
+				emailRedirectTo: getEmailRedirectUrl(nextPath),
+			},
+		});
+
+		setSubmitting(null);
+
+		if (error) {
+			setMessage(authErrorMessage(error));
+			return;
+		}
+
+		setConfirmationEmail(trimmedEmail);
+		setNotice(confirmationNotice());
 	}
 
 	const isBusy = submitting !== null;
+	const canShowSignupNoticeActions =
+		mode === "signup" && Boolean(confirmationEmail || notice);
 	const title =
 		mode === "signin" ? "Welcome back" : "Create your ResumeRoster account";
 	const subtitle =
@@ -322,9 +364,9 @@ export function SignUp() {
 								<div className="auth-input-wrap">
 									<UserRound aria-hidden="true" size={16} strokeWidth={1.8} />
 									<Input
-										autoComplete="name"
-										id="auth-full-name"
-										maxLength={64}
+									autoComplete="name"
+									id="auth-full-name"
+									maxLength={64}
 										onChange={(event) => setFullName(event.target.value)}
 										placeholder="Shajith Bathina"
 										required
@@ -342,7 +384,15 @@ export function SignUp() {
 								<Input
 									autoComplete="email"
 									id="auth-email"
-									onChange={(event) => setEmail(event.target.value)}
+									onChange={(event) => {
+										setEmail(event.target.value);
+										if (
+											confirmationEmail &&
+											event.target.value.trim().toLowerCase() !== confirmationEmail
+										) {
+											setConfirmationEmail("");
+										}
+									}}
 									placeholder="you@example.com"
 									required
 									type="email"
@@ -375,7 +425,30 @@ export function SignUp() {
 								{message}
 							</p>
 						) : null}
-						{notice ? <p className="auth-form-notice">{notice}</p> : null}
+						{notice ? (
+							<div className="auth-form-notice" role="status">
+								<p>{notice}</p>
+								{canShowSignupNoticeActions ? (
+									<div className="auth-notice-actions">
+										<button
+											disabled={isBusy}
+											onClick={() => void handleResendConfirmation()}
+											type="button"
+										>
+											{submitting === "resend-confirmation"
+												? "Sending..."
+												: "Resend email"}
+										</button>
+										<button
+											onClick={() => switchMode("signin")}
+											type="button"
+										>
+											Go to sign in
+										</button>
+									</div>
+								) : null}
+							</div>
+						) : null}
 
 						<Button
 							className="auth-submit-button h-10 w-full"
