@@ -19,8 +19,9 @@
 .feed-center,
 .feed-right-rail,
 .resume-detail-main-scroll,
+.secure-resume-pages,
 .resume-context-card p {
-	scrollbar-color: color-mix(in srgb, var(--brand) 54%, var(--text-tertiary))
+	scrollbar-color: color-mix(in srgb, var(--text-tertiary) 42%, transparent)
 		transparent;
 	scrollbar-width: thin;
 }
@@ -28,54 +29,79 @@
 .feed-center::-webkit-scrollbar,
 .feed-right-rail::-webkit-scrollbar,
 .resume-detail-main-scroll::-webkit-scrollbar,
+.secure-resume-pages::-webkit-scrollbar,
 .resume-context-card p::-webkit-scrollbar {
-	width: 12px;
-	height: 12px;
+	width: 10px;
+	height: 10px;
 }
 
 .feed-center::-webkit-scrollbar-track,
 .feed-right-rail::-webkit-scrollbar-track,
 .resume-detail-main-scroll::-webkit-scrollbar-track,
+.secure-resume-pages::-webkit-scrollbar-track,
 .resume-context-card p::-webkit-scrollbar-track {
-	border: 4px solid transparent;
 	border-radius: var(--radius-pill);
-	background: color-mix(in srgb, var(--bg-elevated) 42%, transparent);
-	background-clip: padding-box;
+	background: transparent;
 }
 
 .feed-center::-webkit-scrollbar-thumb,
 .feed-right-rail::-webkit-scrollbar-thumb,
 .resume-detail-main-scroll::-webkit-scrollbar-thumb,
+.secure-resume-pages::-webkit-scrollbar-thumb,
 .resume-context-card p::-webkit-scrollbar-thumb {
 	border: 3px solid transparent;
 	border-radius: var(--radius-pill);
-	background:
-		linear-gradient(
-			180deg,
-			color-mix(in srgb, var(--brand) 72%, var(--text-primary)),
-			color-mix(in srgb, var(--brand-dark) 72%, var(--text-secondary))
-		)
+	background: color-mix(in srgb, var(--text-tertiary) 42%, transparent)
 		padding-box;
 }
 
 .feed-center::-webkit-scrollbar-thumb:hover,
 .feed-right-rail::-webkit-scrollbar-thumb:hover,
 .resume-detail-main-scroll::-webkit-scrollbar-thumb:hover,
+.secure-resume-pages::-webkit-scrollbar-thumb:hover,
 .resume-context-card p::-webkit-scrollbar-thumb:hover {
-	background:
-		linear-gradient(
-			180deg,
-			color-mix(in srgb, var(--brand) 86%, var(--text-primary)),
-			color-mix(in srgb, var(--brand-dark) 86%, var(--text-secondary))
-		)
+	background: color-mix(in srgb, var(--brand) 30%, var(--text-tertiary))
 		padding-box;
 }
 
 .feed-center::-webkit-scrollbar-corner,
 .feed-right-rail::-webkit-scrollbar-corner,
 .resume-detail-main-scroll::-webkit-scrollbar-corner,
+.secure-resume-pages::-webkit-scrollbar-corner,
 .resume-context-card p::-webkit-scrollbar-corner {
 	background: transparent;
+}
+
+html:has(body.main-app),
+body.main-app {
+	scrollbar-color: color-mix(in srgb, var(--text-tertiary) 42%, transparent)
+		transparent;
+	scrollbar-width: thin;
+}
+
+html:has(body.main-app)::-webkit-scrollbar,
+body.main-app::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+html:has(body.main-app)::-webkit-scrollbar-track,
+body.main-app::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+html:has(body.main-app)::-webkit-scrollbar-thumb,
+body.main-app::-webkit-scrollbar-thumb {
+	border: 3px solid transparent;
+	border-radius: var(--radius-pill);
+	background: color-mix(in srgb, var(--text-tertiary) 42%, transparent)
+		padding-box;
+}
+
+html:has(body.main-app)::-webkit-scrollbar-thumb:hover,
+body.main-app::-webkit-scrollbar-thumb:hover {
+	background: color-mix(in srgb, var(--brand) 26%, var(--text-tertiary))
+		padding-box;
 }
 
 @media (min-width: 1025px) {
@@ -249,11 +275,10 @@
 		grid-template-columns:
 			minmax(0, 1fr)
 			clamp(300px, 24vw, 440px) !important;
-		align-items: stretch !important;
+		align-items: start !important;
 		gap: var(--feed-canvas-gutter) !important;
-		height: calc(100svh - var(--app-header-height)) !important;
-		min-height: 0 !important;
-		overflow: hidden !important;
+		min-height: calc(100svh - var(--app-header-height)) !important;
+		overflow: visible !important;
 		width: min(
 			1680px,
 			calc(
@@ -269,14 +294,8 @@
 	}
 
 	.feed-center {
-		align-self: stretch !important;
-		height: 100% !important;
+		align-self: start !important;
 		min-height: 0 !important;
-		overflow-x: hidden !important;
-		overflow-y: auto !important;
-		overscroll-behavior: contain;
-		padding-right: clamp(2px, 0.45vw, 8px);
-		scrollbar-gutter: stable;
 	}
 
 	.feed-center,
@@ -322,14 +341,14 @@
 	.feed-right-rail {
 		display: grid !important;
 		align-content: start !important;
-		align-self: stretch !important;
-		height: 100% !important;
-		max-height: 100% !important;
+		align-self: start !important;
+		position: sticky;
+		top: calc(var(--app-header-height) + clamp(18px, 2vw, 28px));
+		max-height: calc(100svh - var(--app-header-height) - clamp(36px, 4vw, 56px));
 		overflow-x: hidden !important;
 		overflow-y: auto !important;
 		overscroll-behavior: contain;
 		width: 100% !important;
-		scrollbar-gutter: stable;
 	}
 
 	.resume-detail-route {
@@ -340,9 +359,8 @@
 		max-width: none !important;
 		margin-right: var(--feed-canvas-edge) !important;
 		margin-left: var(--feed-canvas-gutter) !important;
-		height: calc(100svh - var(--app-header-height)) !important;
-		min-height: 0 !important;
-		overflow: hidden !important;
+		min-height: calc(100svh - var(--app-header-height)) !important;
+		overflow: visible !important;
 		padding-top: clamp(26px, 2vw, 42px) !important;
 		padding-bottom: clamp(20px, 2vw, 32px) !important;
 	}
@@ -352,9 +370,8 @@
 		grid-template-columns:
 			minmax(0, 1fr)
 			minmax(340px, clamp(360px, 28%, 500px)) !important;
-		align-items: stretch !important;
+		align-items: start !important;
 		gap: var(--feed-canvas-gutter) !important;
-		height: 100% !important;
 		min-height: 0 !important;
 		width: 100% !important;
 		min-width: 0 !important;
@@ -368,11 +385,6 @@
 		gap: 20px;
 		min-width: 0;
 		min-height: 0;
-		overflow-x: hidden;
-		overflow-y: auto;
-		overscroll-behavior: contain;
-		padding-right: clamp(2px, 0.45vw, 8px);
-		scrollbar-gutter: stable;
 	}
 
 	.resume-preview-pane {
@@ -382,12 +394,13 @@
 	.thread-context-panel {
 		grid-column: 2;
 		grid-row: 1;
-		position: static;
+		position: sticky;
+		top: calc(var(--app-header-height) + clamp(18px, 2vw, 28px));
 		display: grid;
 		align-content: stretch;
-		align-self: stretch;
-		height: 100%;
-		max-height: 100%;
+		align-self: start;
+		height: calc(100svh - var(--app-header-height) - clamp(36px, 4vw, 56px));
+		max-height: calc(100svh - var(--app-header-height) - clamp(36px, 4vw, 56px));
 		min-width: 0;
 		width: 100%;
 		max-width: 100%;
@@ -704,6 +717,7 @@
 	}
 
 	.feed-right-rail {
+		position: static;
 		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 	}
 

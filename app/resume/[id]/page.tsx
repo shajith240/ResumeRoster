@@ -1,7 +1,6 @@
 import AuthGate from "@/components/AuthGate";
 import ResumeDetail from "@/components/ResumeDetail";
 import RouteHeader from "@/components/RouteHeader";
-import RouteScrollProxy from "@/components/RouteScrollProxy";
 
 type ResumePageProps = {
   params: Promise<{ id: string }>;
@@ -14,7 +13,6 @@ export default async function ResumePage({ params }: ResumePageProps) {
     <AuthGate>
       <RouteHeader />
       <main className="resume-detail-route page-enter">
-        <RouteScrollProxy targetSelector=".resume-detail-main-scroll" />
         <ResumeDetail resumeId={id} />
       </main>
     </AuthGate>
