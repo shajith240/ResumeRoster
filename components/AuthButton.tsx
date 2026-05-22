@@ -8,7 +8,8 @@ import { toast } from "sonner";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { UserDropdown } from "@/components/ui/user-dropdown";
 import { PROFILE_CHANGE_EVENT, normalizeAppStatus } from "@/lib/app-presence";
-import { signInWithGoogle, signOut, supabase } from "@/lib/supabase/client";
+import { getLoginPath } from "@/lib/auth-redirect";
+import { signOut, supabase } from "@/lib/supabase/client";
 import type { AppStatus } from "@/lib/supabase/types";
 
 type AppTheme = "dark" | "light";
@@ -149,12 +150,12 @@ export default function AuthButton() {
 	if (!user) {
 		return (
 			<div className="auth-actions">
-				<button
+				<Link
 					className="btn-primary btn-ghost nav-login"
-					onClick={() => void signInWithGoogle()}
+					href={getLoginPath("/feed")}
 				>
 					Log in
-				</button>
+				</Link>
 				<Link className="btn-primary btn-brand" href="/submit">
 					Post resume
 				</Link>

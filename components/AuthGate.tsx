@@ -6,6 +6,7 @@ import type { User } from "@supabase/supabase-js";
 import AppPresence from "@/components/AppPresence";
 import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
+import { getCurrentPathForLogin, getLoginPath } from "@/lib/auth-redirect";
 import { SessionNavBar } from "@/components/ui/sidebar";
 
 type AuthGateProps = {
@@ -63,7 +64,7 @@ export default function AuthGate({ children }: AuthGateProps) {
 			if (!active) return;
 
 			if (!data.session?.user) {
-				router.replace("/");
+				router.replace(getLoginPath(getCurrentPathForLogin()));
 				return;
 			}
 
@@ -75,7 +76,7 @@ export default function AuthGate({ children }: AuthGateProps) {
 			data: { subscription },
 		} = supabase.auth.onAuthStateChange((_event, session) => {
 			if (!session?.user) {
-				router.replace("/");
+				router.replace(getLoginPath(getCurrentPathForLogin()));
 				return;
 			}
 

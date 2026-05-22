@@ -163,7 +163,7 @@ export default function SubmitResumeForm() {
 
 		if (!user) {
 			const errorMessage =
-				"Your session expired. Sign in again from the landing page.";
+				"Your session expired. Sign in again to continue.";
 			setMessage(errorMessage);
 			toast.error(errorMessage);
 			return;

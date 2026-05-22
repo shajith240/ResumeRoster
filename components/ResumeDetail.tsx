@@ -29,7 +29,8 @@ import {
 	getResumePosterLabel,
 	getResumeRoleLabel,
 } from "@/lib/resume-display";
-import { signInWithGoogle, supabase } from "@/lib/supabase/client";
+import { getLoginPath } from "@/lib/auth-redirect";
+import { supabase } from "@/lib/supabase/client";
 import type {
 	ResumeAuthorProfile,
 	ResumeSummary,
@@ -293,6 +294,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	);
 	const isOwner = Boolean(user && resume?.user_id === user.id);
 	const isClosed = resume?.status === "closed";
+
+	function goToLogin() {
+		const loginRoute = getLoginPath(`/resume/${resumeId}`);
+		announceRouteTransition(loginRoute);
+		router.push(loginRoute);
+	}
 
 	function reportError(errorMessage: string) {
 		setMessage(errorMessage);
@@ -588,7 +595,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setMessage("");
 
 		if (!user) {
-			await signInWithGoogle();
+			goToLogin();
 			return;
 		}
 
@@ -656,7 +663,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (!user) {
-			await signInWithGoogle();
+			goToLogin();
 			return;
 		}
 
@@ -751,7 +758,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setMessage("");
 
 		if (!user) {
-			await signInWithGoogle();
+			goToLogin();
 			return;
 		}
 
@@ -920,7 +927,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (!user) {
-			await signInWithGoogle();
+			goToLogin();
 			return;
 		}
 
@@ -945,7 +952,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (!user) {
-			await signInWithGoogle();
+			goToLogin();
 			return;
 		}
 
@@ -1096,9 +1103,9 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						<p>Sign in to open the private resume PDF.</p>
 						<button
 							className="btn-primary"
-							onClick={() => void signInWithGoogle()}
+							onClick={goToLogin}
 						>
-							Sign in with Google
+							Sign in to continue
 						</button>
 					</div>
 				)}
