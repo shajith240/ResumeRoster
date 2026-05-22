@@ -36,6 +36,7 @@ const JOB_DESCRIPTION_MIN_LENGTH = 20;
 const JOB_DESCRIPTION_MAX_LENGTH = 8000;
 const POST_DESCRIPTION_MIN_LENGTH = 10;
 const POST_DESCRIPTION_MAX_LENGTH = 4000;
+const SUBMIT_FLOW_SQL = "supabase/submit-flow-fix.sql";
 
 function cleanFileName(name: string) {
 	return name
@@ -48,6 +49,16 @@ function fileSize(size: number) {
 	return `${(size / 1024 / 1024).toFixed(2)} MB`;
 }
 
+function isSubmitBackendSetupError(error: { message?: string } | null) {
+	return /bucket|foreign key|permission denied|policy|profiles|resumes|row-level security|schema cache|storage|violates/i.test(
+		error?.message ?? "",
+	);
+}
+
+function submitBackendSetupMessage(error: { message?: string } | null) {
+	return `Backend submit setup is missing. Run ${SUBMIT_FLOW_SQL} in Supabase, then refresh. Supabase said: ${error?.message ?? "Unknown setup error."}`;
+}
+
 function profileDisplayName(profile: SubmitProfile | null, user: User | null) {
 	return (
 		profile?.full_name?.trim() ||
@@ -55,6 +66,22 @@ function profileDisplayName(profile: SubmitProfile | null, user: User | null) {
 		user?.user_metadata?.full_name ||
 		user?.email?.split("@")[0] ||
 		"your profile"
+	);
+}
+
+function getMetadataName(user: User) {
+	return (
+		(user.user_metadata?.full_name as string | undefined) ||
+		(user.user_metadata?.name as string | undefined) ||
+		null
+	);
+}
+
+function getMetadataAvatar(user: User) {
+	return (
+		(user.user_metadata?.avatar_url as string | undefined) ||
+		(user.user_metadata?.picture as string | undefined) ||
+		null
 	);
 }
 
@@ -84,6 +111,29 @@ async function getSubmitProfile(activeUser: User | null) {
 	if (primaryResult.error) return null;
 
 	return primaryResult.data as SubmitProfile | null;
+}
+
+async function ensureSubmitProfile(activeUser: User) {
+	const existingProfile = await supabase
+		.from("profiles")
+		.select("id")
+		.eq("id", activeUser.id)
+		.maybeSingle();
+
+	if (existingProfile.data?.id) return null;
+	if (existingProfile.error) return existingProfile.error;
+
+	const insertProfile = await supabase.from("profiles").insert({
+		id: activeUser.id,
+		full_name: getMetadataName(activeUser),
+		avatar_url: getMetadataAvatar(activeUser),
+	});
+
+	if (insertProfile.error && insertProfile.error.code !== "23505") {
+		return insertProfile.error;
+	}
+
+	return null;
 }
 
 export default function SubmitResumeForm() {
@@ -156,6 +206,31 @@ export default function SubmitResumeForm() {
 		profile?.target_role?.trim() ||
 		profile?.college?.trim() ||
 		"your saved profile details";
+	const trimmedTitle = title.trim();
+	const trimmedJobDescription = jobDescription.trim();
+	const trimmedPostDescription = postDescription.trim();
+	const jobDescriptionRemaining = Math.max(
+		JOB_DESCRIPTION_MIN_LENGTH - trimmedJobDescription.length,
+		0,
+	);
+	const postDescriptionRemaining = Math.max(
+		POST_DESCRIPTION_MIN_LENGTH - trimmedPostDescription.length,
+		0,
+	);
+	const submitIssue = !trimmedTitle
+		? "Add a resume title."
+		: !file
+			? "Upload a PDF resume."
+			: jobDescriptionRemaining > 0
+				? `Add ${jobDescriptionRemaining} more ${jobDescriptionRemaining === 1 ? "character" : "characters"} to the job description.`
+				: postDescriptionRemaining > 0
+					? `Add ${postDescriptionRemaining} more ${postDescriptionRemaining === 1 ? "character" : "characters"} to what you want help with.`
+					: "";
+
+	function showFormError(errorMessage: string) {
+		setMessage(errorMessage);
+		toast.error(errorMessage);
+	}
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -164,37 +239,47 @@ export default function SubmitResumeForm() {
 		if (!user) {
 			const errorMessage =
 				"Your session expired. Sign in again to continue.";
-			setMessage(errorMessage);
-			toast.error(errorMessage);
+			showFormError(errorMessage);
+			return;
+		}
+
+		if (!trimmedTitle) {
+			showFormError("Add a resume title before submitting.");
 			return;
 		}
 
 		if (!file || file.type !== "application/pdf") {
 			const errorMessage = "Upload a PDF resume for the MVP.";
-			setMessage(errorMessage);
-			toast.error(errorMessage);
+			showFormError(errorMessage);
 			return;
 		}
 
-		const trimmedTitle = title.trim();
-		const trimmedJobDescription = jobDescription.trim();
-		const trimmedPostDescription = postDescription.trim();
-
 		if (trimmedJobDescription.length < JOB_DESCRIPTION_MIN_LENGTH) {
-			const errorMessage = "Paste the JD so roasters can judge fit.";
-			setMessage(errorMessage);
-			toast.error(errorMessage);
+			const errorMessage = `Add ${JOB_DESCRIPTION_MIN_LENGTH}+ characters of job description so roasters can judge fit.`;
+			showFormError(errorMessage);
 			return;
 		}
 
 		if (trimmedPostDescription.length < POST_DESCRIPTION_MIN_LENGTH) {
-			const errorMessage = "Add what kind of help you want from the community.";
-			setMessage(errorMessage);
-			toast.error(errorMessage);
+			const errorMessage = `Add ${POST_DESCRIPTION_MIN_LENGTH}+ characters explaining what help you want.`;
+			showFormError(errorMessage);
 			return;
 		}
 
 		setSubmitting(true);
+
+		const profileError = await ensureSubmitProfile(user);
+		if (profileError) {
+			setSubmitting(false);
+			const errorMessage = isSubmitBackendSetupError(profileError)
+				? submitBackendSetupMessage(profileError)
+				: `Profile setup failed: ${profileError.message}`;
+			setMessage(errorMessage);
+			toast.error("Profile setup failed.", {
+				description: errorMessage,
+			});
+			return;
+		}
 
 		const filePath = `${user.id}/${Date.now()}-${cleanFileName(file.name)}`;
 		const upload = await supabase.storage
@@ -206,9 +291,12 @@ export default function SubmitResumeForm() {
 
 		if (upload.error) {
 			setSubmitting(false);
-			setMessage(upload.error.message);
+			const errorMessage = isSubmitBackendSetupError(upload.error)
+				? submitBackendSetupMessage(upload.error)
+				: upload.error.message;
+			setMessage(errorMessage);
 			toast.error("Upload failed.", {
-				description: upload.error.message,
+				description: errorMessage,
 			});
 			return;
 		}
@@ -240,8 +328,10 @@ export default function SubmitResumeForm() {
 					insert.error.message,
 				);
 			const errorMessage = needsContextMigration
-				? "Run supabase/resume-context.sql in Supabase, then try again."
-				: insert.error.message;
+				? `Run supabase/resume-context.sql in Supabase, then try again. Supabase said: ${insert.error.message}`
+				: isSubmitBackendSetupError(insert.error)
+					? submitBackendSetupMessage(insert.error)
+					: insert.error.message;
 			setMessage(errorMessage);
 			toast.error("Upload failed.", {
 				description: errorMessage,
@@ -259,7 +349,7 @@ export default function SubmitResumeForm() {
 	}
 
 	return (
-		<form className="submit-form submit-form-wide" onSubmit={handleSubmit}>
+		<form className="submit-form submit-form-wide" noValidate onSubmit={handleSubmit}>
 			<div className="submit-form-grid">
 				<section className="submit-form-column" aria-label="Resume basics">
 					<label className="field-block submit-title-field">
@@ -347,6 +437,11 @@ export default function SubmitResumeForm() {
 					<label className="field-block submit-jd-field">
 						<span>Job description</span>
 						<textarea
+							aria-describedby="job-description-help"
+							aria-invalid={
+								trimmedJobDescription.length > 0 &&
+								jobDescriptionRemaining > 0
+							}
 							className="submit-context-textarea submit-jd-textarea"
 							value={jobDescription}
 							onChange={(event) => setJobDescription(event.target.value)}
@@ -355,14 +450,29 @@ export default function SubmitResumeForm() {
 							maxLength={JOB_DESCRIPTION_MAX_LENGTH}
 							placeholder="Paste the JD, responsibilities, requirements, and keywords from the role you are applying for."
 						/>
-						<small>
-							This helps roasters compare your resume against the actual role.
+						<small
+							className={
+								trimmedJobDescription.length > 0 &&
+								jobDescriptionRemaining > 0
+									? "field-validation is-warning"
+									: undefined
+							}
+							id="job-description-help"
+						>
+							{jobDescriptionRemaining > 0
+								? `${jobDescriptionRemaining} more ${jobDescriptionRemaining === 1 ? "character" : "characters"} needed. Paste enough JD context to judge fit.`
+								: "This helps roasters compare your resume against the actual role."}
 						</small>
 					</label>
 
 					<label className="field-block submit-help-field">
 						<span>What should the community help with?</span>
 						<textarea
+							aria-describedby="post-description-help"
+							aria-invalid={
+								trimmedPostDescription.length > 0 &&
+								postDescriptionRemaining > 0
+							}
 							className="submit-context-textarea submit-help-textarea"
 							value={postDescription}
 							onChange={(event) => setPostDescription(event.target.value)}
@@ -371,8 +481,18 @@ export default function SubmitResumeForm() {
 							maxLength={POST_DESCRIPTION_MAX_LENGTH}
 							placeholder="Example: I want feedback on ATS keywords, project bullet strength, and whether this fits backend internship roles."
 						/>
-						<small>
-							Add your ask, concerns, or the part of the resume you want roasted first.
+						<small
+							className={
+								trimmedPostDescription.length > 0 &&
+								postDescriptionRemaining > 0
+									? "field-validation is-warning"
+									: undefined
+							}
+							id="post-description-help"
+						>
+							{postDescriptionRemaining > 0
+								? `${postDescriptionRemaining} more ${postDescriptionRemaining === 1 ? "character" : "characters"} needed. Tell roasters what to focus on.`
+								: "Add your ask, concerns, or the part of the resume you want roasted first."}
 						</small>
 					</label>
 				</section>
@@ -400,14 +520,8 @@ export default function SubmitResumeForm() {
 
 				<button
 					className="btn-primary submit-button"
-					disabled={
-						submitting ||
-						success ||
-						!title.trim() ||
-						!file ||
-						jobDescription.trim().length < JOB_DESCRIPTION_MIN_LENGTH ||
-						postDescription.trim().length < POST_DESCRIPTION_MIN_LENGTH
-					}
+					disabled={submitting || success}
+					title={submitIssue || undefined}
 				>
 					{success ? (
 						"Posted. Redirecting..."
@@ -420,6 +534,11 @@ export default function SubmitResumeForm() {
 						"Submit for roasting"
 					)}
 				</button>
+				{submitIssue && !submitting && !success ? (
+					<p className="submit-action-hint" aria-live="polite">
+						{submitIssue}
+					</p>
+				) : null}
 			</div>
 
 			{message ? <p className="form-message">{message}</p> : null}

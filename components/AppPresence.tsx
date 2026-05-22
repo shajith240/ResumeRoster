@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import {
 	APP_PRESENCE_CHANGE_EVENT,
 	PROFILE_CHANGE_EVENT,
+	isPresenceFeatureError,
 	normalizeAppStatus,
 } from "@/lib/app-presence";
 import { supabase } from "@/lib/supabase/client";
@@ -51,6 +52,7 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 	const sessionIdRef = useRef("");
 	const statusRef = useRef<AppStatus>("online");
 	const heartbeatTimerRef = useRef<number | null>(null);
+	const presenceFeatureReadyRef = useRef(true);
 
 	useEffect(() => {
 		let mounted = true;
@@ -58,15 +60,28 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 
 		async function recordPresence(status = statusRef.current) {
 			statusRef.current = status;
+			if (!presenceFeatureReadyRef.current) return false;
 
 			const { error } = await supabase.rpc("record_app_presence", {
 				app_status: status,
 				session_id: sessionIdRef.current,
 			});
 
+			if (error) {
+				if (isPresenceFeatureError(error)) {
+					presenceFeatureReadyRef.current = false;
+					if (heartbeatTimerRef.current) {
+						window.clearInterval(heartbeatTimerRef.current);
+						heartbeatTimerRef.current = null;
+					}
+				}
+				return false;
+			}
+
 			if (!error && mounted) {
 				announcePresenceChange();
 			}
+			return true;
 		}
 
 		function scheduleHeartbeat() {
@@ -83,9 +98,9 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 			const savedStatus = await getSavedStatus(userId);
 			if (!mounted) return;
 
-			await recordPresence(savedStatus);
+			const recorded = await recordPresence(savedStatus);
 			if (!mounted) return;
-			scheduleHeartbeat();
+			if (recorded) scheduleHeartbeat();
 		}
 
 		function handleProfileChange(event: Event) {
@@ -96,12 +111,16 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 		}
 
 		function handleVisibilityChange() {
-			if (document.visibilityState === "visible") {
+			if (
+				document.visibilityState === "visible" &&
+				presenceFeatureReadyRef.current
+			) {
 				void recordPresence();
 			}
 		}
 
 		function clearPresence() {
+			if (!presenceFeatureReadyRef.current || !sessionIdRef.current) return;
 			void supabase.rpc("clear_app_presence", {
 				session_id: sessionIdRef.current,
 			});

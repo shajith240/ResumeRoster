@@ -1593,6 +1593,15 @@ body.main-app-dark .feed-stats-grid div {
 	font-weight: 400;
 }
 
+.field-validation.is-warning {
+	color: var(--brand);
+}
+
+.field-block textarea[aria-invalid="true"] {
+	border-color: color-mix(in srgb, var(--brand) 78%, var(--border-default));
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent);
+}
+
 .role-picker {
 	border: 0;
 }
@@ -1781,6 +1790,17 @@ body.main-app-dark .toggle-ui::after {
 	justify-self: end;
 	padding-inline: 22px;
 	font-size: 15px;
+}
+
+.submit-action-hint {
+	grid-column: 2;
+	max-width: 250px;
+	justify-self: end;
+	margin: -4px 0 0;
+	color: var(--text-tertiary);
+	font-size: 12px;
+	line-height: 1.4;
+	text-align: right;
 }
 
 .button-spinner {
@@ -2412,6 +2432,13 @@ body.main-app-dark .bottom-nav {
 	.submit-button {
 		width: 100%;
 		justify-self: stretch;
+	}
+
+	.submit-action-hint {
+		grid-column: 1;
+		max-width: none;
+		justify-self: stretch;
+		text-align: left;
 	}
 }
 

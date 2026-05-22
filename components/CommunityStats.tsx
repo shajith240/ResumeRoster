@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
 	APP_PRESENCE_ACTIVE_WINDOW_SECONDS,
 	APP_PRESENCE_CHANGE_EVENT,
+	isPresenceFeatureError,
 } from "@/lib/app-presence";
 import { supabase } from "@/lib/supabase/client";
 
@@ -25,12 +26,6 @@ function getWeekStartIso() {
 
 function isDeleteFeatureError(error: { message?: string } | null) {
 	return /is_deleted|schema cache|column/i.test(error?.message ?? "");
-}
-
-function isPresenceFeatureError(error: { message?: string } | null) {
-	return /record_app_presence|get_active_roaster_count|app_presence_sessions|schema cache|function|relation/i.test(
-		error?.message ?? "",
-	);
 }
 
 async function loadCommunityStats() {
@@ -66,11 +61,13 @@ async function loadActiveRoasters() {
 	});
 
 	if (error) {
-		if (isPresenceFeatureError(error)) return 0;
+		if (isPresenceFeatureError(error)) {
+			return { count: 0, featureReady: false };
+		}
 		throw error;
 	}
 
-	return Number(data ?? 0);
+	return { count: Number(data ?? 0), featureReady: true };
 }
 
 function formatStat(value: number) {
@@ -123,13 +120,21 @@ export default function CommunityStats() {
 
 	useEffect(() => {
 		let active = true;
+		let presenceFeatureReady = true;
 		let refreshTimer: number | null = null;
 		let pollTimer: number | null = null;
 
 		async function refreshActiveRoasters() {
+			if (!presenceFeatureReady) return;
+
 			try {
 				const nextActiveRoasters = await loadActiveRoasters();
-				if (active) setActiveRoasters(nextActiveRoasters);
+				presenceFeatureReady = nextActiveRoasters.featureReady;
+				if (!presenceFeatureReady && pollTimer) {
+					window.clearInterval(pollTimer);
+					pollTimer = null;
+				}
+				if (active) setActiveRoasters(nextActiveRoasters.count);
 			} catch {
 				if (active) setActiveRoasters(0);
 			} finally {
