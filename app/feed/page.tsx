@@ -2,6 +2,7 @@ import AuthGate from "@/components/AuthGate";
 import CommunityStats from "@/components/CommunityStats";
 import ResumeFeed, { type FeedSort } from "@/components/ResumeFeed";
 import RouteHeader from "@/components/RouteHeader";
+import RouteScrollProxy from "@/components/RouteScrollProxy";
 import Link from "next/link";
 
 type FeedPageProps = {
@@ -24,6 +25,7 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 		<AuthGate>
 			<RouteHeader />
 			<main className="feed-app-shell page-enter">
+				<RouteScrollProxy targetSelector=".feed-center" />
 				<section className="feed-center">
 					<div className="feed-community-header">
 						<div>

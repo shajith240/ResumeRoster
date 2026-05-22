@@ -16,6 +16,68 @@
 	min-width: 0;
 }
 
+.feed-center,
+.feed-right-rail,
+.resume-detail-main-scroll,
+.resume-context-card p {
+	scrollbar-color: color-mix(in srgb, var(--brand) 54%, var(--text-tertiary))
+		transparent;
+	scrollbar-width: thin;
+}
+
+.feed-center::-webkit-scrollbar,
+.feed-right-rail::-webkit-scrollbar,
+.resume-detail-main-scroll::-webkit-scrollbar,
+.resume-context-card p::-webkit-scrollbar {
+	width: 12px;
+	height: 12px;
+}
+
+.feed-center::-webkit-scrollbar-track,
+.feed-right-rail::-webkit-scrollbar-track,
+.resume-detail-main-scroll::-webkit-scrollbar-track,
+.resume-context-card p::-webkit-scrollbar-track {
+	border: 4px solid transparent;
+	border-radius: var(--radius-pill);
+	background: color-mix(in srgb, var(--bg-elevated) 42%, transparent);
+	background-clip: padding-box;
+}
+
+.feed-center::-webkit-scrollbar-thumb,
+.feed-right-rail::-webkit-scrollbar-thumb,
+.resume-detail-main-scroll::-webkit-scrollbar-thumb,
+.resume-context-card p::-webkit-scrollbar-thumb {
+	border: 3px solid transparent;
+	border-radius: var(--radius-pill);
+	background:
+		linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--brand) 72%, var(--text-primary)),
+			color-mix(in srgb, var(--brand-dark) 72%, var(--text-secondary))
+		)
+		padding-box;
+}
+
+.feed-center::-webkit-scrollbar-thumb:hover,
+.feed-right-rail::-webkit-scrollbar-thumb:hover,
+.resume-detail-main-scroll::-webkit-scrollbar-thumb:hover,
+.resume-context-card p::-webkit-scrollbar-thumb:hover {
+	background:
+		linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--brand) 86%, var(--text-primary)),
+			color-mix(in srgb, var(--brand-dark) 86%, var(--text-secondary))
+		)
+		padding-box;
+}
+
+.feed-center::-webkit-scrollbar-corner,
+.feed-right-rail::-webkit-scrollbar-corner,
+.resume-detail-main-scroll::-webkit-scrollbar-corner,
+.resume-context-card p::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
 @media (min-width: 1025px) {
 	.app-with-sidebar {
 		--feed-canvas-edge: 24px;
