@@ -4,6 +4,16 @@ import Link from "next/link";
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Lock, Mail, UserRound } from "lucide-react";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -193,6 +203,10 @@ export function SignUp() {
 	const [confirmationEmail, setConfirmationEmail] = useState("");
 	const [existingAccount, setExistingAccount] =
 		useState<ExistingAccountHint | null>(null);
+
+	function closeExistingAccountDialog() {
+		setExistingAccount(null);
+	}
 
 	useEffect(() => {
 		document.body.classList.add("main-app");
@@ -514,26 +528,6 @@ export function SignUp() {
 								{message}
 							</p>
 						) : null}
-						{existingAccount ? (
-							<div className="auth-form-message" role="alert">
-								<p>{existingAccount.message}</p>
-								<div className="auth-notice-actions auth-account-actions">
-									{existingOAuthProviders.map((provider) => (
-										<button
-											disabled={isBusy}
-											key={provider}
-											onClick={() => void handleProvider(provider)}
-											type="button"
-										>
-											Continue with {providerLabel(provider)}
-										</button>
-									))}
-									<button onClick={() => switchMode("signin")} type="button">
-										Go to sign in
-									</button>
-								</div>
-							</div>
-						) : null}
 						{notice ? (
 							<div className="auth-form-notice" role="status">
 								<p>{notice}</p>
@@ -592,6 +586,52 @@ export function SignUp() {
 					</button>
 				</div>
 			</section>
+
+			<AlertDialog
+				open={Boolean(existingAccount)}
+				onOpenChange={(open) => {
+					if (!open) {
+						closeExistingAccountDialog();
+					}
+				}}
+			>
+				<AlertDialogContent className="auth-account-dialog" size="sm">
+					<AlertDialogHeader>
+						<AlertDialogTitle>Account already exists</AlertDialogTitle>
+						<AlertDialogDescription>
+							{existingAccount?.message ||
+								"This email already has a ResumeRoster account."}
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>Use another email</AlertDialogCancel>
+						{existingOAuthProviders.length ? (
+							existingOAuthProviders.map((provider) => (
+								<AlertDialogAction
+									className="auth-account-dialog-action"
+									key={provider}
+									onClick={(event) => {
+										event.preventDefault();
+										void handleProvider(provider);
+									}}
+								>
+									Continue with {providerLabel(provider)}
+								</AlertDialogAction>
+							))
+						) : (
+							<AlertDialogAction
+								className="auth-account-dialog-action"
+								onClick={(event) => {
+									event.preventDefault();
+									switchMode("signin");
+								}}
+							>
+								Go to sign in
+							</AlertDialogAction>
+						)}
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</main>
 	);
 }

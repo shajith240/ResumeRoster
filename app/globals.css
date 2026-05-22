@@ -929,15 +929,14 @@ html[data-app-theme="dark"] .full-page-loader {
 	transform: none;
 }
 
-.auth-account-actions button {
-	border-color: rgba(196, 52, 26, 0.24);
-	background: rgba(196, 52, 26, 0.08);
-	color: var(--danger);
+.auth-account-dialog-action {
+	border-color: transparent;
+	background: var(--brand);
+	color: #fff;
 }
 
-.auth-account-actions button:hover {
-	border-color: rgba(196, 52, 26, 0.4);
-	background: rgba(196, 52, 26, 0.14);
+.auth-account-dialog-action:hover {
+	background: var(--brand-dark);
 }
 
 .auth-submit-button {
