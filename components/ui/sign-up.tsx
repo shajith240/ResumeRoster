@@ -14,6 +14,17 @@ type AuthMode = "signin" | "signup";
 type OAuthProvider = "google" | "github";
 type SubmitState = AuthMode | OAuthProvider | "resend-confirmation" | null;
 type AppTheme = "dark" | "light";
+type EmailStatusResponse = {
+	accountExists: boolean;
+	emailConfirmed: boolean;
+	lookupAvailable: boolean;
+	providers: string[];
+	requiresMigration?: boolean;
+};
+type ExistingAccountHint = {
+	message: string;
+	providers: string[];
+};
 
 const APP_THEME_STORAGE_KEY = "resumeroster-theme";
 const APP_THEME_CHANGE_EVENT = "resumeroster-theme-change";
@@ -72,7 +83,59 @@ function authErrorMessage(error: unknown) {
 }
 
 function confirmationNotice() {
-	return "If this is a new email signup, check your inbox for the confirmation link. If this email already uses Google or GitHub, continue with that provider instead.";
+	return "Check your inbox for the confirmation link, then come back to sign in.";
+}
+
+function providerLabel(provider: string) {
+	const labels: Record<string, string> = {
+		email: "email and password",
+		github: "GitHub",
+		google: "Google",
+	};
+
+	return labels[provider] || provider;
+}
+
+function existingAccountMessage(providers: string[]) {
+	const readableProviders = providers.map(providerLabel);
+	const oauthProviders = providers.filter((provider) =>
+		["google", "github"].includes(provider),
+	);
+
+	if (oauthProviders.length && !providers.includes("email")) {
+		return `This email already has a ResumeRoster account. Continue with ${oauthProviders
+			.map(providerLabel)
+			.join(" or ")} to sign in.`;
+	}
+
+	if (readableProviders.length) {
+		return `This email already has a ResumeRoster account. Sign in with ${readableProviders.join(
+			" or ",
+		)} instead.`;
+	}
+
+	return "This email already has a ResumeRoster account. Go to sign in instead.";
+}
+
+async function lookupEmailStatus(email: string) {
+	try {
+		const response = await fetch("/api/auth/email-status", {
+			body: JSON.stringify({ email }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+			method: "POST",
+		});
+
+		if (!response.ok) {
+			return null;
+		}
+
+		const data = (await response.json()) as EmailStatusResponse;
+		return data.lookupAvailable ? data : null;
+	} catch {
+		return null;
+	}
 }
 
 function GoogleIcon() {
@@ -128,6 +191,8 @@ export function SignUp() {
 	const [notice, setNotice] = useState("");
 	const [submitting, setSubmitting] = useState<SubmitState>(null);
 	const [confirmationEmail, setConfirmationEmail] = useState("");
+	const [existingAccount, setExistingAccount] =
+		useState<ExistingAccountHint | null>(null);
 
 	useEffect(() => {
 		document.body.classList.add("main-app");
@@ -174,6 +239,7 @@ export function SignUp() {
 		setMessage("");
 		setNotice("");
 		setConfirmationEmail("");
+		setExistingAccount(null);
 	}
 
 	async function handleProvider(provider: OAuthProvider) {
@@ -181,6 +247,7 @@ export function SignUp() {
 		setMessage("");
 		setNotice("");
 		setConfirmationEmail("");
+		setExistingAccount(null);
 
 		try {
 			await signInWithProvider(provider, nextPath);
@@ -195,6 +262,7 @@ export function SignUp() {
 		setMessage("");
 		setNotice("");
 		setConfirmationEmail("");
+		setExistingAccount(null);
 
 		const trimmedEmail = email.trim().toLowerCase();
 		const trimmedFullName = fullName.trim();
@@ -215,6 +283,20 @@ export function SignUp() {
 		}
 
 		setSubmitting(mode);
+
+		if (mode === "signup") {
+			const emailStatus = await lookupEmailStatus(trimmedEmail);
+
+			if (emailStatus?.accountExists) {
+				const providers = emailStatus.providers.filter(Boolean);
+				setExistingAccount({
+					message: existingAccountMessage(providers),
+					providers,
+				});
+				setSubmitting(null);
+				return;
+			}
+		}
 
 		if (typeof window !== "undefined") {
 			window.localStorage.setItem(AUTH_NEXT_STORAGE_KEY, nextPath);
@@ -292,6 +374,10 @@ export function SignUp() {
 	const isBusy = submitting !== null;
 	const canShowSignupNoticeActions =
 		mode === "signup" && Boolean(confirmationEmail || notice);
+	const existingOAuthProviders =
+		existingAccount?.providers.filter((provider): provider is OAuthProvider =>
+			["google", "github"].includes(provider),
+		) ?? [];
 	const title =
 		mode === "signin" ? "Welcome back" : "Create your ResumeRoster account";
 	const subtitle =
@@ -364,9 +450,9 @@ export function SignUp() {
 								<div className="auth-input-wrap">
 									<UserRound aria-hidden="true" size={16} strokeWidth={1.8} />
 									<Input
-									autoComplete="name"
-									id="auth-full-name"
-									maxLength={64}
+										autoComplete="name"
+										id="auth-full-name"
+										maxLength={64}
 										onChange={(event) => setFullName(event.target.value)}
 										placeholder="Shajith Bathina"
 										required
@@ -386,6 +472,9 @@ export function SignUp() {
 									id="auth-email"
 									onChange={(event) => {
 										setEmail(event.target.value);
+										if (existingAccount) {
+											setExistingAccount(null);
+										}
 										if (
 											confirmationEmail &&
 											event.target.value.trim().toLowerCase() !== confirmationEmail
@@ -424,6 +513,26 @@ export function SignUp() {
 							<p className="auth-form-message" role="alert">
 								{message}
 							</p>
+						) : null}
+						{existingAccount ? (
+							<div className="auth-form-message" role="alert">
+								<p>{existingAccount.message}</p>
+								<div className="auth-notice-actions auth-account-actions">
+									{existingOAuthProviders.map((provider) => (
+										<button
+											disabled={isBusy}
+											key={provider}
+											onClick={() => void handleProvider(provider)}
+											type="button"
+										>
+											Continue with {providerLabel(provider)}
+										</button>
+									))}
+									<button onClick={() => switchMode("signin")} type="button">
+										Go to sign in
+									</button>
+								</div>
+							</div>
 						) : null}
 						{notice ? (
 							<div className="auth-form-notice" role="status">

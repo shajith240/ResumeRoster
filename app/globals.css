@@ -886,6 +886,7 @@ html[data-app-theme="dark"] .full-page-loader {
 	color: var(--success);
 }
 
+.auth-form-message p,
 .auth-form-notice p {
 	margin: 0;
 }
@@ -926,6 +927,17 @@ html[data-app-theme="dark"] .full-page-loader {
 	cursor: not-allowed;
 	opacity: 0.65;
 	transform: none;
+}
+
+.auth-account-actions button {
+	border-color: rgba(196, 52, 26, 0.24);
+	background: rgba(196, 52, 26, 0.08);
+	color: var(--danger);
+}
+
+.auth-account-actions button:hover {
+	border-color: rgba(196, 52, 26, 0.4);
+	background: rgba(196, 52, 26, 0.14);
 }
 
 .auth-submit-button {
