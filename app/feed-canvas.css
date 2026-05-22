@@ -245,10 +245,7 @@
 	.resume-detail-route {
 		width: min(
 			1760px,
-			calc(
-				100vw - var(--session-sidebar-width) - var(--feed-canvas-gutter) -
-					var(--feed-canvas-edge)
-			)
+			calc(100% - var(--feed-canvas-gutter) - var(--feed-canvas-edge))
 		) !important;
 		max-width: none !important;
 		margin-right: var(--feed-canvas-edge) !important;
@@ -258,9 +255,13 @@
 
 	.resume-thread {
 		display: grid !important;
-		grid-template-columns: minmax(680px, 1fr) clamp(360px, 31vw, 520px) !important;
+		grid-template-columns:
+			minmax(0, 1fr)
+			minmax(340px, clamp(360px, 28%, 500px)) !important;
 		align-items: start !important;
 		gap: var(--feed-canvas-gutter) !important;
+		width: 100% !important;
+		min-width: 0 !important;
 	}
 
 	.resume-preview-pane {
@@ -278,6 +279,8 @@
 		height: clamp(560px, calc(100vh - 112px), 860px);
 		max-height: calc(100vh - 112px);
 		min-width: 0;
+		width: 100%;
+		max-width: 100%;
 		gap: 16px;
 		container-name: thread-panel;
 		container-type: inline-size;
@@ -440,15 +443,14 @@
 	.resume-detail-route {
 		width: min(
 			1840px,
-			calc(
-				100vw - var(--session-sidebar-width) - var(--feed-canvas-gutter) -
-					var(--feed-canvas-edge)
-			)
+			calc(100% - var(--feed-canvas-gutter) - var(--feed-canvas-edge))
 		) !important;
 	}
 
 	.resume-thread {
-		grid-template-columns: minmax(920px, 1fr) clamp(400px, 28vw, 540px) !important;
+		grid-template-columns:
+			minmax(0, 1fr)
+			minmax(380px, clamp(400px, 28%, 500px)) !important;
 	}
 }
 
@@ -464,8 +466,8 @@
 	}
 
 	.resume-thread {
-		grid-template-columns: minmax(1080px, 1fr) 540px !important;
-		gap: 56px !important;
+		grid-template-columns: minmax(0, 1fr) minmax(420px, 500px) !important;
+		gap: var(--feed-canvas-gutter) !important;
 	}
 }
 
