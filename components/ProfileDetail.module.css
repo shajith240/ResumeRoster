@@ -3,6 +3,7 @@
 	padding: clamp(14px, 2vw, 30px);
 	background: var(--bg-base);
 	color: var(--text-primary);
+	font-family: var(--font-app-body);
 }
 
 .canvas {
@@ -109,13 +110,13 @@
 	background: rgba(104, 82, 205, 0.1);
 	color: #4230a3;
 	font-size: 13px;
-	font-weight: 750;
+	font-weight: 500;
 }
 
 .identity p {
 	margin-top: 12px;
 	color: var(--text-primary);
-	font-family: var(--font-body);
+	font-family: var(--font-app-body);
 	font-size: clamp(18px, 1.35vw, 24px);
 	font-weight: 500;
 }
@@ -157,7 +158,7 @@
 	gap: 6px;
 	color: var(--text-primary);
 	font-size: 12px;
-	font-weight: 650;
+	font-weight: 500;
 	text-decoration: none;
 }
 
@@ -175,7 +176,7 @@
 	border-radius: var(--button-radius);
 	background: var(--bg-inverse);
 	color: var(--text-inverse);
-	font-weight: 600;
+	font-weight: 500;
 }
 
 .statsGrid {
@@ -214,16 +215,16 @@
 
 .statCard strong {
 	color: var(--text-primary);
-	font-family: var(--font-body);
 	font-size: clamp(28px, 2.5vw, 38px);
-	font-weight: 800;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
 	line-height: 1;
 }
 
 .statCard span {
 	color: var(--text-secondary);
 	font-size: 12px;
-	font-weight: 750;
+	font-weight: 500;
 }
 
 .profileGrid {
@@ -285,7 +286,7 @@
 	background: var(--bg-elevated);
 	color: var(--text-primary);
 	font-size: 12px;
-	font-weight: 750;
+	font-weight: 500;
 }
 
 .resumeHighlight {
@@ -326,7 +327,7 @@
 	overflow: hidden;
 	color: var(--text-primary);
 	font-size: 14px;
-	font-weight: 850;
+	font-weight: 600;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
@@ -415,7 +416,7 @@
 	overflow: hidden;
 	color: var(--text-primary);
 	font-size: 12px;
-	font-weight: 800;
+	font-weight: 600;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
@@ -433,7 +434,8 @@
 	color: var(--text-primary);
 	font-size: 11px;
 	font-style: normal;
-	font-weight: 800;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
 }
 
@@ -506,7 +508,7 @@
 	background: var(--bg-elevated);
 	color: var(--text-primary);
 	font-size: 12px;
-	font-weight: 650;
+	font-weight: 500;
 	cursor: pointer;
 	user-select: none;
 	transition:
@@ -551,7 +553,7 @@
 	background: var(--brand);
 	color: white;
 	font-size: 22px;
-	font-weight: 900;
+	font-weight: 600;
 }
 
 .editAvatar img {
@@ -567,6 +569,7 @@
 
 .editPreview strong {
 	font-size: 15px;
+	font-weight: 500;
 }
 
 .editPreview span {
@@ -628,7 +631,7 @@
 .fieldLimit {
 	color: var(--text-tertiary);
 	font-size: 11px;
-	font-weight: 550;
+	font-weight: 500;
 	line-height: 1;
 }
 
@@ -664,7 +667,7 @@
 	background: var(--bg-elevated);
 	color: var(--text-primary);
 	font-size: 11px;
-	font-weight: 550;
+	font-weight: 500;
 	line-height: 1;
 	transition:
 		background-color 0.2s var(--button-ease),
@@ -688,7 +691,7 @@
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 	font: inherit;
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 400;
 	outline: none;
 	transition:
 		border-color 0.15s,
@@ -732,7 +735,7 @@
 .highlightSelectItem {
 	border-radius: var(--button-radius-sm);
 	font-size: 13px;
-	font-weight: 550;
+	font-weight: 400;
 }
 
 .skillEditorHeader {
@@ -745,7 +748,7 @@
 .skillEditorHeader span {
 	color: var(--text-tertiary);
 	font-size: 12px;
-	font-weight: 700;
+	font-weight: 500;
 }
 
 .skillEditor {
@@ -780,7 +783,7 @@
 	background: var(--bg-elevated);
 	color: var(--text-primary);
 	font-size: 12px;
-	font-weight: 650;
+	font-weight: 500;
 	line-height: 1;
 	transition:
 		background-color 0.2s var(--button-ease),
@@ -844,7 +847,7 @@
 
 .footerButton {
 	min-width: 116px;
-	font-weight: 600;
+	font-weight: 500;
 }
 
 .emptyState {

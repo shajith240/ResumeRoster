@@ -1716,8 +1716,11 @@ body.main-app-dark .toggle-ui::after {
 
 .thread-context-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+	grid-template-columns: minmax(0, 1fr);
+	grid-template-rows: minmax(0, 0.42fr) minmax(0, 0.58fr);
 	gap: 12px;
+	height: 100%;
+	min-height: 0;
 	min-width: 0;
 }
 
@@ -1725,7 +1728,7 @@ body.main-app-dark .toggle-ui::after {
 	display: grid;
 	grid-template-rows: auto auto minmax(0, 1fr);
 	gap: 8px;
-	min-height: clamp(156px, 14vw, 210px);
+	min-height: 0;
 	overflow: hidden;
 	padding: 16px;
 	background:

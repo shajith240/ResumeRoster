@@ -1046,16 +1046,16 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			<aside className="thread-context-panel" aria-label="Resume context">
 				<div className="thread-context-grid" aria-label="Resume context">
 					<ResumeContextCard
-						eyebrow="JD"
-						title="Job description"
-						content={jobDescription}
-						emptyMessage="No JD was attached to this older post."
-					/>
-					<ResumeContextCard
 						eyebrow="Ask"
 						title="What they want help with"
 						content={postDescription}
 						emptyMessage="No post description was attached to this older post."
+					/>
+					<ResumeContextCard
+						eyebrow="JD"
+						title="Job description"
+						content={jobDescription}
+						emptyMessage="No JD was attached to this older post."
 					/>
 				</div>
 			</aside>

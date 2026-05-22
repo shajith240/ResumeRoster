@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { CalendarDays, Flame, Search, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CalendarDays } from "lucide-react";
 
 import StackedList, {
 	type LeaderboardRoastPreview,
 	type LeaderboardRoaster,
 } from "@/components/ui/stacked-list";
-import { Input } from "@/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -17,7 +15,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { resolveAvatarUrl } from "@/lib/supabase/avatars";
 import { supabase } from "@/lib/supabase/client";
 import type { RoasterLeaderboardEntry } from "@/lib/supabase/types";
 import styles from "./Leaderboard.module.css";
@@ -33,6 +30,7 @@ const PROFILE_SELECT =
 	"id,username,full_name,avatar_url,avatar_path,college,target_role,roast_count,helpful_votes";
 const PROFILE_FALLBACK_SELECT =
 	"id,username,college,target_role,roast_count,helpful_votes";
+const LEADERBOARD_LIMIT = 100;
 
 const rangeLabels: Record<TimeRange, string> = {
 	week: "This Week",
@@ -59,6 +57,10 @@ function roleTag(roaster: RoasterLeaderboardEntry) {
 		return "Career Switcher";
 	}
 
+	if (role.includes("intern")) {
+		return "Intern";
+	}
+
 	return "Job Seeker";
 }
 
@@ -70,22 +72,6 @@ function improvement(helpfulVotes: number, roastCount: number) {
 	return Math.min(96, Math.max(12, 18 + helpfulVotes * 4 + roastCount * 2));
 }
 
-function nameFor(roaster: LeaderboardRoaster) {
-	return roaster.full_name || roaster.username || "Anonymous roaster";
-}
-
-function initials(name: string) {
-	const letters = name
-		.split(/\s+/)
-		.filter(Boolean)
-		.map((part) => part[0])
-		.join("")
-		.slice(0, 2)
-		.toUpperCase();
-
-	return letters || "#";
-}
-
 function sortRoasters(roasters: LeaderboardRoaster[]) {
 	return [...roasters].sort(
 		(a, b) =>
@@ -93,20 +79,6 @@ function sortRoasters(roasters: LeaderboardRoaster[]) {
 			b.helpful_votes - a.helpful_votes ||
 			b.roast_count - a.roast_count,
 	);
-}
-
-function matchesSearch(roaster: LeaderboardRoaster, query: string) {
-	if (!query) return true;
-
-	return [
-		nameFor(roaster),
-		roaster.target_role,
-		roaster.college,
-		roaster.role_tag,
-		roaster.top_roast?.content,
-	]
-		.filter(Boolean)
-		.some((value) => value!.toLowerCase().includes(query));
 }
 
 function isMissingSoftDeleteColumn(message: string) {
@@ -142,7 +114,7 @@ async function fetchRoastRows({
 		return query
 			.order("helpful_votes", { ascending: false })
 			.order("created_at", { ascending: false })
-			.limit(250);
+			.limit(1000);
 	}
 
 	const activeRoasts = await run(true);
@@ -252,10 +224,86 @@ function enhanceRoaster(
 	};
 }
 
-function podiumOrder(roasters: LeaderboardRoaster[]) {
-	const top = roasters.slice(0, 3);
-	if (top.length < 3) return top;
-	return [top[1], top[0], top[2]];
+async function fetchLeaderboardData(range: TimeRange) {
+	const since = getRangeStart(range);
+
+	if (since) {
+		const { data: periodRoasts, error: roastError } = await fetchRoastRows({
+			since,
+		});
+
+		if (roastError) {
+			return { message: roastError.message, roasters: [] };
+		}
+
+		const roasts = (periodRoasts ?? []) as RoastRow[];
+		const authorIds = Array.from(new Set(roasts.map((roast) => roast.author_id)));
+
+		if (!authorIds.length) {
+			return { message: "", roasters: [] };
+		}
+
+		const { profiles, errorMessage } = await fetchProfilesById(authorIds);
+
+		if (errorMessage) {
+			return { message: errorMessage, roasters: [] };
+		}
+
+		const stats = roasts.reduce<
+			Record<string, { helpfulVotes: number; roastCount: number }>
+		>((map, roast) => {
+			map[roast.author_id] ??= { helpfulVotes: 0, roastCount: 0 };
+			map[roast.author_id].helpfulVotes += roast.helpful_votes;
+			map[roast.author_id].roastCount += 1;
+			return map;
+		}, {});
+		const topRoasts = bestRoastMap(roasts);
+
+		return {
+			message: "",
+			roasters: sortRoasters(
+				profiles.map((profile) =>
+					enhanceRoaster(profile, topRoasts[profile.id], stats[profile.id]),
+				),
+			).slice(0, LEADERBOARD_LIMIT),
+		};
+	}
+
+	const { data, error } = await supabase.rpc("get_roaster_leaderboard", {
+		limit_count: LEADERBOARD_LIMIT,
+	});
+
+	if (error) {
+		return {
+			message: "Run supabase/leaderboard.sql once in Supabase, then refresh this page.",
+			roasters: [],
+		};
+	}
+
+	const baseRoasters = (data ?? []) as RoasterLeaderboardEntry[];
+	const authorIds = baseRoasters.map((roaster) => roaster.id);
+	const { profiles, errorMessage } = await fetchProfilesById(authorIds);
+	const profilesById = Object.fromEntries(
+		profiles.map((profile) => [profile.id, profile]),
+	);
+	let topRoasts: Record<string, RoastRow> = {};
+
+	if (authorIds.length) {
+		const { data: roasts } = await fetchRoastRows({ authorIds });
+		topRoasts = bestRoastMap((roasts ?? []) as RoastRow[]);
+	}
+
+	return {
+		message: errorMessage,
+		roasters: sortRoasters(
+			baseRoasters.map((roaster) =>
+				enhanceRoaster(
+					mergeProfileMetadata(roaster, profilesById[roaster.id]),
+					topRoasts[roaster.id],
+				),
+			),
+		).slice(0, LEADERBOARD_LIMIT),
+	};
 }
 
 export default function Leaderboard() {
@@ -266,125 +314,76 @@ export default function Leaderboard() {
 	const [searchQuery, setSearchQuery] = useState("");
 
 	useEffect(() => {
-		async function loadLeaderboard() {
+		let active = true;
+		let refreshTimer: number | undefined;
+
+		async function loadLeaderboard(quiet = false) {
 			const started = Date.now();
-			setLoading(true);
+			if (!quiet) {
+				setLoading(true);
+			}
 			setMessage("");
 
-			const since = getRangeStart(range);
+			const result = await fetchLeaderboardData(range);
 
-			if (since) {
-				const { data: periodRoasts, error: roastError } = await fetchRoastRows({
-					since,
-				});
+			if (!active) return;
 
-				if (roastError) {
-					setMessage(roastError.message);
-					setRoasters([]);
-				} else {
-					const roasts = (periodRoasts ?? []) as RoastRow[];
-					const authorIds = Array.from(new Set(roasts.map((roast) => roast.author_id)));
+			setRoasters(result.roasters);
+			setMessage(result.message);
 
-					if (!authorIds.length) {
-						setRoasters([]);
-					} else {
-						const { profiles, errorMessage } = await fetchProfilesById(authorIds);
+			const finish = () => {
+				if (!active) return;
+				setLoading(false);
+			};
 
-						if (errorMessage) {
-							setMessage(errorMessage);
-							setRoasters([]);
-						} else {
-							const stats = roasts.reduce<
-								Record<string, { helpfulVotes: number; roastCount: number }>
-							>((map, roast) => {
-								map[roast.author_id] ??= { helpfulVotes: 0, roastCount: 0 };
-								map[roast.author_id].helpfulVotes += roast.helpful_votes;
-								map[roast.author_id].roastCount += 1;
-								return map;
-							}, {});
-							const topRoasts = bestRoastMap(roasts);
-
-							setRoasters(
-								sortRoasters(
-									profiles.map((profile) =>
-										enhanceRoaster(profile, topRoasts[profile.id], stats[profile.id]),
-									),
-								),
-							);
-						}
-					}
-				}
-			} else {
-				const { data, error } = await supabase.rpc("get_roaster_leaderboard", {
-					limit_count: 50,
-				});
-
-				if (error) {
-					setMessage(
-						"Run supabase/leaderboard.sql once in Supabase, then refresh this page.",
-					);
-					setRoasters([]);
-				} else {
-					const baseRoasters = (data ?? []) as RoasterLeaderboardEntry[];
-					const authorIds = baseRoasters.map((roaster) => roaster.id);
-					const { profiles, errorMessage } = await fetchProfilesById(authorIds);
-					const profilesById = Object.fromEntries(
-						profiles.map((profile) => [profile.id, profile]),
-					);
-					let topRoasts: Record<string, RoastRow> = {};
-
-					if (errorMessage) {
-						setMessage(errorMessage);
-					}
-
-					if (authorIds.length) {
-						const { data: roasts } = await fetchRoastRows({ authorIds });
-
-						topRoasts = bestRoastMap((roasts ?? []) as RoastRow[]);
-					}
-
-					setRoasters(
-						sortRoasters(
-							baseRoasters.map((roaster) =>
-								enhanceRoaster(
-									mergeProfileMetadata(roaster, profilesById[roaster.id]),
-									topRoasts[roaster.id],
-								),
-							),
-						),
-					);
-				}
+			if (quiet) {
+				finish();
+				return;
 			}
 
 			const elapsed = Date.now() - started;
-			window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
+			window.setTimeout(finish, Math.max(0, 260 - elapsed));
+		}
+
+		function scheduleRefresh() {
+			if (refreshTimer) {
+				window.clearTimeout(refreshTimer);
+			}
+
+			refreshTimer = window.setTimeout(() => {
+				void loadLeaderboard(true);
+			}, 220);
 		}
 
 		void loadLeaderboard();
-	}, [range]);
 
-	const query = searchQuery.trim().toLowerCase();
-	const visibleRoasters = useMemo(
-		() => sortRoasters(roasters).filter((roaster) => matchesSearch(roaster, query)),
-		[query, roasters],
-	);
-	const topRoasters = visibleRoasters.slice(0, 3);
-	const listRoasters = visibleRoasters;
-	const listStartRank = 1;
-	const totalPoints = roasters.reduce(
-		(total, roaster) => total + (roaster.roast_points ?? 0),
-		0,
-	);
+		const channel = supabase.channel(`leaderboard-live-${range}`);
+		channel
+			.on(
+				"postgres_changes",
+				{ event: "*", schema: "public", table: "roasts" },
+				scheduleRefresh,
+			)
+			.on(
+				"postgres_changes",
+				{ event: "*", schema: "public", table: "profiles" },
+				scheduleRefresh,
+			)
+			.subscribe();
+
+		return () => {
+			active = false;
+			if (refreshTimer) {
+				window.clearTimeout(refreshTimer);
+			}
+			void supabase.removeChannel(channel);
+		};
+	}, [range]);
 
 	if (loading) {
 		return (
 			<section className={styles.page}>
 				<div className={styles.loadingHero} />
-				<div className={styles.loadingGrid}>
-					<span />
-					<span />
-					<span />
-				</div>
 				<div className={styles.loadingTable} />
 			</section>
 		);
@@ -421,115 +420,16 @@ export default function Leaderboard() {
 							</SelectGroup>
 						</SelectContent>
 					</Select>
-
-					<label className={styles.search}>
-						<Search aria-hidden="true" />
-						<span className="sr-only">Search leaderboard</span>
-						<Input
-							onChange={(event) => setSearchQuery(event.target.value)}
-							placeholder="Search roasters, roles, top roasts..."
-							type="search"
-							value={searchQuery}
-						/>
-					</label>
 				</div>
 			</header>
 
-			<div className={styles.topLayout}>
-				<div className={styles.podium} aria-label="Top three roasters">
-					{podiumOrder(topRoasters).map((roaster) => {
-						const rank = visibleRoasters.findIndex((item) => item.id === roaster.id) + 1;
-						return <PodiumCard key={roaster.id} rank={rank} roaster={roaster} />;
-					})}
-
-					{!topRoasters.length ? (
-						<div className={styles.emptyPodium}>
-							<strong>No roasters found</strong>
-							<p>Try another search or switch the time range.</p>
-						</div>
-					) : null}
-				</div>
-
-				<aside className={styles.infoStack}>
-					<div className={styles.noteCard}>
-						<Sparkles aria-hidden="true" />
-						<p>Climb the ranks by writing useful, specific resume feedback.</p>
-					</div>
-					<div className={styles.pointsCard}>
-						<Flame aria-hidden="true" />
-						<div>
-							<h2>What are Roast Points?</h2>
-							<p>
-								Roast Points reflect helpful feedback and review activity. The
-								better your resume advice, the higher you climb.
-							</p>
-							<strong>{totalPoints.toLocaleString()} points on this board</strong>
-						</div>
-					</div>
-				</aside>
-			</div>
-
-			<div className={styles.listHeader}>
-				<div>
-					<h2>Roaster list</h2>
-					<p>
-						{listRoasters.length
-							? `Showing ${visibleRoasters.length} ranked ${
-									visibleRoasters.length === 1 ? "roaster" : "roasters"
-								}`
-							: "No roasters match this view"}
-					</p>
-				</div>
-			</div>
-
 			<StackedList
 				message={message}
-				roasters={listRoasters}
-				searchQuery=""
-				startRank={listStartRank}
+				onSearchQueryChange={setSearchQuery}
+				roasters={roasters}
+				searchQuery={searchQuery}
+				startRank={1}
 			/>
 		</section>
-	);
-}
-
-function PodiumCard({
-	rank,
-	roaster,
-}: {
-	rank: number;
-	roaster: LeaderboardRoaster;
-}) {
-	const isWinner = rank === 1;
-	const name = nameFor(roaster);
-	const avatarUrl = resolveAvatarUrl(roaster.avatar_url, roaster.avatar_path);
-
-	return (
-		<article className={`${styles.podiumCard} ${isWinner ? styles.winnerCard : ""}`}>
-			<div className={styles.rankBadge}>#{rank}</div>
-			<div className={styles.avatar}>
-				{avatarUrl ? (
-					<img src={avatarUrl} alt={`${name} profile photo`} />
-				) : (
-					<span>{initials(name)}</span>
-				)}
-			</div>
-			<h2>{name}</h2>
-			<span className={styles.rolePill}>{roaster.role_tag}</span>
-			<strong>
-				<Flame aria-hidden="true" />
-				{(roaster.roast_points ?? 0).toLocaleString()}
-			</strong>
-			<p>Roast Points</p>
-			<em>+{roaster.improvement}% improvement</em>
-			<Link
-				href={
-					roaster.top_roast
-						? `/resume/${roaster.top_roast.resume_id}`
-						: `/profile/${roaster.id}`
-				}
-			>
-				View Roast
-			</Link>
-		</article>
 	);
 }

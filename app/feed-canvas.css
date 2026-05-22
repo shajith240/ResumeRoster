@@ -259,7 +259,7 @@
 	.resume-thread {
 		display: grid !important;
 		grid-template-columns: minmax(680px, 1fr) clamp(360px, 31vw, 520px) !important;
-		align-items: start !important;
+		align-items: stretch !important;
 		gap: var(--feed-canvas-gutter) !important;
 	}
 
@@ -273,7 +273,9 @@
 		position: sticky;
 		top: 76px;
 		display: grid;
-		align-content: start;
+		align-content: stretch;
+		align-self: stretch;
+		height: 100%;
 		min-width: 0;
 		gap: 16px;
 		container-name: thread-panel;
@@ -287,11 +289,13 @@
 	}
 
 	.thread-context-grid {
-		grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)) !important;
+		grid-template-columns: minmax(0, 1fr) !important;
+		grid-template-rows: minmax(0, 0.42fr) minmax(0, 0.58fr) !important;
+		height: 100% !important;
 	}
 
 	.resume-context-card {
-		min-height: clamp(156px, 13vw, 210px) !important;
+		min-height: 0 !important;
 	}
 
 	@container thread-panel (max-width: 460px) {
@@ -486,6 +490,7 @@
 		grid-row: 3;
 		display: grid;
 		align-content: start;
+		height: auto;
 		gap: 16px;
 	}
 
@@ -596,6 +601,15 @@
 		grid-column: 1 !important;
 		grid-row: 3 !important;
 		position: static !important;
+	}
+
+	.thread-context-grid {
+		grid-template-rows: none !important;
+		height: auto !important;
+	}
+
+	.resume-context-card {
+		min-height: clamp(156px, 18vw, 220px) !important;
 	}
 
 	.thread-discussion-panel {
