@@ -1,4 +1,5 @@
 import AuthGate from "@/components/AuthGate";
+import CommunityStats from "@/components/CommunityStats";
 import ResumeFeed, { type FeedSort } from "@/components/ResumeFeed";
 import RouteHeader from "@/components/RouteHeader";
 import Link from "next/link";
@@ -51,16 +52,7 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 
 					<section className="feed-stats-panel">
 						<h2>Community stats</h2>
-						<div className="feed-stats-grid">
-							<div>
-								<span>Resumes roasted this week</span>
-								<strong>42</strong>
-							</div>
-							<div>
-								<span>Active roasters</span>
-								<strong>18</strong>
-							</div>
-						</div>
+						<CommunityStats />
 					</section>
 
 					<section

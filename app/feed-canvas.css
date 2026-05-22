@@ -259,7 +259,7 @@
 	.resume-thread {
 		display: grid !important;
 		grid-template-columns: minmax(680px, 1fr) clamp(360px, 31vw, 520px) !important;
-		align-items: stretch !important;
+		align-items: start !important;
 		gap: var(--feed-canvas-gutter) !important;
 	}
 
@@ -274,8 +274,9 @@
 		top: 76px;
 		display: grid;
 		align-content: stretch;
-		align-self: stretch;
-		height: 100%;
+		align-self: start;
+		height: clamp(560px, calc(100vh - 112px), 860px);
+		max-height: calc(100vh - 112px);
 		min-width: 0;
 		gap: 16px;
 		container-name: thread-panel;
@@ -290,7 +291,7 @@
 
 	.thread-context-grid {
 		grid-template-columns: minmax(0, 1fr) !important;
-		grid-template-rows: minmax(0, 0.42fr) minmax(0, 0.58fr) !important;
+		grid-template-rows: repeat(2, minmax(0, 1fr)) !important;
 		height: 100% !important;
 	}
 
@@ -491,6 +492,7 @@
 		display: grid;
 		align-content: start;
 		height: auto;
+		max-height: none;
 		gap: 16px;
 	}
 

@@ -24,8 +24,17 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+	getResumeAffiliationLabel,
+	getResumePosterLabel,
+	getResumeRoleLabel,
+} from "@/lib/resume-display";
 import { signInWithGoogle, supabase } from "@/lib/supabase/client";
-import type { ResumeSummary, Roast } from "@/lib/supabase/types";
+import type {
+	ResumeAuthorProfile,
+	ResumeSummary,
+	Roast,
+} from "@/lib/supabase/types";
 import { toast } from "sonner";
 
 type ResumeDetailProps = {
@@ -72,6 +81,10 @@ const RESUME_SELECT_WITH_READS =
 	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
 const RESUME_SELECT_BASE =
 	"id,user_id,title,file_path,is_anonymous,status,roast_count,created_at";
+const RESUME_AUTHOR_PROFILE_SELECT_WITH_STATUS =
+	"id,username,full_name,avatar_url,avatar_path,college,target_role,current_position,app_status";
+const RESUME_AUTHOR_PROFILE_SELECT_BASE =
+	"id,username,full_name,avatar_url,college,target_role";
 
 function formatDate(value: string) {
 	return new Intl.DateTimeFormat("en", {
@@ -129,6 +142,12 @@ function isDeleteFeatureError(error: { message?: string } | null) {
 
 function isResumeContextFeatureError(error: { message?: string } | null) {
 	return /job_description|post_description|read_count|schema cache|column/i.test(
+		error?.message ?? "",
+	);
+}
+
+function isAuthorProfileFeatureError(error: { message?: string } | null) {
+	return /app_status|current_position|avatar_path|schema cache|column/i.test(
 		error?.message ?? "",
 	);
 }
@@ -241,6 +260,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const router = useRouter();
 	const [user, setUser] = useState<User | null>(null);
 	const [resume, setResume] = useState<ResumeSummary | null>(null);
+	const [resumeAuthorProfile, setResumeAuthorProfile] =
+		useState<ResumeAuthorProfile | null>(null);
 	const [roasts, setRoasts] = useState<Roast[]>([]);
 	const [authorProfiles, setAuthorProfiles] = useState<
 		Record<string, AuthorProfile>
@@ -335,6 +356,31 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					: current,
 			);
 		}
+	}
+
+	async function fetchResumeAuthorProfile(activeResume: ResumeSummary) {
+		if (activeResume.is_anonymous) return null;
+
+		const primaryResult = await supabase
+			.from("profiles")
+			.select(RESUME_AUTHOR_PROFILE_SELECT_WITH_STATUS)
+			.eq("id", activeResume.user_id)
+			.maybeSingle();
+
+		if (primaryResult.error && isAuthorProfileFeatureError(primaryResult.error)) {
+			const fallbackResult = await supabase
+				.from("profiles")
+				.select(RESUME_AUTHOR_PROFILE_SELECT_BASE)
+				.eq("id", activeResume.user_id)
+				.maybeSingle();
+
+			if (fallbackResult.error) return null;
+			return (fallbackResult.data ?? null) as ResumeAuthorProfile | null;
+		}
+
+		if (primaryResult.error) return null;
+
+		return (primaryResult.data ?? null) as ResumeAuthorProfile | null;
 	}
 
 	async function loadRoastThread(activeUser: User | null) {
@@ -521,6 +567,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 			const loadedResume = withResumeDefaults(resumeResult.data);
 			setResume(loadedResume);
+			setResumeAuthorProfile(await fetchResumeAuthorProfile(loadedResume));
 
 			if (activeUser) {
 				await openResumeFile(loadedResume);
@@ -958,6 +1005,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const postDescription = resume.post_description ?? "";
 	const visibleRoastCount = roasts.filter((roast) => !roast.is_deleted).length;
 	const deleteTargetIsReply = Boolean(deleteTargetRoast?.parent_id);
+	const posterLabel = getResumePosterLabel(resume, resumeAuthorProfile);
 
 	return (
 		<>
@@ -965,7 +1013,16 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			<article className="thread-viewer-card resume-preview-pane">
 				<header className="thread-header">
 					<div className="post-meta">
-						<span>posted anonymously</span>
+						{resume.is_anonymous ? (
+							<span>{posterLabel}</span>
+						) : (
+							<Link
+								className="post-author-link"
+								href={`/profile/${resume.user_id}`}
+							>
+								{posterLabel}
+							</Link>
+						)}
 						<time dateTime={resume.created_at}>
 							{formatDate(resume.created_at)}
 						</time>
@@ -1007,8 +1064,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 				<h1>{resume.title}</h1>
 				<div className="post-tags">
-					<span className="badge role-badge">Resume thread</span>
-					<span className="badge neutral-badge">Anonymous upload</span>
+					<span className="badge role-badge">
+						{getResumeRoleLabel(resume, resumeAuthorProfile)}
+					</span>
+					<span className="badge neutral-badge">
+						{getResumeAffiliationLabel(resume, resumeAuthorProfile)}
+					</span>
 				</div>
 
 				{signedUrl ? (

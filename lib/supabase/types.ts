@@ -1,4 +1,17 @@
 export type ResumeStatus = "open" | "roasted" | "closed";
+export type AppStatus = "online" | "focus" | "offline";
+
+export type ResumeAuthorProfile = {
+  id: string;
+  username: string | null;
+  full_name?: string | null;
+  avatar_url?: string | null;
+  avatar_path?: string | null;
+  college?: string | null;
+  target_role?: string | null;
+  current_position?: string | null;
+  app_status?: AppStatus | null;
+};
 
 export type ResumeSummary = {
   id: string;
@@ -12,6 +25,7 @@ export type ResumeSummary = {
   job_description: string | null;
   post_description: string | null;
   created_at: string;
+  author_profile?: ResumeAuthorProfile | null;
 };
 
 export type Roast = {
@@ -36,6 +50,7 @@ export type RoasterLeaderboardEntry = {
   avatar_path?: string | null;
   college: string | null;
   target_role: string | null;
+  app_status?: AppStatus | null;
   roast_count: number;
   helpful_votes: number;
 };

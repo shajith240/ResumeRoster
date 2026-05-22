@@ -7,8 +7,13 @@ import { BookmarkIcon } from "@/components/ui/bookmark";
 import { EyeIcon } from "@/components/ui/eye";
 import { LinkIcon } from "@/components/ui/link";
 import { MessageCircleIcon } from "@/components/ui/message-circle";
+import {
+  getResumeAffiliationLabel,
+  getResumePosterLabel,
+  getResumeRoleLabel,
+} from "@/lib/resume-display";
 import { supabase } from "@/lib/supabase/client";
-import type { ResumeSummary } from "@/lib/supabase/types";
+import type { ResumeAuthorProfile, ResumeSummary } from "@/lib/supabase/types";
 
 const RESUME_SELECT_WITH_CONTEXT =
   "id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,job_description,post_description,created_at";
@@ -16,6 +21,10 @@ const RESUME_SELECT_WITH_READS =
   "id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
 const RESUME_SELECT_BASE =
   "id,user_id,title,file_path,is_anonymous,status,roast_count,created_at";
+const AUTHOR_PROFILE_SELECT_WITH_STATUS =
+  "id,username,full_name,avatar_url,avatar_path,college,target_role,current_position,app_status";
+const AUTHOR_PROFILE_SELECT_BASE =
+  "id,username,full_name,avatar_url,college,target_role";
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", {
@@ -46,6 +55,12 @@ function isResumeContextFeatureError(error: { message?: string } | null) {
   );
 }
 
+function isAuthorProfileFeatureError(error: { message?: string } | null) {
+  return /app_status|current_position|avatar_path|schema cache|column/i.test(
+    error?.message ?? "",
+  );
+}
+
 function withResumeDefaults(
   resume: Omit<
     ResumeSummary,
@@ -61,15 +76,6 @@ function withResumeDefaults(
     job_description: resume.job_description ?? null,
     post_description: resume.post_description ?? null,
   };
-}
-
-function roleFromTitle(title: string) {
-  const lower = title.toLowerCase();
-  if (lower.includes("data")) return "Data Analyst";
-  if (lower.includes("product")) return "Product Manager";
-  if (lower.includes("mba")) return "MBA";
-  if (lower.includes("intern")) return "SDE Intern";
-  return "Full-time SDE";
 }
 
 export type FeedSort = "best" | "new" | "top";
@@ -139,6 +145,53 @@ async function mergeLiveRoastCounts(resumeRows: ResumeSummary[]) {
   return resumeRows.map((resume) => ({
     ...resume,
     roast_count: countsByResume.get(resume.id) ?? 0,
+  }));
+}
+
+async function fetchPublicAuthorProfiles(resumeRows: ResumeSummary[]) {
+  const authorIds = Array.from(
+    new Set(
+      resumeRows
+        .filter((resume) => !resume.is_anonymous)
+        .map((resume) => resume.user_id),
+    ),
+  );
+
+  if (!authorIds.length) return new Map<string, ResumeAuthorProfile>();
+
+  const primaryResult = await supabase
+    .from("profiles")
+    .select(AUTHOR_PROFILE_SELECT_WITH_STATUS)
+    .in("id", authorIds);
+
+  let profileRows = (primaryResult.data ?? []) as ResumeAuthorProfile[];
+  let profileError = primaryResult.error;
+
+  if (profileError && isAuthorProfileFeatureError(profileError)) {
+    const fallbackResult = await supabase
+      .from("profiles")
+      .select(AUTHOR_PROFILE_SELECT_BASE)
+      .in("id", authorIds);
+
+    profileRows = (fallbackResult.data ?? []) as ResumeAuthorProfile[];
+    profileError = fallbackResult.error;
+  }
+
+  if (profileError) return new Map<string, ResumeAuthorProfile>();
+
+  return new Map(profileRows.map((profile) => [profile.id, profile]));
+}
+
+async function attachPublicAuthorProfiles(resumeRows: ResumeSummary[]) {
+  const profilesById = await fetchPublicAuthorProfiles(resumeRows);
+
+  if (!profilesById.size) return resumeRows;
+
+  return resumeRows.map((resume) => ({
+    ...resume,
+    author_profile: resume.is_anonymous
+      ? null
+      : profilesById.get(resume.user_id) ?? null,
   }));
 }
 
@@ -235,7 +288,9 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
       if (resumeError) {
         setMessage(resumeError.message);
       } else {
-        const rowsWithLiveCounts = await mergeLiveRoastCounts(resumeRows);
+        const rowsWithProfiles = await attachPublicAuthorProfiles(resumeRows);
+        if (!active) return;
+        const rowsWithLiveCounts = await mergeLiveRoastCounts(rowsWithProfiles);
         if (!active) return;
         setResumes(sortResumes(rowsWithLiveCounts, activeSort));
       }
@@ -314,6 +369,8 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
       </nav>
       {sortedResumes.map((resume, index) => {
         const heated = resume.roast_count > 5;
+        const authorProfile = resume.author_profile ?? null;
+        const posterLabel = getResumePosterLabel(resume, authorProfile);
         const snippet =
           resume.post_description?.trim() ||
           "Targeting recruiter screens with a resume that needs sharper bullets, clearer proof, and fewer weak first impressions.";
@@ -322,7 +379,13 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
           <article className="resume-card" style={{ animationDelay: `${index * 50}ms` }} key={resume.id}>
             <div className="post-content">
               <div className="post-meta">
-                <span>posted anonymously</span>
+                {resume.is_anonymous ? (
+                  <span>{posterLabel}</span>
+                ) : (
+                  <Link className="post-author-link" href={`/profile/${resume.user_id}`}>
+                    {posterLabel}
+                  </Link>
+                )}
                 <time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
                 <span className="post-read-count">
                   <EyeIcon className="post-meta-icon" size={15} aria-hidden="true" />
@@ -334,8 +397,12 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
               </Link>
 
               <div className="post-tags">
-                <span className="badge role-badge">{roleFromTitle(resume.title)}</span>
-                <span className="badge neutral-badge">Anonymous college</span>
+                <span className="badge role-badge">
+                  {getResumeRoleLabel(resume, authorProfile)}
+                </span>
+                <span className="badge neutral-badge">
+                  {getResumeAffiliationLabel(resume, authorProfile)}
+                </span>
                 <span className={`badge ${heated ? "badge-hot" : resume.status === "closed" ? "badge-closed" : "badge-open"}`}>
                   {heated ? "Heated" : resume.status === "closed" ? "Closed" : "Open"}
                 </span>

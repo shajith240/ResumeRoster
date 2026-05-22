@@ -11,6 +11,7 @@ create table if not exists public.profiles (
   avatar_path text,
   college text,
   target_role text,
+  app_status text not null default 'online' check (app_status in ('online', 'focus', 'offline')),
   roast_count int not null default 0,
   helpful_votes int not null default 0,
   created_at timestamptz not null default now()

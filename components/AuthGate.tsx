@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import AppPresence from "@/components/AppPresence";
 import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
 import { SessionNavBar } from "@/components/ui/sidebar";
@@ -98,6 +99,7 @@ export default function AuthGate({ children }: AuthGateProps) {
 
 	return (
 		<>
+			<AppPresence userId={user.id} />
 			<SessionNavBar />
 			<div className="app-with-sidebar">{children}</div>
 		</>

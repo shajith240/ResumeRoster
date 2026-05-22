@@ -15,6 +15,14 @@ import { toast } from "sonner";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { supabase } from "@/lib/supabase/client";
 
+type SubmitProfile = {
+	full_name: string | null;
+	username: string | null;
+	college?: string | null;
+	target_role?: string | null;
+	current_position?: string | null;
+};
+
 const roles = [
 	"SDE Intern",
 	"Full-time SDE",
@@ -40,10 +48,49 @@ function fileSize(size: number) {
 	return `${(size / 1024 / 1024).toFixed(2)} MB`;
 }
 
+function profileDisplayName(profile: SubmitProfile | null, user: User | null) {
+	return (
+		profile?.full_name?.trim() ||
+		profile?.username?.trim().replace(/^@+/, "") ||
+		user?.user_metadata?.full_name ||
+		user?.email?.split("@")[0] ||
+		"your profile"
+	);
+}
+
+async function getSubmitProfile(activeUser: User | null) {
+	if (!activeUser) return null;
+
+	const primaryResult = await supabase
+		.from("profiles")
+		.select("full_name,username,college,target_role,current_position")
+		.eq("id", activeUser.id)
+		.maybeSingle();
+
+	if (
+		primaryResult.error &&
+		/current_position|schema cache|column/i.test(primaryResult.error.message)
+	) {
+		const fallbackResult = await supabase
+			.from("profiles")
+			.select("full_name,username,college,target_role")
+			.eq("id", activeUser.id)
+			.maybeSingle();
+
+		if (fallbackResult.error) return null;
+		return fallbackResult.data as SubmitProfile | null;
+	}
+
+	if (primaryResult.error) return null;
+
+	return primaryResult.data as SubmitProfile | null;
+}
+
 export default function SubmitResumeForm() {
 	const router = useRouter();
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [user, setUser] = useState<User | null>(null);
+	const [profile, setProfile] = useState<SubmitProfile | null>(null);
 	const [title, setTitle] = useState("");
 	const [targetRole, setTargetRole] = useState(roles[0]);
 	const [jobDescription, setJobDescription] = useState("");
@@ -56,12 +103,19 @@ export default function SubmitResumeForm() {
 	const [success, setSuccess] = useState(false);
 
 	useEffect(() => {
-		supabase.auth.getUser().then(({ data }) => setUser(data.user));
+		async function syncUser(activeUser: User | null) {
+			setUser(activeUser);
+			setProfile(await getSubmitProfile(activeUser));
+		}
+
+		supabase.auth.getUser().then(({ data }) => {
+			void syncUser(data.user);
+		});
 
 		const {
 			data: { subscription },
 		} = supabase.auth.onAuthStateChange((_event, session) => {
-			setUser(session?.user ?? null);
+			void syncUser(session?.user ?? null);
 		});
 
 		return () => subscription.unsubscribe();
@@ -95,6 +149,13 @@ export default function SubmitResumeForm() {
 		setDragging(false);
 		pickFile(event.dataTransfer.files?.[0]);
 	}
+
+	const publicProfileName = profileDisplayName(profile, user);
+	const publicProfileDetail =
+		profile?.current_position?.trim() ||
+		profile?.target_role?.trim() ||
+		profile?.college?.trim() ||
+		"your saved profile details";
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -320,8 +381,14 @@ export default function SubmitResumeForm() {
 			<div className="submit-form-actions">
 				<label className="anonymous-toggle">
 					<span className="toggle-copy">
-						<strong>Post anonymously</strong>
-						<small>Your name will not appear on the post</small>
+						<strong>
+							{isAnonymous ? "Post anonymously" : "Post with my profile"}
+						</strong>
+						<small>
+							{isAnonymous
+								? "Your name will not appear on the post"
+								: `${publicProfileName} and ${publicProfileDetail} will appear in the feed`}
+						</small>
 					</span>
 					<input
 						checked={isAnonymous}

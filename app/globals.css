@@ -788,6 +788,17 @@ html[data-app-theme="dark"] .full-page-loader {
 	font-weight: 500;
 }
 
+.post-author-link {
+	color: var(--text-secondary);
+	font-weight: 500;
+	text-decoration: none;
+	transition: color 0.18s var(--button-ease);
+}
+
+.post-author-link:hover {
+	color: var(--brand);
+}
+
 .post-meta > :not(:first-child)::before {
 	margin-right: 7px;
 	color: var(--text-tertiary);
@@ -1421,6 +1432,7 @@ body.main-app-dark .feed-stats-grid div {
 .toggle-copy {
 	display: grid;
 	gap: 2px;
+	min-width: 0;
 }
 
 .toggle-copy strong {
@@ -1431,6 +1443,8 @@ body.main-app-dark .feed-stats-grid div {
 .toggle-copy small {
 	color: var(--text-secondary);
 	font-size: 12px;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
 }
 
 .toggle-ui {
@@ -1717,7 +1731,7 @@ body.main-app-dark .toggle-ui::after {
 .thread-context-grid {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
-	grid-template-rows: minmax(0, 0.42fr) minmax(0, 0.58fr);
+	grid-template-rows: repeat(2, minmax(0, 1fr));
 	gap: 12px;
 	height: 100%;
 	min-height: 0;
@@ -1764,6 +1778,7 @@ body.main-app-dark .toggle-ui::after {
 
 .resume-context-card p {
 	margin: 0;
+	min-height: 0;
 	overflow: auto;
 	padding-right: 2px;
 	color: var(--text-secondary);
