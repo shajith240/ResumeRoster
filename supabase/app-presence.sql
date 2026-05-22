@@ -48,6 +48,10 @@ begin
     return;
   end if;
 
+  insert into public.profiles (id)
+  values (auth.uid())
+  on conflict (id) do nothing;
+
   delete from public.app_presence_sessions
   where last_seen_at < now() - interval '5 minutes';
 
@@ -107,3 +111,5 @@ $$;
 grant execute on function public.record_app_presence(text, text) to authenticated;
 grant execute on function public.clear_app_presence(text) to authenticated;
 grant execute on function public.get_active_roaster_count(int) to authenticated;
+
+notify pgrst, 'reload schema';

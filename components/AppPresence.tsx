@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import {
+	APP_PRESENCE_CHANNEL,
 	APP_PRESENCE_CHANGE_EVENT,
 	PROFILE_CHANGE_EVENT,
 	isPresenceFeatureError,
 	normalizeAppStatus,
+	type AppPresencePayload,
 } from "@/lib/app-presence";
 import { supabase } from "@/lib/supabase/client";
 import type { AppStatus } from "@/lib/supabase/types";
@@ -44,11 +47,30 @@ function getPresenceSessionId(userId: string) {
 	return sessionId;
 }
 
-function announcePresenceChange() {
-	window.dispatchEvent(new CustomEvent(APP_PRESENCE_CHANGE_EVENT));
+function buildPresencePayload(
+	userId: string,
+	sessionId: string,
+	status: AppStatus,
+): AppPresencePayload {
+	return {
+		user_id: userId,
+		session_id: sessionId,
+		status,
+		online_at: new Date().toISOString(),
+	};
+}
+
+function announcePresenceChange(payload: AppPresencePayload) {
+	window.dispatchEvent(
+		new CustomEvent<AppPresencePayload>(APP_PRESENCE_CHANGE_EVENT, {
+			detail: payload,
+		}),
+	);
 }
 
 export default function AppPresence({ userId }: AppPresenceProps) {
+	const channelRef = useRef<RealtimeChannel | null>(null);
+	const realtimeSubscribedRef = useRef(false);
 	const sessionIdRef = useRef("");
 	const statusRef = useRef<AppStatus>("online");
 	const heartbeatTimerRef = useRef<number | null>(null);
@@ -57,6 +79,20 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 	useEffect(() => {
 		let mounted = true;
 		sessionIdRef.current = getPresenceSessionId(userId);
+
+		async function trackRealtimePresence(status = statusRef.current) {
+			statusRef.current = status;
+			const channel = channelRef.current;
+			if (!channel || !realtimeSubscribedRef.current) return;
+
+			const payload = buildPresencePayload(
+				userId,
+				sessionIdRef.current,
+				status,
+			);
+			await channel.track(payload);
+			if (mounted) announcePresenceChange(payload);
+		}
 
 		async function recordPresence(status = statusRef.current) {
 			statusRef.current = status;
@@ -79,7 +115,9 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 			}
 
 			if (!error && mounted) {
-				announcePresenceChange();
+				announcePresenceChange(
+					buildPresencePayload(userId, sessionIdRef.current, status),
+				);
 			}
 			return true;
 		}
@@ -97,6 +135,22 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 		async function startPresence() {
 			const savedStatus = await getSavedStatus(userId);
 			if (!mounted) return;
+			statusRef.current = savedStatus;
+
+			const channel = supabase.channel(APP_PRESENCE_CHANNEL, {
+				config: {
+					presence: {
+						key: sessionIdRef.current,
+					},
+				},
+			});
+			channelRef.current = channel;
+
+			channel.subscribe((subscriptionStatus) => {
+				if (subscriptionStatus !== "SUBSCRIBED" || !mounted) return;
+				realtimeSubscribedRef.current = true;
+				void trackRealtimePresence(statusRef.current);
+			});
 
 			const recorded = await recordPresence(savedStatus);
 			if (!mounted) return;
@@ -107,14 +161,14 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 			const detail = (event as CustomEvent<{ id?: string; app_status?: string }>)
 				.detail;
 			if (!detail?.app_status || (detail.id && detail.id !== userId)) return;
-			void recordPresence(normalizeAppStatus(detail.app_status));
+			const nextStatus = normalizeAppStatus(detail.app_status);
+			void trackRealtimePresence(nextStatus);
+			void recordPresence(nextStatus);
 		}
 
 		function handleVisibilityChange() {
-			if (
-				document.visibilityState === "visible" &&
-				presenceFeatureReadyRef.current
-			) {
+			if (document.visibilityState === "visible") {
+				void trackRealtimePresence();
 				void recordPresence();
 			}
 		}
@@ -140,6 +194,13 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 				window.clearInterval(heartbeatTimerRef.current);
 				heartbeatTimerRef.current = null;
 			}
+			const channel = channelRef.current;
+			if (channel) {
+				void channel.untrack();
+				void supabase.removeChannel(channel);
+			}
+			channelRef.current = null;
+			realtimeSubscribedRef.current = false;
 			clearPresence();
 		};
 	}, [userId]);

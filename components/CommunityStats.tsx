@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import {
+	APP_PRESENCE_CHANNEL,
 	APP_PRESENCE_ACTIVE_WINDOW_SECONDS,
 	APP_PRESENCE_CHANGE_EVENT,
 	isPresenceFeatureError,
+	type AppPresencePayload,
 } from "@/lib/app-presence";
 import { supabase } from "@/lib/supabase/client";
 
@@ -70,6 +72,20 @@ async function loadActiveRoasters() {
 	return { count: Number(data ?? 0), featureReady: true };
 }
 
+function countRealtimeRoasters(
+	presenceState: Record<string, Array<AppPresencePayload>>,
+) {
+	const activeUserIds = new Set<string>();
+
+	Object.values(presenceState).forEach((presences) => {
+		presences.forEach((presence) => {
+			if (presence.user_id) activeUserIds.add(presence.user_id);
+		});
+	});
+
+	return activeUserIds.size;
+}
+
 function formatStat(value: number) {
 	return value.toLocaleString();
 }
@@ -78,7 +94,16 @@ export default function CommunityStats() {
 	const [stats, setStats] = useState<CommunityStatsState>(EMPTY_STATS);
 	const [statsLoading, setStatsLoading] = useState(true);
 	const [activeRoastersLoading, setActiveRoastersLoading] = useState(true);
-	const [activeRoasters, setActiveRoasters] = useState(0);
+	const [serverActiveRoasters, setServerActiveRoasters] = useState<number | null>(
+		null,
+	);
+	const [realtimeActiveRoasters, setRealtimeActiveRoasters] = useState(0);
+	const [localSessionActive, setLocalSessionActive] = useState(false);
+	const activeRoasters = Math.max(
+		serverActiveRoasters ?? 0,
+		realtimeActiveRoasters,
+		localSessionActive ? 1 : 0,
+	);
 
 	useEffect(() => {
 		let active = true;
@@ -120,6 +145,89 @@ export default function CommunityStats() {
 
 	useEffect(() => {
 		let active = true;
+		let syncTimer: number | null = null;
+
+		function syncRealtimeCount() {
+			if (!active) return;
+			if (syncTimer) window.clearTimeout(syncTimer);
+			syncTimer = window.setTimeout(() => {
+				if (!active) return;
+				setRealtimeActiveRoasters(
+					countRealtimeRoasters(
+						channel.presenceState() as Record<
+							string,
+							Array<AppPresencePayload>
+						>,
+					),
+				);
+				setActiveRoastersLoading(false);
+			}, 80);
+		}
+
+		function handleLocalPresence(event: Event) {
+			const presence = (event as CustomEvent<AppPresencePayload>).detail;
+			if (!presence?.user_id) return;
+			setRealtimeActiveRoasters((current) => Math.max(current, 1));
+			setActiveRoastersLoading(false);
+		}
+
+		const channel = supabase
+			.channel(APP_PRESENCE_CHANNEL)
+			.on("presence", { event: "sync" }, syncRealtimeCount)
+			.on("presence", { event: "join" }, syncRealtimeCount)
+			.on("presence", { event: "leave" }, syncRealtimeCount)
+			.subscribe((subscriptionStatus) => {
+				if (subscriptionStatus === "SUBSCRIBED") syncRealtimeCount();
+			});
+
+		window.addEventListener(APP_PRESENCE_CHANGE_EVENT, handleLocalPresence);
+
+		return () => {
+			active = false;
+			if (syncTimer) window.clearTimeout(syncTimer);
+			window.removeEventListener(APP_PRESENCE_CHANGE_EVENT, handleLocalPresence);
+			void supabase.removeChannel(channel);
+		};
+	}, []);
+
+	useEffect(() => {
+		let active = true;
+
+		function updateLocalSessionActive(hasUser: boolean) {
+			if (!active) return;
+			setLocalSessionActive(
+				hasUser && document.visibilityState !== "hidden",
+			);
+			if (hasUser) setActiveRoastersLoading(false);
+		}
+
+		function handleVisibilityChange() {
+			void supabase.auth
+				.getUser()
+				.then(({ data }) => updateLocalSessionActive(Boolean(data.user)));
+		}
+
+		void supabase.auth
+			.getUser()
+			.then(({ data }) => updateLocalSessionActive(Boolean(data.user)));
+
+		const {
+			data: { subscription },
+		} = supabase.auth.onAuthStateChange((_event, session) => {
+			updateLocalSessionActive(Boolean(session?.user));
+		});
+
+		document.addEventListener("visibilitychange", handleVisibilityChange);
+
+		return () => {
+			active = false;
+			document.removeEventListener("visibilitychange", handleVisibilityChange);
+			subscription.unsubscribe();
+		};
+	}, []);
+
+	useEffect(() => {
+		let active = true;
 		let presenceFeatureReady = true;
 		let refreshTimer: number | null = null;
 		let pollTimer: number | null = null;
@@ -134,9 +242,13 @@ export default function CommunityStats() {
 					window.clearInterval(pollTimer);
 					pollTimer = null;
 				}
-				if (active) setActiveRoasters(nextActiveRoasters.count);
+				if (active) {
+					setServerActiveRoasters(
+						nextActiveRoasters.featureReady ? nextActiveRoasters.count : null,
+					);
+				}
 			} catch {
-				if (active) setActiveRoasters(0);
+				if (active) setServerActiveRoasters(null);
 			} finally {
 				if (active) setActiveRoastersLoading(false);
 			}
