@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import {
 	ArrowRight,
 	FileText,
@@ -44,6 +44,7 @@ type StackedListProps = {
 type RankedRoaster = {
 	rank: number;
 	roaster: LeaderboardRoaster;
+	searchText: string;
 };
 
 const rowSpring = {
@@ -123,19 +124,50 @@ function tableQuote(roaster: LeaderboardRoaster) {
 	return roaster.top_roast?.content ?? "No top roast yet.";
 }
 
-function matchesQuery(roaster: LeaderboardRoaster, query: string) {
-	if (!query) return true;
+function normalizeSearchValue(value: string) {
+	return value
+		.normalize("NFKD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.replace(/[@#"'.,/\\|()[\]{}:;!?+%_-]+/g, " ")
+		.replace(/\s+/g, " ")
+		.trim();
+}
 
-	return [
-		roasterName(roaster),
-		roaster.username,
-		roaster.target_role,
-		roaster.college,
-		roleTag(roaster),
-		roaster.top_roast?.content,
-	]
-		.filter(Boolean)
-		.some((value) => value!.toLowerCase().includes(query));
+function buildSearchText(roaster: LeaderboardRoaster, rank: number) {
+	const points = roastPoints(roaster);
+	const improve = improvement(roaster);
+
+	return normalizeSearchValue(
+		[
+			`rank ${rank}`,
+			`#${rank}`,
+			String(rank),
+			`${points} points`,
+			`${improve} improvement`,
+			roasterName(roaster),
+			roaster.username,
+			roaster.target_role,
+			roaster.college,
+			roleTag(roaster),
+			roaster.top_roast?.content,
+			roaster.top_roast?.helpful_votes
+				? `${roaster.top_roast.helpful_votes} helpful`
+				: "",
+		]
+			.filter(Boolean)
+			.join(" "),
+	);
+}
+
+function queryTerms(query: string) {
+	return normalizeSearchValue(query).split(" ").filter(Boolean);
+}
+
+function matchesQuery(searchText: string, terms: string[]) {
+	if (!terms.length) return true;
+
+	return terms.every((term) => searchText.includes(term));
 }
 
 function LeaderboardAvatar({
@@ -355,27 +387,38 @@ export function StackedList({
 	}, [searchQuery]);
 
 	const activeQuery = (onSearchQueryChange ? searchQuery : localQuery).trim();
-	const normalizedQuery = activeQuery.toLowerCase();
+	const deferredQuery = useDeferredValue(activeQuery);
+	const deferredDirectoryQuery = useDeferredValue(directoryQuery);
+	const activeTerms = useMemo(() => queryTerms(deferredQuery), [deferredQuery]);
+	const directoryTerms = useMemo(
+		() => queryTerms(deferredDirectoryQuery),
+		[deferredDirectoryQuery],
+	);
 	const rankedRoasters = useMemo<RankedRoaster[]>(
 		() =>
-			roasters.slice(0, 100).map((roaster, index) => ({
-				rank: startRank + index,
-				roaster,
-			})),
+			roasters.slice(0, 100).map((roaster, index) => {
+				const rank = startRank + index;
+
+				return {
+					rank,
+					roaster,
+					searchText: buildSearchText(roaster, rank),
+				};
+			}),
 		[roasters, startRank],
 	);
 	const filteredRoasters = useMemo(
 		() =>
-			rankedRoasters.filter(({ roaster }) =>
-				matchesQuery(roaster, normalizedQuery),
+			rankedRoasters.filter(({ searchText }) =>
+				matchesQuery(searchText, activeTerms),
 			),
-		[normalizedQuery, rankedRoasters],
+		[activeTerms, rankedRoasters],
 	);
 	const directoryResults = useMemo(() => {
-		const query = directoryQuery.trim().toLowerCase();
-
-		return rankedRoasters.filter(({ roaster }) => matchesQuery(roaster, query));
-	}, [directoryQuery, rankedRoasters]);
+		return rankedRoasters.filter(({ searchText }) =>
+			matchesQuery(searchText, directoryTerms),
+		);
+	}, [directoryTerms, rankedRoasters]);
 
 	function handleSearch(value: string) {
 		if (onSearchQueryChange) {
@@ -393,9 +436,6 @@ export function StackedList({
 					<div className="min-w-0">
 						<h2 className="m-0 flex items-center gap-2 font-[var(--font-display)] text-[34px] font-normal leading-none tracking-normal text-[var(--text-primary)]">
 							Top 100
-							<span className="mt-1 rounded-full bg-[var(--bg-elevated)] px-2 py-1 font-[var(--font-app-body)] text-xs font-medium leading-none text-[var(--text-secondary)]">
-								{rankedRoasters.length}
-							</span>
 						</h2>
 						<p className="mt-2 text-sm font-normal text-[var(--text-secondary)]">
 							Roaster directory ranked by useful resume feedback.
@@ -410,9 +450,11 @@ export function StackedList({
 					/>
 					<span className="sr-only">Search roasters</span>
 					<Input
+						autoComplete="off"
 						className="h-11 rounded-[var(--button-radius)] border-[var(--border-default)] bg-[var(--bg-elevated)] pl-10 pr-10 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
 						onChange={(event) => handleSearch(event.target.value)}
 						placeholder="Search roasters, roles, top roasts..."
+						spellCheck={false}
 						type="search"
 						value={activeQuery}
 					/>
@@ -548,9 +590,11 @@ export function StackedList({
 								/>
 								<span className="sr-only">Search roaster directory</span>
 								<Input
+									autoComplete="off"
 									className="h-10 rounded-[12px] border-transparent bg-[var(--bg-surface)] pl-10 pr-4 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
 									onChange={(event) => setDirectoryQuery(event.target.value)}
 									placeholder="Search roasters..."
+									spellCheck={false}
 									type="search"
 									value={directoryQuery}
 								/>
