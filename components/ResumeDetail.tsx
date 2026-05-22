@@ -86,6 +86,8 @@ const RESUME_AUTHOR_PROFILE_SELECT_WITH_STATUS =
 	"id,username,full_name,avatar_url,avatar_path,college,target_role,current_position,app_status";
 const RESUME_AUTHOR_PROFILE_SELECT_BASE =
 	"id,username,full_name,avatar_url,college,target_role";
+const SUPABASE_MIGRATION_MESSAGE =
+	"Run the pending Supabase migrations, then refresh.";
 
 function formatDate(value: string) {
 	return new Intl.DateTimeFormat("en", {
@@ -658,7 +660,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setMessage("");
 
 		if (!replySchemaReady) {
-			reportError("Run supabase/replies.sql in Supabase, then refresh to enable replies.");
+			reportError(`${SUPABASE_MIGRATION_MESSAGE} Replies are not ready yet.`);
 			return;
 		}
 
@@ -704,7 +706,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				isMissingColumnError(error, "reply_count")
 			) {
 				setReplySchemaReady(false);
-				reportError("Run supabase/replies.sql in Supabase, then refresh to enable replies.");
+				reportError(`${SUPABASE_MIGRATION_MESSAGE} Replies are not ready yet.`);
 				return;
 			}
 
@@ -855,7 +857,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		if (error) {
 			reportError(
 				error.message.includes("reaction")
-					? "Run the reaction SQL migration in Supabase, then try again."
+					? `${SUPABASE_MIGRATION_MESSAGE} Reactions are not ready yet.`
 					: error.message,
 			);
 			return;
@@ -922,7 +924,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setMessage("");
 
 		if (!deleteSchemaReady) {
-			reportError("Run supabase/roast-deletes.sql in Supabase, then refresh to enable comment deletes.");
+			reportError(`${SUPABASE_MIGRATION_MESSAGE} Comment deletes are not ready yet.`);
 			return;
 		}
 
@@ -968,7 +970,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		if (error) {
 			if (isDeleteFeatureError(error)) {
 				setDeleteSchemaReady(false);
-				reportError("Run supabase/roast-deletes.sql in Supabase, then refresh to enable comment deletes.");
+				reportError(`${SUPABASE_MIGRATION_MESSAGE} Comment deletes are not ready yet.`);
 				return;
 			}
 
@@ -1154,12 +1156,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					</div>
 					{!replySchemaReady ? (
 						<p className="form-message">
-							Run supabase/replies.sql in Supabase, then refresh to enable nested replies.
+							{SUPABASE_MIGRATION_MESSAGE} Nested replies are not ready yet.
 						</p>
 					) : null}
 					{!deleteSchemaReady ? (
 						<p className="form-message">
-							Run supabase/roast-deletes.sql in Supabase, then refresh to enable comment deletes.
+							{SUPABASE_MIGRATION_MESSAGE} Comment deletes are not ready yet.
 						</p>
 					) : null}
 
@@ -1189,7 +1191,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 								: isOwnRoast
 									? "You cannot reply to your own roast."
 									: !replySchemaReady
-										? "Run supabase/replies.sql to enable replies."
+										? `${SUPABASE_MIGRATION_MESSAGE} Replies are not ready yet.`
 										: null;
 						const canReply = !replyBlockReason;
 						const roastStyle = {
@@ -1333,7 +1335,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 												title={
 													deleteSchemaReady
 														? undefined
-														: "Run supabase/roast-deletes.sql to enable deletes."
+														: `${SUPABASE_MIGRATION_MESSAGE} Deletes are not ready yet.`
 												}
 												type="button"
 											>

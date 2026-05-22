@@ -31,6 +31,8 @@ const PROFILE_SELECT =
 const PROFILE_FALLBACK_SELECT =
 	"id,username,college,target_role,roast_count,helpful_votes";
 const LEADERBOARD_LIMIT = 100;
+const SUPABASE_MIGRATION_MESSAGE =
+	"Run the pending Supabase migrations, then refresh this page.";
 
 const rangeLabels: Record<TimeRange, string> = {
 	week: "This Week",
@@ -275,7 +277,7 @@ async function fetchLeaderboardData(range: TimeRange) {
 
 	if (error) {
 		return {
-			message: "Run supabase/leaderboard.sql once in Supabase, then refresh this page.",
+			message: SUPABASE_MIGRATION_MESSAGE,
 			roasters: [],
 		};
 	}

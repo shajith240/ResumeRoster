@@ -84,6 +84,8 @@ type UsernameAvailability = {
 const fallbackAvatar = "/assets/logo.png";
 const PROFILE_CHANGE_EVENT = "resumeroster-profile-change";
 const LATEST_RESUME_VALUE = "__latest_public_resume__";
+const SUPABASE_MIGRATION_MESSAGE =
+	"Run the pending Supabase migrations, then refresh this page.";
 const PROFILE_FIELD_LIMITS = {
 	fullName: 64,
 	username: 32,
@@ -495,7 +497,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					seedResult.error.code !== "23505" &&
 					isProfileFeatureError(seedResult.error.message)
 				) {
-					setMessage("Run supabase/profile-features.sql in Supabase, then refresh this page.");
+					setMessage(SUPABASE_MIGRATION_MESSAGE);
 					setLoading(false);
 					return;
 				}
@@ -516,7 +518,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			if (profileResult.error) {
 				setMessage(
 					isProfileFeatureError(profileResult.error.message)
-						? "Run supabase/profile-features.sql in Supabase, then refresh this page."
+						? SUPABASE_MIGRATION_MESSAGE
 						: profileResult.error.message,
 				);
 				setLoading(false);
@@ -524,7 +526,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			}
 
 			if (resumesResult.error && isProfileFeatureError(resumesResult.error.message)) {
-				setMessage("Run supabase/profile-features.sql in Supabase, then refresh this page.");
+				setMessage(SUPABASE_MIGRATION_MESSAGE);
 				setLoading(false);
 				return;
 			}
@@ -653,7 +655,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 
 		if (upload.error) {
 			throw new Error(
-				`${upload.error.message}. Run supabase/profile-features.sql if the avatars bucket is missing.`,
+				`${upload.error.message}. ${SUPABASE_MIGRATION_MESSAGE}`,
 			);
 		}
 
@@ -734,7 +736,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 
 				throw new Error(
 					isProfileFeatureError(error.message)
-						? "Run supabase/profile-features.sql in Supabase, then refresh this page."
+						? SUPABASE_MIGRATION_MESSAGE
 						: error.message,
 				);
 			}

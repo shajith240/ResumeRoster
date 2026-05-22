@@ -2,7 +2,7 @@
 
 ![ResumeRoster hero](public/assets/readme_hero%20image.png)
 
-ResumeRoster is a Next.js community app for anonymous resume feedback. Users sign in with Google, upload a redacted resume, receive structured feedback from other students and job seekers, reply in discussion threads, and discover strong roasters through public profiles and a leaderboard.
+ResumeRoster is a Next.js community app for anonymous resume feedback. Users sign in with email, Google, or GitHub, upload a redacted resume, receive structured feedback from other students and job seekers, reply in discussion threads, and discover strong roasters through public profiles and a leaderboard.
 
 The product idea is simple: make resume feedback faster, more honest, and more useful without exposing the applicant's identity.
 
@@ -16,7 +16,7 @@ The product idea is simple: make resume feedback faster, more honest, and more u
 - Professional leaderboard based on roast quality and contribution
 - Real read counts for resume views
 - Light and dark app themes
-- Google OAuth through Supabase
+- Email auth, Google OAuth, and GitHub OAuth through Supabase
 
 ## Why It Exists
 
@@ -37,7 +37,7 @@ For recruiters or engineering reviewers visiting this repo: the project demonstr
 
 ## Product Flow
 
-1. A user signs in with Google.
+1. A user signs in with email, Google, or GitHub.
 2. They upload a redacted PDF resume.
 3. The resume appears in the community feed.
 4. Other signed-in users open the private preview and leave feedback.
@@ -62,8 +62,8 @@ lib/supabase/
   client.ts          Supabase browser client
   types.ts           Shared app types
 supabase/
-  schema.sql         Core database schema
-  *.sql              Feature migrations and storage policies
+  migrations/        Ordered Supabase CLI migrations
+  *.sql              Legacy one-off SQL files kept for reference
 public/assets/
   Visual assets used by the app and README
 ```
@@ -94,27 +94,43 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Supabase Setup
 
 1. Create a Supabase project.
-2. Enable Google OAuth in Supabase Auth.
+2. Enable Google and GitHub OAuth in Supabase Auth.
 3. Add redirect URLs:
    - Local: `http://localhost:3000/auth/callback`
    - Production: `https://your-domain.com/auth/callback`
-4. Create a private Storage bucket named `resumes`.
-5. Run the SQL files in `supabase/` from the Supabase SQL editor.
+4. Set these environment variables locally and in production:
 
-Recommended migration order for a fresh project:
-
-```text
-supabase/schema.sql
-supabase/storage-policies.sql
-supabase/storage-read-fix.sql
-supabase/reactions.sql
-supabase/replies.sql
-supabase/profile-features.sql
-supabase/leaderboard.sql
-supabase/read-counts.sql
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
-`supabase/read-counts.sql` is required for persistent resume read counts. The frontend has fallback behavior, but real counts need that migration.
+`SUPABASE_SERVICE_ROLE_KEY` is used only by the server-side auth lookup route so the signup flow can safely detect existing email accounts.
+
+5. Link the Supabase CLI to the project and review the migrations:
+
+```bash
+npx supabase login
+npx supabase link --project-ref your-project-ref
+npm run db:push:dry
+```
+
+6. After reviewing the dry run, apply the ordered migrations:
+
+```bash
+npm run db:push
+```
+
+The source of truth is `supabase/migrations/`. The loose SQL files in `supabase/` are historical references and should not be used for new setup.
+
+For local database validation with Docker:
+
+```bash
+npm run db:reset
+```
+
+Never run a reset against production. Production changes should go through `npm run db:push:dry`, review, then `npm run db:push`.
 
 ## Available Scripts
 
@@ -124,6 +140,9 @@ npm run typecheck  # Run TypeScript checks
 npm run lint       # Run ESLint
 npm run build      # Create a production build
 npm run start      # Start the production server
+npm run db:reset   # Rebuild local Supabase from ordered migrations
+npm run db:push:dry # Preview pending migrations for a linked Supabase project
+npm run db:push    # Apply reviewed migrations to a linked Supabase project
 ```
 
 ## Design Direction

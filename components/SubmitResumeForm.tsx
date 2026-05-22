@@ -36,7 +36,8 @@ const JOB_DESCRIPTION_MIN_LENGTH = 20;
 const JOB_DESCRIPTION_MAX_LENGTH = 8000;
 const POST_DESCRIPTION_MIN_LENGTH = 10;
 const POST_DESCRIPTION_MAX_LENGTH = 4000;
-const SUBMIT_FLOW_SQL = "supabase/submit-flow-fix.sql";
+const SUPABASE_MIGRATION_MESSAGE =
+	"Run the pending Supabase migrations, then refresh.";
 
 function cleanFileName(name: string) {
 	return name
@@ -56,7 +57,7 @@ function isSubmitBackendSetupError(error: { message?: string } | null) {
 }
 
 function submitBackendSetupMessage(error: { message?: string } | null) {
-	return `Backend submit setup is missing. Run ${SUBMIT_FLOW_SQL} in Supabase, then refresh. Supabase said: ${error?.message ?? "Unknown setup error."}`;
+	return `Backend submit setup is missing. ${SUPABASE_MIGRATION_MESSAGE} Supabase said: ${error?.message ?? "Unknown setup error."}`;
 }
 
 function profileDisplayName(profile: SubmitProfile | null, user: User | null) {
@@ -328,7 +329,7 @@ export default function SubmitResumeForm() {
 					insert.error.message,
 				);
 			const errorMessage = needsContextMigration
-				? `Run supabase/resume-context.sql in Supabase, then try again. Supabase said: ${insert.error.message}`
+				? `${SUPABASE_MIGRATION_MESSAGE} Supabase said: ${insert.error.message}`
 				: isSubmitBackendSetupError(insert.error)
 					? submitBackendSetupMessage(insert.error)
 					: insert.error.message;
