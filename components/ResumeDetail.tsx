@@ -1080,6 +1080,17 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				key={roast.id}
 				role="listitem"
 			>
+				{roast.depth > 0 ? (
+					<svg
+						aria-hidden="true"
+						className="thread-branch-curve"
+						focusable="false"
+						preserveAspectRatio="none"
+						viewBox="0 0 48 32"
+					>
+						<path d="M0.5 0 V17 C0.5 25 6.5 31.5 14.5 31.5 H48" />
+					</svg>
+				) : null}
 				<article
 					className={`thread-roast ${roast.depth ? "is-reply" : ""}${
 						isDeleted ? " is-deleted" : ""

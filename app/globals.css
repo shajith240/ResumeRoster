@@ -2437,7 +2437,7 @@ body.main-app-dark .toggle-ui::after {
 	--thread-line-color: color-mix(
 		in srgb,
 		var(--text-tertiary) 34%,
-		transparent
+		var(--bg-base)
 	);
 	--thread-mask-color: var(--bg-base);
 	display: grid;
@@ -2533,7 +2533,7 @@ body.main-app-dark .toggle-ui::after {
 	content: "";
 }
 
-.thread-children > .thread-roast-node::before {
+.thread-branch-curve {
 	position: absolute;
 	top: 0;
 	left: calc(-1 * var(--thread-branch-offset, 28px));
@@ -2542,12 +2542,18 @@ body.main-app-dark .toggle-ui::after {
 		var(--thread-branch-offset, 28px) + (var(--thread-avatar-size, 32px) / 2)
 	);
 	height: var(--thread-connector-midline, 32px);
-	border-bottom: 1px solid var(--thread-line-color);
-	border-left: 1px solid var(--thread-line-color);
-	border-bottom-left-radius: 14px;
-	background: var(--thread-mask-color);
-	content: "";
+	overflow: visible;
+	color: var(--thread-line-color);
 	pointer-events: none;
+}
+
+.thread-branch-curve path {
+	fill: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1;
+	vector-effect: non-scaling-stroke;
 }
 
 .thread-children > .thread-roast-node:last-child::after {
@@ -3059,10 +3065,6 @@ body.main-app-dark .bottom-nav {
 
 	.thread-roast {
 		gap: 10px;
-	}
-
-	.thread-children > .thread-roast-node::before {
-		border-bottom-left-radius: 12px;
 	}
 
 	.bottom-nav {
