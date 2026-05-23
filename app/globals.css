@@ -2451,11 +2451,11 @@ body.main-app-dark .toggle-ui::after {
 .thread-roast {
 	position: relative;
 	z-index: 2;
-	display: grid;
-	grid-template-columns: var(--thread-avatar-size) minmax(0, 1fr);
+	display: flex;
+	align-items: flex-start;
 	gap: 12px;
 	border-bottom: 1px solid var(--border-subtle);
-	padding: var(--thread-item-padding-y) 0;
+	padding: var(--thread-item-padding-y, 16px) 0;
 	animation: fadeUp 0.3s ease both;
 }
 
@@ -2470,18 +2470,20 @@ body.main-app-dark .toggle-ui::after {
 .thread-roast-avatar-cell {
 	position: relative;
 	display: flex;
+	flex: 0 0 var(--thread-avatar-size, 32px);
 	align-self: stretch;
+	width: var(--thread-avatar-size, 32px);
 	justify-content: center;
 	align-items: flex-start;
-	min-height: var(--thread-avatar-size);
+	min-height: var(--thread-avatar-size, 32px);
 }
 
 .thread-roast-node.has-visible-replies
 	> .thread-roast
 	.thread-roast-avatar-cell::after {
 	position: absolute;
-	top: calc(var(--thread-avatar-size) + 7px);
-	bottom: calc(-1 * var(--thread-item-padding-y) - 1px);
+	top: calc(var(--thread-avatar-size, 32px) + 7px);
+	bottom: calc(-1 * var(--thread-item-padding-y, 16px) - 1px);
 	left: 50%;
 	width: 1px;
 	background: var(--thread-line-color);
@@ -2493,8 +2495,8 @@ body.main-app-dark .toggle-ui::after {
 	position: relative;
 	z-index: 1;
 	display: grid;
-	width: var(--thread-avatar-size);
-	height: var(--thread-avatar-size);
+	width: var(--thread-avatar-size, 32px);
+	height: var(--thread-avatar-size, 32px);
 	place-items: center;
 	border: 1px solid color-mix(in srgb, var(--border-default) 76%, transparent);
 	border-radius: 50%;
@@ -2516,13 +2518,13 @@ body.main-app-dark .toggle-ui::after {
 .thread-children {
 	position: relative;
 	z-index: 1;
-	margin-left: calc(var(--thread-avatar-size) / 2);
-	padding-left: var(--thread-branch-offset);
+	margin-left: calc(var(--thread-avatar-size, 32px) / 2);
+	padding-left: var(--thread-branch-offset, 28px);
 }
 
 .thread-children::before {
 	position: absolute;
-	top: calc(-1 * var(--thread-item-padding-y) - 1px);
+	top: calc(-1 * var(--thread-item-padding-y, 16px) - 1px);
 	bottom: 0;
 	left: 0;
 	z-index: 0;
@@ -2534,10 +2536,12 @@ body.main-app-dark .toggle-ui::after {
 .thread-children > .thread-roast-node::before {
 	position: absolute;
 	top: 0;
-	left: calc(-1 * var(--thread-branch-offset));
+	left: calc(-1 * var(--thread-branch-offset, 28px));
 	z-index: 1;
-	width: calc(var(--thread-branch-offset) + (var(--thread-avatar-size) / 2));
-	height: var(--thread-connector-midline);
+	width: calc(
+		var(--thread-branch-offset, 28px) + (var(--thread-avatar-size, 32px) / 2)
+	);
+	height: var(--thread-connector-midline, 32px);
 	border-bottom: 1px solid var(--thread-line-color);
 	border-left: 1px solid var(--thread-line-color);
 	border-bottom-left-radius: 14px;
@@ -2548,9 +2552,9 @@ body.main-app-dark .toggle-ui::after {
 
 .thread-children > .thread-roast-node:last-child::after {
 	position: absolute;
-	top: var(--thread-connector-midline);
+	top: var(--thread-connector-midline, 32px);
 	bottom: 0;
-	left: calc(-1 * var(--thread-branch-offset) - 1px);
+	left: calc(-1 * var(--thread-branch-offset, 28px) - 1px);
 	z-index: 1;
 	width: 3px;
 	background: var(--thread-mask-color);
@@ -2578,6 +2582,11 @@ body.main-app-dark .toggle-ui::after {
 	gap: 6px;
 	color: var(--text-tertiary);
 	font-size: 13px;
+}
+
+.thread-roast-body {
+	flex: 1 1 auto;
+	min-width: 0;
 }
 
 .thread-roast-body header a:hover {
