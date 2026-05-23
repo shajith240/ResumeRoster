@@ -1088,7 +1088,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						preserveAspectRatio="none"
 						viewBox="0 0 48 32"
 					>
-						<path d="M0.5 0 V17 C0.5 25 6.5 31.5 14.5 31.5 H48" />
+						<path
+							className="thread-branch-mask"
+							d="M0.5 0 V17 C0.5 25 6.5 31.5 14.5 31.5 H48"
+						/>
+						<path
+							className="thread-branch-line"
+							d="M0.5 0 V17 C0.5 25 6.5 31.5 14.5 31.5 H48"
+						/>
 					</svg>
 				) : null}
 				<article
