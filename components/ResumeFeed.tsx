@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { BookmarkIcon } from "@/components/ui/bookmark";
 import { EyeIcon } from "@/components/ui/eye";
 import { LinkIcon } from "@/components/ui/link";
+import { getLoginPath } from "@/lib/auth-redirect";
 import { MessageCircleIcon } from "@/components/ui/message-circle";
 import {
   getResumeAffiliationLabel,
@@ -19,6 +20,12 @@ import {
   withResumeDefaults,
   type FeedSort,
 } from "@/lib/feed-ranking";
+import {
+  getSaveButtonState,
+  getSavedResumeIds,
+  mergeSavedResumeState,
+  type SavedResumeReference,
+} from "@/lib/saved-resumes";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeAuthorProfile, ResumeSummary } from "@/lib/supabase/types";
 
@@ -34,6 +41,12 @@ const AUTHOR_PROFILE_SELECT_WITH_STATUS =
   "id,username,full_name,avatar_url,avatar_path,college,target_role,current_position,app_status";
 const AUTHOR_PROFILE_SELECT_BASE =
   "id,username,full_name,avatar_url,college,target_role";
+const SAVED_RESUMES_MIGRATION_MESSAGE =
+  "Run the pending Supabase migration to enable saved resumes.";
+
+type SavedResumeSummary = ResumeSummary & {
+  is_saved: boolean;
+};
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", {
@@ -56,6 +69,16 @@ function isAuthorProfileFeatureError(error: { message?: string } | null) {
   return /app_status|current_position|avatar_path|schema cache|column/i.test(
     error?.message ?? "",
   );
+}
+
+function isSavedResumeFeatureError(error: { message?: string } | null) {
+  return /saved_resumes|schema cache|relation|does not exist/i.test(
+    error?.message ?? "",
+  );
+}
+
+function isDuplicateSavedResumeError(error: { code?: string; message?: string } | null) {
+  return error?.code === "23505" || /duplicate key|unique/i.test(error?.message ?? "");
 }
 
 const sortOptions: Array<{ href: string; label: string; value: FeedSort }> = [
@@ -133,6 +156,35 @@ async function attachPublicAuthorProfiles(resumeRows: ResumeSummary[]) {
   }));
 }
 
+async function fetchSavedResumeIds(userId: string | null) {
+  if (!userId) {
+    return {
+      savedResumeIds: new Set<string>(),
+      requiresMigration: false,
+      error: null,
+    };
+  }
+
+  const { data, error } = await supabase
+    .from("saved_resumes")
+    .select("resume_id")
+    .eq("user_id", userId);
+
+  if (error) {
+    return {
+      savedResumeIds: new Set<string>(),
+      requiresMigration: isSavedResumeFeatureError(error),
+      error,
+    };
+  }
+
+  return {
+    savedResumeIds: getSavedResumeIds((data ?? []) as SavedResumeReference[]),
+    requiresMigration: false,
+    error: null,
+  };
+}
+
 function FeedSkeleton() {
   return (
     <div className="feed-skeleton-list" aria-label="Loading feed">
@@ -153,13 +205,16 @@ function FeedSkeleton() {
 
 type ResumeFeedProps = {
   activeSort?: FeedSort;
+  savedOnly?: boolean;
 };
 
-export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
-  const [resumes, setResumes] = useState<ResumeSummary[]>([]);
+export default function ResumeFeed({ activeSort = "best", savedOnly = false }: ResumeFeedProps) {
+  const [resumes, setResumes] = useState<SavedResumeSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [copiedId, setCopiedId] = useState("");
+  const [saveFeatureReady, setSaveFeatureReady] = useState(true);
+  const [savingIds, setSavingIds] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
     let active = true;
@@ -168,6 +223,10 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
       setLoading(true);
       setMessage("");
       const started = Date.now();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const savedResult = await fetchSavedResumeIds(user?.id ?? null);
       let query = supabase
         .from("resumes")
         .select(RESUME_SELECT_WITH_CONTEXT);
@@ -222,6 +281,7 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
       }
 
       if (!active) return;
+      setSaveFeatureReady(!savedResult.requiresMigration);
 
       if (resumeError) {
         setMessage(resumeError.message);
@@ -230,7 +290,23 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
         if (!active) return;
         const rowsWithLiveCounts = await mergeLiveRoastCounts(rowsWithProfiles);
         if (!active) return;
-        setResumes(sortResumes(rowsWithLiveCounts, activeSort));
+        if (savedResult.error && savedOnly) {
+          setMessage(
+            savedResult.requiresMigration
+              ? SAVED_RESUMES_MIGRATION_MESSAGE
+              : savedResult.error.message,
+          );
+          setResumes([]);
+        } else {
+          const rowsWithSavedState = mergeSavedResumeState(
+            rowsWithLiveCounts,
+            savedResult.savedResumeIds,
+          );
+          const visibleRows = savedOnly
+            ? rowsWithSavedState.filter((resume) => resume.is_saved)
+            : rowsWithSavedState;
+          setResumes(sortResumes(visibleRows, activeSort));
+        }
       }
 
       const elapsed = Date.now() - started;
@@ -245,7 +321,7 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
     return () => {
       active = false;
     };
-  }, [activeSort]);
+  }, [activeSort, savedOnly]);
 
   const sortedResumes = useMemo(
     () => sortResumes(resumes, activeSort),
@@ -271,6 +347,90 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
     window.setTimeout(() => setCopiedId(""), 1400);
   }
 
+  function setResumeSaving(resumeId: string, isSaving: boolean) {
+    setSavingIds((current) => {
+      const next = new Set(current);
+      if (isSaving) {
+        next.add(resumeId);
+      } else {
+        next.delete(resumeId);
+      }
+      return next;
+    });
+  }
+
+  async function toggleSavedResume(resume: SavedResumeSummary) {
+    if (savingIds.has(resume.id)) return;
+
+    if (!saveFeatureReady) {
+      toast.error(SAVED_RESUMES_MIGRATION_MESSAGE);
+      return;
+    }
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      toast.error("Sign in to save resumes.");
+      window.location.assign(
+        getLoginPath(`${window.location.pathname}${window.location.search}`),
+      );
+      return;
+    }
+
+    const wasSaved = resume.is_saved;
+    const nextSaved = !wasSaved;
+    setResumeSaving(resume.id, true);
+    setResumes((current) => {
+      const next = current.map((row) =>
+        row.id === resume.id ? { ...row, is_saved: nextSaved } : row,
+      );
+
+      return savedOnly && !nextSaved
+        ? next.filter((row) => row.id !== resume.id)
+        : next;
+    });
+
+    const result = nextSaved
+      ? await supabase
+          .from("saved_resumes")
+          .insert({ user_id: user.id, resume_id: resume.id })
+      : await supabase
+          .from("saved_resumes")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("resume_id", resume.id);
+
+    if (result.error && !(nextSaved && isDuplicateSavedResumeError(result.error))) {
+      setResumes((current) => {
+        if (savedOnly && !current.some((row) => row.id === resume.id)) {
+          return sortResumes([...current, { ...resume, is_saved: wasSaved }], activeSort);
+        }
+
+        return current.map((row) =>
+          row.id === resume.id ? { ...row, is_saved: wasSaved } : row,
+        );
+      });
+
+      if (isSavedResumeFeatureError(result.error)) {
+        setSaveFeatureReady(false);
+        toast.error(SAVED_RESUMES_MIGRATION_MESSAGE);
+      } else {
+        toast.error("Could not update saved resumes.", {
+          description: result.error.message,
+        });
+      }
+
+      setResumeSaving(resume.id, false);
+      return;
+    }
+
+    toast.success(nextSaved ? "Resume saved." : "Removed from saved resumes.");
+    setResumeSaving(resume.id, false);
+  }
+
   if (loading) {
     return <FeedSkeleton />;
   }
@@ -280,6 +440,18 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
   }
 
   if (!resumes.length) {
+    if (savedOnly) {
+      return (
+        <div className="empty-state feed-empty-state">
+          <h2>No saved resumes yet</h2>
+          <p>Save resumes from the feed when you want to revisit their roasts later.</p>
+          <Link className="btn-primary" href="/feed">
+            Browse feed
+          </Link>
+        </div>
+      );
+    }
+
     return (
       <div className="empty-state feed-empty-state">
         <h2>No resumes yet</h2>
@@ -292,23 +464,32 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
   }
 
   return (
-    <section className="community-feed stagger-children" aria-label="Open resumes">
+    <section className="community-feed stagger-children" aria-label={savedOnly ? "Saved resumes" : "Open resumes"}>
       <nav className="feed-sortbar pill-tabs" aria-label="Feed sort">
         {sortOptions.map((option) => (
           <Link
-            aria-current={activeSort === option.value ? "page" : undefined}
-            className={activeSort === option.value ? "active" : ""}
+            aria-current={!savedOnly && activeSort === option.value ? "page" : undefined}
+            className={!savedOnly && activeSort === option.value ? "active" : ""}
             href={option.href}
             key={option.value}
           >
             {option.label}
           </Link>
         ))}
+        <Link
+          aria-current={savedOnly ? "page" : undefined}
+          className={savedOnly ? "active" : ""}
+          href="/feed?saved=1"
+        >
+          Saved
+        </Link>
       </nav>
       {sortedResumes.map((resume, index) => {
         const heated = resume.roast_count > 5;
         const authorProfile = resume.author_profile ?? null;
         const posterLabel = getResumePosterLabel(resume, authorProfile);
+        const isSaving = savingIds.has(resume.id);
+        const saveButtonState = getSaveButtonState(resume.is_saved, isSaving);
         const snippet =
           resume.post_description?.trim() ||
           "Targeting recruiter screens with a resume that needs sharper bullets, clearer proof, and fewer weak first impressions.";
@@ -360,9 +541,16 @@ export default function ResumeFeed({ activeSort = "best" }: ResumeFeedProps) {
                   Share
                   {copiedId === resume.id ? <em>Copied!</em> : null}
                 </button>
-                <button className="post-action-button" type="button" aria-label="Save resume">
+                <button
+                  aria-label={saveButtonState.ariaLabel}
+                  aria-pressed={resume.is_saved}
+                  className={`post-action-button save-button ${resume.is_saved ? "is-saved" : ""}`}
+                  disabled={isSaving}
+                  onClick={() => void toggleSavedResume(resume)}
+                  type="button"
+                >
                   <BookmarkIcon className="post-action-icon" size={16} aria-hidden="true" />
-                  Save
+                  {saveButtonState.label}
                 </button>
                 <span className={`resume-status ${resume.status === "closed" ? "closed" : ""}`}>
                   {resume.status === "closed" ? "Closed" : "Open for roasting"}

@@ -40,8 +40,8 @@ export function getBestScore(resume: ResumeSummary, now = Date.now()) {
 	return resume.roast_count * 8 + 48 / Math.pow(ageHours + 2, 1.2);
 }
 
-export function sortResumes(
-	resumes: ResumeSummary[],
+export function sortResumes<T extends ResumeSummary>(
+	resumes: T[],
 	sort: FeedSort,
 	now = Date.now(),
 ) {

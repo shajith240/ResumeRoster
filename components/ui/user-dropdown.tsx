@@ -117,12 +117,8 @@ const MENU_ITEMS: {
 	activity: [
 		{
 			icon: "solar:bookmark-line-duotone",
-			label: "Saved roasts",
+			label: "Saved resumes",
 			action: "saved",
-			badge: {
-				text: "Soon",
-				className: "bg-[var(--brand-muted)] text-[var(--brand)] text-[11px]",
-			},
 		},
 		{
 			icon: "solar:question-circle-line-duotone",

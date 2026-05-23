@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import AuthButton from "./AuthButton";
 
 const navLinks = [
@@ -14,6 +14,9 @@ const navLinks = [
 
 export default function RouteHeader() {
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const sort = searchParams.get("sort");
+	const saved = searchParams.get("saved");
 
 	return (
 		<>
@@ -27,12 +30,17 @@ export default function RouteHeader() {
 
 			<nav className="bottom-nav" aria-label="Mobile navigation">
 				{navLinks.map((link) => {
-					const isFeedMatch = pathname === "/feed" && link.href === "/feed";
-					const isRouteMatch = link.href === pathname;
+					const href = new URL(link.href, "https://resumeroster.local");
+					const linkSort = href.searchParams.get("sort");
+					const linkSaved = href.searchParams.get("saved");
+					const isRouteMatch =
+						pathname === href.pathname &&
+						sort === linkSort &&
+						saved === linkSaved;
 
 					return (
 						<Link
-							className={isFeedMatch || isRouteMatch ? "active" : ""}
+							className={isRouteMatch ? "active" : ""}
 							href={link.href}
 							key={link.label}
 						>

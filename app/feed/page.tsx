@@ -7,6 +7,7 @@ import Link from "next/link";
 type FeedPageProps = {
 	searchParams?: Promise<{
 		sort?: string | string[];
+		saved?: string | string[];
 	}>;
 };
 
@@ -16,9 +17,16 @@ function normalizeSort(value: string | string[] | undefined): FeedSort {
 	return sort === "new" || sort === "top" ? sort : "best";
 }
 
+function normalizeSaved(value: string | string[] | undefined) {
+	const saved = Array.isArray(value) ? value[0] : value;
+
+	return saved === "1" || saved === "true";
+}
+
 export default async function FeedPage({ searchParams }: FeedPageProps) {
 	const params = await searchParams;
 	const activeSort = normalizeSort(params?.sort);
+	const savedOnly = normalizeSaved(params?.saved);
 
 	return (
 		<AuthGate>
@@ -27,17 +35,18 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 				<section className="feed-center">
 					<div className="feed-community-header">
 						<div>
-							<h1>Community Roast Feed</h1>
+							<h1>{savedOnly ? "Saved Resumes" : "Community Roast Feed"}</h1>
 							<p>
-								Anonymous resumes. Public feedback. Sharpest roasts voted to the
-								top.
+								{savedOnly
+									? "Return to the resumes you saved for another read."
+									: "Anonymous resumes. Public feedback. Sharpest roasts voted to the top."}
 							</p>
 						</div>
 						<Link className="btn-primary" href="/submit">
 							Post resume
 						</Link>
 					</div>
-					<ResumeFeed activeSort={activeSort} />
+					<ResumeFeed activeSort={activeSort} savedOnly={savedOnly} />
 				</section>
 
 				<div className="feed-right-rail" aria-label="Community context">

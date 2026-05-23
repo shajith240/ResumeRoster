@@ -75,6 +75,7 @@ export function SessionNavBar() {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const sort = searchParams.get("sort");
+	const saved = searchParams.get("saved");
 
 	const items = useMemo<NavItem[]>(
 		() => [
@@ -82,19 +83,19 @@ export function SessionNavBar() {
 				href: "/feed",
 				label: "Home",
 				icon: HomeIcon,
-				active: pathname === "/feed" && !sort,
+				active: pathname === "/feed" && !sort && !saved,
 			},
 			{
 				href: "/feed?sort=new",
 				label: "New",
 				icon: ListFilterIcon,
-				active: pathname === "/feed" && sort === "new",
+				active: pathname === "/feed" && sort === "new" && !saved,
 			},
 			{
 				href: "/feed?sort=top",
 				label: "Top rated",
 				icon: FlameIcon,
-				active: pathname === "/feed" && sort === "top",
+				active: pathname === "/feed" && sort === "top" && !saved,
 			},
 			{
 				href: "/submit",
@@ -110,7 +111,7 @@ export function SessionNavBar() {
 				active: pathname === "/leaderboard",
 			},
 		],
-		[pathname, sort],
+		[pathname, saved, sort],
 	);
 
 	return (

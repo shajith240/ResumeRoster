@@ -1185,6 +1185,21 @@ html[data-app-theme="dark"] .full-page-loader {
 	color: var(--text-primary);
 }
 
+.post-action-button:disabled {
+	cursor: progress;
+	opacity: 0.72;
+}
+
+.save-button.is-saved {
+	background: var(--brand-muted);
+	color: var(--brand);
+}
+
+.save-button.is-saved:hover {
+	background: var(--brand-muted);
+	color: var(--brand-dark);
+}
+
 .post-actions .resume-status {
 	margin-left: auto;
 }

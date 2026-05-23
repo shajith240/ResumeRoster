@@ -195,7 +195,7 @@ export default function AuthButton() {
 		const routes: Record<string, string> = {
 			profile: "/profile/me",
 			submit: "/submit",
-			saved: "/feed",
+			saved: "/feed?saved=1",
 			help: "/feed",
 			feedback: "/feed",
 		};
