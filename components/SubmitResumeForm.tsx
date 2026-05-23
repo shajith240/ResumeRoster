@@ -13,6 +13,16 @@ import { UploadCloud } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
+import {
+	JOB_DESCRIPTION_MAX_LENGTH,
+	JOB_DESCRIPTION_MIN_LENGTH,
+	POST_DESCRIPTION_MAX_LENGTH,
+	POST_DESCRIPTION_MIN_LENGTH,
+	TARGET_ROLES,
+	cleanResumeFileName,
+	formatFileSize,
+	getSubmitIssue,
+} from "@/lib/submit-validation";
 import { supabase } from "@/lib/supabase/client";
 
 type SubmitProfile = {
@@ -23,32 +33,8 @@ type SubmitProfile = {
 	current_position?: string | null;
 };
 
-const roles = [
-	"SDE Intern",
-	"Full-time SDE",
-	"MBA",
-	"Data Analyst",
-	"Product Manager",
-	"Other",
-];
-
-const JOB_DESCRIPTION_MIN_LENGTH = 20;
-const JOB_DESCRIPTION_MAX_LENGTH = 8000;
-const POST_DESCRIPTION_MIN_LENGTH = 10;
-const POST_DESCRIPTION_MAX_LENGTH = 4000;
 const SUPABASE_MIGRATION_MESSAGE =
 	"Run the pending Supabase migrations, then refresh.";
-
-function cleanFileName(name: string) {
-	return name
-		.toLowerCase()
-		.replace(/[^a-z0-9.]+/g, "-")
-		.replace(/-+/g, "-");
-}
-
-function fileSize(size: number) {
-	return `${(size / 1024 / 1024).toFixed(2)} MB`;
-}
 
 function isSubmitBackendSetupError(error: { message?: string } | null) {
 	return /bucket|foreign key|permission denied|policy|profiles|resumes|row-level security|schema cache|storage|violates/i.test(
@@ -143,7 +129,7 @@ export default function SubmitResumeForm() {
 	const [user, setUser] = useState<User | null>(null);
 	const [profile, setProfile] = useState<SubmitProfile | null>(null);
 	const [title, setTitle] = useState("");
-	const [targetRole, setTargetRole] = useState(roles[0]);
+	const [targetRole, setTargetRole] = useState<string>(TARGET_ROLES[0]);
 	const [jobDescription, setJobDescription] = useState("");
 	const [postDescription, setPostDescription] = useState("");
 	const [file, setFile] = useState<File | null>(null);
@@ -218,15 +204,12 @@ export default function SubmitResumeForm() {
 		POST_DESCRIPTION_MIN_LENGTH - trimmedPostDescription.length,
 		0,
 	);
-	const submitIssue = !trimmedTitle
-		? "Add a resume title."
-		: !file
-			? "Upload a PDF resume."
-			: jobDescriptionRemaining > 0
-				? `Add ${jobDescriptionRemaining} more ${jobDescriptionRemaining === 1 ? "character" : "characters"} to the job description.`
-				: postDescriptionRemaining > 0
-					? `Add ${postDescriptionRemaining} more ${postDescriptionRemaining === 1 ? "character" : "characters"} to what you want help with.`
-					: "";
+	const submitIssue = getSubmitIssue({
+		title,
+		hasFile: Boolean(file),
+		jobDescription,
+		postDescription,
+	});
 
 	function showFormError(errorMessage: string) {
 		setMessage(errorMessage);
@@ -282,7 +265,7 @@ export default function SubmitResumeForm() {
 			return;
 		}
 
-		const filePath = `${user.id}/${Date.now()}-${cleanFileName(file.name)}`;
+		const filePath = `${user.id}/${Date.now()}-${cleanResumeFileName(file.name)}`;
 		const upload = await supabase.storage
 			.from("resumes")
 			.upload(filePath, file, {
@@ -368,7 +351,7 @@ export default function SubmitResumeForm() {
 					<fieldset className="field-block role-picker submit-role-field">
 						<legend>Target role</legend>
 						<div>
-							{roles.map((role) => (
+							{TARGET_ROLES.map((role) => (
 								<button
 									className={targetRole === role ? "selected" : ""}
 									type="button"
@@ -406,7 +389,7 @@ export default function SubmitResumeForm() {
 								<>
 									<span className="file-check">OK</span>
 									<strong>{file.name}</strong>
-									<small>{fileSize(file.size)}</small>
+									<small>{formatFileSize(file.size)}</small>
 									<em
 										onClick={(event) => {
 											event.stopPropagation();

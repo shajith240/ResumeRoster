@@ -2299,6 +2299,133 @@ body.main-app-dark .toggle-ui::after {
 	color: color-mix(in srgb, var(--danger) 78%, var(--text-primary)) !important;
 }
 
+.comment-report-button {
+	color: var(--text-tertiary);
+}
+
+.comment-report-button:hover:not(:disabled) {
+	color: var(--text-primary);
+}
+
+.report-dialog-content {
+	border-color: var(--border-default);
+	background: var(--bg-surface);
+	color: var(--text-primary);
+}
+
+.report-form {
+	display: grid;
+	gap: 14px;
+}
+
+.report-target-preview {
+	display: grid;
+	gap: 6px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-md);
+	background: color-mix(in srgb, var(--bg-base) 82%, transparent);
+	padding: 12px;
+}
+
+.report-target-preview span {
+	color: var(--text-tertiary);
+	font-size: 12px;
+}
+
+.report-target-preview p {
+	display: -webkit-box;
+	margin: 0;
+	overflow: hidden;
+	color: var(--text-secondary);
+	font-size: 13px;
+	line-height: 1.5;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+}
+
+.report-reason-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 8px;
+}
+
+.report-reason-grid button {
+	display: grid;
+	gap: 4px;
+	min-height: 78px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-md);
+	background: var(--bg-base);
+	padding: 10px;
+	color: var(--text-secondary);
+	text-align: left;
+	transition:
+		border-color 180ms ease,
+		background-color 180ms ease,
+		color 180ms ease,
+		transform 180ms ease;
+}
+
+.report-reason-grid button:hover {
+	border-color: color-mix(in srgb, var(--accent) 36%, var(--border-subtle));
+	color: var(--text-primary);
+	transform: translateY(-1px);
+}
+
+.report-reason-grid button.is-selected {
+	border-color: color-mix(in srgb, var(--accent) 58%, var(--border-subtle));
+	background: color-mix(in srgb, var(--accent) 12%, var(--bg-base));
+	color: var(--text-primary);
+}
+
+.report-reason-grid span {
+	font-size: 13px;
+	font-weight: 550;
+}
+
+.report-reason-grid small {
+	color: var(--text-tertiary);
+	font-size: 11px;
+	line-height: 1.35;
+}
+
+.report-details-field {
+	display: grid;
+	gap: 8px;
+	color: var(--text-secondary);
+	font-size: 13px;
+}
+
+.report-details-field textarea {
+	min-height: 108px;
+	resize: vertical;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-md);
+	background: var(--bg-base);
+	padding: 11px 12px;
+	color: var(--text-primary);
+	font: inherit;
+	line-height: 1.5;
+}
+
+.report-details-field textarea:focus {
+	border-color: rgba(232, 93, 38, 0.36);
+	outline: 3px solid rgba(232, 93, 38, 0.12);
+}
+
+.report-form-meta {
+	display: flex;
+	justify-content: flex-end;
+	color: var(--text-tertiary);
+	font-size: 12px;
+}
+
+@media (max-width: 520px) {
+	.report-reason-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
 .inline-reply-form {
 	display: grid;
 	gap: 10px;

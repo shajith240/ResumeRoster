@@ -1,5 +1,17 @@
 export type ResumeStatus = "open" | "roasted" | "closed";
 export type AppStatus = "online" | "focus" | "offline";
+export type ContentReportReason =
+  | "personal_info"
+  | "harassment"
+  | "spam"
+  | "unsafe"
+  | "off_topic"
+  | "other";
+export type ContentReportStatus =
+  | "pending"
+  | "reviewing"
+  | "dismissed"
+  | "actioned";
 
 export type ResumeAuthorProfile = {
   id: string;

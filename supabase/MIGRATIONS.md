@@ -11,6 +11,7 @@
 0004_profiles_avatars_public_profile.sql
 0005_leaderboard_auth_lookup.sql
 0006_rls_storage_hardening.sql
+0007_content_reporting_moderation.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.

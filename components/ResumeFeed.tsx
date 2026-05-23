@@ -12,8 +12,17 @@ import {
   getResumePosterLabel,
   getResumeRoleLabel,
 } from "@/lib/resume-display";
+import {
+  formatCount,
+  mergeRoastCountsFromRows,
+  sortResumes,
+  withResumeDefaults,
+  type FeedSort,
+} from "@/lib/feed-ranking";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeAuthorProfile, ResumeSummary } from "@/lib/supabase/types";
+
+export type { FeedSort } from "@/lib/feed-ranking";
 
 const RESUME_SELECT_WITH_CONTEXT =
   "id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,job_description,post_description,created_at";
@@ -33,18 +42,6 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
-function formatCount(value: number) {
-  if (value >= 1_000_000) {
-    return `${(value / 1_000_000).toFixed(value >= 10_000_000 ? 0 : 1)}M`;
-  }
-
-  if (value >= 1_000) {
-    return `${(value / 1_000).toFixed(value >= 10_000 ? 0 : 1)}K`;
-  }
-
-  return value.toLocaleString();
-}
-
 function isReadCountFeatureError(error: { message?: string } | null) {
   return /read_count|schema cache|column/i.test(error?.message ?? "");
 }
@@ -61,59 +58,11 @@ function isAuthorProfileFeatureError(error: { message?: string } | null) {
   );
 }
 
-function withResumeDefaults(
-  resume: Omit<
-    ResumeSummary,
-    "read_count" | "job_description" | "post_description"
-  > &
-    Partial<
-      Pick<ResumeSummary, "read_count" | "job_description" | "post_description">
-    >,
-): ResumeSummary {
-  return {
-    ...resume,
-    read_count: resume.read_count ?? 0,
-    job_description: resume.job_description ?? null,
-    post_description: resume.post_description ?? null,
-  };
-}
-
-export type FeedSort = "best" | "new" | "top";
-
 const sortOptions: Array<{ href: string; label: string; value: FeedSort }> = [
   { href: "/feed", label: "Best", value: "best" },
   { href: "/feed?sort=new", label: "New", value: "new" },
   { href: "/feed?sort=top", label: "Top rated", value: "top" },
 ];
-
-function getBestScore(resume: ResumeSummary) {
-  const ageHours = Math.max(
-    1,
-    (Date.now() - new Date(resume.created_at).getTime()) / 3_600_000,
-  );
-
-  return resume.roast_count * 8 + 48 / Math.pow(ageHours + 2, 1.2);
-}
-
-function sortResumes(resumes: ResumeSummary[], sort: FeedSort) {
-  return [...resumes].sort((a, b) => {
-    if (sort === "new") {
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    }
-
-    if (sort === "top") {
-      return (
-        b.roast_count - a.roast_count ||
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-    }
-
-    return (
-      getBestScore(b) - getBestScore(a) ||
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-  });
-}
 
 async function mergeLiveRoastCounts(resumeRows: ResumeSummary[]) {
   if (!resumeRows.length) return resumeRows;
@@ -134,18 +83,7 @@ async function mergeLiveRoastCounts(resumeRows: ResumeSummary[]) {
 
   if (error) return resumeRows;
 
-  const countsByResume = new Map<string, number>();
-  for (const roast of data ?? []) {
-    countsByResume.set(
-      roast.resume_id,
-      (countsByResume.get(roast.resume_id) ?? 0) + 1,
-    );
-  }
-
-  return resumeRows.map((resume) => ({
-    ...resume,
-    roast_count: countsByResume.get(resume.id) ?? 0,
-  }));
+  return mergeRoastCountsFromRows(resumeRows, data ?? []);
 }
 
 async function fetchPublicAuthorProfiles(resumeRows: ResumeSummary[]) {
