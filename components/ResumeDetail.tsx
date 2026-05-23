@@ -1088,7 +1088,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						preserveAspectRatio="none"
 						viewBox="0 0 48 32"
 					>
-						<path d="M0.5 0 V16 C0.5 24.5 7 31.5 15.5 31.5 H48" />
+						<path d="M0.5 0 V16 C0.5 24.5 7 31.5 15.5 31.5 H31" />
 					</svg>
 				) : null}
 				<article

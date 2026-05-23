@@ -2510,7 +2510,7 @@ body.main-app-dark .toggle-ui::after {
 	position: absolute;
 	top: 0;
 	left: calc(-1 * var(--thread-branch-offset, 28px));
-	z-index: 3;
+	z-index: 0;
 	width: calc(
 		var(--thread-branch-offset, 28px) + (var(--thread-avatar-size, 32px) / 2)
 	);
