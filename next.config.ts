@@ -1,11 +1,28 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
+const shouldUploadErrorMonitoringSourceMaps = Boolean(
+	process.env.ERROR_MONITORING_AUTH_TOKEN &&
+		process.env.ERROR_MONITORING_ORG &&
+		process.env.ERROR_MONITORING_PROJECT &&
+		process.env.ERROR_MONITORING_URL,
+);
 
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: join(projectRoot),
+	outputFileTracingRoot: join(projectRoot),
 };
 
-export default nextConfig;
+export default shouldUploadErrorMonitoringSourceMaps
+	? withSentryConfig(nextConfig, {
+			org: process.env.ERROR_MONITORING_ORG,
+			project: process.env.ERROR_MONITORING_PROJECT,
+			authToken: process.env.ERROR_MONITORING_AUTH_TOKEN,
+			sentryUrl: process.env.ERROR_MONITORING_URL,
+			silent: !process.env.CI,
+			widenClientFileUpload: true,
+			disableLogger: true,
+		})
+	: nextConfig;
