@@ -9,6 +9,10 @@ export type ThreadRoast = Roast & {
 	depth: number;
 };
 
+export type ThreadRoastNode = ThreadRoast & {
+	children: ThreadRoastNode[];
+};
+
 export function getReactionBlockReason(
 	activeUser: ActiveUserLike,
 	activeResume: ResumeSummary | null,
@@ -72,10 +76,7 @@ function sortReplyRoasts(a: Roast, b: Roast) {
 	);
 }
 
-export function buildThreadRoasts(
-	roasts: Roast[],
-	collapsedRoastIds: Set<string>,
-): ThreadRoast[] {
+function buildChildrenByParent(roasts: Roast[]) {
 	const childrenByParent = new Map<string | null, Roast[]>();
 
 	for (const roast of roasts) {
@@ -92,28 +93,44 @@ export function buildThreadRoasts(
 		}
 	}
 
-	const flattened: ThreadRoast[] = [];
-	const stack = [...(childrenByParent.get(null) ?? [])]
-		.reverse()
-		.map((roast) => ({ depth: 0, roast }));
+	return childrenByParent;
+}
 
-	while (stack.length) {
-		const { depth, roast } = stack.pop()!;
+export function buildThreadRoastTree(
+	roasts: Roast[],
+	collapsedRoastIds: Set<string>,
+): ThreadRoastNode[] {
+	const childrenByParent = buildChildrenByParent(roasts);
+
+	function buildNode(roast: Roast, depth: number): ThreadRoastNode {
 		const children = childrenByParent.get(roast.id) ?? [];
-		flattened.push({
+		const visibleChildren = collapsedRoastIds.has(roast.id)
+			? []
+			: children.map((child) => buildNode(child, depth + 1));
+
+		return {
 			...roast,
 			childCount: children.length,
 			depth,
-		});
-
-		if (collapsedRoastIds.has(roast.id)) {
-			continue;
-		}
-
-		for (let index = children.length - 1; index >= 0; index -= 1) {
-			stack.push({ depth: depth + 1, roast: children[index] });
-		}
+			children: visibleChildren,
+		};
 	}
 
+	return (childrenByParent.get(null) ?? []).map((roast) => buildNode(roast, 0));
+}
+
+export function buildThreadRoasts(
+	roasts: Roast[],
+	collapsedRoastIds: Set<string>,
+): ThreadRoast[] {
+	const flattened: ThreadRoast[] = [];
+
+	function visit(node: ThreadRoastNode) {
+		const { children, ...roast } = node;
+		flattened.push(roast);
+		children.forEach(visit);
+	}
+
+	buildThreadRoastTree(roasts, collapsedRoastIds).forEach(visit);
 	return flattened;
 }

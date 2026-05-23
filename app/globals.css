@@ -2359,10 +2359,6 @@ body.main-app-dark .toggle-ui::after {
 	max-width: none;
 }
 
-.thread-discussion-panel .thread-roast {
-	grid-template-columns: minmax(0, 1fr);
-}
-
 .thread-discussion-panel .thread-roast-form {
 	width: 100%;
 	max-width: none;
@@ -2431,38 +2427,124 @@ body.main-app-dark .toggle-ui::after {
 	font-size: 13px;
 }
 
-.thread-roast {
+.roast-list {
+	--thread-avatar-size: 32px;
+	--thread-branch-offset: 28px;
+	--thread-item-padding-y: 16px;
+	--thread-connector-midline: calc(
+		var(--thread-item-padding-y) + (var(--thread-avatar-size) / 2)
+	);
+	--thread-line-color: color-mix(
+		in srgb,
+		var(--text-tertiary) 34%,
+		transparent
+	);
+	--thread-mask-color: var(--bg-base);
 	display: grid;
-	grid-template-columns: 44px minmax(0, 1fr);
+}
+
+.thread-roast-node {
+	position: relative;
+	min-width: 0;
+}
+
+.thread-roast {
+	position: relative;
+	display: grid;
+	grid-template-columns: var(--thread-avatar-size) minmax(0, 1fr);
 	gap: 12px;
-	margin-left: calc(var(--reply-depth, 0) * 18px);
 	border-bottom: 1px solid var(--border-subtle);
-	padding: 16px 0;
+	padding: var(--thread-item-padding-y) 0;
 	animation: fadeUp 0.3s ease both;
 }
 
 .thread-roast.is-reply {
-	position: relative;
-	grid-template-columns: minmax(0, 1fr);
-	margin-left: calc(var(--reply-depth, 0) * 22px);
-	padding-left: 18px;
+	border-bottom-color: color-mix(
+		in srgb,
+		var(--border-subtle) 70%,
+		transparent
+	);
 }
 
-.thread-roast.is-reply::before {
+.thread-roast-rail {
+	position: relative;
+	display: grid;
+	place-items: start center;
+	min-height: var(--thread-avatar-size);
+}
+
+.thread-roast-node.has-visible-replies > .thread-roast .thread-roast-rail::after {
 	position: absolute;
-	top: 0;
-	left: 0;
-	width: 17px;
-	height: 20px;
-	border-bottom: 1px solid rgba(138, 129, 120, 0.28);
-	border-left: 1px solid rgba(138, 129, 120, 0.28);
-	border-bottom-left-radius: 16px;
-	box-shadow: inset 1px -1px 0 rgba(232, 93, 38, 0.06);
+	top: calc(var(--thread-avatar-size) + 7px);
+	bottom: -17px;
+	left: 50%;
+	width: 1px;
+	background: var(--thread-line-color);
 	content: "";
+	transform: translateX(-50%);
+}
+
+.thread-roast-avatar {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	width: var(--thread-avatar-size);
+	height: var(--thread-avatar-size);
+	place-items: center;
+	border: 1px solid color-mix(in srgb, var(--border-default) 76%, transparent);
+	border-radius: 50%;
+	background: var(--bg-elevated);
+	color: var(--text-tertiary);
+	font-size: 11px;
+	font-weight: 700;
+	object-fit: cover;
+}
+
+.thread-roast-avatar.is-deleted {
+	background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
 }
 
 .thread-roast.is-deleted {
 	color: var(--text-tertiary);
+}
+
+.thread-children {
+	position: relative;
+	margin-left: calc(var(--thread-avatar-size) / 2);
+	padding-left: var(--thread-branch-offset);
+}
+
+.thread-children::before {
+	position: absolute;
+	top: -17px;
+	bottom: 0;
+	left: 0;
+	width: 1px;
+	background: var(--thread-line-color);
+	content: "";
+}
+
+.thread-children > .thread-roast-node::before {
+	position: absolute;
+	top: 0;
+	left: calc(-1 * var(--thread-branch-offset));
+	width: calc(var(--thread-branch-offset) + (var(--thread-avatar-size) / 2));
+	height: var(--thread-connector-midline);
+	border-bottom: 1px solid var(--thread-line-color);
+	border-left: 1px solid var(--thread-line-color);
+	border-bottom-left-radius: 14px;
+	content: "";
+}
+
+.thread-children > .thread-roast-node:not(.has-visible-replies):last-child::after {
+	position: absolute;
+	top: var(--thread-connector-midline);
+	bottom: 0;
+	left: calc(-1 * var(--thread-branch-offset) - 1px);
+	z-index: 1;
+	width: 3px;
+	background: var(--thread-mask-color);
+	content: "";
 }
 
 .deleted-author-chip {
@@ -2949,18 +3031,17 @@ body.main-app-dark .bottom-nav {
 		grid-template-columns: 1fr;
 	}
 
+	.roast-list {
+		--thread-avatar-size: 30px;
+		--thread-branch-offset: 22px;
+		--thread-item-padding-y: 14px;
+	}
+
 	.thread-roast {
-		margin-left: calc(var(--reply-depth, 0) * 10px);
+		gap: 10px;
 	}
 
-	.thread-roast.is-reply {
-		margin-left: calc(var(--reply-depth, 0) * 14px);
-		padding-left: 14px;
-	}
-
-	.thread-roast.is-reply::before {
-		width: 14px;
-		height: 18px;
+	.thread-children > .thread-roast-node::before {
 		border-bottom-left-radius: 12px;
 	}
 

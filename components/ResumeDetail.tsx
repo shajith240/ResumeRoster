@@ -44,10 +44,11 @@ import {
 	getResumeRoleLabel,
 } from "@/lib/resume-display";
 import {
-	buildThreadRoasts,
+	buildThreadRoastTree,
 	getReactionBlockReason,
 	getReplyBlockReason,
 	normalizeRoast,
+	type ThreadRoastNode,
 } from "@/lib/resume-thread";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { supabase } from "@/lib/supabase/client";
@@ -229,7 +230,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [message, setMessage] = useState("");
 
 	const threadRoasts = useMemo(
-		() => buildThreadRoasts(roasts, collapsedRoastIds),
+		() => buildThreadRoastTree(roasts, collapsedRoastIds),
 		[collapsedRoastIds, roasts],
 	);
 	const isOwner = Boolean(user && resume?.user_id === user.id);
@@ -1045,6 +1046,243 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		: "";
 	const reportDetailsRemaining =
 		REPORT_DETAILS_MAX_LENGTH - reportDetails.length;
+	let threadRenderIndex = 0;
+
+	function renderThreadRoast(roast: ThreadRoastNode) {
+		const voted = votedRoastIds.has(roast.id);
+		const disliked = dislikedRoastIds.has(roast.id);
+		const authorProfile = authorProfiles[roast.author_id];
+		const authorHandle = getAuthorHandle(roast.author_id, authorProfile);
+		const reactionBlockReason = getReactionBlockReason(user, resume, roast);
+		const reactionDisabled = Boolean(reactionBlockReason);
+		const replyCount = Math.max(roast.reply_count ?? 0, roast.childCount);
+		const isCollapsed = collapsedRoastIds.has(roast.id);
+		const isDeleted = Boolean(roast.is_deleted);
+		const isOwnRoast = user?.id === roast.author_id;
+		const replyBlockReason = getReplyBlockReason({
+			isClosed,
+			isDeleted,
+			isOwnRoast,
+			migrationMessage: SUPABASE_MIGRATION_MESSAGE,
+			replySchemaReady,
+		});
+		const canReply = !replyBlockReason;
+		const roastStyle = {
+			animationDelay: `${threadRenderIndex * 32}ms`,
+		} as CSSProperties;
+		threadRenderIndex += 1;
+
+		return (
+			<div
+				className={`thread-roast-node ${
+					roast.children.length ? "has-visible-replies" : ""
+				}`}
+				key={roast.id}
+				role="listitem"
+			>
+				<article
+					className={`thread-roast ${roast.depth ? "is-reply" : ""}${
+						isDeleted ? " is-deleted" : ""
+					}`}
+					style={roastStyle}
+				>
+					<div className="thread-roast-rail" aria-hidden="true">
+						{isDeleted ? (
+							<span className="thread-roast-avatar is-deleted">D</span>
+						) : (
+							<img
+								className="thread-roast-avatar"
+								src={getAuthorAvatar(roast.author_id, authorProfile)}
+								alt=""
+								width={32}
+								height={32}
+								aria-hidden="true"
+							/>
+						)}
+					</div>
+					<div className="thread-roast-body">
+						<header>
+							{isDeleted ? (
+								<span className="deleted-author-chip">Deleted roaster</span>
+							) : (
+								<Button asChild className="comment-author-chip" size="sm">
+									<Link href={`/profile/${roast.author_id}`}>
+										{authorHandle}
+									</Link>
+								</Button>
+							)}
+							<time dateTime={roast.created_at}>
+								&middot; {formatDate(roast.created_at)}
+							</time>
+							{!isDeleted && roast.helpful_votes > 5 ? (
+								<span className="badge badge-open">Verified helpful</span>
+							) : null}
+						</header>
+						<p className={isDeleted ? "deleted-roast-copy" : undefined}>
+							{isDeleted
+								? "This roast was deleted by its author."
+								: roast.content}
+						</p>
+						<footer>
+							{isDeleted ? null : (
+								<div className="comment-reactions">
+									<Button
+										className="reaction-button py-0 pe-0"
+										variant={voted ? "secondary" : "outline"}
+										disabled={reactionDisabled}
+										onClick={() => void reactToRoast(roast, "like")}
+										type="button"
+										aria-label={
+											voted
+												? "Remove like from this roast"
+												: "Like this roast"
+										}
+										title={reactionBlockReason ?? undefined}
+									>
+										<ThumbsUp
+											className="me-2 opacity-60"
+											size={16}
+											strokeWidth={2}
+											aria-hidden="true"
+										/>
+										Like
+										<span className="reaction-count">
+											{roast.helpful_votes}
+										</span>
+									</Button>
+									<Button
+										className="reaction-button py-0 pe-0"
+										variant={disliked ? "secondary" : "outline"}
+										disabled={reactionDisabled}
+										onClick={() => void reactToRoast(roast, "dislike")}
+										type="button"
+										aria-label={
+											disliked
+												? "Remove dislike from this roast"
+												: "Dislike this roast"
+										}
+										title={reactionBlockReason ?? undefined}
+									>
+										<ThumbsDown
+											className="me-2 opacity-60"
+											size={16}
+											strokeWidth={2}
+											aria-hidden="true"
+										/>
+										Dislike
+										<span className="reaction-count">
+											{roast.dislike_count ?? 0}
+										</span>
+									</Button>
+								</div>
+							)}
+							{isDeleted ? null : (
+								<button
+									disabled={!canReply}
+									title={replyBlockReason ?? undefined}
+									onClick={() => {
+										if (!canReply) return;
+										setReplyingToId((current) =>
+											current === roast.id ? null : roast.id,
+										);
+										setReplyContent("");
+									}}
+									type="button"
+								>
+									Reply
+								</button>
+							)}
+							{replyCount > 0 ? (
+								<button
+									className="reply-collapse-button"
+									onClick={() => toggleRoastReplies(roast.id)}
+									type="button"
+								>
+									{isCollapsed
+										? `Show ${replyCount} ${
+												replyCount === 1 ? "reply" : "replies"
+											}`
+										: "Hide replies"}
+								</button>
+							) : null}
+							{!isDeleted && isOwnRoast ? (
+								<button
+									className="comment-delete-button"
+									disabled={!deleteSchemaReady || deletingRoastId === roast.id}
+									onClick={() => void requestDeleteRoast(roast)}
+									title={
+										deleteSchemaReady
+											? undefined
+											: `${SUPABASE_MIGRATION_MESSAGE} Deletes are not ready yet.`
+									}
+									type="button"
+								>
+									{deletingRoastId === roast.id ? "Deleting..." : "Delete"}
+								</button>
+							) : null}
+							{!isDeleted && !isOwnRoast ? (
+								<button
+									className="comment-report-button"
+									disabled={!reportSchemaReady}
+									onClick={() => openReportDialog(roast)}
+									title={
+										reportSchemaReady
+											? undefined
+											: `${SUPABASE_MIGRATION_MESSAGE} Reports are not ready yet.`
+									}
+									type="button"
+								>
+									Report
+								</button>
+							) : null}
+						</footer>
+						{!isDeleted && replyingToId === roast.id ? (
+							<form
+								className="inline-reply-form"
+								onSubmit={(event) => handleReplySubmit(event, roast)}
+							>
+								<textarea
+									autoFocus
+									onChange={(event) => setReplyContent(event.target.value)}
+									placeholder={`Reply to ${authorHandle}`}
+									rows={3}
+									value={replyContent}
+								/>
+								<div>
+									<button
+										className="reply-cancel-button"
+										onClick={() => {
+											setReplyingToId(null);
+											setReplyContent("");
+										}}
+										type="button"
+									>
+										Cancel
+									</button>
+									<button
+										className="btn-primary btn-brand reply-submit-button"
+										disabled={submittingReplyId === roast.id}
+										type="submit"
+									>
+										{submittingReplyId === roast.id ? "Posting..." : "Post reply"}
+									</button>
+								</div>
+							</form>
+						) : null}
+					</div>
+				</article>
+				{roast.children.length ? (
+					<div
+						aria-label={`Replies to ${authorHandle}`}
+						className="thread-children"
+						role="list"
+					>
+						{roast.children.map((child) => renderThreadRoast(child))}
+					</div>
+				) : null}
+			</div>
+		);
+	}
 
 	return (
 		<>
@@ -1207,239 +1445,16 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						</p>
 					) : null}
 
-					<div className="roast-list">
-					{threadRoasts.map((roast, index) => {
-						const voted = votedRoastIds.has(roast.id);
-						const disliked = dislikedRoastIds.has(roast.id);
-						const authorProfile = authorProfiles[roast.author_id];
-						const authorHandle = getAuthorHandle(
-							roast.author_id,
-							authorProfile,
-						);
-						const reactionBlockReason = getReactionBlockReason(
-							user,
-							resume,
-							roast,
-						);
-						const reactionDisabled = Boolean(reactionBlockReason);
-						const replyCount = Math.max(roast.reply_count ?? 0, roast.childCount);
-						const isCollapsed = collapsedRoastIds.has(roast.id);
-						const isDeleted = Boolean(roast.is_deleted);
-						const isOwnRoast = user?.id === roast.author_id;
-						const replyBlockReason = getReplyBlockReason({
-							isClosed,
-							isDeleted,
-							isOwnRoast,
-							migrationMessage: SUPABASE_MIGRATION_MESSAGE,
-							replySchemaReady,
-						});
-						const canReply = !replyBlockReason;
-						const roastStyle = {
-							"--reply-depth": Math.min(roast.depth, 8),
-							animationDelay: `${index * 40}ms`,
-						} as CSSProperties;
-
-						return (
-							<article
-								className={`thread-roast ${roast.depth ? "is-reply" : ""}${isDeleted ? " is-deleted" : ""}`}
-								style={roastStyle}
-								key={roast.id}
-							>
-								<div className="thread-roast-body">
-									<header>
-										{isDeleted ? (
-											<span className="deleted-author-chip">Deleted roaster</span>
-										) : (
-											<Button
-												asChild
-												className="comment-author-chip py-0 ps-0"
-												size="sm"
-											>
-												<Link href={`/profile/${roast.author_id}`}>
-													<span className="me-0.5 flex aspect-square h-full p-1.5">
-														<img
-															className="h-auto w-full rounded-full"
-															src={getAuthorAvatar(
-																roast.author_id,
-																authorProfile,
-															)}
-															alt=""
-															width={24}
-															height={24}
-															aria-hidden="true"
-														/>
-													</span>
-													{authorHandle}
-												</Link>
-											</Button>
-										)}
-										<time dateTime={roast.created_at}>
-											&middot; {formatDate(roast.created_at)}
-										</time>
-										{!isDeleted && roast.helpful_votes > 5 ? (
-											<span className="badge badge-open">Verified helpful</span>
-										) : null}
-									</header>
-									<p className={isDeleted ? "deleted-roast-copy" : undefined}>
-										{isDeleted
-											? "This roast was deleted by its author."
-											: roast.content}
-									</p>
-									<footer>
-										{isDeleted ? null : (
-											<div className="comment-reactions">
-											<Button
-												className="reaction-button py-0 pe-0"
-												variant={voted ? "secondary" : "outline"}
-												disabled={reactionDisabled}
-												onClick={() => void reactToRoast(roast, "like")}
-												type="button"
-												aria-label={
-													voted
-														? "Remove like from this roast"
-														: "Like this roast"
-												}
-												title={reactionBlockReason ?? undefined}
-											>
-												<ThumbsUp
-													className="me-2 opacity-60"
-													size={16}
-													strokeWidth={2}
-													aria-hidden="true"
-												/>
-												Like
-												<span className="reaction-count">
-													{roast.helpful_votes}
-												</span>
-											</Button>
-											<Button
-												className="reaction-button py-0 pe-0"
-												variant={disliked ? "secondary" : "outline"}
-												disabled={reactionDisabled}
-												onClick={() => void reactToRoast(roast, "dislike")}
-												type="button"
-												aria-label={
-													disliked
-														? "Remove dislike from this roast"
-														: "Dislike this roast"
-												}
-												title={reactionBlockReason ?? undefined}
-											>
-												<ThumbsDown
-													className="me-2 opacity-60"
-													size={16}
-													strokeWidth={2}
-													aria-hidden="true"
-												/>
-												Dislike
-												<span className="reaction-count">
-													{roast.dislike_count ?? 0}
-												</span>
-											</Button>
-											</div>
-										)}
-										{isDeleted ? null : (
-											<button
-												disabled={!canReply}
-												title={replyBlockReason ?? undefined}
-												onClick={() => {
-													if (!canReply) return;
-													setReplyingToId((current) =>
-														current === roast.id ? null : roast.id,
-													);
-													setReplyContent("");
-												}}
-												type="button"
-											>
-												Reply
-											</button>
-										)}
-										{replyCount > 0 ? (
-											<button
-												className="reply-collapse-button"
-												onClick={() => toggleRoastReplies(roast.id)}
-												type="button"
-											>
-												{isCollapsed
-													? `Show ${replyCount} ${replyCount === 1 ? "reply" : "replies"}`
-													: "Hide replies"}
-											</button>
-										) : null}
-										{!isDeleted && isOwnRoast ? (
-											<button
-												className="comment-delete-button"
-												disabled={
-													!deleteSchemaReady || deletingRoastId === roast.id
-												}
-												onClick={() => void requestDeleteRoast(roast)}
-												title={
-													deleteSchemaReady
-														? undefined
-														: `${SUPABASE_MIGRATION_MESSAGE} Deletes are not ready yet.`
-												}
-												type="button"
-											>
-												{deletingRoastId === roast.id ? "Deleting..." : "Delete"}
-											</button>
-										) : null}
-										{!isDeleted && !isOwnRoast ? (
-											<button
-												className="comment-report-button"
-												disabled={!reportSchemaReady}
-												onClick={() => openReportDialog(roast)}
-												title={
-													reportSchemaReady
-														? undefined
-														: `${SUPABASE_MIGRATION_MESSAGE} Reports are not ready yet.`
-												}
-												type="button"
-											>
-												Report
-											</button>
-										) : null}
-									</footer>
-									{!isDeleted && replyingToId === roast.id ? (
-										<form
-											className="inline-reply-form"
-											onSubmit={(event) => handleReplySubmit(event, roast)}
-										>
-											<textarea
-												autoFocus
-												onChange={(event) => setReplyContent(event.target.value)}
-												placeholder={`Reply to ${authorHandle}`}
-												rows={3}
-												value={replyContent}
-											/>
-											<div>
-												<button
-													className="reply-cancel-button"
-													onClick={() => {
-														setReplyingToId(null);
-														setReplyContent("");
-													}}
-													type="button"
-												>
-													Cancel
-												</button>
-												<button
-													className="btn-primary btn-brand reply-submit-button"
-													disabled={submittingReplyId === roast.id}
-													type="submit"
-												>
-													{submittingReplyId === roast.id ? "Posting..." : "Post reply"}
-												</button>
-											</div>
-										</form>
-									) : null}
-								</div>
-							</article>
-						);
-					})}
-					{!threadRoasts.length ? (
-						<p className="muted-text">
-							No roasts yet. First useful feedback wins the room.
-						</p>
-					) : null}
+					<div
+						className="roast-list"
+						role={threadRoasts.length ? "list" : undefined}
+					>
+						{threadRoasts.map((roast) => renderThreadRoast(roast))}
+						{!threadRoasts.length ? (
+							<p className="muted-text">
+								No roasts yet. First useful feedback wins the room.
+							</p>
+						) : null}
 					</div>
 				</section>
 			</div>

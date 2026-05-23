@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+	buildThreadRoastTree,
 	buildThreadRoasts,
 	getReactionBlockReason,
 	getReplyBlockReason,
@@ -175,5 +176,23 @@ describe("resume thread rules", () => {
 
 		expect(flattened.map((item) => item.id)).toEqual(["parent"]);
 		expect(flattened[0].childCount).toBe(1);
+	});
+
+	it("builds nested roast trees for continuous reply connectors", () => {
+		const tree = buildThreadRoastTree(
+			[
+				roast({ id: "parent", helpful_votes: 2 }),
+				roast({ id: "child", parent_id: "parent" }),
+				roast({ id: "grandchild", parent_id: "child" }),
+			],
+			new Set(),
+		);
+
+		expect(tree).toHaveLength(1);
+		expect(tree[0].id).toBe("parent");
+		expect(tree[0].children[0].id).toBe("child");
+		expect(tree[0].children[0].depth).toBe(1);
+		expect(tree[0].children[0].children[0].id).toBe("grandchild");
+		expect(tree[0].children[0].children[0].depth).toBe(2);
 	});
 });
