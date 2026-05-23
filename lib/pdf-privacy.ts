@@ -65,11 +65,14 @@ export function containsContactSignal(text: string) {
 	return assessResumePrivacyText(text).findings.length > 0;
 }
 
+export function containsDirectContactSignal(text: string) {
+	return assessResumePrivacyText(text).findings.some((finding) =>
+		["email", "phone"].includes(finding.type),
+	);
+}
+
 export function getPrivacyUploadIssue(status: string) {
 	if (status === "checking") return "Wait for the PDF privacy check to finish.";
-	if (status === "warning") {
-		return "Remove detected contact details from the PDF, then upload it again.";
-	}
 	if (status === "error") {
 		return "Upload a standard, readable PDF so we can check it before posting.";
 	}

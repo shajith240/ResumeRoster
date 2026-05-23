@@ -1862,6 +1862,81 @@ body.main-app-dark .toggle-ui::after {
 	transform: translateX(16px);
 }
 
+.privacy-picker {
+	display: grid;
+	gap: 10px;
+	min-width: 0;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-md);
+	padding: 12px;
+	background: var(--bg-base);
+}
+
+.privacy-picker legend {
+	padding: 0 4px;
+	color: var(--text-secondary);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.privacy-options {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+}
+
+.privacy-options label {
+	position: relative;
+	display: grid;
+	min-height: 92px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--button-radius);
+	padding: 10px;
+	background: var(--bg-elevated);
+	cursor: pointer;
+	transition:
+		border-color 180ms var(--button-ease),
+		background-color 180ms var(--button-ease),
+		transform 180ms var(--button-ease);
+}
+
+.privacy-options label:hover {
+	border-color: var(--border-default);
+	background: var(--bg-surface);
+}
+
+.privacy-options label.selected {
+	border-color: color-mix(in srgb, var(--brand) 46%, transparent);
+	background: var(--brand-muted);
+}
+
+.privacy-options input {
+	position: absolute;
+	opacity: 0;
+}
+
+.privacy-options span {
+	display: grid;
+	gap: 5px;
+}
+
+.privacy-options strong {
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.privacy-options small,
+.privacy-picker p {
+	margin: 0;
+	color: var(--text-secondary);
+	font-size: 11px;
+	line-height: 1.35;
+}
+
 .submit-button {
 	min-height: 44px;
 	width: min(100%, 250px);
@@ -2631,6 +2706,10 @@ body.main-app-dark .bottom-nav {
 
 	.submit-form-grid,
 	.submit-form-actions {
+		grid-template-columns: 1fr;
+	}
+
+	.privacy-options {
 		grid-template-columns: 1fr;
 	}
 

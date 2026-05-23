@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	assessResumePrivacyText,
 	containsContactSignal,
+	containsDirectContactSignal,
 	getPrivacyUploadIssue,
 } from "@/lib/pdf-privacy";
 
@@ -26,13 +27,16 @@ describe("pdf privacy checks", () => {
 		expect(containsContactSignal(text)).toBe(false);
 	});
 
+	it("separates direct contacts from useful profile links", () => {
+		expect(containsDirectContactSignal("github.com/example")).toBe(false);
+		expect(containsDirectContactSignal("Email test@example.com")).toBe(true);
+	});
+
 	it("maps scan states to upload-blocking messages", () => {
 		expect(getPrivacyUploadIssue("checking")).toBe(
 			"Wait for the PDF privacy check to finish.",
 		);
-		expect(getPrivacyUploadIssue("warning")).toBe(
-			"Remove detected contact details from the PDF, then upload it again.",
-		);
+		expect(getPrivacyUploadIssue("warning")).toBe("");
 		expect(getPrivacyUploadIssue("clear")).toBe("");
 	});
 });

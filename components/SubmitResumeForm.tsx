@@ -19,17 +19,21 @@ import { toast } from "sonner";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import {
 	assessResumePrivacyText,
-	getPrivacyUploadIssue,
 	MAX_PRIVACY_SCAN_PAGES,
 	type PrivacyFinding,
 } from "@/lib/pdf-privacy";
+import {
+	RESUME_PRIVACY_MODE_COPY,
+	RESUME_PRIVACY_MODES,
+	getPrivacyModeHelpText,
+	type ResumePrivacyMode,
+} from "@/lib/resume-privacy";
 import {
 	JOB_DESCRIPTION_MAX_LENGTH,
 	JOB_DESCRIPTION_MIN_LENGTH,
 	POST_DESCRIPTION_MAX_LENGTH,
 	POST_DESCRIPTION_MIN_LENGTH,
 	TARGET_ROLES,
-	cleanResumeFileName,
 	formatFileSize,
 	getSubmitIssue,
 } from "@/lib/submit-validation";
@@ -64,19 +68,6 @@ type PrivacyScanState =
 	  }
 	| { status: "error"; findings: PrivacyFinding[]; message: string };
 
-const SUPABASE_MIGRATION_MESSAGE =
-	"Run the pending Supabase migrations, then refresh.";
-
-function isSubmitBackendSetupError(error: { message?: string } | null) {
-	return /bucket|foreign key|permission denied|policy|profiles|resumes|row-level security|schema cache|storage|violates/i.test(
-		error?.message ?? "",
-	);
-}
-
-function submitBackendSetupMessage(error: { message?: string } | null) {
-	return `Backend submit setup is missing. ${SUPABASE_MIGRATION_MESSAGE} Supabase said: ${error?.message ?? "Unknown setup error."}`;
-}
-
 function profileDisplayName(profile: SubmitProfile | null, user: User | null) {
 	return (
 		profile?.full_name?.trim() ||
@@ -84,22 +75,6 @@ function profileDisplayName(profile: SubmitProfile | null, user: User | null) {
 		user?.user_metadata?.full_name ||
 		user?.email?.split("@")[0] ||
 		"your profile"
-	);
-}
-
-function getMetadataName(user: User) {
-	return (
-		(user.user_metadata?.full_name as string | undefined) ||
-		(user.user_metadata?.name as string | undefined) ||
-		null
-	);
-}
-
-function getMetadataAvatar(user: User) {
-	return (
-		(user.user_metadata?.avatar_url as string | undefined) ||
-		(user.user_metadata?.picture as string | undefined) ||
-		null
 	);
 }
 
@@ -155,7 +130,7 @@ async function scanPdfPrivacy(file: File): Promise<PrivacyScanState> {
 				pageCount,
 				scannedPageCount,
 				message:
-					"Possible contact details found. Redact the PDF source, export it again, and upload the clean version.",
+					"Contact details found. The server will remove them according to your privacy mode before posting.",
 			};
 		}
 
@@ -166,8 +141,8 @@ async function scanPdfPrivacy(file: File): Promise<PrivacyScanState> {
 			scannedPageCount,
 			message:
 				pageCount > scannedPageCount
-					? `No obvious contact details found in the first ${scannedPageCount} pages. Review the rest manually before posting.`
-					: "No obvious emails, phone numbers, or profile links found. Still review the PDF before posting.",
+					? `No obvious contact details found in the first ${scannedPageCount} pages. The server still checks the final upload.`
+					: "No obvious emails, phone numbers, or profile links found. The server still checks the final upload.",
 		};
 	} catch (error) {
 		task.destroy();
@@ -203,29 +178,6 @@ async function getSubmitProfile(activeUser: User | null) {
 	return primaryResult.data as SubmitProfile | null;
 }
 
-async function ensureSubmitProfile(activeUser: User) {
-	const existingProfile = await supabase
-		.from("profiles")
-		.select("id")
-		.eq("id", activeUser.id)
-		.maybeSingle();
-
-	if (existingProfile.data?.id) return null;
-	if (existingProfile.error) return existingProfile.error;
-
-	const insertProfile = await supabase.from("profiles").insert({
-		id: activeUser.id,
-		full_name: getMetadataName(activeUser),
-		avatar_url: getMetadataAvatar(activeUser),
-	});
-
-	if (insertProfile.error && insertProfile.error.code !== "23505") {
-		return insertProfile.error;
-	}
-
-	return null;
-}
-
 export default function SubmitResumeForm() {
 	const router = useRouter();
 	const inputRef = useRef<HTMLInputElement | null>(null);
@@ -237,12 +189,13 @@ export default function SubmitResumeForm() {
 	const [jobDescription, setJobDescription] = useState("");
 	const [postDescription, setPostDescription] = useState("");
 	const [file, setFile] = useState<File | null>(null);
+	const [privacyMode, setPrivacyMode] =
+		useState<ResumePrivacyMode>("contact_hidden");
 	const [privacyScan, setPrivacyScan] = useState<PrivacyScanState>({
 		status: "idle",
 		findings: [],
 		message: "",
 	});
-	const [isAnonymous, setIsAnonymous] = useState(true);
 	const [dragging, setDragging] = useState(false);
 	const [message, setMessage] = useState("");
 	const [submitting, setSubmitting] = useState(false);
@@ -313,9 +266,6 @@ export default function SubmitResumeForm() {
 			if (scanRun !== privacyScanRunRef.current) return;
 
 			setPrivacyScan(result);
-			if (result.status === "warning") {
-				toast.error("Redact contact details before posting.");
-			}
 		} catch {
 			if (scanRun !== privacyScanRunRef.current) return;
 			setPrivacyScan({
@@ -355,13 +305,11 @@ export default function SubmitResumeForm() {
 		POST_DESCRIPTION_MIN_LENGTH - trimmedPostDescription.length,
 		0,
 	);
-	const privacyIssue = getPrivacyUploadIssue(privacyScan.status);
 	const submitIssue = getSubmitIssue({
 		title,
 		hasFile: Boolean(file),
 		jobDescription,
 		postDescription,
-		privacyIssue,
 	});
 
 	function showFormError(errorMessage: string) {
@@ -391,11 +339,6 @@ export default function SubmitResumeForm() {
 			return;
 		}
 
-		if (privacyIssue) {
-			showFormError(privacyIssue);
-			return;
-		}
-
 		if (trimmedJobDescription.length < JOB_DESCRIPTION_MIN_LENGTH) {
 			const errorMessage = `Add ${JOB_DESCRIPTION_MIN_LENGTH}+ characters of job description so roasters can judge fit.`;
 			showFormError(errorMessage);
@@ -410,70 +353,41 @@ export default function SubmitResumeForm() {
 
 		setSubmitting(true);
 
-		const profileError = await ensureSubmitProfile(user);
-		if (profileError) {
+		const session = await supabase.auth.getSession();
+		const accessToken = session.data.session?.access_token;
+		if (!accessToken) {
 			setSubmitting(false);
-			const errorMessage = isSubmitBackendSetupError(profileError)
-				? submitBackendSetupMessage(profileError)
-				: `Profile setup failed: ${profileError.message}`;
-			setMessage(errorMessage);
-			toast.error("Profile setup failed.", {
-				description: errorMessage,
-			});
+			showFormError("Your session expired. Sign in again to continue.");
 			return;
 		}
 
-		const filePath = `${user.id}/${Date.now()}-${cleanResumeFileName(file.name)}`;
-		const upload = await supabase.storage
-			.from("resumes")
-			.upload(filePath, file, {
-				contentType: "application/pdf",
-				upsert: false,
-			});
+		const formData = new FormData();
+		formData.append("file", file);
+		formData.append("title", trimmedTitle);
+		formData.append("targetRole", targetRole);
+		formData.append("jobDescription", trimmedJobDescription);
+		formData.append("postDescription", trimmedPostDescription);
+		formData.append("privacyMode", privacyMode);
 
-		if (upload.error) {
-			setSubmitting(false);
-			const errorMessage = isSubmitBackendSetupError(upload.error)
-				? submitBackendSetupMessage(upload.error)
-				: upload.error.message;
-			setMessage(errorMessage);
-			toast.error("Upload failed.", {
-				description: errorMessage,
-			});
-			return;
-		}
+		const response = await fetch("/api/resumes/submit", {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+			body: formData,
+		});
 
-		await supabase
-			.from("profiles")
-			.update({ target_role: targetRole })
-			.eq("id", user.id);
-
-		const insert = await supabase
-			.from("resumes")
-			.insert({
-				user_id: user.id,
-				title: trimmedTitle,
-				file_path: filePath,
-				job_description: trimmedJobDescription,
-				post_description: trimmedPostDescription,
-				is_anonymous: isAnonymous,
-			})
-			.select("id")
-			.single();
+		const result = (await response.json().catch(() => null)) as {
+			id?: string;
+			message?: string;
+		} | null;
 
 		setSubmitting(false);
 
-		if (insert.error) {
-			void supabase.storage.from("resumes").remove([filePath]);
-			const needsContextMigration =
-				/job_description|post_description|schema cache|column/i.test(
-					insert.error.message,
-				);
-			const errorMessage = needsContextMigration
-				? `${SUPABASE_MIGRATION_MESSAGE} Supabase said: ${insert.error.message}`
-				: isSubmitBackendSetupError(insert.error)
-					? submitBackendSetupMessage(insert.error)
-					: insert.error.message;
+		if (!response.ok || !result?.id) {
+			const errorMessage =
+				result?.message ??
+				"Upload failed while processing the privacy-safe PDF.";
 			setMessage(errorMessage);
 			toast.error("Upload failed.", {
 				description: errorMessage,
@@ -484,7 +398,7 @@ export default function SubmitResumeForm() {
 		setSuccess(true);
 		toast.success("Resume posted.");
 		window.setTimeout(() => {
-			const resumeRoute = `/resume/${insert.data.id}`;
+			const resumeRoute = `/resume/${result.id}`;
 			announceRouteTransition(resumeRoute);
 			router.push(resumeRoute);
 		}, 500);
@@ -665,24 +579,33 @@ export default function SubmitResumeForm() {
 			</div>
 
 			<div className="submit-form-actions">
-				<label className="anonymous-toggle">
-					<span className="toggle-copy">
-						<strong>
-							{isAnonymous ? "Post anonymously" : "Post with my profile"}
-						</strong>
-						<small>
-							{isAnonymous
-								? "Your name will not appear on the post"
-								: `${publicProfileName} and ${publicProfileDetail} will appear in the feed`}
-						</small>
-					</span>
-					<input
-						checked={isAnonymous}
-						type="checkbox"
-						onChange={(event) => setIsAnonymous(event.target.checked)}
-					/>
-					<span className="toggle-ui" aria-hidden="true" />
-				</label>
+				<fieldset className="privacy-picker">
+					<legend>Privacy mode</legend>
+					<div className="privacy-options">
+						{RESUME_PRIVACY_MODES.map((mode) => (
+							<label
+								className={privacyMode === mode ? "selected" : ""}
+								key={mode}
+							>
+								<input
+									checked={privacyMode === mode}
+									name="privacyMode"
+									onChange={() => setPrivacyMode(mode)}
+									type="radio"
+								/>
+								<span>
+									<strong>{RESUME_PRIVACY_MODE_COPY[mode].label}</strong>
+									<small>
+										{mode === "public"
+											? `${publicProfileName} and ${publicProfileDetail} can appear with the post.`
+											: RESUME_PRIVACY_MODE_COPY[mode].description}
+									</small>
+								</span>
+							</label>
+						))}
+					</div>
+					<p>{getPrivacyModeHelpText(privacyMode)}</p>
+				</fieldset>
 
 				<button
 					className="btn-primary submit-button"
@@ -694,7 +617,7 @@ export default function SubmitResumeForm() {
 					) : submitting ? (
 						<>
 							<span className="button-spinner" />
-							Uploading...
+							Processing PDF...
 						</>
 					) : (
 						"Submit for roasting"

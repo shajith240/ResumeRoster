@@ -1,4 +1,5 @@
 export type ResumeStatus = "open" | "roasted" | "closed";
+export type ResumePrivacyMode = "public" | "contact_hidden" | "anonymous";
 export type AppStatus = "online" | "focus" | "offline";
 export type ContentReportReason =
   | "personal_info"
@@ -31,6 +32,7 @@ export type ResumeSummary = {
   title: string;
   file_path: string;
   is_anonymous: boolean;
+  privacy_mode?: ResumePrivacyMode;
   status: ResumeStatus;
   roast_count: number;
   read_count: number;

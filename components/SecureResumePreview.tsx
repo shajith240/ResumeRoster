@@ -8,7 +8,7 @@ import type {
 	TextItem,
 	TextMarkedContent,
 } from "pdfjs-dist/types/src/display/api";
-import { containsContactSignal } from "@/lib/pdf-privacy";
+import { containsDirectContactSignal } from "@/lib/pdf-privacy";
 
 const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
 
@@ -38,7 +38,7 @@ function paintRedactions(
 	const pageWidth = viewport.width;
 
 	for (const item of items) {
-		if (!isTextItem(item) || !containsContactSignal(item.str)) continue;
+		if (!isTextItem(item) || !containsDirectContactSignal(item.str)) continue;
 
 		const transform = pdfjs.Util.transform(viewport.transform, item.transform);
 		const fontHeight = Math.max(8, Math.hypot(transform[2], transform[3]));
@@ -221,7 +221,7 @@ export default function SecureResumePreview({
 			<div className="secure-resume-preview-bar">
 				<div>
 					<strong>Protected preview</strong>
-					<span>Obvious contact details are visually masked. Source PDFs should be redacted before upload.</span>
+					<span>Uploaded PDFs are processed by the selected privacy mode before they are shown.</span>
 				</div>
 				<span>{pageCount ? `${pageCount} page${pageCount === 1 ? "" : "s"}` : "Loading"}</span>
 			</div>

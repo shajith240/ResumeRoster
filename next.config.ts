@@ -13,6 +13,7 @@ const shouldUploadErrorMonitoringSourceMaps = Boolean(
 
 const nextConfig: NextConfig = {
 	outputFileTracingRoot: join(projectRoot),
+	serverExternalPackages: ["mupdf"],
 };
 
 export default shouldUploadErrorMonitoringSourceMaps
