@@ -164,22 +164,6 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 			color 160ms var(--button-ease);
 	}
 
-	.session-sidebar-link::before {
-		position: absolute;
-		top: 14px;
-		bottom: 14px;
-		left: 6px;
-		width: 3px;
-		border-radius: 999px;
-		background: var(--brand);
-		content: "";
-		opacity: 0;
-		transform: scaleY(0.72);
-		transition:
-			opacity 160ms var(--button-ease),
-			transform 180ms var(--button-ease);
-	}
-
 	.session-sidebar-link:hover,
 	.session-sidebar-link:focus-visible {
 		background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
@@ -192,13 +176,8 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	}
 
 	.session-sidebar-link.is-active {
-		background: color-mix(in srgb, var(--bg-elevated) 86%, var(--text-primary) 4%);
+		background: transparent;
 		color: var(--text-primary);
-	}
-
-	.session-sidebar-link.is-active::before {
-		opacity: 1;
-		transform: scaleY(1);
 	}
 
 	.session-sidebar-link.is-primary {
@@ -212,11 +191,34 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	}
 
 	.session-sidebar-icon-slot {
+		position: relative;
 		display: grid;
 		width: 40px;
 		height: 40px;
 		place-items: center;
 		border-radius: 10px;
+	}
+
+	.session-sidebar-icon-slot::after {
+		position: absolute;
+		bottom: 3px;
+		left: 50%;
+		width: 16px;
+		height: 2px;
+		border-radius: 999px;
+		background: var(--brand);
+		content: "";
+		opacity: 0;
+		transform: translateX(-50%) scaleX(0.55);
+		transform-origin: center;
+		transition:
+			opacity 160ms var(--button-ease),
+			transform 180ms var(--button-ease);
+	}
+
+	.session-sidebar-link.is-active .session-sidebar-icon-slot::after {
+		opacity: 0.88;
+		transform: translateX(-50%) scaleX(1);
 	}
 
 	.session-sidebar-icon {
@@ -261,7 +263,7 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	@media (prefers-reduced-motion: reduce) {
 		.session-sidebar,
 		.session-sidebar-link,
-		.session-sidebar-link::before,
+		.session-sidebar-icon-slot::after,
 		.session-sidebar-label {
 			transition-duration: 0.01ms;
 		}
