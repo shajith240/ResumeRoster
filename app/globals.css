@@ -2433,7 +2433,7 @@ body.main-app-dark .toggle-ui::after {
 	--thread-item-padding-y: 16px;
 	--thread-line-color: color-mix(
 		in srgb,
-		var(--text-tertiary) 34%,
+		var(--text-tertiary) 62%,
 		var(--bg-base)
 	);
 	position: relative;
@@ -2480,7 +2480,7 @@ body.main-app-dark .toggle-ui::after {
 .thread-connector-layer {
 	position: absolute;
 	inset: 0;
-	z-index: 0;
+	z-index: 4;
 	width: 100%;
 	height: 100%;
 	overflow: visible;
@@ -2493,7 +2493,7 @@ body.main-app-dark .toggle-ui::after {
 	stroke: currentColor;
 	stroke-linecap: round;
 	stroke-linejoin: round;
-	stroke-width: 1;
+	stroke-width: 1.35;
 	vector-effect: non-scaling-stroke;
 }
 

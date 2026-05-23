@@ -286,7 +286,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				if (!parentRect || !childRect) return [];
 
 				const parentX = parentRect.left + parentRect.width / 2 - listRect.left;
-				const childX = childRect.left + childRect.width / 2 - listRect.left;
+				const childX = childRect.left - listRect.left;
 				const startY = parentRect.bottom - listRect.top + 7;
 				const childY = childRect.top + childRect.height / 2 - listRect.top;
 				const deltaX = Math.max(childX - parentX, 1);
@@ -341,19 +341,24 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		};
 
 		scheduleUpdate();
+		const settleTimeout = window.setTimeout(scheduleUpdate, 380);
 
-		const resizeObserver = new ResizeObserver(scheduleUpdate);
-		resizeObserver.observe(list);
+		const resizeObserver =
+			typeof ResizeObserver === "undefined"
+				? null
+				: new ResizeObserver(scheduleUpdate);
+		resizeObserver?.observe(list);
 		list
 			.querySelectorAll<HTMLElement>(".thread-roast, .thread-roast-avatar")
-			.forEach((element) => resizeObserver.observe(element));
+			.forEach((element) => resizeObserver?.observe(element));
 		window.addEventListener("resize", scheduleUpdate);
 
 		return () => {
 			if (animationFrame) {
 				cancelAnimationFrame(animationFrame);
 			}
-			resizeObserver.disconnect();
+			window.clearTimeout(settleTimeout);
+			resizeObserver?.disconnect();
 			window.removeEventListener("resize", scheduleUpdate);
 		};
 	}, [threadRoasts]);
