@@ -4,7 +4,9 @@ import {
 	type CSSProperties,
 	FormEvent,
 	useEffect,
+	useLayoutEffect,
 	useMemo,
+	useRef,
 	useState,
 } from "react";
 import Link from "next/link";
@@ -64,6 +66,11 @@ type ResumeDetailProps = {
 };
 
 type Reaction = "like" | "dislike";
+
+type ThreadConnectorPath = {
+	d: string;
+	id: string;
+};
 
 type AuthorProfile = {
 	id: string;
@@ -228,6 +235,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
 	const [message, setMessage] = useState("");
+	const threadListRef = useRef<HTMLDivElement | null>(null);
+	const [threadConnectorPaths, setThreadConnectorPaths] = useState<
+		ThreadConnectorPath[]
+	>([]);
+	const [threadConnectorFrame, setThreadConnectorFrame] = useState({
+		height: 0,
+		width: 0,
+	});
 
 	const threadRoasts = useMemo(
 		() => buildThreadRoastTree(roasts, collapsedRoastIds),
@@ -235,6 +250,113 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	);
 	const isOwner = Boolean(user && resume?.user_id === user.id);
 	const isClosed = resume?.status === "closed";
+
+	useLayoutEffect(() => {
+		const list = threadListRef.current;
+		if (!list || !threadRoasts.length) {
+			setThreadConnectorPaths([]);
+			setThreadConnectorFrame({ height: 0, width: 0 });
+			return;
+		}
+
+		let animationFrame = 0;
+
+		const updateConnectors = () => {
+			animationFrame = 0;
+			const listRect = list.getBoundingClientRect();
+			const nodes = Array.from(
+				list.querySelectorAll<HTMLElement>("[data-thread-roast-id]"),
+			);
+			const avatarRects = new Map<string, DOMRect>();
+
+			for (const node of nodes) {
+				const roastId = node.dataset.threadRoastId;
+				const avatar = node.querySelector<HTMLElement>(".thread-roast-avatar");
+				if (!roastId || !avatar) continue;
+				avatarRects.set(roastId, avatar.getBoundingClientRect());
+			}
+
+			const nextPaths = nodes.flatMap((node) => {
+				const roastId = node.dataset.threadRoastId;
+				const parentId = node.dataset.threadParentId;
+				if (!roastId || !parentId) return [];
+
+				const parentRect = avatarRects.get(parentId);
+				const childRect = avatarRects.get(roastId);
+				if (!parentRect || !childRect) return [];
+
+				const parentX = parentRect.left + parentRect.width / 2 - listRect.left;
+				const childX = childRect.left + childRect.width / 2 - listRect.left;
+				const startY = parentRect.bottom - listRect.top + 7;
+				const childY = childRect.top + childRect.height / 2 - listRect.top;
+				const deltaX = Math.max(childX - parentX, 1);
+				const deltaY = Math.max(childY - startY, 1);
+				const radius = Math.min(14, deltaX / 2, deltaY);
+				const curveStartY = Math.max(startY, childY - radius);
+				const curveEndX = parentX + radius;
+
+				return [
+					{
+						d: [
+							`M ${parentX.toFixed(2)} ${startY.toFixed(2)}`,
+							`V ${curveStartY.toFixed(2)}`,
+							`Q ${parentX.toFixed(2)} ${childY.toFixed(2)} ${curveEndX.toFixed(2)} ${childY.toFixed(2)}`,
+							`H ${childX.toFixed(2)}`,
+						].join(" "),
+						id: `${parentId}-${roastId}`,
+					},
+				];
+			});
+
+			const nextFrame = {
+				height: Math.ceil(listRect.height),
+				width: Math.ceil(listRect.width),
+			};
+
+			setThreadConnectorFrame((current) =>
+				current.height === nextFrame.height && current.width === nextFrame.width
+					? current
+					: nextFrame,
+			);
+			setThreadConnectorPaths((current) => {
+				if (
+					current.length === nextPaths.length &&
+					current.every(
+						(path, index) =>
+							path.id === nextPaths[index]?.id &&
+							path.d === nextPaths[index]?.d,
+					)
+				) {
+					return current;
+				}
+				return nextPaths;
+			});
+		};
+
+		const scheduleUpdate = () => {
+			if (animationFrame) {
+				cancelAnimationFrame(animationFrame);
+			}
+			animationFrame = requestAnimationFrame(updateConnectors);
+		};
+
+		scheduleUpdate();
+
+		const resizeObserver = new ResizeObserver(scheduleUpdate);
+		resizeObserver.observe(list);
+		list
+			.querySelectorAll<HTMLElement>(".thread-roast, .thread-roast-avatar")
+			.forEach((element) => resizeObserver.observe(element));
+		window.addEventListener("resize", scheduleUpdate);
+
+		return () => {
+			if (animationFrame) {
+				cancelAnimationFrame(animationFrame);
+			}
+			resizeObserver.disconnect();
+			window.removeEventListener("resize", scheduleUpdate);
+		};
+	}, [threadRoasts]);
 
 	function goToLogin() {
 		const loginRoute = getLoginPath(`/resume/${resumeId}`);
@@ -1074,30 +1196,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 		return (
 			<div
-				className={`thread-roast-node ${
-					roast.children.length ? "has-visible-replies" : ""
-				}`}
+				className="thread-roast-node"
+				data-thread-parent-id={roast.parent_id ?? undefined}
+				data-thread-roast-id={roast.id}
 				key={roast.id}
 				role="listitem"
 			>
-				{roast.depth > 0 ? (
-					<svg
-						aria-hidden="true"
-						className="thread-branch-curve"
-						focusable="false"
-						preserveAspectRatio="none"
-						viewBox="0 0 48 32"
-					>
-						<path
-							className="thread-branch-mask"
-							d="M0.5 0 V17 C0.5 25 6.5 31.5 14.5 31.5 H48"
-						/>
-						<path
-							className="thread-branch-line"
-							d="M0.5 0 V17 C0.5 25 6.5 31.5 14.5 31.5 H48"
-						/>
-					</svg>
-				) : null}
 				<article
 					className={`thread-roast ${roast.depth ? "is-reply" : ""}${
 						isDeleted ? " is-deleted" : ""
@@ -1465,8 +1569,25 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 					<div
 						className="roast-list"
+						ref={threadListRef}
 						role={threadRoasts.length ? "list" : undefined}
 					>
+						{threadConnectorPaths.length &&
+						threadConnectorFrame.width &&
+						threadConnectorFrame.height ? (
+							<svg
+								aria-hidden="true"
+								className="thread-connector-layer"
+								focusable="false"
+								height={threadConnectorFrame.height}
+								viewBox={`0 0 ${threadConnectorFrame.width} ${threadConnectorFrame.height}`}
+								width={threadConnectorFrame.width}
+							>
+								{threadConnectorPaths.map((path) => (
+									<path d={path.d} key={path.id} />
+								))}
+							</svg>
+						) : null}
 						{threadRoasts.map((roast) => renderThreadRoast(roast))}
 						{!threadRoasts.length ? (
 							<p className="muted-text">

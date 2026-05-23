@@ -2431,20 +2431,19 @@ body.main-app-dark .toggle-ui::after {
 	--thread-avatar-size: 32px;
 	--thread-branch-offset: 28px;
 	--thread-item-padding-y: 16px;
-	--thread-connector-midline: calc(
-		var(--thread-item-padding-y) + (var(--thread-avatar-size) / 2)
-	);
 	--thread-line-color: color-mix(
 		in srgb,
 		var(--text-tertiary) 34%,
 		var(--bg-base)
 	);
-	--thread-mask-color: var(--bg-base);
+	position: relative;
 	display: grid;
+	isolation: isolate;
 }
 
 .thread-roast-node {
 	position: relative;
+	z-index: 1;
 	min-width: 0;
 }
 
@@ -2478,17 +2477,24 @@ body.main-app-dark .toggle-ui::after {
 	min-height: var(--thread-avatar-size, 32px);
 }
 
-.thread-roast-node.has-visible-replies
-	> .thread-roast
-	.thread-roast-avatar-cell::after {
+.thread-connector-layer {
 	position: absolute;
-	top: calc(var(--thread-avatar-size, 32px) + 7px);
-	bottom: calc(-1 * var(--thread-item-padding-y, 16px) - 1px);
-	left: 50%;
-	width: 1px;
-	background: var(--thread-line-color);
-	content: "";
-	transform: translateX(-50%);
+	inset: 0;
+	z-index: 0;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+	color: var(--thread-line-color);
+	pointer-events: none;
+}
+
+.thread-connector-layer path {
+	fill: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1;
+	vector-effect: non-scaling-stroke;
 }
 
 .thread-roast-avatar {
@@ -2520,60 +2526,6 @@ body.main-app-dark .toggle-ui::after {
 	z-index: 1;
 	margin-left: calc(var(--thread-avatar-size, 32px) / 2);
 	padding-left: var(--thread-branch-offset, 28px);
-}
-
-.thread-children::before {
-	position: absolute;
-	top: calc(-1 * var(--thread-item-padding-y, 16px) - 1px);
-	bottom: 0;
-	left: 0;
-	z-index: 0;
-	width: 1px;
-	background: var(--thread-line-color);
-	content: "";
-}
-
-.thread-branch-curve {
-	position: absolute;
-	top: 0;
-	left: calc(-1 * var(--thread-branch-offset, 28px));
-	z-index: 1;
-	width: calc(
-		var(--thread-branch-offset, 28px) + (var(--thread-avatar-size, 32px) / 2)
-	);
-	height: var(--thread-connector-midline, 32px);
-	overflow: visible;
-	color: var(--thread-line-color);
-	pointer-events: none;
-}
-
-.thread-branch-curve path {
-	fill: none;
-	stroke-linecap: round;
-	stroke-linejoin: round;
-	vector-effect: non-scaling-stroke;
-}
-
-.thread-branch-mask {
-	stroke: var(--thread-mask-color);
-	stroke-width: 5;
-}
-
-.thread-branch-line {
-	stroke: currentColor;
-	stroke-width: 1;
-}
-
-.thread-children > .thread-roast-node:last-child::after {
-	position: absolute;
-	top: var(--thread-connector-midline, 32px);
-	bottom: 0;
-	left: calc(-1 * var(--thread-branch-offset, 28px) - 1px);
-	z-index: 1;
-	width: 3px;
-	background: var(--thread-mask-color);
-	content: "";
-	pointer-events: none;
 }
 
 .deleted-author-chip {
