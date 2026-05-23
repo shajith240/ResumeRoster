@@ -285,7 +285,7 @@ function LeaderboardRow({
 
 			<Link
 				href={topRoastHref}
-				className="inline-flex w-fit select-none items-center gap-2 rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-3 py-2 text-xs font-medium text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px max-[760px]:col-start-2"
+				className="inline-flex min-h-11 w-fit select-none items-center gap-2 rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-3 py-2 text-xs font-medium text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px max-[760px]:col-start-2"
 			>
 				View
 				<ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -430,7 +430,7 @@ export function StackedList({
 	}
 
 	return (
-		<section className="relative min-h-[560px] w-full overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] pb-24 font-[var(--font-app-body)] shadow-none">
+		<section className="relative min-h-[560px] w-full overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] pb-24 font-[var(--font-app-body)] shadow-none max-[760px]:pb-0">
 			<div className="border-b border-[var(--border-subtle)] p-5 pb-4">
 				<div className="mb-4 flex items-center justify-between gap-4">
 					<div className="min-w-0">
@@ -461,7 +461,7 @@ export function StackedList({
 					{activeQuery ? (
 						<button
 							aria-label="Clear leaderboard search"
-							className="absolute right-2.5 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-[8px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)]"
+							className="absolute right-1 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-[8px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)]"
 							onClick={() => handleSearch("")}
 							type="button"
 						>
@@ -518,7 +518,7 @@ export function StackedList({
 					right: directoryOpen ? 10 : 16,
 					borderRadius: directoryOpen ? 16 : 18,
 				}}
-				className="absolute z-30 flex flex-col overflow-hidden border border-[var(--border-default)] bg-[var(--bg-elevated)] shadow-[0_18px_48px_rgba(0,0,0,0.22)]"
+				className="absolute z-30 flex flex-col overflow-hidden border border-[var(--border-default)] bg-[var(--bg-elevated)] shadow-[0_18px_48px_rgba(0,0,0,0.22)] max-[760px]:hidden"
 				initial={false}
 				onClick={() => {
 					if (!directoryOpen) setDirectoryOpen(true);
@@ -559,7 +559,7 @@ export function StackedList({
 						{directoryOpen ? (
 							<button
 								aria-label="Close roaster directory"
-								className="grid h-9 w-9 place-items-center rounded-[12px] bg-[var(--bg-surface)] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+								className="grid h-11 w-11 place-items-center rounded-[12px] bg-[var(--bg-surface)] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
 								onClick={(event) => {
 									event.stopPropagation();
 									setDirectoryOpen(false);
@@ -591,7 +591,7 @@ export function StackedList({
 								<span className="sr-only">Search roaster directory</span>
 								<Input
 									autoComplete="off"
-									className="h-10 rounded-[12px] border-transparent bg-[var(--bg-surface)] pl-10 pr-4 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
+									className="h-11 rounded-[12px] border-transparent bg-[var(--bg-surface)] pl-10 pr-4 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
 									onChange={(event) => setDirectoryQuery(event.target.value)}
 									placeholder="Search roasters..."
 									spellCheck={false}

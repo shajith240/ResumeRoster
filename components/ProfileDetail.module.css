@@ -973,6 +973,15 @@
 }
 
 @media (max-width: 760px) {
+	.shell {
+		padding-bottom: var(--mobile-dock-space);
+	}
+
+	.canvas {
+		min-height: auto;
+		padding-bottom: 0;
+	}
+
 	.editDialog {
 		top: 8px !important;
 		width: calc(100vw - 20px);

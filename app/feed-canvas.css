@@ -624,7 +624,7 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 
 	.thread-discussion-panel {
 		grid-column: 1;
-		grid-row: 2;
+		grid-row: 3;
 	}
 
 	.thread-discussion-panel .thread-roast {
@@ -656,9 +656,14 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 		gap: 8px;
 		margin: 0;
 	}
+
+	.thread-context-grid {
+		grid-template-rows: none !important;
+		height: auto !important;
+	}
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
 	.feed-app-shell {
 		width: calc(100% - 32px) !important;
 	}
@@ -769,7 +774,7 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 
 	.thread-discussion-panel {
 		grid-column: 1 !important;
-		grid-row: 2 !important;
+		grid-row: 3 !important;
 	}
 
 	.resume-pdf-frame,

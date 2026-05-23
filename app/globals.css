@@ -76,6 +76,7 @@
 	--button-radius: 10px;
 	--button-radius-sm: 8px;
 	--button-ease: cubic-bezier(0.16, 1, 0.3, 1);
+	--mobile-dock-space: 0px;
 	--shadow-sm:
 		0 1px 3px rgba(26, 25, 22, 0.08), 0 1px 2px rgba(26, 25, 22, 0.04);
 	--shadow-md:
@@ -2607,7 +2608,7 @@ body.main-app-dark .toggle-ui::after {
 }
 
 body.main-app-dark .bottom-nav {
-	border-top-color: var(--app-chrome-border);
+	border-color: var(--app-chrome-border);
 	background: var(--app-chrome-bg);
 }
 
@@ -2681,7 +2682,11 @@ body.main-app-dark .bottom-nav {
 	}
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
+	:root {
+		--mobile-dock-space: calc(114px + env(safe-area-inset-bottom));
+	}
+
 	.app-header {
 		grid-template-columns: 1fr auto;
 		min-height: var(--app-header-height);
@@ -2692,7 +2697,7 @@ body.main-app-dark .bottom-nav {
 	.leaderboard-route,
 	.resume-detail-route {
 		width: calc(100% - 32px);
-		padding-bottom: 86px;
+		padding-bottom: var(--mobile-dock-space);
 	}
 
 	.feed-app-shell {
@@ -2703,6 +2708,10 @@ body.main-app-dark .bottom-nav {
 	.feed-community-header {
 		align-items: flex-start;
 		flex-direction: column;
+	}
+
+	.feed-community-header .btn-primary {
+		display: none;
 	}
 
 	.resume-card {
@@ -2716,7 +2725,7 @@ body.main-app-dark .bottom-nav {
 	.submit-route {
 		width: calc(100% - 32px);
 		padding-top: 26px;
-		padding-bottom: 86px;
+		padding-bottom: var(--mobile-dock-space);
 	}
 
 	.submit-form {
@@ -2789,48 +2798,150 @@ body.main-app-dark .bottom-nav {
 
 	.bottom-nav {
 		position: fixed;
-		right: 0;
-		bottom: 0;
-		left: 0;
+		right: auto;
+		bottom: max(10px, env(safe-area-inset-bottom));
+		left: 50%;
 		z-index: 120;
 		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		height: 56px;
-		border-top: 1px solid var(--app-chrome-border);
-		background: var(--app-chrome-bg);
-		backdrop-filter: blur(18px) saturate(140%);
-		-webkit-backdrop-filter: blur(18px) saturate(140%);
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 4px;
+		width: min(calc(100vw - 24px), 430px);
+		min-height: 74px;
+		border: 1px solid var(--app-chrome-border);
+		border-radius: 24px;
+		padding: 7px;
+		background: color-mix(in srgb, var(--bg-surface) 88%, transparent);
+		box-shadow:
+			0 18px 44px rgba(0, 0, 0, 0.18),
+			inset 0 1px 0 rgba(255, 255, 255, 0.3);
+		backdrop-filter: blur(22px) saturate(160%);
+		-webkit-backdrop-filter: blur(22px) saturate(160%);
+		transform: translateX(-50%);
 	}
 
-	.bottom-nav a {
+	.dock-link {
 		display: grid;
+		grid-template-rows: 28px auto;
 		place-items: center;
 		align-content: center;
-		gap: 2px;
+		gap: 3px;
+		min-width: 0;
+		min-height: 56px;
+		border: 1px solid transparent;
+		border-radius: 17px;
+		padding: 6px 3px 5px;
 		color: var(--text-secondary);
-		font-size: 11px;
-		font-weight: 600;
+		font-family: var(--font-app-body);
+		font-size: 10.5px;
+		font-weight: 650;
+		line-height: 1;
+		text-decoration: none;
+		transition:
+			background-color 180ms var(--button-ease),
+			border-color 180ms var(--button-ease),
+			color 180ms var(--button-ease),
+			transform 180ms var(--button-ease);
 	}
 
-	.bottom-nav span {
-		font-size: 13px;
+	.dock-link:focus-visible {
+		outline: none;
+		box-shadow: var(--shadow-focus);
 	}
 
-	.bottom-nav a.active {
+	.dock-link:active {
+		transform: translateY(1px);
+	}
+
+	.dock-icon-wrap {
+		display: grid;
+		width: 32px;
+		height: 28px;
+		place-items: center;
+		border-radius: 14px;
+	}
+
+	.dock-label {
+		display: block;
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.dock-link.active:not(.dock-link-primary) {
+		border-color: color-mix(in srgb, var(--brand) 24%, transparent);
+		background: var(--brand-muted);
 		color: var(--brand);
+	}
+
+	.dock-link-primary {
+		position: relative;
+		z-index: 1;
+		margin-top: -13px;
+		min-height: 68px;
+		border-color: color-mix(in srgb, var(--brand) 46%, transparent);
+		background: var(--brand);
+		color: #fff;
+		box-shadow: 0 12px 26px rgba(232, 93, 38, 0.28);
+	}
+
+	.dock-link-primary.active,
+	.dock-link-primary:hover {
+		background: var(--brand-dark);
+		color: #fff;
+	}
+
+	.post-action-button,
+	.role-picker button,
+	.thread-roast-body footer button,
+	.inline-reply-form button,
+	.owner-actions button {
+		min-height: 44px;
+	}
+
+	.post-actions {
+		gap: 6px;
+	}
+
+	.thread-roast-body footer {
+		gap: 8px;
+	}
+
+	.thread-roast-body footer button {
+		border-radius: var(--button-radius-sm);
+		padding: 0 10px;
+	}
+
+	.report-dialog-content {
+		width: calc(100vw - 24px);
+		max-height: calc(100dvh - 32px);
+		padding: 18px;
+	}
+
+	.report-reason-grid button {
+		min-height: 72px;
+	}
+
+	.roast-form-footer .btn-primary,
+	.inline-reply-form .reply-submit-button,
+	.submit-button {
+		min-height: 46px;
 	}
 }
 
 body.main-app-dark .bottom-nav {
-	border-top-color: var(--app-chrome-border);
-	background: var(--app-chrome-bg);
+	border-color: var(--app-chrome-border);
+	background: color-mix(in srgb, var(--bg-surface) 88%, transparent);
+	box-shadow:
+		0 18px 44px rgba(0, 0, 0, 0.42),
+		inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-body.main-app-dark .bottom-nav a {
+body.main-app-dark .dock-link {
 	color: var(--text-secondary);
 }
 
-body.main-app-dark .bottom-nav a.active {
+body.main-app-dark .dock-link.active:not(.dock-link-primary) {
 	color: var(--brand);
 }
 

@@ -144,9 +144,16 @@
 	}
 }
 
+@media (max-width: 760px) {
+	.page {
+		padding-bottom: var(--mobile-dock-space);
+	}
+}
+
 @media (max-width: 560px) {
 	.page {
 		padding: 10px;
+		padding-bottom: var(--mobile-dock-space);
 	}
 
 	.header h1 {
