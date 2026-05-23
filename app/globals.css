@@ -2450,6 +2450,7 @@ body.main-app-dark .toggle-ui::after {
 
 .thread-roast {
 	position: relative;
+	z-index: 2;
 	display: grid;
 	grid-template-columns: var(--thread-avatar-size) minmax(0, 1fr);
 	gap: 12px;
@@ -2466,17 +2467,21 @@ body.main-app-dark .toggle-ui::after {
 	);
 }
 
-.thread-roast-rail {
+.thread-roast-avatar-cell {
 	position: relative;
-	display: grid;
-	place-items: start center;
+	display: flex;
+	align-self: stretch;
+	justify-content: center;
+	align-items: flex-start;
 	min-height: var(--thread-avatar-size);
 }
 
-.thread-roast-node.has-visible-replies > .thread-roast .thread-roast-rail::after {
+.thread-roast-node.has-visible-replies
+	> .thread-roast
+	.thread-roast-avatar-cell::after {
 	position: absolute;
 	top: calc(var(--thread-avatar-size) + 7px);
-	bottom: -17px;
+	bottom: calc(-1 * var(--thread-item-padding-y) - 1px);
 	left: 50%;
 	width: 1px;
 	background: var(--thread-line-color);
@@ -2510,15 +2515,17 @@ body.main-app-dark .toggle-ui::after {
 
 .thread-children {
 	position: relative;
+	z-index: 1;
 	margin-left: calc(var(--thread-avatar-size) / 2);
 	padding-left: var(--thread-branch-offset);
 }
 
 .thread-children::before {
 	position: absolute;
-	top: -17px;
+	top: calc(-1 * var(--thread-item-padding-y) - 1px);
 	bottom: 0;
 	left: 0;
+	z-index: 0;
 	width: 1px;
 	background: var(--thread-line-color);
 	content: "";
@@ -2528,15 +2535,18 @@ body.main-app-dark .toggle-ui::after {
 	position: absolute;
 	top: 0;
 	left: calc(-1 * var(--thread-branch-offset));
+	z-index: 1;
 	width: calc(var(--thread-branch-offset) + (var(--thread-avatar-size) / 2));
 	height: var(--thread-connector-midline);
 	border-bottom: 1px solid var(--thread-line-color);
 	border-left: 1px solid var(--thread-line-color);
 	border-bottom-left-radius: 14px;
+	background: var(--thread-mask-color);
 	content: "";
+	pointer-events: none;
 }
 
-.thread-children > .thread-roast-node:not(.has-visible-replies):last-child::after {
+.thread-children > .thread-roast-node:last-child::after {
 	position: absolute;
 	top: var(--thread-connector-midline);
 	bottom: 0;
@@ -2545,6 +2555,7 @@ body.main-app-dark .toggle-ui::after {
 	width: 3px;
 	background: var(--thread-mask-color);
 	content: "";
+	pointer-events: none;
 }
 
 .deleted-author-chip {

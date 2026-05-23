@@ -1086,7 +1086,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					}`}
 					style={roastStyle}
 				>
-					<div className="thread-roast-rail" aria-hidden="true">
+					<div className="thread-roast-avatar-cell" aria-hidden="true">
 						{isDeleted ? (
 							<span className="thread-roast-avatar is-deleted">D</span>
 						) : (
