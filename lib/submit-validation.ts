@@ -17,6 +17,7 @@ export type SubmitValidationInput = {
 	hasFile: boolean;
 	jobDescription: string;
 	postDescription: string;
+	privacyIssue?: string;
 };
 
 export function cleanResumeFileName(name: string) {
@@ -35,6 +36,7 @@ export function getSubmitIssue({
 	hasFile,
 	jobDescription,
 	postDescription,
+	privacyIssue,
 }: SubmitValidationInput) {
 	const trimmedTitle = title.trim();
 	const trimmedJobDescription = jobDescription.trim();
@@ -50,6 +52,7 @@ export function getSubmitIssue({
 
 	if (!trimmedTitle) return "Add a resume title.";
 	if (!hasFile) return "Upload a PDF resume.";
+	if (privacyIssue) return privacyIssue;
 
 	if (jobDescriptionRemaining > 0) {
 		return `Add ${jobDescriptionRemaining} more ${

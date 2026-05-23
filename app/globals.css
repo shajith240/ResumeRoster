@@ -1696,6 +1696,68 @@ body.main-app-dark .feed-stats-grid div {
 	font-weight: 800;
 }
 
+.privacy-check {
+	display: grid;
+	gap: 10px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-md);
+	padding: 12px;
+	background: color-mix(in srgb, var(--bg-base) 86%, transparent);
+}
+
+.privacy-check div {
+	display: grid;
+	gap: 3px;
+}
+
+.privacy-check strong {
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 520;
+}
+
+.privacy-check span {
+	color: var(--text-secondary);
+	font-size: 12px;
+	line-height: 1.45;
+}
+
+.privacy-check ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.privacy-check li {
+	border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--border-subtle));
+	border-radius: var(--radius-pill);
+	padding: 4px 8px;
+	background: color-mix(in srgb, var(--danger) 10%, transparent);
+	color: var(--danger);
+	font-size: 11px;
+}
+
+.privacy-check-clear {
+	border-color: color-mix(in srgb, #22c55e 30%, var(--border-subtle));
+}
+
+.privacy-check-clear strong {
+	color: #63c987;
+}
+
+.privacy-check-warning,
+.privacy-check-error {
+	border-color: color-mix(in srgb, var(--danger) 42%, var(--border-subtle));
+}
+
+.privacy-check-warning strong,
+.privacy-check-error strong {
+	color: var(--danger);
+}
+
 .submit-context-textarea {
 	min-height: 132px;
 	resize: vertical;

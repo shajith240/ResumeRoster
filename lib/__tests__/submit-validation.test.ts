@@ -48,6 +48,18 @@ describe("submit validation", () => {
 		).toBe("Add 5 more characters to what you want help with.");
 	});
 
+	it("blocks submit while PDF privacy checks are unresolved", () => {
+		expect(
+			getSubmitIssue({
+				title: "Backend internship resume",
+				hasFile: true,
+				jobDescription: "This is a detailed backend internship role.",
+				postDescription: "Review my project bullets.",
+				privacyIssue: "Remove detected contact details from the PDF.",
+			}),
+		).toBe("Remove detected contact details from the PDF.");
+	});
+
 	it("returns no issue when all required fields are valid", () => {
 		expect(
 			getSubmitIssue({

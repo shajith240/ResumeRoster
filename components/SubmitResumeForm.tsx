@@ -10,9 +10,19 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { UploadCloud } from "lucide-react";
+import type {
+	TextItem,
+	TextMarkedContent,
+} from "pdfjs-dist/types/src/display/api";
 import type { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
+import {
+	assessResumePrivacyText,
+	getPrivacyUploadIssue,
+	MAX_PRIVACY_SCAN_PAGES,
+	type PrivacyFinding,
+} from "@/lib/pdf-privacy";
 import {
 	JOB_DESCRIPTION_MAX_LENGTH,
 	JOB_DESCRIPTION_MIN_LENGTH,
@@ -25,6 +35,8 @@ import {
 } from "@/lib/submit-validation";
 import { supabase } from "@/lib/supabase/client";
 
+const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
+
 type SubmitProfile = {
 	full_name: string | null;
 	username: string | null;
@@ -32,6 +44,25 @@ type SubmitProfile = {
 	target_role?: string | null;
 	current_position?: string | null;
 };
+
+type PrivacyScanState =
+	| { status: "idle"; findings: PrivacyFinding[]; message: string }
+	| { status: "checking"; findings: PrivacyFinding[]; message: string }
+	| {
+			status: "clear";
+			findings: PrivacyFinding[];
+			message: string;
+			pageCount: number;
+			scannedPageCount: number;
+	  }
+	| {
+			status: "warning";
+			findings: PrivacyFinding[];
+			message: string;
+			pageCount: number;
+			scannedPageCount: number;
+	  }
+	| { status: "error"; findings: PrivacyFinding[]; message: string };
 
 const SUPABASE_MIGRATION_MESSAGE =
 	"Run the pending Supabase migrations, then refresh.";
@@ -70,6 +101,78 @@ function getMetadataAvatar(user: User) {
 		(user.user_metadata?.picture as string | undefined) ||
 		null
 	);
+}
+
+function isTextItem(item: TextItem | TextMarkedContent): item is TextItem {
+	return "str" in item;
+}
+
+async function hasPdfSignature(file: File) {
+	const header = await file.slice(0, 5).text();
+	return header === "%PDF-";
+}
+
+async function getPdfJs() {
+	const pdfjs = await import("pdfjs-dist");
+	pdfjs.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
+	return pdfjs;
+}
+
+async function scanPdfPrivacy(file: File): Promise<PrivacyScanState> {
+	const pdfjs = await getPdfJs();
+	const bytes = new Uint8Array(await file.arrayBuffer());
+	const task = pdfjs.getDocument({
+		data: bytes,
+		disableAutoFetch: true,
+		disableStream: true,
+	});
+
+	try {
+		const pdf = await task.promise;
+		const pageCount = pdf.numPages;
+		const scannedPageCount = Math.min(pageCount, MAX_PRIVACY_SCAN_PAGES);
+		const pageTexts: string[] = [];
+
+		for (let pageNumber = 1; pageNumber <= scannedPageCount; pageNumber += 1) {
+			const page = await pdf.getPage(pageNumber);
+			const textContent = await page.getTextContent();
+			pageTexts.push(
+				textContent.items
+					.filter(isTextItem)
+					.map((item) => item.str)
+					.join(" "),
+			);
+			page.cleanup();
+		}
+
+		await pdf.destroy();
+
+		const assessment = assessResumePrivacyText(pageTexts.join(" "));
+		if (assessment.findings.length) {
+			return {
+				status: "warning",
+				findings: assessment.findings,
+				pageCount,
+				scannedPageCount,
+				message:
+					"Possible contact details found. Redact the PDF source, export it again, and upload the clean version.",
+			};
+		}
+
+		return {
+			status: "clear",
+			findings: [],
+			pageCount,
+			scannedPageCount,
+			message:
+				pageCount > scannedPageCount
+					? `No obvious contact details found in the first ${scannedPageCount} pages. Review the rest manually before posting.`
+					: "No obvious emails, phone numbers, or profile links found. Still review the PDF before posting.",
+		};
+	} catch (error) {
+		task.destroy();
+		throw error;
+	}
 }
 
 async function getSubmitProfile(activeUser: User | null) {
@@ -126,6 +229,7 @@ async function ensureSubmitProfile(activeUser: User) {
 export default function SubmitResumeForm() {
 	const router = useRouter();
 	const inputRef = useRef<HTMLInputElement | null>(null);
+	const privacyScanRunRef = useRef(0);
 	const [user, setUser] = useState<User | null>(null);
 	const [profile, setProfile] = useState<SubmitProfile | null>(null);
 	const [title, setTitle] = useState("");
@@ -133,6 +237,11 @@ export default function SubmitResumeForm() {
 	const [jobDescription, setJobDescription] = useState("");
 	const [postDescription, setPostDescription] = useState("");
 	const [file, setFile] = useState<File | null>(null);
+	const [privacyScan, setPrivacyScan] = useState<PrivacyScanState>({
+		status: "idle",
+		findings: [],
+		message: "",
+	});
 	const [isAnonymous, setIsAnonymous] = useState(true);
 	const [dragging, setDragging] = useState(false);
 	const [message, setMessage] = useState("");
@@ -158,33 +267,75 @@ export default function SubmitResumeForm() {
 		return () => subscription.unsubscribe();
 	}, []);
 
-	function pickFile(nextFile: File | undefined) {
+	async function pickFile(nextFile: File | undefined) {
 		setMessage("");
+		privacyScanRunRef.current += 1;
+		const scanRun = privacyScanRunRef.current;
+		setPrivacyScan({ status: "idle", findings: [], message: "" });
+
 		if (!nextFile) return;
 
-		if (nextFile.type !== "application/pdf") {
+		if (nextFile.type && nextFile.type !== "application/pdf") {
+			setFile(null);
 			setMessage("PDF only. Your resume deserves standards.");
 			toast.error("Upload a PDF resume.");
 			return;
 		}
 
 		if (nextFile.size > 5 * 1024 * 1024) {
+			setFile(null);
 			setMessage("Keep the PDF under 5MB.");
 			toast.error("Keep the PDF under 5MB.");
 			return;
 		}
 
 		setFile(nextFile);
+		setPrivacyScan({
+			status: "checking",
+			findings: [],
+			message: "Checking the PDF before it can be posted.",
+		});
+
+		try {
+			if (!(await hasPdfSignature(nextFile))) {
+				if (scanRun !== privacyScanRunRef.current) return;
+				setFile(null);
+				setPrivacyScan({
+					status: "error",
+					findings: [],
+					message: "This file does not look like a valid PDF.",
+				});
+				toast.error("Upload a valid PDF file.");
+				return;
+			}
+
+			const result = await scanPdfPrivacy(nextFile);
+			if (scanRun !== privacyScanRunRef.current) return;
+
+			setPrivacyScan(result);
+			if (result.status === "warning") {
+				toast.error("Redact contact details before posting.");
+			}
+		} catch {
+			if (scanRun !== privacyScanRunRef.current) return;
+			setPrivacyScan({
+				status: "error",
+				findings: [],
+				message:
+					"We could not scan this PDF. Export a standard redacted PDF and upload it again.",
+			});
+			toast.error("PDF privacy check failed.");
+		}
 	}
 
 	function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
-		pickFile(event.target.files?.[0]);
+		void pickFile(event.target.files?.[0]);
 	}
 
 	function handleDrop(event: DragEvent<HTMLButtonElement>) {
 		event.preventDefault();
 		setDragging(false);
-		pickFile(event.dataTransfer.files?.[0]);
+		void pickFile(event.dataTransfer.files?.[0]);
 	}
 
 	const publicProfileName = profileDisplayName(profile, user);
@@ -204,11 +355,13 @@ export default function SubmitResumeForm() {
 		POST_DESCRIPTION_MIN_LENGTH - trimmedPostDescription.length,
 		0,
 	);
+	const privacyIssue = getPrivacyUploadIssue(privacyScan.status);
 	const submitIssue = getSubmitIssue({
 		title,
 		hasFile: Boolean(file),
 		jobDescription,
 		postDescription,
+		privacyIssue,
 	});
 
 	function showFormError(errorMessage: string) {
@@ -232,9 +385,14 @@ export default function SubmitResumeForm() {
 			return;
 		}
 
-		if (!file || file.type !== "application/pdf") {
+		if (!file || (file.type && file.type !== "application/pdf")) {
 			const errorMessage = "Upload a PDF resume for the MVP.";
 			showFormError(errorMessage);
+			return;
+		}
+
+		if (privacyIssue) {
+			showFormError(privacyIssue);
 			return;
 		}
 
@@ -393,7 +551,13 @@ export default function SubmitResumeForm() {
 									<em
 										onClick={(event) => {
 											event.stopPropagation();
+											privacyScanRunRef.current += 1;
 											setFile(null);
+											setPrivacyScan({
+												status: "idle",
+												findings: [],
+												message: "",
+											});
 											if (inputRef.current) inputRef.current.value = "";
 										}}
 									>
@@ -411,6 +575,24 @@ export default function SubmitResumeForm() {
 								</>
 							)}
 						</button>
+						{file ? (
+							<div className={`privacy-check privacy-check-${privacyScan.status}`}>
+								<div>
+									<strong>PDF privacy check</strong>
+									<span>{privacyScan.message}</span>
+								</div>
+								{privacyScan.findings.length ? (
+									<ul>
+										{privacyScan.findings.map((finding) => (
+											<li key={finding.type}>
+												{finding.label}
+												{finding.count > 1 ? ` x${finding.count}` : ""}
+											</li>
+										))}
+									</ul>
+								) : null}
+							</div>
+						) : null}
 					</div>
 				</section>
 
@@ -504,7 +686,7 @@ export default function SubmitResumeForm() {
 
 				<button
 					className="btn-primary submit-button"
-					disabled={submitting || success}
+					disabled={submitting || success || Boolean(submitIssue)}
 					title={submitIssue || undefined}
 				>
 					{success ? (

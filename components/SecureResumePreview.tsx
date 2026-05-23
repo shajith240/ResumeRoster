@@ -8,6 +8,7 @@ import type {
 	TextItem,
 	TextMarkedContent,
 } from "pdfjs-dist/types/src/display/api";
+import { containsContactSignal } from "@/lib/pdf-privacy";
 
 const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
 
@@ -24,23 +25,8 @@ type PagePreviewProps = {
 	pdf: PDFDocumentProxy;
 };
 
-const EMAIL_PATTERN = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
-const PHONE_PATTERN = /(?:\+?\d[\s().-]*){8,}\d/;
-const CONTACT_LINK_PATTERN =
-	/(?:https?:\/\/|www\.|mailto:|linkedin\.com|github\.com|gitlab\.com|portfolio|behance\.net)/i;
-
 function isTextItem(item: TextItem | TextMarkedContent): item is TextItem {
 	return "str" in item;
-}
-
-function shouldRedactText(value: string) {
-	const text = value.trim();
-
-	return (
-		EMAIL_PATTERN.test(text) ||
-		PHONE_PATTERN.test(text) ||
-		CONTACT_LINK_PATTERN.test(text)
-	);
 }
 
 function paintRedactions(
@@ -52,7 +38,7 @@ function paintRedactions(
 	const pageWidth = viewport.width;
 
 	for (const item of items) {
-		if (!isTextItem(item) || !shouldRedactText(item.str)) continue;
+		if (!isTextItem(item) || !containsContactSignal(item.str)) continue;
 
 		const transform = pdfjs.Util.transform(viewport.transform, item.transform);
 		const fontHeight = Math.max(8, Math.hypot(transform[2], transform[3]));
@@ -235,7 +221,7 @@ export default function SecureResumePreview({
 			<div className="secure-resume-preview-bar">
 				<div>
 					<strong>Protected preview</strong>
-					<span>Contact details are masked. Text copy, print, and download controls are hidden.</span>
+					<span>Obvious contact details are visually masked. Source PDFs should be redacted before upload.</span>
 				</div>
 				<span>{pageCount ? `${pageCount} page${pageCount === 1 ? "" : "s"}` : "Loading"}</span>
 			</div>
