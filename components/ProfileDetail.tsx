@@ -11,7 +11,6 @@ import {
 } from "react";
 import {
 	ArrowRight,
-	BadgeCheck,
 	BriefcaseBusiness,
 	CalendarDays,
 	Camera,
@@ -769,7 +768,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					<div className={styles.identity}>
 						<div className={styles.identityHeader}>
 							<h1>{profileView.displayName}</h1>
-							<BadgeCheck aria-hidden="true" />
 						</div>
 						<div className={styles.roleTag}>{profileView.roleTag}</div>
 						<p>{profileView.tagline}</p>

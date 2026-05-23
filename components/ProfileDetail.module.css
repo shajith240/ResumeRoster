@@ -80,7 +80,6 @@
 .identityHeader {
 	display: flex;
 	align-items: center;
-	gap: 12px;
 }
 
 .identity h1 {
@@ -90,13 +89,6 @@
 	font-weight: 400;
 	letter-spacing: 0;
 	line-height: 0.92;
-}
-
-.identityHeader svg {
-	width: 24px;
-	height: 24px;
-	color: #d4a538;
-	fill: rgba(212, 165, 56, 0.22);
 }
 
 .roleTag {
@@ -182,31 +174,36 @@
 .statsGrid {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
-	overflow: hidden;
 	border: 1px solid var(--border-subtle);
-	border-radius: 12px;
-	background: var(--bg-surface);
+	border-radius: 10px;
+	padding: 8px;
+	background: color-mix(in srgb, var(--bg-surface) 92%, var(--bg-base));
 }
 
 .statCard {
+	position: relative;
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
-	gap: 2px 14px;
+	gap: 4px 12px;
 	align-items: center;
-	padding: clamp(16px, 1.4vw, 22px);
-	border-right: 1px solid var(--border-subtle);
-}
-
-.statCard:last-child {
-	border-right: 0;
+	min-height: 86px;
+	border: 1px solid transparent;
+	border-radius: 8px;
+	padding: clamp(14px, 1.1vw, 18px);
+	background: var(--bg-surface);
 }
 
 .statCard svg {
 	grid-row: span 2;
-	width: 34px;
-	height: 34px;
-	color: #9f7529;
+	width: 22px;
+	height: 22px;
+	color: var(--text-tertiary);
 	stroke-width: 1.7;
+}
+
+.statPrimary {
+	border-color: color-mix(in srgb, var(--brand) 20%, var(--border-subtle));
+	background: color-mix(in srgb, var(--bg-surface) 88%, var(--brand) 12%);
 }
 
 .statPrimary svg {
@@ -215,7 +212,7 @@
 
 .statCard strong {
 	color: var(--text-primary);
-	font-size: clamp(28px, 2.5vw, 38px);
+	font-size: clamp(26px, 2.05vw, 36px);
 	font-weight: 600;
 	font-variant-numeric: tabular-nums;
 	line-height: 1;
@@ -223,8 +220,9 @@
 
 .statCard span {
 	color: var(--text-secondary);
-	font-size: 12px;
-	font-weight: 500;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.2;
 }
 
 .profileGrid {
@@ -959,14 +957,6 @@
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	.statCard:nth-child(2) {
-		border-right: 0;
-	}
-
-	.statCard:nth-child(-n + 2) {
-		border-bottom: 1px solid var(--border-subtle);
-	}
-
 	.editFields {
 		grid-template-columns: 1fr;
 	}
@@ -1028,12 +1018,7 @@
 	}
 
 	.statCard {
-		border-right: 0;
-		border-bottom: 1px solid var(--border-subtle);
-	}
-
-	.statCard:last-child {
-		border-bottom: 0;
+		min-height: 78px;
 	}
 
 	.resumeHighlight,
@@ -1060,8 +1045,6 @@
 	color: var(--text-primary);
 }
 
-:global(body.main-app-dark) .identityHeader svg,
-:global(body.main-app-dark) .statCard svg,
 :global(body.main-app-dark) .statPrimary svg,
 :global(body.main-app-dark) .resumePreview svg,
 :global(body.main-app-dark) .activityIcon,
