@@ -92,9 +92,9 @@ const ROAST_SELECT_WITH_REACTIONS =
 const ROAST_SELECT_BASE =
 	"id,resume_id,author_id,content,helpful_votes,created_at";
 const RESUME_SELECT_WITH_CONTEXT =
-	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,job_description,post_description,created_at";
+	"id,user_id,title,file_path,is_anonymous,privacy_mode,status,roast_count,read_count,job_description,post_description,created_at";
 const RESUME_SELECT_WITH_READS =
-	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
+	"id,user_id,title,file_path,is_anonymous,privacy_mode,status,roast_count,read_count,created_at";
 const RESUME_SELECT_BASE =
 	"id,user_id,title,file_path,is_anonymous,status,roast_count,created_at";
 const RESUME_AUTHOR_PROFILE_SELECT_WITH_STATUS =
@@ -1113,7 +1113,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				</div>
 
 				{signedUrl ? (
-					<SecureResumePreview fileUrl={signedUrl} title={resume.title} />
+					<SecureResumePreview
+						fileUrl={signedUrl}
+						privacyMode={
+							resume.privacy_mode ??
+							(resume.is_anonymous ? "anonymous" : "public")
+						}
+						title={resume.title}
+					/>
 				) : user ? (
 					<div className="locked-file">
 						<p>

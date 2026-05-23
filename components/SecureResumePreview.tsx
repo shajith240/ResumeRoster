@@ -5,10 +5,12 @@ import * as pdfjs from "pdfjs-dist";
 import type {
 	PDFDocumentProxy,
 	PDFPageProxy,
-	TextItem,
-	TextMarkedContent,
 } from "pdfjs-dist/types/src/display/api";
-import { containsDirectContactSignal } from "@/lib/pdf-privacy";
+import {
+	allowsResumePreviewInteractions,
+	isResumePreviewLocked,
+	type ResumePrivacyMode,
+} from "@/lib/resume-privacy";
 
 const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
 
@@ -16,61 +18,105 @@ pdfjs.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
 
 type SecureResumePreviewProps = {
 	fileUrl: string;
+	privacyMode: ResumePrivacyMode;
 	title: string;
 };
 
 type PagePreviewProps = {
+	allowInteractions: boolean;
 	containerWidth: number;
 	pageNumber: number;
 	pdf: PDFDocumentProxy;
 };
 
-function isTextItem(item: TextItem | TextMarkedContent): item is TextItem {
-	return "str" in item;
-}
+type LinkAnnotation = {
+	rect?: number[];
+	unsafeUrl?: string;
+	url?: string;
+};
 
-function paintRedactions(
-	context: CanvasRenderingContext2D,
-	page: PDFPageProxy,
-	viewport: ReturnType<PDFPageProxy["getViewport"]>,
-	items: Array<TextItem | TextMarkedContent>,
-) {
-	const pageWidth = viewport.width;
+function normalizeExternalUrl(value: unknown) {
+	if (typeof value !== "string") return "";
 
-	for (const item of items) {
-		if (!isTextItem(item) || !containsDirectContactSignal(item.str)) continue;
+	const trimmed = value.trim();
+	if (!trimmed || /\s/.test(trimmed)) return "";
 
-		const transform = pdfjs.Util.transform(viewport.transform, item.transform);
-		const fontHeight = Math.max(8, Math.hypot(transform[2], transform[3]));
-		const width = Math.min(
-			pageWidth - transform[4],
-			Math.max(item.width * viewport.scale, item.str.length * fontHeight * 0.52),
-		);
-		const x = Math.max(0, transform[4] - 3);
-		const y = Math.max(0, transform[5] - fontHeight - 3);
-		const height = fontHeight + 7;
+	const withProtocol = /^[a-z][a-z\d+.-]*:/i.test(trimmed)
+		? trimmed
+		: /^[^\s/]+\.[^\s]+$/i.test(trimmed)
+			? `https://${trimmed}`
+			: "";
 
-		context.save();
-		context.fillStyle = "#f5f1ea";
-		context.fillRect(x, y, width + 8, height);
-		context.strokeStyle = "rgba(23, 20, 15, 0.12)";
-		context.strokeRect(x + 0.5, y + 0.5, width + 7, height - 1);
-		context.fillStyle = "#8a8178";
-		context.font = `${Math.max(9, Math.min(12, fontHeight * 0.62))}px system-ui, sans-serif`;
-		context.fillText("redacted", x + 6, y + height - 6);
-		context.restore();
+	if (!withProtocol) return "";
+
+	try {
+		const url = new URL(withProtocol);
+		return ["http:", "https:", "mailto:", "tel:"].includes(url.protocol)
+			? url.toString()
+			: "";
+	} catch {
+		return "";
 	}
-
-	page.cleanup();
 }
 
-function SecureResumePage({ containerWidth, pageNumber, pdf }: PagePreviewProps) {
+function renderLinkLayer(
+	layer: HTMLDivElement,
+	annotations: LinkAnnotation[],
+	viewport: ReturnType<PDFPageProxy["getViewport"]>,
+) {
+	layer.replaceChildren();
+
+	for (const annotation of annotations) {
+		const url = normalizeExternalUrl(annotation.url ?? annotation.unsafeUrl);
+		if (!url || !Array.isArray(annotation.rect)) continue;
+
+		const [x1, y1, x2, y2] = viewport.convertToViewportRectangle(
+			annotation.rect,
+		);
+		const left = Math.min(x1, x2);
+		const top = Math.min(y1, y2);
+		const width = Math.abs(x2 - x1);
+		const height = Math.abs(y2 - y1);
+
+		if (width <= 0 || height <= 0) continue;
+
+		const link = document.createElement("a");
+		link.className = "secure-resume-link";
+		link.href = url;
+		link.rel = "noopener noreferrer";
+		link.target = "_blank";
+		link.title = "Open link in a new tab";
+		link.setAttribute("aria-label", "Open resume link in a new tab");
+		link.style.left = `${left}px`;
+		link.style.top = `${top}px`;
+		link.style.width = `${width}px`;
+		link.style.height = `${height}px`;
+		link.addEventListener("click", (event) => {
+			if (!url.startsWith("http")) return;
+			event.preventDefault();
+			window.open(url, "_blank", "noopener,noreferrer");
+		});
+
+		layer.append(link);
+	}
+}
+
+function SecureResumePage({
+	allowInteractions,
+	containerWidth,
+	pageNumber,
+	pdf,
+}: PagePreviewProps) {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
+	const linkLayerRef = useRef<HTMLDivElement | null>(null);
+	const pageShellRef = useRef<HTMLDivElement | null>(null);
+	const textLayerRef = useRef<HTMLDivElement | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		let cancelled = false;
 		let renderTask: pdfjs.RenderTask | null = null;
+		let textLayer: InstanceType<typeof pdfjs.TextLayer> | null = null;
 
 		async function renderPage() {
 			const canvas = canvasRef.current;
@@ -83,15 +129,23 @@ function SecureResumePage({ containerWidth, pageNumber, pdf }: PagePreviewProps)
 
 			const baseViewport = page.getViewport({ scale: 1 });
 			const targetWidth = Math.min(Math.max(containerWidth - 32, 280), 980);
-			const scale = Math.max(0.45, Math.min(1.55, targetWidth / baseViewport.width));
+			const scale = Math.max(
+				0.45,
+				Math.min(1.55, targetWidth / baseViewport.width),
+			);
 			const viewport = page.getViewport({ scale });
 			const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+			const pageShell = pageShellRef.current;
 			const context = canvas.getContext("2d", {
 				alpha: false,
 				willReadFrequently: false,
 			});
 
 			if (!context) return;
+			if (pageShell) {
+				pageShell.style.width = `${viewport.width}px`;
+				pageShell.style.height = `${viewport.height}px`;
+			}
 
 			canvas.width = Math.floor(viewport.width * pixelRatio);
 			canvas.height = Math.floor(viewport.height * pixelRatio);
@@ -107,10 +161,36 @@ function SecureResumePage({ containerWidth, pageNumber, pdf }: PagePreviewProps)
 
 			if (cancelled) return;
 
-			const textContent = await page.getTextContent();
-			if (cancelled) return;
+			if (allowInteractions) {
+				const textContent = await page.getTextContent();
+				if (cancelled) return;
 
-			paintRedactions(context, page, viewport, textContent.items);
+				if (textLayerRef.current) {
+					textLayerRef.current.replaceChildren();
+					textLayer = new pdfjs.TextLayer({
+						container: textLayerRef.current,
+						textContentSource: textContent,
+						viewport,
+					});
+					await textLayer.render();
+				}
+
+				if (cancelled) return;
+
+				const annotations = (await page.getAnnotations({
+					intent: "display",
+				})) as LinkAnnotation[];
+				if (cancelled) return;
+
+				if (linkLayerRef.current) {
+					renderLinkLayer(linkLayerRef.current, annotations, viewport);
+				}
+			} else {
+				textLayerRef.current?.replaceChildren();
+				linkLayerRef.current?.replaceChildren();
+			}
+
+			page.cleanup();
 			setLoading(false);
 		}
 
@@ -122,22 +202,37 @@ function SecureResumePage({ containerWidth, pageNumber, pdf }: PagePreviewProps)
 		return () => {
 			cancelled = true;
 			renderTask?.cancel();
+			textLayer?.cancel();
 		};
-	}, [containerWidth, pageNumber, pdf]);
+	}, [allowInteractions, containerWidth, pageNumber, pdf]);
 
 	return (
 		<div className="secure-resume-page">
-			{loading ? <div className="secure-resume-page-loader">Rendering page...</div> : null}
-			<canvas
-				aria-label={`Protected resume preview page ${pageNumber}`}
-				ref={canvasRef}
-			/>
+			<div className="secure-resume-page-shell" ref={pageShellRef}>
+				{loading ? (
+					<div className="secure-resume-page-loader">Rendering page...</div>
+				) : null}
+				<canvas
+					aria-label={`Protected resume preview page ${pageNumber}`}
+					ref={canvasRef}
+				/>
+				{allowInteractions ? (
+					<>
+						<div
+							className="textLayer secure-resume-text-layer"
+							ref={textLayerRef}
+						/>
+						<div className="secure-resume-link-layer" ref={linkLayerRef} />
+					</>
+				) : null}
+			</div>
 		</div>
 	);
 }
 
 export default function SecureResumePreview({
 	fileUrl,
+	privacyMode,
 	title,
 }: SecureResumePreviewProps) {
 	const containerRef = useRef<HTMLDivElement | null>(null);
@@ -209,21 +304,34 @@ export default function SecureResumePreview({
 		}
 	}
 
+	const isLocked = isResumePreviewLocked(privacyMode);
+	const allowInteractions = allowsResumePreviewInteractions(privacyMode);
+	const previewTitle = isLocked ? "Protected preview" : "Interactive preview";
+	const previewDescription = isLocked
+		? "Anonymous PDFs are redacted on the server and shown without copy or link actions."
+		: "This PDF keeps selectable text and opens resume links in a new tab.";
+
 	return (
 		<section
 			aria-label={`Protected preview for ${title}`}
-			className="secure-resume-preview"
-			onContextMenu={(event) => event.preventDefault()}
-			onKeyDown={blockProtectedShortcuts}
+			className={`secure-resume-preview ${
+				isLocked ? "is-locked" : "is-interactive"
+			}`}
+			onContextMenu={isLocked ? (event) => event.preventDefault() : undefined}
+			onKeyDown={isLocked ? blockProtectedShortcuts : undefined}
 			ref={containerRef}
-			tabIndex={0}
+			tabIndex={isLocked ? 0 : undefined}
 		>
 			<div className="secure-resume-preview-bar">
 				<div>
-					<strong>Protected preview</strong>
-					<span>Uploaded PDFs are processed by the selected privacy mode before they are shown.</span>
+					<strong>{previewTitle}</strong>
+					<span>{previewDescription}</span>
 				</div>
-				<span>{pageCount ? `${pageCount} page${pageCount === 1 ? "" : "s"}` : "Loading"}</span>
+				<span>
+					{pageCount
+						? `${pageCount} page${pageCount === 1 ? "" : "s"}`
+						: "Loading"}
+				</span>
 			</div>
 
 			{error ? (
@@ -236,6 +344,7 @@ export default function SecureResumePreview({
 				<div className="secure-resume-pages">
 					{Array.from({ length: pageCount }, (_, index) => (
 						<SecureResumePage
+							allowInteractions={allowInteractions}
 							containerWidth={containerWidth}
 							key={index + 1}
 							pageNumber={index + 1}

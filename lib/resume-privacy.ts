@@ -42,6 +42,14 @@ export function isAnonymousResumeMode(mode: ResumePrivacyMode) {
 	return mode !== "public";
 }
 
+export function isResumePreviewLocked(mode: ResumePrivacyMode) {
+	return mode === "anonymous";
+}
+
+export function allowsResumePreviewInteractions(mode: ResumePrivacyMode) {
+	return mode !== "anonymous";
+}
+
 export function getPrivacyModeHelpText(mode: ResumePrivacyMode) {
 	if (mode === "public") {
 		return "Best when you want roasters to judge your full profile and resume together.";

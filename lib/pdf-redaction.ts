@@ -226,6 +226,8 @@ function removeSensitiveLinks(
 	mode: ResumePrivacyMode,
 	redactionRects: RedactionRect[],
 ) {
+	if (mode === "public") return;
+
 	for (const link of page.getLinks()) {
 		const uri = link.getURI();
 		const linkRect = link.getBounds();

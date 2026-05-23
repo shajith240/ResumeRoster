@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
 	RESUME_PRIVACY_MODES,
+	allowsResumePreviewInteractions,
 	getPrivacyModeHelpText,
 	isAnonymousResumeMode,
+	isResumePreviewLocked,
 	isResumePrivacyMode,
 } from "@/lib/resume-privacy";
 import { buildNameRedactionCandidates } from "@/lib/pdf-redaction";
@@ -26,6 +28,14 @@ describe("resume privacy modes", () => {
 
 	it("returns beginner-readable help copy", () => {
 		expect(getPrivacyModeHelpText("anonymous")).toContain("Strongest privacy");
+	});
+
+	it("locks copy and links only for fully anonymous previews", () => {
+		expect(allowsResumePreviewInteractions("public")).toBe(true);
+		expect(allowsResumePreviewInteractions("contact_hidden")).toBe(true);
+		expect(allowsResumePreviewInteractions("anonymous")).toBe(false);
+		expect(isResumePreviewLocked("public")).toBe(false);
+		expect(isResumePreviewLocked("anonymous")).toBe(true);
 	});
 
 	it("builds conservative name candidates from profile data", () => {

@@ -2100,8 +2100,16 @@ body.main-app-dark .toggle-ui::after {
 	border: 1px solid var(--border-subtle);
 	border-radius: var(--radius-lg);
 	background: #242321;
+}
+
+.secure-resume-preview.is-locked {
 	user-select: none;
 	-webkit-user-select: none;
+}
+
+.secure-resume-preview.is-interactive {
+	user-select: text;
+	-webkit-user-select: text;
 }
 
 .secure-resume-preview:focus-visible {
@@ -2162,14 +2170,95 @@ body.main-app-dark .toggle-ui::after {
 	min-height: 180px;
 }
 
+.secure-resume-page-shell {
+	position: relative;
+	max-width: 100%;
+	min-height: 180px;
+	background: white;
+	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
 .secure-resume-page canvas {
+	display: block;
 	max-width: 100%;
 	height: auto;
 	background: white;
-	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
+.secure-resume-preview.is-interactive .secure-resume-page canvas {
+	pointer-events: none;
+}
+
+.secure-resume-preview.is-locked .secure-resume-page canvas {
 	pointer-events: auto;
 	user-select: none;
 	-webkit-user-select: none;
+}
+
+.secure-resume-text-layer {
+	--min-font-size: 1;
+	--text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+	--min-font-size-inv: calc(1 / var(--min-font-size));
+	color-scheme: only light;
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	overflow: clip;
+	line-height: 1;
+	text-align: initial;
+	text-size-adjust: none;
+	transform-origin: 0 0;
+	forced-color-adjust: none;
+}
+
+.secure-resume-text-layer :is(span, br) {
+	position: absolute;
+	color: transparent;
+	white-space: pre;
+	cursor: text;
+	transform-origin: 0% 0%;
+}
+
+.secure-resume-text-layer > :not(.markedContent),
+.secure-resume-text-layer .markedContent span:not(.markedContent) {
+	z-index: 1;
+	--font-height: 0;
+	--scale-x: 1;
+	--rotate: 0deg;
+	font-size: calc(var(--text-scale-factor) * var(--font-height));
+	transform: rotate(var(--rotate)) scaleX(var(--scale-x))
+		scale(var(--min-font-size-inv));
+}
+
+.secure-resume-text-layer .markedContent {
+	display: contents;
+}
+
+.secure-resume-text-layer ::selection {
+	background: rgba(42, 91, 255, 0.24);
+}
+
+.secure-resume-link-layer {
+	position: absolute;
+	inset: 0;
+	z-index: 3;
+	pointer-events: none;
+}
+
+.secure-resume-link {
+	position: absolute;
+	border-radius: 2px;
+	outline-offset: 2px;
+	pointer-events: auto;
+	transition: background-color 0.16s ease;
+}
+
+.secure-resume-link:hover {
+	background: rgba(232, 93, 38, 0.16);
+}
+
+.secure-resume-link:focus-visible {
+	outline: 2px solid rgba(232, 93, 38, 0.72);
 }
 
 .secure-resume-page-loader,
