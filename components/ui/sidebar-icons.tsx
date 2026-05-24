@@ -176,6 +176,23 @@ const TROPHY_BASE_VARIANTS: Variants = {
 	},
 };
 
+const SHIELD_VARIANTS: Variants = {
+	normal: { scale: 1, y: 0 },
+	animate: {
+		scale: [1, 1.04, 1],
+		y: [0, -1, 0],
+		transition: { duration: 0.48, ease: "easeInOut" },
+	},
+};
+
+const SHIELD_CHECK_VARIANTS: Variants = {
+	normal: { pathLength: 1 },
+	animate: {
+		pathLength: [1, 0.58, 1],
+		transition: { duration: 0.48, ease: "easeInOut" },
+	},
+};
+
 export const HomeIcon = createSidebarIcon("HomeIcon", (controls) => (
 	<>
 		<motion.path
@@ -272,6 +289,21 @@ export const TrophyIcon = createSidebarIcon("TrophyIcon", (controls) => (
 			animate={controls}
 			d="M4 22h16"
 			variants={TROPHY_BASE_VARIANTS}
+		/>
+	</>
+));
+
+export const ShieldIcon = createSidebarIcon("ShieldIcon", (controls) => (
+	<>
+		<motion.path
+			animate={controls}
+			d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"
+			variants={SHIELD_VARIANTS}
+		/>
+		<motion.path
+			animate={controls}
+			d="m9 12 2 2 4-5"
+			variants={SHIELD_CHECK_VARIANTS}
 		/>
 	</>
 ));

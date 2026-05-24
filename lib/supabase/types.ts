@@ -13,6 +13,7 @@ export type ContentReportStatus =
   | "reviewing"
   | "dismissed"
   | "actioned";
+export type StickerStatus = "active" | "hidden";
 
 export type ResumeAuthorProfile = {
   id: string;
@@ -48,12 +49,26 @@ export type Roast = {
   parent_id?: string | null;
   author_id: string;
   content: string;
+  sticker_id?: string | null;
   helpful_votes: number;
   dislike_count?: number;
   reply_count?: number;
   is_deleted?: boolean;
   deleted_at?: string | null;
   created_at: string;
+};
+
+export type Sticker = {
+  id: string;
+  title: string;
+  alt_text: string;
+  storage_path: string;
+  mime_type: "image/png" | "image/webp" | "image/gif";
+  file_size: number;
+  status: StickerStatus;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 export type RoasterLeaderboardEntry = {

@@ -8,11 +8,13 @@ import {
 	HomeIcon,
 	ListFilterIcon,
 	PlusIcon,
+	ShieldIcon,
 	TrophyIcon,
 	type SidebarAnimatedIconComponent,
 	type SidebarAnimatedIconHandle,
 } from "@/components/ui/sidebar-icons";
 
+import { useAdminAccess } from "@/lib/use-admin-access";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
@@ -76,9 +78,11 @@ export function SessionNavBar() {
 	const searchParams = useSearchParams();
 	const sort = searchParams.get("sort");
 	const saved = searchParams.get("saved");
+	const { isAdmin } = useAdminAccess();
 
 	const items = useMemo<NavItem[]>(
-		() => [
+		() => {
+			const baseItems: NavItem[] = [
 			{
 				href: "/feed",
 				label: "Home",
@@ -110,8 +114,20 @@ export function SessionNavBar() {
 				icon: TrophyIcon,
 				active: pathname === "/leaderboard",
 			},
-		],
-		[pathname, saved, sort],
+		];
+
+			if (isAdmin) {
+				baseItems.push({
+					href: "/admin",
+					label: "Admin",
+					icon: ShieldIcon,
+					active: pathname.startsWith("/admin"),
+				});
+			}
+
+			return baseItems;
+		},
+		[isAdmin, pathname, saved, sort],
 	);
 
 	return (

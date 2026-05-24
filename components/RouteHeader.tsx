@@ -5,12 +5,14 @@ import { usePathname, useSearchParams } from "next/navigation";
 import {
 	Bookmark,
 	Home,
+	ShieldCheck,
 	Plus,
 	Trophy,
 	UserRound,
 	type LucideIcon,
 } from "lucide-react";
 import AuthButton from "./AuthButton";
+import { useAdminAccess } from "@/lib/use-admin-access";
 
 type DockLink = {
 	href: string;
@@ -62,6 +64,19 @@ export default function RouteHeader() {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const saved = searchParams.get("saved");
+	const { isAdmin } = useAdminAccess();
+	const visibleDockLinks = isAdmin
+		? [
+				...dockLinks,
+				{
+					href: "/admin",
+					label: "Admin",
+					icon: ShieldCheck,
+					match: ({ pathname }: { pathname: string; saved: string | null }) =>
+						pathname.startsWith("/admin"),
+				},
+			]
+		: dockLinks;
 
 	return (
 		<>
@@ -74,7 +89,7 @@ export default function RouteHeader() {
 			</header>
 
 			<nav className="bottom-nav" aria-label="Mobile navigation">
-				{dockLinks.map((link) => {
+				{visibleDockLinks.map((link) => {
 					const Icon = link.icon;
 					const isRouteMatch = link.match({ pathname, saved });
 

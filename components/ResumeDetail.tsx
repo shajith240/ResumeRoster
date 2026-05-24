@@ -13,6 +13,7 @@ import { ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import SecureResumePreview from "@/components/SecureResumePreview";
+import StickerPicker, { type StickerOption } from "@/components/StickerPicker";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -38,6 +39,7 @@ import {
 	REPORT_REASON_OPTIONS,
 	type ReportReason,
 } from "@/lib/report-validation";
+import { getRoastPayloadIssue } from "@/lib/sticker-validation";
 import {
 	getResumeAffiliationLabel,
 	getResumePosterLabel,
@@ -56,6 +58,7 @@ import type {
 	ResumeAuthorProfile,
 	ResumeSummary,
 	Roast,
+	Sticker as StickerRecord,
 } from "@/lib/supabase/types";
 import { toast } from "sonner";
 
@@ -85,6 +88,8 @@ type ResumeQueryResult = {
 };
 
 const ROAST_SELECT_WITH_THREADS =
+	"id,resume_id,parent_id,author_id,content,sticker_id,helpful_votes,dislike_count,reply_count,is_deleted,deleted_at,created_at";
+const ROAST_SELECT_WITH_THREADS_NO_STICKER =
 	"id,resume_id,parent_id,author_id,content,helpful_votes,dislike_count,reply_count,is_deleted,deleted_at,created_at";
 const ROAST_SELECT_WITH_THREADS_LEGACY =
 	"id,resume_id,parent_id,author_id,content,helpful_votes,dislike_count,reply_count,created_at";
@@ -143,6 +148,12 @@ function isDeleteFeatureError(error: { message?: string } | null) {
 
 function isReportFeatureError(error: { message?: string } | null) {
 	return /content_reports|report_content|schema cache|column|function/i.test(
+		error?.message ?? "",
+	);
+}
+
+function isStickerFeatureError(error: { message?: string } | null) {
+	return /stickers|sticker_id|schema cache|column|relation/i.test(
 		error?.message ?? "",
 	);
 }
@@ -210,6 +221,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [signedUrlError, setSignedUrlError] = useState("");
 	const [content, setContent] = useState("");
 	const [replyContent, setReplyContent] = useState("");
+	const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
+	const [replyStickerId, setReplyStickerId] = useState<string | null>(null);
 	const [replyingToId, setReplyingToId] = useState<string | null>(null);
 	const [submittingReplyId, setSubmittingReplyId] = useState("");
 	const [deletingRoastId, setDeletingRoastId] = useState("");
@@ -222,9 +235,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [collapsedRoastIds, setCollapsedRoastIds] = useState<Set<string>>(
 		new Set(),
 	);
+	const [stickers, setStickers] = useState<StickerOption[]>([]);
 	const [replySchemaReady, setReplySchemaReady] = useState(true);
 	const [deleteSchemaReady, setDeleteSchemaReady] = useState(true);
 	const [reportSchemaReady, setReportSchemaReady] = useState(true);
+	const [stickerSchemaReady, setStickerSchemaReady] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
 	const [message, setMessage] = useState("");
@@ -232,6 +247,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const threadRoasts = useMemo(
 		() => buildThreadRoastTree(roasts, collapsedRoastIds),
 		[collapsedRoastIds, roasts],
+	);
+	const activeStickerIds = useMemo(
+		() => new Set(stickers.map((sticker) => sticker.id)),
+		[stickers],
+	);
+	const stickersById = useMemo(
+		() => new Map(stickers.map((sticker) => [sticker.id, sticker])),
+		[stickers],
 	);
 	const isOwner = Boolean(user && resume?.user_id === user.id);
 	const isClosed = resume?.status === "closed";
@@ -331,12 +354,56 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		return (primaryResult.data ?? null) as ResumeAuthorProfile | null;
 	}
 
+	async function loadStickers() {
+		const { data, error } = await supabase
+			.from("stickers")
+			.select("id,title,alt_text,storage_path,status")
+			.eq("status", "active")
+			.order("created_at", { ascending: false });
+
+		if (error) {
+			if (isStickerFeatureError(error)) {
+				setStickerSchemaReady(false);
+			}
+			return;
+		}
+
+		setStickerSchemaReady(true);
+		setStickers(
+			((data ?? []) as Array<
+				Pick<StickerRecord, "id" | "title" | "alt_text" | "storage_path">
+			>).map((sticker) => ({
+				...sticker,
+				publicUrl: supabase.storage
+					.from("stickers")
+					.getPublicUrl(sticker.storage_path).data.publicUrl,
+			})),
+		);
+	}
+
 	async function loadRoastThread(activeUser: User | null) {
-		const roastResultWithThreads = await supabase
+		const roastResultWithSticker = await supabase
 			.from("roasts")
 			.select(ROAST_SELECT_WITH_THREADS)
 			.eq("resume_id", resumeId)
 			.order("created_at", { ascending: false });
+
+		const roastResultWithThreads =
+			roastResultWithSticker.error &&
+			isStickerFeatureError(roastResultWithSticker.error)
+				? await supabase
+						.from("roasts")
+						.select(ROAST_SELECT_WITH_THREADS_NO_STICKER)
+						.eq("resume_id", resumeId)
+						.order("created_at", { ascending: false })
+				: roastResultWithSticker;
+
+		setStickerSchemaReady(
+			!(
+				roastResultWithSticker.error &&
+				isStickerFeatureError(roastResultWithSticker.error)
+			),
+		);
 
 		const roastResultWithDeleteFallback =
 			roastResultWithThreads.error &&
@@ -522,6 +589,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				void recordResumeRead(loadedResume, activeUser);
 			}
 
+			await loadStickers();
 			await loadRoastThread(activeUser);
 
 			const elapsed = Date.now() - started;
@@ -551,21 +619,46 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		const roastContent = content.trim();
-		if (roastContent.length < 10) {
-			reportError("Give at least 10 characters of useful feedback.");
+		const payloadIssue = getRoastPayloadIssue({
+			activeStickerIds,
+			content: roastContent,
+			stickerId: selectedStickerId,
+		});
+
+		if (payloadIssue) {
+			reportError(payloadIssue);
+			return;
+		}
+
+		if (selectedStickerId && !stickerSchemaReady) {
+			reportError(`${SUPABASE_MIGRATION_MESSAGE} Stickers are not ready yet.`);
 			return;
 		}
 
 		setSubmitting(true);
+		const roastPayload: {
+			author_id: string;
+			content: string;
+			resume_id: string;
+			sticker_id?: string | null;
+		} = {
+			resume_id: resumeId,
+			author_id: user.id,
+			content: roastContent,
+		};
+
+		if (stickerSchemaReady) {
+			roastPayload.sticker_id = selectedStickerId;
+		}
 
 		const { data, error } = await supabase
 			.from("roasts")
-			.insert({
-				resume_id: resumeId,
-				author_id: user.id,
-				content: roastContent,
-			})
-			.select("id,resume_id,author_id,content,helpful_votes,created_at")
+			.insert(roastPayload)
+			.select(
+				stickerSchemaReady
+					? ROAST_SELECT_WITH_THREADS
+					: ROAST_SELECT_WITH_THREADS_NO_STICKER,
+			)
 			.single();
 
 		setSubmitting(false);
@@ -575,7 +668,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		setRoasts((current) => [normalizeRoast(data as Roast), ...current]);
+		setRoasts((current) => [normalizeRoast(data as unknown as Roast), ...current]);
 		setAuthorProfiles((current) => ({
 			...current,
 			[user.id]: {
@@ -588,6 +681,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			current ? { ...current, roast_count: current.roast_count + 1 } : current,
 		);
 		setContent("");
+		setSelectedStickerId(null);
 		toast.success("Roast submitted.");
 	}
 
@@ -619,22 +713,48 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		const replyText = replyContent.trim();
-		if (replyText.length < 10) {
-			reportError("Give at least 10 characters of useful reply context.");
+		const payloadIssue = getRoastPayloadIssue({
+			activeStickerIds,
+			content: replyText,
+			stickerId: replyStickerId,
+		});
+
+		if (payloadIssue) {
+			reportError(payloadIssue.replace("feedback", "reply context"));
+			return;
+		}
+
+		if (replyStickerId && !stickerSchemaReady) {
+			reportError(`${SUPABASE_MIGRATION_MESSAGE} Stickers are not ready yet.`);
 			return;
 		}
 
 		setSubmittingReplyId(parentRoast.id);
+		const replyPayload: {
+			author_id: string;
+			content: string;
+			parent_id: string;
+			resume_id: string;
+			sticker_id?: string | null;
+		} = {
+			resume_id: resumeId,
+			parent_id: parentRoast.id,
+			author_id: user.id,
+			content: replyText,
+		};
+
+		if (stickerSchemaReady) {
+			replyPayload.sticker_id = replyStickerId;
+		}
 
 		const { data, error } = await supabase
 			.from("roasts")
-			.insert({
-				resume_id: resumeId,
-				parent_id: parentRoast.id,
-				author_id: user.id,
-				content: replyText,
-			})
-			.select(ROAST_SELECT_WITH_THREADS)
+			.insert(replyPayload)
+			.select(
+				stickerSchemaReady
+					? ROAST_SELECT_WITH_THREADS
+					: ROAST_SELECT_WITH_THREADS_NO_STICKER,
+			)
 			.single();
 
 		setSubmittingReplyId("");
@@ -653,7 +773,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		const nextReply = normalizeRoast(data as Roast);
+		const nextReply = normalizeRoast(data as unknown as Roast);
 		setRoasts((current) => [
 			nextReply,
 			...current.map((roast) =>
@@ -680,6 +800,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		);
 		setReplyingToId(null);
 		setReplyContent("");
+		setReplyStickerId(null);
 		toast.success("Reply posted.");
 	}
 
@@ -1058,6 +1179,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		const replyCount = Math.max(roast.reply_count ?? 0, roast.childCount);
 		const isCollapsed = collapsedRoastIds.has(roast.id);
 		const isDeleted = Boolean(roast.is_deleted);
+		const roastSticker =
+			!isDeleted && roast.sticker_id ? stickersById.get(roast.sticker_id) : null;
 		const isOwnRoast = user?.id === roast.author_id;
 		const replyBlockReason = getReplyBlockReason({
 			isClosed,
@@ -1134,6 +1257,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 								? "This roast was deleted by its author."
 								: roast.content}
 						</p>
+						{roastSticker ? (
+							<figure className="roast-sticker">
+								<img
+									alt={roastSticker.alt_text || roastSticker.title}
+									src={roastSticker.publicUrl}
+								/>
+							</figure>
+						) : null}
 						<footer>
 							{isDeleted ? null : (
 								<div className="comment-reactions">
@@ -1197,6 +1328,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 											current === roast.id ? null : roast.id,
 										);
 										setReplyContent("");
+										setReplyStickerId(null);
 									}}
 									type="button"
 								>
@@ -1259,12 +1391,20 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 									rows={3}
 									value={replyContent}
 								/>
+								<StickerPicker
+									disabled={!stickerSchemaReady || submittingReplyId === roast.id}
+									onClear={() => setReplyStickerId(null)}
+									onSelect={setReplyStickerId}
+									selectedStickerId={replyStickerId}
+									stickers={stickers}
+								/>
 								<div>
 									<button
 										className="reply-cancel-button"
 										onClick={() => {
 											setReplyingToId(null);
 											setReplyContent("");
+											setReplyStickerId(null);
 										}}
 										type="button"
 									>
@@ -1424,13 +1564,22 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							/>
 							<div className="roast-form-footer">
 								<span>Roast the resume, not the person</span>
-								<button className="btn-primary btn-brand" disabled={submitting}>
-									{submitting
-										? "Posting..."
-										: user
-											? "Submit roast"
-											: "Sign in to roast"}
-								</button>
+								<div className="roast-form-actions">
+									<StickerPicker
+										disabled={!stickerSchemaReady || submitting}
+										onClear={() => setSelectedStickerId(null)}
+										onSelect={setSelectedStickerId}
+										selectedStickerId={selectedStickerId}
+										stickers={stickers}
+									/>
+									<button className="btn-primary btn-brand" disabled={submitting}>
+										{submitting
+											? "Posting..."
+											: user
+												? "Submit roast"
+												: "Sign in to roast"}
+									</button>
+								</div>
 							</div>
 							{message ? <p className="form-message">{message}</p> : null}
 						</form>
@@ -1453,6 +1602,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					{!reportSchemaReady ? (
 						<p className="form-message">
 							{SUPABASE_MIGRATION_MESSAGE} Reports are not ready yet.
+						</p>
+					) : null}
+					{!stickerSchemaReady ? (
+						<p className="form-message">
+							{SUPABASE_MIGRATION_MESSAGE} Stickers are not ready yet.
 						</p>
 					) : null}
 
