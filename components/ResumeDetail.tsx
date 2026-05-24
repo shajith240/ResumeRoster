@@ -3,6 +3,7 @@
 import {
 	type CSSProperties,
 	FormEvent,
+	type ReactNode,
 	useEffect,
 	useMemo,
 	useState,
@@ -11,9 +12,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
+import CommentMediaToolbar, {
+	type CommentAttachmentOption,
+} from "@/components/CommentMediaToolbar";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import SecureResumePreview from "@/components/SecureResumePreview";
-import StickerPicker, { type StickerOption } from "@/components/StickerPicker";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -39,7 +42,7 @@ import {
 	REPORT_REASON_OPTIONS,
 	type ReportReason,
 } from "@/lib/report-validation";
-import { getRoastPayloadIssue } from "@/lib/sticker-validation";
+import { getRoastContentIssue } from "@/lib/comment-media-validation";
 import {
 	getResumeAffiliationLabel,
 	getResumePosterLabel,
@@ -55,10 +58,11 @@ import {
 import { getLoginPath } from "@/lib/auth-redirect";
 import { supabase } from "@/lib/supabase/client";
 import type {
+	CommentAttachment,
+	CommentContentFormat,
 	ResumeAuthorProfile,
 	ResumeSummary,
 	Roast,
-	Sticker as StickerRecord,
 } from "@/lib/supabase/types";
 import { toast } from "sonner";
 
@@ -87,9 +91,9 @@ type ResumeQueryResult = {
 	error: { message?: string } | null;
 };
 
+const ROAST_SELECT_WITH_MEDIA =
+	"id,resume_id,parent_id,author_id,content,attachment_id,content_format,helpful_votes,dislike_count,reply_count,is_deleted,deleted_at,created_at";
 const ROAST_SELECT_WITH_THREADS =
-	"id,resume_id,parent_id,author_id,content,sticker_id,helpful_votes,dislike_count,reply_count,is_deleted,deleted_at,created_at";
-const ROAST_SELECT_WITH_THREADS_NO_STICKER =
 	"id,resume_id,parent_id,author_id,content,helpful_votes,dislike_count,reply_count,is_deleted,deleted_at,created_at";
 const ROAST_SELECT_WITH_THREADS_LEGACY =
 	"id,resume_id,parent_id,author_id,content,helpful_votes,dislike_count,reply_count,created_at";
@@ -152,8 +156,8 @@ function isReportFeatureError(error: { message?: string } | null) {
 	);
 }
 
-function isStickerFeatureError(error: { message?: string } | null) {
-	return /stickers|sticker_id|schema cache|column|relation/i.test(
+function isCommentMediaFeatureError(error: { message?: string } | null) {
+	return /comment_attachments|attachment_id|content_format|schema cache|column|relation/i.test(
 		error?.message ?? "",
 	);
 }
@@ -203,6 +207,148 @@ function ResumeContextCard({
 	);
 }
 
+function renderInlineMarkdown(text: string, keyPrefix: string) {
+	const parts: ReactNode[] = [];
+	const pattern =
+		/(\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)|`([^`]+)`|\*\*([^*]+)\*\*|\*([^*]+)\*)/g;
+	let lastIndex = 0;
+	let match: RegExpExecArray | null;
+
+	while ((match = pattern.exec(text))) {
+		if (match.index > lastIndex) {
+			parts.push(text.slice(lastIndex, match.index));
+		}
+
+		const key = `${keyPrefix}-${match.index}`;
+		if (match[2] && match[3]) {
+			parts.push(
+				<a
+					href={match[3]}
+					key={key}
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					{match[2]}
+				</a>,
+			);
+		} else if (match[4]) {
+			parts.push(<code key={key}>{match[4]}</code>);
+		} else if (match[5]) {
+			parts.push(<strong key={key}>{match[5]}</strong>);
+		} else if (match[6]) {
+			parts.push(<em key={key}>{match[6]}</em>);
+		}
+
+		lastIndex = pattern.lastIndex;
+	}
+
+	if (lastIndex < text.length) {
+		parts.push(text.slice(lastIndex));
+	}
+
+	return parts;
+}
+
+function FormattedRoastContent({
+	content,
+	format,
+	isDeleted,
+}: {
+	content: string;
+	format?: CommentContentFormat;
+	isDeleted: boolean;
+}) {
+	if (isDeleted) {
+		return (
+			<p className="deleted-roast-copy">
+				This roast was deleted by its author.
+			</p>
+		);
+	}
+
+	if (format !== "markdown") {
+		return <p>{content}</p>;
+	}
+
+	const lines = content.split(/\r?\n/);
+	const nodes: ReactNode[] = [];
+	let bulletItems: string[] = [];
+
+	function flushBullets(index: number) {
+		if (!bulletItems.length) return;
+
+		nodes.push(
+			<ul key={`ul-${index}`}>
+				{bulletItems.map((item, itemIndex) => (
+					<li key={`${index}-${itemIndex}`}>
+						{renderInlineMarkdown(item, `${index}-${itemIndex}`)}
+					</li>
+				))}
+			</ul>,
+		);
+		bulletItems = [];
+	}
+
+	lines.forEach((line, index) => {
+		const trimmed = line.trim();
+
+		if (!trimmed) {
+			flushBullets(index);
+			return;
+		}
+
+		if (trimmed.startsWith("- ")) {
+			bulletItems.push(trimmed.slice(2).trim());
+			return;
+		}
+
+		flushBullets(index);
+
+		if (trimmed.startsWith("> ")) {
+			nodes.push(
+				<blockquote key={`quote-${index}`}>
+					{renderInlineMarkdown(trimmed.slice(2).trim(), `quote-${index}`)}
+				</blockquote>,
+			);
+			return;
+		}
+
+		nodes.push(
+			<p key={`p-${index}`}>
+				{renderInlineMarkdown(trimmed, `p-${index}`)}
+			</p>,
+		);
+	});
+
+	flushBullets(lines.length);
+
+	return <div className="comment-markdown">{nodes}</div>;
+}
+
+function getAttachmentUrl(attachment?: CommentAttachmentOption | null) {
+	return (
+		attachment?.publicUrl ||
+		attachment?.external_url ||
+		attachment?.preview_url ||
+		""
+	);
+}
+
+function RoastAttachment({
+	attachment,
+}: {
+	attachment?: CommentAttachmentOption | null;
+}) {
+	const url = getAttachmentUrl(attachment);
+	if (!attachment || !url) return null;
+
+	return (
+		<figure className="roast-attachment">
+			<img alt={attachment.alt_text || attachment.title} src={url} />
+		</figure>
+	);
+}
+
 export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const router = useRouter();
 	const [user, setUser] = useState<User | null>(null);
@@ -221,8 +367,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [signedUrlError, setSignedUrlError] = useState("");
 	const [content, setContent] = useState("");
 	const [replyContent, setReplyContent] = useState("");
-	const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
-	const [replyStickerId, setReplyStickerId] = useState<string | null>(null);
+	const [contentFormat, setContentFormat] =
+		useState<CommentContentFormat>("plain");
+	const [replyContentFormat, setReplyContentFormat] =
+		useState<CommentContentFormat>("plain");
+	const [selectedAttachment, setSelectedAttachment] =
+		useState<CommentAttachmentOption | null>(null);
+	const [replyAttachment, setReplyAttachment] =
+		useState<CommentAttachmentOption | null>(null);
 	const [replyingToId, setReplyingToId] = useState<string | null>(null);
 	const [submittingReplyId, setSubmittingReplyId] = useState("");
 	const [deletingRoastId, setDeletingRoastId] = useState("");
@@ -235,11 +387,13 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [collapsedRoastIds, setCollapsedRoastIds] = useState<Set<string>>(
 		new Set(),
 	);
-	const [stickers, setStickers] = useState<StickerOption[]>([]);
+	const [attachmentsById, setAttachmentsById] = useState<
+		Record<string, CommentAttachmentOption>
+	>({});
 	const [replySchemaReady, setReplySchemaReady] = useState(true);
 	const [deleteSchemaReady, setDeleteSchemaReady] = useState(true);
 	const [reportSchemaReady, setReportSchemaReady] = useState(true);
-	const [stickerSchemaReady, setStickerSchemaReady] = useState(true);
+	const [mediaSchemaReady, setMediaSchemaReady] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
 	const [message, setMessage] = useState("");
@@ -247,14 +401,6 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const threadRoasts = useMemo(
 		() => buildThreadRoastTree(roasts, collapsedRoastIds),
 		[collapsedRoastIds, roasts],
-	);
-	const activeStickerIds = useMemo(
-		() => new Set(stickers.map((sticker) => sticker.id)),
-		[stickers],
-	);
-	const stickersById = useMemo(
-		() => new Map(stickers.map((sticker) => [sticker.id, sticker])),
-		[stickers],
 	);
 	const isOwner = Boolean(user && resume?.user_id === user.id);
 	const isClosed = resume?.status === "closed";
@@ -354,54 +500,72 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		return (primaryResult.data ?? null) as ResumeAuthorProfile | null;
 	}
 
-	async function loadStickers() {
+	async function loadRoastAttachments(loadedRoasts: Roast[]) {
+		const attachmentIds = Array.from(
+			new Set(
+				loadedRoasts
+					.map((roast) => roast.attachment_id)
+					.filter((id): id is string => Boolean(id)),
+			),
+		);
+
+		if (!attachmentIds.length) {
+			setAttachmentsById({});
+			return;
+		}
+
 		const { data, error } = await supabase
-			.from("stickers")
-			.select("id,title,alt_text,storage_path,status")
-			.eq("status", "active")
-			.order("created_at", { ascending: false });
+			.from("comment_attachments")
+			.select("id,user_id,kind,source,storage_path,external_url,preview_url,provider,title,alt_text,mime_type,file_size,created_at")
+			.in("id", attachmentIds);
 
 		if (error) {
-			if (isStickerFeatureError(error)) {
-				setStickerSchemaReady(false);
+			if (isCommentMediaFeatureError(error)) {
+				setMediaSchemaReady(false);
 			}
 			return;
 		}
 
-		setStickerSchemaReady(true);
-		setStickers(
-			((data ?? []) as Array<
-				Pick<StickerRecord, "id" | "title" | "alt_text" | "storage_path">
-			>).map((sticker) => ({
-				...sticker,
-				publicUrl: supabase.storage
-					.from("stickers")
-					.getPublicUrl(sticker.storage_path).data.publicUrl,
-			})),
-		);
+		const entries = ((data ?? []) as CommentAttachment[]).map((attachment) => {
+			const publicUrl = attachment.storage_path
+				? supabase.storage.from("comment-media").getPublicUrl(attachment.storage_path)
+						.data.publicUrl
+				: undefined;
+
+			return [
+				attachment.id,
+				{
+					...attachment,
+					publicUrl,
+				},
+			] as const;
+		});
+
+		setMediaSchemaReady(true);
+		setAttachmentsById(Object.fromEntries(entries));
 	}
 
 	async function loadRoastThread(activeUser: User | null) {
-		const roastResultWithSticker = await supabase
+		const roastResultWithMedia = await supabase
 			.from("roasts")
-			.select(ROAST_SELECT_WITH_THREADS)
+			.select(ROAST_SELECT_WITH_MEDIA)
 			.eq("resume_id", resumeId)
 			.order("created_at", { ascending: false });
 
 		const roastResultWithThreads =
-			roastResultWithSticker.error &&
-			isStickerFeatureError(roastResultWithSticker.error)
+			roastResultWithMedia.error &&
+			isCommentMediaFeatureError(roastResultWithMedia.error)
 				? await supabase
 						.from("roasts")
-						.select(ROAST_SELECT_WITH_THREADS_NO_STICKER)
+						.select(ROAST_SELECT_WITH_THREADS)
 						.eq("resume_id", resumeId)
 						.order("created_at", { ascending: false })
-				: roastResultWithSticker;
+				: roastResultWithMedia;
 
-		setStickerSchemaReady(
+		setMediaSchemaReady(
 			!(
-				roastResultWithSticker.error &&
-				isStickerFeatureError(roastResultWithSticker.error)
+				roastResultWithMedia.error &&
+				isCommentMediaFeatureError(roastResultWithMedia.error)
 			),
 		);
 
@@ -459,6 +623,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			normalizeRoast(roast),
 		);
 		setRoasts(loadedRoasts);
+		await loadRoastAttachments(loadedRoasts);
 
 		const authorIds = Array.from(
 			new Set(
@@ -589,7 +754,6 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				void recordResumeRead(loadedResume, activeUser);
 			}
 
-			await loadStickers();
 			await loadRoastThread(activeUser);
 
 			const elapsed = Date.now() - started;
@@ -619,10 +783,10 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		const roastContent = content.trim();
-		const payloadIssue = getRoastPayloadIssue({
-			activeStickerIds,
+		const payloadIssue = getRoastContentIssue({
+			attachmentId: selectedAttachment?.id,
 			content: roastContent,
-			stickerId: selectedStickerId,
+			contentFormat,
 		});
 
 		if (payloadIssue) {
@@ -630,45 +794,55 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		if (selectedStickerId && !stickerSchemaReady) {
-			reportError(`${SUPABASE_MIGRATION_MESSAGE} Stickers are not ready yet.`);
+		if ((selectedAttachment || contentFormat === "markdown") && !mediaSchemaReady) {
+			reportError(`${SUPABASE_MIGRATION_MESSAGE} Comment media is not ready yet.`);
 			return;
 		}
 
 		setSubmitting(true);
 		const roastPayload: {
 			author_id: string;
+			attachment_id?: string | null;
 			content: string;
+			content_format?: CommentContentFormat;
 			resume_id: string;
-			sticker_id?: string | null;
 		} = {
 			resume_id: resumeId,
 			author_id: user.id,
 			content: roastContent,
 		};
 
-		if (stickerSchemaReady) {
-			roastPayload.sticker_id = selectedStickerId;
+		if (mediaSchemaReady) {
+			roastPayload.attachment_id = selectedAttachment?.id ?? null;
+			roastPayload.content_format = contentFormat;
 		}
 
 		const { data, error } = await supabase
 			.from("roasts")
 			.insert(roastPayload)
-			.select(
-				stickerSchemaReady
-					? ROAST_SELECT_WITH_THREADS
-					: ROAST_SELECT_WITH_THREADS_NO_STICKER,
-			)
+			.select(mediaSchemaReady ? ROAST_SELECT_WITH_MEDIA : ROAST_SELECT_WITH_THREADS)
 			.single();
 
 		setSubmitting(false);
 
 		if (error) {
+			if (isCommentMediaFeatureError(error)) {
+				setMediaSchemaReady(false);
+				reportError(`${SUPABASE_MIGRATION_MESSAGE} Comment media is not ready yet.`);
+				return;
+			}
+
 			reportError(error.message);
 			return;
 		}
 
 		setRoasts((current) => [normalizeRoast(data as unknown as Roast), ...current]);
+		if (selectedAttachment) {
+			setAttachmentsById((current) => ({
+				...current,
+				[selectedAttachment.id]: selectedAttachment,
+			}));
+		}
 		setAuthorProfiles((current) => ({
 			...current,
 			[user.id]: {
@@ -681,7 +855,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			current ? { ...current, roast_count: current.roast_count + 1 } : current,
 		);
 		setContent("");
-		setSelectedStickerId(null);
+		setContentFormat("plain");
+		setSelectedAttachment(null);
 		toast.success("Roast submitted.");
 	}
 
@@ -713,10 +888,10 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		const replyText = replyContent.trim();
-		const payloadIssue = getRoastPayloadIssue({
-			activeStickerIds,
+		const payloadIssue = getRoastContentIssue({
+			attachmentId: replyAttachment?.id,
 			content: replyText,
-			stickerId: replyStickerId,
+			contentFormat: replyContentFormat,
 		});
 
 		if (payloadIssue) {
@@ -724,18 +899,19 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		if (replyStickerId && !stickerSchemaReady) {
-			reportError(`${SUPABASE_MIGRATION_MESSAGE} Stickers are not ready yet.`);
+		if ((replyAttachment || replyContentFormat === "markdown") && !mediaSchemaReady) {
+			reportError(`${SUPABASE_MIGRATION_MESSAGE} Comment media is not ready yet.`);
 			return;
 		}
 
 		setSubmittingReplyId(parentRoast.id);
 		const replyPayload: {
 			author_id: string;
+			attachment_id?: string | null;
 			content: string;
+			content_format?: CommentContentFormat;
 			parent_id: string;
 			resume_id: string;
-			sticker_id?: string | null;
 		} = {
 			resume_id: resumeId,
 			parent_id: parentRoast.id,
@@ -743,18 +919,15 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			content: replyText,
 		};
 
-		if (stickerSchemaReady) {
-			replyPayload.sticker_id = replyStickerId;
+		if (mediaSchemaReady) {
+			replyPayload.attachment_id = replyAttachment?.id ?? null;
+			replyPayload.content_format = replyContentFormat;
 		}
 
 		const { data, error } = await supabase
 			.from("roasts")
 			.insert(replyPayload)
-			.select(
-				stickerSchemaReady
-					? ROAST_SELECT_WITH_THREADS
-					: ROAST_SELECT_WITH_THREADS_NO_STICKER,
-			)
+			.select(mediaSchemaReady ? ROAST_SELECT_WITH_MEDIA : ROAST_SELECT_WITH_THREADS)
 			.single();
 
 		setSubmittingReplyId("");
@@ -766,6 +939,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			) {
 				setReplySchemaReady(false);
 				reportError(`${SUPABASE_MIGRATION_MESSAGE} Replies are not ready yet.`);
+				return;
+			}
+
+			if (isCommentMediaFeatureError(error)) {
+				setMediaSchemaReady(false);
+				reportError(`${SUPABASE_MIGRATION_MESSAGE} Comment media is not ready yet.`);
 				return;
 			}
 
@@ -782,6 +961,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					: roast,
 			),
 		]);
+		if (replyAttachment) {
+			setAttachmentsById((current) => ({
+				...current,
+				[replyAttachment.id]: replyAttachment,
+			}));
+		}
 		setCollapsedRoastIds((current) => {
 			const next = new Set(current);
 			next.delete(parentRoast.id);
@@ -800,7 +985,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		);
 		setReplyingToId(null);
 		setReplyContent("");
-		setReplyStickerId(null);
+		setReplyContentFormat("plain");
+		setReplyAttachment(null);
 		toast.success("Reply posted.");
 	}
 
@@ -1042,6 +1228,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			current === targetRoast.id ? null : current,
 		);
 		setReplyContent("");
+		setReplyContentFormat("plain");
+		setReplyAttachment(null);
 		await loadRoastThread(user);
 		setResume((current) =>
 			current
@@ -1179,8 +1367,10 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		const replyCount = Math.max(roast.reply_count ?? 0, roast.childCount);
 		const isCollapsed = collapsedRoastIds.has(roast.id);
 		const isDeleted = Boolean(roast.is_deleted);
-		const roastSticker =
-			!isDeleted && roast.sticker_id ? stickersById.get(roast.sticker_id) : null;
+		const roastAttachment =
+			!isDeleted && roast.attachment_id
+				? attachmentsById[roast.attachment_id]
+				: null;
 		const isOwnRoast = user?.id === roast.author_id;
 		const replyBlockReason = getReplyBlockReason({
 			isClosed,
@@ -1252,19 +1442,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 								<span className="badge badge-open">Verified helpful</span>
 							) : null}
 						</header>
-						<p className={isDeleted ? "deleted-roast-copy" : undefined}>
-							{isDeleted
-								? "This roast was deleted by its author."
-								: roast.content}
-						</p>
-						{roastSticker ? (
-							<figure className="roast-sticker">
-								<img
-									alt={roastSticker.alt_text || roastSticker.title}
-									src={roastSticker.publicUrl}
-								/>
-							</figure>
-						) : null}
+						<FormattedRoastContent
+							content={roast.content}
+							format={roast.content_format}
+							isDeleted={isDeleted}
+						/>
+						<RoastAttachment attachment={roastAttachment} />
 						<footer>
 							{isDeleted ? null : (
 								<div className="comment-reactions">
@@ -1328,7 +1511,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 											current === roast.id ? null : roast.id,
 										);
 										setReplyContent("");
-										setReplyStickerId(null);
+										setReplyContentFormat("plain");
+										setReplyAttachment(null);
 									}}
 									type="button"
 								>
@@ -1391,20 +1575,22 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 									rows={3}
 									value={replyContent}
 								/>
-								<StickerPicker
-									disabled={!stickerSchemaReady || submittingReplyId === roast.id}
-									onClear={() => setReplyStickerId(null)}
-									onSelect={setReplyStickerId}
-									selectedStickerId={replyStickerId}
-									stickers={stickers}
+								<CommentMediaToolbar
+									attachment={replyAttachment}
+									contentFormat={replyContentFormat}
+									disabled={!mediaSchemaReady || submittingReplyId === roast.id}
+									onAttachmentChange={setReplyAttachment}
+									onFormatChange={setReplyContentFormat}
+									onRequireLogin={goToLogin}
 								/>
-								<div>
+								<div className="inline-reply-actions">
 									<button
 										className="reply-cancel-button"
 										onClick={() => {
 											setReplyingToId(null);
 											setReplyContent("");
-											setReplyStickerId(null);
+											setReplyContentFormat("plain");
+											setReplyAttachment(null);
 										}}
 										type="button"
 									>
@@ -1565,12 +1751,13 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							<div className="roast-form-footer">
 								<span>Roast the resume, not the person</span>
 								<div className="roast-form-actions">
-									<StickerPicker
-										disabled={!stickerSchemaReady || submitting}
-										onClear={() => setSelectedStickerId(null)}
-										onSelect={setSelectedStickerId}
-										selectedStickerId={selectedStickerId}
-										stickers={stickers}
+									<CommentMediaToolbar
+										attachment={selectedAttachment}
+										contentFormat={contentFormat}
+										disabled={!mediaSchemaReady || submitting}
+										onAttachmentChange={setSelectedAttachment}
+										onFormatChange={setContentFormat}
+										onRequireLogin={goToLogin}
 									/>
 									<button className="btn-primary btn-brand" disabled={submitting}>
 										{submitting
@@ -1604,9 +1791,9 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							{SUPABASE_MIGRATION_MESSAGE} Reports are not ready yet.
 						</p>
 					) : null}
-					{!stickerSchemaReady ? (
+					{!mediaSchemaReady ? (
 						<p className="form-message">
-							{SUPABASE_MIGRATION_MESSAGE} Stickers are not ready yet.
+							{SUPABASE_MIGRATION_MESSAGE} Comment media is not ready yet.
 						</p>
 					) : null}
 

@@ -66,7 +66,7 @@ export async function GET(request: Request) {
 			admin
 				.from("roasts")
 				.select(
-					"id,resume_id,parent_id,author_id,content,sticker_id,helpful_votes,dislike_count,is_deleted,created_at",
+					"id,resume_id,parent_id,author_id,content,attachment_id,content_format,helpful_votes,dislike_count,is_deleted,created_at",
 				)
 				.order("created_at", { ascending: false })
 				.limit(8),

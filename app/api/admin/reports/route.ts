@@ -66,7 +66,7 @@ export async function GET(request: Request) {
 			roastIds.length
 				? admin
 						.from("roasts")
-						.select("id,resume_id,parent_id,author_id,content,sticker_id,is_deleted,created_at")
+						.select("id,resume_id,parent_id,author_id,content,attachment_id,content_format,is_deleted,created_at")
 						.in("id", roastIds)
 				: Promise.resolve({ data: [], error: null }),
 		]);

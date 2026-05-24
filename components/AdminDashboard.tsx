@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { ShieldCheck, UploadCloud } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useAdminAccess } from "@/lib/use-admin-access";
-import type { ContentReportStatus, Sticker } from "@/lib/supabase/types";
+import type { ContentReportStatus } from "@/lib/supabase/types";
 
 type AdminStats = {
 	activeRoasters: number;
@@ -63,10 +63,6 @@ type ReportPreview = {
 	updated_at: string;
 };
 
-type AdminSticker = Sticker & {
-	publicUrl: string;
-};
-
 const reportStatuses: ContentReportStatus[] = [
 	"pending",
 	"reviewing",
@@ -91,12 +87,7 @@ export default function AdminDashboard() {
 	const [accessToken, setAccessToken] = useState("");
 	const [overview, setOverview] = useState<AdminOverview | null>(null);
 	const [reports, setReports] = useState<ReportPreview[]>([]);
-	const [stickers, setStickers] = useState<AdminSticker[]>([]);
 	const [reportStatus, setReportStatus] = useState<ContentReportStatus>("pending");
-	const [uploading, setUploading] = useState(false);
-	const [dragging, setDragging] = useState(false);
-	const [stickerTitle, setStickerTitle] = useState("");
-	const [stickerAlt, setStickerAlt] = useState("");
 
 	const headers = useMemo(
 		() => ({
@@ -150,17 +141,15 @@ export default function AdminDashboard() {
 	const loadAdminData = useCallback(async function loadAdminData() {
 		if (!accessToken || !isAdmin) return;
 
-		const [overviewData, reportsData, stickersData] = await Promise.all([
+		const [overviewData, reportsData] = await Promise.all([
 			fetchJson<AdminOverview>("/api/admin/overview"),
 			fetchJson<{ reports: ReportPreview[] }>(
 				`/api/admin/reports?status=${reportStatus}`,
 			),
-			fetchJson<{ stickers: AdminSticker[] }>("/api/admin/stickers"),
 		]);
 
 		setOverview(overviewData);
 		setReports(reportsData.reports);
-		setStickers(stickersData.stickers);
 	}, [accessToken, fetchJson, isAdmin, reportStatus]);
 
 	useEffect(() => {
@@ -180,59 +169,6 @@ export default function AdminDashboard() {
 			await loadAdminData();
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Action failed.");
-		}
-	}
-
-	async function uploadSticker(file: File) {
-		if (!file) return;
-		setUploading(true);
-
-		const formData = new FormData();
-		formData.append("file", file);
-		formData.append("title", stickerTitle);
-		formData.append("altText", stickerAlt);
-
-		try {
-			await fetchJson("/api/admin/stickers", {
-				body: formData,
-				method: "POST",
-			});
-			toast.success("Sticker uploaded.");
-			setStickerTitle("");
-			setStickerAlt("");
-			await loadAdminData();
-		} catch (error) {
-			toast.error(error instanceof Error ? error.message : "Upload failed.");
-		} finally {
-			setUploading(false);
-		}
-	}
-
-	async function updateStickerStatus(sticker: AdminSticker) {
-		const nextStatus = sticker.status === "active" ? "hidden" : "active";
-
-		try {
-			await fetchJson(`/api/admin/stickers/${sticker.id}`, {
-				body: JSON.stringify({ status: nextStatus }),
-				headers: { "Content-Type": "application/json" },
-				method: "PATCH",
-			});
-			toast.success(nextStatus === "active" ? "Sticker shown." : "Sticker hidden.");
-			await loadAdminData();
-		} catch (error) {
-			toast.error(error instanceof Error ? error.message : "Sticker update failed.");
-		}
-	}
-
-	async function deleteSticker(sticker: AdminSticker) {
-		try {
-			await fetchJson(`/api/admin/stickers/${sticker.id}`, {
-				method: "DELETE",
-			});
-			toast.success("Unused sticker deleted.");
-			await loadAdminData();
-		} catch (error) {
-			toast.error(error instanceof Error ? error.message : "Sticker delete failed.");
 		}
 	}
 
@@ -396,72 +332,6 @@ export default function AdminDashboard() {
 								<strong>{roast.content}</strong>
 								<span>{roast.is_deleted ? "removed" : "live"} · {formatDate(roast.created_at)}</span>
 							</Link>
-						))}
-					</div>
-				</div>
-
-				<div className="admin-panel">
-					<div className="admin-panel-header">
-						<div>
-							<h2>Stickers</h2>
-							<p>Drag a PNG, WebP, or GIF under 2MB.</p>
-						</div>
-					</div>
-					<label
-						className={`admin-sticker-dropzone ${dragging ? "is-dragging" : ""}`}
-						onDragEnter={(event) => {
-							event.preventDefault();
-							setDragging(true);
-						}}
-						onDragOver={(event) => event.preventDefault()}
-						onDragLeave={() => setDragging(false)}
-						onDrop={(event) => {
-							event.preventDefault();
-							setDragging(false);
-							const file = event.dataTransfer.files[0];
-							if (file) void uploadSticker(file);
-						}}
-					>
-						<UploadCloud size={24} strokeWidth={2} aria-hidden="true" />
-						<span>{uploading ? "Uploading..." : "Drop sticker or click to upload"}</span>
-						<input
-							accept="image/png,image/webp,image/gif"
-							disabled={uploading}
-							onChange={(event) => {
-								const file = event.target.files?.[0];
-								if (file) void uploadSticker(file);
-								event.currentTarget.value = "";
-							}}
-							type="file"
-						/>
-					</label>
-					<div className="admin-sticker-fields">
-						<input
-							onChange={(event) => setStickerTitle(event.target.value)}
-							placeholder="Sticker title"
-							value={stickerTitle}
-						/>
-						<input
-							onChange={(event) => setStickerAlt(event.target.value)}
-							placeholder="Alt text"
-							value={stickerAlt}
-						/>
-					</div>
-					<div className="admin-sticker-list">
-						{stickers.map((sticker) => (
-							<article key={sticker.id}>
-								<img alt={sticker.alt_text || sticker.title} src={sticker.publicUrl} />
-								<div>
-									<strong>{sticker.title}</strong>
-									<span>{sticker.status}</span>
-								</div>
-								<button onClick={() => void updateStickerStatus(sticker)} type="button">
-									{sticker.status === "active" ? "Hide" : "Show"}
-								</button>
-								<button onClick={() => void deleteSticker(sticker)} type="button">
-									Delete unused
-								</button>
-							</article>
 						))}
 					</div>
 				</div>

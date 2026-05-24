@@ -55,7 +55,8 @@ export function normalizeRoast(roast: Roast): Roast {
 	return {
 		...roast,
 		parent_id: roast.parent_id ?? null,
-		sticker_id: roast.sticker_id ?? null,
+		attachment_id: roast.attachment_id ?? null,
+		content_format: roast.content_format ?? "plain",
 		dislike_count: roast.dislike_count ?? 0,
 		reply_count: roast.reply_count ?? 0,
 		is_deleted: roast.is_deleted ?? false,

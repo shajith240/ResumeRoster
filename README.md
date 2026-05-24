@@ -104,9 +104,13 @@ Open [http://localhost:3000](http://localhost:3000).
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+ADMIN_EMAILS=you@example.com
+KLIPY_API_KEY=your_klipy_app_key
+# Optional fallback if you choose GIPHY instead:
+# GIPHY_API_KEY=your_giphy_api_key
 ```
 
-`SUPABASE_SERVICE_ROLE_KEY` is used only by the server-side auth lookup route so the signup flow can safely detect existing email accounts.
+`SUPABASE_SERVICE_ROLE_KEY` is server-only and powers protected routes for auth checks, resume processing, admin moderation, and comment media uploads. `KLIPY_API_KEY` enables GIF search; the app falls back to `GIPHY_API_KEY` only if KLIPY is not configured.
 
 5. Link the Supabase CLI to the project and review the migrations:
 

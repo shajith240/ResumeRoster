@@ -13,7 +13,9 @@ export type ContentReportStatus =
   | "reviewing"
   | "dismissed"
   | "actioned";
-export type StickerStatus = "active" | "hidden";
+export type CommentContentFormat = "plain" | "markdown";
+export type CommentAttachmentKind = "image" | "gif";
+export type CommentAttachmentSource = "upload" | "gif_provider";
 
 export type ResumeAuthorProfile = {
   id: string;
@@ -49,7 +51,8 @@ export type Roast = {
   parent_id?: string | null;
   author_id: string;
   content: string;
-  sticker_id?: string | null;
+  attachment_id?: string | null;
+  content_format?: CommentContentFormat;
   helpful_votes: number;
   dislike_count?: number;
   reply_count?: number;
@@ -58,17 +61,20 @@ export type Roast = {
   created_at: string;
 };
 
-export type Sticker = {
+export type CommentAttachment = {
   id: string;
+  user_id?: string | null;
+  kind: CommentAttachmentKind;
+  source: CommentAttachmentSource;
+  storage_path: string | null;
+  external_url: string | null;
+  preview_url: string | null;
+  provider: string | null;
   title: string;
   alt_text: string;
-  storage_path: string;
-  mime_type: "image/png" | "image/webp" | "image/gif";
-  file_size: number;
-  status: StickerStatus;
-  created_by: string | null;
+  mime_type: "image/png" | "image/jpeg" | "image/webp" | "image/gif" | null;
+  file_size: number | null;
   created_at: string;
-  updated_at: string;
 };
 
 export type RoasterLeaderboardEntry = {
