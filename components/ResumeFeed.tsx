@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import FeedResumePreview from "@/components/FeedResumePreview";
 import { toast } from "sonner";
 import { BookmarkIcon } from "@/components/ui/bookmark";
 import { EyeIcon } from "@/components/ui/eye";
@@ -43,6 +44,7 @@ const AUTHOR_PROFILE_SELECT_BASE =
   "id,username,full_name,avatar_url,college,target_role";
 const SAVED_RESUMES_MIGRATION_MESSAGE =
   "Run the pending Supabase migration to enable saved resumes.";
+const FEED_PREVIEW_SIGNED_URL_TTL_SECONDS = 60 * 20;
 
 type SavedResumeSummary = ResumeSummary & {
   is_saved: boolean;
@@ -194,6 +196,7 @@ function FeedSkeleton() {
             <span className="skeleton skeleton-line meta" />
             <span className="skeleton skeleton-line title" />
             <span className="skeleton skeleton-line tags" />
+            <span className="skeleton skeleton-line preview" />
             <span className="skeleton skeleton-line copy" />
             <span className="skeleton skeleton-line actions" />
           </div>
@@ -213,6 +216,8 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [copiedId, setCopiedId] = useState("");
+  const [previewUrlsById, setPreviewUrlsById] = useState<Record<string, string>>({});
+  const [previewUrlsLoading, setPreviewUrlsLoading] = useState(false);
   const [saveFeatureReady, setSaveFeatureReady] = useState(true);
   const [savingIds, setSavingIds] = useState<Set<string>>(() => new Set());
 
@@ -327,6 +332,65 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
     () => sortResumes(resumes, activeSort),
     [activeSort, resumes],
   );
+  const previewTargets = useMemo(
+    () =>
+      sortedResumes.map((resume) => ({
+        filePath: resume.file_path,
+        id: resume.id,
+      })),
+    [sortedResumes],
+  );
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadPreviewUrls() {
+      if (!previewTargets.length) {
+        setPreviewUrlsById({});
+        setPreviewUrlsLoading(false);
+        return;
+      }
+
+      setPreviewUrlsLoading(true);
+
+      const { data, error } = await supabase.storage
+        .from("resumes")
+        .createSignedUrls(
+          previewTargets.map((resume) => resume.filePath),
+          FEED_PREVIEW_SIGNED_URL_TTL_SECONDS,
+        );
+
+      if (!active) return;
+
+      if (error) {
+        setPreviewUrlsById({});
+        setPreviewUrlsLoading(false);
+        return;
+      }
+
+      const nextPreviewUrls = previewTargets.reduce<Record<string, string>>(
+        (previewUrls, resume, index) => {
+          const signedUrl = data?.[index]?.signedUrl;
+
+          if (signedUrl) {
+            previewUrls[resume.id] = signedUrl;
+          }
+
+          return previewUrls;
+        },
+        {},
+      );
+
+      setPreviewUrlsById(nextPreviewUrls);
+      setPreviewUrlsLoading(false);
+    }
+
+    void loadPreviewUrls();
+
+    return () => {
+      active = false;
+    };
+  }, [previewTargets]);
 
   async function shareResume(resume: ResumeSummary) {
     const url = `${window.location.origin}/resume/${resume.id}`;
@@ -526,6 +590,18 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                   {heated ? "Heated" : resume.status === "closed" ? "Closed" : "Open"}
                 </span>
               </div>
+
+              <Link
+                aria-label={`Open resume preview for ${resume.title}`}
+                className="feed-preview-link"
+                href={`/resume/${resume.id}`}
+              >
+                <FeedResumePreview
+                  fileUrl={previewUrlsById[resume.id]}
+                  isLoading={previewUrlsLoading}
+                  title={resume.title}
+                />
+              </Link>
 
               <p className="feed-snippet">
                 {snippet}
