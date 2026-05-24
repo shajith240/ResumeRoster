@@ -326,12 +326,7 @@ function FormattedRoastContent({
 }
 
 function getAttachmentUrl(attachment?: CommentAttachmentOption | null) {
-	return (
-		attachment?.publicUrl ||
-		attachment?.external_url ||
-		attachment?.preview_url ||
-		""
-	);
+	return attachment?.publicUrl || "";
 }
 
 function RoastAttachment({
@@ -516,7 +511,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 		const { data, error } = await supabase
 			.from("comment_attachments")
-			.select("id,user_id,kind,source,storage_path,external_url,preview_url,provider,title,alt_text,mime_type,file_size,created_at")
+			.select("id,user_id,kind,source,storage_path,title,alt_text,mime_type,file_size,created_at")
 			.in("id", attachmentIds);
 
 		if (error) {

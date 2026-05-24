@@ -14,8 +14,8 @@ export type ContentReportStatus =
   | "dismissed"
   | "actioned";
 export type CommentContentFormat = "plain" | "markdown";
-export type CommentAttachmentKind = "image" | "gif";
-export type CommentAttachmentSource = "upload" | "gif_provider";
+export type CommentAttachmentKind = "image";
+export type CommentAttachmentSource = "upload";
 
 export type ResumeAuthorProfile = {
   id: string;
@@ -67,12 +67,9 @@ export type CommentAttachment = {
   kind: CommentAttachmentKind;
   source: CommentAttachmentSource;
   storage_path: string | null;
-  external_url: string | null;
-  preview_url: string | null;
-  provider: string | null;
   title: string;
   alt_text: string;
-  mime_type: "image/png" | "image/jpeg" | "image/webp" | "image/gif" | null;
+  mime_type: "image/png" | "image/jpeg" | "image/webp" | null;
   file_size: number | null;
   created_at: string;
 };

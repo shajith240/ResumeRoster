@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 		const file = formData?.get("file");
 
 		if (!file || !(file instanceof File)) {
-			return badRequest("Upload a PNG, JPG, WebP, or GIF image.");
+			return badRequest("Upload a PNG, JPG, or WebP image.");
 		}
 
 		const bytes = new Uint8Array(await file.arrayBuffer());
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 				title,
 				user_id: user.id,
 			})
-			.select("id,kind,source,storage_path,external_url,preview_url,provider,title,alt_text,mime_type,file_size,created_at")
+			.select("id,kind,source,storage_path,title,alt_text,mime_type,file_size,created_at")
 			.single();
 
 		if (insert.error) {

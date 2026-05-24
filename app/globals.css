@@ -2854,96 +2854,6 @@ body.main-app-dark .toggle-ui::after {
 	color: var(--text-primary);
 }
 
-.gif-popover {
-	position: absolute;
-	right: 0;
-	bottom: calc(100% + 10px);
-	z-index: 30;
-	display: grid;
-	gap: 10px;
-	width: min(360px, calc(100vw - 40px));
-	border: 1px solid var(--border-default);
-	border-radius: var(--radius-lg);
-	padding: 12px;
-	background: var(--bg-elevated);
-	box-shadow: var(--shadow-lg);
-}
-
-.gif-search {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	border: 1px solid var(--border-subtle);
-	border-radius: var(--radius-md);
-	padding: 0 10px;
-	background: var(--bg-base);
-	color: var(--text-tertiary);
-}
-
-.gif-search input {
-	min-width: 0;
-	width: 100%;
-	border: 0;
-	padding: 9px 0;
-	background: transparent;
-	color: var(--text-primary);
-	font-size: 13px;
-	outline: none;
-}
-
-.gif-grid {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 8px;
-	max-height: 310px;
-	overflow: auto;
-}
-
-.gif-grid button {
-	display: grid;
-	gap: 6px;
-	border: 1px solid var(--border-subtle);
-	border-radius: var(--radius-md);
-	padding: 8px;
-	background: var(--bg-surface);
-	color: var(--text-secondary);
-	text-align: center;
-	transition:
-		border-color 0.18s var(--button-ease),
-		background 0.18s var(--button-ease);
-}
-
-.gif-grid button:hover {
-	border-color: color-mix(in srgb, var(--brand) 55%, var(--border-default));
-	background: color-mix(in srgb, var(--brand) 9%, var(--bg-surface));
-}
-
-.gif-grid img {
-	width: 100%;
-	aspect-ratio: 1;
-	border-radius: var(--radius-sm);
-	object-fit: cover;
-	background: var(--bg-base);
-}
-
-.gif-grid span {
-	overflow: hidden;
-	color: var(--text-secondary);
-	font-size: 11px;
-	font-weight: 650;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.gif-empty {
-	grid-column: 1 / -1;
-	margin: 0;
-	padding: 16px;
-	color: var(--text-tertiary);
-	font-size: 13px;
-	text-align: center;
-}
-
 .thread-list-header h2 {
 	font-family: var(--font-body);
 	font-size: 18px;
@@ -3638,12 +3548,6 @@ body.main-app-dark .bottom-nav {
 	.comment-media-preview {
 		width: 100%;
 		justify-content: center;
-	}
-
-	.gif-popover {
-		right: auto;
-		left: 0;
-		width: 100%;
 	}
 
 	.thread-context-grid {

@@ -6,16 +6,13 @@ export const COMMENT_IMAGE_ALLOWED_MIME_TYPES = [
 	"image/png",
 	"image/jpeg",
 	"image/webp",
-	"image/gif",
 ] as const;
 
 export const COMMENT_CONTENT_FORMATS = ["plain", "markdown"] as const;
-export const GIF_PROVIDERS = ["klipy", "giphy"] as const;
 
 export type CommentImageMimeType =
 	(typeof COMMENT_IMAGE_ALLOWED_MIME_TYPES)[number];
 export type CommentContentFormat = (typeof COMMENT_CONTENT_FORMATS)[number];
-export type GifProvider = (typeof GIF_PROVIDERS)[number];
 
 export type CommentImageFileInput = {
 	bytes: Uint8Array;
@@ -43,13 +40,6 @@ export function detectCommentImageMimeType(
 	}
 
 	if (
-		hasBytes(bytes, [0x47, 0x49, 0x46, 0x38, 0x37, 0x61]) ||
-		hasBytes(bytes, [0x47, 0x49, 0x46, 0x38, 0x39, 0x61])
-	) {
-		return "image/gif";
-	}
-
-	if (
 		hasBytes(bytes, [0x52, 0x49, 0x46, 0x46]) &&
 		hasBytes(bytes, [0x57, 0x45, 0x42, 0x50], 8)
 	) {
@@ -63,8 +53,6 @@ export function getCommentImageExtension(mimeType: CommentImageMimeType) {
 	switch (mimeType) {
 		case "image/jpeg":
 			return "jpg";
-		case "image/gif":
-			return "gif";
 		case "image/webp":
 			return "webp";
 		default:
@@ -88,7 +76,7 @@ export function getCommentImageUploadIssue(file: CommentImageFileInput) {
 			declaredType as CommentImageMimeType,
 		)
 	) {
-		return "Upload a PNG, JPG, WebP, or GIF image.";
+		return "Upload a PNG, JPG, or WebP image.";
 	}
 
 	if (declaredType && declaredType !== detectedType) {
@@ -128,38 +116,7 @@ export function getRoastContentIssue({
 	}
 
 	if (attachmentId && !UUID_PATTERN.test(attachmentId)) {
-		return "Choose a valid image or GIF.";
-	}
-
-	return "";
-}
-
-export function isGifProvider(value: unknown): value is GifProvider {
-	return GIF_PROVIDERS.includes(value as GifProvider);
-}
-
-export function getTrustedGifUrlIssue(provider: GifProvider, value: unknown) {
-	if (typeof value !== "string" || !value.trim()) {
-		return "Choose a GIF first.";
-	}
-
-	let url: URL;
-	try {
-		url = new URL(value.trim());
-	} catch {
-		return "Choose a valid GIF URL.";
-	}
-
-	if (url.protocol !== "https:") {
-		return "Choose a valid GIF URL.";
-	}
-
-	const host = url.hostname.toLowerCase();
-	const allowedHost =
-		provider === "giphy" ? host.endsWith("giphy.com") : host.endsWith("klipy.com");
-
-	if (!allowedHost) {
-		return "Choose a GIF from the configured provider.";
+		return "Choose a valid image.";
 	}
 
 	return "";

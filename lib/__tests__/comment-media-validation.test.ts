@@ -3,33 +3,30 @@ import {
 	detectCommentImageMimeType,
 	getCommentImageUploadIssue,
 	getRoastContentIssue,
-	getTrustedGifUrlIssue,
 } from "@/lib/comment-media-validation";
 
 const pngBytes = new Uint8Array([
 	0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
 ]);
 const jpgBytes = new Uint8Array([0xff, 0xd8, 0xff, 0xe0]);
-const gifBytes = new TextEncoder().encode("GIF89a reaction");
 const webpBytes = new Uint8Array([
 	0x52, 0x49, 0x46, 0x46, 0x24, 0x00, 0x00, 0x00, 0x57, 0x45, 0x42, 0x50,
 ]);
 const svgBytes = new TextEncoder().encode("<svg onload=alert(1)></svg>");
+const unsupportedBytes = new TextEncoder().encode("not an image");
 
 describe("comment media upload validation", () => {
 	it("detects supported image signatures", () => {
 		expect(detectCommentImageMimeType(pngBytes)).toBe("image/png");
 		expect(detectCommentImageMimeType(jpgBytes)).toBe("image/jpeg");
-		expect(detectCommentImageMimeType(gifBytes)).toBe("image/gif");
 		expect(detectCommentImageMimeType(webpBytes)).toBe("image/webp");
 	});
 
-	it("accepts small PNG, JPG, WebP, and GIF uploads", () => {
+	it("accepts small PNG, JPG, and WebP uploads", () => {
 		for (const [bytes, type, name] of [
 			[pngBytes, "image/png", "screen.png"],
 			[jpgBytes, "image/jpeg", "screen.jpg"],
 			[webpBytes, "image/webp", "screen.webp"],
-			[gifBytes, "image/gif", "reaction.gif"],
 		] as const) {
 			expect(
 				getCommentImageUploadIssue({
@@ -50,13 +47,22 @@ describe("comment media upload validation", () => {
 				size: svgBytes.length,
 				type: "image/svg+xml",
 			}),
-		).toBe("Upload a PNG, JPG, WebP, or GIF image.");
+		).toBe("Upload a PNG, JPG, or WebP image.");
 
 		expect(
 			getCommentImageUploadIssue({
-				bytes: gifBytes,
+				bytes: unsupportedBytes,
+				name: "screen.bmp",
+				size: unsupportedBytes.length,
+				type: "image/bmp",
+			}),
+		).toBe("Upload a PNG, JPG, or WebP image.");
+
+		expect(
+			getCommentImageUploadIssue({
+				bytes: webpBytes,
 				name: "bad.png",
-				size: gifBytes.length,
+				size: webpBytes.length,
 				type: "image/png",
 			}),
 		).toBe("The image file type does not match its contents.");
@@ -118,16 +124,6 @@ describe("roast content validation", () => {
 				content: "Lead with impact and quantify the first bullet.",
 				contentFormat: "plain",
 			}),
-		).toBe("Choose a valid image or GIF.");
-	});
-});
-
-describe("GIF URL validation", () => {
-	it("keeps provider GIF URLs pinned to trusted hosts", () => {
-		expect(getTrustedGifUrlIssue("giphy", "https://media.giphy.com/media/demo/giphy.gif")).toBe("");
-		expect(getTrustedGifUrlIssue("klipy", "https://cdn.klipy.com/demo.gif")).toBe("");
-		expect(getTrustedGifUrlIssue("giphy", "https://evil.example/demo.gif")).toBe(
-			"Choose a GIF from the configured provider.",
-		);
+		).toBe("Choose a valid image.");
 	});
 });

@@ -1,6 +1,6 @@
 -- ResumeRoster 0011: comment media attachments and markdown mode.
 -- Pivots roast extras away from curated stickers into normal comment tools:
--- user image upload, provider GIFs, and plain/markdown content format.
+-- user image upload and plain/markdown content format.
 
 create table if not exists public.comment_attachments (
   id uuid primary key default gen_random_uuid(),
@@ -8,9 +8,6 @@ create table if not exists public.comment_attachments (
   kind text not null,
   source text not null,
   storage_path text,
-  external_url text,
-  preview_url text,
-  provider text,
   title text not null default '',
   alt_text text not null default '',
   mime_type text,
@@ -23,9 +20,6 @@ alter table public.comment_attachments
   add column if not exists kind text not null default 'image',
   add column if not exists source text not null default 'upload',
   add column if not exists storage_path text,
-  add column if not exists external_url text,
-  add column if not exists preview_url text,
-  add column if not exists provider text,
   add column if not exists title text not null default '',
   add column if not exists alt_text text not null default '',
   add column if not exists mime_type text,
@@ -34,8 +28,8 @@ alter table public.comment_attachments
 
 update public.comment_attachments
 set
-  kind = case when kind in ('image', 'gif') then kind else 'image' end,
-  source = case when source in ('upload', 'gif_provider') then source else 'upload' end,
+  kind = 'image',
+  source = 'upload',
   title = coalesce(title, ''),
   alt_text = coalesce(alt_text, ''),
   created_at = coalesce(created_at, now());
@@ -61,28 +55,15 @@ alter table public.comment_attachments
   drop constraint if exists comment_attachments_title_length_check,
   drop constraint if exists comment_attachments_alt_text_length_check,
   add constraint comment_attachments_kind_check
-    check (kind in ('image', 'gif')),
+    check (kind = 'image'),
   add constraint comment_attachments_source_check
-    check (source in ('upload', 'gif_provider')),
+    check (source = 'upload'),
   add constraint comment_attachments_shape_check
-    check (
-      (
-        kind = 'image'
-        and source = 'upload'
-        and storage_path is not null
-        and external_url is null
-      )
-      or (
-        kind = 'gif'
-        and source = 'gif_provider'
-        and storage_path is null
-        and external_url is not null
-      )
-    ),
+    check (storage_path is not null),
   add constraint comment_attachments_mime_type_check
     check (
       mime_type is null
-      or mime_type in ('image/png', 'image/jpeg', 'image/webp', 'image/gif')
+      or mime_type in ('image/png', 'image/jpeg', 'image/webp')
     ),
   add constraint comment_attachments_file_size_check
     check (file_size is null or (file_size > 0 and file_size <= 3145728)),
@@ -126,13 +107,13 @@ values (
   'comment-media',
   true,
   3145728,
-  array['image/png', 'image/jpeg', 'image/webp', 'image/gif']
+  array['image/png', 'image/jpeg', 'image/webp']
 )
 on conflict (id) do update
 set
   public = true,
   file_size_limit = 3145728,
-  allowed_mime_types = array['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+  allowed_mime_types = array['image/png', 'image/jpeg', 'image/webp'];
 
 alter table public.comment_attachments enable row level security;
 
