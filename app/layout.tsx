@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   },
   description:
     "Linted is a human-powered career linter for resumes. Post anonymously, catch structural bugs before recruiters do, and ship a cleaner version.",
+  icons: {
+    apple: "/assets/Linted-favicon.png",
+    icon: "/assets/Linted-favicon.png",
+    shortcut: "/assets/Linted-favicon.png",
+  },
   openGraph: {
     title: "Linted",
     description:

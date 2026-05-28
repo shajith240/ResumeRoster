@@ -79,6 +79,7 @@ type ResumeDetailProps = {
 };
 
 type Reaction = "like" | "dislike";
+type ResumeOwnerAction = "close" | "reopen" | "delete";
 
 type AuthorProfile = {
 	id: string;
@@ -192,6 +193,12 @@ function isReportFeatureError(error: { message?: string } | null) {
 
 function isCommentMediaFeatureError(error: { message?: string } | null) {
 	return /comment_attachments|attachment_id|content_format|schema cache|column|relation/i.test(
+		error?.message ?? "",
+	);
+}
+
+function isPermissionPolicyError(error: { message?: string } | null) {
+	return /row-level security|violates row-level|permission denied|policy|not authorized|not allowed/i.test(
 		error?.message ?? "",
 	);
 }
@@ -408,6 +415,9 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [submittingReplyId, setSubmittingReplyId] = useState("");
 	const [deletingRoastId, setDeletingRoastId] = useState("");
 	const [deleteTargetRoast, setDeleteTargetRoast] = useState<Roast | null>(null);
+	const [pendingResumeAction, setPendingResumeAction] =
+		useState<ResumeOwnerAction | null>(null);
+	const [resumeActionBusy, setResumeActionBusy] = useState(false);
 	const [reportTargetRoast, setReportTargetRoast] = useState<Roast | null>(null);
 	const [reportReason, setReportReason] =
 		useState<ReportReason>("personal_info");
@@ -443,6 +453,63 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	function reportError(errorMessage: string) {
 		setMessage(errorMessage);
 		toast.error(errorMessage);
+	}
+
+	function clearFeedbackDrafts() {
+		setContent("");
+		setContentFormat("plain");
+		setSelectedAttachment(null);
+		setReplyingToId(null);
+		setReplyContent("");
+		setReplyContentFormat("plain");
+		setReplyAttachment(null);
+	}
+
+	function applyClosedResumeState(errorMessage: string) {
+		setResume((current) =>
+			current ? { ...current, status: "closed" } : current,
+		);
+		clearFeedbackDrafts();
+		reportError(errorMessage);
+	}
+
+	async function fetchLatestResumeStatus() {
+		const { data, error } = await supabase
+			.from("resumes")
+			.select("status")
+			.eq("id", resumeId)
+			.maybeSingle();
+
+		if (error) {
+			return null;
+		}
+
+		return (data?.status ?? null) as ResumeSummary["status"] | null;
+	}
+
+	async function reportFriendlyWriteError(
+		error: { message?: string } | null,
+		kind: "feedback" | "reply",
+	) {
+		const latestStatus = await fetchLatestResumeStatus();
+
+		if (latestStatus === "closed") {
+			applyClosedResumeState(
+				kind === "reply"
+					? "This resume is closed, so new replies cannot be posted."
+					: "This resume is closed, so new feedback cannot be posted.",
+			);
+			return true;
+		}
+
+		if (isPermissionPolicyError(error)) {
+			reportError(
+				"We could not save this because your account is not allowed to do that action. Refresh the page and try again.",
+			);
+			return true;
+		}
+
+		return false;
 	}
 
 	async function openResumeFile(activeResume = resume) {
@@ -802,6 +869,57 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		void load();
 	}, [resumeId]);
 
+	useEffect(() => {
+		const channel = supabase
+			.channel(`resume-status:${resumeId}`)
+			.on(
+				"postgres_changes",
+				{
+					event: "UPDATE",
+					filter: `id=eq.${resumeId}`,
+					schema: "public",
+					table: "resumes",
+				},
+				(payload) => {
+					const nextStatus = payload.new?.status as
+						| ResumeSummary["status"]
+						| undefined;
+
+					if (!nextStatus) {
+						return;
+					}
+
+					setResume((current) =>
+						current ? { ...current, status: nextStatus } : current,
+					);
+
+					if (nextStatus === "closed") {
+						clearFeedbackDrafts();
+						setMessage("This resume is closed for new feedback.");
+					}
+				},
+			)
+			.on(
+				"postgres_changes",
+				{
+					event: "DELETE",
+					filter: `id=eq.${resumeId}`,
+					schema: "public",
+					table: "resumes",
+				},
+				() => {
+					toast.info("This resume was deleted.");
+					announceRouteTransition("/feed");
+					router.push("/feed");
+				},
+			)
+			.subscribe();
+
+		return () => {
+			void supabase.removeChannel(channel);
+		};
+	}, [resumeId, router]);
+
 	async function handleRoastSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setMessage("");
@@ -871,6 +989,10 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				return;
 			}
 
+			if (await reportFriendlyWriteError(error, "feedback")) {
+				return;
+			}
+
 			reportError(error.message);
 			return;
 		}
@@ -917,7 +1039,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (parentRoast.author_id === user.id) {
-			reportError("You cannot reply to your own roast.");
+			reportError("You cannot reply to your own feedback.");
 			return;
 		}
 
@@ -987,6 +1109,10 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				return;
 			}
 
+			if (await reportFriendlyWriteError(error, "reply")) {
+				return;
+			}
+
 			reportError(error.message);
 			return;
 		}
@@ -1050,7 +1176,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (targetRoast.author_id === user.id) {
-			reportError("You cannot react to your own roast.");
+			reportError("You cannot react to your own feedback.");
 			return;
 		}
 
@@ -1149,30 +1275,49 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		applyLocalReaction(reaction);
-		toast.success(reaction === "like" ? "Liked roast." : "Disliked roast.");
+		toast.success(reaction === "like" ? "Liked feedback." : "Disliked feedback.");
 	}
 
-	async function closeResume() {
+	async function updateResumeStatus(
+		nextStatus: Extract<ResumeSummary["status"], "open" | "closed">,
+	) {
 		setMessage("");
 
 		if (!resume || !isOwner) {
-			reportError("Only the resume owner can close this thread.");
-			return;
+			reportError("Only the resume owner can change this thread status.");
+			return false;
 		}
 
+		setResumeActionBusy(true);
 		const { error } = await supabase
 			.from("resumes")
-			.update({ status: "closed" })
+			.update({ status: nextStatus })
 			.eq("id", resume.id);
+		setResumeActionBusy(false);
 
 		if (error) {
-			reportError(error.message);
-			return;
+			reportError(
+				isPermissionPolicyError(error)
+					? "Only the resume owner can change this thread status."
+					: "We could not update this resume status. Please try again.",
+			);
+			return false;
 		}
 
-		setResume({ ...resume, status: "closed" });
-		setMessage("This resume is now closed for new feedback.");
-		toast.success("Resume thread closed.");
+		setResume((current) =>
+			current ? { ...current, status: nextStatus } : current,
+		);
+
+		if (nextStatus === "closed") {
+			clearFeedbackDrafts();
+			setMessage("This resume is now closed for new feedback.");
+			toast.success("Feedback closed.");
+		} else {
+			setMessage("This resume is open for feedback again.");
+			toast.success("Feedback reopened.");
+		}
+
+		return true;
 	}
 
 	async function deleteResume() {
@@ -1180,29 +1325,82 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 		if (!resume || !isOwner) {
 			reportError("Only the resume owner can delete this submission.");
-			return;
+			return false;
 		}
 
+		setResumeActionBusy(true);
 		const removeFile = await supabase.storage
 			.from("resumes")
 			.remove([resume.file_path]);
 		if (removeFile.error) {
-			reportError(removeFile.error.message);
-			return;
+			setResumeActionBusy(false);
+			reportError("We could not delete the resume file. Please try again.");
+			return false;
 		}
 
 		const { error } = await supabase
 			.from("resumes")
 			.delete()
 			.eq("id", resume.id);
+		setResumeActionBusy(false);
+
 		if (error) {
-			reportError(error.message);
-			return;
+			reportError(
+				isPermissionPolicyError(error)
+					? "Only the resume owner can delete this submission."
+					: "We could not delete this submission. Please try again.",
+			);
+			return false;
 		}
 
 		toast.success("Resume deleted.");
 		announceRouteTransition("/feed");
 		router.push("/feed");
+		return true;
+	}
+
+	function requestResumeStatusAction() {
+		setMessage("");
+
+		if (!resume || !isOwner) {
+			reportError("Only the resume owner can change this thread status.");
+			return;
+		}
+
+		setPendingResumeAction(isClosed ? "reopen" : "close");
+	}
+
+	function requestDeleteResume() {
+		setMessage("");
+
+		if (!resume || !isOwner) {
+			reportError("Only the resume owner can delete this submission.");
+			return;
+		}
+
+		setPendingResumeAction("delete");
+	}
+
+	async function confirmResumeOwnerAction() {
+		if (!pendingResumeAction) {
+			return;
+		}
+
+		if (pendingResumeAction === "delete") {
+			const deleted = await deleteResume();
+			if (deleted) {
+				setPendingResumeAction(null);
+			}
+			return;
+		}
+
+		const updated = await updateResumeStatus(
+			pendingResumeAction === "close" ? "closed" : "open",
+		);
+
+		if (updated) {
+			setPendingResumeAction(null);
+		}
 	}
 
 	async function requestDeleteRoast(targetRoast: Roast) {
@@ -1224,7 +1422,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (targetRoast.is_deleted) {
-			reportError("This roast has already been deleted.");
+			reportError("This comment has already been deleted.");
 			return;
 		}
 
@@ -1259,7 +1457,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				return;
 			}
 
-			reportError(error.message);
+			reportError(
+				isPermissionPolicyError(error)
+					? "You can only delete comments or replies you wrote."
+					: "We could not delete this comment. Please try again.",
+			);
 			return;
 		}
 
@@ -1278,7 +1480,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					}
 				: current,
 		);
-		toast.success(targetRoast.parent_id ? "Reply deleted." : "Roast deleted.");
+		toast.success(targetRoast.parent_id ? "Reply deleted." : "Comment deleted.");
 	}
 
 	function openReportDialog(targetRoast: Roast) {
@@ -1295,7 +1497,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (targetRoast.author_id === user.id) {
-			reportError("You cannot report your own roast.");
+			reportError("You cannot report your own feedback.");
 			return;
 		}
 
@@ -1385,6 +1587,27 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const postDescription = resume.post_description ?? "";
 	const visibleRoastCount = roasts.filter((roast) => !roast.is_deleted).length;
 	const deleteTargetIsReply = Boolean(deleteTargetRoast?.parent_id);
+	const resumeActionCopy =
+		pendingResumeAction === "delete"
+			? {
+					action: "Delete submission",
+					description:
+						"This removes the resume, its PDF, feedback thread, and saved references. This cannot be undone.",
+					title: "Delete submission?",
+				}
+			: pendingResumeAction === "reopen"
+				? {
+						action: "Reopen feedback",
+						description:
+							"Reviewers will be able to add new feedback and replies again.",
+						title: "Reopen feedback?",
+					}
+				: {
+						action: "Close feedback",
+						description:
+							"New reviewers will not be able to comment until you reopen it. Existing feedback stays visible.",
+						title: "Close feedback?",
+					};
 	const posterLabel = getResumePosterLabel(resume, resumeAuthorProfile);
 	const reportTargetAuthorHandle = reportTargetRoast
 		? getAuthorHandle(
@@ -1605,7 +1828,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 								</button>
 							) : null}
 						</footer>
-						{!isDeleted && replyingToId === roast.id ? (
+						{!isDeleted && canReply && replyingToId === roast.id ? (
 							<form
 								className="inline-reply-form"
 								onSubmit={(event) => handleReplySubmit(event, roast)}
@@ -1693,16 +1916,17 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						{isOwner ? (
 							<div className="owner-actions">
 								<Button
-									disabled={isClosed}
-									onClick={() => void closeResume()}
+									disabled={resumeActionBusy}
+									onClick={requestResumeStatusAction}
 									type="button"
 									variant="outline"
 								>
-									{isClosed ? "Closed" : "Close feedback"}
+									{isClosed ? "Reopen feedback" : "Close feedback"}
 								</Button>
 								<Button
 									className="owner-delete-button"
-									onClick={() => void deleteResume()}
+									disabled={resumeActionBusy}
+									onClick={requestDeleteResume}
 									type="button"
 									variant="destructive"
 								>
@@ -1774,7 +1998,9 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							<h2>{isOwner ? "Owner view" : "Feedback closed"}</h2>
 							<p>
 								{isOwner
-									? "You own this resume. You can reply for clarification, but you cannot mark feedback helpful."
+									? isClosed
+										? "You own this resume. Reopen feedback when you want reviewers to add new comments again."
+										: "You own this resume. You can reply for clarification, but you cannot mark feedback helpful."
 									: "This thread is visible for learning, but no new feedback can be added."}
 							</p>
 							{message ? <p className="form-message">{message}</p> : null}
@@ -1943,6 +2169,37 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				</form>
 			</DialogContent>
 		</Dialog>
+		<AlertDialog
+			open={Boolean(pendingResumeAction)}
+			onOpenChange={(open) => {
+				if (!open && !resumeActionBusy) {
+					setPendingResumeAction(null);
+				}
+			}}
+		>
+			<AlertDialogContent size="sm">
+				<AlertDialogHeader>
+					<AlertDialogTitle>{resumeActionCopy.title}</AlertDialogTitle>
+					<AlertDialogDescription>
+						{resumeActionCopy.description}
+					</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogCancel disabled={resumeActionBusy}>
+						Cancel
+					</AlertDialogCancel>
+					<AlertDialogAction
+						disabled={resumeActionBusy}
+						onClick={(event) => {
+							event.preventDefault();
+							void confirmResumeOwnerAction();
+						}}
+					>
+						{resumeActionBusy ? "Working..." : resumeActionCopy.action}
+					</AlertDialogAction>
+				</AlertDialogFooter>
+			</AlertDialogContent>
+		</AlertDialog>
 		<AlertDialog
 			open={Boolean(deleteTargetRoast)}
 			onOpenChange={(open) => {
