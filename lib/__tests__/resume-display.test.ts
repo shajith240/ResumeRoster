@@ -35,10 +35,10 @@ describe("resume display labels", () => {
 		expect(
 			getProfileDisplayName({
 				id: "user-1",
-				full_name: "Shajith Bathina",
-				username: "shajith240",
+				full_name: "Alex Morgan",
+				username: "alexmorgan",
 			}),
-		).toBe("Shajith Bathina");
+		).toBe("Alex Morgan");
 	});
 
 	it("hides poster identity for anonymous resumes", () => {
@@ -50,19 +50,21 @@ describe("resume display labels", () => {
 		const publicResume = { ...baseResume, is_anonymous: false };
 		const profile = {
 			id: "user-1",
-			full_name: "Shajith Bathina",
-			username: "shajith",
-			college: "IIT(ISM) Dhanbad",
-			current_position: "SDE intern",
+			full_name: "Alex Morgan",
+			username: "alexmorgan",
+			college: "State University",
+			current_position: "Software engineering intern",
 			target_role: "Full-time SDE",
 		};
 
 		expect(getResumePosterLabel(publicResume, profile)).toBe(
-			"posted by Shajith Bathina",
+			"posted by Alex Morgan",
 		);
-		expect(getResumeRoleLabel(publicResume, profile)).toBe("SDE intern");
+		expect(getResumeRoleLabel(publicResume, profile)).toBe(
+			"Software engineering intern",
+		);
 		expect(getResumeAffiliationLabel(publicResume, profile)).toBe(
-			"IIT(ISM) Dhanbad",
+			"State University",
 		);
 	});
 });

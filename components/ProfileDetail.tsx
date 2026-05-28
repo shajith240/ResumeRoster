@@ -1670,7 +1670,7 @@ function ProfileEditDialog({
 											limitText(event.target.value, PROFILE_FIELD_LIMITS.fullName),
 										)
 									}
-									placeholder="Shajith Bathina"
+									placeholder="Alex Morgan"
 									value={fullName}
 								/>
 							</div>
@@ -1693,7 +1693,7 @@ function ProfileEditDialog({
 											),
 										)
 									}
-									placeholder="shajith240"
+									placeholder="alexmorgan"
 									value={username}
 								/>
 								<div className={usernameAssistClass} aria-live="polite">
@@ -1758,7 +1758,7 @@ function ProfileEditDialog({
 											),
 										)
 									}
-									placeholder="SDE intern"
+									placeholder="Software engineering intern"
 									value={currentPosition}
 								/>
 							</div>
@@ -1778,7 +1778,7 @@ function ProfileEditDialog({
 											limitText(event.target.value, PROFILE_FIELD_LIMITS.college),
 										)
 									}
-									placeholder="IIT(ISM) Dhanbad"
+									placeholder="State University"
 									value={college}
 								/>
 							</div>
@@ -1803,7 +1803,7 @@ function ProfileEditDialog({
 										),
 									)
 								}
-								placeholder="Dhanbad, Jharkhand"
+								placeholder="City, State"
 								value={collegeLocation}
 							/>
 						</div>

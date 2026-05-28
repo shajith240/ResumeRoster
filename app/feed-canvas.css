@@ -791,28 +791,75 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 		width: 100% !important;
 	}
 
-	.feed-sortbar,
-	.pill-tabs {
+	.feed-sortbar {
 		width: 100% !important;
 	}
 
-	.pill-tabs a,
-	.pill-tabs button {
-		flex: 1 1 0;
+	.feed-sortbar.pill-tabs {
+		display: grid !important;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 3px;
+		padding: 4px;
+	}
+
+	.feed-sortbar.pill-tabs a {
+		min-height: 42px;
 		min-width: 0;
+		padding: 0 3px;
+		border-radius: calc(var(--radius-pill) - 2px);
+		font-size: 12px;
+		line-height: 1;
+		text-align: center;
 		white-space: nowrap;
 	}
 
+	.feed-sortbar .sort-label-full {
+		display: none;
+	}
+
+	.feed-sortbar .sort-label-short {
+		display: inline;
+	}
+
 	.post-actions {
+		display: grid !important;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 		align-items: stretch;
+		gap: 6px;
 	}
 
 	.post-action-button {
-		flex: 1 1 calc(50% - 6px);
+		width: 100%;
+		min-width: 0;
+		border: 1px solid var(--border-subtle);
+		border-radius: 10px;
+		padding: 0 6px;
+		background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
+		font-size: 11.5px;
+		gap: 4px;
 		justify-content: center;
 	}
 
+	.post-action-button:hover {
+		border-color: var(--border-default);
+		background: var(--bg-elevated);
+	}
+
+	.post-action-label,
+	.post-action-count {
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.save-button.is-saved {
+		border-color: color-mix(in srgb, var(--brand) 28%, var(--border-subtle));
+		background: color-mix(in srgb, var(--brand) 10%, transparent);
+	}
+
 	.post-actions .resume-status {
+		grid-column: 1 / -1;
 		width: 100%;
 		margin-left: 0 !important;
 		text-align: center;

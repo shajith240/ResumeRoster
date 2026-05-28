@@ -11,7 +11,7 @@ import {
 
 describe("profile validation", () => {
 	it("normalizes usernames to the public handle format", () => {
-		expect(normalizeUsername("@Sha Jith!!_240")).toBe("shajith_240");
+		expect(normalizeUsername("@Alex Morgan!!_24")).toBe("alexmorgan_24");
 	});
 
 	it("limits text without adding hidden formatting", () => {
@@ -19,9 +19,9 @@ describe("profile validation", () => {
 	});
 
 	it("builds unique-looking username suggestions within the DB limit", () => {
-		const suggestions = buildUsernameCandidates("shajith");
+		const suggestions = buildUsernameCandidates("alex");
 
-		expect(suggestions).toContain("shajith24");
+		expect(suggestions).toContain("alex24");
 		expect(suggestions.length).toBeLessThanOrEqual(10);
 		expect(
 			suggestions.every(
@@ -34,8 +34,8 @@ describe("profile validation", () => {
 		expect(usernameTakenMessage([])).toBe(
 			"That username is already taken. Try another name.",
 		);
-		expect(usernameTakenMessage(["shajith24", "shajithdev"])).toBe(
-			"That username is already taken. Try @shajith24, @shajithdev.",
+		expect(usernameTakenMessage(["alex24", "alexdev"])).toBe(
+			"That username is already taken. Try @alex24, @alexdev.",
 		);
 	});
 

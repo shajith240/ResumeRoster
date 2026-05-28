@@ -1089,7 +1089,7 @@
 
 @media (max-width: 760px) {
 	.shell {
-		padding-bottom: var(--mobile-dock-space);
+		padding-bottom: calc(var(--mobile-dock-space) + 18px);
 	}
 
 	.canvas {
@@ -1127,7 +1127,7 @@
 
 @media (max-width: 560px) {
 	.shell {
-		padding: 10px;
+		padding: 10px 10px calc(var(--mobile-dock-space) + 22px);
 	}
 
 	.identity h1 {

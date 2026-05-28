@@ -197,6 +197,52 @@ export function UserDropdown({
 		return colors[status.toLowerCase() as keyof typeof colors] || colors.online;
 	};
 
+	const renderMobileStatusControls = () => (
+		<div className="user-menu-mobile-section" aria-label="Status">
+			<span className="user-menu-mobile-section-title">Status</span>
+			<div className="user-menu-choice-grid">
+				{MENU_ITEMS.status.map((status) => (
+					<button
+						aria-pressed={selectedStatus === status.value}
+						className={cn(
+							"user-menu-choice",
+							selectedStatus === status.value ? "is-selected" : "",
+						)}
+						key={status.value}
+						onClick={() => onStatusChange(status.value)}
+						type="button"
+					>
+						<Icon icon={status.icon} className="size-4" />
+						<span>{status.label}</span>
+					</button>
+				))}
+			</div>
+		</div>
+	);
+
+	const renderMobileAppearanceControls = () => (
+		<div className="user-menu-mobile-section" aria-label="Appearance">
+			<span className="user-menu-mobile-section-title">Appearance</span>
+			<div className="user-menu-choice-grid user-menu-choice-grid-two">
+				{MENU_ITEMS.appearance.map((themeItem) => (
+					<button
+						aria-pressed={selectedTheme === themeItem.value}
+						className={cn(
+							"user-menu-choice",
+							selectedTheme === themeItem.value ? "is-selected" : "",
+						)}
+						key={themeItem.value}
+						onClick={() => onThemeChange(themeItem.value)}
+						type="button"
+					>
+						<Icon icon={themeItem.icon} className="size-4" />
+						<span>{themeItem.label}</span>
+					</button>
+				))}
+			</div>
+		</div>
+	);
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -209,8 +255,9 @@ export function UserDropdown({
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent
-				className="no-scrollbar z-[1000] w-[310px] rounded-2xl border border-[var(--border-default)] bg-[var(--bg-base)] p-0 text-[var(--text-primary)] shadow-2xl shadow-black/30"
+				className="user-menu-content no-scrollbar z-[1000] w-[310px] rounded-2xl border border-[var(--border-default)] bg-[var(--bg-base)] p-0 text-[var(--text-primary)] shadow-2xl shadow-black/30"
 				align="end"
+				collisionPadding={12}
 				sideOffset={12}
 			>
 				<section className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-1 shadow backdrop-blur-lg">
@@ -239,39 +286,46 @@ export function UserDropdown({
 					</div>
 
 					<DropdownMenuGroup>
-						<DropdownMenuSub>
-							<DropdownMenuSubTrigger className="cursor-pointer rounded-lg p-2">
-								<span className="flex items-center gap-1.5 font-medium text-[var(--text-secondary)]">
-									<Icon
-										icon="solar:smile-circle-line-duotone"
-										className="size-5 text-[var(--text-tertiary)]"
-									/>
-									Update status
-								</span>
-							</DropdownMenuSubTrigger>
-							<DropdownMenuPortal>
-								<DropdownMenuSubContent className="z-[1001] border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] backdrop-blur-lg">
-									<DropdownMenuRadioGroup
-										value={selectedStatus}
-										onValueChange={onStatusChange}
+						<div className="user-menu-submenu-only">
+							<DropdownMenuSub>
+								<DropdownMenuSubTrigger className="cursor-pointer rounded-lg p-2">
+									<span className="flex items-center gap-1.5 font-medium text-[var(--text-secondary)]">
+										<Icon
+											icon="solar:smile-circle-line-duotone"
+											className="size-5 text-[var(--text-tertiary)]"
+										/>
+										Update status
+									</span>
+								</DropdownMenuSubTrigger>
+								<DropdownMenuPortal>
+									<DropdownMenuSubContent
+										className="z-[1001] border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] backdrop-blur-lg"
+										collisionPadding={12}
+										sideOffset={8}
 									>
-										{MENU_ITEMS.status.map((status, index) => (
-											<DropdownMenuRadioItem
-												className="gap-2"
-												key={index}
-												value={status.value}
-											>
-												<Icon
-													icon={status.icon}
-													className="size-5 text-[var(--text-tertiary)]"
-												/>
-												{status.label}
-											</DropdownMenuRadioItem>
-										))}
-									</DropdownMenuRadioGroup>
-								</DropdownMenuSubContent>
-							</DropdownMenuPortal>
-						</DropdownMenuSub>
+										<DropdownMenuRadioGroup
+											value={selectedStatus}
+											onValueChange={onStatusChange}
+										>
+											{MENU_ITEMS.status.map((status, index) => (
+												<DropdownMenuRadioItem
+													className="gap-2"
+													key={index}
+													value={status.value}
+												>
+													<Icon
+														icon={status.icon}
+														className="size-5 text-[var(--text-tertiary)]"
+													/>
+													{status.label}
+												</DropdownMenuRadioItem>
+											))}
+										</DropdownMenuRadioGroup>
+									</DropdownMenuSubContent>
+								</DropdownMenuPortal>
+							</DropdownMenuSub>
+						</div>
+						{renderMobileStatusControls()}
 					</DropdownMenuGroup>
 
 					<DropdownMenuSeparator />
@@ -280,41 +334,50 @@ export function UserDropdown({
 							<Fragment key={`${item.action}-${index}`}>
 								{renderMenuItem(item, index)}
 								{item.action === "submit" ? (
-									<DropdownMenuSub>
-										<DropdownMenuSubTrigger className="cursor-pointer rounded-lg p-2">
-											<span className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
-												<Icon
-													icon="solar:palette-round-line-duotone"
-													className="size-5 text-[var(--text-tertiary)]"
-												/>
-												Appearance
-											</span>
-										</DropdownMenuSubTrigger>
-										<DropdownMenuPortal>
-											<DropdownMenuSubContent className="z-[1001] border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] backdrop-blur-lg">
-												<DropdownMenuRadioGroup
-													value={selectedTheme}
-													onValueChange={(value) =>
-														onThemeChange(value === "light" ? "light" : "dark")
-													}
-												>
-													{MENU_ITEMS.appearance.map((themeItem) => (
-														<DropdownMenuRadioItem
-															className="gap-2"
-															key={themeItem.value}
-															value={themeItem.value}
+									<>
+										<div className="user-menu-submenu-only">
+											<DropdownMenuSub>
+												<DropdownMenuSubTrigger className="cursor-pointer rounded-lg p-2">
+													<span className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
+														<Icon
+															icon="solar:palette-round-line-duotone"
+															className="size-5 text-[var(--text-tertiary)]"
+														/>
+														Appearance
+													</span>
+												</DropdownMenuSubTrigger>
+												<DropdownMenuPortal>
+													<DropdownMenuSubContent
+														className="z-[1001] border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] backdrop-blur-lg"
+														collisionPadding={12}
+														sideOffset={8}
+													>
+														<DropdownMenuRadioGroup
+															value={selectedTheme}
+															onValueChange={(value) =>
+																onThemeChange(value === "light" ? "light" : "dark")
+															}
 														>
-															<Icon
-																icon={themeItem.icon}
-																className="size-5 text-[var(--text-tertiary)]"
-															/>
-															{themeItem.label}
-														</DropdownMenuRadioItem>
-													))}
-												</DropdownMenuRadioGroup>
-											</DropdownMenuSubContent>
-										</DropdownMenuPortal>
-									</DropdownMenuSub>
+															{MENU_ITEMS.appearance.map((themeItem) => (
+																<DropdownMenuRadioItem
+																	className="gap-2"
+																	key={themeItem.value}
+																	value={themeItem.value}
+																>
+																	<Icon
+																		icon={themeItem.icon}
+																		className="size-5 text-[var(--text-tertiary)]"
+																	/>
+																	{themeItem.label}
+																</DropdownMenuRadioItem>
+															))}
+														</DropdownMenuRadioGroup>
+													</DropdownMenuSubContent>
+												</DropdownMenuPortal>
+											</DropdownMenuSub>
+										</div>
+										{renderMobileAppearanceControls()}
+									</>
 								) : null}
 							</Fragment>
 						))}

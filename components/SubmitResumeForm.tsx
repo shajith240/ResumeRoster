@@ -415,7 +415,7 @@ export default function SubmitResumeForm() {
 							onChange={(event) => setTitle(event.target.value)}
 							required
 							maxLength={120}
-							placeholder="Student applying for SDE internship"
+							placeholder="Backend internship resume"
 						/>
 						<small>Make the goal clear in one line.</small>
 					</label>

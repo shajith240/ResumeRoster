@@ -83,11 +83,21 @@ function isDuplicateSavedResumeError(error: { code?: string; message?: string } 
   return error?.code === "23505" || /duplicate key|unique/i.test(error?.message ?? "");
 }
 
-const sortOptions: Array<{ href: string; label: string; value: FeedSort }> = [
+const sortOptions: Array<{
+  href: string;
+  label: string;
+  shortLabel?: string;
+  value: FeedSort;
+}> = [
   { href: "/feed", label: "Best", value: "best" },
   { href: "/feed?sort=new", label: "New", value: "new" },
-  { href: "/feed?sort=top", label: "Top rated", value: "top" },
-  { href: "/feed?sort=needs", label: "Needs review", value: "needs" },
+  { href: "/feed?sort=top", label: "Top rated", shortLabel: "Top", value: "top" },
+  {
+    href: "/feed?sort=needs",
+    label: "Needs review",
+    shortLabel: "Needs",
+    value: "needs",
+  },
 ];
 
 async function mergeLiveRoastCounts(resumeRows: ResumeSummary[]) {
@@ -538,7 +548,10 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
             href={option.href}
             key={option.value}
           >
-            {option.label}
+            <span className="sort-label-full">{option.label}</span>
+            <span className="sort-label-short">
+              {option.shortLabel ?? option.label}
+            </span>
           </Link>
         ))}
         <Link
@@ -546,7 +559,8 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
           className={savedOnly ? "active" : ""}
           href="/feed?saved=1"
         >
-          Saved
+          <span className="sort-label-full">Saved</span>
+          <span className="sort-label-short">Saved</span>
         </Link>
       </nav>
       {sortedResumes.map((resume, index) => {
@@ -611,11 +625,16 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
               <div className="post-actions">
                 <Link className="post-action-button" href={`/resume/${resume.id}`} aria-label={`Open ${resume.roast_count} comments`}>
                   <MessageCircleIcon className="post-action-icon" size={16} aria-hidden="true" />
-                  {formatCount(resume.roast_count)} {resume.roast_count === 1 ? "Comment" : "Comments"}
+                  <span className="post-action-count">
+                    {formatCount(resume.roast_count)}
+                  </span>
+                  <span className="post-action-label">
+                    {resume.roast_count === 1 ? "Comment" : "Comments"}
+                  </span>
                 </Link>
                 <button className="post-action-button copy-button" type="button" onClick={() => void shareResume(resume)} aria-label="Share resume">
                   <LinkIcon className="post-action-icon" size={16} aria-hidden="true" />
-                  Share
+                  <span className="post-action-label">Share</span>
                   {copiedId === resume.id ? <em>Copied!</em> : null}
                 </button>
                 <button
@@ -627,7 +646,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                   type="button"
                 >
                   <BookmarkIcon className="post-action-icon" size={16} aria-hidden="true" />
-                  {saveButtonState.label}
+                  <span className="post-action-label">{saveButtonState.label}</span>
                 </button>
                 <span className={`resume-status ${resume.status === "closed" ? "closed" : ""}`}>
                   {resume.status === "closed" ? "Closed" : "Open for review"}

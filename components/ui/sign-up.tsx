@@ -468,7 +468,7 @@ export function SignUp() {
 										id="auth-full-name"
 										maxLength={64}
 										onChange={(event) => setFullName(event.target.value)}
-										placeholder="Shajith Bathina"
+										placeholder="Alex Morgan"
 										required
 										type="text"
 										value={fullName}

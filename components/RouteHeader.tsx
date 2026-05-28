@@ -88,7 +88,13 @@ export default function RouteHeader() {
 				<AuthButton />
 			</header>
 
-			<nav className="bottom-nav" aria-label="Mobile navigation">
+			<nav
+				className="bottom-nav"
+				aria-label="Mobile navigation"
+				style={{
+					gridTemplateColumns: `repeat(${visibleDockLinks.length}, minmax(0, 1fr))`,
+				}}
+			>
 				{visibleDockLinks.map((link) => {
 					const Icon = link.icon;
 					const isRouteMatch = link.match({ pathname, saved });
