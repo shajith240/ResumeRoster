@@ -17,6 +17,10 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { resolveAvatarUrl } from "@/lib/supabase/avatars";
 import type { RoasterLeaderboardEntry } from "@/lib/supabase/types";
+import {
+	canShowReviewerProfile,
+	getReviewerDisplayLabel,
+} from "@/lib/reviewer-validation";
 
 export type LeaderboardRoastPreview = {
 	id: string;
@@ -34,10 +38,13 @@ export type LeaderboardRoaster = RoasterLeaderboardEntry & {
 };
 
 type StackedListProps = {
+	description?: string;
+	heading?: string;
 	message?: string;
 	onSearchQueryChange?: (value: string) => void;
 	roasters: LeaderboardRoaster[];
 	searchQuery?: string;
+	searchPlaceholder?: string;
 	startRank?: number;
 };
 
@@ -73,6 +80,10 @@ function roasterName(roaster: LeaderboardRoaster) {
 function roleTag(roaster: LeaderboardRoaster) {
 	if (roaster.role_tag) return roaster.role_tag;
 
+	if (canShowReviewerProfile(roaster.community_role, roaster.reviewer_type)) {
+		return getReviewerDisplayLabel(roaster);
+	}
+
 	const role = `${roaster.target_role ?? ""} ${roaster.college ?? ""}`.toLowerCase();
 
 	if (role.includes("student") || role.includes("college") || role.includes("iit")) {
@@ -91,6 +102,10 @@ function roleTag(roaster: LeaderboardRoaster) {
 }
 
 function tagClass(label: string) {
+	if (label === "Trusted reviewer") {
+		return "border-[rgba(255,184,95,0.34)] bg-[var(--brand-muted)] text-[var(--brand)]";
+	}
+
 	if (label === "Student") {
 		return "border-[#D9D0FF] bg-[#F1EDFF] text-[#5137B8] dark:border-[rgba(169,149,255,0.28)] dark:bg-[rgba(169,149,255,0.14)] dark:text-[#d7ceff]";
 	}
@@ -149,6 +164,9 @@ function buildSearchText(roaster: LeaderboardRoaster, rank: number) {
 			roaster.username,
 			roaster.target_role,
 			roaster.college,
+			roaster.reviewer_headline,
+			roaster.reviewer_expertise?.join(" "),
+			roaster.reviewer_verification_status,
 			roleTag(roaster),
 			roaster.top_roast?.content,
 			roaster.top_roast?.helpful_votes
@@ -251,7 +269,10 @@ function LeaderboardRow({
 						{name}
 					</strong>
 					<span className="mt-1 block truncate text-xs font-normal text-[var(--text-secondary)]">
-						{roaster.target_role || roaster.college || "Community reviewer"}
+						{roaster.reviewer_headline ||
+							roaster.target_role ||
+							roaster.college ||
+							"Community reviewer"}
 					</span>
 				</div>
 			</Link>
@@ -371,10 +392,13 @@ function DirectoryRow({
 }
 
 export function StackedList({
+	description = "Roaster directory ranked by useful resume feedback.",
+	heading = "Top 100",
 	message = "",
 	onSearchQueryChange,
 	roasters,
 	searchQuery = "",
+	searchPlaceholder = "Search roasters, roles, top roasts...",
 	startRank = 1,
 }: StackedListProps) {
 	const [localQuery, setLocalQuery] = useState(searchQuery);
@@ -435,10 +459,10 @@ export function StackedList({
 				<div className="mb-4 flex items-center justify-between gap-4">
 					<div className="min-w-0">
 						<h2 className="m-0 flex items-center gap-2 font-[var(--font-display)] text-[34px] font-normal leading-none tracking-normal text-[var(--text-primary)]">
-							Top 100
+							{heading}
 						</h2>
 						<p className="mt-2 text-sm font-normal text-[var(--text-secondary)]">
-							Roaster directory ranked by useful resume feedback.
+							{description}
 						</p>
 					</div>
 				</div>
@@ -453,7 +477,7 @@ export function StackedList({
 						autoComplete="off"
 						className="h-11 rounded-[var(--button-radius)] border-[var(--border-default)] bg-[var(--bg-elevated)] pl-10 pr-10 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
 						onChange={(event) => handleSearch(event.target.value)}
-						placeholder="Search roasters, roles, top roasts..."
+						placeholder={searchPlaceholder}
 						spellCheck={false}
 						type="search"
 						value={activeQuery}

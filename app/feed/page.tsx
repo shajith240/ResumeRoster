@@ -14,7 +14,7 @@ type FeedPageProps = {
 function normalizeSort(value: string | string[] | undefined): FeedSort {
 	const sort = Array.isArray(value) ? value[0] : value;
 
-	return sort === "new" || sort === "top" ? sort : "best";
+	return sort === "new" || sort === "top" || sort === "needs" ? sort : "best";
 }
 
 function normalizeSaved(value: string | string[] | undefined) {

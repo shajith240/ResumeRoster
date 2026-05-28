@@ -102,6 +102,12 @@ export function SessionNavBar() {
 				active: pathname === "/feed" && sort === "top" && !saved,
 			},
 			{
+				href: "/feed?sort=needs",
+				label: "Needs review",
+				icon: ListFilterIcon,
+				active: pathname === "/feed" && sort === "needs" && !saved,
+			},
+			{
 				href: "/submit",
 				label: "Post resume",
 				icon: PlusIcon,

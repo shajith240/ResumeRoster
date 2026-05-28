@@ -1,6 +1,6 @@
 import type { ResumeSummary } from "@/lib/supabase/types";
 
-export type FeedSort = "best" | "new" | "top";
+export type FeedSort = "best" | "new" | "top" | "needs";
 
 export type ResumeRowWithDefaults = Omit<
 	ResumeSummary,
@@ -53,6 +53,17 @@ export function sortResumes<T extends ResumeSummary>(
 		if (sort === "top") {
 			return (
 				b.roast_count - a.roast_count ||
+				new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+			);
+		}
+
+		if (sort === "needs") {
+			const statusScore = (resume: ResumeSummary) =>
+				resume.status === "open" ? 0 : 1;
+
+			return (
+				statusScore(a) - statusScore(b) ||
+				a.roast_count - b.roast_count ||
 				new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 			);
 		}

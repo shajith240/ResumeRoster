@@ -87,6 +87,7 @@ const sortOptions: Array<{ href: string; label: string; value: FeedSort }> = [
   { href: "/feed", label: "Best", value: "best" },
   { href: "/feed?sort=new", label: "New", value: "new" },
   { href: "/feed?sort=top", label: "Top rated", value: "top" },
+  { href: "/feed?sort=needs", label: "Needs review", value: "needs" },
 ];
 
 async function mergeLiveRoastCounts(resumeRows: ResumeSummary[]) {

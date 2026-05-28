@@ -25,6 +25,14 @@ import type { RoasterLeaderboardEntry } from "@/lib/supabase/types";
 import styles from "./Leaderboard.module.css";
 
 type TimeRange = "week" | "month" | "all";
+type DirectoryMode = "leaderboard" | "reviewers";
+type ReviewerFilter =
+	| "all"
+	| "trusted"
+	| "recruiters"
+	| "engineers"
+	| "career_coaches"
+	| "students";
 
 type RoastRow = LeaderboardRoastPreview & {
 	author_id: string;
@@ -32,7 +40,7 @@ type RoastRow = LeaderboardRoastPreview & {
 
 const ROAST_SELECT = "id,resume_id,author_id,content,helpful_votes,created_at";
 const PROFILE_SELECT =
-	"id,username,full_name,avatar_url,avatar_path,college,target_role,roast_count,helpful_votes";
+	"id,username,full_name,avatar_url,avatar_path,college,target_role,community_role,reviewer_type,reviewer_headline,reviewer_expertise,reviewer_verification_status,roast_count,helpful_votes";
 const PROFILE_FALLBACK_SELECT =
 	"id,username,college,target_role,roast_count,helpful_votes";
 const LEADERBOARD_LIMIT = 100;
@@ -43,6 +51,14 @@ const rangeLabels: Record<TimeRange, string> = {
 	week: "This Week",
 	month: "This Month",
 	all: "All Time",
+};
+const reviewerFilterLabels: Record<ReviewerFilter, string> = {
+	all: "All",
+	career_coaches: "Career coaches",
+	engineers: "Engineers",
+	recruiters: "Recruiters",
+	students: "Students/placed",
+	trusted: "Trusted",
 };
 
 function getRangeStart(range: TimeRange) {
@@ -58,7 +74,7 @@ function isMissingSoftDeleteColumn(message: string) {
 }
 
 function isMissingProfileMetadataColumn(message: string) {
-	return /full_name|avatar_url|avatar_path|schema cache|column/i.test(message);
+	return /full_name|avatar_url|avatar_path|community_role|reviewer_|schema cache|column/i.test(message);
 }
 
 async function fetchRoastRows({
@@ -147,9 +163,103 @@ function mergeProfileMetadata(
 		full_name: profile.full_name ?? roaster.full_name ?? null,
 		avatar_url: profile.avatar_url ?? roaster.avatar_url ?? null,
 		avatar_path: profile.avatar_path ?? roaster.avatar_path ?? null,
+		community_role: profile.community_role ?? roaster.community_role ?? null,
 		username: profile.username ?? roaster.username,
 		college: profile.college ?? roaster.college,
+		reviewer_expertise:
+			profile.reviewer_expertise ?? roaster.reviewer_expertise ?? null,
+		reviewer_headline:
+			profile.reviewer_headline ?? roaster.reviewer_headline ?? null,
+		reviewer_type: profile.reviewer_type ?? roaster.reviewer_type ?? null,
+		reviewer_verification_status:
+			profile.reviewer_verification_status ??
+			roaster.reviewer_verification_status ??
+			null,
 		target_role: profile.target_role ?? roaster.target_role,
+	};
+}
+
+function applyReviewerFilter(
+	profiles: RoasterLeaderboardEntry[],
+	filter: ReviewerFilter,
+) {
+	return profiles.filter((profile) => {
+		const isReviewer =
+			profile.community_role === "reviewer" || profile.community_role === "both";
+		if (!isReviewer) return false;
+
+		if (filter === "trusted") {
+			return profile.reviewer_verification_status === "verified";
+		}
+
+		if (filter === "recruiters") {
+			return (
+				profile.reviewer_type === "recruiter" ||
+				profile.reviewer_type === "hiring_manager"
+			);
+		}
+
+		if (filter === "engineers") {
+			return profile.reviewer_type === "engineer";
+		}
+
+		if (filter === "career_coaches") {
+			return profile.reviewer_type === "career_coach";
+		}
+
+		if (filter === "students") {
+			return (
+				profile.reviewer_type === "student" ||
+				profile.reviewer_type === "placed_professional"
+			);
+		}
+
+		return true;
+	});
+}
+
+async function fetchReviewerDirectory(filter: ReviewerFilter) {
+	const profileResult = await supabase
+		.from("profiles")
+		.select(PROFILE_SELECT)
+		.in("community_role", ["reviewer", "both"])
+		.order("helpful_votes", { ascending: false })
+		.order("roast_count", { ascending: false })
+		.limit(100);
+
+	if (profileResult.error) {
+		if (isMissingProfileMetadataColumn(profileResult.error.message)) {
+			return { message: SUPABASE_MIGRATION_MESSAGE, roasters: [] };
+		}
+
+		return { message: profileResult.error.message, roasters: [] };
+	}
+
+	const profiles = applyReviewerFilter(
+		(profileResult.data ?? []) as RoasterLeaderboardEntry[],
+		filter,
+	);
+	const authorIds = profiles.map((profile) => profile.id);
+	let topRoasts: Record<string, RoastRow> = {};
+
+	if (authorIds.length) {
+		const { data: roasts } = await fetchRoastRows({ authorIds });
+		topRoasts = bestRoastMap((roasts ?? []) as RoastRow[]);
+	}
+
+	const ranked = sortRoasters(
+		profiles.map((profile) => enhanceRoaster(profile, topRoasts[profile.id])),
+	).sort(
+		(a, b) =>
+			Number(b.reviewer_verification_status === "verified") -
+				Number(a.reviewer_verification_status === "verified") ||
+			(b.helpful_votes ?? 0) - (a.helpful_votes ?? 0) ||
+			(b.roast_count ?? 0) - (a.roast_count ?? 0),
+	);
+
+	return {
+		message: "",
+		roasters: ranked.slice(0, LEADERBOARD_LIMIT),
 	};
 }
 
@@ -239,7 +349,9 @@ export default function Leaderboard() {
 	const [roasters, setRoasters] = useState<LeaderboardRoaster[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [message, setMessage] = useState("");
+	const [mode, setMode] = useState<DirectoryMode>("leaderboard");
 	const [range, setRange] = useState<TimeRange>("month");
+	const [reviewerFilter, setReviewerFilter] = useState<ReviewerFilter>("all");
 	const [searchQuery, setSearchQuery] = useState("");
 
 	useEffect(() => {
@@ -253,7 +365,10 @@ export default function Leaderboard() {
 			}
 			setMessage("");
 
-			const result = await fetchLeaderboardData(range);
+			const result =
+				mode === "reviewers"
+					? await fetchReviewerDirectory(reviewerFilter)
+					: await fetchLeaderboardData(range);
 
 			if (!active) return;
 
@@ -286,7 +401,9 @@ export default function Leaderboard() {
 
 		void loadLeaderboard();
 
-		const channel = supabase.channel(`leaderboard-live-${range}`);
+		const channel = supabase.channel(
+			`leaderboard-live-${mode}-${range}-${reviewerFilter}`,
+		);
 		channel
 			.on(
 				"postgres_changes",
@@ -307,7 +424,7 @@ export default function Leaderboard() {
 			}
 			void supabase.removeChannel(channel);
 		};
-	}, [range]);
+	}, [mode, range, reviewerFilter]);
 
 	if (loading) {
 		return (
@@ -323,40 +440,107 @@ export default function Leaderboard() {
 			<header className={styles.header}>
 				<div>
 					<h1>Leaderboard</h1>
-					<p>Top roasters. Better resumes. Stronger careers.</p>
+					<p>
+						{mode === "reviewers"
+							? "Find credible people who can give useful resume feedback."
+							: "Top roasters. Better resumes. Stronger careers."}
+					</p>
 				</div>
 
 				<div className={styles.toolbar}>
-					<Select value={range} onValueChange={(value) => setRange(value as TimeRange)}>
-						<SelectTrigger
-							aria-label="Leaderboard time range"
-							className={styles.rangeTrigger}
+					<div className={styles.modeTabs}>
+						<button
+							aria-pressed={mode === "leaderboard"}
+							onClick={() => setMode("leaderboard")}
+							type="button"
 						>
-							<CalendarDays className={styles.rangeIcon} aria-hidden="true" />
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent className={styles.rangeContent}>
-							<SelectGroup>
-								{(["week", "month", "all"] as const).map((value) => (
-									<SelectItem
-										className={styles.rangeItem}
-										key={value}
-										value={value}
-									>
-										{rangeLabels[value]}
-									</SelectItem>
-								))}
-							</SelectGroup>
-						</SelectContent>
-					</Select>
+							Leaderboard
+						</button>
+						<button
+							aria-pressed={mode === "reviewers"}
+							onClick={() => setMode("reviewers")}
+							type="button"
+						>
+							Reviewers
+						</button>
+					</div>
+					{mode === "leaderboard" ? (
+						<Select value={range} onValueChange={(value) => setRange(value as TimeRange)}>
+							<SelectTrigger
+								aria-label="Leaderboard time range"
+								className={styles.rangeTrigger}
+							>
+								<CalendarDays className={styles.rangeIcon} aria-hidden="true" />
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent className={styles.rangeContent}>
+								<SelectGroup>
+									{(["week", "month", "all"] as const).map((value) => (
+										<SelectItem
+											className={styles.rangeItem}
+											key={value}
+											value={value}
+										>
+											{rangeLabels[value]}
+										</SelectItem>
+									))}
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+					) : (
+						<Select
+							value={reviewerFilter}
+							onValueChange={(value) => setReviewerFilter(value as ReviewerFilter)}
+						>
+							<SelectTrigger
+								aria-label="Reviewer directory filter"
+								className={styles.rangeTrigger}
+							>
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent className={styles.rangeContent}>
+								<SelectGroup>
+									{(
+										[
+											"all",
+											"trusted",
+											"recruiters",
+											"engineers",
+											"career_coaches",
+											"students",
+										] as const
+									).map((value) => (
+										<SelectItem
+											className={styles.rangeItem}
+											key={value}
+											value={value}
+										>
+											{reviewerFilterLabels[value]}
+										</SelectItem>
+									))}
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+					)}
 				</div>
 			</header>
 
 			<StackedList
+				description={
+					mode === "reviewers"
+						? "People who opted into reviewing resumes, sorted by trust and helpfulness."
+						: "Roaster directory ranked by useful resume feedback."
+				}
+				heading={mode === "reviewers" ? "Reviewer Directory" : "Top 100"}
 				message={message}
 				onSearchQueryChange={setSearchQuery}
 				roasters={roasters}
 				searchQuery={searchQuery}
+				searchPlaceholder={
+					mode === "reviewers"
+						? "Search reviewers, expertise, roles..."
+						: "Search roasters, roles, top roasts..."
+				}
 				startRank={1}
 			/>
 		</section>

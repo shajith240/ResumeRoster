@@ -36,7 +36,37 @@
 
 .toolbar {
 	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
 	justify-content: flex-end;
+}
+
+.modeTabs {
+	display: inline-grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 4px;
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius);
+	padding: 4px;
+	background: var(--bg-surface);
+}
+
+.modeTabs button {
+	min-width: 104px;
+	border-radius: var(--button-radius-sm);
+	padding: 8px 12px;
+	color: var(--text-secondary);
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1;
+	transition:
+		background-color 0.18s var(--button-ease),
+		color 0.18s var(--button-ease);
+}
+
+.modeTabs button[aria-pressed="true"] {
+	background: var(--text-primary);
+	color: var(--text-inverse);
 }
 
 .rangeTrigger {
@@ -137,6 +167,10 @@
 
 	.toolbar {
 		justify-content: stretch;
+	}
+
+	.modeTabs {
+		width: 100%;
 	}
 
 	.rangeTrigger {

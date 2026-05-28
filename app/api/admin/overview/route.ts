@@ -25,6 +25,7 @@ export async function GET(request: Request) {
 			roastCount,
 			replyCount,
 			pendingReportCount,
+			pendingReviewerCount,
 			recentResumes,
 			recentRoasts,
 			activePresence,
@@ -53,6 +54,12 @@ export async function GET(request: Request) {
 			getCount(
 				admin
 					.from("content_reports")
+					.select("id", { count: "exact", head: true })
+					.eq("status", "pending"),
+			),
+			getCount(
+				admin
+					.from("reviewer_applications")
 					.select("id", { count: "exact", head: true })
 					.eq("status", "pending"),
 			),
@@ -93,6 +100,7 @@ export async function GET(request: Request) {
 				activeRoasters: activeRoasterCount,
 				openResumes: openResumeCount,
 				pendingReports: pendingReportCount,
+				pendingReviewers: pendingReviewerCount,
 				replies: replyCount,
 				resumes: resumeCount,
 				roasts: roastCount,

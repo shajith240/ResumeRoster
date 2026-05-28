@@ -1,6 +1,17 @@
+import {
+	canShowReviewerProfile,
+	getReviewerDisplayLabel,
+	type CommunityRole,
+	type ReviewerType,
+	type ReviewerVerificationStatus,
+} from "@/lib/reviewer-validation";
+
 export type LeaderboardStatsInput = {
 	college?: string | null;
+	community_role?: CommunityRole | null;
 	helpful_votes: number;
+	reviewer_type?: ReviewerType | null;
+	reviewer_verification_status?: ReviewerVerificationStatus | null;
 	roast_count: number;
 	target_role?: string | null;
 };
@@ -20,6 +31,10 @@ export type LeaderboardTopRoast = {
 };
 
 export function roleTag(roaster: LeaderboardStatsInput) {
+	if (canShowReviewerProfile(roaster.community_role, roaster.reviewer_type)) {
+		return getReviewerDisplayLabel(roaster);
+	}
+
 	const role = `${roaster.target_role ?? ""} ${roaster.college ?? ""}`.toLowerCase();
 
 	if (role.includes("student") || role.includes("college") || role.includes("iit")) {

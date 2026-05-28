@@ -16,6 +16,24 @@ export type ContentReportStatus =
 export type CommentContentFormat = "plain" | "markdown";
 export type CommentAttachmentKind = "image";
 export type CommentAttachmentSource = "upload";
+export type CommunityRole = "candidate" | "reviewer" | "both";
+export type ReviewerType =
+  | "student"
+  | "placed_professional"
+  | "recruiter"
+  | "hiring_manager"
+  | "engineer"
+  | "designer"
+  | "product_manager"
+  | "career_coach"
+  | "founder"
+  | "other";
+export type ReviewerVerificationStatus =
+  | "none"
+  | "pending"
+  | "verified"
+  | "rejected";
+export type ReviewerApplicationStatus = "pending" | "approved" | "rejected";
 
 export type ResumeAuthorProfile = {
   id: string;
@@ -27,6 +45,11 @@ export type ResumeAuthorProfile = {
   target_role?: string | null;
   current_position?: string | null;
   app_status?: AppStatus | null;
+  community_role?: CommunityRole | null;
+  reviewer_type?: ReviewerType | null;
+  reviewer_headline?: string | null;
+  reviewer_expertise?: string[] | null;
+  reviewer_verification_status?: ReviewerVerificationStatus | null;
 };
 
 export type ResumeSummary = {
@@ -83,6 +106,11 @@ export type RoasterLeaderboardEntry = {
   college: string | null;
   target_role: string | null;
   app_status?: AppStatus | null;
+  community_role?: CommunityRole | null;
+  reviewer_type?: ReviewerType | null;
+  reviewer_headline?: string | null;
+  reviewer_expertise?: string[] | null;
+  reviewer_verification_status?: ReviewerVerificationStatus | null;
   roast_count: number;
   helpful_votes: number;
 };
@@ -94,6 +122,14 @@ export type PublicProfile = RoasterLeaderboardEntry & {
   college_location: string | null;
   about: string | null;
   skills: string[] | null;
+  community_role: CommunityRole;
+  reviewer_type: ReviewerType | null;
+  reviewer_headline: string | null;
+  reviewer_bio: string | null;
+  reviewer_expertise: string[] | null;
+  reviewer_verification_status: ReviewerVerificationStatus;
+  reviewer_verified_at: string | null;
+  reviewer_verified_by: string | null;
   resume_highlight_id: string | null;
   roast_points: number;
   resume_improvement: number;
@@ -103,6 +139,21 @@ export type PublicProfile = RoasterLeaderboardEntry & {
   received_roast_count: number;
   received_helpful_votes: number;
   created_at: string;
+};
+
+export type ReviewerApplication = {
+  id: string;
+  user_id: string;
+  requested_type: ReviewerType;
+  expertise: string[];
+  proof_url: string;
+  note: string;
+  status: ReviewerApplicationStatus;
+  admin_note: string;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 export type PublicProfileResume = {

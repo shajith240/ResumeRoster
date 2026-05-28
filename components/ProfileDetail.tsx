@@ -62,10 +62,26 @@ import {
 	parseSkills,
 	usernameTakenMessage,
 } from "@/lib/profile-validation";
+import {
+	COMMUNITY_ROLES,
+	REVIEWER_FIELD_LIMITS,
+	REVIEWER_TYPES,
+	canShowReviewerProfile,
+	getCommunityRoleLabel,
+	getReviewerDisplayLabel,
+	getReviewerTypeLabel,
+	getReviewerApplicationIssue,
+	isCommunityRole,
+	isReviewerType,
+	limitReviewerText,
+	parseReviewerExpertise,
+} from "@/lib/reviewer-validation";
 import type {
+	CommunityRole,
 	PublicProfile,
 	PublicProfileResume,
 	PublicProfileRoast,
+	ReviewerType,
 } from "@/lib/supabase/types";
 import { toast } from "sonner";
 import styles from "./ProfileDetail.module.css";
@@ -95,6 +111,23 @@ const PROFILE_CHANGE_EVENT = "resumeroster-profile-change";
 const LATEST_RESUME_VALUE = "__latest_public_resume__";
 const SUPABASE_MIGRATION_MESSAGE =
 	"Run the pending Supabase migrations, then refresh this page.";
+const REVIEWER_EXPERTISE_OPTIONS = Array.from(
+	new Set([
+		"ATS",
+		"Recruiter Screen",
+		"Behavioral Interviews",
+		"System Design",
+		"Frontend",
+		"Backend",
+		"Data",
+		"Design",
+		"Product",
+		"Career Switchers",
+		"Internships",
+		"Portfolio Review",
+		...SKILL_OPTIONS,
+	]),
+);
 const uuidPattern =
 	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -284,7 +317,7 @@ function getActivity(
 }
 
 function isProfileFeatureError(message: string) {
-	return /avatar_url|tagline|current_position|college_location|about|skills|resume_highlight_id|get_public_profile_resumes|schema cache|column|function/i.test(
+	return /avatar_url|tagline|current_position|college_location|about|skills|community_role|reviewer_|reviewer_applications|resume_highlight_id|get_public_profile_resumes|schema cache|column|function/i.test(
 		message,
 	);
 }
@@ -302,6 +335,15 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	const [collegeLocation, setCollegeLocation] = useState("");
 	const [about, setAbout] = useState("");
 	const [skillsInput, setSkillsInput] = useState("");
+	const [communityRole, setCommunityRole] =
+		useState<CommunityRole>("candidate");
+	const [reviewerType, setReviewerType] = useState<ReviewerType | "">("");
+	const [reviewerHeadline, setReviewerHeadline] = useState("");
+	const [reviewerBio, setReviewerBio] = useState("");
+	const [reviewerExpertiseInput, setReviewerExpertiseInput] = useState("");
+	const [reviewerProofUrl, setReviewerProofUrl] = useState("");
+	const [reviewerApplicationNote, setReviewerApplicationNote] = useState("");
+	const [reviewerApplying, setReviewerApplying] = useState(false);
 	const [resumeHighlightId, setResumeHighlightId] = useState("");
 	const [avatarFile, setAvatarFile] = useState<File | null>(null);
 	const [avatarPreview, setAvatarPreview] = useState("");
@@ -483,6 +525,33 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			);
 			setAbout(limitText(loadedProfile.about ?? "", PROFILE_FIELD_LIMITS.about));
 			setSkillsInput((loadedProfile.skills ?? []).join(", "));
+			setCommunityRole(
+				isCommunityRole(loadedProfile.community_role)
+					? loadedProfile.community_role
+					: "candidate",
+			);
+			setReviewerType(
+				loadedProfile.reviewer_type && isReviewerType(loadedProfile.reviewer_type)
+					? loadedProfile.reviewer_type
+					: "",
+			);
+			setReviewerHeadline(
+				limitReviewerText(
+					loadedProfile.reviewer_headline ?? "",
+					REVIEWER_FIELD_LIMITS.headline,
+				),
+			);
+			setReviewerBio(
+				limitReviewerText(
+					loadedProfile.reviewer_bio ?? "",
+					REVIEWER_FIELD_LIMITS.bio,
+				),
+			);
+			setReviewerExpertiseInput(
+				(loadedProfile.reviewer_expertise ?? []).join(", "),
+			);
+			setReviewerProofUrl("");
+			setReviewerApplicationNote("");
 			setResumeHighlightId(
 				loadedProfile.resume_highlight_id ||
 					loadedResumes.find((resume) => resume.is_highlight)?.id ||
@@ -589,6 +658,19 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				resumes.some((resume) => resume.id === resumeHighlightId) && resumeHighlightId
 					? resumeHighlightId
 					: null;
+			const nextCommunityRole = isCommunityRole(communityRole)
+				? communityRole
+				: "candidate";
+			const nextReviewerType =
+				nextCommunityRole === "candidate"
+					? null
+					: isReviewerType(reviewerType)
+						? reviewerType
+						: "other";
+			const nextReviewerExpertise =
+				nextCommunityRole === "candidate"
+					? []
+					: parseReviewerExpertise(reviewerExpertiseInput);
 
 			const nextProfile = {
 				full_name:
@@ -604,6 +686,23 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					null,
 				about: limitText(about, PROFILE_FIELD_LIMITS.about).trim() || null,
 				skills: nextSkills,
+				community_role: nextCommunityRole,
+				reviewer_bio:
+					nextCommunityRole === "candidate"
+						? null
+						: limitReviewerText(
+								reviewerBio,
+								REVIEWER_FIELD_LIMITS.bio,
+							) || null,
+				reviewer_expertise: nextReviewerExpertise,
+				reviewer_headline:
+					nextCommunityRole === "candidate"
+						? null
+						: limitReviewerText(
+								reviewerHeadline,
+								REVIEWER_FIELD_LIMITS.headline,
+							) || null,
+				reviewer_type: nextReviewerType,
 				resume_highlight_id: selectedHighlight,
 				...(avatarUpdate ?? {}),
 			};
@@ -664,6 +763,105 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		}
 	}
 
+	async function applyForTrustedReviewer() {
+		setSaveMessage("");
+
+		if (!user || !isOwnProfile) {
+			const errorMessage = "Sign in with your own profile to apply.";
+			setSaveMessage(errorMessage);
+			toast.error(errorMessage);
+			return;
+		}
+
+		const nextCommunityRole = isCommunityRole(communityRole)
+			? communityRole
+			: "candidate";
+		const nextReviewerType = isReviewerType(reviewerType) ? reviewerType : null;
+		const nextReviewerExpertise = parseReviewerExpertise(reviewerExpertiseInput);
+		const issue = getReviewerApplicationIssue({
+			communityRole: nextCommunityRole,
+			note: reviewerApplicationNote,
+			proofUrl: reviewerProofUrl,
+			reviewerType: nextReviewerType,
+		});
+
+		if (issue) {
+			setSaveMessage(issue);
+			toast.error(issue);
+			return;
+		}
+
+		setReviewerApplying(true);
+
+		try {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+
+			if (!session?.access_token) {
+				throw new Error("Sign in again before applying.");
+			}
+
+			const response = await fetch("/api/reviewer-application", {
+				body: JSON.stringify({
+					communityRole: nextCommunityRole,
+					note: reviewerApplicationNote,
+					proofUrl: reviewerProofUrl,
+					reviewerBio,
+					reviewerExpertise: nextReviewerExpertise,
+					reviewerHeadline,
+					reviewerType: nextReviewerType,
+				}),
+				headers: {
+					Authorization: `Bearer ${session.access_token}`,
+					"Content-Type": "application/json",
+				},
+				method: "POST",
+			});
+			const data = await response.json().catch(() => ({}));
+
+			if (!response.ok) {
+				throw new Error(
+					(data as { message?: string }).message ??
+						"Reviewer application failed.",
+				);
+			}
+
+			setProfile((current) =>
+				current
+					? {
+							...current,
+							community_role: nextCommunityRole,
+							reviewer_bio: limitReviewerText(
+								reviewerBio,
+								REVIEWER_FIELD_LIMITS.bio,
+							),
+							reviewer_expertise: nextReviewerExpertise,
+							reviewer_headline: limitReviewerText(
+								reviewerHeadline,
+								REVIEWER_FIELD_LIMITS.headline,
+							),
+							reviewer_type: nextReviewerType,
+							reviewer_verification_status: "pending",
+							reviewer_verified_at: null,
+							reviewer_verified_by: null,
+						}
+					: current,
+			);
+			setReviewerProofUrl("");
+			setReviewerApplicationNote("");
+			setSaveMessage("Reviewer application sent");
+			toast.success("Reviewer application sent.");
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error ? error.message : "Reviewer application failed.";
+			setSaveMessage(errorMessage);
+			toast.error(errorMessage);
+		} finally {
+			setReviewerApplying(false);
+		}
+	}
+
 	const profileView = useMemo(() => {
 		if (!profile) return null;
 
@@ -677,6 +875,13 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			"Community resume reviewer";
 		const resumeHighlight = highlightedResume(profile, resumes);
 		const skills = profile.skills?.length ? profile.skills : fallbackSkills(profile);
+		const reviewerVisible = canShowReviewerProfile(
+			profile.community_role,
+			profile.reviewer_type,
+		);
+		const reviewerExpertise = profile.reviewer_expertise?.length
+			? profile.reviewer_expertise
+			: skills.slice(0, 6);
 
 		return {
 			activity: getActivity(roasts, resumes, profile),
@@ -686,6 +891,16 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			currentRole,
 			displayName,
 			initials: getInitials(displayName) || "R",
+			reviewerBio:
+				profile.reviewer_bio ||
+				"Open to reviewing resumes with practical, role-aware feedback.",
+			reviewerExpertise,
+			reviewerHeadline:
+				profile.reviewer_headline ||
+				`${getReviewerTypeLabel(profile.reviewer_type)} focused on useful resume feedback.`,
+			reviewerLabel: getReviewerDisplayLabel(profile),
+			reviewerStatus: profile.reviewer_verification_status,
+			reviewerVisible,
 			resumeHighlight,
 			roleTag: roleTag(profile),
 			skills,
@@ -804,6 +1019,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								avatarPreview={avatarPreview || profileView.avatarUrl}
 								college={college}
 								collegeLocation={collegeLocation}
+								communityRole={communityRole}
 								currentPosition={currentPosition}
 								displayName={profileView.displayName}
 								fullName={fullName}
@@ -812,15 +1028,35 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								onAboutChange={setAbout}
 								onCollegeChange={setCollege}
 								onCollegeLocationChange={setCollegeLocation}
+								onCommunityRoleChange={setCommunityRole}
 								onCurrentPositionChange={setCurrentPosition}
 								onFullNameChange={setFullName}
 								profileOwnerId={profile.id}
+								onReviewerApplicationNoteChange={
+									setReviewerApplicationNote
+								}
+								onReviewerApply={applyForTrustedReviewer}
+								onReviewerBioChange={setReviewerBio}
+								onReviewerExpertiseChange={setReviewerExpertiseInput}
+								onReviewerHeadlineChange={setReviewerHeadline}
+								onReviewerProofUrlChange={setReviewerProofUrl}
+								onReviewerTypeChange={setReviewerType}
 								onResumeHighlightChange={setResumeHighlightId}
 								onSave={saveProfile}
 								onSkillsChange={setSkillsInput}
 								onTaglineChange={setTagline}
 								onUsernameChange={setUsername}
 								originalUsername={profile.username ?? ""}
+								reviewerApplicationNote={reviewerApplicationNote}
+								reviewerApplying={reviewerApplying}
+								reviewerBio={reviewerBio}
+								reviewerExpertiseInput={reviewerExpertiseInput}
+								reviewerHeadline={reviewerHeadline}
+								reviewerProofUrl={reviewerProofUrl}
+								reviewerType={reviewerType}
+								reviewerVerificationStatus={
+									profile.reviewer_verification_status
+								}
 								resumeHighlightId={resumeHighlightId}
 								resumes={resumes}
 								saveMessage={saveMessage}
@@ -858,6 +1094,33 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				</section>
 
 				<div className={styles.profileGrid}>
+					{profileView.reviewerVisible ? (
+						<section className={styles.reviewerPanel}>
+							<div className={styles.panelHeader}>
+								<div>
+									<h2>Reviewer Profile</h2>
+									<p>{profileView.reviewerHeadline}</p>
+								</div>
+								<span
+									className={
+										profileView.reviewerStatus === "verified"
+											? styles.trustedReviewerBadge
+											: styles.selfDeclaredBadge
+									}
+								>
+									<ShieldCheck aria-hidden="true" />
+									{profileView.reviewerLabel}
+								</span>
+							</div>
+							<p>{profileView.reviewerBio}</p>
+							<div className={styles.skillCloud}>
+								{profileView.reviewerExpertise.map((skill) => (
+									<span key={skill}>{skill}</span>
+								))}
+							</div>
+						</section>
+					) : null}
+
 					<section className={styles.aboutPanel}>
 						<h2>About Me</h2>
 						<p>
@@ -1033,6 +1296,7 @@ function ProfileEditDialog({
 	avatarPreview,
 	college,
 	collegeLocation,
+	communityRole,
 	currentPosition,
 	displayName,
 	fullName,
@@ -1041,15 +1305,31 @@ function ProfileEditDialog({
 	onAboutChange,
 	onCollegeChange,
 	onCollegeLocationChange,
+	onCommunityRoleChange,
 	onCurrentPositionChange,
 	onFullNameChange,
 	profileOwnerId,
+	onReviewerApplicationNoteChange,
+	onReviewerApply,
+	onReviewerBioChange,
+	onReviewerExpertiseChange,
+	onReviewerHeadlineChange,
+	onReviewerProofUrlChange,
+	onReviewerTypeChange,
 	onResumeHighlightChange,
 	onSave,
 	onSkillsChange,
 	onTaglineChange,
 	onUsernameChange,
 	originalUsername,
+	reviewerApplicationNote,
+	reviewerApplying,
+	reviewerBio,
+	reviewerExpertiseInput,
+	reviewerHeadline,
+	reviewerProofUrl,
+	reviewerType,
+	reviewerVerificationStatus,
 	resumeHighlightId,
 	resumes,
 	saveMessage,
@@ -1062,6 +1342,7 @@ function ProfileEditDialog({
 	avatarPreview: string;
 	college: string;
 	collegeLocation: string;
+	communityRole: CommunityRole;
 	currentPosition: string;
 	displayName: string;
 	fullName: string;
@@ -1070,15 +1351,31 @@ function ProfileEditDialog({
 	onAboutChange: (value: string) => void;
 	onCollegeChange: (value: string) => void;
 	onCollegeLocationChange: (value: string) => void;
+	onCommunityRoleChange: (value: CommunityRole) => void;
 	onCurrentPositionChange: (value: string) => void;
 	onFullNameChange: (value: string) => void;
 	profileOwnerId: string;
+	onReviewerApplicationNoteChange: (value: string) => void;
+	onReviewerApply: () => void;
+	onReviewerBioChange: (value: string) => void;
+	onReviewerExpertiseChange: (value: string) => void;
+	onReviewerHeadlineChange: (value: string) => void;
+	onReviewerProofUrlChange: (value: string) => void;
+	onReviewerTypeChange: (value: ReviewerType | "") => void;
 	onResumeHighlightChange: (value: string) => void;
 	onSave: (event: FormEvent<HTMLFormElement>) => void;
 	onSkillsChange: (value: string) => void;
 	onTaglineChange: (value: string) => void;
 	onUsernameChange: (value: string) => void;
 	originalUsername: string;
+	reviewerApplicationNote: string;
+	reviewerApplying: boolean;
+	reviewerBio: string;
+	reviewerExpertiseInput: string;
+	reviewerHeadline: string;
+	reviewerProofUrl: string;
+	reviewerType: ReviewerType | "";
+	reviewerVerificationStatus: PublicProfile["reviewer_verification_status"];
 	resumeHighlightId: string;
 	resumes: PublicProfileResume[];
 	saveMessage: string;
@@ -1088,6 +1385,7 @@ function ProfileEditDialog({
 	username: string;
 }) {
 	const [skillQuery, setSkillQuery] = useState("");
+	const [reviewerExpertiseQuery, setReviewerExpertiseQuery] = useState("");
 	const [usernameAvailability, setUsernameAvailability] =
 		useState<UsernameAvailability>({
 			status: "idle",
@@ -1095,14 +1393,26 @@ function ProfileEditDialog({
 			suggestions: [],
 		});
 	const selectedSkills = useMemo(() => parseSkills(skillsInput), [skillsInput]);
+	const selectedReviewerExpertise = useMemo(
+		() => parseReviewerExpertise(reviewerExpertiseInput),
+		[reviewerExpertiseInput],
+	);
 	const normalizedUsername = normalizeUsername(username);
 	const normalizedOriginalUsername = normalizeUsername(originalUsername);
 	const usernameChanged =
 		Boolean(normalizedUsername) && normalizedUsername !== normalizedOriginalUsername;
 	const normalizedSkillQuery = skillQuery.trim().replace(/\s+/g, " ");
+	const normalizedReviewerExpertiseQuery = reviewerExpertiseQuery
+		.trim()
+		.replace(/\s+/g, " ");
 	const selectedSkillKeys = useMemo(
 		() => new Set(selectedSkills.map((skill) => skill.toLowerCase())),
 		[selectedSkills],
+	);
+	const selectedReviewerExpertiseKeys = useMemo(
+		() =>
+			new Set(selectedReviewerExpertise.map((skill) => skill.toLowerCase())),
+		[selectedReviewerExpertise],
 	);
 	const skillSuggestions = useMemo(() => {
 		const query = normalizedSkillQuery.toLowerCase();
@@ -1119,6 +1429,30 @@ function ProfileEditDialog({
 		!selectedSkillKeys.has(normalizedSkillQuery.toLowerCase()) &&
 		!SKILL_OPTIONS.some(
 			(skill) => skill.toLowerCase() === normalizedSkillQuery.toLowerCase(),
+		);
+	const reviewerModeEnabled = communityRole !== "candidate";
+	const reviewerExpertiseSuggestions = useMemo(() => {
+		const query = normalizedReviewerExpertiseQuery.toLowerCase();
+
+		return REVIEWER_EXPERTISE_OPTIONS.filter((skill) => {
+			const key = skill.toLowerCase();
+			return (
+				!selectedReviewerExpertiseKeys.has(key) &&
+				(!query || key.includes(query))
+			);
+		}).slice(0, 8);
+	}, [normalizedReviewerExpertiseQuery, selectedReviewerExpertiseKeys]);
+	const canAddCustomReviewerExpertise =
+		selectedReviewerExpertise.length < REVIEWER_FIELD_LIMITS.expertise &&
+		normalizedReviewerExpertiseQuery.length >= 2 &&
+		normalizedReviewerExpertiseQuery.length <=
+			REVIEWER_FIELD_LIMITS.expertiseItem &&
+		!selectedReviewerExpertiseKeys.has(
+			normalizedReviewerExpertiseQuery.toLowerCase(),
+		) &&
+		!REVIEWER_EXPERTISE_OPTIONS.some(
+			(skill) =>
+				skill.toLowerCase() === normalizedReviewerExpertiseQuery.toLowerCase(),
 		);
 
 	useEffect(() => {
@@ -1224,6 +1558,53 @@ function ProfileEditDialog({
 
 		if (event.key === "Backspace" && !skillQuery && selectedSkills.length) {
 			commitSkills(selectedSkills.slice(0, -1));
+		}
+	}
+
+	function commitReviewerExpertise(nextExpertise: string[]) {
+		onReviewerExpertiseChange(nextExpertise.join(", "));
+	}
+
+	function addReviewerExpertise(skill: string) {
+		const cleanedSkill = skill.trim().replace(/\s+/g, " ");
+		if (
+			cleanedSkill.length < 2 ||
+			cleanedSkill.length > REVIEWER_FIELD_LIMITS.expertiseItem ||
+			selectedReviewerExpertiseKeys.has(cleanedSkill.toLowerCase()) ||
+			selectedReviewerExpertise.length >= REVIEWER_FIELD_LIMITS.expertise
+		) {
+			return;
+		}
+
+		commitReviewerExpertise([...selectedReviewerExpertise, cleanedSkill]);
+		setReviewerExpertiseQuery("");
+	}
+
+	function removeReviewerExpertise(skill: string) {
+		commitReviewerExpertise(
+			selectedReviewerExpertise.filter(
+				(selectedSkill) => selectedSkill.toLowerCase() !== skill.toLowerCase(),
+			),
+		);
+	}
+
+	function handleReviewerExpertiseKeyDown(
+		event: KeyboardEvent<HTMLInputElement>,
+	) {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			addReviewerExpertise(
+				reviewerExpertiseSuggestions[0] ?? normalizedReviewerExpertiseQuery,
+			);
+			return;
+		}
+
+		if (
+			event.key === "Backspace" &&
+			!reviewerExpertiseQuery &&
+			selectedReviewerExpertise.length
+		) {
+			commitReviewerExpertise(selectedReviewerExpertise.slice(0, -1));
 		}
 	}
 
@@ -1551,6 +1932,243 @@ function ProfileEditDialog({
 								</div>
 							</div>
 						</div>
+
+						<section className={styles.reviewerEditBlock}>
+							<div>
+								<Label>I&apos;m here to</Label>
+								<div className={styles.segmentedControl}>
+									{COMMUNITY_ROLES.map((role) => (
+										<button
+											aria-pressed={communityRole === role}
+											key={role}
+											onClick={() => {
+												onCommunityRoleChange(role);
+												if (role !== "candidate" && !reviewerType) {
+													onReviewerTypeChange("other");
+												}
+											}}
+											type="button"
+										>
+											{getCommunityRoleLabel(role)}
+										</button>
+									))}
+								</div>
+							</div>
+
+							{reviewerModeEnabled ? (
+								<>
+									<div>
+										<FieldHeader htmlFor="profile-reviewer-type">
+											Reviewer role
+										</FieldHeader>
+										<Select
+											onValueChange={(value) =>
+												onReviewerTypeChange(
+													isReviewerType(value) ? value : "",
+												)
+											}
+											value={reviewerType || "other"}
+										>
+											<SelectTrigger
+												className={styles.highlightSelectTrigger}
+												id="profile-reviewer-type"
+											>
+												<SelectValue placeholder="Choose reviewer role" />
+											</SelectTrigger>
+											<SelectContent className={styles.highlightSelectContent}>
+												<SelectGroup>
+													{REVIEWER_TYPES.map((type) => (
+														<SelectItem
+															className={styles.highlightSelectItem}
+															key={type}
+															value={type}
+														>
+															{getReviewerTypeLabel(type)}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
+									</div>
+
+									<div>
+										<FieldHeader
+											htmlFor="profile-reviewer-headline"
+											max={REVIEWER_FIELD_LIMITS.headline}
+											value={reviewerHeadline}
+										>
+											Reviewer headline
+										</FieldHeader>
+										<Input
+											id="profile-reviewer-headline"
+											maxLength={REVIEWER_FIELD_LIMITS.headline}
+											onChange={(event) =>
+												onReviewerHeadlineChange(
+													limitReviewerText(
+														event.target.value,
+														REVIEWER_FIELD_LIMITS.headline,
+													),
+												)
+											}
+											placeholder="Recruiter screen feedback for early-career engineers"
+											value={reviewerHeadline}
+										/>
+									</div>
+
+									<div>
+										<FieldHeader
+											htmlFor="profile-reviewer-bio"
+											max={REVIEWER_FIELD_LIMITS.bio}
+											value={reviewerBio}
+										>
+											Reviewer bio
+										</FieldHeader>
+										<textarea
+											className={`${styles.editTextarea} ${styles.aboutTextarea}`}
+											id="profile-reviewer-bio"
+											maxLength={REVIEWER_FIELD_LIMITS.bio}
+											onChange={(event) =>
+												onReviewerBioChange(
+													limitReviewerText(
+														event.target.value,
+														REVIEWER_FIELD_LIMITS.bio,
+													),
+												)
+											}
+											placeholder="Mention what resumes you can review well and how you give feedback."
+											value={reviewerBio}
+										/>
+									</div>
+
+									<div>
+										<div className={styles.skillEditorHeader}>
+											<Label htmlFor="profile-reviewer-expertise">
+												Reviewer expertise
+											</Label>
+											<span>
+												{selectedReviewerExpertise.length}/
+												{REVIEWER_FIELD_LIMITS.expertise}
+											</span>
+										</div>
+										<div className={styles.skillEditor}>
+											<div className={styles.selectedSkillList}>
+												{selectedReviewerExpertise.length ? (
+													selectedReviewerExpertise.map((skill) => (
+														<button
+															aria-label={`Remove ${skill}`}
+															key={skill}
+															onClick={() => removeReviewerExpertise(skill)}
+															type="button"
+														>
+															{skill}
+															<X aria-hidden="true" />
+														</button>
+													))
+												) : (
+													<span>Add areas where your feedback is strongest.</span>
+												)}
+											</div>
+											<div className={styles.skillSearch}>
+												<Search aria-hidden="true" />
+												<Input
+													id="profile-reviewer-expertise"
+													maxLength={REVIEWER_FIELD_LIMITS.expertiseItem}
+													onChange={(event) =>
+														setReviewerExpertiseQuery(event.target.value)
+													}
+													onKeyDown={handleReviewerExpertiseKeyDown}
+													placeholder="Search or add expertise"
+													value={reviewerExpertiseQuery}
+												/>
+											</div>
+											<div className={styles.skillSuggestions}>
+												{canAddCustomReviewerExpertise ? (
+													<button
+														onClick={() =>
+															addReviewerExpertise(
+																normalizedReviewerExpertiseQuery,
+															)
+														}
+														type="button"
+													>
+														<Plus aria-hidden="true" />
+														Add &quot;{normalizedReviewerExpertiseQuery}&quot;
+													</button>
+												) : null}
+												{reviewerExpertiseSuggestions.map((skill) => (
+													<button
+														disabled={
+															selectedReviewerExpertise.length >=
+															REVIEWER_FIELD_LIMITS.expertise
+														}
+														key={skill}
+														onClick={() => addReviewerExpertise(skill)}
+														type="button"
+													>
+														<Plus aria-hidden="true" />
+														{skill}
+													</button>
+												))}
+											</div>
+										</div>
+									</div>
+
+									<div className={styles.verificationBox}>
+										<div>
+											<strong>Trusted reviewer</strong>
+											<span>
+												{reviewerVerificationStatus === "verified"
+													? "Approved by admin."
+													: reviewerVerificationStatus === "pending"
+														? "Application pending review."
+														: "Optional admin review for high-trust labels."}
+											</span>
+										</div>
+										{reviewerVerificationStatus === "verified" ? null : (
+											<>
+												<Input
+													aria-label="Proof link"
+													maxLength={REVIEWER_FIELD_LIMITS.proofUrl}
+													onChange={(event) =>
+														onReviewerProofUrlChange(event.target.value)
+													}
+													placeholder="LinkedIn, portfolio, GitHub, or work proof URL"
+													value={reviewerProofUrl}
+												/>
+												<textarea
+													aria-label="Reviewer application note"
+													className={styles.editTextarea}
+													maxLength={REVIEWER_FIELD_LIMITS.applicationNote}
+													onChange={(event) =>
+														onReviewerApplicationNoteChange(
+															limitReviewerText(
+																event.target.value,
+																REVIEWER_FIELD_LIMITS.applicationNote,
+															),
+														)
+													}
+													placeholder="Short note for admin review."
+													value={reviewerApplicationNote}
+												/>
+												<Button
+													disabled={reviewerApplying}
+													onClick={onReviewerApply}
+													type="button"
+													variant="outline"
+												>
+													<ShieldCheck data-icon="inline-start" aria-hidden="true" />
+													{reviewerApplying
+														? "Sending..."
+														: reviewerVerificationStatus === "rejected"
+															? "Reapply for trust"
+															: "Apply for trust"}
+												</Button>
+											</>
+										)}
+									</div>
+								</>
+							) : null}
+						</section>
 					</div>
 
 					{saveMessage && saveMessage !== "Saved" ? (

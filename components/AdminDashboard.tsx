@@ -7,11 +7,17 @@ import { ShieldCheck } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useAdminAccess } from "@/lib/use-admin-access";
 import type { ContentReportStatus } from "@/lib/supabase/types";
+import {
+	getReviewerTypeLabel,
+	isReviewerType,
+	type ReviewerApplicationStatus,
+} from "@/lib/reviewer-validation";
 
 type AdminStats = {
 	activeRoasters: number;
 	openResumes: number;
 	pendingReports: number;
+	pendingReviewers: number;
 	replies: number;
 	resumes: number;
 	roasts: number;
@@ -47,6 +53,12 @@ type ProfilePreview = {
 	id: string;
 	username: string | null;
 	full_name: string | null;
+	avatar_url?: string | null;
+	current_position?: string | null;
+	reviewer_headline?: string | null;
+	reviewer_verification_status?: string | null;
+	roast_count?: number;
+	helpful_votes?: number;
 };
 
 type ReportPreview = {
@@ -63,11 +75,32 @@ type ReportPreview = {
 	updated_at: string;
 };
 
+type ReviewerApplicationPreview = {
+	id: string;
+	admin_note: string;
+	created_at: string;
+	expertise: string[];
+	note: string;
+	profile: ProfilePreview | null;
+	proof_url: string;
+	requested_type: string;
+	reviewed_at: string | null;
+	reviewedBy: ProfilePreview | null;
+	status: ReviewerApplicationStatus;
+	updated_at: string;
+	user_id: string;
+};
+
 const reportStatuses: ContentReportStatus[] = [
 	"pending",
 	"reviewing",
 	"actioned",
 	"dismissed",
+];
+const reviewerStatuses: ReviewerApplicationStatus[] = [
+	"pending",
+	"approved",
+	"rejected",
 ];
 
 function formatDate(value: string) {
@@ -87,7 +120,12 @@ export default function AdminDashboard() {
 	const [accessToken, setAccessToken] = useState("");
 	const [overview, setOverview] = useState<AdminOverview | null>(null);
 	const [reports, setReports] = useState<ReportPreview[]>([]);
+	const [reviewerApplications, setReviewerApplications] = useState<
+		ReviewerApplicationPreview[]
+	>([]);
 	const [reportStatus, setReportStatus] = useState<ContentReportStatus>("pending");
+	const [reviewerStatus, setReviewerStatus] =
+		useState<ReviewerApplicationStatus>("pending");
 
 	const headers = useMemo(
 		() => ({
@@ -141,16 +179,20 @@ export default function AdminDashboard() {
 	const loadAdminData = useCallback(async function loadAdminData() {
 		if (!accessToken || !isAdmin) return;
 
-		const [overviewData, reportsData] = await Promise.all([
+		const [overviewData, reportsData, reviewerData] = await Promise.all([
 			fetchJson<AdminOverview>("/api/admin/overview"),
 			fetchJson<{ reports: ReportPreview[] }>(
 				`/api/admin/reports?status=${reportStatus}`,
+			),
+			fetchJson<{ applications: ReviewerApplicationPreview[] }>(
+				`/api/admin/reviewers?status=${reviewerStatus}`,
 			),
 		]);
 
 		setOverview(overviewData);
 		setReports(reportsData.reports);
-	}, [accessToken, fetchJson, isAdmin, reportStatus]);
+		setReviewerApplications(reviewerData.applications);
+	}, [accessToken, fetchJson, isAdmin, reportStatus, reviewerStatus]);
 
 	useEffect(() => {
 		void loadAdminData().catch((error) => {
@@ -166,6 +208,20 @@ export default function AdminDashboard() {
 				method: "POST",
 			});
 			toast.success("Moderation action saved.");
+			await loadAdminData();
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "Action failed.");
+		}
+	}
+
+	async function runReviewerAction(applicationId: string, action: string) {
+		try {
+			await fetchJson(`/api/admin/reviewers/${applicationId}/action`, {
+				body: JSON.stringify({ action }),
+				headers: { "Content-Type": "application/json" },
+				method: "POST",
+			});
+			toast.success("Reviewer action saved.");
 			await loadAdminData();
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Action failed.");
@@ -213,6 +269,7 @@ export default function AdminDashboard() {
 							Roasts: overview.stats.roasts,
 							Replies: overview.stats.replies,
 							"Pending reports": overview.stats.pendingReports,
+							"Reviewer apps": overview.stats.pendingReviewers,
 							"Active roasters": overview.stats.activeRoasters,
 						}).map(([label, value]) => (
 							<div className="admin-stat" key={label}>
@@ -221,6 +278,95 @@ export default function AdminDashboard() {
 							</div>
 						))
 					: null}
+			</section>
+
+			<section className="admin-panel">
+				<div className="admin-panel-header">
+					<div>
+						<h2>Reviewer applications</h2>
+						<p>Approve trust labels only when the proof and profile make sense.</p>
+					</div>
+					<div className="admin-tabs">
+						{reviewerStatuses.map((status) => (
+							<button
+								className={reviewerStatus === status ? "active" : ""}
+								key={status}
+								onClick={() => setReviewerStatus(status)}
+								type="button"
+							>
+								{status}
+							</button>
+						))}
+					</div>
+				</div>
+				<div className="admin-report-list">
+					{reviewerApplications.map((application) => (
+						<article className="admin-report" key={application.id}>
+							<div>
+								<span className="badge neutral-badge">
+									{getReviewerTypeLabel(
+										isReviewerType(application.requested_type)
+											? application.requested_type
+											: "other",
+									)}
+								</span>
+								<span className="badge role-badge">{application.status}</span>
+							</div>
+							<h3>{getProfileLabel(application.profile)}</h3>
+							<p>{application.profile?.reviewer_headline || application.note}</p>
+							<dl>
+								<div>
+									<dt>Helpful votes</dt>
+									<dd>{application.profile?.helpful_votes ?? 0}</dd>
+								</div>
+								<div>
+									<dt>Roasts</dt>
+									<dd>{application.profile?.roast_count ?? 0}</dd>
+								</div>
+								<div>
+									<dt>Updated</dt>
+									<dd>{formatDate(application.updated_at)}</dd>
+								</div>
+							</dl>
+							{application.expertise.length ? (
+								<p>{application.expertise.join(", ")}</p>
+							) : null}
+							<div className="admin-action-row">
+								<Link href={`/profile/${application.user_id}`}>Open profile</Link>
+								<a href={application.proof_url} rel="noreferrer" target="_blank">
+									Open proof
+								</a>
+								<button
+									onClick={() =>
+										void runReviewerAction(application.id, "approve_reviewer")
+									}
+									type="button"
+								>
+									Approve trust
+								</button>
+								<button
+									onClick={() =>
+										void runReviewerAction(application.id, "reject_reviewer")
+									}
+									type="button"
+								>
+									Reject
+								</button>
+								<button
+									onClick={() =>
+										void runReviewerAction(application.id, "reset_reviewer")
+									}
+									type="button"
+								>
+									Reset pending
+								</button>
+							</div>
+						</article>
+					))}
+					{!reviewerApplications.length ? (
+						<p className="muted-text">No reviewer applications in this queue.</p>
+					) : null}
+				</div>
 			</section>
 
 			<section className="admin-panel">

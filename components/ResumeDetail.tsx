@@ -49,6 +49,11 @@ import {
 	getResumeRoleLabel,
 } from "@/lib/resume-display";
 import {
+	canShowReviewerProfile,
+	getReviewerDisplayLabel,
+	isTrustedReviewer,
+} from "@/lib/reviewer-validation";
+import {
 	buildThreadRoastTree,
 	getReactionBlockReason,
 	getReplyBlockReason,
@@ -60,8 +65,11 @@ import { supabase } from "@/lib/supabase/client";
 import type {
 	CommentAttachment,
 	CommentContentFormat,
+	CommunityRole,
 	ResumeAuthorProfile,
 	ResumeSummary,
+	ReviewerType,
+	ReviewerVerificationStatus,
 	Roast,
 } from "@/lib/supabase/types";
 import { toast } from "sonner";
@@ -76,6 +84,11 @@ type AuthorProfile = {
 	id: string;
 	username: string | null;
 	full_name: string | null;
+	community_role?: CommunityRole | null;
+	reviewer_type?: ReviewerType | null;
+	reviewer_headline?: string | null;
+	reviewer_expertise?: string[] | null;
+	reviewer_verification_status?: ReviewerVerificationStatus | null;
 };
 
 type ResumeRowWithDefaults = Omit<
@@ -108,7 +121,7 @@ const RESUME_SELECT_WITH_READS =
 const RESUME_SELECT_BASE =
 	"id,user_id,title,file_path,is_anonymous,status,roast_count,created_at";
 const RESUME_AUTHOR_PROFILE_SELECT_WITH_STATUS =
-	"id,username,full_name,avatar_url,avatar_path,college,target_role,current_position,app_status";
+	"id,username,full_name,avatar_url,avatar_path,college,target_role,current_position,app_status,community_role,reviewer_type,reviewer_headline,reviewer_expertise,reviewer_verification_status";
 const RESUME_AUTHOR_PROFILE_SELECT_BASE =
 	"id,username,full_name,avatar_url,college,target_role";
 const SUPABASE_MIGRATION_MESSAGE =
@@ -132,6 +145,27 @@ function getAuthorHandle(authorId: string, profile?: AuthorProfile) {
 function getAuthorAvatar(authorId: string, profile?: AuthorProfile) {
 	const seed = profile?.full_name || profile?.username || authorId;
 	return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}`;
+}
+
+function ReviewerTrustChip({ profile }: { profile?: AuthorProfile }) {
+	if (!canShowReviewerProfile(profile?.community_role, profile?.reviewer_type)) {
+		return null;
+	}
+
+	const trusted = isTrustedReviewer(profile?.reviewer_verification_status);
+
+	return (
+		<span
+			className={`reviewer-trust-chip${trusted ? " is-trusted" : ""}`}
+			title={
+				trusted
+					? "Admin-approved trusted reviewer"
+					: "Self-described reviewer role"
+			}
+		>
+			{getReviewerDisplayLabel(profile ?? {})}
+		</span>
+	);
 }
 
 function isMissingColumnError(error: { message?: string } | null, column: string) {
@@ -169,7 +203,7 @@ function isResumeContextFeatureError(error: { message?: string } | null) {
 }
 
 function isAuthorProfileFeatureError(error: { message?: string } | null) {
-	return /app_status|current_position|avatar_path|schema cache|column/i.test(
+	return /app_status|current_position|avatar_path|community_role|reviewer_|schema cache|column/i.test(
 		error?.message ?? "",
 	);
 }
@@ -629,10 +663,20 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		);
 
 		if (authorIds.length) {
-			const profileResult = await supabase
+			const profileResultWithReviewerFields = await supabase
 				.from("profiles")
-				.select("id,username,full_name")
+				.select(
+					"id,username,full_name,community_role,reviewer_type,reviewer_headline,reviewer_expertise,reviewer_verification_status",
+				)
 				.in("id", authorIds);
+			const profileResult =
+				profileResultWithReviewerFields.error &&
+				isAuthorProfileFeatureError(profileResultWithReviewerFields.error)
+					? await supabase
+							.from("profiles")
+							.select("id,username,full_name")
+							.in("id", authorIds)
+					: profileResultWithReviewerFields;
 
 			if (!profileResult.error) {
 				setAuthorProfiles(
@@ -1429,6 +1473,9 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 										{authorHandle}
 									</Link>
 								</Button>
+							)}
+							{isDeleted ? null : (
+								<ReviewerTrustChip profile={authorProfile} />
 							)}
 							<time dateTime={roast.created_at}>
 								&middot; {formatDate(roast.created_at)}

@@ -86,6 +86,39 @@ describe("feed ranking", () => {
 		]);
 	});
 
+	it("orders Needs review by open status, low roast count, and recency", () => {
+		const rows = [
+			resume({
+				id: "closed-zero",
+				roast_count: 0,
+				status: "closed",
+				created_at: "2026-05-23T00:00:00.000Z",
+			}),
+			resume({
+				id: "open-two",
+				roast_count: 2,
+				created_at: "2026-05-24T00:00:00.000Z",
+			}),
+			resume({
+				id: "open-zero-new",
+				roast_count: 0,
+				created_at: "2026-05-23T00:00:00.000Z",
+			}),
+			resume({
+				id: "open-zero-old",
+				roast_count: 0,
+				created_at: "2026-05-22T00:00:00.000Z",
+			}),
+		];
+
+		expect(sortResumes(rows, "needs").map((item) => item.id)).toEqual([
+			"open-zero-new",
+			"open-zero-old",
+			"open-two",
+			"closed-zero",
+		]);
+	});
+
 	it("balances Best between roast activity and freshness", () => {
 		const now = new Date("2026-05-23T12:00:00.000Z").getTime();
 		const activeOlder = resume({

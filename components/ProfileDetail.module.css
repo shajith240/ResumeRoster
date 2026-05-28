@@ -240,6 +240,7 @@
 .aboutPanel,
 .skillsPanel,
 .highlightPanel,
+.reviewerPanel,
 .activityPanel,
 .roastsPanel {
 	border: 1px solid var(--border-subtle);
@@ -251,12 +252,71 @@
 
 .panelHeader h2,
 .aboutPanel h2,
+.reviewerPanel h2,
 .skillsPanel h2 {
 	margin: 0;
 	font-family: var(--font-display);
 	font-size: 25px;
 	font-weight: 400;
 	letter-spacing: 0;
+}
+
+.reviewerPanel {
+	grid-column: 1 / -1;
+	background:
+		linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--bg-surface) 94%, var(--brand) 6%),
+			var(--bg-surface)
+		);
+}
+
+.reviewerPanel .panelHeader {
+	align-items: flex-start;
+}
+
+.reviewerPanel .panelHeader p {
+	margin: 7px 0 0;
+	color: var(--text-secondary);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.45;
+}
+
+.reviewerPanel > p {
+	max-width: 760px;
+	margin: 10px 0 0;
+	color: var(--text-secondary);
+	font-size: 13px;
+	line-height: 1.65;
+}
+
+.trustedReviewerBadge,
+.selfDeclaredBadge {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	gap: 7px;
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius-sm);
+	padding: 8px 10px;
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.trustedReviewerBadge {
+	border-color: color-mix(in srgb, var(--brand) 35%, var(--border-default));
+	background: var(--brand-muted);
+	color: var(--brand);
+}
+
+.trustedReviewerBadge svg,
+.selfDeclaredBadge svg {
+	width: 14px;
+	height: 14px;
 }
 
 .aboutPanel p,
@@ -831,6 +891,71 @@
 	cursor: not-allowed;
 	opacity: 0.5;
 	transform: none;
+}
+
+.reviewerEditBlock {
+	display: grid;
+	gap: 16px;
+	border: 1px solid var(--border-subtle);
+	border-radius: 12px;
+	padding: 14px;
+	background: color-mix(in srgb, var(--bg-elevated) 58%, transparent);
+}
+
+.segmentedControl {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 6px;
+	margin-top: 8px;
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius);
+	padding: 4px;
+	background: var(--bg-surface);
+}
+
+.segmentedControl button {
+	min-height: 38px;
+	border-radius: var(--button-radius-sm);
+	padding: 7px 9px;
+	color: var(--text-secondary);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+	transition:
+		background-color 0.18s var(--button-ease),
+		color 0.18s var(--button-ease);
+}
+
+.segmentedControl button[aria-pressed="true"] {
+	background: var(--text-primary);
+	color: var(--text-inverse);
+}
+
+.verificationBox {
+	display: grid;
+	gap: 10px;
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius);
+	padding: 12px;
+	background: var(--bg-surface);
+}
+
+.verificationBox strong,
+.verificationBox span {
+	display: block;
+}
+
+.verificationBox strong {
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.verificationBox span {
+	margin-top: 4px;
+	color: var(--text-secondary);
+	font-size: 12px;
+	line-height: 1.45;
 }
 
 .editFooter {

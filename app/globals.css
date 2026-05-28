@@ -3000,6 +3000,26 @@ body.main-app-dark .toggle-ui::after {
 	text-underline-offset: 3px;
 }
 
+.reviewer-trust-chip {
+	display: inline-flex;
+	align-items: center;
+	min-height: 24px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--button-radius-sm);
+	padding: 0 8px;
+	background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
+	color: var(--text-secondary);
+	font-size: 11px;
+	font-weight: 650;
+	line-height: 1;
+}
+
+.reviewer-trust-chip.is-trusted {
+	border-color: color-mix(in srgb, var(--brand) 34%, var(--border-default));
+	background: var(--brand-muted);
+	color: var(--brand);
+}
+
 .thread-roast-body p {
 	margin-top: 8px;
 	color: var(--text-primary);
