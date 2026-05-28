@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -30,6 +30,7 @@ type MenuAction =
 	| "logout";
 
 type AppTheme = "dark" | "light";
+type MobilePanel = "main" | "status" | "appearance";
 
 type MenuItem = {
 	icon: string;
@@ -153,6 +154,9 @@ export function UserDropdown({
 	selectedTheme = "dark",
 	promoDiscount,
 }: UserDropdownProps) {
+	const [open, setOpen] = useState(false);
+	const [mobilePanel, setMobilePanel] = useState<MobilePanel>("main");
+
 	const renderMenuItem = (item: MenuItem, index: number) => (
 		<DropdownMenuItem
 			key={`${item.action}-${index}`}
@@ -197,54 +201,95 @@ export function UserDropdown({
 		return colors[status.toLowerCase() as keyof typeof colors] || colors.online;
 	};
 
-	const renderMobileStatusControls = () => (
-		<div className="user-menu-mobile-section" aria-label="Status">
-			<span className="user-menu-mobile-section-title">Status</span>
-			<div className="user-menu-choice-grid">
-				{MENU_ITEMS.status.map((status) => (
-					<button
-						aria-pressed={selectedStatus === status.value}
-						className={cn(
-							"user-menu-choice",
-							selectedStatus === status.value ? "is-selected" : "",
-						)}
-						key={status.value}
-						onClick={() => onStatusChange(status.value)}
-						type="button"
-					>
-						<Icon icon={status.icon} className="size-4" />
-						<span>{status.label}</span>
-					</button>
-				))}
-			</div>
-		</div>
+	const selectedStatusItem =
+		MENU_ITEMS.status.find((status) => status.value === selectedStatus) ??
+		MENU_ITEMS.status[0];
+	const selectedThemeItem =
+		MENU_ITEMS.appearance.find((theme) => theme.value === selectedTheme) ??
+		MENU_ITEMS.appearance[0];
+
+	const renderMobilePanelTrigger = (
+		panel: Exclude<MobilePanel, "main">,
+		icon: string,
+		label: string,
+		valueLabel: string,
+	) => (
+		<button
+			className="user-menu-mobile-trigger"
+			onClick={() => setMobilePanel(panel)}
+			type="button"
+		>
+			<span className="user-menu-mobile-trigger-label">
+				<Icon icon={icon} className="size-5" />
+				{label}
+			</span>
+			<span className="user-menu-mobile-trigger-value">{valueLabel}</span>
+			<Icon
+				icon="solar:alt-arrow-right-line-duotone"
+				className="user-menu-mobile-trigger-chevron"
+			/>
+		</button>
 	);
 
-	const renderMobileAppearanceControls = () => (
-		<div className="user-menu-mobile-section" aria-label="Appearance">
-			<span className="user-menu-mobile-section-title">Appearance</span>
-			<div className="user-menu-choice-grid user-menu-choice-grid-two">
-				{MENU_ITEMS.appearance.map((themeItem) => (
-					<button
-						aria-pressed={selectedTheme === themeItem.value}
-						className={cn(
-							"user-menu-choice",
-							selectedTheme === themeItem.value ? "is-selected" : "",
-						)}
-						key={themeItem.value}
-						onClick={() => onThemeChange(themeItem.value)}
-						type="button"
-					>
-						<Icon icon={themeItem.icon} className="size-4" />
-						<span>{themeItem.label}</span>
-					</button>
-				))}
-			</div>
-		</div>
-	);
+	const renderMobileDrilldown = () => {
+		const isStatusPanel = mobilePanel === "status";
+		const title = isStatusPanel ? "Update status" : "Appearance";
+		const items = isStatusPanel ? MENU_ITEMS.status : MENU_ITEMS.appearance;
+		const selectedValue = isStatusPanel ? selectedStatus : selectedTheme;
+
+		return (
+			<section className="user-menu-mobile-panel">
+				<button
+					className="user-menu-mobile-back"
+					onClick={() => setMobilePanel("main")}
+					type="button"
+				>
+					<Icon icon="solar:alt-arrow-left-line-duotone" className="size-5" />
+					{title}
+				</button>
+				<div className="user-menu-mobile-list" aria-label={title}>
+					{items.map((item) => (
+						<button
+							aria-pressed={selectedValue === item.value}
+							className={cn(
+								"user-menu-mobile-option",
+								selectedValue === item.value ? "is-selected" : "",
+							)}
+							key={item.value}
+							onClick={() => {
+								if (isStatusPanel) {
+									onStatusChange(item.value);
+								} else {
+									onThemeChange(item.value === "light" ? "light" : "dark");
+								}
+								setMobilePanel("main");
+							}}
+							type="button"
+						>
+							<span>
+								<Icon icon={item.icon} className="size-5" />
+								{item.label}
+							</span>
+							{selectedValue === item.value ? (
+								<Icon icon="solar:check-circle-bold" className="size-5" />
+							) : null}
+						</button>
+					))}
+				</div>
+			</section>
+		);
+	};
 
 	return (
-		<DropdownMenu>
+		<DropdownMenu
+			open={open}
+			onOpenChange={(nextOpen) => {
+				setOpen(nextOpen);
+				if (!nextOpen) {
+					setMobilePanel("main");
+				}
+			}}
+		>
 			<DropdownMenuTrigger asChild>
 				<Avatar className="size-10 cursor-pointer border border-[var(--border-default)] shadow-sm">
 					<AvatarImage src={user.avatar} alt={user.name} />
@@ -260,6 +305,8 @@ export function UserDropdown({
 				collisionPadding={12}
 				sideOffset={12}
 			>
+				{mobilePanel !== "main" ? renderMobileDrilldown() : null}
+				<div className={mobilePanel === "main" ? "" : "user-menu-main-hidden"}>
 				<section className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-1 shadow backdrop-blur-lg">
 					<div className="flex items-center p-2">
 						<div className="flex flex-1 items-center gap-2">
@@ -325,7 +372,12 @@ export function UserDropdown({
 								</DropdownMenuPortal>
 							</DropdownMenuSub>
 						</div>
-						{renderMobileStatusControls()}
+						{renderMobilePanelTrigger(
+							"status",
+							"solar:smile-circle-line-duotone",
+							"Status",
+							selectedStatusItem.label,
+						)}
 					</DropdownMenuGroup>
 
 					<DropdownMenuSeparator />
@@ -376,7 +428,12 @@ export function UserDropdown({
 												</DropdownMenuPortal>
 											</DropdownMenuSub>
 										</div>
-										{renderMobileAppearanceControls()}
+										{renderMobilePanelTrigger(
+											"appearance",
+											"solar:palette-round-line-duotone",
+											"Appearance",
+											selectedThemeItem.label,
+										)}
 									</>
 								) : null}
 							</Fragment>
@@ -394,6 +451,7 @@ export function UserDropdown({
 						{MENU_ITEMS.account.map(renderMenuItem)}
 					</DropdownMenuGroup>
 				</section>
+				</div>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
