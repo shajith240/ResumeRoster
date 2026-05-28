@@ -386,9 +386,8 @@ export default function Home() {
             <h1>Lint your resume before recruiters compile it</h1>
 
             <p className="hero-subtext">
-              Linted is a human-powered career linter. Post anonymously, get
-              reviewers to catch structural bugs, vague bullets, and recruiter red
-              flags, then vote the sharpest fixes to the top.
+              Post anonymously. Get reviewers to catch weak bullets and recruiter
+              red flags before you apply.
             </p>
 
             <LandingCta className="hero-btn" href={isSignedIn ? "/feed" : "/submit"} isSignedIn={isSignedIn}>
