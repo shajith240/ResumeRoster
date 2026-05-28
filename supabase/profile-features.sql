@@ -1,4 +1,4 @@
--- ResumeRoster profile feature expansion.
+-- Linted profile feature expansion.
 -- Run this in the Supabase SQL editor before using editable profile details.
 
 alter table public.profiles

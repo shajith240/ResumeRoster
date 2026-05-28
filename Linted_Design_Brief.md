@@ -1,4 +1,4 @@
-# ResumeRoster — Complete UI/UX Redesign Brief
+﻿# Linted — Complete UI/UX Redesign Brief
 ## For Codex / AI Coding Agent
 
 > **Design philosophy**: Reddit's community energy × Linear's product polish × Hacker News's raw signal-to-noise ratio.
@@ -220,7 +220,7 @@ Border-bottom: 1px solid rgba(255,255,255,0.08)
 Backdrop-filter: blur(12px) — subtle frost glass on scroll
 ```
 
-**Left**: `ResumeRoster` in `Instrument Serif`, 20px, color: `#F2EFE9`
+**Left**: `Linted` in `Instrument Serif`, 20px, color: `#F2EFE9`
 - Add a tiny 🔥 favicon/icon before the wordmark (actual emoji or SVG flame icon)
 
 **Center** (desktop): Search bar — `width: 320px`
@@ -252,7 +252,7 @@ color: var(--text-secondary)
 ```
 Active tab: `color: var(--text-primary)`, bottom border `2px solid var(--brand)`, animated slide
 
-Links: `Home` · `New` · `Top Roasted` · `Leaderboard`
+Links: `Home` · `New` · `Top Reviewed` · `Leaderboard`
 
 ---
 
@@ -294,13 +294,13 @@ Each nav item:
 [Divider: 1px solid var(--border-subtle), margin: 16px 0]
 
 [Section: COMMUNITIES — small label, 11px, uppercase, letter-spacing: 0.08em]
-- r/resumeroast (dot indicator, green if active)
-- Top roasters
+- Linted (dot indicator, green if active)
+- Top reviewers
 - Anonymous uploads
 
 [Section: STATS BOX — card style]
-  Resumes roasted this week: [number]
-  Active roasters: [number]
+  Resumes reviewed this week: [number]
+  Active reviewers: [number]
   Style: small card, bg var(--brand-muted), border var(--brand) at 20% opacity
   Numbers in Instrument Serif, 24px, color var(--brand)
 ```
@@ -309,8 +309,8 @@ Each nav item:
 ```html
 <div class="feed-header">
   <div>
-    <p class="feed-community">r/resumeroast</p>   <!-- 12px, muted, DM Sans -->
-    <h1 class="feed-title">Community Roast Feed</h1> <!-- Instrument Serif, 36px -->
+    <p class="feed-community">Linted</p>   <!-- 12px, muted, DM Sans -->
+    <h1 class="feed-title">Community Lint Feed</h1> <!-- Instrument Serif, 36px -->
     <p class="feed-subtitle">Anonymous resumes. Public feedback. Sharpest roasts voted to the top.</p>
   </div>
   <button class="btn-primary">Post resume</button>
@@ -320,7 +320,7 @@ Each nav item:
 ### Sort Tabs
 ```
 Container: background var(--bg-surface), border 1px solid var(--border-subtle), border-radius var(--radius-pill), padding 3px, display: inline-flex
-Tabs: Best · New · Most Roasted
+Tabs: Best · New · Most Reviewed
 Active tab: background var(--text-primary), color white, border-radius var(--radius-pill), transition 0.2s
 Inactive: color var(--text-secondary), hover: color var(--text-primary)
 Font: DM Sans 13px, font-weight 500
@@ -376,7 +376,7 @@ Padding: 14px 16px 12px
 
 [Row 1: Metadata]
   font: DM Sans 12px, color var(--text-tertiary)
-  "r/resumeroast · posted anonymously · May 19 · 3 min read"
+  "Linted · posted anonymously · May 19 · 3 min read"
   Dot separators between items
 
 [Row 2: Title]
@@ -412,7 +412,7 @@ Padding: 14px 16px 12px
   transition: all 0.15s
 
   Right side (margin-left: auto):
-    "Open for roasting" pill — badge-open style — OR "Closed" badge
+    "Open for reviewing" pill — badge-open style — OR "Closed" badge
 ```
 
 **Card entry animation**: Cards entering the feed stagger with `animation-delay: N * 50ms`. Use Intersection Observer to trigger `fadeUp` as cards enter viewport on scroll.
@@ -428,7 +428,7 @@ Position: sticky; top: 76px
   border-radius: var(--radius-lg)
   padding: 16px
 
-  Header: "About r/resumeroast" — DM Sans 15px, font-weight 600
+  Header: "About Linted" — DM Sans 15px, font-weight 600
   Body text: 14px, color var(--text-secondary), line-height 1.6
   Divider, then "Created [date]" metadata row
 
@@ -484,7 +484,7 @@ Padding-top: 60px
 1. **Resume title**
    - Label: "Resume title" — 13px, font-weight 500, margin-bottom 6px
    - Input with placeholder: "Fresh grad applying for SDE roles"
-   - Below input (helper text): "Give context so roasters know what you're targeting" — 12px, muted
+   - Below input (helper text): "Give context so reviewers know what you're targeting" — 12px, muted
 
 2. **Target role** (NEW — add this field)
    - Label: "Target role"
@@ -543,7 +543,7 @@ Padding-top: 60px
 5. **Submit button**
    - Full width, height 48px
    - btn-primary style but with font-size 16px
-   - Text: "Submit for roasting"
+   - Text: "Submit for reviewing"
    - Loading state: spinner icon + "Uploading..." text, opacity 0.7, disabled
    - Success state: green checkmark + "Posted! Redirecting..." with brief animation
 
@@ -590,24 +590,24 @@ Active: dark bg, white text
 /* Mobile: single column */
 ```
 
-### Top Roasters card
+### Top Reviewers card
 ```
 Card style (bg-surface, border, radius-xl, shadow-sm)
 Padding: 24px
 
 Header row:
-  "Top roasters" — DM Sans 18px, font-weight 600
+  "Top reviewers" — DM Sans 18px, font-weight 600
   "Ranked by helpful votes" — 12px, muted, margin-left: auto
 
-Empty state (when no roasters):
+Empty state (when no reviewers):
   Centered, padding 40px
   Trophy icon (SVG, 40px, color var(--text-tertiary))
-  "No roasters yet" — 15px, font-weight 500
+  "No reviewers yet" — 15px, font-weight 500
   "First useful roast gets the board moving." — 13px, muted
   
-  Add a subtle CTA button: "Be the first roaster →" — brand color link style
+  Add a subtle CTA button: "Be the first reviewer →" — brand color link style
 
-Populated state (each roaster row):
+Populated state (each reviewer row):
   Display: flex, align-items: center, gap 12px, padding 10px 0
   Border-bottom: 1px solid var(--border-subtle) (except last)
   Hover: background var(--bg-base), border-radius var(--radius-md), transition 0.15s
@@ -628,7 +628,7 @@ Populated state (each roaster row):
   Top 3 get: crown emoji / gold-silver-bronze dot indicator
 ```
 
-### Most Roasted Resumes card
+### Most Reviewed Resumes card
 Same card style.
 
 ```
@@ -683,7 +683,7 @@ Mobile: single column
 
 **Profile card anatomy**:
 
-1. **"Roaster profile" badge** at top:
+1. **"Reviewer profile" badge** at top:
    ```
    display: inline-flex
    background: var(--brand-muted)
@@ -752,7 +752,7 @@ Header:
 ```
 Display: flex, justify-content: space-between, align-items: center
 "Recent roasts" — DM Sans 18px, font-weight 600
-"Feedback this roaster has contributed" — 12px, muted, max-width 160px, text-right
+"Feedback this reviewer has contributed" — 12px, muted, max-width 160px, text-right
 ```
 
 Empty state:
@@ -760,7 +760,7 @@ Empty state:
 Padding: 48px 24px, text-align: center
 Icon: chat bubble SVG, 40px, color var(--text-tertiary)
 "No public roasts yet." — 15px, font-weight 500
-"Start roasting resumes to build your reputation." — 13px, muted
+"Start reviewing resumes to build your reputation." — 13px, muted
 CTA: "Browse feed →" — brand color link
 ```
 
@@ -784,7 +784,7 @@ This page doesn't exist yet. Build it as the most important page of the app.
 ### Layout
 ```
 Max-width: 900px, centered
-Two sections stacked: [Resume viewer] then [Roast thread]
+Two sections stacked: [Resume viewer] then [Feedback thread]
 ```
 
 ### Resume viewer section
@@ -792,7 +792,7 @@ Two sections stacked: [Resume viewer] then [Roast thread]
 Card, padding 24px
 Header:
   Posted by badge + timestamp (left)
-  Status badge "Open for roasting" (right)
+  Status badge "Open for reviewing" (right)
 
 Title: Instrument Serif, 36px
 Tags: role badge, college badge, gap 8px
@@ -817,10 +817,10 @@ Textarea:
   
 Bottom row (inside card):
   Community rule reminder: "🔥 Roast the resume, not the person" — 12px, muted
-  "Submit roast" button — btn-brand — right aligned
+  "Submit feedback" button — btn-brand — right aligned
 ```
 
-### Roast thread
+### Feedback thread
 Each roast:
 ```
 Display: flex, gap 12px, padding 16px 0
@@ -869,7 +869,7 @@ Implement ALL of these — they're what separate a real product from a side proj
 [ ] Skeleton loading states for cards (animated shimmer, NOT spinners)
     - Skeleton: gray rectangles with shimmer animation as placeholder
     - Show for 300ms minimum even if data loads faster (prevents flash)
-[ ] Hover on username in roast thread: underline with brand color
+[ ] Hover on username in feedback thread: underline with brand color
 [ ] "Copy link" button: brief "Copied!" tooltip fade in/out
 ```
 
@@ -978,9 +978,9 @@ Trigger toasts for: successful roast submit, vote registered, profile saved, lin
 5. **Submit page** — user's first real interaction
 6. **Leaderboard page**
 7. **Profile page**
-8. **Resume detail / roast thread page** (can build after launch)
+8. **Resume detail / feedback thread page** (can build after launch)
 9. **Skeleton states + toasts** — production polish layer
 
 ---
 
-*Brief version: 1.0 · ResumeRoster · Built for production*
+*Brief version: 1.0 · Linted · Built for production*

@@ -1,4 +1,4 @@
--- ResumeRoster active roaster heartbeat.
+-- Linted active roaster heartbeat.
 -- Run this in Supabase to count users currently using the app.
 
 create table if not exists public.app_presence_sessions (

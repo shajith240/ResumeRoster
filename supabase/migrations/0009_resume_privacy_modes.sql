@@ -1,4 +1,4 @@
--- ResumeRoster 0009: privacy modes and server-side resume upload enforcement.
+-- Linted 0009: privacy modes and server-side resume upload enforcement.
 
 alter table public.resumes
   add column if not exists privacy_mode text not null default 'anonymous';

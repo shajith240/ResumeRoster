@@ -1,4 +1,4 @@
--- ResumeRoster nested roast replies.
+-- Linted nested roast replies.
 -- Run or rerun this in the Supabase SQL editor before deploying comment replies.
 
 alter table public.roasts

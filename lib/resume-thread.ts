@@ -21,11 +21,11 @@ export function getReactionBlockReason(
 	if (!activeUser) return null;
 
 	if (activeResume?.user_id === activeUser.id) {
-		return "Resume owners cannot react to roasts on their own resume.";
+		return "Resume owners cannot react to feedback on their own resume.";
 	}
 
 	if (roast.author_id === activeUser.id) {
-		return "You cannot react to your own roast.";
+		return "You cannot react to your own feedback.";
 	}
 
 	return null;
@@ -45,8 +45,8 @@ export function getReplyBlockReason({
 	replySchemaReady: boolean;
 }) {
 	if (isClosed) return "This resume is closed for new replies.";
-	if (isDeleted) return "Deleted roasts cannot receive new replies.";
-	if (isOwnRoast) return "You cannot reply to your own roast.";
+	if (isDeleted) return "Deleted feedback cannot receive new replies.";
+	if (isOwnRoast) return "You cannot reply to your own feedback.";
 	if (!replySchemaReady) return `${migrationMessage} Replies are not ready yet.`;
 	return null;
 }

@@ -1,4 +1,4 @@
--- ResumeRoster 0003: nested replies, reactions, soft deletes, and derived counters.
+-- Linted 0003: nested replies, reactions, soft deletes, and derived counters.
 -- Keeps existing roasts/votes and recalculates counters from live data.
 
 alter table public.roasts

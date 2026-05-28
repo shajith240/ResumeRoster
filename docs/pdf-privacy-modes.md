@@ -1,6 +1,6 @@
 # PDF Privacy Modes
 
-ResumeRoster keeps the real resume layout because formatting, hierarchy, and
+Linted keeps the real resume layout because formatting, hierarchy, and
 ATS-readability are part of the feedback. The app should not rebuild resumes
 into a house template.
 

@@ -1,4 +1,4 @@
--- ResumeRoster 0008: saved resumes.
+-- Linted 0008: saved resumes.
 -- Persists each user's private saved-resume list without exposing saves to
 -- other users or adding public counters.
 

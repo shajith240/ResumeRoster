@@ -1,4 +1,4 @@
--- ResumeRoster signup account lookup.
+-- Linted signup account lookup.
 -- Run this in Supabase, then set SUPABASE_SERVICE_ROLE_KEY in Vercel/local env.
 -- The function is only granted to service_role and must be called server-side.
 

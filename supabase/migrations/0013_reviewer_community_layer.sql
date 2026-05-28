@@ -1,4 +1,4 @@
--- ResumeRoster 0013: professional reviewer identity, trust applications, and reviewer discovery.
+-- Linted 0013: professional reviewer identity, trust applications, and reviewer discovery.
 
 alter table public.profiles
   add column if not exists community_role text not null default 'candidate',

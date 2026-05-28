@@ -1,4 +1,4 @@
--- ResumeRoster 0012: simplify comment media to uploaded images only.
+-- Linted 0012: simplify comment media to uploaded images only.
 -- Keeps the text/markdown toggle, removes external media attachments from the
 -- current data model, and narrows comment uploads to PNG/JPG/WebP.
 

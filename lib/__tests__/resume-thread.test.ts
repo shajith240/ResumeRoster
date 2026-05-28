@@ -45,11 +45,11 @@ describe("resume thread rules", () => {
 
 		expect(
 			getReactionBlockReason({ id: "owner-1" }, resume, targetRoast),
-		).toBe("Resume owners cannot react to roasts on their own resume.");
+		).toBe("Resume owners cannot react to feedback on their own resume.");
 
 		expect(
 			getReactionBlockReason({ id: "roaster-1" }, resume, targetRoast),
-		).toBe("You cannot react to your own roast.");
+		).toBe("You cannot react to your own feedback.");
 
 		expect(
 			getReactionBlockReason({ id: "roaster-2" }, resume, targetRoast),
@@ -87,7 +87,7 @@ describe("resume thread rules", () => {
 				migrationMessage: "Run migrations.",
 				replySchemaReady: true,
 			}),
-		).toBe("Deleted roasts cannot receive new replies.");
+		).toBe("Deleted feedback cannot receive new replies.");
 
 		expect(
 			getReplyBlockReason({
@@ -97,7 +97,7 @@ describe("resume thread rules", () => {
 				migrationMessage: "Run migrations.",
 				replySchemaReady: true,
 			}),
-		).toBe("You cannot reply to your own roast.");
+		).toBe("You cannot reply to your own feedback.");
 
 		expect(
 			getReplyBlockReason({

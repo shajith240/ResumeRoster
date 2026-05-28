@@ -1,26 +1,26 @@
-# ResumeRoster
+# Linted
 
-![ResumeRoster hero](public/assets/readme_hero%20image.png)
+![Linted hero](public/assets/readme_hero%20image.png)
 
-ResumeRoster is a Next.js community app for anonymous resume feedback. Users sign in with email, Google, or GitHub, upload a redacted resume, receive structured feedback from other students and job seekers, reply in discussion threads, and discover strong roasters through public profiles and a leaderboard.
+Linted is a Next.js community app for human-powered resume linting. Users sign in with email, Google, or GitHub, upload a resume, receive structured feedback from students, recruiters, and working professionals, reply in discussion threads, and discover strong reviewers through public profiles and a leaderboard.
 
-The product idea is simple: make resume feedback faster, more honest, and more useful without exposing the applicant's identity.
+The product idea is simple: a linter catches bugs before code compiles; Linted catches resume bugs before recruiters reject them.
 
 ## What It Does
 
 - Anonymous resume submissions with private PDF storage
 - Community feed of resumes open for feedback
-- Resume detail pages with secure previews and threaded roast discussions
+- Resume detail pages with secure previews and threaded feedback discussions
 - Like and dislike reactions on comments, with owner/self-reaction guards
-- Public roaster profiles with avatars, skills, bio, highlights, and activity
-- Professional leaderboard based on roast quality and contribution
+- Public reviewer profiles with avatars, skills, bio, highlights, and activity
+- Professional leaderboard based on feedback quality and contribution
 - Real read counts for resume views
 - Light and dark app themes
 - Email auth, Google OAuth, and GitHub OAuth through Supabase
 
 ## Why It Exists
 
-Most resume feedback is either too polite, too vague, or too slow. ResumeRoster gives job seekers a place to get direct feedback from peers while keeping submissions anonymous. The goal is not to roast people. The goal is to sharpen resumes until they survive a real recruiter screen.
+Most resume feedback is either too polite, too vague, or too slow. Linted gives job seekers a place to run a public lint pass on their resume while controlling how much identity they expose. The goal is not to dunk on people. The goal is to catch vague bullets, weak proof, messy structure, and recruiter red flags before the first screen.
 
 For recruiters or engineering reviewers visiting this repo: the project demonstrates a full-stack product flow with authentication, database rules, file storage, optimistic UI, profile systems, interactive comment threads, and production-minded frontend polish.
 
@@ -42,21 +42,21 @@ For recruiters or engineering reviewers visiting this repo: the project demonstr
 3. The resume appears in the community feed.
 4. Other signed-in users open the private preview and leave feedback.
 5. The resume owner can read feedback but cannot react to comments on their own resume.
-6. Roasters build public profiles and leaderboard reputation through useful feedback.
+6. Reviewers build public profiles and leaderboard reputation through useful feedback.
 
 ## Project Structure
 
 ```text
 app/
   feed/              Community feed route
-  resume/[id]/       Resume detail and roast thread route
-  profile/[id]/      Public roaster profile route
+  resume/[id]/       Resume detail and feedback thread route
+  profile/[id]/      Public reviewer profile route
   submit/            Resume submission route
 components/
   ResumeFeed.tsx     Feed cards, sorting, sharing, read-count display
   ResumeDetail.tsx   Secure preview, read tracking, comments, replies, reactions
   ProfileDetail.tsx  Public profile and edit profile experience
-  Leaderboard.tsx    Ranked roaster view
+  Leaderboard.tsx    Ranked reviewer view
   ui/                Shared shadcn-style UI components
 lib/supabase/
   client.ts          Supabase browser client
@@ -148,7 +148,7 @@ npm run db:push    # Apply reviewed migrations to a linked Supabase project
 
 ## Design Direction
 
-ResumeRoster is designed to feel like LinkedIn meets a creative design startup: professional, direct, and polished without gamified clutter. The landing page has its own visual system, while the authenticated app focuses on clean layouts, readable threads, careful spacing, and productive feedback workflows.
+Linted is designed to feel like LinkedIn meets a creative design startup: professional, direct, and polished without gamified clutter. The landing page has its own visual system, while the authenticated app focuses on clean layouts, readable threads, careful spacing, and productive feedback workflows.
 
 ## Contributing
 
@@ -171,4 +171,4 @@ Please keep changes focused, preserve existing Supabase flows, and avoid unrelat
 
 ## Status
 
-ResumeRoster is an active product build. The core loop is in place: authenticate, submit, browse, read, roast, reply, react, and build a public roaster profile. The next priorities are production hardening, better moderation tools, stronger tests, and deployment polish.
+Linted is an active product build. The core loop is in place: authenticate, submit, browse, read, review, reply, react, and build a public reviewer profile. The next priorities are production hardening, better moderation tools, stronger tests, and deployment polish.

@@ -1,4 +1,4 @@
--- ResumeRoster 0010: admin moderation surface and curated roast stickers.
+-- Linted 0010: admin moderation surface and curated roast stickers.
 -- Adds admin-reviewable stickers, optional sticker attachments on roasts, and
 -- richer report prioritization without exposing moderation tables to clients.
 

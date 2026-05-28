@@ -266,11 +266,11 @@ export default function AdminDashboard() {
 							Users: overview.stats.users,
 							Resumes: overview.stats.resumes,
 							"Open resumes": overview.stats.openResumes,
-							Roasts: overview.stats.roasts,
+							Comments: overview.stats.roasts,
 							Replies: overview.stats.replies,
 							"Pending reports": overview.stats.pendingReports,
 							"Reviewer apps": overview.stats.pendingReviewers,
-							"Active roasters": overview.stats.activeRoasters,
+							"Active reviewers": overview.stats.activeRoasters,
 						}).map(([label, value]) => (
 							<div className="admin-stat" key={label}>
 								<strong>{value}</strong>
@@ -320,7 +320,7 @@ export default function AdminDashboard() {
 									<dd>{application.profile?.helpful_votes ?? 0}</dd>
 								</div>
 								<div>
-									<dt>Roasts</dt>
+									<dt>Comments</dt>
 									<dd>{application.profile?.roast_count ?? 0}</dd>
 								</div>
 								<div>

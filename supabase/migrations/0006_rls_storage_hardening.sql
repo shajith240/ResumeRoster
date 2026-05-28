@@ -1,4 +1,4 @@
--- ResumeRoster 0006: RLS, table grants, storage, and RPC hardening.
+-- Linted 0006: RLS, table grants, storage, and RPC hardening.
 -- Keeps existing data. This migration tightens who can mutate protected counters,
 -- read private resume files, and call security-definer helpers.
 

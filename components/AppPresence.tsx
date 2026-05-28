@@ -18,7 +18,7 @@ type AppPresenceProps = {
 };
 
 const HEARTBEAT_INTERVAL_MS = 30_000;
-const PRESENCE_SESSION_KEY = "resumeroster.presence.session";
+const PRESENCE_SESSION_KEY = "linted.presence.session";
 
 async function getSavedStatus(userId: string): Promise<AppStatus> {
 	const result = await supabase

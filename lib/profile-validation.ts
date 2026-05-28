@@ -57,9 +57,9 @@ export function normalizeUsername(value: string) {
 }
 
 export function buildUsernameCandidates(username: string) {
-	const base = normalizeUsername(username).replace(/[_-]+$/g, "") || "roaster";
+	const base = normalizeUsername(username).replace(/[_-]+$/g, "") || "reviewer";
 	const year = new Date().getFullYear().toString().slice(-2);
-	const suffixes = ["24", "240", "dev", "hq", year, "01", "roast"];
+	const suffixes = ["24", "240", "dev", "hq", year, "01", "lint"];
 	const candidates: string[] = [];
 
 	for (const suffix of suffixes) {

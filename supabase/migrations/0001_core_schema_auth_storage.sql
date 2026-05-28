@@ -1,4 +1,4 @@
--- ResumeRoster 0001: core schema, auth profile bootstrap, and resume storage.
+-- Linted 0001: core schema, auth profile bootstrap, and resume storage.
 -- Idempotent by design: safe on an existing production database and on a fresh local reset.
 
 create extension if not exists "pgcrypto";

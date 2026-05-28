@@ -81,8 +81,8 @@ export default function RouteHeader() {
 	return (
 		<>
 			<header className="app-header">
-				<Link href="/feed" className="app-logo" aria-label="ResumeRoster home">
-					ResumeRoster
+				<Link href="/feed" className="app-logo" aria-label="Linted home">
+					Linted
 				</Link>
 
 				<AuthButton />

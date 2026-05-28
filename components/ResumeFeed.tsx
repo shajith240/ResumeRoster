@@ -399,7 +399,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
     if (navigator.share) {
       await navigator.share({
         title: resume.title,
-        text: "Roast this resume on ResumeRoster",
+        text: "Lint this resume on Linted",
         url,
       });
       toast.success("Share sheet opened.");
@@ -509,7 +509,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
       return (
         <div className="empty-state feed-empty-state">
           <h2>No saved resumes yet</h2>
-          <p>Save resumes from the feed when you want to revisit their roasts later.</p>
+          <p>Save resumes from the feed when you want to revisit their fixes later.</p>
           <Link className="btn-primary" href="/feed">
             Browse feed
           </Link>
@@ -520,7 +520,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
     return (
       <div className="empty-state feed-empty-state">
         <h2>No resumes yet</h2>
-        <p>Be the first person brave enough to put a resume in the public roast pit.</p>
+        <p>Be the first person brave enough to run a resume through the public lint pass.</p>
         <Link className="btn-primary" href="/submit">
           Submit a resume
         </Link>
@@ -609,9 +609,9 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
               </p>
 
               <div className="post-actions">
-                <Link className="post-action-button" href={`/resume/${resume.id}`} aria-label={`Open ${resume.roast_count} roasts`}>
+                <Link className="post-action-button" href={`/resume/${resume.id}`} aria-label={`Open ${resume.roast_count} comments`}>
                   <MessageCircleIcon className="post-action-icon" size={16} aria-hidden="true" />
-                  {formatCount(resume.roast_count)} {resume.roast_count === 1 ? "Roast" : "Roasts"}
+                  {formatCount(resume.roast_count)} {resume.roast_count === 1 ? "Comment" : "Comments"}
                 </Link>
                 <button className="post-action-button copy-button" type="button" onClick={() => void shareResume(resume)} aria-label="Share resume">
                   <LinkIcon className="post-action-icon" size={16} aria-hidden="true" />
@@ -630,7 +630,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                   {saveButtonState.label}
                 </button>
                 <span className={`resume-status ${resume.status === "closed" ? "closed" : ""}`}>
-                  {resume.status === "closed" ? "Closed" : "Open for roasting"}
+                  {resume.status === "closed" ? "Closed" : "Open for review"}
                 </span>
               </div>
             </div>

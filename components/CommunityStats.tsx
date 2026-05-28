@@ -279,13 +279,13 @@ export default function CommunityStats() {
 			aria-busy={statsLoading || activeRoastersLoading}
 		>
 			<div>
-				<span>Resumes roasted this week</span>
+				<span>Resumes reviewed this week</span>
 				<strong>
 					{statsLoading ? "--" : formatStat(stats.resumesRoastedThisWeek)}
 				</strong>
 			</div>
 			<div>
-				<span>Active roasters</span>
+				<span>Active reviewers</span>
 				<strong>
 					{activeRoastersLoading ? "--" : formatStat(activeRoasters)}
 				</strong>

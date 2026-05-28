@@ -1,4 +1,4 @@
--- ResumeRoster 0005: leaderboard and secure auth email lookup RPCs.
+-- Linted 0005: leaderboard and secure auth email lookup RPCs.
 
 drop function if exists public.get_roaster_leaderboard(int);
 

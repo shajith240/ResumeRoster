@@ -6,14 +6,32 @@ import "./globals.css";
 import "./feed-canvas.css";
 
 export const metadata: Metadata = {
-  title: "ResumeRoster",
+  metadataBase: new URL("https://linted.space"),
+  title: {
+    default: "Linted",
+    template: "%s | Linted",
+  },
   description:
-    "Post your resume anonymously, get public community roasts, and improve before recruiters see it.",
+    "Linted is a human-powered career linter for resumes. Post anonymously, catch structural bugs before recruiters do, and ship a cleaner version.",
+  openGraph: {
+    title: "Linted",
+    description:
+      "Human-powered resume linting before the recruiter/compiler rejects it.",
+    siteName: "Linted",
+    type: "website",
+    url: "https://linted.space",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Linted",
+    description:
+      "Human-powered resume linting before the recruiter/compiler rejects it.",
+  },
 };
 
 const themeBootstrapScript = `
 try {
-  var theme = window.localStorage.getItem("resumeroster-theme") === "light" ? "light" : "dark";
+  var theme = window.localStorage.getItem("linted-theme") === "light" ? "light" : "dark";
   document.documentElement.dataset.appTheme = theme;
 } catch (error) {
   document.documentElement.dataset.appTheme = "dark";

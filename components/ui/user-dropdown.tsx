@@ -81,7 +81,7 @@ const MENU_ITEMS: {
 	account: MenuItem[];
 } = {
 	status: [
-		{ value: "online", icon: "solar:fire-line-duotone", label: "Roasting" },
+		{ value: "online", icon: "solar:fire-line-duotone", label: "Reviewing" },
 		{
 			value: "focus",
 			icon: "solar:emoji-funny-circle-line-duotone",
@@ -139,11 +139,11 @@ const MENU_ITEMS: {
 
 export function UserDropdown({
 	user = {
-		name: "Resume roaster",
-		username: "@resumeroster",
+		name: "Resume reviewer",
+		username: "@linted",
 		avatar:
 			"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces",
-		initials: "RR",
+		initials: "LI",
 		status: "online",
 	},
 	onAction = () => undefined,
@@ -234,7 +234,7 @@ export function UserDropdown({
 						<Badge
 							className={`${getStatusColor(user.status)} rounded-sm border-[0.5px] text-[11px] capitalize`}
 						>
-							{user.status === "online" ? "roasting" : user.status}
+							{user.status === "online" ? "reviewing" : user.status}
 						</Badge>
 					</div>
 

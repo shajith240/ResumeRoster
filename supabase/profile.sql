@@ -1,4 +1,4 @@
--- Public roaster profile RPCs.
+-- Public reviewer profile RPCs.
 -- Run this once in Supabase SQL Editor after the core schema.
 
 create or replace function public.get_public_profile(profile_id uuid)

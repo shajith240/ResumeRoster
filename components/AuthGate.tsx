@@ -15,8 +15,8 @@ type AuthGateProps = {
 
 type AppTheme = "dark" | "light";
 
-const APP_THEME_STORAGE_KEY = "resumeroster-theme";
-const APP_THEME_CHANGE_EVENT = "resumeroster-theme-change";
+const APP_THEME_STORAGE_KEY = "linted-theme";
+const APP_THEME_CHANGE_EVENT = "linted-theme-change";
 
 function getStoredAppTheme(): AppTheme {
 	if (typeof window === "undefined") return "dark";

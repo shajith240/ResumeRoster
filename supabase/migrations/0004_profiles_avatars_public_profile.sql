@@ -1,4 +1,4 @@
--- ResumeRoster 0004: editable public profiles, avatar storage, and profile RPCs.
+-- Linted 0004: editable public profiles, avatar storage, and profile RPCs.
 
 alter table public.profiles
   add column if not exists avatar_url text,

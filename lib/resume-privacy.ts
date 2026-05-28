@@ -52,7 +52,7 @@ export function allowsResumePreviewInteractions(mode: ResumePrivacyMode) {
 
 export function getPrivacyModeHelpText(mode: ResumePrivacyMode) {
 	if (mode === "public") {
-		return "Best when you want roasters to judge your full profile and resume together.";
+		return "Best when you want reviewers to judge your full profile and resume together.";
 	}
 
 	if (mode === "contact_hidden") {

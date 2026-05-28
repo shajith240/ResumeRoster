@@ -16,7 +16,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-type ResumeRosterAuthProvider = Extract<Provider, "google" | "github">;
+type LintedAuthProvider = Extract<Provider, "google" | "github">;
 
 function getAuthCallbackUrl(nextPath: string) {
 	if (typeof window === "undefined") return undefined;
@@ -27,7 +27,7 @@ function getAuthCallbackUrl(nextPath: string) {
 }
 
 export async function signInWithProvider(
-	provider: ResumeRosterAuthProvider,
+	provider: LintedAuthProvider,
 	nextPath = "/feed",
 ) {
 	const safeNextPath = getSafeNextPath(nextPath);

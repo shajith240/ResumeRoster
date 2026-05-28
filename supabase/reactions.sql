@@ -1,4 +1,4 @@
--- ResumeRoster comment reactions.
+-- Linted comment reactions.
 -- Run this once in the Supabase SQL editor before deploying reaction toggles.
 
 alter table public.roasts

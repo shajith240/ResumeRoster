@@ -1,6 +1,6 @@
-# ResumeRoster Supabase Migrations
+# Linted Supabase Migrations
 
-`supabase/migrations/` is the database source of truth for ResumeRoster. The loose SQL files in this folder are legacy one-off scripts kept as reference while the ordered migrations are validated in production and local environments.
+`supabase/migrations/` is the database source of truth for Linted. The loose SQL files in this folder are legacy one-off scripts kept as reference while the ordered migrations are validated in production and local environments.
 
 ## Files
 

@@ -443,7 +443,7 @@ export default function Leaderboard() {
 					<p>
 						{mode === "reviewers"
 							? "Find credible people who can give useful resume feedback."
-							: "Top roasters. Better resumes. Stronger careers."}
+							: "Top reviewers. Better resumes. Stronger careers."}
 					</p>
 				</div>
 
@@ -529,7 +529,7 @@ export default function Leaderboard() {
 				description={
 					mode === "reviewers"
 						? "People who opted into reviewing resumes, sorted by trust and helpfulness."
-						: "Roaster directory ranked by useful resume feedback."
+						: "Reviewer directory ranked by useful resume feedback."
 				}
 				heading={mode === "reviewers" ? "Reviewer Directory" : "Top 100"}
 				message={message}
@@ -539,7 +539,7 @@ export default function Leaderboard() {
 				searchPlaceholder={
 					mode === "reviewers"
 						? "Search reviewers, expertise, roles..."
-						: "Search roasters, roles, top roasts..."
+						: "Search reviewers, roles, top feedback..."
 				}
 				startRank={1}
 			/>

@@ -1,6 +1,4 @@
--- Linted auth profile safety.
--- Run this after enabling Email, Google, or GitHub auth providers.
--- It prevents duplicate profile usernames when providers return the same name.
+-- Linted 0014: profile username defaults for the Linted rebrand.
 
 create or replace function public.make_unique_username(
   base_username text,
@@ -18,7 +16,7 @@ declare
 begin
   normalized := lower(
     regexp_replace(
-      coalesce(nullif(trim(base_username), ''), 'roaster'),
+      coalesce(nullif(trim(base_username), ''), 'reviewer'),
       '[^a-z0-9_-]+',
       '-',
       'g'
@@ -27,7 +25,7 @@ begin
   normalized := trim(both '-' from normalized);
 
   if normalized = '' then
-    normalized := 'roaster';
+    normalized := 'reviewer';
   end if;
 
   candidate := left(normalized, 32);
@@ -67,7 +65,7 @@ begin
     new.raw_user_meta_data ->> 'user_name',
     new.raw_user_meta_data ->> 'preferred_username',
     split_part(new.email, '@', 1),
-    'roaster'
+    'reviewer'
   );
   avatar := coalesce(
     new.raw_user_meta_data ->> 'avatar_url',
@@ -91,7 +89,4 @@ begin
 end;
 $$;
 
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
+notify pgrst, 'reload schema';

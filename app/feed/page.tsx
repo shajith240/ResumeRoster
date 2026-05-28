@@ -35,11 +35,11 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 				<section className="feed-center">
 					<div className="feed-community-header">
 						<div>
-							<h1>{savedOnly ? "Saved Resumes" : "Community Roast Feed"}</h1>
+							<h1>{savedOnly ? "Saved Resumes" : "Community Lint Feed"}</h1>
 							<p>
 								{savedOnly
 									? "Return to the resumes you saved for another read."
-									: "Anonymous resumes. Public feedback. Sharpest roasts voted to the top."}
+									: "Anonymous resumes. Public checks. Sharpest fixes voted to the top."}
 							</p>
 						</div>
 						<Link className="btn-primary" href="/submit">
@@ -53,8 +53,8 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 					<section>
 						<h2>About the feed</h2>
 						<p>
-							Post a redacted resume, get specific feedback, and vote for the
-							roast that actually helps someone improve.
+							Post a resume, get specific feedback, and vote for the check
+							that actually helps someone improve.
 						</p>
 						<div className="rail-meta">Created May 2026</div>
 					</section>
@@ -69,17 +69,17 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 						aria-labelledby="feed-rules-title"
 					>
 						<div className="feed-rules-copy">
-							<span className="feed-rules-eyebrow">Roast coach says</span>
+							<span className="feed-rules-eyebrow">Lint coach says</span>
 							<h2 id="feed-rules-title">Community rules</h2>
 							<ol className="feed-rules-list">
 								<li>
-									<strong>Redact first.</strong>
+									<strong>Protect privacy.</strong>
 									<span>
-										Hide names, emails, phone numbers, links, and IDs.
+										Use the privacy mode that fits what you want reviewed.
 									</span>
 								</li>
 								<li>
-									<strong>Roast the resume.</strong>
+									<strong>Lint the resume.</strong>
 									<span>
 										Attack weak bullets, unclear impact, and messy structure.
 									</span>

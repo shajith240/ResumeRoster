@@ -36,8 +36,8 @@ type ExistingAccountHint = {
 	providers: string[];
 };
 
-const APP_THEME_STORAGE_KEY = "resumeroster-theme";
-const APP_THEME_CHANGE_EVENT = "resumeroster-theme-change";
+const APP_THEME_STORAGE_KEY = "linted-theme";
+const APP_THEME_CHANGE_EVENT = "linted-theme-change";
 
 function getStoredAppTheme(): AppTheme {
 	if (typeof window === "undefined") return "dark";
@@ -113,18 +113,18 @@ function existingAccountMessage(providers: string[]) {
 	);
 
 	if (oauthProviders.length && !providers.includes("email")) {
-		return `This email already has a ResumeRoster account. Continue with ${oauthProviders
+		return `This email already has a Linted account. Continue with ${oauthProviders
 			.map(providerLabel)
 			.join(" or ")} to sign in.`;
 	}
 
 	if (readableProviders.length) {
-		return `This email already has a ResumeRoster account. Sign in with ${readableProviders.join(
+		return `This email already has a Linted account. Sign in with ${readableProviders.join(
 			" or ",
 		)} instead.`;
 	}
 
-	return "This email already has a ResumeRoster account. Go to sign in instead.";
+	return "This email already has a Linted account. Go to sign in instead.";
 }
 
 async function lookupEmailStatus(email: string) {
@@ -393,18 +393,18 @@ export function SignUp() {
 			["google", "github"].includes(provider),
 		) ?? [];
 	const title =
-		mode === "signin" ? "Welcome back" : "Create your ResumeRoster account";
+		mode === "signin" ? "Welcome back" : "Create your Linted account";
 	const subtitle =
 		mode === "signin"
 			? "Sign in with email, Google, or GitHub."
-			: "Use email, Google, or GitHub to start roasting resumes.";
+			: "Use email, Google, or GitHub to start linting resumes.";
 
 	return (
 		<main className="auth-route page-enter">
 			<section className="auth-card" aria-labelledby="auth-title">
 				<div className="auth-card-surface">
-					<Link className="auth-wordmark" href="/" aria-label="ResumeRoster home">
-						ResumeRoster
+					<Link className="auth-wordmark" href="/" aria-label="Linted home">
+						Linted
 					</Link>
 
 					<div className="auth-heading">
@@ -575,7 +575,7 @@ export function SignUp() {
 				<div className="auth-card-footer">
 					<p>
 						{mode === "signin"
-							? "New to ResumeRoster?"
+							? "New to Linted?"
 							: "Already have an account?"}
 					</p>
 					<button
@@ -600,7 +600,7 @@ export function SignUp() {
 						<AlertDialogTitle>Account already exists</AlertDialogTitle>
 						<AlertDialogDescription>
 							{existingAccount?.message ||
-								"This email already has a ResumeRoster account."}
+								"This email already has a Linted account."}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>

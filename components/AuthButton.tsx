@@ -25,8 +25,8 @@ type ProfileChangeDetail = Partial<NavProfile> & {
 	id?: string | null;
 };
 
-const APP_THEME_STORAGE_KEY = "resumeroster-theme";
-const APP_THEME_CHANGE_EVENT = "resumeroster-theme-change";
+const APP_THEME_STORAGE_KEY = "linted-theme";
+const APP_THEME_CHANGE_EVENT = "linted-theme-change";
 const NAV_PROFILE_SELECT_WITH_STATUS =
 	"full_name, username, avatar_url, app_status";
 const NAV_PROFILE_SELECT_BASE = "full_name, username, avatar_url";
@@ -170,14 +170,14 @@ export default function AuthButton() {
 			getMetadataName(user) ||
 			profile?.username ||
 			user.email?.split("@")[0] ||
-			"Resume roaster",
+			"Resume reviewer",
 	);
 	const avatarUrl = profile?.avatar_url || getMetadataAvatar(user) || undefined;
 	const username = profile?.username
 		? `@${profile.username.replace(/^@+/, "")}`
 		: user.email
 			? `@${user.email.split("@")[0]}`
-			: "@resumeroster";
+			: "@linted";
 	const initials = displayName
 		.split(/\s+/)
 		.map((part: string) => part[0])
@@ -257,7 +257,7 @@ export default function AuthButton() {
 					name: displayName,
 					username,
 					avatar: avatarUrl,
-					initials: initials || "RR",
+					initials: initials || "LI",
 					status,
 				}}
 				onAction={(action) => void handleAction(action)}

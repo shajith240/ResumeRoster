@@ -1,4 +1,4 @@
--- ResumeRoster 0011: comment media attachments and markdown mode.
+-- Linted 0011: comment media attachments and markdown mode.
 -- Pivots roast extras away from curated stickers into normal comment tools:
 -- user image upload and plain/markdown content format.
 

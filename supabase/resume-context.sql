@@ -1,4 +1,4 @@
--- ResumeRoster resume context fields.
+-- Linted resume context fields.
 -- Run this in the Supabase SQL editor before posting resumes with JD/post context.
 
 alter table public.resumes

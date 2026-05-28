@@ -138,7 +138,7 @@ function getAuthorHandle(authorId: string, profile?: AuthorProfile) {
 	const name =
 		profile?.username ||
 		profile?.full_name ||
-		`roaster-${authorId.slice(0, 8)}`;
+		`reviewer-${authorId.slice(0, 8)}`;
 	return name.startsWith("@") ? name : `@${name}`;
 }
 
@@ -295,7 +295,7 @@ function FormattedRoastContent({
 	if (isDeleted) {
 		return (
 			<p className="deleted-roast-copy">
-				This roast was deleted by its author.
+				This comment was deleted by its author.
 			</p>
 		);
 	}
@@ -812,12 +812,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (isOwner) {
-			reportError("You cannot roast your own resume. Let the community cook.");
+			reportError("You cannot review your own resume. Let the community help.");
 			return;
 		}
 
 		if (isClosed) {
-			reportError("This resume is closed for new roasts.");
+			reportError("This resume is closed for new feedback.");
 			return;
 		}
 
@@ -896,7 +896,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setContent("");
 		setContentFormat("plain");
 		setSelectedAttachment(null);
-		toast.success("Roast submitted.");
+		toast.success("Feedback submitted.");
 	}
 
 	async function handleReplySubmit(
@@ -1055,7 +1055,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (isOwner) {
-			reportError("Resume owners cannot react to roasts for their own resume.");
+			reportError("Resume owners cannot react to feedback for their own resume.");
 			return;
 		}
 
@@ -1171,7 +1171,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		setResume({ ...resume, status: "closed" });
-		setMessage("This resume is now closed for new roasts.");
+		setMessage("This resume is now closed for new feedback.");
 		toast.success("Resume thread closed.");
 	}
 
@@ -1219,7 +1219,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (targetRoast.author_id !== user.id) {
-			reportError("You can only delete roasts or replies you wrote.");
+			reportError("You can only delete comments or replies you wrote.");
 			return;
 		}
 
@@ -1300,7 +1300,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		if (targetRoast.is_deleted) {
-			reportError("Deleted roasts cannot be reported.");
+			reportError("Deleted feedback cannot be reported.");
 			return;
 		}
 
@@ -1466,7 +1466,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					<div className="thread-roast-body">
 						<header>
 							{isDeleted ? (
-								<span className="deleted-author-chip">Deleted roaster</span>
+								<span className="deleted-author-chip">Deleted reviewer</span>
 							) : (
 								<Button asChild className="comment-author-chip" size="sm">
 									<Link href={`/profile/${roast.author_id}`}>
@@ -1688,7 +1688,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						<span
 							className={`badge ${isClosed ? "badge-closed" : "badge-open"}`}
 						>
-							{isClosed ? "Closed" : "Open for roasting"}
+							{isClosed ? "Closed" : "Open for review"}
 						</span>
 						{isOwner ? (
 							<div className="owner-actions">
@@ -1698,7 +1698,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 									type="button"
 									variant="outline"
 								>
-									{isClosed ? "Closed" : "Close roasts"}
+									{isClosed ? "Closed" : "Close feedback"}
 								</Button>
 								<Button
 									className="owner-delete-button"
@@ -1768,14 +1768,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				)}
 			</article>
 
-			<section className="thread-discussion-panel" aria-label="Roast discussion">
+			<section className="thread-discussion-panel" aria-label="Feedback discussion">
 					{isClosed || isOwner ? (
 						<div className="closed-note">
-							<h2>{isOwner ? "Owner view" : "Roasts closed"}</h2>
+							<h2>{isOwner ? "Owner view" : "Feedback closed"}</h2>
 							<p>
 								{isOwner
-									? "You own this resume. You can reply for clarification, but you cannot mark roasts helpful."
-									: "This thread is visible for learning, but no new roasts can be added."}
+									? "You own this resume. You can reply for clarification, but you cannot mark feedback helpful."
+									: "This thread is visible for learning, but no new feedback can be added."}
 							</p>
 							{message ? <p className="form-message">{message}</p> : null}
 						</div>
@@ -1791,7 +1791,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 								rows={4}
 							/>
 							<div className="roast-form-footer">
-								<span>Roast the resume, not the person</span>
+								<span>Review the resume, not the person</span>
 								<div className="roast-form-actions">
 									<CommentMediaToolbar
 										attachment={selectedAttachment}
@@ -1805,8 +1805,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 										{submitting
 											? "Posting..."
 											: user
-												? "Submit roast"
-												: "Sign in to roast"}
+												? "Submit feedback"
+												: "Sign in to review"}
 									</button>
 								</div>
 							</div>
@@ -1815,7 +1815,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					)}
 
 					<div className="thread-list-header">
-						<h2>Roast thread</h2>
+						<h2>Feedback thread</h2>
 						<span>{visibleRoastCount} comments</span>
 					</div>
 					{!replySchemaReady ? (
@@ -1846,7 +1846,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						{threadRoasts.map((roast) => renderThreadRoast(roast))}
 						{!threadRoasts.length ? (
 							<p className="muted-text">
-								No roasts yet. First useful feedback wins the room.
+								No feedback yet. First useful comment wins the room.
 							</p>
 						) : null}
 					</div>
@@ -1880,7 +1880,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		>
 			<DialogContent className="report-dialog-content">
 				<DialogHeader>
-					<DialogTitle>Report roast</DialogTitle>
+					<DialogTitle>Report comment</DialogTitle>
 					<DialogDescription>
 						Send this to the moderation queue. Reports are private and help us
 						keep feedback useful.
@@ -1954,12 +1954,12 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			<AlertDialogContent size="sm">
 				<AlertDialogHeader>
 					<AlertDialogTitle>
-						{deleteTargetIsReply ? "Delete reply?" : "Delete roast?"}
+						{deleteTargetIsReply ? "Delete reply?" : "Delete comment?"}
 					</AlertDialogTitle>
 					<AlertDialogDescription>
 						{deleteTargetIsReply
 							? "This reply will be removed from the thread. The rest of the conversation will stay visible."
-							: "This roast will be removed. Replies from other users will stay visible so the thread still makes sense."}
+							: "This comment will be removed. Replies from other users will stay visible so the thread still makes sense."}
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
@@ -1977,7 +1977,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							? "Deleting..."
 							: deleteTargetIsReply
 								? "Delete reply"
-								: "Delete roast"}
+								: "Delete comment"}
 					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>

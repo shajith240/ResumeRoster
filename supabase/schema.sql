@@ -1,4 +1,4 @@
--- ResumeRoster Step 0 schema.
+-- Linted Step 0 schema.
 -- Run this in the Supabase SQL editor before building Phase 1.
 
 create extension if not exists "pgcrypto";

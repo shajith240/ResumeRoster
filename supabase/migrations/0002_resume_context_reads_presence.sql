@@ -1,4 +1,4 @@
--- ResumeRoster 0002: resume context, read tracking, and active roaster presence.
+-- Linted 0002: resume context, read tracking, and active roaster presence.
 -- Preserves existing rows and only adds/updates forward-compatible structures.
 
 alter table public.resumes

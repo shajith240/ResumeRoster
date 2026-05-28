@@ -1,4 +1,4 @@
--- ResumeRoster submit flow backend fix.
+-- Linted submit flow backend fix.
 -- Run this in Supabase SQL editor if new users can sign in but cannot post resumes.
 -- It repairs profile creation, resume insert policies, resume context columns,
 -- and the private resume storage bucket/policies.

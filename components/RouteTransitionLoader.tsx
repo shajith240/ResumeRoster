@@ -7,8 +7,8 @@ import LoadingScreen from "@/components/LoadingScreen";
 const MIN_VISIBLE_MS = 700;
 const ROUTE_READY_SETTLE_MS = 120;
 const STALLED_TRANSITION_MS = 2200;
-const ROUTE_TRANSITION_EVENT = "resumeroster-route-transition";
-const APP_THEME_STORAGE_KEY = "resumeroster-theme";
+const ROUTE_TRANSITION_EVENT = "linted-route-transition";
+const APP_THEME_STORAGE_KEY = "linted-theme";
 const APP_ROUTE_PREFIXES = ["/feed", "/submit", "/leaderboard", "/profile", "/resume"];
 
 type LoaderTheme = "dark" | "light";
@@ -179,7 +179,7 @@ export default function RouteTransitionLoader() {
 		>
 			<LoadingScreen
 				className="route-transition-content"
-				label="Opening the next ResumeRoster page"
+				label="Opening the next Linted page"
 				theme={loaderTheme}
 				variant="plain"
 			/>

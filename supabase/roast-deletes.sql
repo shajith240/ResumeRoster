@@ -1,4 +1,4 @@
--- ResumeRoster roast/reply deletion.
+-- Linted roast/reply deletion.
 -- Run this in the Supabase SQL editor to let users delete their own roasts/replies.
 
 alter table public.roasts

@@ -340,7 +340,7 @@ export default function SubmitResumeForm() {
 		}
 
 		if (trimmedJobDescription.length < JOB_DESCRIPTION_MIN_LENGTH) {
-			const errorMessage = `Add ${JOB_DESCRIPTION_MIN_LENGTH}+ characters of job description so roasters can judge fit.`;
+			const errorMessage = `Add ${JOB_DESCRIPTION_MIN_LENGTH}+ characters of job description so reviewers can judge fit.`;
 			showFormError(errorMessage);
 			return;
 		}
@@ -541,7 +541,7 @@ export default function SubmitResumeForm() {
 						>
 							{jobDescriptionRemaining > 0
 								? `${jobDescriptionRemaining} more ${jobDescriptionRemaining === 1 ? "character" : "characters"} needed. Paste enough JD context to judge fit.`
-								: "This helps roasters compare your resume against the actual role."}
+								: "This helps reviewers compare your resume against the actual role."}
 						</small>
 					</label>
 
@@ -571,8 +571,8 @@ export default function SubmitResumeForm() {
 							id="post-description-help"
 						>
 							{postDescriptionRemaining > 0
-								? `${postDescriptionRemaining} more ${postDescriptionRemaining === 1 ? "character" : "characters"} needed. Tell roasters what to focus on.`
-								: "Add your ask, concerns, or the part of the resume you want roasted first."}
+								? `${postDescriptionRemaining} more ${postDescriptionRemaining === 1 ? "character" : "characters"} needed. Tell reviewers what to focus on.`
+								: "Add your ask, concerns, or the part of the resume you want reviewed first."}
 						</small>
 					</label>
 				</section>
@@ -620,7 +620,7 @@ export default function SubmitResumeForm() {
 							Processing PDF...
 						</>
 					) : (
-						"Submit for roasting"
+						"Submit for review"
 					)}
 				</button>
 				{submitIssue && !submitting && !success ? (

@@ -74,7 +74,7 @@ function initials(name: string) {
 }
 
 function roasterName(roaster: LeaderboardRoaster) {
-	return roaster.full_name || roaster.username || "Anonymous roaster";
+	return roaster.full_name || roaster.username || "Anonymous reviewer";
 }
 
 function roleTag(roaster: LeaderboardRoaster) {
@@ -136,7 +136,7 @@ function improvement(roaster: LeaderboardRoaster) {
 }
 
 function tableQuote(roaster: LeaderboardRoaster) {
-	return roaster.top_roast?.content ?? "No top roast yet.";
+	return roaster.top_roast?.content ?? "No top feedback yet.";
 }
 
 function normalizeSearchValue(value: string) {
@@ -392,13 +392,13 @@ function DirectoryRow({
 }
 
 export function StackedList({
-	description = "Roaster directory ranked by useful resume feedback.",
+	description = "Reviewer directory ranked by useful resume feedback.",
 	heading = "Top 100",
 	message = "",
 	onSearchQueryChange,
 	roasters,
 	searchQuery = "",
-	searchPlaceholder = "Search roasters, roles, top roasts...",
+	searchPlaceholder = "Search reviewers, roles, top feedback...",
 	startRank = 1,
 }: StackedListProps) {
 	const [localQuery, setLocalQuery] = useState(searchQuery);
@@ -472,7 +472,7 @@ export function StackedList({
 						aria-hidden="true"
 						className="absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-[var(--text-tertiary)]"
 					/>
-					<span className="sr-only">Search roasters</span>
+					<span className="sr-only">Search reviewers</span>
 					<Input
 						autoComplete="off"
 						className="h-11 rounded-[var(--button-radius)] border-[var(--border-default)] bg-[var(--bg-elevated)] pl-10 pr-10 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
@@ -497,11 +497,11 @@ export function StackedList({
 
 			<div className="hidden grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_118px_minmax(180px,1fr)_120px] gap-4 border-b border-[var(--border-subtle)] px-5 py-3 text-xs font-medium uppercase tracking-[0.06em] text-[var(--text-tertiary)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_118px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-head]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px_112px] max-[1080px]:[&_.top-roast-head]:hidden md:grid">
 				<span>Rank</span>
-				<span>Roaster</span>
+				<span>Reviewer</span>
 				<span className="role-head">Role</span>
 				<span>Points</span>
 				<span>Improve</span>
-				<span className="top-roast-head">Top roast</span>
+				<span className="top-roast-head">Top feedback</span>
 				<span>Action</span>
 			</div>
 
@@ -528,8 +528,8 @@ export function StackedList({
 					<span className="empty-icon">
 						<FileText aria-hidden="true" />
 					</span>
-					<strong>No matching roasters</strong>
-					<p>Try another search or help someone with a resume roast.</p>
+					<strong>No matching reviewers</strong>
+					<p>Try another search or help someone lint a resume.</p>
 					<Link href="/feed">Open the feed -&gt;</Link>
 				</div>
 			) : null}
@@ -571,10 +571,10 @@ export function StackedList({
 						</div>
 						<div className="min-w-0">
 							<h3 className="m-0 truncate text-base font-medium leading-none text-[var(--text-primary)]">
-								Roaster Directory
+								Reviewer Directory
 							</h3>
 							<p className="mt-1 truncate text-xs font-normal text-[var(--text-secondary)]">
-								{rankedRoasters.length} roasters ranked
+								{rankedRoasters.length} reviewers ranked
 							</p>
 						</div>
 					</div>
@@ -582,7 +582,7 @@ export function StackedList({
 					<div className="flex shrink-0 items-center gap-3">
 						{directoryOpen ? (
 							<button
-								aria-label="Close roaster directory"
+								aria-label="Close reviewer directory"
 								className="grid h-11 w-11 place-items-center rounded-[12px] bg-[var(--bg-surface)] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
 								onClick={(event) => {
 									event.stopPropagation();
@@ -612,12 +612,12 @@ export function StackedList({
 									aria-hidden="true"
 									className="absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-[var(--text-tertiary)]"
 								/>
-								<span className="sr-only">Search roaster directory</span>
+								<span className="sr-only">Search reviewer directory</span>
 								<Input
 									autoComplete="off"
 									className="h-11 rounded-[12px] border-transparent bg-[var(--bg-surface)] pl-10 pr-4 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
 									onChange={(event) => setDirectoryQuery(event.target.value)}
-									placeholder="Search roasters..."
+									placeholder="Search reviewers..."
 									spellCheck={false}
 									type="search"
 									value={directoryQuery}
@@ -647,7 +647,7 @@ export function StackedList({
 									<div className="grid min-h-40 place-items-center text-center">
 										<div>
 											<strong className="block text-sm font-medium text-[var(--text-primary)]">
-												No roasters found
+												No reviewers found
 											</strong>
 											<p className="mt-1 text-xs text-[var(--text-secondary)]">
 												Try a different name, role, or roast keyword.

@@ -15,7 +15,7 @@ describe("profile validation", () => {
 	});
 
 	it("limits text without adding hidden formatting", () => {
-		expect(limitText("ResumeRoster", 6)).toBe("Resume");
+		expect(limitText("Resume review", 6)).toBe("Resume");
 	});
 
 	it("builds unique-looking username suggestions within the DB limit", () => {

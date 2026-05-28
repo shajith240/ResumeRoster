@@ -108,7 +108,7 @@ export function getRoastContentIssue({
 	}
 
 	if (normalizedContent.length > ROAST_CONTENT_MAX_LENGTH) {
-		return "Keep roasts under 4000 characters.";
+		return "Keep feedback under 4000 characters.";
 	}
 
 	if (!isCommentContentFormat(contentFormat)) {

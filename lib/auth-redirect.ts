@@ -1,4 +1,4 @@
-export const AUTH_NEXT_STORAGE_KEY = "resumeroster.auth.next";
+export const AUTH_NEXT_STORAGE_KEY = "linted.auth.next";
 
 export function getSafeNextPath(value: string | null | undefined) {
 	if (!value || !value.startsWith("/") || value.startsWith("//")) {

@@ -1,4 +1,4 @@
--- ResumeRoster 0007: content reporting and moderation queue.
+-- Linted 0007: content reporting and moderation queue.
 -- Users can report visible resumes or roasts through a narrow RPC. The queue is
 -- private by default and intended for service-role/admin review in Supabase.
 

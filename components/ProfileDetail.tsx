@@ -107,7 +107,7 @@ type UsernameAvailability = {
 };
 
 const fallbackAvatar = "/assets/logo.png";
-const PROFILE_CHANGE_EVENT = "resumeroster-profile-change";
+const PROFILE_CHANGE_EVENT = "linted-profile-change";
 const LATEST_RESUME_VALUE = "__latest_public_resume__";
 const SUPABASE_MIGRATION_MESSAGE =
 	"Run the pending Supabase migrations, then refresh this page.";
@@ -273,7 +273,7 @@ function getActivity(
 		icon: FileText,
 		title: `Posted ${resume.title}`,
 		detail: formatActivityDate(resume.created_at),
-		result: `${resume.roast_count} roasts`,
+		result: `${resume.roast_count} comments`,
 		href: `/resume/${resume.id}`,
 		timestamp: new Date(resume.created_at).getTime(),
 	}));
@@ -298,7 +298,7 @@ function getActivity(
 		{
 			id: "profile-created",
 			icon: ShieldCheck,
-			title: "Joined ResumeRoster",
+			title: "Joined Linted",
 			detail: `Member since ${formatDate(profile.created_at)}`,
 			result: "Ready",
 			href: "/feed",
@@ -399,7 +399,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				}
 
 				if (!matchedProfile?.id) {
-					setMessage(`We could not find a roaster profile for @${profileToken}.`);
+					setMessage(`We could not find a reviewer profile for @${profileToken}.`);
 					setLoading(false);
 					return;
 				}
@@ -463,7 +463,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				setMessage(
 					isUuid(profileToken)
 						? "We could not find a profile row for this user yet."
-						: `We could not find a roaster profile for @${profileToken}.`,
+						: `We could not find a reviewer profile for @${profileToken}.`,
 				);
 				setLoading(false);
 				return;
@@ -868,7 +868,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		const metadataName = isOwnProfile ? getMetadataName(user) : "";
 		const metadataAvatar = isOwnProfile ? getMetadataAvatar(user) : "";
 		const displayName =
-			profile.full_name || metadataName || profile.username || "Anonymous roaster";
+			profile.full_name || metadataName || profile.username || "Anonymous reviewer";
 		const currentRole =
 			profile.current_position ||
 			profile.target_role ||
@@ -906,7 +906,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			skills,
 			tagline:
 				profile.tagline ||
-				"Building better resumes, one thoughtful roast at a time.",
+				"Building better resumes, one thoughtful lint pass at a time.",
 		};
 	}, [isOwnProfile, profile, resumes, roasts, user]);
 
@@ -948,7 +948,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			<section className={styles.shell}>
 				<div className={styles.emptyState}>
 					<h1>Profile not found</h1>
-					<p>This roaster does not have public reputation yet.</p>
+					<p>This reviewer does not have public reputation yet.</p>
 					<Link className="btn-primary" href="/leaderboard">
 						View leaderboard
 					</Link>
@@ -1073,7 +1073,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					<StatCard
 						highlight
 						icon={Flame}
-						label="Roast Points"
+						label="Lint Points"
 						value={profile.roast_points.toLocaleString()}
 					/>
 					<StatCard
@@ -1083,12 +1083,12 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					/>
 					<StatCard
 						icon={FileText}
-						label="Resumes Roasted"
+						label="Resumes Reviewed"
 						value={profile.resumes_roasted_count.toLocaleString()}
 					/>
 					<StatCard
 						icon={Trophy}
-						label="Best Roasts"
+						label="Best Reviews"
 						value={profile.best_roast_count.toLocaleString()}
 					/>
 				</section>
@@ -1155,7 +1155,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								<div>
 									<strong>{profileView.resumeHighlight.title}</strong>
 									<span>
-										{profileView.resumeHighlight.roast_count} roasts -{" "}
+										{profileView.resumeHighlight.roast_count} comments -{" "}
 										{formatActivityDate(profileView.resumeHighlight.created_at)}
 									</span>
 									<Link href={`/resume/${profileView.resumeHighlight.id}`}>
@@ -1186,7 +1186,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 
 					<section className={styles.roastsPanel}>
 						<div className={styles.panelHeader}>
-							<h2>Recent Roasts</h2>
+							<h2>Recent Reviews</h2>
 							<Link href="/feed">View all</Link>
 						</div>
 						{roasts.length ? (
@@ -1197,7 +1197,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							</div>
 						) : (
 							<p className={styles.mutedCopy}>
-								No public roasts yet. Helpful feedback will show up here.
+								No public reviews yet. Helpful feedback will show up here.
 							</p>
 						)}
 					</section>
@@ -1624,7 +1624,7 @@ function ProfileEditDialog({
 			<DialogHeader className={styles.editHeader}>
 				<DialogTitle className={styles.editTitle}>Edit profile</DialogTitle>
 				<DialogDescription className={styles.editDescription}>
-					Update the public details shown on your ResumeRoster profile.
+					Update the public details shown on your Linted profile.
 				</DialogDescription>
 			</DialogHeader>
 			<form className={styles.editForm} onSubmit={onSave}>
@@ -1733,7 +1733,7 @@ function ProfileEditDialog({
 										limitText(event.target.value, PROFILE_FIELD_LIMITS.tagline),
 									)
 								}
-								placeholder="Building better resumes, one roast at a time."
+								placeholder="Building better resumes, one lint pass at a time."
 								value={tagline}
 							/>
 						</div>

@@ -31,81 +31,81 @@ const featureContent: Record<
 > = {
   ats: {
     theme: "ats",
-    title: "Anonymous Resume Feed",
+    title: "Anonymous Resume Lint",
     copy:
-      "Post your resume without your name, college, phone, or email and let the community roast what recruiters will notice.",
+      "Post a resume without exposing personal details and let reviewers catch the bugs recruiters will reject.",
     score: "42",
-    scoreLabel: "live roasts",
-    insight: "New anonymous resume is trending in the feed",
-    panelTitle: "Public Roast Feed",
+    scoreLabel: "lint passes",
+    insight: "New resume failed the clarity check",
+    panelTitle: "Career Lint Report",
     good: "Identity hidden",
-    warn: "Impact bullets getting roasted",
-    listTitle: "Community notes",
+    warn: "Impact bug found",
+    listTitle: "Static checks",
     points: [
       "Hide personal details before the resume goes public.",
-      "Collect feedback from students, freshers, and people already hired.",
-      "Keep the best comments attached to each resume version.",
+      "Flag vague bullets, weak proof, and recruiter red flags.",
+      "Keep the best fixes attached to each resume version.",
     ],
   },
   jd: {
     theme: "jd",
-    title: "Peer Roasts",
+    title: "Human Reviewers, Compiler Mindset",
     copy:
-      "Get comments from people who just survived placements, internships, ATS uploads, and recruiter screens.",
+      "Recruiters behave like strict compilers. Linted lets peers, recruiters, and engineers catch errors before the first screen.",
     score: "18",
     scoreLabel: "helpful votes",
-    insight: "Top roast points out a missing project outcome",
-    panelTitle: "Best Roast",
+    insight: "Top check points out a missing project outcome",
+    panelTitle: "Best Fix",
     good: "Specific fix suggested",
     warn: "Generic summary called out",
     listTitle: "Why it helps",
     points: [
-      "Roasts are public, so weak advice gets ignored fast.",
+      "Feedback is public, so weak advice gets ignored fast.",
       "Helpful feedback rises through votes instead of authority.",
       "Real applicants explain what worked for them.",
     ],
   },
   roast: {
     theme: "roast",
-    title: "Vote the Best Feedback",
+    title: "Vote the Sharpest Fixes",
     copy:
-      "Every roast can be voted helpful, so the sharpest comments rise above noise, jokes, and lazy one-liners.",
+      "Every comment can be voted helpful, so the sharpest fixes rise above noise, jokes, and lazy one-liners.",
     score: "7",
-    scoreLabel: "top roasts",
+    scoreLabel: "top fixes",
     insight: "Most-voted comment explains exactly what to rewrite",
-    panelTitle: "Roast Ranking",
+    panelTitle: "Fix Ranking",
     good: "Actionable comment",
-    warn: "Low-effort roast buried",
+    warn: "Low-effort take buried",
     listTitle: "Voting rules",
     points: [
       "Upvote feedback that names the problem and gives a fix.",
-      "Feature roasts that improve the resume, not just insult it.",
+      "Feature comments that improve the resume, not just insult it.",
       "Let the community decide which feedback deserves attention.",
     ],
   },
   skills: {
     theme: "skills",
-    title: "Roaster Reputation",
+    title: "Reviewer Reputation",
     copy:
-      "People who consistently give useful feedback build visible reputation and become trusted resume reviewers.",
+      "People who consistently give useful lint passes build visible reputation and become trusted resume reviewers.",
     score: "#12",
-    scoreLabel: "roaster rank",
+    scoreLabel: "reviewer rank",
     insight: "Placement mentor earned 31 helpful votes this week",
-    panelTitle: "Roaster Profile",
+    panelTitle: "Reviewer Profile",
     good: "Hired-at proof visible",
     warn: "Unhelpful comments lose reach",
     listTitle: "Reputation signals",
     points: [
       "Reward people whose feedback gets marked helpful.",
-      "Show badges for placement wins, roles, and strong roast history.",
+      "Show reviewer roles, expertise, and strong feedback history.",
       "Turn good reviewers into the reason people return.",
     ],
   },
   optimize: {
     theme: "optimize",
-    title: "Improvement Leaderboard",
+    title: "Career Lint Score",
     copy:
-      "Before-and-after resumes show who improved the most this week, making progress public and addictive.",
+      "Before-and-after resumes show who cleaned up the most career bugs this week, making progress visible and easy to follow.",
     score: "+64%",
     scoreLabel: "improvement",
     insight: "Resume climbed after 9 community fixes",
@@ -122,11 +122,11 @@ const featureContent: Record<
 };
 
 const featureTabs: Array<{ key: FeatureKey; label: string }> = [
-  { key: "ats", label: "Anonymous Feed" },
-  { key: "jd", label: "Peer Roasts" },
-  { key: "roast", label: "Helpful Votes" },
-  { key: "skills", label: "Roaster Reputation" },
-  { key: "optimize", label: "Improvement Board" },
+  { key: "ats", label: "Resume Lint" },
+  { key: "jd", label: "Reviewer Checks" },
+  { key: "roast", label: "Useful Fixes" },
+  { key: "skills", label: "Reviewer Trust" },
+  { key: "optimize", label: "Improvement" },
 ];
 
 const tagAssets = [
@@ -159,17 +159,17 @@ const benefits: Array<{ key: BenefitKey; label: string; copy: string }> = [
   {
     key: "students",
     label: "For students",
-    copy: "Post anonymously before placements and learn what seniors, peers, and recent hires would fix first.",
+    copy: "Run your resume through the crowd before placement season treats it like a compile step.",
   },
   {
     key: "jobseekers",
     label: "For job seekers",
-    copy: "Get public feedback from people applying to similar roles, then share your improved version back to the feed.",
+    copy: "Catch unclear proof, weak metrics, and JD mismatch before recruiter screens.",
   },
   {
     key: "switchers",
     label: "For career switchers",
-    copy: "Test whether strangers understand your career shift before a recruiter has to guess the story.",
+    copy: "Make your career story parse cleanly before a stranger has to infer it.",
   },
 ];
 
@@ -177,32 +177,32 @@ const stackCards = [
   {
     className: "notes-card",
     image: "Resume_upload.png",
-    title: "Anonymous Upload",
-    copy: "Remove personal details and post your resume to the public roast feed.",
+    title: "Upload the Source",
+    copy: "Remove personal details when needed and post your resume to the public lint feed.",
   },
   {
     className: "chat-card",
     image: "JD match.png",
-    title: "Community Feed",
-    copy: "Your resume appears beside other anonymous submissions waiting for feedback.",
+    title: "Run the Lint Pass",
+    copy: "Your resume appears beside other submissions waiting for precise feedback.",
   },
   {
     className: "recorder-card",
     image: "Recruter_roast.png",
-    title: "Recruiter Roast",
-    copy: "Other students and job seekers call out weak, generic, or confusing parts.",
+    title: "Catch Recruiter Errors",
+    copy: "Reviewers call out weak, generic, or confusing parts before they reach the first screen.",
   },
   {
     className: "tutorials-card",
     image: "fix_plan.png",
-    title: "Helpful Votes",
-    copy: "The strongest roasts rise through votes so you know which fixes matter.",
+    title: "Apply Useful Fixes",
+    copy: "The strongest comments rise through votes so you know which fixes matter.",
   },
   {
     className: "tools-card",
     image: "ats.png",
-    title: "Leaderboard",
-    copy: "Improved resumes and trusted roasters get featured every week.",
+    title: "Build Reviewer Trust",
+    copy: "Improved resumes and trusted reviewers get featured every week.",
   },
 ];
 
@@ -339,8 +339,8 @@ export default function Home() {
     <>
       <nav className={`navbar${navHidden ? " nav-hidden" : ""}`}>
         <div className="container nav-content">
-          <Link className="landing-wordmark" href="/" aria-label="ResumeRoster home">
-            ResumeRoster
+          <Link className="landing-wordmark" href="/" aria-label="Linted home">
+            Linted
           </Link>
 
           <div className="nav-links">
@@ -377,26 +377,27 @@ export default function Home() {
                 muted
                 loop
                 playsInline
-                aria-label="ResumeRoster preview"
+                aria-label="Linted preview"
               >
                 <source src={asset("Hero_section_animation.webm")} type="video/webm" />
               </video>
             </div>
 
-            <h1>Get your resume roasted before recruiters do</h1>
+            <h1>Lint your resume before recruiters compile it</h1>
 
             <p className="hero-subtext">
-              Post your resume anonymously, let the community roast it, and vote the
-              sharpest feedback to the top before recruiters ever see it.
+              Linted is a human-powered career linter. Post anonymously, get
+              reviewers to catch structural bugs, vague bullets, and recruiter red
+              flags, then vote the sharpest fixes to the top.
             </p>
 
             <LandingCta className="hero-btn" href={isSignedIn ? "/feed" : "/submit"} isSignedIn={isSignedIn}>
-              {authReady && isSignedIn ? "Go to roast feed" : "Post your resume"}
+              {authReady && isSignedIn ? "Go to lint feed" : "Lint my resume"}
             </LandingCta>
           </div>
         </section>
 
-        <section className="trust-section" aria-label="ResumeRoster use cases">
+        <section className="trust-section" aria-label="Linted use cases">
           <div className="logos-track">
             {repeatedTags.map((group, groupIndex) => (
               <div
@@ -417,12 +418,12 @@ export default function Home() {
         </section>
 
         <section className="feature-header" id="how-it-works">
-          <h2>Make your resume roast public</h2>
+          <h2>A static analysis pass for your career</h2>
 
           <div
             className="feature-tabs"
             role="tablist"
-            aria-label="ResumeRoster community features"
+            aria-label="Linted community features"
           >
             {featureTabs.map((tab) => {
               const isActive = activeFeature === tab.key;
@@ -452,7 +453,7 @@ export default function Home() {
             <div className="showcase-info">
               <h3>{feature.title}</h3>
               <p>{feature.copy}</p>
-              <Link className="showcase-link" href="/feed">Open the feed</Link>
+              <Link className="showcase-link" href="/feed">Open the lint feed</Link>
             </div>
 
             <div className="showcase-video">
@@ -507,9 +508,9 @@ export default function Home() {
             </div>
             <div className="sticky-heading" ref={pinHeadingRef}>
               <h2>
-                Real people roast better
+                Human reviewers catch
                 <br />
-                when everyone can vote
+                what automated scans miss
               </h2>
             </div>
 
@@ -525,19 +526,19 @@ export default function Home() {
 
               <div className="feature-card">
                 <div className="sketch-icon compass" />
-                <h3>Let the crowd find the weak spots</h3>
+                <h3>Catch bugs before the compiler</h3>
                 <p>
-                  Students, job seekers, and recent hires point out vague bullets,
-                  missing proof, and recruiter red flags.
+                  Students, job seekers, and trusted reviewers point out vague
+                  bullets, missing proof, and recruiter red flags.
                 </p>
               </div>
 
               <div className="feature-card">
                 <div className="sketch-icon flag" />
-                <h3>The best feedback rises</h3>
+                <h3>Promote the fix, not the noise</h3>
                 <p>
-                  Votes push the most useful roasts upward, while trusted roasters build
-                  reputation for feedback that actually helps.
+                  Votes push the most useful fixes upward, while trusted reviewers
+                  build reputation for feedback that actually helps.
                 </p>
               </div>
             </div>
@@ -547,15 +548,15 @@ export default function Home() {
         <section className="quote-section" id="proof">
           <div className="stars">*****</div>
           <blockquote>
-            &quot;I trusted the roast more because other students voted on the exact
-            comment that helped me rewrite my projects.&quot;
+            &quot;The best comment read like a lint error: exact line, exact problem,
+            exact fix.&quot;
           </blockquote>
           <p>Anonymous final-year student</p>
         </section>
 
         <section className="benefits" id="use-cases">
           <div className="benefits-copy">
-            <h2>Built for public resume feedback</h2>
+            <h2>Built for career linting in public</h2>
             {benefits.map((benefit) => {
               const isActive = activeBenefit === benefit.key;
               return (
@@ -583,7 +584,7 @@ export default function Home() {
         </section>
 
         <section className="cards-stack">
-          <h2>From anonymous upload to public improvement</h2>
+          <h2>From resume source to cleaner application</h2>
           <div className="stack-list">
             {stackCards.map((card) => (
               <article className={`stack-card ${card.className}`} key={card.title}>
@@ -598,20 +599,20 @@ export default function Home() {
         <section className="quote-section second-quote">
           <div className="stars">*****</div>
           <blockquote>
-            &quot;My best feedback came from someone who had just cracked the same role,
-            not from a generic private report.&quot;
+            &quot;My resume did not need a generic score. It needed someone to point at
+            the bug and tell me the fix.&quot;
           </blockquote>
           <p>Anonymous software job seeker</p>
         </section>
 
         <section className="cta-banner">
           <div>
-            <h2>Your resume should survive the first scan</h2>
+            <h2>Your resume should pass the first scan</h2>
             <p>
-              Post it anonymously, let the community roast it, and climb the
-              most-improved board before your next application.
+              Run it through Linted before the recruiter/compiler rejects it. Post
+              anonymously, collect fixes, and ship a cleaner version.
             </p>
-            <LandingCta className="cta-link" href="/submit" isSignedIn={isSignedIn}>Join the roast feed</LandingCta>
+            <LandingCta className="cta-link" href="/submit" isSignedIn={isSignedIn}>Run a lint pass</LandingCta>
           </div>
           <video className="cta-video" autoPlay muted loop playsInline aria-label="Resume first scan preview">
             <source src={asset("Your resume should survive the first scan.webm")} type="video/webm" />
@@ -635,10 +636,10 @@ function Footer() {
       <div className="footer-columns">
         <div className="footer-links">
           <Link href="/">Our Mission</Link>
-          <Link href="/feed">Roast Feed</Link>
+          <Link href="/feed">Lint Feed</Link>
           <Link href="/leaderboard">Leaderboard</Link>
-          <Link href="/leaderboard">Top Roasters</Link>
-          <Link href="/submit">Invite Roasters!</Link>
+          <Link href="/leaderboard">Top Reviewers</Link>
+          <Link href="/submit">Invite Reviewers!</Link>
         </div>
         <div className="footer-links">
           <Link href="/feed">Blog</Link>
@@ -672,7 +673,7 @@ function Footer() {
           </div>
         </div>
       </div>
-      <p>&copy; 2026 ResumeRoster. All rights reserved.</p>
+      <p>&copy; 2026 Linted. All rights reserved.</p>
     </footer>
   );
 }

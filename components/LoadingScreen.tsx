@@ -13,7 +13,7 @@ const LOADING_ANIMATION_SRC = "/assets/lodingscreen%20animation.webm";
 export default function LoadingScreen({
 	caption,
 	className,
-	label = "Loading ResumeRoster",
+	label = "Loading Linted",
 	theme = "auto",
 	variant = "panel",
 }: LoadingScreenProps) {
