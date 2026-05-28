@@ -166,7 +166,7 @@
 	}
 
 	.toolbar {
-		justify-content: stretch;
+		justify-content: flex-start;
 	}
 
 	.modeTabs {
@@ -174,7 +174,9 @@
 	}
 
 	.rangeTrigger {
-		width: 100%;
+		width: fit-content;
+		max-width: 100%;
+		align-self: flex-start;
 	}
 }
 

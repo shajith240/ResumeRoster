@@ -651,6 +651,8 @@ html[data-app-theme="dark"] .loading-screen[data-loader-theme="auto"] {
 	z-index: 9999;
 	display: grid;
 	place-items: center;
+	width: 100dvw;
+	min-height: 100dvh;
 	padding: 24px;
 	background: var(--route-loader-bg);
 	backdrop-filter: blur(22px) saturate(130%);
@@ -685,10 +687,14 @@ html[data-app-theme="dark"] .loading-screen[data-loader-theme="auto"] {
 }
 
 .full-page-loader {
+	position: fixed;
+	inset: 0;
+	z-index: 9998;
 	display: grid;
 	place-items: center;
-	width: 100%;
-	min-height: 100svh;
+	width: 100dvw;
+	min-height: 100dvh;
+	margin: 0;
 	padding: 24px;
 	background: #101114;
 }
