@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
+import NotificationCenter from "@/components/NotificationCenter";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { UserDropdown } from "@/components/ui/user-dropdown";
 import { PROFILE_CHANGE_EVENT, normalizeAppStatus } from "@/lib/app-presence";
 import { getLoginPath } from "@/lib/auth-redirect";
+import { NOTIFICATIONS_OPEN_EVENT } from "@/lib/notifications";
 import { signOut, supabase } from "@/lib/supabase/client";
 import type { AppStatus } from "@/lib/supabase/types";
 
@@ -192,6 +194,11 @@ export default function AuthButton() {
 			return;
 		}
 
+		if (action === "notifications") {
+			window.dispatchEvent(new CustomEvent(NOTIFICATIONS_OPEN_EVENT));
+			return;
+		}
+
 		const routes: Record<string, string> = {
 			profile: "/profile/me",
 			submit: "/submit",
@@ -251,6 +258,7 @@ export default function AuthButton() {
 
 	return (
 		<div className="profile-menu">
+			<NotificationCenter userId={user.id} />
 			<UserDropdown
 				selectedStatus={status}
 				user={{

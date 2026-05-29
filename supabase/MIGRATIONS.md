@@ -14,6 +14,16 @@
 0007_content_reporting_moderation.sql
 0008_saved_resumes.sql
 0009_resume_privacy_modes.sql
+0010_admin_stickers_moderation.sql
+0011_comment_media_markdown.sql
+0012_comment_images_only.sql
+0013_reviewer_community_layer.sql
+0014_linted_profile_defaults.sql
+0015_role_onboarding.sql
+0016_fix_onboarding_rpc_ambiguity.sql
+0017_single_active_user_sessions.sql
+0018_map_onboarding_persona_to_profile_role.sql
+0019_realtime_notifications.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.

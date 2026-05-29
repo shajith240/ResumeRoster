@@ -1651,6 +1651,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				className="thread-roast-node"
 				data-thread-parent-id={roast.parent_id ?? undefined}
 				data-thread-roast-id={roast.id}
+				id={`comment-${roast.id}`}
 				key={roast.id}
 				role="listitem"
 			>

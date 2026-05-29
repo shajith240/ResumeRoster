@@ -49,6 +49,14 @@ export type OnboardingPersonaId =
   | "founder"
   | "other";
 export type OnboardingStatus = "pending" | "completed" | "not_required";
+export type NotificationType =
+  | "resume_feedback"
+  | "comment_reply"
+  | "resume_thread_reply"
+  | "helpful_vote"
+  | "reviewer_status"
+  | "moderation"
+  | "system";
 
 export type ResumeAuthorProfile = {
   id: string;
@@ -199,4 +207,24 @@ export type PublicProfileRoast = {
   content: string;
   helpful_votes: number;
   created_at: string;
+};
+
+export type LintedNotification = {
+  id: string;
+  recipient_id: string;
+  actor_id: string | null;
+  type: NotificationType;
+  title: string;
+  body: string;
+  link_href: string;
+  resume_id: string | null;
+  roast_id: string | null;
+  parent_roast_id: string | null;
+  related_user_id: string | null;
+  metadata: Record<string, unknown>;
+  dedupe_key: string | null;
+  read_at: string | null;
+  seen_at: string | null;
+  created_at: string;
+  updated_at: string;
 };
