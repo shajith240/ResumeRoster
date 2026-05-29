@@ -578,6 +578,21 @@
 	padding: 22px;
 }
 
+.reviewerDialog {
+	width: min(680px, calc(100vw - 32px));
+	max-width: min(680px, calc(100vw - 32px));
+	max-height: calc(100dvh - 40px);
+	overflow-y: auto;
+	border-radius: 14px;
+	padding: 22px;
+}
+
+.reviewerDialogForm {
+	display: grid;
+	gap: 16px;
+	margin-top: 18px;
+}
+
 .trustDialogBody {
 	display: grid;
 	gap: 16px;
@@ -1206,6 +1221,12 @@
 		padding: 18px;
 	}
 
+	.reviewerDialog {
+		width: calc(100vw - 20px);
+		max-width: calc(100vw - 20px);
+		padding: 18px;
+	}
+
 	.editHeader {
 		padding: 16px 18px 12px;
 	}
@@ -1335,7 +1356,8 @@
 }
 
 :global(body.main-app-dark) .editDialog,
-:global(body.main-app-dark) .trustDialog {
+:global(body.main-app-dark) .trustDialog,
+:global(body.main-app-dark) .reviewerDialog {
 	border-color: var(--border-default);
 	background: var(--bg-surface);
 	color: var(--text-primary);
