@@ -11,6 +11,7 @@ import {
 } from "react";
 import {
 	ArrowRight,
+	BadgeCheck,
 	BriefcaseBusiness,
 	CalendarDays,
 	Camera,
@@ -983,6 +984,15 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					<div className={styles.identity}>
 						<div className={styles.identityHeader}>
 							<h1>{profileView.displayName}</h1>
+							{profileView.reviewerStatus === "verified" ? (
+								<span
+									className={styles.verifiedNameBadge}
+									title="Trusted reviewer verified by Linted"
+									aria-label="Trusted reviewer verified by Linted"
+								>
+									<BadgeCheck aria-hidden="true" />
+								</span>
+							) : null}
 						</div>
 						<div className={styles.roleTag}>{profileView.roleTag}</div>
 						<p>{profileView.tagline}</p>
@@ -1032,14 +1042,9 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								onCurrentPositionChange={setCurrentPosition}
 								onFullNameChange={setFullName}
 								profileOwnerId={profile.id}
-								onReviewerApplicationNoteChange={
-									setReviewerApplicationNote
-								}
-								onReviewerApply={applyForTrustedReviewer}
 								onReviewerBioChange={setReviewerBio}
 								onReviewerExpertiseChange={setReviewerExpertiseInput}
 								onReviewerHeadlineChange={setReviewerHeadline}
-								onReviewerProofUrlChange={setReviewerProofUrl}
 								onReviewerTypeChange={setReviewerType}
 								onResumeHighlightChange={setResumeHighlightId}
 								onSave={saveProfile}
@@ -1047,16 +1052,10 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								onTaglineChange={setTagline}
 								onUsernameChange={setUsername}
 								originalUsername={profile.username ?? ""}
-								reviewerApplicationNote={reviewerApplicationNote}
-								reviewerApplying={reviewerApplying}
 								reviewerBio={reviewerBio}
 								reviewerExpertiseInput={reviewerExpertiseInput}
 								reviewerHeadline={reviewerHeadline}
-								reviewerProofUrl={reviewerProofUrl}
 								reviewerType={reviewerType}
-								reviewerVerificationStatus={
-									profile.reviewer_verification_status
-								}
 								resumeHighlightId={resumeHighlightId}
 								resumes={resumes}
 								saveMessage={saveMessage}
@@ -1101,16 +1100,35 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 									<h2>Reviewer Profile</h2>
 									<p>{profileView.reviewerHeadline}</p>
 								</div>
-								<span
-									className={
-										profileView.reviewerStatus === "verified"
-											? styles.trustedReviewerBadge
-											: styles.selfDeclaredBadge
-									}
-								>
-									<ShieldCheck aria-hidden="true" />
-									{profileView.reviewerLabel}
-								</span>
+								<div className={styles.reviewerPanelActions}>
+									<span
+										className={
+											profileView.reviewerStatus === "verified"
+												? styles.trustedReviewerBadge
+												: styles.selfDeclaredBadge
+										}
+									>
+										{profileView.reviewerStatus === "verified" ? (
+											<BadgeCheck aria-hidden="true" />
+										) : (
+											<ShieldCheck aria-hidden="true" />
+										)}
+										{profileView.reviewerLabel}
+									</span>
+									{isOwnProfile && profileView.reviewerStatus !== "verified" ? (
+										<TrustApplicationDialog
+											onApply={applyForTrustedReviewer}
+											onNoteChange={setReviewerApplicationNote}
+											onProofUrlChange={setReviewerProofUrl}
+											proofUrl={reviewerProofUrl}
+											applicationNote={reviewerApplicationNote}
+											applying={reviewerApplying}
+											reviewerVerificationStatus={
+												profile.reviewer_verification_status
+											}
+										/>
+									) : null}
+								</div>
 							</div>
 							<p>{profileView.reviewerBio}</p>
 							<div className={styles.skillCloud}>
@@ -1268,6 +1286,115 @@ function RoastRow({ roast }: { roast: PublicProfileRoast }) {
 	);
 }
 
+function TrustApplicationDialog({
+	applicationNote,
+	applying,
+	onApply,
+	onNoteChange,
+	onProofUrlChange,
+	proofUrl,
+	reviewerVerificationStatus,
+}: {
+	applicationNote: string;
+	applying: boolean;
+	onApply: () => void;
+	onNoteChange: (value: string) => void;
+	onProofUrlChange: (value: string) => void;
+	proofUrl: string;
+	reviewerVerificationStatus: PublicProfile["reviewer_verification_status"];
+}) {
+	const buttonLabel =
+		reviewerVerificationStatus === "pending"
+			? "Update application"
+			: reviewerVerificationStatus === "rejected"
+				? "Reapply for trust"
+				: "Apply for trust";
+	const statusCopy =
+		reviewerVerificationStatus === "pending"
+			? "Your application is waiting for admin review. You can update the proof if something changed."
+			: reviewerVerificationStatus === "rejected"
+				? "Your last request was not approved. Add clearer proof before reapplying."
+				: "Submit one public proof link so an admin can approve the trusted reviewer label.";
+
+	return (
+		<Dialog>
+			<DialogTrigger asChild>
+				<Button className={styles.trustApplyButton} type="button" variant="outline">
+					<BadgeCheck aria-hidden="true" />
+					{buttonLabel}
+				</Button>
+			</DialogTrigger>
+			<DialogContent className={styles.trustDialog}>
+				<DialogHeader>
+					<DialogTitle>Trusted reviewer application</DialogTitle>
+					<DialogDescription>
+						Verification is separate from profile editing. Your profile stays
+						self-declared until an admin approves the proof.
+					</DialogDescription>
+				</DialogHeader>
+
+				<div className={styles.trustDialogBody}>
+					<div className={styles.trustStatusCard}>
+						<BadgeCheck aria-hidden="true" />
+						<div>
+							<strong>Gold tick after approval</strong>
+							<span>{statusCopy}</span>
+						</div>
+					</div>
+
+					<div className={styles.trustField}>
+						<Label htmlFor="trust-proof-url">Public proof link</Label>
+						<Input
+							id="trust-proof-url"
+							maxLength={REVIEWER_FIELD_LIMITS.proofUrl}
+							onChange={(event) => onProofUrlChange(event.target.value)}
+							placeholder="LinkedIn, portfolio, GitHub, or work profile"
+							value={proofUrl}
+						/>
+					</div>
+
+					<div className={styles.trustField}>
+						<div className={styles.fieldLabelRow}>
+							<Label htmlFor="trust-application-note">Review note</Label>
+							<span className={styles.fieldLimit}>
+								{applicationNote.length}/
+								{REVIEWER_FIELD_LIMITS.applicationNote}
+							</span>
+						</div>
+						<textarea
+							className={styles.editTextarea}
+							id="trust-application-note"
+							maxLength={REVIEWER_FIELD_LIMITS.applicationNote}
+							onChange={(event) =>
+								onNoteChange(
+									limitReviewerText(
+										event.target.value,
+										REVIEWER_FIELD_LIMITS.applicationNote,
+									),
+								)
+							}
+							placeholder="Briefly explain what proof this link shows."
+							value={applicationNote}
+						/>
+					</div>
+				</div>
+
+				<DialogFooter>
+					<DialogClose asChild>
+						<Button type="button" variant="outline">
+							Cancel
+						</Button>
+					</DialogClose>
+					<Button disabled={applying} onClick={onApply} type="button">
+						<Upload data-icon="inline-start" aria-hidden="true" />
+						{applying ? "Sending..." : buttonLabel}
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	);
+}
+
 function FieldHeader({
 	children,
 	htmlFor,
@@ -1309,12 +1436,9 @@ function ProfileEditDialog({
 	onCurrentPositionChange,
 	onFullNameChange,
 	profileOwnerId,
-	onReviewerApplicationNoteChange,
-	onReviewerApply,
 	onReviewerBioChange,
 	onReviewerExpertiseChange,
 	onReviewerHeadlineChange,
-	onReviewerProofUrlChange,
 	onReviewerTypeChange,
 	onResumeHighlightChange,
 	onSave,
@@ -1322,14 +1446,10 @@ function ProfileEditDialog({
 	onTaglineChange,
 	onUsernameChange,
 	originalUsername,
-	reviewerApplicationNote,
-	reviewerApplying,
 	reviewerBio,
 	reviewerExpertiseInput,
 	reviewerHeadline,
-	reviewerProofUrl,
 	reviewerType,
-	reviewerVerificationStatus,
 	resumeHighlightId,
 	resumes,
 	saveMessage,
@@ -1355,12 +1475,9 @@ function ProfileEditDialog({
 	onCurrentPositionChange: (value: string) => void;
 	onFullNameChange: (value: string) => void;
 	profileOwnerId: string;
-	onReviewerApplicationNoteChange: (value: string) => void;
-	onReviewerApply: () => void;
 	onReviewerBioChange: (value: string) => void;
 	onReviewerExpertiseChange: (value: string) => void;
 	onReviewerHeadlineChange: (value: string) => void;
-	onReviewerProofUrlChange: (value: string) => void;
 	onReviewerTypeChange: (value: ReviewerType | "") => void;
 	onResumeHighlightChange: (value: string) => void;
 	onSave: (event: FormEvent<HTMLFormElement>) => void;
@@ -1368,14 +1485,10 @@ function ProfileEditDialog({
 	onTaglineChange: (value: string) => void;
 	onUsernameChange: (value: string) => void;
 	originalUsername: string;
-	reviewerApplicationNote: string;
-	reviewerApplying: boolean;
 	reviewerBio: string;
 	reviewerExpertiseInput: string;
 	reviewerHeadline: string;
-	reviewerProofUrl: string;
 	reviewerType: ReviewerType | "";
-	reviewerVerificationStatus: PublicProfile["reviewer_verification_status"];
 	resumeHighlightId: string;
 	resumes: PublicProfileResume[];
 	saveMessage: string;
@@ -2111,60 +2224,6 @@ function ProfileEditDialog({
 												))}
 											</div>
 										</div>
-									</div>
-
-									<div className={styles.verificationBox}>
-										<div>
-											<strong>Trusted reviewer</strong>
-											<span>
-												{reviewerVerificationStatus === "verified"
-													? "Approved by admin."
-													: reviewerVerificationStatus === "pending"
-														? "Application pending review."
-														: "Optional admin review for high-trust labels."}
-											</span>
-										</div>
-										{reviewerVerificationStatus === "verified" ? null : (
-											<>
-												<Input
-													aria-label="Proof link"
-													maxLength={REVIEWER_FIELD_LIMITS.proofUrl}
-													onChange={(event) =>
-														onReviewerProofUrlChange(event.target.value)
-													}
-													placeholder="LinkedIn, portfolio, GitHub, or work proof URL"
-													value={reviewerProofUrl}
-												/>
-												<textarea
-													aria-label="Reviewer application note"
-													className={styles.editTextarea}
-													maxLength={REVIEWER_FIELD_LIMITS.applicationNote}
-													onChange={(event) =>
-														onReviewerApplicationNoteChange(
-															limitReviewerText(
-																event.target.value,
-																REVIEWER_FIELD_LIMITS.applicationNote,
-															),
-														)
-													}
-													placeholder="Short note for admin review."
-													value={reviewerApplicationNote}
-												/>
-												<Button
-													disabled={reviewerApplying}
-													onClick={onReviewerApply}
-													type="button"
-													variant="outline"
-												>
-													<ShieldCheck data-icon="inline-start" aria-hidden="true" />
-													{reviewerApplying
-														? "Sending..."
-														: reviewerVerificationStatus === "rejected"
-															? "Reapply for trust"
-															: "Apply for trust"}
-												</Button>
-											</>
-										)}
 									</div>
 								</>
 							) : null}

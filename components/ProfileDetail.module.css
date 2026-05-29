@@ -84,6 +84,8 @@
 .identityHeader {
 	display: flex;
 	align-items: center;
+	gap: 12px;
+	min-width: 0;
 }
 
 .identity h1 {
@@ -93,6 +95,24 @@
 	font-weight: 400;
 	letter-spacing: 0;
 	line-height: 0.92;
+}
+
+.verifiedNameBadge {
+	display: inline-grid;
+	flex: 0 0 auto;
+	width: clamp(28px, 2.35vw, 36px);
+	height: clamp(28px, 2.35vw, 36px);
+	place-items: center;
+	border: 1px solid rgba(212, 165, 56, 0.46);
+	border-radius: 50%;
+	background: color-mix(in srgb, #d4a538 18%, var(--bg-surface));
+	color: #d4a538;
+}
+
+.verifiedNameBadge svg {
+	width: 68%;
+	height: 68%;
+	stroke-width: 2.2;
 }
 
 .roleTag {
@@ -284,6 +304,14 @@
 	align-items: flex-start;
 }
 
+.reviewerPanelActions {
+	display: flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
 .reviewerPanel .panelHeader p {
 	margin: 7px 0 0;
 	color: var(--text-secondary);
@@ -317,15 +345,30 @@
 }
 
 .trustedReviewerBadge {
-	border-color: color-mix(in srgb, var(--brand) 35%, var(--border-default));
-	background: var(--brand-muted);
-	color: var(--brand);
+	border-color: rgba(212, 165, 56, 0.46);
+	background: color-mix(in srgb, #d4a538 14%, var(--bg-elevated));
+	color: #d4a538;
 }
 
 .trustedReviewerBadge svg,
 .selfDeclaredBadge svg {
 	width: 14px;
 	height: 14px;
+}
+
+.trustApplyButton {
+	gap: 7px;
+	height: 34px;
+	border-radius: var(--button-radius-sm);
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.trustApplyButton svg {
+	width: 14px;
+	height: 14px;
+	color: #d4a538;
 }
 
 .aboutPanel p,
@@ -526,6 +569,70 @@
 	overflow: hidden;
 	border-radius: 14px;
 	padding: 0;
+}
+
+.trustDialog {
+	width: min(520px, calc(100vw - 32px));
+	max-width: min(520px, calc(100vw - 32px));
+	border-radius: 14px;
+	padding: 22px;
+}
+
+.trustDialogBody {
+	display: grid;
+	gap: 16px;
+	margin: 18px 0;
+}
+
+.trustStatusCard {
+	display: flex;
+	gap: 12px;
+	border: 1px solid rgba(212, 165, 56, 0.34);
+	border-radius: 12px;
+	padding: 13px;
+	background: color-mix(in srgb, #d4a538 10%, var(--bg-surface));
+}
+
+.trustStatusCard > svg {
+	flex: 0 0 auto;
+	width: 20px;
+	height: 20px;
+	color: #d4a538;
+}
+
+.trustStatusCard strong,
+.trustStatusCard span {
+	display: block;
+}
+
+.trustStatusCard strong {
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.trustStatusCard span {
+	margin-top: 4px;
+	color: var(--text-secondary);
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.trustField {
+	display: grid;
+	gap: 8px;
+}
+
+.trustField label {
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.trustField :global(input) {
+	border-color: var(--border-default);
+	background: var(--bg-surface);
+	color: var(--text-primary);
 }
 
 .editHeader {
@@ -947,33 +1054,6 @@
 	color: var(--text-inverse);
 }
 
-.verificationBox {
-	display: grid;
-	gap: 10px;
-	border: 1px solid var(--border-default);
-	border-radius: var(--button-radius);
-	padding: 12px;
-	background: var(--bg-surface);
-}
-
-.verificationBox strong,
-.verificationBox span {
-	display: block;
-}
-
-.verificationBox strong {
-	color: var(--text-primary);
-	font-size: 13px;
-	font-weight: 700;
-}
-
-.verificationBox span {
-	margin-top: 4px;
-	color: var(--text-secondary);
-	font-size: 12px;
-	line-height: 1.45;
-}
-
 .editFooter {
 	flex: 0 0 auto;
 	border-top: 1px solid var(--border-subtle);
@@ -1120,6 +1200,12 @@
 		max-height: calc(100dvh - 16px);
 	}
 
+	.trustDialog {
+		width: calc(100vw - 20px);
+		max-width: calc(100vw - 20px);
+		padding: 18px;
+	}
+
 	.editHeader {
 		padding: 16px 18px 12px;
 	}
@@ -1177,8 +1263,19 @@
 		gap: 10px;
 	}
 
+	.identityHeader {
+		align-items: flex-start;
+	}
+
+	.reviewerPanelActions {
+		justify-content: flex-start;
+		flex-wrap: wrap;
+		width: 100%;
+	}
+
 	.trustedReviewerBadge,
-	.selfDeclaredBadge {
+	.selfDeclaredBadge,
+	.trustApplyButton {
 		max-width: 100%;
 		white-space: normal;
 	}
@@ -1237,7 +1334,8 @@
 	color: #cfc3ff;
 }
 
-:global(body.main-app-dark) .editDialog {
+:global(body.main-app-dark) .editDialog,
+:global(body.main-app-dark) .trustDialog {
 	border-color: var(--border-default);
 	background: var(--bg-surface);
 	color: var(--text-primary);
