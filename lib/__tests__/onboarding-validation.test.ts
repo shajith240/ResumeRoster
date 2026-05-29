@@ -3,6 +3,7 @@ import {
 	getCommunityRoleForOnboardingGoal,
 	getOnboardingDestination,
 	getOnboardingIssue,
+	getPersonaProfileLabel,
 	getReviewerTypeForOnboarding,
 	isOnboardingGoalId,
 	isOnboardingPersonaId,
@@ -39,6 +40,12 @@ describe("onboarding validation", () => {
 		expect(getReviewerTypeForOnboarding("review_resumes", "job_seeker")).toBe(
 			"other",
 		);
+	});
+
+	it("maps personas to public profile role labels", () => {
+		expect(getPersonaProfileLabel("student")).toBe("Student");
+		expect(getPersonaProfileLabel("recruiter_hr")).toBe("Recruiter / HR");
+		expect(getPersonaProfileLabel("career_switcher")).toBe("Career switcher");
 	});
 
 	it("builds the personalized first destination", () => {

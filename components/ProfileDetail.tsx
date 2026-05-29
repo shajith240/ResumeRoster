@@ -63,6 +63,7 @@ import {
 	parseSkills,
 	usernameTakenMessage,
 } from "@/lib/profile-validation";
+import { ONBOARDING_PROFILE_POSITION_OPTIONS } from "@/lib/onboarding-validation";
 import {
 	COMMUNITY_ROLES,
 	REVIEWER_FIELD_LIMITS,
@@ -132,6 +133,7 @@ const REVIEWER_EXPERTISE_OPTIONS = Array.from(
 		...SKILL_OPTIONS,
 	]),
 );
+const NO_POSITION_VALUE = "__not_set__";
 const uuidPattern =
 	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -671,7 +673,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				tagline:
 					limitText(tagline, PROFILE_FIELD_LIMITS.tagline).trim() || null,
 				current_position: nextPosition,
-				target_role: nextPosition,
 				college: limitText(college, PROFILE_FIELD_LIMITS.college).trim() || null,
 				college_location:
 					limitText(collegeLocation, PROFILE_FIELD_LIMITS.collegeLocation).trim() ||
@@ -1952,6 +1953,19 @@ function ProfileEditDialog({
 	const normalizedOriginalUsername = normalizeUsername(originalUsername);
 	const usernameChanged =
 		Boolean(normalizedUsername) && normalizedUsername !== normalizedOriginalUsername;
+	const positionOptions = useMemo(() => {
+		const normalizedCurrentPosition = currentPosition.trim();
+		if (
+			normalizedCurrentPosition &&
+			!(ONBOARDING_PROFILE_POSITION_OPTIONS as readonly string[]).includes(
+				normalizedCurrentPosition,
+			)
+		) {
+			return [normalizedCurrentPosition, ...ONBOARDING_PROFILE_POSITION_OPTIONS];
+		}
+
+		return ONBOARDING_PROFILE_POSITION_OPTIONS;
+	}, [currentPosition]);
 	const normalizedSkillQuery = skillQuery.trim().replace(/\s+/g, " ");
 	const selectedSkillKeys = useMemo(
 		() => new Set(selectedSkills.map((skill) => skill.toLowerCase())),
@@ -2214,25 +2228,45 @@ function ProfileEditDialog({
 							<div>
 								<FieldHeader
 									htmlFor="profile-current-position"
-									max={PROFILE_FIELD_LIMITS.currentPosition}
-									value={currentPosition}
 								>
-									Current position
+									Profile role
 								</FieldHeader>
-								<Input
-									id="profile-current-position"
-									maxLength={PROFILE_FIELD_LIMITS.currentPosition}
-									onChange={(event) =>
+								<Select
+									onValueChange={(value) =>
 										onCurrentPositionChange(
-											limitText(
-												event.target.value,
-												PROFILE_FIELD_LIMITS.currentPosition,
-											),
+											value === NO_POSITION_VALUE
+												? ""
+												: limitText(value, PROFILE_FIELD_LIMITS.currentPosition),
 										)
 									}
-									placeholder="Software engineering intern"
-									value={currentPosition}
-								/>
+									value={currentPosition || NO_POSITION_VALUE}
+								>
+									<SelectTrigger
+										className={styles.highlightSelectTrigger}
+										id="profile-current-position"
+									>
+										<SelectValue placeholder="Choose profile role" />
+									</SelectTrigger>
+									<SelectContent className={styles.highlightSelectContent}>
+										<SelectGroup>
+											<SelectItem
+												className={styles.highlightSelectItem}
+												value={NO_POSITION_VALUE}
+											>
+												Not set
+											</SelectItem>
+											{positionOptions.map((position) => (
+												<SelectItem
+													className={styles.highlightSelectItem}
+													key={position}
+													value={position}
+												>
+													{position}
+												</SelectItem>
+											))}
+										</SelectGroup>
+									</SelectContent>
+								</Select>
 							</div>
 							<div>
 								<FieldHeader

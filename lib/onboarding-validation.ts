@@ -147,6 +147,14 @@ export function getOnboardingPersona(value: OnboardingPersonaId) {
 	);
 }
 
+export function getPersonaProfileLabel(value: OnboardingPersonaId) {
+	return getOnboardingPersona(value).label;
+}
+
+export const ONBOARDING_PROFILE_POSITION_OPTIONS = ONBOARDING_PERSONAS.map(
+	(persona) => persona.label,
+);
+
 export function getCommunityRoleForOnboardingGoal(
 	goalId: OnboardingGoalId,
 ): CommunityRole {

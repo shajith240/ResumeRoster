@@ -49,25 +49,25 @@ describe("reviewer validation", () => {
 		);
 	});
 
-	it("shows reviewer identity before candidate fallback on profiles", () => {
+	it("uses profile role before reviewer-specific identity on profiles", () => {
 		expect(
 			getProfileRoleLabel({
 				college: null,
 				community_role: "reviewer",
-				current_position: null,
+				current_position: "Recruiter / HR",
 				reviewer_type: "recruiter",
 				target_role: null,
 			}),
-		).toBe("Recruiter");
+		).toBe("Recruiter / HR");
 		expect(
 			getProfileRoleLabel({
 				college: null,
 				community_role: "both",
-				current_position: null,
+				current_position: "Student",
 				reviewer_type: "hiring_manager",
 				target_role: "SDE intern",
 			}),
-		).toBe("Hiring manager");
+		).toBe("Student");
 		expect(
 			getProfileRoleLabel({
 				college: null,
@@ -77,6 +77,15 @@ describe("reviewer validation", () => {
 				target_role: "Backend intern",
 			}),
 		).toBe("Intern");
+		expect(
+			getProfileRoleLabel({
+				college: null,
+				community_role: "reviewer",
+				current_position: null,
+				reviewer_type: "engineer",
+				target_role: null,
+			}),
+		).toBe("Reviewer");
 	});
 
 	it("validates proof links for reviewer applications", () => {

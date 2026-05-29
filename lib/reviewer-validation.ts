@@ -149,13 +149,8 @@ export function getProfileRoleLabel(profile: {
 	reviewer_type?: ReviewerType | null;
 	target_role?: string | null;
 }) {
-	if (
-		(profile.community_role === "reviewer" || profile.community_role === "both") &&
-		profile.reviewer_type &&
-		isReviewerType(profile.reviewer_type)
-	) {
-		return getReviewerTypeLabel(profile.reviewer_type);
-	}
+	const currentPosition = profile.current_position?.trim().replace(/\s+/g, " ");
+	if (currentPosition) return currentPosition;
 
 	if (profile.community_role === "reviewer") {
 		return "Reviewer";
