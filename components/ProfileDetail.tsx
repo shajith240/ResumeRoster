@@ -148,6 +148,10 @@ function cleanFileName(value: string) {
 		.slice(0, 80);
 }
 
+function limitLiveText(value: string, limit: number) {
+	return value.slice(0, limit);
+}
+
 function isUsernameConstraintError(error: { code?: string; message?: string }) {
 	return (
 		error.code === "23505" ||
@@ -1626,7 +1630,7 @@ function ReviewerProfileDialog({
 										maxLength={REVIEWER_FIELD_LIMITS.headline}
 										onChange={(event) =>
 											onReviewerHeadlineChange(
-												limitReviewerText(
+												limitLiveText(
 													event.target.value,
 													REVIEWER_FIELD_LIMITS.headline,
 												),
@@ -1651,7 +1655,7 @@ function ReviewerProfileDialog({
 										maxLength={REVIEWER_FIELD_LIMITS.bio}
 										onChange={(event) =>
 											onReviewerBioChange(
-												limitReviewerText(
+												limitLiveText(
 													event.target.value,
 													REVIEWER_FIELD_LIMITS.bio,
 												),
@@ -1836,7 +1840,7 @@ function TrustApplicationDialog({
 							maxLength={REVIEWER_FIELD_LIMITS.applicationNote}
 							onChange={(event) =>
 								onNoteChange(
-									limitReviewerText(
+									limitLiveText(
 										event.target.value,
 										REVIEWER_FIELD_LIMITS.applicationNote,
 									),
