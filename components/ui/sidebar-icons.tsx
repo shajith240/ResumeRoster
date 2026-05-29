@@ -123,6 +123,24 @@ const LIST_VARIANTS: Variants = {
 	},
 };
 
+const REVIEW_QUEUE_BUBBLE_VARIANTS: Variants = {
+	normal: { scale: 1, y: 0 },
+	animate: {
+		scale: [1, 1.04, 1],
+		y: [0, -1, 0],
+		transition: { duration: 0.45, ease: "easeInOut" },
+	},
+};
+
+const REVIEW_QUEUE_LINE_VARIANTS: Variants = {
+	normal: { pathLength: 1, x: 0 },
+	animate: {
+		pathLength: [1, 0.7, 1],
+		x: [0, 1, 0],
+		transition: { duration: 0.42, ease: "easeInOut" },
+	},
+};
+
 const FLAME_VARIANTS: Variants = {
 	normal: { scale: 1, rotate: 0 },
 	animate: {
@@ -229,6 +247,30 @@ export const ListFilterIcon = createSidebarIcon(
 				d="M10 18h4"
 				transition={{ delay: 0.1 }}
 				variants={LIST_VARIANTS}
+			/>
+		</>
+	),
+);
+
+export const ReviewQueueIcon = createSidebarIcon(
+	"ReviewQueueIcon",
+	(controls) => (
+		<>
+			<motion.path
+				animate={controls}
+				d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"
+				variants={REVIEW_QUEUE_BUBBLE_VARIANTS}
+			/>
+			<motion.path
+				animate={controls}
+				d="M8 8h8"
+				variants={REVIEW_QUEUE_LINE_VARIANTS}
+			/>
+			<motion.path
+				animate={controls}
+				d="M8 12h5"
+				transition={{ delay: 0.06 }}
+				variants={REVIEW_QUEUE_LINE_VARIANTS}
 			/>
 		</>
 	),

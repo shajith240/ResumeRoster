@@ -8,6 +8,7 @@ import {
 	HomeIcon,
 	ListFilterIcon,
 	PlusIcon,
+	ReviewQueueIcon,
 	ShieldIcon,
 	TrophyIcon,
 	type SidebarAnimatedIconComponent,
@@ -104,7 +105,7 @@ export function SessionNavBar() {
 			{
 				href: "/feed?sort=needs",
 				label: "Needs review",
-				icon: ListFilterIcon,
+				icon: ReviewQueueIcon,
 				active: pathname === "/feed" && sort === "needs" && !saved,
 			},
 			{
