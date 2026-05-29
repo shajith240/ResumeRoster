@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import { Star } from "lucide-react";
 import LandingCta from "@/components/LandingCta";
 import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
@@ -12,6 +13,7 @@ type FeatureKey = "ats" | "jd" | "roast" | "skills" | "optimize";
 type BenefitKey = "students" | "jobseekers" | "switchers";
 
 const asset = (path: string) => `/assets/${path}`;
+const ratingStars = [0, 1, 2, 3, 4];
 
 const featureContent: Record<
   FeatureKey,
@@ -362,7 +364,7 @@ export default function Home() {
           </div>
 
           <LandingCta className="nav-button" href={isSignedIn ? "/feed" : "/submit"} isSignedIn={isSignedIn}>
-            {authReady && isSignedIn ? "Enter app" : "Post your resume"}
+            {authReady && isSignedIn ? "Enter app" : "Sign up now"}
           </LandingCta>
         </div>
       </nav>
@@ -545,7 +547,11 @@ export default function Home() {
         </section>
 
         <section className="quote-section" id="proof">
-          <div className="stars">*****</div>
+          <div className="stars" aria-label="Five star review">
+            {ratingStars.map((star) => (
+              <Star aria-hidden="true" key={star} />
+            ))}
+          </div>
           <blockquote>
             &quot;The best comment read like a lint error: exact line, exact problem,
             exact fix.&quot;
@@ -596,7 +602,11 @@ export default function Home() {
         </section>
 
         <section className="quote-section second-quote">
-          <div className="stars">*****</div>
+          <div className="stars" aria-label="Five star review">
+            {ratingStars.map((star) => (
+              <Star aria-hidden="true" key={star} />
+            ))}
+          </div>
           <blockquote>
             &quot;My resume did not need a generic score. It needed someone to point at
             the bug and tell me the fix.&quot;

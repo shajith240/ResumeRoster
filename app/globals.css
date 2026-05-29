@@ -4068,10 +4068,11 @@ body.main-app-dark .form-message {
 	top: 0;
 	z-index: 100;
 	width: 100%;
-	border-bottom: 1px solid rgba(26, 24, 21, 0.06);
-	background: rgba(247, 245, 242, 0.82);
-	backdrop-filter: blur(18px) saturate(1.15);
-	-webkit-backdrop-filter: blur(18px) saturate(1.15);
+	border-bottom: 1px solid rgba(26, 24, 21, 0.09);
+	background: rgba(247, 245, 242, 0.92);
+	box-shadow: 0 8px 26px rgba(34, 29, 22, 0.045);
+	backdrop-filter: blur(22px) saturate(1.18);
+	-webkit-backdrop-filter: blur(22px) saturate(1.18);
 	transform: translateY(0);
 	transition:
 		transform 0.32s ease,
@@ -4085,13 +4086,14 @@ body.main-app-dark .form-message {
 }
 
 .nav-content {
-	display: flex;
+	display: grid;
+	grid-template-columns: minmax(140px, 1fr) auto minmax(140px, 1fr);
 	align-items: center;
-	justify-content: space-between;
 	height: 68px;
 }
 
 .landing-wordmark {
+	justify-self: start;
 	color: #17130f;
 	font-family: var(--font-display);
 	font-size: 28px;
@@ -4112,21 +4114,24 @@ body.main-app-dark .form-message {
 .nav-links {
 	display: flex;
 	align-items: center;
+	justify-self: center;
 	gap: 6px;
-	border: 1px solid rgba(35, 31, 27, 0.08);
+	border: 1px solid rgba(35, 31, 27, 0.11);
 	border-radius: 999px;
 	padding: 5px;
-	background: rgba(255, 253, 248, 0.58);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+	background: rgba(255, 253, 248, 0.78);
+	box-shadow:
+		0 1px 2px rgba(31, 27, 22, 0.04),
+		inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
 .nav-links a {
 	position: relative;
 	border-radius: 999px;
 	padding: 8px 13px;
-	color: rgba(17, 17, 17, 0.72);
+	color: rgba(17, 17, 17, 0.76);
 	font-size: 12px;
-	font-weight: 500;
+	font-weight: 600;
 	transition:
 		background 0.2s ease,
 		color 0.2s ease,
@@ -4157,21 +4162,22 @@ body.main-app-dark .form-message {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	border: 1px solid rgba(17, 17, 17, 0.1);
+	justify-self: end;
+	border: 1px solid rgba(17, 17, 17, 0.82);
 	padding: 10px 18px;
-	background: rgba(255, 253, 248, 0.72);
-	box-shadow: 0 1px 2px rgba(30, 24, 18, 0.05);
-	color: #111;
-	font-weight: 500;
+	background: #17130f;
+	box-shadow: 0 8px 18px rgba(23, 19, 15, 0.1);
+	color: #fffdf8;
+	font-weight: 600;
 }
 
 .nav-button:hover,
 .showcase-info button:hover,
 .showcase-link:hover {
-	background: #111;
+	background: #2a251f;
 	color: #fff;
 	transform: translateY(-1px);
-	box-shadow: 0 10px 24px rgba(17, 17, 17, 0.14);
+	box-shadow: 0 12px 26px rgba(17, 17, 17, 0.16);
 }
 
 .nav-button:active,
@@ -4847,9 +4853,20 @@ body.main-app-dark .form-message {
 }
 
 .stars {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
 	margin-bottom: 18px;
-	font-size: 24px;
-	letter-spacing: 3px;
+	color: #c58b26;
+	line-height: 1;
+}
+
+.stars svg {
+	width: 18px;
+	height: 18px;
+	fill: currentColor;
+	stroke-width: 1.6;
 }
 
 .quote-section blockquote {
@@ -5495,19 +5512,25 @@ body.main-app-dark .form-message {
 	}
 
 	.nav-content {
-		flex-wrap: wrap;
-		gap: 14px;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 14px 12px;
 		height: auto;
 		padding: 18px 0;
 	}
 
 	.nav-links {
 		order: 3;
+		grid-column: 1 / -1;
 		flex-wrap: wrap;
 		justify-content: center;
+		justify-self: stretch;
 		gap: 4px;
 		width: 100%;
 		border-radius: 16px;
+	}
+
+	.nav-button {
+		padding: 9px 13px;
 	}
 
 	.nav-links a {
