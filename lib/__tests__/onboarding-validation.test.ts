@@ -34,8 +34,8 @@ describe("onboarding validation", () => {
 		expect(getReviewerTypeForOnboarding("review_resumes", "recruiter_hr")).toBe(
 			"recruiter",
 		);
-		expect(getReviewerTypeForOnboarding("both", "hiring_manager")).toBe(
-			"hiring_manager",
+		expect(getReviewerTypeForOnboarding("both", "product_manager")).toBe(
+			"product_manager",
 		);
 		expect(getReviewerTypeForOnboarding("review_resumes", "job_seeker")).toBe(
 			"other",
@@ -45,7 +45,7 @@ describe("onboarding validation", () => {
 	it("maps personas to public profile role labels", () => {
 		expect(getPersonaProfileLabel("student")).toBe("Student");
 		expect(getPersonaProfileLabel("recruiter_hr")).toBe("Recruiter / HR");
-		expect(getPersonaProfileLabel("career_switcher")).toBe("Career switcher");
+		expect(getPersonaProfileLabel("career_coach")).toBe("Career coach");
 	});
 
 	it("builds the personalized first destination", () => {

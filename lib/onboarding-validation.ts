@@ -43,21 +43,9 @@ export const ONBOARDING_PERSONAS = [
 		mappedReviewerType: "student",
 	},
 	{
-		description: "Moving from college into a first full-time role.",
-		id: "new_grad",
-		label: "New grad",
-		mappedReviewerType: null,
-	},
-	{
 		description: "Actively applying and looking for a clearer resume.",
 		id: "job_seeker",
 		label: "Job seeker",
-		mappedReviewerType: null,
-	},
-	{
-		description: "Changing roles, domains, or industries.",
-		id: "career_switcher",
-		label: "Career switcher",
 		mappedReviewerType: null,
 	},
 	{
@@ -67,22 +55,10 @@ export const ONBOARDING_PERSONAS = [
 		mappedReviewerType: "recruiter",
 	},
 	{
-		description: "Evaluates candidates or makes hiring decisions.",
-		id: "hiring_manager",
-		label: "Hiring manager",
-		mappedReviewerType: "hiring_manager",
-	},
-	{
 		description: "Can review technical projects, proof, and role fit.",
 		id: "engineer",
 		label: "Engineer",
 		mappedReviewerType: "engineer",
-	},
-	{
-		description: "Can review design portfolios, UX proof, and presentation.",
-		id: "designer",
-		label: "Designer",
-		mappedReviewerType: "designer",
 	},
 	{
 		description: "Can review product, strategy, and impact signals.",
@@ -95,12 +71,6 @@ export const ONBOARDING_PERSONAS = [
 		id: "career_coach",
 		label: "Career coach",
 		mappedReviewerType: "career_coach",
-	},
-	{
-		description: "Hires, mentors, or reviews from an operator lens.",
-		id: "founder",
-		label: "Founder",
-		mappedReviewerType: "founder",
 	},
 	{
 		description: "Does not fit one label yet.",

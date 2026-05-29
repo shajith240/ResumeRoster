@@ -1,25 +1,30 @@
 "use client";
 
-import { type KeyboardEvent, useMemo, useState } from "react";
+import {
+	type KeyboardEvent,
+	type ReactNode,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-	ArrowRight,
-	BriefcaseBusiness,
-	Check,
-	GraduationCap,
-	Handshake,
-	Search,
-	ShieldCheck,
-	Sparkles,
-	UsersRound,
-	X,
-	type LucideIcon,
-} from "lucide-react";
+import { X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+	ArrowRightIcon,
+	BriefcaseIcon,
+	GraduationCapIcon,
+	SearchIcon,
+	ShieldIcon,
+	SparklesIcon,
+	UsersIcon,
+	type SidebarAnimatedIconComponent,
+	type SidebarAnimatedIconHandle,
+} from "@/components/ui/sidebar-icons";
 import {
 	ONBOARDING_GOALS,
 	ONBOARDING_PERSONAS,
@@ -29,7 +34,6 @@ import {
 	getReviewerTypeForOnboarding,
 	isOnboardingGoalId,
 	isOnboardingPersonaId,
-	normalizeOnboardingTargetRole,
 	parseOnboardingExpertise,
 	type OnboardingGoalId,
 	type OnboardingPersonaId,
@@ -55,26 +59,22 @@ const REVIEWER_EXPERTISE_OPTIONS = Array.from(
 		...SKILL_OPTIONS,
 	]),
 );
+const REVIEWER_EXPERTISE_LIMIT = 6;
 
-const goalIcons: Record<OnboardingGoalId, LucideIcon> = {
-	both: Sparkles,
-	get_feedback: Search,
-	review_resumes: ShieldCheck,
+const goalIcons: Record<OnboardingGoalId, SidebarAnimatedIconComponent> = {
+	both: SparklesIcon,
+	get_feedback: SearchIcon,
+	review_resumes: ShieldIcon,
 };
 
-const personaIcons: Record<OnboardingPersonaId, LucideIcon> = {
-	career_coach: Handshake,
-	career_switcher: ArrowRight,
-	designer: Sparkles,
-	engineer: BriefcaseBusiness,
-	founder: BriefcaseBusiness,
-	hiring_manager: UsersRound,
-	job_seeker: Search,
-	new_grad: GraduationCap,
-	other: UsersRound,
-	product_manager: BriefcaseBusiness,
-	recruiter_hr: ShieldCheck,
-	student: GraduationCap,
+const personaIcons: Record<OnboardingPersonaId, SidebarAnimatedIconComponent> = {
+	career_coach: UsersIcon,
+	engineer: BriefcaseIcon,
+	job_seeker: SearchIcon,
+	other: ArrowRightIcon,
+	product_manager: SparklesIcon,
+	recruiter_hr: ShieldIcon,
+	student: GraduationCapIcon,
 };
 
 function isOnboardingMigrationError(error: { message?: string } | null) {
@@ -83,12 +83,59 @@ function isOnboardingMigrationError(error: { message?: string } | null) {
 	);
 }
 
+function OnboardingChoiceCard({
+	children,
+	description,
+	icon: Icon,
+	isSelected,
+	label,
+	onSelect,
+}: {
+	children?: ReactNode;
+	description: string;
+	icon: SidebarAnimatedIconComponent;
+	isSelected: boolean;
+	label: string;
+	onSelect: () => void;
+}) {
+	const iconRef = useRef<SidebarAnimatedIconHandle>(null);
+
+	function startIconAnimation() {
+		iconRef.current?.startAnimation();
+	}
+
+	function stopIconAnimation() {
+		iconRef.current?.stopAnimation();
+	}
+
+	return (
+		<Button
+			aria-pressed={isSelected}
+			className="onboarding-choice-card"
+			onBlur={stopIconAnimation}
+			onClick={onSelect}
+			onFocus={startIconAnimation}
+			onMouseEnter={startIconAnimation}
+			onMouseLeave={stopIconAnimation}
+			type="button"
+			variant="ghost"
+		>
+			<span className="onboarding-choice-icon">
+				<Icon ref={iconRef} aria-hidden="true" size={20} />
+			</span>
+			<strong>{label}</strong>
+			<span>{description}</span>
+			{children}
+			{isSelected ? <span className="onboarding-choice-check" /> : null}
+		</Button>
+	);
+}
+
 export default function OnboardingFlow() {
 	const router = useRouter();
 	const [step, setStep] = useState<1 | 2 | 3>(1);
 	const [goalId, setGoalId] = useState<OnboardingGoalId | "">("");
 	const [personaId, setPersonaId] = useState<OnboardingPersonaId | "">("");
-	const [targetRole, setTargetRole] = useState("");
 	const [expertiseInput, setExpertiseInput] = useState("");
 	const [expertiseQuery, setExpertiseQuery] = useState("");
 	const [message, setMessage] = useState("");
@@ -99,8 +146,9 @@ export default function OnboardingFlow() {
 	const communityRole = selectedGoal
 		? getCommunityRoleForOnboardingGoal(selectedGoal)
 		: "candidate";
-	const showCandidateSetup = communityRole === "candidate" || communityRole === "both";
 	const showReviewerSetup = communityRole === "reviewer" || communityRole === "both";
+	const totalSteps = showReviewerSetup ? 3 : 2;
+	const isFinalStep = step === totalSteps;
 	const selectedExpertise = useMemo(
 		() => parseOnboardingExpertise(expertiseInput),
 		[expertiseInput],
@@ -121,7 +169,7 @@ export default function OnboardingFlow() {
 	const canAddCustomExpertise =
 		normalizedExpertiseQuery.length >= 2 &&
 		normalizedExpertiseQuery.length <= 32 &&
-		selectedExpertise.length < 12 &&
+		selectedExpertise.length < REVIEWER_EXPERTISE_LIMIT &&
 		!selectedExpertiseKeys.has(normalizedExpertiseQuery.toLowerCase()) &&
 		!REVIEWER_EXPERTISE_OPTIONS.some(
 			(skill) => skill.toLowerCase() === normalizedExpertiseQuery.toLowerCase(),
@@ -133,7 +181,7 @@ export default function OnboardingFlow() {
 			nextSkill.length < 2 ||
 			nextSkill.length > 32 ||
 			selectedExpertiseKeys.has(nextSkill.toLowerCase()) ||
-			selectedExpertise.length >= 12
+			selectedExpertise.length >= REVIEWER_EXPERTISE_LIMIT
 		) {
 			return;
 		}
@@ -181,7 +229,12 @@ export default function OnboardingFlow() {
 				return;
 			}
 
-			setStep(3);
+			if (showReviewerSetup) {
+				setStep(3);
+				return;
+			}
+
+			void completeOnboarding();
 		}
 	}
 
@@ -217,9 +270,7 @@ export default function OnboardingFlow() {
 			expertise_items: showReviewerSetup ? selectedExpertise : [],
 			selected_goal_id: selectedGoal,
 			selected_persona_id: selectedPersona,
-			target_role_text: showCandidateSetup
-				? normalizeOnboardingTargetRole(targetRole)
-				: "",
+			target_role_text: "",
 		});
 
 		setSubmitting(false);
@@ -256,7 +307,7 @@ export default function OnboardingFlow() {
 						Linted
 					</Link>
 					<div className="onboarding-progress" aria-label="Onboarding progress">
-						{[1, 2, 3].map((item) => (
+						{Array.from({ length: totalSteps }, (_, index) => index + 1).map((item) => (
 							<span
 								aria-current={step === item ? "step" : undefined}
 								className={step >= item ? "is-active" : ""}
@@ -273,14 +324,14 @@ export default function OnboardingFlow() {
 							? "Set your Linted path"
 							: step === 2
 								? "Tell us your lens"
-								: "Make your first screen useful"}
+								: "Add review areas"}
 					</h1>
 					<p>
 						{step === 1
 							? "This only personalizes your starting point. Anyone can still review any open resume."
 							: step === 2
 								? "Choose the closest fit so Linted can show the right cues, not lock you into a box."
-								: "Add one or two useful defaults now. The full profile editor stays available later."}
+								: "Optional topics that appear on your reviewer profile and help route better matches later."}
 					</p>
 				</div>
 
@@ -291,23 +342,17 @@ export default function OnboardingFlow() {
 							const isSelected = goalId === goal.id;
 
 							return (
-								<button
-									aria-pressed={isSelected}
-									className="onboarding-choice-card"
+								<OnboardingChoiceCard
+									description={goal.description}
+									icon={Icon}
+									isSelected={isSelected}
 									key={goal.id}
-									onClick={() => {
+									label={goal.label}
+									onSelect={() => {
 										setGoalId(goal.id);
 										setMessage("");
 									}}
-									type="button"
-								>
-									<span className="onboarding-choice-icon">
-										<Icon aria-hidden="true" />
-									</span>
-									<strong>{goal.label}</strong>
-									<span>{goal.description}</span>
-									{isSelected ? <Check aria-hidden="true" /> : null}
-								</button>
+								/>
 							);
 						})}
 					</div>
@@ -320,110 +365,108 @@ export default function OnboardingFlow() {
 							const isSelected = personaId === persona.id;
 
 							return (
-								<button
-									aria-pressed={isSelected}
-									className="onboarding-choice-card"
+								<OnboardingChoiceCard
+									description={persona.description}
+									icon={Icon}
+									isSelected={isSelected}
 									key={persona.id}
-									onClick={() => {
+									label={persona.label}
+									onSelect={() => {
 										setPersonaId(persona.id);
 										setMessage("");
 									}}
-									type="button"
-								>
-									<span className="onboarding-choice-icon">
-										<Icon aria-hidden="true" />
-									</span>
-									<strong>{persona.label}</strong>
-									<span>{persona.description}</span>
-									{isSelected ? <Check aria-hidden="true" /> : null}
-								</button>
+								/>
 							);
 						})}
 					</div>
 				) : null}
 
-				{step === 3 ? (
+				{step === 3 && showReviewerSetup ? (
 					<div className="onboarding-setup-panel">
-						{showCandidateSetup ? (
-							<div className="onboarding-field">
-								<Label htmlFor="onboarding-target-role">Target role</Label>
-								<div className="onboarding-input-wrap">
-									<BriefcaseBusiness aria-hidden="true" />
-									<Input
-										id="onboarding-target-role"
-										maxLength={64}
-										onChange={(event) => setTargetRole(event.target.value)}
-										placeholder="Frontend engineer, data analyst, product intern..."
-										value={targetRole}
-									/>
+						<div className="onboarding-field">
+							<div className="onboarding-field-row">
+								<div>
+									<Label htmlFor="onboarding-expertise">Review areas</Label>
+									<p className="onboarding-field-hint">
+										Shown on your reviewer profile.
+									</p>
 								</div>
+								<span>
+									{selectedExpertise.length}/{REVIEWER_EXPERTISE_LIMIT}
+								</span>
 							</div>
-						) : null}
-
-						{showReviewerSetup ? (
-							<div className="onboarding-field">
-								<div className="onboarding-field-row">
-									<Label htmlFor="onboarding-expertise">Review expertise</Label>
-									<span>{selectedExpertise.length}/12</span>
-								</div>
-								<div className="onboarding-skill-editor">
-									<div className="onboarding-selected-skills">
-										{selectedExpertise.length ? (
-											selectedExpertise.map((skill) => (
-												<button
-													aria-label={`Remove ${skill}`}
-													key={skill}
-													onClick={() => removeExpertise(skill)}
-													type="button"
-												>
-													{skill}
-													<X aria-hidden="true" />
-												</button>
-											))
-										) : (
-											<span>Pick topics you can review well.</span>
-										)}
-									</div>
-									<div className="onboarding-input-wrap">
-										<Search aria-hidden="true" />
-										<Input
-											id="onboarding-expertise"
-											maxLength={32}
-											onChange={(event) => setExpertiseQuery(event.target.value)}
-											onKeyDown={handleExpertiseKeyDown}
-											placeholder="ATS, React, recruiter screens..."
-											value={expertiseQuery}
-										/>
-									</div>
-									<div className="onboarding-suggestions">
-										{canAddCustomExpertise ? (
-											<button
-												onClick={() => addExpertise(normalizedExpertiseQuery)}
-												type="button"
-											>
-												Add "{normalizedExpertiseQuery}"
-											</button>
-										) : null}
-										{expertiseSuggestions.map((skill) => (
-											<button
-												disabled={selectedExpertise.length >= 12}
+							<div className="onboarding-skill-editor">
+								<div className="onboarding-selected-skills">
+									{selectedExpertise.length ? (
+										selectedExpertise.map((skill) => (
+											<Button
+												aria-label={`Remove ${skill}`}
+												className="onboarding-selected-skill"
 												key={skill}
-												onClick={() => addExpertise(skill)}
+												onClick={() => removeExpertise(skill)}
 												type="button"
+												variant="outline"
 											>
 												{skill}
-											</button>
-										))}
-									</div>
+												<X aria-hidden="true" />
+											</Button>
+										))
+									) : (
+										<span>Choose up to 6 topics you can review well.</span>
+									)}
+								</div>
+								<div className="onboarding-input-wrap">
+									<SearchIcon
+										aria-hidden="true"
+										className="onboarding-field-icon"
+										size={17}
+									/>
+									<Input
+										id="onboarding-expertise"
+										maxLength={32}
+										onChange={(event) => setExpertiseQuery(event.target.value)}
+										onKeyDown={handleExpertiseKeyDown}
+										placeholder="ATS, backend, recruiter screens..."
+										value={expertiseQuery}
+									/>
+								</div>
+								<div className="onboarding-suggestions">
+									{canAddCustomExpertise ? (
+										<Button
+											className="onboarding-suggestion-button"
+											onClick={() => addExpertise(normalizedExpertiseQuery)}
+											type="button"
+											variant="outline"
+										>
+											Add "{normalizedExpertiseQuery}"
+										</Button>
+									) : null}
+									{expertiseSuggestions.map((skill) => (
+										<Button
+											className="onboarding-suggestion-button"
+											disabled={
+												selectedExpertise.length >= REVIEWER_EXPERTISE_LIMIT
+											}
+											key={skill}
+											onClick={() => addExpertise(skill)}
+											type="button"
+											variant="outline"
+										>
+											{skill}
+										</Button>
+									))}
 								</div>
 							</div>
-						) : null}
+						</div>
 
 						<div className="onboarding-note">
-							<UsersRound aria-hidden="true" />
+							<ShieldIcon
+								aria-hidden="true"
+								className="onboarding-note-icon"
+								size={18}
+							/>
 							<p>
-								This setup changes recommendations and profile cues only. Review
-								access stays open to every signed-in user.
+								You can leave this blank and still review any open resume.
 							</p>
 						</div>
 					</div>
@@ -442,25 +485,27 @@ export default function OnboardingFlow() {
 							setMessage("");
 							setStep((current) => (current === 3 ? 2 : 1));
 						}}
+						size="xl"
 						type="button"
-						variant="outline"
+						variant="secondary"
 					>
 						Back
 					</Button>
 					<Button
-						className="onboarding-primary"
 						disabled={submitting}
-						onClick={step === 3 ? () => void completeOnboarding() : goNext}
+						onClick={isFinalStep ? () => void completeOnboarding() : goNext}
+						size="xl"
 						type="button"
+						variant="brand"
 					>
 						<span>
-							{step === 3
+							{isFinalStep
 								? submitting
 									? "Personalizing..."
 									: "Enter Linted"
 								: "Continue"}
 						</span>
-						<ArrowRight aria-hidden="true" />
+						<ArrowRightIcon aria-hidden="true" size={16} />
 					</Button>
 				</footer>
 			</section>

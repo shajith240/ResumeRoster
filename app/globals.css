@@ -1424,12 +1424,18 @@ html[data-app-theme="dark"] .full-page-loader {
 
 .onboarding-shell {
 	display: grid;
-	gap: 24px;
+	gap: 26px;
 	width: min(1040px, 100%);
 	border: 1px solid var(--border-default);
-	border-radius: 20px;
+	border-radius: 18px;
 	padding: clamp(20px, 3vw, 34px);
-	background: color-mix(in srgb, var(--bg-surface) 94%, transparent);
+	background:
+		linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--bg-elevated) 24%, transparent),
+			transparent 34%
+		),
+		color-mix(in srgb, var(--bg-surface) 96%, transparent);
 	box-shadow: var(--shadow-lg);
 }
 
@@ -1447,13 +1453,13 @@ html[data-app-theme="dark"] .full-page-loader {
 	gap: 7px;
 	border: 1px solid var(--border-subtle);
 	border-radius: 999px;
-	padding: 7px 9px;
+	padding: 6px 8px;
 	background: var(--bg-elevated);
 }
 
 .onboarding-progress span {
-	width: 26px;
-	height: 5px;
+	width: 25px;
+	height: 4px;
 	border-radius: 999px;
 	background: var(--border-default);
 	transition:
@@ -1462,7 +1468,7 @@ html[data-app-theme="dark"] .full-page-loader {
 }
 
 .onboarding-progress span.is-active {
-	width: 34px;
+	width: 32px;
 	background: var(--brand);
 }
 
@@ -1508,21 +1514,27 @@ html[data-app-theme="dark"] .full-page-loader {
 }
 
 .onboarding-persona-grid {
-	grid-template-columns: repeat(4, minmax(0, 1fr));
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .onboarding-choice-card {
 	position: relative;
 	display: grid;
-	min-height: 168px;
+	width: 100%;
+	height: auto;
+	min-height: 156px;
 	align-content: start;
-	gap: 11px;
+	align-items: start;
+	justify-content: stretch;
+	justify-items: start;
+	gap: 10px;
 	border: 1px solid var(--border-default);
-	border-radius: 14px;
-	padding: 17px;
-	background: var(--bg-elevated);
+	border-radius: 12px;
+	padding: 18px;
+	background: color-mix(in srgb, var(--bg-elevated) 82%, transparent);
 	color: var(--text-primary);
 	text-align: left;
+	white-space: normal;
 	transition:
 		background 0.18s var(--button-ease),
 		border-color 0.18s var(--button-ease),
@@ -1531,37 +1543,53 @@ html[data-app-theme="dark"] .full-page-loader {
 }
 
 .onboarding-choice-card:hover {
+	border-color: color-mix(in srgb, var(--brand) 28%, var(--border-default));
+	background: color-mix(in srgb, var(--bg-elevated) 92%, var(--brand) 8%);
 	transform: translateY(-1px);
 }
 
 .onboarding-choice-card[aria-pressed="true"] {
-	border-color: color-mix(in srgb, var(--brand) 48%, var(--border-default));
-	background: color-mix(in srgb, var(--brand) 13%, var(--bg-elevated));
+	border-color: color-mix(in srgb, var(--brand) 54%, var(--border-default));
+	background: color-mix(in srgb, var(--brand) 10%, var(--bg-elevated));
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 20%, transparent);
 }
 
-.onboarding-choice-card > svg {
+.onboarding-choice-check {
 	position: absolute;
 	right: 15px;
 	top: 15px;
-	width: 18px;
-	height: 18px;
-	color: var(--brand);
+	width: 10px;
+	height: 10px;
+	border-radius: 999px;
+	background: var(--brand);
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 14%, transparent);
 }
 
 .onboarding-choice-icon {
 	display: grid;
-	width: 36px;
-	height: 36px;
+	width: 34px;
+	height: 34px;
 	place-items: center;
 	border: 1px solid var(--border-subtle);
-	border-radius: 10px;
-	background: var(--bg-surface);
+	border-radius: 9px;
+	background: color-mix(in srgb, var(--bg-surface) 86%, transparent);
 	color: var(--brand);
 }
 
-.onboarding-choice-icon svg {
-	width: 18px;
-	height: 18px;
+.onboarding-choice-icon > div,
+.onboarding-choice-card .onboarding-choice-icon svg {
+	width: 20px;
+	height: 20px;
+}
+
+.onboarding-choice-icon > div {
+	display: grid;
+	place-items: center;
+	line-height: 0;
+}
+
+.onboarding-choice-card .onboarding-choice-icon svg {
+	display: block;
 }
 
 .onboarding-choice-card strong {
@@ -1570,7 +1598,7 @@ html[data-app-theme="dark"] .full-page-loader {
 	line-height: 1.2;
 }
 
-.onboarding-choice-card span:last-of-type {
+.onboarding-choice-card strong + span {
 	color: var(--text-secondary);
 	font-size: 12px;
 	font-weight: 500;
@@ -1601,19 +1629,30 @@ html[data-app-theme="dark"] .full-page-loader {
 	font-weight: 700;
 }
 
+.onboarding-field-hint {
+	margin: 3px 0 0;
+	color: var(--text-tertiary);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.4;
+}
+
 .onboarding-input-wrap {
 	position: relative;
 }
 
-.onboarding-input-wrap > svg {
+.onboarding-field-icon {
 	position: absolute;
 	left: 14px;
 	top: 50%;
 	z-index: 1;
-	width: 16px;
-	height: 16px;
 	color: var(--text-tertiary);
+	pointer-events: none;
 	transform: translateY(-50%);
+}
+
+.onboarding-field-icon svg {
+	display: block;
 }
 
 .onboarding-input-wrap input {
@@ -1659,14 +1698,16 @@ html[data-app-theme="dark"] .full-page-loader {
 	font-weight: 600;
 }
 
-.onboarding-selected-skills button,
-.onboarding-suggestions button {
+.onboarding-selected-skill,
+.onboarding-suggestion-button {
 	display: inline-flex;
 	align-items: center;
+	height: auto;
+	min-height: 30px;
 	gap: 6px;
 	border: 1px solid var(--border-default);
 	border-radius: var(--button-radius-sm);
-	padding: 8px 10px;
+	padding: 7px 10px;
 	background: var(--bg-elevated);
 	color: var(--text-primary);
 	font-size: 12px;
@@ -1674,12 +1715,12 @@ html[data-app-theme="dark"] .full-page-loader {
 	line-height: 1;
 }
 
-.onboarding-selected-skills svg {
+.onboarding-selected-skill svg {
 	width: 13px;
 	height: 13px;
 }
 
-.onboarding-suggestions button:disabled {
+.onboarding-suggestion-button:disabled {
 	cursor: not-allowed;
 	opacity: 0.52;
 }
@@ -1694,11 +1735,13 @@ html[data-app-theme="dark"] .full-page-loader {
 	color: var(--text-secondary);
 }
 
-.onboarding-note svg {
+.onboarding-note-icon {
 	flex: 0 0 auto;
-	width: 18px;
-	height: 18px;
 	color: var(--brand);
+}
+
+.onboarding-note-icon svg {
+	display: block;
 }
 
 .onboarding-note p {
@@ -1731,17 +1774,7 @@ html[data-app-theme="dark"] .full-page-loader {
 	font-weight: 700;
 }
 
-.onboarding-primary {
-	gap: 8px;
-	background: var(--brand);
-	color: #fff;
-}
-
-.onboarding-primary:hover {
-	background: var(--brand-dark);
-}
-
-.onboarding-primary svg {
+.onboarding-actions svg {
 	width: 16px;
 	height: 16px;
 }

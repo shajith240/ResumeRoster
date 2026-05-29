@@ -211,6 +211,84 @@ const SHIELD_CHECK_VARIANTS: Variants = {
 	},
 };
 
+const SEARCH_RING_VARIANTS: Variants = {
+	normal: { scale: 1, x: 0 },
+	animate: {
+		scale: [1, 1.05, 1],
+		x: [0, -0.5, 0],
+		transition: { duration: 0.46, ease: "easeInOut" },
+	},
+};
+
+const SEARCH_HANDLE_VARIANTS: Variants = {
+	normal: { pathLength: 1, x: 0 },
+	animate: {
+		pathLength: [1, 0.62, 1],
+		x: [0, 1, 0],
+		transition: { duration: 0.42, ease: "easeInOut" },
+	},
+};
+
+const CAP_VARIANTS: Variants = {
+	normal: { y: 0, scale: 1 },
+	animate: {
+		y: [0, -1.2, 0],
+		scale: [1, 1.03, 1],
+		transition: { duration: 0.48, ease: "easeInOut" },
+	},
+};
+
+const BRIEFCASE_BODY_VARIANTS: Variants = {
+	normal: { y: 0 },
+	animate: {
+		y: [0, -1, 0],
+		transition: { duration: 0.46, ease: "easeInOut" },
+	},
+};
+
+const USERS_HEAD_VARIANTS: Variants = {
+	normal: { scale: 1, y: 0 },
+	animate: {
+		scale: [1, 1.06, 1],
+		y: [0, -1, 0],
+		transition: { duration: 0.44, ease: "easeInOut" },
+	},
+};
+
+const USERS_BODY_VARIANTS: Variants = {
+	normal: { pathLength: 1 },
+	animate: {
+		pathLength: [1, 0.72, 1],
+		transition: { duration: 0.42, ease: "easeInOut" },
+	},
+};
+
+const SPARKLE_VARIANTS: Variants = {
+	normal: { scale: 1, rotate: 0 },
+	animate: {
+		scale: [1, 1.12, 1],
+		rotate: [0, 6, 0],
+		transition: { duration: 0.48, ease: "easeInOut" },
+	},
+};
+
+const ARROW_LINE_VARIANTS: Variants = {
+	normal: { pathLength: 1, x: 0 },
+	animate: {
+		pathLength: [1, 0.7, 1],
+		x: [0, 1.5, 0],
+		transition: { duration: 0.4, ease: "easeInOut" },
+	},
+};
+
+const ARROW_HEAD_VARIANTS: Variants = {
+	normal: { x: 0 },
+	animate: {
+		x: [0, 1.5, 0],
+		transition: { duration: 0.4, ease: "easeInOut" },
+	},
+};
+
 export const HomeIcon = createSidebarIcon("HomeIcon", (controls) => (
 	<>
 		<motion.path
@@ -349,3 +427,132 @@ export const ShieldIcon = createSidebarIcon("ShieldIcon", (controls) => (
 		/>
 	</>
 ));
+
+export const SearchIcon = createSidebarIcon("SearchIcon", (controls) => (
+	<>
+		<motion.circle
+			animate={controls}
+			cx="11"
+			cy="11"
+			r="7"
+			variants={SEARCH_RING_VARIANTS}
+		/>
+		<motion.path
+			animate={controls}
+			d="m20 20-3.5-3.5"
+			variants={SEARCH_HANDLE_VARIANTS}
+		/>
+	</>
+));
+
+export const GraduationCapIcon = createSidebarIcon(
+	"GraduationCapIcon",
+	(controls) => (
+		<>
+			<motion.path
+				animate={controls}
+				d="M22 10 12 5 2 10l10 5 10-5Z"
+				variants={CAP_VARIANTS}
+			/>
+			<motion.path
+				animate={controls}
+				d="M6 12v4c3.5 2 8.5 2 12 0v-4"
+				variants={TROPHY_BASE_VARIANTS}
+			/>
+			<motion.path
+				animate={controls}
+				d="M22 10v5"
+				variants={TROPHY_BASE_VARIANTS}
+			/>
+		</>
+	),
+);
+
+export const BriefcaseIcon = createSidebarIcon(
+	"BriefcaseIcon",
+	(controls) => (
+		<>
+			<motion.path
+				animate={controls}
+				d="M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1"
+				variants={BRIEFCASE_BODY_VARIANTS}
+			/>
+			<motion.rect
+				animate={controls}
+				height="13"
+				rx="2"
+				variants={BRIEFCASE_BODY_VARIANTS}
+				width="18"
+				x="3"
+				y="7"
+			/>
+			<motion.path
+				animate={controls}
+				d="M3 12h18"
+				variants={LIST_VARIANTS}
+			/>
+		</>
+	),
+);
+
+export const UsersIcon = createSidebarIcon("UsersIcon", (controls) => (
+	<>
+		<motion.path
+			animate={controls}
+			d="M16 21v-2a4 4 0 0 0-8 0v2"
+			variants={USERS_BODY_VARIANTS}
+		/>
+		<motion.circle
+			animate={controls}
+			cx="12"
+			cy="8"
+			r="4"
+			variants={USERS_HEAD_VARIANTS}
+		/>
+		<motion.path
+			animate={controls}
+			d="M22 21v-2a4 4 0 0 0-3-3.87"
+			variants={USERS_BODY_VARIANTS}
+		/>
+		<motion.path
+			animate={controls}
+			d="M16 4.13a4 4 0 0 1 0 7.75"
+			variants={USERS_HEAD_VARIANTS}
+		/>
+	</>
+));
+
+export const SparklesIcon = createSidebarIcon("SparklesIcon", (controls) => (
+	<>
+		<motion.path
+			animate={controls}
+			d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Z"
+			style={{ originX: 0.5, originY: 0.5 }}
+			variants={SPARKLE_VARIANTS}
+		/>
+		<motion.path
+			animate={controls}
+			d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14Z"
+			style={{ originX: 0.8, originY: 0.7 }}
+			variants={SPARKLE_VARIANTS}
+		/>
+	</>
+));
+
+export const ArrowRightIcon = createSidebarIcon(
+	"ArrowRightIcon",
+	(controls) => (
+		<>
+			<motion.path
+				animate={controls}
+				d="M5 12h14"
+				variants={ARROW_LINE_VARIANTS}
+			/>
+			<motion.path
+				animate={controls}
+				d="m13 6 6 6-6 6"
+				variants={ARROW_HEAD_VARIANTS}
+			/>
+		</>
+	),
+);
