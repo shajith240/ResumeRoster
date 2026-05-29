@@ -108,6 +108,7 @@ type UsernameAvailability = {
 };
 
 const fallbackAvatar = "/assets/logo.png";
+const VERIFIED_TICK_SRC = "/assets/verified_tick.png";
 const PROFILE_CHANGE_EVENT = "linted-profile-change";
 const LATEST_RESUME_VALUE = "__latest_public_resume__";
 const SUPABASE_MIGRATION_MESSAGE =
@@ -1075,7 +1076,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 									title="Trusted reviewer verified by Linted"
 									aria-label="Trusted reviewer verified by Linted"
 								>
-									<BadgeCheck aria-hidden="true" />
+									<img src={VERIFIED_TICK_SRC} alt="" aria-hidden="true" />
 								</span>
 							) : null}
 						</div>
@@ -1184,11 +1185,11 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 										}
 									>
 										{profileView.reviewerStatus === "verified" ? (
-											<BadgeCheck aria-hidden="true" />
+											<img src={VERIFIED_TICK_SRC} alt="" aria-hidden="true" />
 										) : (
 											<ShieldCheck aria-hidden="true" />
 										)}
-										{profileView.reviewerLabel}
+										<span>{profileView.reviewerLabel}</span>
 									</span>
 									{isOwnProfile ? (
 										<ReviewerProfileDialog
