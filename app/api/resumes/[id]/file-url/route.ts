@@ -15,26 +15,15 @@ export async function GET(request: Request, context: RouteContext) {
 
 		if ("response" in result) return result.response;
 
-		return Response.redirect(result.signedUrl, 302);
+		return Response.json(
+			{ signedUrl: result.signedUrl },
+			{
+				headers: {
+					"Cache-Control": "private, no-store, max-age=0",
+				},
+			},
+		);
 	} catch (error) {
 		return serverAuthErrorResponse(error);
 	}
-}
-
-export async function HEAD(request: Request, context: RouteContext) {
-	const response = await GET(request, context);
-
-	if (response.status >= 300 && response.status < 400) {
-		return new Response(null, {
-			headers: {
-				"Cache-Control": "private, no-store, max-age=0",
-			},
-			status: 200,
-		});
-	}
-
-	return new Response(null, {
-		headers: response.headers,
-		status: response.status,
-	});
 }
