@@ -367,7 +367,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <main>
+      <main className="landing-main">
         <section className="hero">
           <div className="container hero-content">
             <div className="hero-visual">

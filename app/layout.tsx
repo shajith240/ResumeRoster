@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense, type ReactNode } from "react";
 import RouteTransitionLoader from "@/components/RouteTransitionLoader";
 import { Toaster } from "@/components/ui/sonner";
@@ -32,6 +32,12 @@ export const metadata: Metadata = {
     description:
       "Human-powered resume linting before the recruiter/compiler rejects it.",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 const themeBootstrapScript = `

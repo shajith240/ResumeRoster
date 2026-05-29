@@ -221,11 +221,28 @@ body {
 
 html {
 	scroll-behavior: smooth;
+	overflow-x: hidden;
 }
 
 html,
 body {
 	min-height: 100%;
+}
+
+body,
+.app-root,
+main {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+
+@supports (overflow: clip) {
+	html,
+	body,
+	.app-root {
+		overflow-x: clip;
+	}
 }
 
 img {
@@ -3762,7 +3779,8 @@ body.main-app-dark .bottom-nav {
 		z-index: 120;
 		display: grid;
 		gap: 3px;
-		width: min(calc(100vw - 24px), 430px);
+		width: min(calc(100dvw - 24px), 430px);
+		max-width: calc(100dvw - 24px);
 		min-height: 72px;
 		border: 1px solid var(--app-chrome-border);
 		border-radius: 22px;
@@ -3915,6 +3933,8 @@ body.main-app-dark .dock-link.active:not(.dock-link-primary) {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
+	min-width: 0;
+	overflow-x: hidden;
 }
 
 .app-root > main,
@@ -4037,6 +4057,13 @@ body.main-app-dark .form-message {
 	width: 88%;
 	max-width: 1220px;
 	margin: 0 auto;
+}
+
+.landing-main {
+	width: 100%;
+	min-width: 0;
+	overflow-x: hidden;
+	background: #f7f5f2;
 }
 
 .navbar {
@@ -4249,7 +4276,7 @@ body.main-app-dark .form-message {
 
 .trust-section {
 	position: relative;
-	overflow: visible;
+	overflow: hidden;
 	padding: 34px 0 92px;
 	isolation: isolate;
 }
@@ -4319,10 +4346,11 @@ body.main-app-dark .form-message {
 	display: flex;
 	align-items: center;
 	width: max-content;
+	max-width: none;
 	padding: 10px 0 16px;
 	animation: scrollLogos 34s linear infinite;
 	will-change: transform;
-	overflow: visible;
+	overflow: hidden;
 }
 
 .logos-group {
@@ -4648,7 +4676,7 @@ body.main-app-dark .form-message {
 
 .sticky-feature-section {
 	position: relative;
-	overflow: visible;
+	overflow: hidden;
 	height: 260vh;
 	background: #f7f5f2;
 }
@@ -5404,6 +5432,22 @@ body.main-app-dark .form-message {
 }
 
 @media (max-width: 760px) {
+	.landing-main,
+	.navbar,
+	.hero,
+	.trust-section,
+	.feature-header,
+	.feature-showcase,
+	.sticky-feature-section,
+	.quote-section,
+	.benefits,
+	.cards-stack,
+	.cta-banner,
+	.footer {
+		max-width: 100%;
+		overflow-x: hidden;
+	}
+
 	.container {
 		width: 90%;
 	}
@@ -5478,7 +5522,7 @@ body.main-app-dark .form-message {
 	}
 
 	.hero-illustration {
-		width: 300px;
+		width: min(300px, 84vw);
 	}
 
 	.hero-visual::before {
@@ -5493,6 +5537,7 @@ body.main-app-dark .form-message {
 	}
 
 	.feature-tabs {
+		max-width: 100%;
 		gap: 18px;
 		padding: 0 18px;
 	}
@@ -5546,7 +5591,7 @@ body.main-app-dark .form-message {
 		display: flex;
 		flex-direction: column;
 		gap: 80px;
-		width: auto;
+		width: min(100%, 360px);
 		transform: none !important;
 	}
 
@@ -5569,6 +5614,7 @@ body.main-app-dark .form-message {
 		position: relative;
 		top: auto;
 		width: min(290px, 88vw);
+		transform: none !important;
 		margin-bottom: 44px;
 	}
 
