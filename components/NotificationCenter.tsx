@@ -292,7 +292,7 @@ export default function NotificationCenter({ userId }: NotificationCenterProps) 
 	if (!featureReady) return null;
 
 	return (
-		<DropdownMenu open={open} onOpenChange={setOpen}>
+		<DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
 			<DropdownMenuTrigger asChild>
 				<button
 					aria-label={

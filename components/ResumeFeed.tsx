@@ -38,6 +38,10 @@ const RESUME_SELECT_WITH_READS =
   "id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
 const RESUME_SELECT_BASE =
   "id,user_id,title,file_path,is_anonymous,status,roast_count,created_at";
+const REVIEW_PREVIEW_SELECT_WITH_THREADS =
+  "id,resume_id,parent_id,content,attachment_id,content_format,sticker_id,helpful_votes,is_deleted,created_at";
+const REVIEW_PREVIEW_SELECT_BASE =
+  "id,resume_id,content,helpful_votes,created_at";
 const AUTHOR_PROFILE_SELECT_WITH_STATUS =
   "id,username,full_name,avatar_url,avatar_path,college,target_role,current_position,app_status";
 const AUTHOR_PROFILE_SELECT_BASE =
@@ -50,11 +54,166 @@ type SavedResumeSummary = ResumeSummary & {
   is_saved: boolean;
 };
 
+type ReviewSignal = {
+  className: "closed" | "hot" | "needs" | "open";
+  label: string;
+};
+
+type ReviewPreviewRow = {
+  id: string;
+  resume_id: string;
+  parent_id?: string | null;
+  content: string;
+  attachment_id?: string | null;
+  content_format?: string | null;
+  sticker_id?: string | null;
+  helpful_votes: number;
+  is_deleted?: boolean;
+  created_at: string;
+};
+
+type ReviewPreview = {
+  id: string;
+  excerpt: string;
+  label: string;
+};
+
+const ACTIONABLE_REVIEW_PATTERN =
+  /\b(add|avoid|change|clarify|cut|drop|explain|fix|highlight|include|impact|improve|mention|metrics|move|proof|quantify|reduce|remove|replace|rewrite|show|shorten|specific|specify|tighten|use|vague|write)\b/i;
+const GENERIC_REVIEW_PATTERN =
+  /^(good|nice|great|ok|okay|cool|done|fine|thanks|thank you|looks good|good resume|good resume man|reviewed)$/i;
+
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
   }).format(new Date(value));
+}
+
+function getReviewSignal(resume: ResumeSummary): ReviewSignal {
+  if (resume.status === "closed") {
+    return { className: "closed", label: "Closed" };
+  }
+
+  if (resume.roast_count === 0) {
+    return { className: "needs", label: "Needs first review" };
+  }
+
+  if (resume.roast_count > 5) {
+    return { className: "hot", label: "Active discussion" };
+  }
+
+  return { className: "open", label: "Open for review" };
+}
+
+function cleanReviewExcerpt(content: string) {
+  const normalized = content
+    .replace(/!\[[^\]]*]\([^)]+\)/g, "")
+    .replace(/\[([^\]]+)]\([^)]+\)/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (normalized.length <= 170) return normalized;
+
+  return `${normalized.slice(0, 167).trim()}...`;
+}
+
+function isFeatureWorthyReview(excerpt: string) {
+  const words = excerpt.match(/[a-z0-9]+/gi) ?? [];
+  const normalized = excerpt.toLowerCase().replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
+
+  if (GENERIC_REVIEW_PATTERN.test(normalized)) return false;
+
+  return (
+    (words.length >= 4 && excerpt.length >= 24 && ACTIONABLE_REVIEW_PATTERN.test(excerpt)) ||
+    (words.length >= 8 && excerpt.length >= 42)
+  );
+}
+
+function getReviewPreview(row: ReviewPreviewRow): ReviewPreview | null {
+  const hasMediaHint =
+    Boolean(row.attachment_id) ||
+    Boolean(row.sticker_id) ||
+    /!\[[^\]]*]\([^)]+\)/.test(row.content);
+  const excerpt = cleanReviewExcerpt(row.content);
+
+  if (excerpt && isFeatureWorthyReview(excerpt)) {
+    return {
+      id: row.id,
+      excerpt,
+      label: hasMediaHint ? "Media note" : "Recent fix",
+    };
+  }
+
+  if (hasMediaHint) {
+    return {
+      id: row.id,
+      excerpt: "A reviewer added a media note. Open the thread to inspect the visual feedback.",
+      label: "Media note",
+    };
+  }
+
+  return null;
+}
+
+function getThreadPrompt(resume: ResumeSummary) {
+  if (resume.roast_count > 0) {
+    const commentLabel =
+      resume.roast_count === 1
+        ? "1 comment is"
+        : `${formatCount(resume.roast_count)} comments are`;
+
+    return `${commentLabel} in the thread. Open it to read the feedback.`;
+  }
+
+  if (resume.status === "closed") {
+    return "This thread is closed, but the feedback is still useful to study.";
+  }
+
+  return "No reviews yet. Be the first to lint this resume.";
+}
+
+function getThreadActionLabel(resume: ResumeSummary) {
+  if (resume.roast_count === 0) {
+    return resume.status === "closed" ? "Thread" : "Review";
+  }
+
+  if (resume.roast_count > 5) {
+    return "Fixes";
+  }
+
+  return resume.roast_count === 1 ? "Comment" : "Comments";
+}
+
+function getThreadActionAria(resume: ResumeSummary) {
+  if (resume.roast_count === 0) {
+    return resume.status === "closed"
+      ? `Open closed thread for ${resume.title}`
+      : `Review ${resume.title}`;
+  }
+
+  return `Open ${resume.roast_count} comments for ${resume.title}`;
+}
+
+function getReviewPreviewsByResumeId(rows: ReviewPreviewRow[]) {
+  const previews = new Map<string, ReviewPreview>();
+  const sortedRows = [...rows].sort(
+    (a, b) =>
+      (b.helpful_votes ?? 0) - (a.helpful_votes ?? 0) ||
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  );
+
+  for (const row of sortedRows) {
+    if (row.is_deleted || row.parent_id) continue;
+    if (previews.has(row.resume_id)) continue;
+
+    const preview = getReviewPreview(row);
+    if (!preview) continue;
+
+    previews.set(row.resume_id, preview);
+  }
+
+  return Object.fromEntries(previews);
 }
 
 function isReadCountFeatureError(error: { message?: string } | null) {
@@ -69,6 +228,12 @@ function isResumeContextFeatureError(error: { message?: string } | null) {
 
 function isAuthorProfileFeatureError(error: { message?: string } | null) {
   return /app_status|current_position|avatar_path|schema cache|column/i.test(
+    error?.message ?? "",
+  );
+}
+
+function isReviewPreviewFeatureError(error: { message?: string } | null) {
+  return /parent_id|is_deleted|attachment_id|content_format|sticker_id|schema cache|column/i.test(
     error?.message ?? "",
   );
 }
@@ -228,6 +393,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
   const [message, setMessage] = useState("");
   const [copiedId, setCopiedId] = useState("");
   const [previewUrlsById, setPreviewUrlsById] = useState<Record<string, string>>({});
+  const [reviewPreviewsById, setReviewPreviewsById] = useState<Record<string, ReviewPreview>>({});
   const [previewUrlsLoading, setPreviewUrlsLoading] = useState(false);
   const [saveFeatureReady, setSaveFeatureReady] = useState(true);
   const [savingIds, setSavingIds] = useState<Set<string>>(() => new Set());
@@ -351,6 +517,10 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
       })),
     [sortedResumes],
   );
+  const previewResumeIds = useMemo(
+    () => sortedResumes.map((resume) => resume.id),
+    [sortedResumes],
+  );
 
   useEffect(() => {
     let active = true;
@@ -402,6 +572,53 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
       active = false;
     };
   }, [previewTargets]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadReviewPreviews() {
+      if (!previewResumeIds.length) {
+        setReviewPreviewsById({});
+        return;
+      }
+
+      const primaryResult = await supabase
+        .from("roasts")
+        .select(REVIEW_PREVIEW_SELECT_WITH_THREADS)
+        .in("resume_id", previewResumeIds)
+        .eq("is_deleted", false)
+        .is("parent_id", null)
+        .order("helpful_votes", { ascending: false })
+        .order("created_at", { ascending: false });
+
+      const previewResult =
+        primaryResult.error && isReviewPreviewFeatureError(primaryResult.error)
+          ? await supabase
+              .from("roasts")
+              .select(REVIEW_PREVIEW_SELECT_BASE)
+              .in("resume_id", previewResumeIds)
+              .order("helpful_votes", { ascending: false })
+              .order("created_at", { ascending: false })
+          : primaryResult;
+
+      if (!active) return;
+
+      if (previewResult.error) {
+        setReviewPreviewsById({});
+        return;
+      }
+
+      setReviewPreviewsById(
+        getReviewPreviewsByResumeId((previewResult.data ?? []) as ReviewPreviewRow[]),
+      );
+    }
+
+    void loadReviewPreviews();
+
+    return () => {
+      active = false;
+    };
+  }, [previewResumeIds]);
 
   async function shareResume(resume: ResumeSummary) {
     const url = `${window.location.origin}/resume/${resume.id}`;
@@ -564,11 +781,13 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
         </Link>
       </nav>
       {sortedResumes.map((resume, index) => {
-        const heated = resume.roast_count > 5;
         const authorProfile = resume.author_profile ?? null;
         const posterLabel = getResumePosterLabel(resume, authorProfile);
         const isSaving = savingIds.has(resume.id);
         const saveButtonState = getSaveButtonState(resume.is_saved, isSaving);
+        const reviewSignal = getReviewSignal(resume);
+        const reviewPreview = reviewPreviewsById[resume.id];
+        const threadActionLabel = getThreadActionLabel(resume);
         const snippet =
           resume.post_description?.trim() ||
           "Targeting recruiter screens with a resume that needs sharper bullets, clearer proof, and fewer weak first impressions.";
@@ -590,9 +809,14 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                   {formatCount(resume.read_count)} reads
                 </span>
               </div>
-              <Link className="post-title-link" href={`/resume/${resume.id}`}>
-                <h2>{resume.title}</h2>
-              </Link>
+              <div className="feed-title-row">
+                <Link className="post-title-link" href={`/resume/${resume.id}`}>
+                  <h2>{resume.title}</h2>
+                </Link>
+                <span className={`feed-status-pill ${reviewSignal.className}`}>
+                  {reviewSignal.label}
+                </span>
+              </div>
 
               <div className="post-tags">
                 <span className="badge role-badge">
@@ -601,36 +825,49 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                 <span className="badge neutral-badge">
                   {getResumeAffiliationLabel(resume, authorProfile)}
                 </span>
-                <span className={`badge ${heated ? "badge-hot" : resume.status === "closed" ? "badge-closed" : "badge-open"}`}>
-                  {heated ? "Heated" : resume.status === "closed" ? "Closed" : "Open"}
-                </span>
               </div>
 
-              <Link
-                aria-label={`Open resume preview for ${resume.title}`}
-                className="feed-preview-link"
-                href={`/resume/${resume.id}`}
-              >
-                <FeedResumePreview
-                  fileUrl={previewUrlsById[resume.id]}
-                  isLoading={previewUrlsLoading}
-                  title={resume.title}
-                />
-              </Link>
+              <div className="feed-card-body">
+                <div className="feed-review-summary">
+                  <span className="feed-section-label">Review request</span>
+                  <p className="feed-snippet">
+                    {snippet}
+                  </p>
+                  <Link
+                    className={`feed-thread-preview ${reviewPreview ? "has-review" : "needs-review"}`}
+                    href={`/resume/${resume.id}`}
+                  >
+                    <span className="feed-thread-label">
+                      {reviewPreview?.label ?? (resume.roast_count > 0 ? "Discussion started" : "Needs reviewer")}
+                    </span>
+                    <p>
+                      {reviewPreview?.excerpt ?? getThreadPrompt(resume)}
+                    </p>
+                  </Link>
+                </div>
 
-              <p className="feed-snippet">
-                {snippet}
-              </p>
+                <Link
+                  aria-label={`Open resume preview for ${resume.title}`}
+                  className="feed-preview-link"
+                  href={`/resume/${resume.id}`}
+                >
+                  <FeedResumePreview
+                    fileUrl={previewUrlsById[resume.id]}
+                    isLoading={previewUrlsLoading}
+                    title={resume.title}
+                  />
+                </Link>
+              </div>
 
               <div className="post-actions">
-                <Link className="post-action-button" href={`/resume/${resume.id}`} aria-label={`Open ${resume.roast_count} comments`}>
+                <Link className="post-action-button" href={`/resume/${resume.id}`} aria-label={getThreadActionAria(resume)}>
                   <MessageCircleIcon className="post-action-icon" size={16} aria-hidden="true" />
-                  <span className="post-action-count">
-                    {formatCount(resume.roast_count)}
-                  </span>
-                  <span className="post-action-label">
-                    {resume.roast_count === 1 ? "Comment" : "Comments"}
-                  </span>
+                  {resume.roast_count > 0 ? (
+                    <span className="post-action-count">
+                      {formatCount(resume.roast_count)}
+                    </span>
+                  ) : null}
+                  <span className="post-action-label">{threadActionLabel}</span>
                 </Link>
                 <button className="post-action-button copy-button" type="button" onClick={() => void shareResume(resume)} aria-label="Share resume">
                   <LinkIcon className="post-action-icon" size={16} aria-hidden="true" />
@@ -648,9 +885,6 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                   <BookmarkIcon className="post-action-icon" size={16} aria-hidden="true" />
                   <span className="post-action-label">{saveButtonState.label}</span>
                 </button>
-                <span className={`resume-status ${resume.status === "closed" ? "closed" : ""}`}>
-                  {resume.status === "closed" ? "Closed" : "Open for review"}
-                </span>
               </div>
             </div>
           </article>

@@ -282,6 +282,7 @@ export function UserDropdown({
 
 	return (
 		<DropdownMenu
+			modal={false}
 			open={open}
 			onOpenChange={(nextOpen) => {
 				setOpen(nextOpen);

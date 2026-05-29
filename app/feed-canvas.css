@@ -858,10 +858,4 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 		background: color-mix(in srgb, var(--brand) 10%, transparent);
 	}
 
-	.post-actions .resume-status {
-		grid-column: 1 / -1;
-		width: 100%;
-		margin-left: 0 !important;
-		text-align: center;
-	}
 }

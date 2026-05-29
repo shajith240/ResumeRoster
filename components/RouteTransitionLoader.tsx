@@ -123,9 +123,9 @@ export default function RouteTransitionLoader() {
 		setLoaderTheme(getLoaderTheme(nextPathname));
 		setVisible(true);
 		hideTimerRef.current = window.setTimeout(() => {
-			if (window.location.pathname !== originPathRef.current) return;
 			setVisible(false);
 			hideTimerRef.current = null;
+			originPathRef.current = window.location.pathname;
 		}, STALLED_TRANSITION_MS);
 	}
 
