@@ -1,5 +1,4 @@
 import { adminErrorResponse, requireAdmin } from "@/lib/admin";
-import { enforceRateLimit } from "@/lib/rate-limit";
 import { REVIEWER_FIELD_LIMITS, limitReviewerText } from "@/lib/reviewer-validation";
 
 export const runtime = "nodejs";
@@ -35,14 +34,6 @@ async function getPayload(request: Request) {
 export async function POST(request: Request, context: RouteContext) {
 	try {
 		const { admin, user } = await requireAdmin(request);
-		await enforceRateLimit(admin, {
-			action: "admin_reviewer_action",
-			limit: 120,
-			request,
-			userId: user.id,
-			windowSeconds: 10 * 60,
-		});
-
 		const { id: applicationId } = await context.params;
 		const payload = await getPayload(request);
 		const action =
@@ -66,37 +57,97 @@ export async function POST(request: Request, context: RouteContext) {
 			return badRequest("Choose a valid reviewer action.");
 		}
 
-		const applicationUpdate = await admin.rpc(
-			"admin_review_reviewer_application",
-			{
-				admin_user_id: user.id,
-				reviewer_action: action,
-				reviewer_admin_note: adminNote,
-				target_application_id: applicationId,
-			},
-		);
+		const applicationResult = await admin
+			.from("reviewer_applications")
+			.select(
+				"id,user_id,requested_type,expertise,proof_url,note,status,admin_note,reviewed_by,reviewed_at,created_at,updated_at",
+			)
+			.eq("id", applicationId)
+			.maybeSingle();
 
-		if (applicationUpdate.error) {
-			console.error("Admin reviewer action RPC failed", applicationUpdate.error);
-			throw new Error("admin-reviewer-action-failed");
+		if (applicationResult.error) {
+			throw new Error(applicationResult.error.message);
+		}
+		if (!applicationResult.data) return badRequest("Application not found.", 404);
+
+		const application = applicationResult.data;
+		const now = new Date().toISOString();
+		let nextStatus: "pending" | "approved" | "rejected" = "pending";
+		let profilePatch: Record<string, unknown> = {};
+
+		if (action === "approve_reviewer") {
+			nextStatus = "approved";
+			profilePatch = {
+				reviewer_expertise: application.expertise ?? [],
+				reviewer_type: application.requested_type,
+				reviewer_verification_status: "verified",
+				reviewer_verified_at: now,
+				reviewer_verified_by: user.id,
+			};
 		}
 
-		const application = Array.isArray(applicationUpdate.data)
-			? applicationUpdate.data[0]
-			: applicationUpdate.data;
+		if (action === "reject_reviewer") {
+			nextStatus = "rejected";
+			profilePatch = {
+				reviewer_verification_status: "rejected",
+				reviewer_verified_at: null,
+				reviewer_verified_by: null,
+			};
+		}
 
-		if (!application) return badRequest("Application not found.", 404);
+		if (action === "reset_reviewer") {
+			nextStatus = "pending";
+			profilePatch = {
+				reviewer_verification_status: "pending",
+				reviewer_verified_at: null,
+				reviewer_verified_by: null,
+			};
+		}
+
+		const [applicationUpdate, profileUpdate] = await Promise.all([
+			admin
+				.from("reviewer_applications")
+				.update({
+					admin_note: adminNote,
+					reviewed_at: action === "reset_reviewer" ? null : now,
+					reviewed_by: action === "reset_reviewer" ? null : user.id,
+					status: nextStatus,
+				})
+				.eq("id", application.id)
+				.select(
+					"id,user_id,requested_type,expertise,proof_url,note,status,admin_note,reviewed_by,reviewed_at,created_at,updated_at",
+				)
+				.single(),
+			admin.from("profiles").update(profilePatch).eq("id", application.user_id),
+		]);
+
+		if (applicationUpdate.error) {
+			throw new Error(applicationUpdate.error.message);
+		}
+		if (profileUpdate.error) throw new Error(profileUpdate.error.message);
+
+		const logResult = await admin.from("moderation_actions").insert({
+			action,
+			admin_user_id: user.id,
+			metadata: {
+				application_status: nextStatus,
+				requested_type: application.requested_type,
+				user_id: application.user_id,
+			},
+			reason: adminNote,
+			target_id: application.id,
+			target_type: "reviewer_application",
+		});
+
+		if (logResult.error) throw new Error(logResult.error.message);
 
 		return Response.json({
-			application,
+			application: applicationUpdate.data,
 			status: "ok",
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json(
-				{ message: "We could not update this reviewer application." },
-				{ status: 500 },
-			);
+			return Response.json({ message: error.message }, { status: 500 });
 		}
 
 		return adminErrorResponse(error);

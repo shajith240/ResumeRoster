@@ -1,6 +1,4 @@
 export const COMMENT_IMAGE_MAX_FILE_SIZE_BYTES = 3 * 1024 * 1024;
-export const COMMENT_IMAGE_MAX_DIMENSION = 4096;
-export const COMMENT_IMAGE_MAX_PIXELS = 12_000_000;
 export const ROAST_CONTENT_MIN_LENGTH = 10;
 export const ROAST_CONTENT_MAX_LENGTH = 4000;
 
@@ -30,28 +28,6 @@ function hasBytes(bytes: Uint8Array, values: number[], offset = 0) {
 	return values.every((value, index) => bytes[offset + index] === value);
 }
 
-function readUint16(bytes: Uint8Array, offset: number, littleEndian = false) {
-	if (offset + 1 >= bytes.length) return 0;
-	return littleEndian
-		? bytes[offset] | (bytes[offset + 1] << 8)
-		: (bytes[offset] << 8) | bytes[offset + 1];
-}
-
-function readUint24(bytes: Uint8Array, offset: number) {
-	if (offset + 2 >= bytes.length) return 0;
-	return bytes[offset] | (bytes[offset + 1] << 8) | (bytes[offset + 2] << 16);
-}
-
-function readUint32(bytes: Uint8Array, offset: number) {
-	if (offset + 3 >= bytes.length) return 0;
-	return (
-		(bytes[offset] << 24) |
-		(bytes[offset + 1] << 16) |
-		(bytes[offset + 2] << 8) |
-		bytes[offset + 3]
-	) >>> 0;
-}
-
 export function detectCommentImageMimeType(
 	bytes: Uint8Array,
 ): CommentImageMimeType | "" {
@@ -71,79 +47,6 @@ export function detectCommentImageMimeType(
 	}
 
 	return "";
-}
-
-export function getCommentImageDimensions(bytes: Uint8Array): {
-	height: number;
-	width: number;
-} | null {
-	const mimeType = detectCommentImageMimeType(bytes);
-
-	if (mimeType === "image/png" && bytes.length >= 24) {
-		return {
-			height: readUint32(bytes, 20),
-			width: readUint32(bytes, 16),
-		};
-	}
-
-	if (mimeType === "image/jpeg") {
-		let offset = 2;
-
-		while (offset + 9 <= bytes.length) {
-			if (bytes[offset] !== 0xff) return null;
-
-			const marker = bytes[offset + 1];
-			const segmentLength = readUint16(bytes, offset + 2);
-			const isStartOfFrame =
-				(marker >= 0xc0 && marker <= 0xc3) ||
-				(marker >= 0xc5 && marker <= 0xc7) ||
-				(marker >= 0xc9 && marker <= 0xcb) ||
-				(marker >= 0xcd && marker <= 0xcf);
-
-			if (isStartOfFrame) {
-				return {
-					height: readUint16(bytes, offset + 5),
-					width: readUint16(bytes, offset + 7),
-				};
-			}
-
-			if (!segmentLength) return null;
-			offset += 2 + segmentLength;
-		}
-
-		return null;
-	}
-
-	if (mimeType === "image/webp" && bytes.length >= 30) {
-		const chunkType = new TextDecoder().decode(bytes.slice(12, 16));
-
-		if (chunkType === "VP8X") {
-			return {
-				height: readUint24(bytes, 27) + 1,
-				width: readUint24(bytes, 24) + 1,
-			};
-		}
-
-		if (chunkType === "VP8 " && hasBytes(bytes, [0x9d, 0x01, 0x2a], 23)) {
-			return {
-				height: readUint16(bytes, 28, true) & 0x3fff,
-				width: readUint16(bytes, 26, true) & 0x3fff,
-			};
-		}
-
-		if (chunkType === "VP8L" && bytes[20] === 0x2f) {
-			const b0 = bytes[21];
-			const b1 = bytes[22];
-			const b2 = bytes[23];
-			const b3 = bytes[24];
-			return {
-				height: 1 + (((b3 & 0x0f) << 10) | (b2 << 2) | ((b1 & 0xc0) >> 6)),
-				width: 1 + (((b1 & 0x3f) << 8) | b0),
-			};
-		}
-	}
-
-	return null;
 }
 
 export function getCommentImageExtension(mimeType: CommentImageMimeType) {
@@ -178,19 +81,6 @@ export function getCommentImageUploadIssue(file: CommentImageFileInput) {
 
 	if (declaredType && declaredType !== detectedType) {
 		return "The image file type does not match its contents.";
-	}
-
-	const dimensions = getCommentImageDimensions(file.bytes);
-	if (!dimensions || dimensions.width <= 0 || dimensions.height <= 0) {
-		return "Upload a valid PNG, JPG, or WebP image.";
-	}
-
-	if (
-		dimensions.width > COMMENT_IMAGE_MAX_DIMENSION ||
-		dimensions.height > COMMENT_IMAGE_MAX_DIMENSION ||
-		dimensions.width * dimensions.height > COMMENT_IMAGE_MAX_PIXELS
-	) {
-		return "Choose an image under 4096px per side.";
 	}
 
 	return "";

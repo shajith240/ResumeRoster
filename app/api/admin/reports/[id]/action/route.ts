@@ -1,5 +1,4 @@
 import { adminErrorResponse, requireAdmin } from "@/lib/admin";
-import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -46,14 +45,6 @@ async function getPayload(request: Request) {
 export async function POST(request: Request, context: RouteContext) {
 	try {
 		const { admin, user } = await requireAdmin(request);
-		await enforceRateLimit(admin, {
-			action: "admin_report_action",
-			limit: 180,
-			request,
-			userId: user.id,
-			windowSeconds: 10 * 60,
-		});
-
 		const { id: reportId } = await context.params;
 		const payload = await getPayload(request);
 		const action =
@@ -234,11 +225,7 @@ export async function POST(request: Request, context: RouteContext) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			console.error("Admin report action failed", error);
-			return Response.json(
-				{ message: "We could not apply this admin action." },
-				{ status: 500 },
-			);
+			return Response.json({ message: error.message }, { status: 500 });
 		}
 		return adminErrorResponse(error);
 	}

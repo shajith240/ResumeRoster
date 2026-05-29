@@ -9,7 +9,6 @@ const URL_PATTERN =
 	/(?:https?:\/\/|www\.|mailto:|tel:)[^\s<>()]+|(?:linkedin|github|gitlab|behance|dribbble|leetcode)\.com\/[^\s<>()]+/gi;
 const ADDRESS_LINE_PATTERN =
 	/\b\d{1,6}\s+[A-Za-z0-9.'#\-\s]{2,}\s(?:street|st\.?|road|rd\.?|avenue|ave\.?|lane|ln\.?|drive|dr\.?|boulevard|blvd\.?|circle|cir\.?|court|ct\.?|way|place|pl\.?)\b[^\n]*/gi;
-const MAX_RESUME_PDF_PAGES = 8;
 
 type RedactionReason = "email" | "phone" | "link" | "name" | "address";
 
@@ -328,10 +327,6 @@ export async function redactResumePdf({
 	const nameCandidates = buildNameRedactionCandidates(profile);
 
 	try {
-		if (pdf.countPages() > MAX_RESUME_PDF_PAGES) {
-			throw new Error(`Keep resume PDFs to ${MAX_RESUME_PDF_PAGES} pages or fewer.`);
-		}
-
 		scrubMetadata(pdf);
 
 		for (let index = 0; index < pdf.countPages(); index += 1) {

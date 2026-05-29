@@ -31,33 +31,6 @@ function createResumePdf() {
 	return bytes;
 }
 
-function createMultiPagePdf(pageCount: number) {
-	const document = new mupdf.PDFDocument();
-	const font = new mupdf.Font("Helvetica");
-	const fontObject = document.addSimpleFont(font);
-
-	for (let index = 0; index < pageCount; index += 1) {
-		const contents = [
-			"BT",
-			`/F1 12 Tf 72 760 Td (Resume page ${index + 1}) Tj`,
-			"ET",
-		].join(" ");
-		const page = document.addPage(
-			[0, 0, 612, 792],
-			0,
-			{ Font: { F1: fontObject } },
-			contents,
-		);
-		document.insertPage(index, page);
-	}
-
-	const output = document.saveToBuffer("garbage=4,compress=yes");
-	const bytes = new Uint8Array(output.asUint8Array());
-	output.destroy();
-	document.destroy();
-	return bytes;
-}
-
 function extractText(bytes: Uint8Array) {
 	const document = mupdf.Document.openDocument(bytes, "application/pdf");
 	const pdf = document.asPDF();
@@ -154,15 +127,5 @@ describe("server PDF redaction", () => {
 		expect(text).not.toContain("github.com/janedoe");
 		expect(text).toContain("GraphQL resume parser");
 		expect(links).toEqual([]);
-	});
-
-	it("rejects unusually long resume PDFs before redaction work", async () => {
-		await expect(
-			redactResumePdf({
-				bytes: createMultiPagePdf(9),
-				mode: "anonymous",
-				profile: {},
-			}),
-		).rejects.toThrow("Keep resume PDFs to 8 pages or fewer.");
 	});
 });

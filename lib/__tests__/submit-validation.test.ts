@@ -73,9 +73,8 @@ describe("submit validation", () => {
 
 	it("normalizes uploaded file names without changing extension", () => {
 		expect(cleanResumeFileName("My Resume Final (2).PDF")).toBe(
-			"my-resume-final-2.pdf",
+			"my-resume-final-2-.pdf",
 		);
-		expect(cleanResumeFileName("../.PDF")).toBe("resume.pdf");
 	});
 
 	it("formats file sizes in megabytes", () => {

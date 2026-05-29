@@ -4,7 +4,6 @@ import {
 	getCommentImageUploadIssue,
 	type CommentImageMimeType,
 } from "@/lib/comment-media-validation";
-import { enforceRateLimit } from "@/lib/rate-limit";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
@@ -27,14 +26,6 @@ function cleanTitle(fileName: string) {
 export async function POST(request: Request) {
 	try {
 		const { admin, user } = await requireSignedInUser(request);
-		await enforceRateLimit(admin, {
-			action: "comment_media_upload",
-			limit: 20,
-			request,
-			userId: user.id,
-			windowSeconds: 60 * 60,
-		});
-
 		const formData = await request.formData().catch(() => null);
 		const file = formData?.get("file");
 
@@ -64,10 +55,7 @@ export async function POST(request: Request) {
 				upsert: false,
 			});
 
-		if (upload.error) {
-			console.error("Comment media upload failed", upload.error);
-			throw new Error("comment-media-upload-failed");
-		}
+		if (upload.error) throw new Error(upload.error.message);
 
 		const insert = await admin
 			.from("comment_attachments")
@@ -86,8 +74,7 @@ export async function POST(request: Request) {
 
 		if (insert.error) {
 			void admin.storage.from("comment-media").remove([storagePath]);
-			console.error("Comment attachment insert failed", insert.error);
-			throw new Error("comment-attachment-insert-failed");
+			throw new Error(insert.error.message);
 		}
 
 		return Response.json({
@@ -99,10 +86,7 @@ export async function POST(request: Request) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json(
-				{ message: "We could not upload this image." },
-				{ status: 500 },
-			);
+			return Response.json({ message: error.message }, { status: 500 });
 		}
 
 		return serverAuthErrorResponse(error);
