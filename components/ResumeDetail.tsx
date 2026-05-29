@@ -48,7 +48,6 @@ import {
 	getResumePosterLabel,
 	getResumeRoleLabel,
 } from "@/lib/resume-display";
-import { fetchResumeFileSignedUrl } from "@/lib/resume-file-url-client";
 import {
 	canShowReviewerProfile,
 	getReviewerDisplayLabel,
@@ -399,6 +398,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [dislikedRoastIds, setDislikedRoastIds] = useState<Set<string>>(
 		new Set(),
 	);
+	const [resumeFileAccessToken, setResumeFileAccessToken] = useState("");
 	const [signedUrl, setSignedUrl] = useState("");
 	const [signedUrlError, setSignedUrlError] = useState("");
 	const [content, setContent] = useState("");
@@ -528,20 +528,13 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 		if (!accessToken) {
 			setSignedUrl("");
+			setResumeFileAccessToken("");
 			setSignedUrlError("Sign in again to open this resume file.");
 			return;
 		}
 
-		try {
-			setSignedUrl(await fetchResumeFileSignedUrl(activeResume.id, accessToken));
-		} catch (error) {
-			setSignedUrl("");
-			setSignedUrlError(
-				error instanceof Error
-					? error.message
-					: "We could not open this resume file.",
-			);
-		}
+		setResumeFileAccessToken(accessToken);
+		setSignedUrl(`/api/resumes/${encodeURIComponent(activeResume.id)}/file`);
 	}
 
 	async function recordResumeRead(
@@ -1964,6 +1957,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 				{signedUrl ? (
 					<SecureResumePreview
+						accessToken={resumeFileAccessToken}
 						fileUrl={signedUrl}
 						privacyMode={
 							resume.privacy_mode ??

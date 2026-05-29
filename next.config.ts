@@ -35,8 +35,6 @@ const connectSources = [
 	errorMonitoringOrigin,
 	"https://*.ingest.sentry.io",
 ].filter(Boolean);
-const fontSources = ["'self'", "data:", "https://fonts.gstatic.com"];
-const styleSources = ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"];
 
 const contentSecurityPolicy = [
 	"default-src 'self'",
@@ -45,8 +43,8 @@ const contentSecurityPolicy = [
 	"frame-ancestors 'none'",
 	"form-action 'self'",
 	"img-src 'self' data: blob: https:",
-	`font-src ${fontSources.join(" ")}`,
-	`style-src ${styleSources.join(" ")}`,
+	"font-src 'self' data:",
+	"style-src 'self' 'unsafe-inline'",
 	`script-src ${scriptSources.join(" ")}`,
 	"worker-src 'self' blob:",
 	`connect-src ${connectSources.join(" ")}`,

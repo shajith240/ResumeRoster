@@ -9,7 +9,6 @@ import { EyeIcon } from "@/components/ui/eye";
 import { LinkIcon } from "@/components/ui/link";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { MessageCircleIcon } from "@/components/ui/message-circle";
-import { fetchResumeFileSignedUrl } from "@/lib/resume-file-url-client";
 import {
   getResumeAffiliationLabel,
   getResumePosterLabel,
@@ -366,27 +365,17 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
 
       setPreviewUrlsLoading(true);
 
-      const previewUrlEntries = await Promise.all(
-        previewTargets.map(async (resume) => {
-          try {
-            const signedUrl = await fetchResumeFileSignedUrl(
-              resume.id,
-              previewAccessToken,
-            );
+      const nextPreviewUrls = previewTargets.reduce<Record<string, string>>(
+        (previewUrls, resume) => {
+          previewUrls[resume.id] = `/api/resumes/${encodeURIComponent(resume.id)}/file`;
 
-            return [resume.id, signedUrl] as const;
-          } catch {
-            return [resume.id, ""] as const;
-          }
-        }),
+          return previewUrls;
+        },
+        {},
       );
 
       if (!active) return;
-      setPreviewUrlsById(
-        Object.fromEntries(
-          previewUrlEntries.filter(([, signedUrl]) => Boolean(signedUrl)),
-        ),
-      );
+      setPreviewUrlsById(nextPreviewUrls);
       setPreviewUrlsLoading(false);
     }
 
@@ -606,6 +595,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                 href={`/resume/${resume.id}`}
               >
                 <FeedResumePreview
+                  accessToken={previewAccessToken}
                   fileUrl={previewUrlsById[resume.id]}
                   isLoading={previewUrlsLoading}
                   title={resume.title}

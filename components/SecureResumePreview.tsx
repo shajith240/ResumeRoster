@@ -17,6 +17,7 @@ const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
 pdfjs.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
 
 type SecureResumePreviewProps = {
+	accessToken?: string;
 	fileUrl: string;
 	privacyMode: ResumePrivacyMode;
 	title: string;
@@ -231,6 +232,7 @@ function SecureResumePage({
 }
 
 export default function SecureResumePreview({
+	accessToken,
 	fileUrl,
 	privacyMode,
 	title,
@@ -269,6 +271,9 @@ export default function SecureResumePreview({
 				disableAutoFetch: true,
 				disableRange: true,
 				disableStream: false,
+				httpHeaders: accessToken
+					? { Authorization: `Bearer ${accessToken}` }
+					: undefined,
 			});
 
 			const loadedPdf = await documentTask.promise;
@@ -295,7 +300,7 @@ export default function SecureResumePreview({
 			documentTask?.destroy();
 			void pdf?.destroy();
 		};
-	}, [fileUrl]);
+	}, [accessToken, fileUrl]);
 
 	function blockProtectedShortcuts(event: React.KeyboardEvent<HTMLDivElement>) {
 		if (!event.ctrlKey && !event.metaKey) return;
