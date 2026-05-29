@@ -14,6 +14,7 @@ const VIEWPORT_MARGIN = 520;
 type PdfJsModule = typeof import("pdfjs-dist");
 
 type FeedResumePreviewProps = {
+	accessToken?: string;
 	fileUrl?: string;
 	isLoading?: boolean;
 	title: string;
@@ -38,6 +39,7 @@ async function loadPdfJs() {
 }
 
 export default function FeedResumePreview({
+	accessToken,
 	fileUrl,
 	isLoading = false,
 	title,
@@ -122,7 +124,11 @@ export default function FeedResumePreview({
 			documentTask = pdfjs.getDocument({
 				url: fileUrl,
 				disableAutoFetch: true,
+				disableRange: true,
 				disableStream: false,
+				httpHeaders: accessToken
+					? { Authorization: `Bearer ${accessToken}` }
+					: undefined,
 			});
 
 			loadedPdf = await documentTask.promise;
@@ -182,7 +188,7 @@ export default function FeedResumePreview({
 			documentTask?.destroy();
 			void loadedPdf?.destroy();
 		};
-	}, [fileUrl, frameSize.height, frameSize.width, isNearViewport]);
+	}, [accessToken, fileUrl, frameSize.height, frameSize.width, isNearViewport]);
 
 	const showSkeleton = status !== "ready";
 	const screenReaderStatus =

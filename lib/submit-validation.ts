@@ -21,10 +21,17 @@ export type SubmitValidationInput = {
 };
 
 export function cleanResumeFileName(name: string) {
-	return name
+	const fileName = name.split(/[\\/]/).pop() || "";
+	const baseName = fileName.replace(/\.pdf$/i, "");
+	const cleaned = baseName
 		.toLowerCase()
 		.replace(/[^a-z0-9.]+/g, "-")
-		.replace(/-+/g, "-");
+		.replace(/-+/g, "-")
+		.replace(/\.{2,}/g, ".")
+		.replace(/-+\./g, ".")
+		.replace(/^[.-]+|[.-]+$/g, "");
+
+	return `${cleaned || "resume"}.pdf`;
 }
 
 export function formatFileSize(size: number) {

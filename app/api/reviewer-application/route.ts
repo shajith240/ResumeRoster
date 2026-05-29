@@ -7,6 +7,7 @@ import {
 	parseReviewerExpertise,
 	REVIEWER_FIELD_LIMITS,
 } from "@/lib/reviewer-validation";
+import { enforceRateLimit } from "@/lib/rate-limit";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 import type { CommunityRole, ReviewerType } from "@/lib/supabase/types";
 
@@ -33,6 +34,14 @@ function getString(payload: Record<string, unknown>, key: string) {
 export async function POST(request: Request) {
 	try {
 		const { admin, user } = await requireSignedInUser(request);
+		await enforceRateLimit(admin, {
+			action: "reviewer_application",
+			limit: 8,
+			request,
+			userId: user.id,
+			windowSeconds: 60 * 60,
+		});
+
 		const payload = await getPayload(request);
 
 		if (!payload || typeof payload !== "object") {
@@ -82,52 +91,36 @@ export async function POST(request: Request) {
 
 		if (issue) return badRequest(issue);
 
-		const profileUpdate = await admin
-			.from("profiles")
-			.update({
-				community_role: communityRole,
-				reviewer_bio: reviewerBio,
-				reviewer_expertise: reviewerExpertise,
-				reviewer_headline: reviewerHeadline,
-				reviewer_type: reviewerType,
-				reviewer_verification_status: "pending",
-			})
-			.eq("id", user.id);
-
-		if (profileUpdate.error) throw new Error(profileUpdate.error.message);
-
-		const applicationResult = await admin
-			.from("reviewer_applications")
-			.upsert(
-				{
-					admin_note: "",
-					expertise: reviewerExpertise,
-					note,
-					proof_url: proofUrl,
-					requested_type: reviewerType,
-					reviewed_at: null,
-					reviewed_by: null,
-					status: "pending",
-					user_id: user.id,
-				},
-				{ onConflict: "user_id" },
-			)
-			.select(
-				"id,user_id,requested_type,expertise,proof_url,note,status,admin_note,reviewed_by,reviewed_at,created_at,updated_at",
-			)
-			.single();
+		const applicationResult = await admin.rpc("submit_reviewer_application", {
+			requested_community_role: communityRole,
+			requested_expertise: reviewerExpertise,
+			requested_note: note,
+			requested_proof_url: proofUrl,
+			requested_reviewer_bio: reviewerBio,
+			requested_reviewer_headline: reviewerHeadline,
+			requested_reviewer_type: reviewerType,
+			target_user_id: user.id,
+		});
 
 		if (applicationResult.error) {
-			throw new Error(applicationResult.error.message);
+			console.error("Reviewer application RPC failed", applicationResult.error);
+			throw new Error("reviewer-application-failed");
 		}
 
+		const application = Array.isArray(applicationResult.data)
+			? applicationResult.data[0]
+			: applicationResult.data;
+
 		return Response.json({
-			application: applicationResult.data,
+			application,
 			status: "ok",
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return Response.json(
+				{ message: "We could not send this application." },
+				{ status: 500 },
+			);
 		}
 
 		return serverAuthErrorResponse(error);

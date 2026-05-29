@@ -1,4 +1,10 @@
-import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
+import {
+	createServiceSupabaseClient,
+	GENERIC_REQUEST_ERROR,
+	getBearerToken,
+	ServerAuthError,
+} from "@/lib/server-auth";
 
 export type AdminAuthResult = {
 	admin: SupabaseClient;
@@ -33,26 +39,15 @@ export function isAdminEmail(
 	return parseAdminEmails(adminEmails).has(email.trim().toLowerCase());
 }
 
-function getBearerToken(request: Request) {
-	const authorization = request.headers.get("authorization") ?? "";
-	const [scheme, token] = authorization.split(/\s+/);
-	return /^bearer$/i.test(scheme) && token ? token : "";
-}
-
 export function createAdminSupabaseClient() {
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-	const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-	if (!supabaseUrl || !serviceRoleKey) {
+	try {
+		return createServiceSupabaseClient();
+	} catch (error) {
+		if (error instanceof ServerAuthError) {
+			throw new AdminAuthError(error.message, error.status);
+		}
 		throw new AdminAuthError("Admin server setup is missing.", 503);
 	}
-
-	return createClient(supabaseUrl, serviceRoleKey, {
-		auth: {
-			autoRefreshToken: false,
-			persistSession: false,
-		},
-	});
 }
 
 export async function requireAdmin(request: Request): Promise<AdminAuthResult> {
@@ -83,5 +78,5 @@ export function adminErrorResponse(error: unknown) {
 		return Response.json({ message: error.message }, { status: error.status });
 	}
 
-	return Response.json({ message: "Admin request failed." }, { status: 500 });
+	return Response.json({ message: GENERIC_REQUEST_ERROR }, { status: 500 });
 }

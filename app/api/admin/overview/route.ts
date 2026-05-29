@@ -109,7 +109,11 @@ export async function GET(request: Request) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			console.error("Admin overview request failed", error);
+			return Response.json(
+				{ message: "We could not load the admin overview." },
+				{ status: 500 },
+			);
 		}
 		return adminErrorResponse(error);
 	}

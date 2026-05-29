@@ -398,6 +398,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [dislikedRoastIds, setDislikedRoastIds] = useState<Set<string>>(
 		new Set(),
 	);
+	const [resumeFileAccessToken, setResumeFileAccessToken] = useState("");
 	const [signedUrl, setSignedUrl] = useState("");
 	const [signedUrlError, setSignedUrlError] = useState("");
 	const [content, setContent] = useState("");
@@ -522,17 +523,18 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		const signed = await supabase.storage
-			.from("resumes")
-			.createSignedUrl(activeResume.file_path, 60 * 20);
+		const { data: sessionData } = await supabase.auth.getSession();
+		const accessToken = sessionData.session?.access_token ?? "";
 
-		if (signed.error) {
+		if (!accessToken) {
 			setSignedUrl("");
-			setSignedUrlError(signed.error.message);
+			setResumeFileAccessToken("");
+			setSignedUrlError("Sign in again to open this resume file.");
 			return;
 		}
 
-		setSignedUrl(signed.data.signedUrl);
+		setResumeFileAccessToken(accessToken);
+		setSignedUrl(`/api/resumes/${encodeURIComponent(activeResume.id)}/file`);
 	}
 
 	async function recordResumeRead(
@@ -1955,6 +1957,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 				{signedUrl ? (
 					<SecureResumePreview
+						accessToken={resumeFileAccessToken}
 						fileUrl={signedUrl}
 						privacyMode={
 							resume.privacy_mode ??
@@ -1966,7 +1969,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					<div className="locked-file">
 						<p>
 							{signedUrlError
-								? "We could not open this private resume file yet. If this is a different account, update the Supabase Storage read policy and retry."
+								? "We could not open this private resume file yet. Refresh and try again."
 								: "Opening the private resume PDF for your signed-in account."}
 						</p>
 						<button

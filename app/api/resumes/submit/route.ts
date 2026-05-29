@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { redactResumePdf } from "@/lib/pdf-redaction";
+import { enforceRateLimit } from "@/lib/rate-limit";
 import { isResumePrivacyMode } from "@/lib/resume-privacy";
+import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 import {
 	JOB_DESCRIPTION_MAX_LENGTH,
 	JOB_DESCRIPTION_MIN_LENGTH,
@@ -27,12 +29,6 @@ function badRequest(message: string, status = 400) {
 function getRequiredString(formData: FormData, key: string) {
 	const value = formData.get(key);
 	return typeof value === "string" ? value.trim() : "";
-}
-
-function getBearerToken(request: Request) {
-	const authorization = request.headers.get("authorization") ?? "";
-	const [scheme, token] = authorization.split(/\s+/);
-	return /^bearer$/i.test(scheme) && token ? token : "";
 }
 
 function getMetadataName(user: User) {
@@ -92,33 +88,15 @@ async function getSubmitProfile(
 }
 
 export async function POST(request: Request) {
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-	const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-	if (!supabaseUrl || !serviceRoleKey) {
-		return badRequest("Server submit setup is missing.", 503);
-	}
-
-	const token = getBearerToken(request);
-	if (!token) {
-		return badRequest("Sign in again before submitting.", 401);
-	}
-
-	const admin = createClient(supabaseUrl, serviceRoleKey, {
-		auth: {
-			autoRefreshToken: false,
-			persistSession: false,
-		},
-	});
-
-	const {
-		data: { user },
-		error: userError,
-	} = await admin.auth.getUser(token);
-
-	if (userError || !user) {
-		return badRequest("Your session expired. Sign in again.", 401);
-	}
+	try {
+		const { admin, user } = await requireSignedInUser(request);
+		await enforceRateLimit(admin, {
+			action: "resume_submit",
+			limit: 4,
+			request,
+			userId: user.id,
+			windowSeconds: 60 * 60,
+		});
 
 	let formData: FormData;
 	try {
@@ -174,7 +152,8 @@ export async function POST(request: Request) {
 
 	const profileError = await ensureSubmitProfile(admin, user);
 	if (profileError) {
-		return badRequest(`Profile setup failed: ${profileError.message}`, 500);
+		console.error("Resume submit profile setup failed", profileError);
+		return badRequest("We could not prepare your profile for this upload.", 500);
 	}
 
 	const profile = await getSubmitProfile(admin, user);
@@ -215,7 +194,8 @@ export async function POST(request: Request) {
 	});
 
 	if (upload.error) {
-		return badRequest(`Upload failed: ${upload.error.message}`, 500);
+		console.error("Resume PDF upload failed", upload.error);
+		return badRequest("We could not upload this resume.", 500);
 	}
 
 	await admin.from("profiles").update({ target_role: targetRole }).eq("id", user.id);
@@ -236,7 +216,8 @@ export async function POST(request: Request) {
 
 	if (insert.error) {
 		void admin.storage.from("resumes").remove([filePath]);
-		return badRequest(`Upload failed: ${insert.error.message}`, 500);
+		console.error("Resume row insert failed", insert.error);
+		return badRequest("We could not save this resume.", 500);
 	}
 
 	return NextResponse.json({
@@ -244,4 +225,7 @@ export async function POST(request: Request) {
 		privacyMode,
 		redactionCounts: processedPdf.redactionCounts,
 	});
+	} catch (error) {
+		return serverAuthErrorResponse(error);
+	}
 }

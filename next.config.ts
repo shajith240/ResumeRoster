@@ -11,8 +11,86 @@ const shouldUploadErrorMonitoringSourceMaps = Boolean(
 		process.env.ERROR_MONITORING_URL,
 );
 
+function getOrigin(value: string | undefined) {
+	if (!value) return "";
+
+	try {
+		return new URL(value).origin;
+	} catch {
+		return "";
+	}
+}
+
+const supabaseOrigin = getOrigin(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const errorMonitoringOrigin = getOrigin(process.env.ERROR_MONITORING_URL);
+const scriptSources = [
+	"'self'",
+	"'unsafe-inline'",
+	process.env.NODE_ENV !== "production" ? "'unsafe-eval'" : "",
+].filter(Boolean);
+const connectSources = [
+	"'self'",
+	supabaseOrigin,
+	supabaseOrigin ? supabaseOrigin.replace("https://", "wss://") : "",
+	errorMonitoringOrigin,
+	"https://*.ingest.sentry.io",
+].filter(Boolean);
+
+const contentSecurityPolicy = [
+	"default-src 'self'",
+	"base-uri 'self'",
+	"object-src 'none'",
+	"frame-ancestors 'none'",
+	"form-action 'self'",
+	"img-src 'self' data: blob: https:",
+	"font-src 'self' data:",
+	"style-src 'self' 'unsafe-inline'",
+	`script-src ${scriptSources.join(" ")}`,
+	"worker-src 'self' blob:",
+	`connect-src ${connectSources.join(" ")}`,
+	"frame-src 'self'",
+	"upgrade-insecure-requests",
+].join("; ");
+
+const securityHeaders = [
+	{
+		key: "Content-Security-Policy",
+		value: contentSecurityPolicy,
+	},
+	{
+		key: "Referrer-Policy",
+		value: "strict-origin-when-cross-origin",
+	},
+	{
+		key: "X-Content-Type-Options",
+		value: "nosniff",
+	},
+	{
+		key: "X-Frame-Options",
+		value: "DENY",
+	},
+	{
+		key: "Permissions-Policy",
+		value:
+			"camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
+	},
+	{
+		key: "Strict-Transport-Security",
+		value: "max-age=31536000; includeSubDomains; preload",
+	},
+];
+
 const nextConfig: NextConfig = {
+	async headers() {
+		return [
+			{
+				source: "/(.*)",
+				headers: securityHeaders,
+			},
+		];
+	},
 	outputFileTracingRoot: join(projectRoot),
+	poweredByHeader: false,
 	serverExternalPackages: ["mupdf"],
 };
 

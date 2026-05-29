@@ -1,5 +1,7 @@
 import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js";
 
+export const GENERIC_REQUEST_ERROR = "Request failed. Try again.";
+
 export type SignedInUserResult = {
 	admin: SupabaseClient;
 	user: User;
@@ -15,7 +17,7 @@ export class ServerAuthError extends Error {
 	}
 }
 
-function getBearerToken(request: Request) {
+export function getBearerToken(request: Request) {
 	const authorization = request.headers.get("authorization") ?? "";
 	const [scheme, token] = authorization.split(/\s+/);
 	return /^bearer$/i.test(scheme) && token ? token : "";
@@ -42,7 +44,7 @@ export async function requireSignedInUser(
 ): Promise<SignedInUserResult> {
 	const token = getBearerToken(request);
 	if (!token) {
-		throw new ServerAuthError("Sign in again before posting.", 401);
+		throw new ServerAuthError("Sign in again to continue.", 401);
 	}
 
 	const admin = createServiceSupabaseClient();
@@ -63,5 +65,5 @@ export function serverAuthErrorResponse(error: unknown) {
 		return Response.json({ message: error.message }, { status: error.status });
 	}
 
-	return Response.json({ message: "Request failed." }, { status: 500 });
+	return Response.json({ message: GENERIC_REQUEST_ERROR }, { status: 500 });
 }
