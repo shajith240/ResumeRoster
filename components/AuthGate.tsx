@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import AppPresence from "@/components/AppPresence";
 import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
 import { getCurrentPathForLogin, getLoginPath } from "@/lib/auth-redirect";
 import { SessionNavBar } from "@/components/ui/sidebar";
+import type { ProfileOnboarding } from "@/lib/supabase/types";
 
 type AuthGateProps = {
 	children: React.ReactNode;
+	showChrome?: boolean;
 };
 
 type AppTheme = "dark" | "light";
@@ -32,7 +34,31 @@ function applyAppTheme(theme: AppTheme) {
 	document.documentElement.dataset.appTheme = theme;
 }
 
-export default function AuthGate({ children }: AuthGateProps) {
+function isOnboardingFeatureError(error: { message?: string } | null) {
+	return /profile_onboarding|schema cache|relation|does not exist/i.test(
+		error?.message ?? "",
+	);
+}
+
+async function shouldRedirectToOnboarding(userId: string) {
+	const { data, error } = await supabase
+		.from("profile_onboarding")
+		.select("status")
+		.eq("user_id", userId)
+		.maybeSingle();
+
+	if (error) {
+		if (isOnboardingFeatureError(error)) return false;
+		return false;
+	}
+
+	if (!data) return false;
+
+	return (data as Pick<ProfileOnboarding, "status">).status === "pending";
+}
+
+export default function AuthGate({ children, showChrome = true }: AuthGateProps) {
+	const pathname = usePathname();
 	const router = useRouter();
 	const [user, setUser] = useState<User | null>(null);
 	const [checking, setChecking] = useState(true);
@@ -60,35 +86,46 @@ export default function AuthGate({ children }: AuthGateProps) {
 	useEffect(() => {
 		let active = true;
 
-		supabase.auth.getSession().then(({ data }) => {
+		async function finishAuthCheck(sessionUser: User | null | undefined) {
 			if (!active) return;
 
-			if (!data.session?.user) {
+			if (!sessionUser) {
 				router.replace(getLoginPath(getCurrentPathForLogin()));
 				return;
 			}
 
-			setUser(data.session.user);
+			const onboardingRequired = await shouldRedirectToOnboarding(
+				sessionUser.id,
+			);
+
+			if (!active) return;
+
+			if (onboardingRequired && pathname !== "/onboarding") {
+				router.replace(
+					`/onboarding?next=${encodeURIComponent(getCurrentPathForLogin())}`,
+				);
+				return;
+			}
+
+			setUser(sessionUser);
 			setChecking(false);
+		}
+
+		supabase.auth.getSession().then(({ data }) => {
+			void finishAuthCheck(data.session?.user);
 		});
 
 		const {
 			data: { subscription },
 		} = supabase.auth.onAuthStateChange((_event, session) => {
-			if (!session?.user) {
-				router.replace(getLoginPath(getCurrentPathForLogin()));
-				return;
-			}
-
-			setUser(session.user);
-			setChecking(false);
+			void finishAuthCheck(session?.user);
 		});
 
 		return () => {
 			active = false;
 			subscription.unsubscribe();
 		};
-	}, [router]);
+	}, [pathname, router]);
 
 	if (checking || !user) {
 		return (
@@ -101,8 +138,14 @@ export default function AuthGate({ children }: AuthGateProps) {
 	return (
 		<>
 			<AppPresence userId={user.id} />
-			<SessionNavBar />
-			<div className="app-with-sidebar">{children}</div>
+			{showChrome ? (
+				<>
+					<SessionNavBar />
+					<div className="app-with-sidebar">{children}</div>
+				</>
+			) : (
+				children
+			)}
 		</>
 	);
 }

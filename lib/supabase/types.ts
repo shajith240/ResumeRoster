@@ -34,6 +34,21 @@ export type ReviewerVerificationStatus =
   | "verified"
   | "rejected";
 export type ReviewerApplicationStatus = "pending" | "approved" | "rejected";
+export type OnboardingGoalId = "get_feedback" | "review_resumes" | "both";
+export type OnboardingPersonaId =
+  | "student"
+  | "new_grad"
+  | "job_seeker"
+  | "career_switcher"
+  | "recruiter_hr"
+  | "hiring_manager"
+  | "engineer"
+  | "designer"
+  | "product_manager"
+  | "career_coach"
+  | "founder"
+  | "other";
+export type OnboardingStatus = "pending" | "completed" | "not_required";
 
 export type ResumeAuthorProfile = {
   id: string;
@@ -152,6 +167,17 @@ export type ReviewerApplication = {
   admin_note: string;
   reviewed_by: string | null;
   reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ProfileOnboarding = {
+  user_id: string;
+  goal_id: OnboardingGoalId | null;
+  persona_id: OnboardingPersonaId | null;
+  status: OnboardingStatus;
+  version: number;
+  completed_at: string | null;
   created_at: string;
   updated_at: string;
 };
