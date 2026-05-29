@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
+import InfoHint from "@/components/InfoHint";
 import { supabase } from "@/lib/supabase/client";
 import type { ProfileOnboarding } from "@/lib/supabase/types";
 
@@ -71,11 +72,13 @@ export default function PersonalizeLintedPrompt({
 		>
 			<div>
 				<span>Optional setup</span>
-				<h2>Personalize your Linted feed</h2>
-				<p>
-					Tell us whether you are here to get feedback, review resumes, or both.
-					It only changes guidance and profile defaults.
-				</p>
+				<h2 className="info-row">
+					Personalize your Linted feed
+					<InfoHint align="right">
+						Tell us whether you are here to get feedback, review resumes, or
+						both. It only changes guidance and profile defaults.
+					</InfoHint>
+				</h2>
 			</div>
 			<div className="feed-welcome-actions">
 				<Link className="btn-primary" href="/onboarding">

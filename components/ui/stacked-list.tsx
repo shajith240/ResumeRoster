@@ -13,6 +13,7 @@ import {
 	X,
 } from "lucide-react";
 
+import InfoHint from "@/components/InfoHint";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { resolveAvatarUrl } from "@/lib/supabase/avatars";
@@ -460,10 +461,8 @@ export function StackedList({
 					<div className="min-w-0">
 						<h2 className="m-0 flex items-center gap-2 font-[var(--font-display)] text-[34px] font-normal leading-none tracking-normal text-[var(--text-primary)]">
 							{heading}
+							<InfoHint align="right">{description}</InfoHint>
 						</h2>
-						<p className="mt-2 text-sm font-normal text-[var(--text-secondary)]">
-							{description}
-						</p>
 					</div>
 				</div>
 
@@ -529,7 +528,6 @@ export function StackedList({
 						<FileText aria-hidden="true" />
 					</span>
 					<strong>No matching reviewers</strong>
-					<p>Try another search or help someone lint a resume.</p>
 					<Link href="/feed">Open the feed -&gt;</Link>
 				</div>
 			) : null}

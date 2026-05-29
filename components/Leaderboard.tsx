@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CalendarDays } from "lucide-react";
 
+import InfoHint from "@/components/InfoHint";
 import StackedList, {
 	type LeaderboardRoastPreview,
 	type LeaderboardRoaster,
@@ -439,12 +440,14 @@ export default function Leaderboard() {
 		<section className={styles.page}>
 			<header className={styles.header}>
 				<div>
-					<h1>Leaderboard</h1>
-					<p>
-						{mode === "reviewers"
-							? "Find credible people who can give useful resume feedback."
-							: "Top reviewers. Better resumes. Stronger careers."}
-					</p>
+					<h1 className="info-row">
+						Leaderboard
+						<InfoHint align="right">
+							{mode === "reviewers"
+								? "Find credible people who can give useful resume feedback."
+								: "Top reviewers. Better resumes. Stronger careers."}
+						</InfoHint>
+					</h1>
 				</div>
 
 				<div className={styles.toolbar}>

@@ -6,6 +6,7 @@ import type {
 	PDFDocumentProxy,
 	PDFPageProxy,
 } from "pdfjs-dist/types/src/display/api";
+import InfoHint from "@/components/InfoHint";
 import {
 	allowsResumePreviewInteractions,
 	isResumePreviewLocked,
@@ -324,8 +325,10 @@ export default function SecureResumePreview({
 		>
 			<div className="secure-resume-preview-bar">
 				<div>
-					<strong>{previewTitle}</strong>
-					<span>{previewDescription}</span>
+					<strong className="info-row">
+						{previewTitle}
+						<InfoHint align="right">{previewDescription}</InfoHint>
+					</strong>
 				</div>
 				<span>
 					{pageCount

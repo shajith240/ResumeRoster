@@ -1,5 +1,6 @@
 import AuthGate from "@/components/AuthGate";
 import CommunityStats from "@/components/CommunityStats";
+import InfoHint from "@/components/InfoHint";
 import PersonalizeLintedPrompt from "@/components/PersonalizeLintedPrompt";
 import ResumeFeed, { type FeedSort } from "@/components/ResumeFeed";
 import RouteHeader from "@/components/RouteHeader";
@@ -92,11 +93,6 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 					<div className="feed-community-header">
 						<div>
 							<h1>{savedOnly ? "Saved Resumes" : "Community Lint Feed"}</h1>
-							<p>
-								{savedOnly
-									? "Return to the resumes you saved for another read."
-									: "Anonymous resumes. Public checks. Sharpest fixes voted to the top."}
-							</p>
 						</div>
 						<Link className="btn-primary" href="/submit">
 							Post resume
@@ -109,8 +105,10 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 						>
 							<div>
 								<span>Setup complete</span>
-								<h2>{welcomeState.title}</h2>
-								<p>{welcomeState.body}</p>
+								<h2 className="info-row">
+									{welcomeState.title}
+									<InfoHint align="right">{welcomeState.body}</InfoHint>
+								</h2>
 							</div>
 							<div className="feed-welcome-actions">
 								<Link className="btn-primary" href={welcomeState.primaryHref}>
@@ -131,11 +129,13 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 
 				<div className="feed-right-rail" aria-label="Community context">
 					<section>
-						<h2>About the feed</h2>
-						<p>
-							Post a resume, get specific feedback, and vote for the check
-							that actually helps someone improve.
-						</p>
+						<h2 className="info-row">
+							About the feed
+							<InfoHint align="left">
+								Post a resume, get specific feedback, and vote for the check
+								that actually helps someone improve.
+							</InfoHint>
+						</h2>
 						<div className="rail-meta">Created May 2026</div>
 					</section>
 
@@ -153,28 +153,36 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 							<h2 id="feed-rules-title">Community rules</h2>
 							<ol className="feed-rules-list">
 								<li>
-									<strong>Protect privacy.</strong>
-									<span>
-										Use the privacy mode that fits what you want reviewed.
-									</span>
+									<strong className="info-row">
+										Protect privacy
+										<InfoHint align="right">
+											Use the privacy mode that fits what you want reviewed.
+										</InfoHint>
+									</strong>
 								</li>
 								<li>
-									<strong>Lint the resume.</strong>
-									<span>
-										Attack weak bullets, unclear impact, and messy structure.
-									</span>
+									<strong className="info-row">
+										Lint the resume
+										<InfoHint align="right">
+											Attack weak bullets, unclear impact, and messy structure.
+										</InfoHint>
+									</strong>
 								</li>
 								<li>
-									<strong>Give a fix.</strong>
-									<span>
-										Point out what to rewrite, reorder, quantify, or remove.
-									</span>
+									<strong className="info-row">
+										Give a fix
+										<InfoHint align="right">
+											Point out what to rewrite, reorder, quantify, or remove.
+										</InfoHint>
+									</strong>
 								</li>
 								<li>
-									<strong>Keep it useful.</strong>
-									<span>
-										No personal shots, spam, or private details in comments.
-									</span>
+									<strong className="info-row">
+										Keep it useful
+										<InfoHint align="right">
+											No personal shots, spam, or private details in comments.
+										</InfoHint>
+									</strong>
 								</li>
 							</ol>
 						</div>

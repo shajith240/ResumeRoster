@@ -15,6 +15,7 @@ import type { User } from "@supabase/supabase-js";
 import CommentMediaToolbar, {
 	type CommentAttachmentOption,
 } from "@/components/CommentMediaToolbar";
+import InfoHint from "@/components/InfoHint";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import SecureResumePreview from "@/components/SecureResumePreview";
 import {
@@ -1994,14 +1995,16 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			<section className="thread-discussion-panel" aria-label="Feedback discussion">
 					{isClosed || isOwner ? (
 						<div className="closed-note">
-							<h2>{isOwner ? "Owner view" : "Feedback closed"}</h2>
-							<p>
-								{isOwner
-									? isClosed
-										? "You own this resume. Reopen feedback when you want reviewers to add new comments again."
-										: "You own this resume. You can reply for clarification, but you cannot mark feedback helpful."
-									: "This thread is visible for learning, but no new feedback can be added."}
-							</p>
+							<h2 className="info-row">
+								{isOwner ? "Owner view" : "Feedback closed"}
+								<InfoHint align="right">
+									{isOwner
+										? isClosed
+											? "You own this resume. Reopen feedback when you want reviewers to add new comments again."
+											: "You own this resume. You can reply for clarification, but you cannot mark feedback helpful."
+										: "This thread is visible for learning, but no new feedback can be added."}
+								</InfoHint>
+							</h2>
 							{message ? <p className="form-message">{message}</p> : null}
 						</div>
 					) : (
@@ -2105,8 +2108,14 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		>
 			<DialogContent className="report-dialog-content">
 				<DialogHeader>
-					<DialogTitle>Report comment</DialogTitle>
-					<DialogDescription>
+					<DialogTitle className="info-row">
+						Report comment
+						<InfoHint align="right">
+							Send this to the moderation queue. Reports are private and help us
+							keep feedback useful.
+						</InfoHint>
+					</DialogTitle>
+					<DialogDescription className="sr-only">
 						Send this to the moderation queue. Reports are private and help us
 						keep feedback useful.
 					</DialogDescription>

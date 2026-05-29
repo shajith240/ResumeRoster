@@ -16,6 +16,7 @@ import type {
 } from "pdfjs-dist/types/src/display/api";
 import type { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
+import InfoHint from "@/components/InfoHint";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import {
 	assessResumePrivacyText,
@@ -515,7 +516,12 @@ export default function SubmitResumeForm() {
 					aria-label="Post context"
 				>
 					<label className="field-block submit-jd-field">
-						<span>Job description</span>
+						<span className="info-row">
+							Job description
+							<InfoHint align="right">
+								This helps reviewers compare your resume against the actual role.
+							</InfoHint>
+						</span>
 						<textarea
 							aria-describedby="job-description-help"
 							aria-invalid={
@@ -541,12 +547,18 @@ export default function SubmitResumeForm() {
 						>
 							{jobDescriptionRemaining > 0
 								? `${jobDescriptionRemaining} more ${jobDescriptionRemaining === 1 ? "character" : "characters"} needed. Paste enough JD context to judge fit.`
-								: "This helps reviewers compare your resume against the actual role."}
+								: `${trimmedJobDescription.length}/${JOB_DESCRIPTION_MAX_LENGTH}`}
 						</small>
 					</label>
 
 					<label className="field-block submit-help-field">
-						<span>What should the community help with?</span>
+						<span className="info-row">
+							What should the community help with?
+							<InfoHint align="right">
+								Add your ask, concerns, or the part of the resume you want
+								reviewed first.
+							</InfoHint>
+						</span>
 						<textarea
 							aria-describedby="post-description-help"
 							aria-invalid={
@@ -572,7 +584,7 @@ export default function SubmitResumeForm() {
 						>
 							{postDescriptionRemaining > 0
 								? `${postDescriptionRemaining} more ${postDescriptionRemaining === 1 ? "character" : "characters"} needed. Tell reviewers what to focus on.`
-								: "Add your ask, concerns, or the part of the resume you want reviewed first."}
+								: `${trimmedPostDescription.length}/${POST_DESCRIPTION_MAX_LENGTH}`}
 						</small>
 					</label>
 				</section>
@@ -580,7 +592,10 @@ export default function SubmitResumeForm() {
 
 			<div className="submit-form-actions">
 				<fieldset className="privacy-picker">
-					<legend>Privacy mode</legend>
+					<legend className="info-row">
+						Privacy mode
+						<InfoHint align="right">{getPrivacyModeHelpText(privacyMode)}</InfoHint>
+					</legend>
 					<div className="privacy-options">
 						{RESUME_PRIVACY_MODES.map((mode) => (
 							<label
@@ -594,17 +609,18 @@ export default function SubmitResumeForm() {
 									type="radio"
 								/>
 								<span>
-									<strong>{RESUME_PRIVACY_MODE_COPY[mode].label}</strong>
-									<small>
-										{mode === "public"
-											? `${publicProfileName} and ${publicProfileDetail} can appear with the post.`
-											: RESUME_PRIVACY_MODE_COPY[mode].description}
-									</small>
+									<strong className="info-row">
+										{RESUME_PRIVACY_MODE_COPY[mode].label}
+										<InfoHint align="right">
+											{mode === "public"
+												? `${publicProfileName} and ${publicProfileDetail} can appear with the post.`
+												: RESUME_PRIVACY_MODE_COPY[mode].description}
+										</InfoHint>
+									</strong>
 								</span>
 							</label>
 						))}
 					</div>
-					<p>{getPrivacyModeHelpText(privacyMode)}</p>
 				</fieldset>
 
 				<button

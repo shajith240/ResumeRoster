@@ -1283,7 +1283,7 @@ html[data-app-theme="dark"] .full-page-loader {
 	line-height: 1.2;
 }
 
-.onboarding-choice-card span:last-of-type {
+.onboarding-choice-description {
 	color: var(--text-secondary);
 	font-size: 12px;
 	font-weight: 500;
@@ -2240,22 +2240,10 @@ html[data-app-theme="dark"] .full-page-loader {
 	counter-increment: feed-rule;
 }
 
-.feed-rules-list strong,
-.feed-rules-list span {
-	display: block;
-}
-
 .feed-rules-list strong {
 	color: var(--text-primary);
 	font-size: 13px;
 	line-height: 1.25;
-}
-
-.feed-rules-list span {
-	margin-top: 2px;
-	color: var(--text-secondary);
-	font-size: 12px;
-	line-height: 1.45;
 }
 
 .feed-rules-visual {
@@ -2301,11 +2289,6 @@ html[data-app-theme="dark"] .full-page-loader {
 
 	.feed-rules-list strong {
 		font-size: 12.5px;
-	}
-
-	.feed-rules-list span {
-		font-size: 11.5px;
-		line-height: 1.38;
 	}
 
 	.feed-rules-visual {
@@ -4531,6 +4514,100 @@ body.main-app-dark .roast-form textarea:focus {
 
 body.main-app-dark .form-message {
 	color: var(--brand);
+}
+
+.info-row {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+
+.info-hint {
+	position: relative;
+	z-index: 20;
+	display: inline-grid;
+	flex: 0 0 auto;
+	width: 22px;
+	height: 22px;
+	place-items: center;
+	border: 1px solid var(--border-default);
+	border-radius: 999px;
+	background: var(--bg-elevated);
+	color: var(--text-tertiary);
+	cursor: help;
+	outline: none;
+	transition:
+		border-color 180ms ease,
+		color 180ms ease,
+		background 180ms ease;
+}
+
+.info-hint > svg {
+	width: 13px;
+	height: 13px;
+	stroke-width: 2;
+}
+
+.info-hint:hover,
+.info-hint:focus-visible {
+	border-color: color-mix(in srgb, var(--brand) 46%, var(--border-default));
+	background: color-mix(in srgb, var(--brand) 12%, var(--bg-elevated));
+	color: var(--brand);
+}
+
+.info-hint-bubble {
+	position: absolute;
+	top: calc(100% + 9px);
+	left: 50%;
+	width: min(280px, calc(100vw - 32px));
+	border: 1px solid var(--border-default);
+	border-radius: 10px;
+	padding: 10px 11px;
+	background: var(--bg-elevated);
+	box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+	color: var(--text-secondary);
+	font-family: var(--font-app-body);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0;
+	line-height: 1.45;
+	opacity: 0;
+	pointer-events: none;
+	text-align: left;
+	transform: translate(-50%, 4px);
+	transition:
+		opacity 160ms ease,
+		transform 160ms ease;
+	white-space: normal;
+}
+
+.info-hint[data-align="left"] .info-hint-bubble {
+	right: 0;
+	left: auto;
+	transform: translate(0, 4px);
+}
+
+.info-hint[data-align="right"] .info-hint-bubble {
+	right: auto;
+	left: 0;
+	transform: translate(0, 4px);
+}
+
+.info-hint:hover .info-hint-bubble,
+.info-hint:focus-visible .info-hint-bubble,
+.onboarding-choice-card:focus-visible .info-hint-bubble {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+.info-hint[data-align="left"]:hover .info-hint-bubble,
+.info-hint[data-align="left"]:focus-visible .info-hint-bubble,
+.info-hint[data-align="right"]:hover .info-hint-bubble,
+.info-hint[data-align="right"]:focus-visible .info-hint-bubble,
+.onboarding-choice-card:focus-visible .info-hint[data-align="left"] .info-hint-bubble,
+.onboarding-choice-card:focus-visible .info-hint[data-align="right"] .info-hint-bubble {
+	transform: translate(0, 0);
 }
 
 .auth-inline-error {
