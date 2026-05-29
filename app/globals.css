@@ -239,8 +239,7 @@ main {
 
 @supports (overflow: clip) {
 	html,
-	body,
-	.app-root {
+	body {
 		overflow-x: clip;
 	}
 }
@@ -3934,7 +3933,6 @@ body.main-app-dark .dock-link.active:not(.dock-link-primary) {
 	flex-direction: column;
 	min-height: 100vh;
 	min-width: 0;
-	overflow-x: hidden;
 }
 
 .app-root > main,
@@ -4062,7 +4060,6 @@ body.main-app-dark .form-message {
 .landing-main {
 	width: 100%;
 	min-width: 0;
-	overflow-x: hidden;
 	background: #f7f5f2;
 }
 
@@ -4676,7 +4673,7 @@ body.main-app-dark .form-message {
 
 .sticky-feature-section {
 	position: relative;
-	overflow: hidden;
+	overflow: visible;
 	height: 260vh;
 	background: #f7f5f2;
 }
@@ -5569,6 +5566,7 @@ body.main-app-dark .form-message {
 
 	.sticky-feature-section {
 		height: auto;
+		overflow: visible;
 		padding-bottom: 90px;
 	}
 
