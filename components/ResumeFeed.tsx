@@ -519,6 +519,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
       return (
         <div className="empty-state feed-empty-state">
           <h2>No saved resumes yet</h2>
+          <p>Save resumes from the feed when you want to revisit their fixes later.</p>
           <Link className="btn-primary" href="/feed">
             Browse feed
           </Link>
@@ -529,6 +530,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
     return (
       <div className="empty-state feed-empty-state">
         <h2>No resumes yet</h2>
+        <p>Be the first person brave enough to run a resume through the public lint pass.</p>
         <Link className="btn-primary" href="/submit">
           Submit a resume
         </Link>

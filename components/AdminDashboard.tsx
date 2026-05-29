@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { ShieldCheck } from "lucide-react";
-import InfoHint from "@/components/InfoHint";
 import { supabase } from "@/lib/supabase/client";
 import { useAdminAccess } from "@/lib/use-admin-access";
 import type { ContentReportStatus } from "@/lib/supabase/types";
@@ -117,7 +116,7 @@ function getProfileLabel(profile: ProfilePreview | null) {
 }
 
 export default function AdminDashboard() {
-	const { isAdmin, loading } = useAdminAccess();
+	const { email, isAdmin, loading } = useAdminAccess();
 	const [accessToken, setAccessToken] = useState("");
 	const [overview, setOverview] = useState<AdminOverview | null>(null);
 	const [reports, setReports] = useState<ReportPreview[]>([]);
@@ -238,12 +237,8 @@ export default function AdminDashboard() {
 			<main className="admin-route page-enter">
 				<section className="admin-access-card">
 					<ShieldCheck size={28} strokeWidth={2} aria-hidden="true" />
-					<h1 className="info-row">
-						Admin access required
-						<InfoHint align="right">
-							This area is limited to emails listed in ADMIN_EMAILS.
-						</InfoHint>
-					</h1>
+					<h1>Admin access required</h1>
+					<p>This area is limited to emails listed in ADMIN_EMAILS.</p>
 					<Link className="btn-primary" href="/feed">
 						Return to feed
 					</Link>
@@ -258,6 +253,7 @@ export default function AdminDashboard() {
 				<div>
 					<span>Admin</span>
 					<h1>Moderation dashboard</h1>
+					<p>Signed in as {email}</p>
 				</div>
 				<button className="btn-primary" onClick={() => void loadAdminData()} type="button">
 					Refresh
@@ -287,12 +283,8 @@ export default function AdminDashboard() {
 			<section className="admin-panel">
 				<div className="admin-panel-header">
 					<div>
-						<h2 className="info-row">
-							Reviewer applications
-							<InfoHint align="right">
-								Approve trust labels only when the proof and profile make sense.
-							</InfoHint>
-						</h2>
+						<h2>Reviewer applications</h2>
+						<p>Approve trust labels only when the proof and profile make sense.</p>
 					</div>
 					<div className="admin-tabs">
 						{reviewerStatuses.map((status) => (
@@ -380,12 +372,8 @@ export default function AdminDashboard() {
 			<section className="admin-panel">
 				<div className="admin-panel-header">
 					<div>
-						<h2 className="info-row">
-							Reports queue
-							<InfoHint align="right">
-								Review the highest-signal reports first.
-							</InfoHint>
-						</h2>
+						<h2>Reports queue</h2>
+						<p>Review the highest-signal reports first.</p>
 					</div>
 					<div className="admin-tabs">
 						{reportStatuses.map((status) => (
@@ -474,12 +462,8 @@ export default function AdminDashboard() {
 				<div className="admin-panel">
 					<div className="admin-panel-header">
 						<div>
-							<h2 className="info-row">
-								Recent activity
-								<InfoHint align="right">
-									Useful context without tracking unnecessary private data.
-								</InfoHint>
-							</h2>
+							<h2>Recent activity</h2>
+							<p>Useful context without tracking unnecessary private data.</p>
 						</div>
 					</div>
 					<div className="admin-activity-list">

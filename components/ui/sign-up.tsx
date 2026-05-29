@@ -15,7 +15,6 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import InfoHint from "@/components/InfoHint";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AUTH_NEXT_STORAGE_KEY, getSafeNextPath } from "@/lib/auth-redirect";
@@ -438,10 +437,8 @@ export function SignUp() {
 								Sign up
 							</button>
 						</div>
-						<h1 className="info-row" id="auth-title">
-							{title}
-							<InfoHint align="right">{subtitle}</InfoHint>
-						</h1>
+						<h1 id="auth-title">{title}</h1>
+						<p>{subtitle}</p>
 					</div>
 
 					<div className="auth-provider-grid">

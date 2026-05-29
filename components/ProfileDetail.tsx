@@ -31,7 +31,6 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
-import InfoHint from "@/components/InfoHint";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -1228,13 +1227,11 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 						<section className={styles.reviewerPanel}>
 							<div className={styles.panelHeader}>
 								<div>
-									<h2 className="info-row">
-										Reviewer Profile
-										<InfoHint align="right">
-											Add reviewer identity when you want to review resumes as a
-											recruiter, hiring manager, engineer, coach, or other reviewer.
-										</InfoHint>
-									</h2>
+									<h2>Reviewer Profile</h2>
+									<p>
+										Add reviewer identity when you want to review resumes as a
+										recruiter, hiring manager, engineer, coach, or other reviewer.
+									</p>
 								</div>
 								<div className={styles.reviewerPanelActions}>
 									<span className={styles.selfDeclaredBadge}>
@@ -1260,6 +1257,10 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 									/>
 								</div>
 							</div>
+							<p>
+								This only changes how your profile introduces you. Review access
+								remains open to every signed-in user.
+							</p>
 						</section>
 					) : null}
 
@@ -1542,14 +1543,8 @@ function ReviewerProfileDialog({
 			</DialogTrigger>
 			<DialogContent className={styles.reviewerDialog}>
 				<DialogHeader>
-					<DialogTitle className="info-row">
-						Reviewer profile
-						<InfoHint align="right">
-							Choose how you want to appear when people read your reviews. This
-							does not restrict who can review resumes.
-						</InfoHint>
-					</DialogTitle>
-					<DialogDescription className="sr-only">
+					<DialogTitle>Reviewer profile</DialogTitle>
+					<DialogDescription>
 						Choose how you want to appear when people read your reviews. This
 						does not restrict who can review resumes.
 					</DialogDescription>
@@ -1794,14 +1789,8 @@ function TrustApplicationDialog({
 			</DialogTrigger>
 			<DialogContent className={styles.trustDialog}>
 				<DialogHeader>
-					<DialogTitle className="info-row">
-						Trusted reviewer application
-						<InfoHint align="right">
-							Verification is separate from profile editing. Your profile stays
-							self-declared until an admin approves the proof.
-						</InfoHint>
-					</DialogTitle>
-					<DialogDescription className="sr-only">
+					<DialogTitle>Trusted reviewer application</DialogTitle>
+					<DialogDescription>
 						Verification is separate from profile editing. Your profile stays
 						self-declared until an admin approves the proof.
 					</DialogDescription>
@@ -1811,10 +1800,8 @@ function TrustApplicationDialog({
 					<div className={styles.trustStatusCard}>
 						<BadgeCheck aria-hidden="true" />
 						<div>
-							<strong className="info-row">
-								Gold tick after approval
-								<InfoHint align="right">{statusCopy}</InfoHint>
-							</strong>
+							<strong>Gold tick after approval</strong>
+							<span>{statusCopy}</span>
 						</div>
 					</div>
 
@@ -2107,13 +2094,8 @@ function ProfileEditDialog({
 	return (
 		<DialogContent className={styles.editDialog}>
 			<DialogHeader className={styles.editHeader}>
-				<DialogTitle className={`${styles.editTitle} info-row`}>
-					Edit profile
-					<InfoHint align="right">
-						Update the public details shown on your Linted profile.
-					</InfoHint>
-				</DialogTitle>
-				<DialogDescription className="sr-only">
+				<DialogTitle className={styles.editTitle}>Edit profile</DialogTitle>
+				<DialogDescription className={styles.editDescription}>
 					Update the public details shown on your Linted profile.
 				</DialogDescription>
 			</DialogHeader>

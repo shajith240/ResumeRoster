@@ -17,7 +17,6 @@ import {
 	type LucideIcon,
 } from "lucide-react";
 import { toast } from "sonner";
-import InfoHint from "@/components/InfoHint";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -275,14 +274,14 @@ export default function OnboardingFlow() {
 							: step === 2
 								? "Tell us your lens"
 								: "Make your first screen useful"}
-						<InfoHint align="right">
-							{step === 1
-								? "This only personalizes your starting point. Anyone can still review any open resume."
-								: step === 2
-									? "Choose the closest fit so Linted can show the right cues, not lock you into a box."
-									: "Add one or two useful defaults now. The full profile editor stays available later."}
-						</InfoHint>
 					</h1>
+					<p>
+						{step === 1
+							? "This only personalizes your starting point. Anyone can still review any open resume."
+							: step === 2
+								? "Choose the closest fit so Linted can show the right cues, not lock you into a box."
+								: "Add one or two useful defaults now. The full profile editor stays available later."}
+					</p>
 				</div>
 
 				{step === 1 ? (
@@ -305,12 +304,8 @@ export default function OnboardingFlow() {
 									<span className="onboarding-choice-icon">
 										<Icon aria-hidden="true" />
 									</span>
-									<strong className="info-row">
-										{goal.label}
-										<InfoHint align="right" focusable={false}>
-											{goal.description}
-										</InfoHint>
-									</strong>
+									<strong>{goal.label}</strong>
+									<span>{goal.description}</span>
 									{isSelected ? <Check aria-hidden="true" /> : null}
 								</button>
 							);
@@ -338,12 +333,8 @@ export default function OnboardingFlow() {
 									<span className="onboarding-choice-icon">
 										<Icon aria-hidden="true" />
 									</span>
-									<strong className="info-row">
-										{persona.label}
-										<InfoHint align="right" focusable={false}>
-											{persona.description}
-										</InfoHint>
-									</strong>
+									<strong>{persona.label}</strong>
+									<span>{persona.description}</span>
 									{isSelected ? <Check aria-hidden="true" /> : null}
 								</button>
 							);
@@ -430,13 +421,10 @@ export default function OnboardingFlow() {
 
 						<div className="onboarding-note">
 							<UsersRound aria-hidden="true" />
-							<strong className="info-row">
-								Open reviewing stays on
-								<InfoHint align="right">
-									This setup changes recommendations and profile cues only.
-									Review access stays open to every signed-in user.
-								</InfoHint>
-							</strong>
+							<p>
+								This setup changes recommendations and profile cues only. Review
+								access stays open to every signed-in user.
+							</p>
 						</div>
 					</div>
 				) : null}
