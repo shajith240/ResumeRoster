@@ -77,7 +77,7 @@ const personaIcons: Record<OnboardingPersonaId, LucideIcon> = {
 };
 
 function isOnboardingMigrationError(error: { message?: string } | null) {
-	return /complete_onboarding|profile_onboarding|onboarding_|schema cache|function|relation|does not exist/i.test(
+	return /complete_onboarding|profile_onboarding|onboarding_|schema cache|function|relation|does not exist|column reference|ambiguous/i.test(
 		error?.message ?? "",
 	);
 }
