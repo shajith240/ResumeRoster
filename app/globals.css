@@ -3517,7 +3517,6 @@ body.main-app-dark .toggle-ui::after {
 .reviewer-trust-chip {
 	display: inline-flex;
 	align-items: center;
-	gap: 5px;
 	min-height: 24px;
 	border: 1px solid var(--border-subtle);
 	border-radius: var(--button-radius-sm);
@@ -3533,12 +3532,6 @@ body.main-app-dark .toggle-ui::after {
 	border-color: color-mix(in srgb, var(--brand) 34%, var(--border-default));
 	background: var(--brand-muted);
 	color: var(--brand);
-}
-
-.reviewer-trust-icon {
-	width: 13px;
-	height: 13px;
-	object-fit: contain;
 }
 
 .thread-roast-body p {

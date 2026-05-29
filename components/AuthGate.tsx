@@ -7,6 +7,11 @@ import AppPresence from "@/components/AppPresence";
 import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
 import { getCurrentPathForLogin, getLoginPath } from "@/lib/auth-redirect";
+import {
+	claimActiveUserSession,
+	endSupersededSession,
+	verifyActiveUserSession,
+} from "@/lib/session-lock";
 import { SessionNavBar } from "@/components/ui/sidebar";
 import type { ProfileOnboarding } from "@/lib/supabase/types";
 
@@ -86,11 +91,28 @@ export default function AuthGate({ children, showChrome = true }: AuthGateProps)
 	useEffect(() => {
 		let active = true;
 
-		async function finishAuthCheck(sessionUser: User | null | undefined) {
+		async function finishAuthCheck(
+			sessionUser: User | null | undefined,
+			sessionMode: "claim" | "verify",
+		) {
 			if (!active) return;
 
 			if (!sessionUser) {
+				setUser(null);
+				setChecking(false);
 				router.replace(getLoginPath(getCurrentPathForLogin()));
+				return;
+			}
+
+			const sessionStatus =
+				sessionMode === "claim"
+					? await claimActiveUserSession(sessionUser.id)
+					: await verifyActiveUserSession(sessionUser.id);
+
+			if (!active) return;
+
+			if (sessionStatus.featureReady && !sessionStatus.active) {
+				await endSupersededSession();
 				return;
 			}
 
@@ -112,13 +134,24 @@ export default function AuthGate({ children, showChrome = true }: AuthGateProps)
 		}
 
 		supabase.auth.getSession().then(({ data }) => {
-			void finishAuthCheck(data.session?.user);
+			void finishAuthCheck(data.session?.user, "claim");
 		});
 
 		const {
 			data: { subscription },
-		} = supabase.auth.onAuthStateChange((_event, session) => {
-			void finishAuthCheck(session?.user);
+		} = supabase.auth.onAuthStateChange((event, session) => {
+			if (event === "SIGNED_OUT") {
+				setUser(null);
+				setChecking(false);
+				router.replace(getLoginPath(getCurrentPathForLogin()));
+				return;
+			}
+
+			const sessionMode =
+				event === "SIGNED_IN" || event === "INITIAL_SESSION"
+					? "claim"
+					: "verify";
+			void finishAuthCheck(session?.user, sessionMode);
 		});
 
 		return () => {
@@ -126,6 +159,42 @@ export default function AuthGate({ children, showChrome = true }: AuthGateProps)
 			subscription.unsubscribe();
 		};
 	}, [pathname, router]);
+
+	useEffect(() => {
+		if (!user) return;
+
+		const userId = user.id;
+		let active = true;
+
+		async function verifyCurrentSession() {
+			if (!active || document.visibilityState === "hidden") return;
+
+			const sessionStatus = await verifyActiveUserSession(userId);
+			if (!active) return;
+
+			if (sessionStatus.featureReady && !sessionStatus.active) {
+				await endSupersededSession();
+			}
+		}
+
+		const intervalId = window.setInterval(verifyCurrentSession, 12_000);
+
+		function handleVisibilityChange() {
+			if (document.visibilityState === "visible") {
+				void verifyCurrentSession();
+			}
+		}
+
+		window.addEventListener("focus", verifyCurrentSession);
+		document.addEventListener("visibilitychange", handleVisibilityChange);
+
+		return () => {
+			active = false;
+			window.clearInterval(intervalId);
+			window.removeEventListener("focus", verifyCurrentSession);
+			document.removeEventListener("visibilitychange", handleVisibilityChange);
+		};
+	}, [user]);
 
 	if (checking || !user) {
 		return (

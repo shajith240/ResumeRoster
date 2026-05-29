@@ -35,6 +35,7 @@ import {
 	type OnboardingPersonaId,
 } from "@/lib/onboarding-validation";
 import { SKILL_OPTIONS } from "@/lib/profile-validation";
+import { ensureActiveUserSession } from "@/lib/session-lock";
 import { supabase } from "@/lib/supabase/client";
 
 const REVIEWER_EXPERTISE_OPTIONS = Array.from(
@@ -195,6 +196,22 @@ export default function OnboardingFlow() {
 
 		setSubmitting(true);
 		setMessage("");
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) {
+			setSubmitting(false);
+			setMessage("Sign in again before finishing onboarding.");
+			return;
+		}
+
+		const sessionActive = await ensureActiveUserSession(user.id);
+		if (!sessionActive) {
+			setSubmitting(false);
+			return;
+		}
 
 		const { error } = await supabase.rpc("complete_onboarding", {
 			expertise_items: showReviewerSetup ? selectedExpertise : [],

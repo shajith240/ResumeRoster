@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AUTH_NEXT_STORAGE_KEY, getSafeNextPath } from "@/lib/auth-redirect";
+import { consumeSessionSupersededNotice } from "@/lib/session-lock";
 import { signInWithProvider, supabase } from "@/lib/supabase/client";
 
 type AuthMode = "signin" | "signup";
@@ -87,6 +88,13 @@ function authErrorMessage(error: unknown) {
 
 	if (message.includes("no_session")) {
 		return "Your sign-in did not finish. Please try again.";
+	}
+
+	if (
+		message.includes("session_replaced") ||
+		message.includes("active_elsewhere")
+	) {
+		return "This account is already active in another browser. Sign in again here to continue.";
 	}
 
 	return rawMessage;
@@ -229,6 +237,11 @@ export function SignUp() {
 	}, []);
 
 	useEffect(() => {
+		const sessionNotice = consumeSessionSupersededNotice();
+		if (sessionNotice) {
+			setMessage(sessionNotice);
+		}
+
 		const authError = searchParams.get("auth_error");
 		if (authError) {
 			setMessage(authErrorMessage(authError));

@@ -154,8 +154,6 @@ function ReviewerTrustChip({ profile }: { profile?: AuthorProfile }) {
 	}
 
 	const trusted = isTrustedReviewer(profile?.reviewer_verification_status);
-	const label = getReviewerDisplayLabel(profile ?? {});
-
 	return (
 		<span
 			className={`reviewer-trust-chip${trusted ? " is-trusted" : ""}`}
@@ -165,15 +163,7 @@ function ReviewerTrustChip({ profile }: { profile?: AuthorProfile }) {
 					: "Self-described reviewer role"
 			}
 		>
-			{trusted ? (
-				<img
-					className="reviewer-trust-icon"
-					src="/assets/verified_tick.png"
-					alt=""
-					aria-hidden="true"
-				/>
-			) : null}
-			{label}
+			{getReviewerDisplayLabel(profile ?? {})}
 		</span>
 	);
 }

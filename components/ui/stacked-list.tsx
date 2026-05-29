@@ -243,7 +243,6 @@ function LeaderboardRow({
 }) {
 	const name = roasterName(roaster);
 	const tag = roleTag(roaster);
-	const trusted = tag === "Trusted reviewer";
 	const points = roastPoints(roaster);
 	const topRoastHref = roaster.top_roast
 		? `/resume/${roaster.top_roast.resume_id}`
@@ -281,18 +280,10 @@ function LeaderboardRow({
 			<div className="role-cell max-[760px]:col-start-2">
 				<span
 					className={cn(
-						"inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium leading-none",
+						"inline-flex max-w-full rounded-full border px-2.5 py-1 text-xs font-medium leading-none",
 						tagClass(tag),
 					)}
 				>
-					{trusted ? (
-						<img
-							className="h-3.5 w-3.5 object-contain"
-							src="/assets/verified_tick.png"
-							alt=""
-							aria-hidden="true"
-						/>
-					) : null}
 					{tag}
 				</span>
 			</div>

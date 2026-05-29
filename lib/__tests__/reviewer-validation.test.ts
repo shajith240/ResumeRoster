@@ -3,6 +3,7 @@ import {
 	REVIEWER_FIELD_LIMITS,
 	canShowReviewerProfile,
 	getProofUrlIssue,
+	getProfileRoleLabel,
 	getReviewerApplicationIssue,
 	getReviewerDisplayLabel,
 	getReviewerTypeLabel,
@@ -46,6 +47,36 @@ describe("reviewer validation", () => {
 		expect(getReviewerTypeLabel("placed_professional")).toBe(
 			"Placed professional",
 		);
+	});
+
+	it("shows reviewer identity before candidate fallback on profiles", () => {
+		expect(
+			getProfileRoleLabel({
+				college: null,
+				community_role: "reviewer",
+				current_position: null,
+				reviewer_type: "recruiter",
+				target_role: null,
+			}),
+		).toBe("Recruiter");
+		expect(
+			getProfileRoleLabel({
+				college: null,
+				community_role: "both",
+				current_position: null,
+				reviewer_type: "hiring_manager",
+				target_role: "SDE intern",
+			}),
+		).toBe("Hiring manager");
+		expect(
+			getProfileRoleLabel({
+				college: null,
+				community_role: "candidate",
+				current_position: null,
+				reviewer_type: null,
+				target_role: "Backend intern",
+			}),
+		).toBe("Intern");
 	});
 
 	it("validates proof links for reviewer applications", () => {

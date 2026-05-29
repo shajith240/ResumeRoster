@@ -395,8 +395,7 @@
 }
 
 .trustedReviewerBadge svg,
-.selfDeclaredBadge svg,
-.trustedReviewerBadge img {
+.selfDeclaredBadge svg {
 	width: 14px;
 	height: 14px;
 }

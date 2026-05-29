@@ -69,6 +69,7 @@ import {
 	REVIEWER_TYPES,
 	canShowReviewerProfile,
 	getCommunityRoleLabel,
+	getProfileRoleLabel,
 	getReviewerDisplayLabel,
 	getReviewerTypeLabel,
 	getReviewerApplicationIssue,
@@ -77,6 +78,7 @@ import {
 	limitReviewerText,
 	parseReviewerExpertise,
 } from "@/lib/reviewer-validation";
+import { ensureActiveUserSession } from "@/lib/session-lock";
 import type {
 	CommunityRole,
 	PublicProfile,
@@ -236,26 +238,6 @@ function getInitials(name: string) {
 		.slice(0, 2)
 		.map((part) => part[0]?.toUpperCase())
 		.join("");
-}
-
-function roleTag(profile: PublicProfile) {
-	const role = `${profile.current_position ?? profile.target_role ?? ""} ${
-		profile.college ?? ""
-	}`.toLowerCase();
-
-	if (role.includes("student") || role.includes("college") || role.includes("iit")) {
-		return "Student";
-	}
-
-	if (role.includes("switch")) {
-		return "Career Switcher";
-	}
-
-	if (role.includes("intern")) {
-		return "Intern";
-	}
-
-	return "Job Seeker";
 }
 
 function highlightedResume(
@@ -643,6 +625,9 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		setSaving(true);
 
 		try {
+			const sessionActive = await ensureActiveUserSession(user.id);
+			if (!sessionActive) return;
+
 			const nextSkills = parseSkills(skillsInput);
 			const nextUsername = limitText(
 				normalizeUsername(username),
@@ -784,6 +769,9 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		setSaving(true);
 
 		try {
+			const sessionActive = await ensureActiveUserSession(user.id);
+			if (!sessionActive) return;
+
 			const nextCommunityRole = isCommunityRole(communityRole)
 				? communityRole
 				: "candidate";
@@ -881,6 +869,9 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		setReviewerApplying(true);
 
 		try {
+			const sessionActive = await ensureActiveUserSession(user.id);
+			if (!sessionActive) return;
+
 			const {
 				data: { session },
 			} = await supabase.auth.getSession();
@@ -989,7 +980,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			reviewerStatus: profile.reviewer_verification_status,
 			reviewerVisible,
 			resumeHighlight,
-			roleTag: roleTag(profile),
+			roleTag: getProfileRoleLabel(profile),
 			skills,
 			tagline:
 				profile.tagline ||
@@ -1184,11 +1175,9 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 												: styles.selfDeclaredBadge
 										}
 									>
-										{profileView.reviewerStatus === "verified" ? (
-											<img src={VERIFIED_TICK_SRC} alt="" aria-hidden="true" />
-										) : (
+										{profileView.reviewerStatus !== "verified" ? (
 											<ShieldCheck aria-hidden="true" />
-										)}
+										) : null}
 										<span>{profileView.reviewerLabel}</span>
 									</span>
 									{isOwnProfile ? (

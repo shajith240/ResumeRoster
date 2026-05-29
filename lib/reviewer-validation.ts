@@ -142,6 +142,48 @@ export function getReviewerDisplayLabel(profile: {
 	return getReviewerTypeLabel(profile.reviewer_type);
 }
 
+export function getProfileRoleLabel(profile: {
+	college?: string | null;
+	community_role?: CommunityRole | null;
+	current_position?: string | null;
+	reviewer_type?: ReviewerType | null;
+	target_role?: string | null;
+}) {
+	if (
+		(profile.community_role === "reviewer" || profile.community_role === "both") &&
+		profile.reviewer_type &&
+		isReviewerType(profile.reviewer_type)
+	) {
+		return getReviewerTypeLabel(profile.reviewer_type);
+	}
+
+	if (profile.community_role === "reviewer") {
+		return "Reviewer";
+	}
+
+	if (profile.community_role === "both") {
+		return "Reviewer + candidate";
+	}
+
+	const role = `${profile.current_position ?? profile.target_role ?? ""} ${
+		profile.college ?? ""
+	}`.toLowerCase();
+
+	if (role.includes("student") || role.includes("college") || role.includes("iit")) {
+		return "Student";
+	}
+
+	if (role.includes("switch")) {
+		return "Career switcher";
+	}
+
+	if (role.includes("intern")) {
+		return "Intern";
+	}
+
+	return "Job seeker";
+}
+
 export function normalizeProofUrl(value: string) {
 	return limitReviewerText(value, REVIEWER_FIELD_LIMITS.proofUrl);
 }
