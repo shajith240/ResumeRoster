@@ -6,10 +6,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	BadgeCheck,
 	CheckCircle2,
+	Database,
 	ExternalLink,
 	FileText,
 	Flag,
 	History,
+	LayoutDashboard,
 	MessageSquare,
 	RefreshCcw,
 	RotateCcw,
@@ -19,9 +21,21 @@ import {
 	Trash2,
 	UserRound,
 	UsersRound,
+	UserX,
 	XCircle,
+	type LucideIcon,
 } from "lucide-react";
 import { toast } from "sonner";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase/client";
 import { useAdminAccess } from "@/lib/use-admin-access";
@@ -34,6 +48,15 @@ import {
 	isReviewerType,
 	type ReviewerApplicationStatus,
 } from "@/lib/reviewer-validation";
+
+export type AdminDashboardView =
+	| "audit"
+	| "content"
+	| "data"
+	| "overview"
+	| "people"
+	| "reports"
+	| "reviewers";
 
 type AdminStats = {
 	activeRoasters: number;
@@ -117,12 +140,22 @@ type ReviewerApplicationPreview = {
 	user_id: string;
 };
 
+type AdminUserDataFootprint = {
+	attachments: number;
+	reportsFiled: number;
+	resumes: number;
+	reviewerApplications: number;
+	reviews: number;
+	votes: number;
+};
+
 type AdminUser = {
 	id: string;
 	email: string | null;
 	created_at: string | null;
 	last_sign_in_at: string | null;
 	profile: ProfilePreview | null;
+	dataFootprint?: AdminUserDataFootprint;
 };
 
 type ModerationAction = {
@@ -135,6 +168,87 @@ type ModerationAction = {
 	target_id: string | null;
 	target_type: string;
 };
+
+type DataMetric = {
+	detail?: string;
+	key: string;
+	label: string;
+	value: number | string;
+};
+
+type AdminDataInventory = {
+	lifecycle: DataMetric[];
+	storage: DataMetric[];
+	tables: DataMetric[];
+};
+
+type AdminSection = {
+	description: string;
+	href: string;
+	icon: LucideIcon;
+	id: AdminDashboardView;
+	label: string;
+	title: string;
+};
+
+const adminSections: AdminSection[] = [
+	{
+		description: "Health, queues, and shortcuts.",
+		href: "/admin",
+		icon: LayoutDashboard,
+		id: "overview",
+		label: "Overview",
+		title: "Admin Overview",
+	},
+	{
+		description: "Reports that need moderation decisions.",
+		href: "/admin/reports",
+		icon: Flag,
+		id: "reports",
+		label: "Reports",
+		title: "Reports",
+	},
+	{
+		description: "Users, profiles, data footprint, and account actions.",
+		href: "/admin/people",
+		icon: UsersRound,
+		id: "people",
+		label: "People",
+		title: "People",
+	},
+	{
+		description: "Reviewer trust applications and proof checks.",
+		href: "/admin/reviewers",
+		icon: BadgeCheck,
+		id: "reviewers",
+		label: "Reviewer Trust",
+		title: "Reviewer Trust",
+	},
+	{
+		description: "Newest resumes and feedback activity.",
+		href: "/admin/content",
+		icon: FileText,
+		id: "content",
+		label: "Content",
+		title: "Content",
+	},
+	{
+		description: "Recent admin actions and moderation history.",
+		href: "/admin/audit",
+		icon: History,
+		id: "audit",
+		label: "Audit",
+		title: "Audit Trail",
+	},
+	{
+		description: "Table counts, storage surface, and deletion model.",
+		href: "/admin/data",
+		icon: Database,
+		id: "data",
+		label: "Data",
+		title: "Data Control",
+	},
+];
 
 const reportStatuses: ContentReportStatus[] = [
 	"pending",
@@ -202,9 +316,26 @@ function getUserSearchText(user: AdminUser) {
 		.toLowerCase();
 }
 
-export default function AdminDashboard() {
+function getFootprintTotal(footprint?: AdminUserDataFootprint) {
+	if (!footprint) return 0;
+	return (
+		footprint.attachments +
+		footprint.reportsFiled +
+		footprint.resumes +
+		footprint.reviewerApplications +
+		footprint.reviews +
+		footprint.votes
+	);
+}
+
+export default function AdminDashboard({
+	view = "overview",
+}: {
+	view?: AdminDashboardView;
+}) {
 	const { email, isAdmin, loading } = useAdminAccess();
 	const [accessToken, setAccessToken] = useState("");
+	const [currentAdminUserId, setCurrentAdminUserId] = useState("");
 	const [overview, setOverview] = useState<AdminOverview | null>(null);
 	const [reports, setReports] = useState<ReportPreview[]>([]);
 	const [reviewerApplications, setReviewerApplications] = useState<
@@ -212,12 +343,21 @@ export default function AdminDashboard() {
 	>([]);
 	const [users, setUsers] = useState<AdminUser[]>([]);
 	const [actions, setActions] = useState<ModerationAction[]>([]);
-	const [reportStatus, setReportStatus] = useState<ContentReportStatus>("pending");
+	const [dataInventory, setDataInventory] = useState<AdminDataInventory | null>(
+		null,
+	);
+	const [reportStatus, setReportStatus] =
+		useState<ContentReportStatus>("pending");
 	const [reviewerStatus, setReviewerStatus] =
 		useState<ReviewerApplicationStatus>("pending");
 	const [userQuery, setUserQuery] = useState("");
 	const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
 	const [busyAction, setBusyAction] = useState("");
+	const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(null);
+	const [pageLoading, setPageLoading] = useState(false);
+
+	const activeSection =
+		adminSections.find((section) => section.id === view) ?? adminSections[0];
 
 	const headers = useMemo(
 		() => ({
@@ -236,6 +376,7 @@ export default function AdminDashboard() {
 
 			if (active) {
 				setAccessToken(session?.access_token ?? "");
+				setCurrentAdminUserId(session?.user.id ?? "");
 			}
 		}
 
@@ -271,27 +412,76 @@ export default function AdminDashboard() {
 	const loadAdminData = useCallback(async function loadAdminData() {
 		if (!accessToken || !isAdmin) return;
 
-		const [overviewData, reportsData, reviewerData, usersData, actionsData] =
-			await Promise.all([
-				fetchJson<AdminOverview>("/api/admin/overview"),
-				fetchJson<{ reports: ReportPreview[] }>(
-					`/api/admin/reports?status=${reportStatus}`,
-				),
-				fetchJson<{ applications: ReviewerApplicationPreview[] }>(
-					`/api/admin/reviewers?status=${reviewerStatus}`,
-				),
-				fetchJson<{ users: AdminUser[] }>("/api/admin/users?limit=80"),
-				fetchJson<{ actions: ModerationAction[] }>(
-					"/api/admin/actions?limit=35",
-				),
+		setPageLoading(true);
+
+		try {
+			const overviewPromise = fetchJson<AdminOverview>("/api/admin/overview");
+			const sectionPromise = (() => {
+				if (view === "reports") {
+					return fetchJson<{ reports: ReportPreview[] }>(
+						`/api/admin/reports?status=${reportStatus}&limit=100`,
+					);
+				}
+				if (view === "reviewers") {
+					return fetchJson<{ applications: ReviewerApplicationPreview[] }>(
+						`/api/admin/reviewers?status=${reviewerStatus}&limit=100`,
+					);
+				}
+				if (view === "people") {
+					return fetchJson<{ users: AdminUser[] }>("/api/admin/users?limit=100");
+				}
+				if (view === "audit") {
+					return fetchJson<{ actions: ModerationAction[] }>(
+						"/api/admin/actions?limit=100",
+					);
+				}
+				if (view === "data") {
+					return fetchJson<AdminDataInventory>("/api/admin/data");
+				}
+				return Promise.resolve(null);
+			})();
+
+			const [overviewData, sectionData] = await Promise.all([
+				overviewPromise,
+				sectionPromise,
 			]);
 
-		setOverview(overviewData);
-		setReports(reportsData.reports);
-		setReviewerApplications(reviewerData.applications);
-		setUsers(usersData.users);
-		setActions(actionsData.actions);
-	}, [accessToken, fetchJson, isAdmin, reportStatus, reviewerStatus]);
+			setOverview(overviewData);
+
+			if (view === "reports") {
+				setReports(
+					(sectionData as { reports: ReportPreview[] } | null)?.reports ?? [],
+				);
+			}
+			if (view === "reviewers") {
+				setReviewerApplications(
+					(sectionData as { applications: ReviewerApplicationPreview[] } | null)
+						?.applications ?? [],
+				);
+			}
+			if (view === "people") {
+				setUsers((sectionData as { users: AdminUser[] } | null)?.users ?? []);
+			}
+			if (view === "audit") {
+				setActions(
+					(sectionData as { actions: ModerationAction[] } | null)?.actions ??
+						[],
+				);
+			}
+			if (view === "data") {
+				setDataInventory(sectionData as AdminDataInventory | null);
+			}
+		} finally {
+			setPageLoading(false);
+		}
+	}, [
+		accessToken,
+		fetchJson,
+		isAdmin,
+		reportStatus,
+		reviewerStatus,
+		view,
+	]);
 
 	useEffect(() => {
 		void loadAdminData().catch((error) => {
@@ -330,15 +520,29 @@ export default function AdminDashboard() {
 
 	async function runUserAction(userId: string, action: string) {
 		const actionKey = `user:${userId}:${action}`;
+		const body: Record<string, string> = { action };
+
+		if (action === "delete_user_account") {
+			body.confirm = "delete-user-data";
+			body.note = "Deleted from admin people control.";
+		}
+
 		setBusyAction(actionKey);
 
 		try {
 			await fetchJson(`/api/admin/users/${userId}/action`, {
-				body: JSON.stringify({ action }),
+				body: JSON.stringify(body),
 				headers: { "Content-Type": "application/json" },
 				method: "POST",
 			});
-			toast.success("Profile action saved.");
+			toast.success(
+				action === "delete_user_account"
+					? "User and linked data deleted."
+					: "Profile action saved.",
+			);
+			if (action === "delete_user_account") {
+				setDeleteTarget(null);
+			}
 			await loadAdminData();
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Action failed.");
@@ -391,16 +595,17 @@ export default function AdminDashboard() {
 
 	return (
 		<main className="admin-route admin-console page-enter">
-			<header className="admin-console-header">
+			<header className="admin-page-header">
 				<div>
 					<span className="admin-eyebrow">Linted Admin</span>
-					<h1>Operations Console</h1>
-					<p>{email}</p>
+					<h1>{activeSection.title}</h1>
+					<p>{activeSection.description}</p>
+					{email ? <small>{email}</small> : null}
 				</div>
 				<div className="admin-header-actions">
-					<a href="#reports">Reports</a>
-					<a href="#people">People</a>
-					<a href="#audit">Audit</a>
+					<Link href="/admin/reports">Reports</Link>
+					<Link href="/admin/people">People</Link>
+					<Link href="/admin/data">Data</Link>
 					<Button
 						className="admin-refresh-button"
 						onClick={() => void loadAdminData()}
@@ -453,224 +658,99 @@ export default function AdminDashboard() {
 			</section>
 
 			<div className="admin-console-layout">
-				<nav className="admin-section-nav" aria-label="Admin sections">
-					<a href="#reports">
-						<Flag aria-hidden="true" />
-						Reports
-					</a>
-					<a href="#people">
-						<UsersRound aria-hidden="true" />
-						People
-					</a>
-					<a href="#reviewers">
-						<BadgeCheck aria-hidden="true" />
-						Reviewer trust
-					</a>
-					<a href="#content">
-						<FileText aria-hidden="true" />
-						Content watch
-					</a>
-					<a href="#audit">
-						<History aria-hidden="true" />
-						Audit trail
-					</a>
-				</nav>
-
+				<AdminSectionNav activeView={view} />
 				<div className="admin-console-main">
-					<section className="admin-console-section admin-critical-section" id="reports">
-						<PanelHeader
-							description="Comment and profile reports sorted by risk signal."
-							title="Moderation Queue"
-						>
-							<SegmentedTabs
-								active={reportStatus}
-								onChange={(value) =>
-									setReportStatus(value as ContentReportStatus)
-								}
-								values={reportStatuses}
-							/>
-						</PanelHeader>
-						{reports.length ? (
-							<div className="admin-table-wrap">
-								<table className="admin-table">
-									<thead>
-										<tr>
-											<th>Target</th>
-											<th>Reason</th>
-											<th>People</th>
-											<th>Updated</th>
-											<th>Note</th>
-											<th>Actions</th>
-										</tr>
-									</thead>
-									<tbody>
-										{reports.map((report) => (
-											<ReportRow
-												busyAction={busyAction}
-												key={report.id}
-												note={adminNotes[report.id] ?? ""}
-												onAction={runReportAction}
-												onNoteChange={(value) =>
-													setAdminNotes((current) => ({
-														...current,
-														[report.id]: value,
-													}))
-												}
-												report={report}
-											/>
-										))}
-									</tbody>
-								</table>
-							</div>
-						) : (
-							<EmptyPanel
-								description="No reports in this status."
-								title="Queue clear"
-							/>
-						)}
-					</section>
-
-					<section className="admin-console-section" id="people">
-						<PanelHeader
-							description="Find users, inspect public identity, and fix profile-level issues."
-							title="People Control"
+					{pageLoading ? (
+						<div className="admin-page-loading">Refreshing admin data</div>
+					) : null}
+					{view === "overview" ? (
+						<OverviewPage stats={stats} />
+					) : null}
+					{view === "reports" ? (
+						<ReportsPage
+							adminNotes={adminNotes}
+							busyAction={busyAction}
+							onAction={runReportAction}
+							onNoteChange={(reportId, value) =>
+								setAdminNotes((current) => ({
+									...current,
+									[reportId]: value,
+								}))
+							}
+							onStatusChange={(value) =>
+								setReportStatus(value as ContentReportStatus)
+							}
+							reports={reports}
+							status={reportStatus}
 						/>
-						<label className="admin-search">
-							<Search aria-hidden="true" />
-							<input
-								onChange={(event) => setUserQuery(event.target.value)}
-								placeholder="Search email, username, reviewer claim, trust status"
-								value={userQuery}
-							/>
-						</label>
-						<div className="admin-table-wrap">
-							<table className="admin-table admin-people-table">
-								<thead>
-									<tr>
-										<th>User</th>
-										<th>Public profile</th>
-										<th>Trust</th>
-										<th>Signal</th>
-										<th>Last sign in</th>
-										<th>Actions</th>
-									</tr>
-								</thead>
-								<tbody>
-									{filteredUsers.slice(0, 16).map((adminUser) => (
-										<UserRow
-											adminUser={adminUser}
-											busyAction={busyAction}
-											key={adminUser.id}
-											onAction={runUserAction}
-										/>
-									))}
-								</tbody>
-							</table>
-							{!filteredUsers.length ? (
-								<EmptyPanel
-									description="Try a different email, username, or role."
-									title="No matching users"
-								/>
-							) : null}
-						</div>
-					</section>
-
-					<section className="admin-console-section" id="reviewers">
-						<PanelHeader
-							description="Approve reviewer trust only when proof and profile match."
-							title="Reviewer Trust Queue"
-						>
-							<SegmentedTabs
-								active={reviewerStatus}
-								onChange={(value) =>
-									setReviewerStatus(value as ReviewerApplicationStatus)
-								}
-								values={reviewerStatuses}
-							/>
-						</PanelHeader>
-						{reviewerApplications.length ? (
-							<div className="admin-table-wrap">
-								<table className="admin-table">
-									<thead>
-										<tr>
-											<th>Applicant</th>
-											<th>Claim</th>
-											<th>Proof</th>
-											<th>Signal</th>
-											<th>Updated</th>
-											<th>Actions</th>
-										</tr>
-									</thead>
-									<tbody>
-										{reviewerApplications.map((application) => (
-											<ReviewerRow
-												application={application}
-												busyAction={busyAction}
-												key={application.id}
-												onAction={runReviewerAction}
-											/>
-										))}
-									</tbody>
-								</table>
-							</div>
-						) : (
-							<EmptyPanel
-								description="Applications in this status will appear here."
-								title="No trust applications"
-							/>
-						)}
-					</section>
-
-					<section className="admin-console-section" id="content">
-						<PanelHeader
-							description="Newest submissions and feedback for launch monitoring."
-							title="Content Watch"
+					) : null}
+					{view === "people" ? (
+						<PeoplePage
+							busyAction={busyAction}
+							currentAdminUserId={currentAdminUserId}
+							onAction={runUserAction}
+							onDeleteRequest={setDeleteTarget}
+							onQueryChange={setUserQuery}
+							query={userQuery}
+							users={filteredUsers}
 						/>
-						<div className="admin-content-grid">
-							<RecentContentList
-								items={overview?.activity.recentResumes ?? []}
-								kind="resume"
-							/>
-							<RecentContentList
-								items={overview?.activity.recentRoasts ?? []}
-								kind="feedback"
-							/>
-						</div>
-					</section>
-
-					<section className="admin-console-section" id="audit">
-						<PanelHeader
-							description="Recent moderation actions with admin attribution."
-							title="Audit Trail"
+					) : null}
+					{view === "reviewers" ? (
+						<ReviewersPage
+							applications={reviewerApplications}
+							busyAction={busyAction}
+							onAction={runReviewerAction}
+							onStatusChange={(value) =>
+								setReviewerStatus(value as ReviewerApplicationStatus)
+							}
+							status={reviewerStatus}
 						/>
-						<div className="admin-table-wrap">
-							<table className="admin-table">
-								<thead>
-									<tr>
-										<th>Action</th>
-										<th>Target</th>
-										<th>Admin</th>
-										<th>Reason</th>
-										<th>Time</th>
-									</tr>
-								</thead>
-								<tbody>
-									{actions.map((action) => (
-										<ActionLogRow action={action} key={action.id} />
-									))}
-								</tbody>
-							</table>
-							{!actions.length ? (
-								<EmptyPanel
-									description="Actions taken from this console will appear here."
-									title="No audit entries"
-								/>
-							) : null}
-						</div>
-					</section>
+					) : null}
+					{view === "content" ? (
+						<ContentPage overview={overview} />
+					) : null}
+					{view === "audit" ? <AuditPage actions={actions} /> : null}
+					{view === "data" ? <DataPage inventory={dataInventory} /> : null}
 				</div>
 			</div>
+			<DeleteUserDialog
+				busy={Boolean(
+					deleteTarget &&
+						busyAction ===
+							`user:${deleteTarget.id}:delete_user_account`,
+				)}
+				onConfirm={() =>
+					deleteTarget
+						? runUserAction(deleteTarget.id, "delete_user_account")
+						: Promise.resolve()
+				}
+				onOpenChange={(open) => {
+					if (!open) setDeleteTarget(null);
+				}}
+				user={deleteTarget}
+			/>
 		</main>
+	);
+}
+
+function AdminSectionNav({ activeView }: { activeView: AdminDashboardView }) {
+	return (
+		<nav className="admin-section-nav" aria-label="Admin sections">
+			{adminSections.map((section) => {
+				const Icon = section.icon;
+				return (
+					<Link
+						aria-current={activeView === section.id ? "page" : undefined}
+						className={activeView === section.id ? "active" : ""}
+						href={section.href}
+						key={section.id}
+					>
+						<Icon aria-hidden="true" />
+						{section.label}
+					</Link>
+				);
+			})}
+		</nav>
 	);
 }
 
@@ -690,6 +770,352 @@ function MetricCard({
 			<div>{icon}</div>
 			<strong>{value.toLocaleString()}</strong>
 			<span>{label}</span>
+		</div>
+	);
+}
+
+function OverviewPage({ stats }: { stats?: AdminStats }) {
+	const cards = [
+		{
+			detail: `${stats?.pendingReports ?? 0} pending`,
+			href: "/admin/reports",
+			icon: Flag,
+			label: "Reports",
+		},
+		{
+			detail: `${stats?.users ?? 0} accounts`,
+			href: "/admin/people",
+			icon: UsersRound,
+			label: "People",
+		},
+		{
+			detail: `${stats?.pendingReviewers ?? 0} waiting`,
+			href: "/admin/reviewers",
+			icon: BadgeCheck,
+			label: "Reviewer Trust",
+		},
+		{
+			detail: `${stats?.resumes ?? 0} resumes`,
+			href: "/admin/content",
+			icon: FileText,
+			label: "Content",
+		},
+		{
+			detail: "Moderation history",
+			href: "/admin/audit",
+			icon: History,
+			label: "Audit Trail",
+		},
+		{
+			detail: "Tables and deletion model",
+			href: "/admin/data",
+			icon: Database,
+			label: "Data Control",
+		},
+	];
+
+	return (
+		<section className="admin-console-section">
+			<PanelHeader
+				description="Choose one workspace. Each page owns one job."
+				title="Control Areas"
+			/>
+			<div className="admin-overview-grid">
+				{cards.map((card) => {
+					const Icon = card.icon;
+					return (
+						<Link className="admin-overview-card" href={card.href} key={card.href}>
+							<Icon aria-hidden="true" />
+							<strong>{card.label}</strong>
+							<span>{card.detail}</span>
+						</Link>
+					);
+				})}
+			</div>
+		</section>
+	);
+}
+
+function ReportsPage({
+	adminNotes,
+	busyAction,
+	onAction,
+	onNoteChange,
+	onStatusChange,
+	reports,
+	status,
+}: {
+	adminNotes: Record<string, string>;
+	busyAction: string;
+	onAction: (reportId: string, action: string) => Promise<void>;
+	onNoteChange: (reportId: string, value: string) => void;
+	onStatusChange: (value: string) => void;
+	reports: ReportPreview[];
+	status: ContentReportStatus;
+}) {
+	return (
+		<section className="admin-console-section admin-critical-section">
+			<PanelHeader
+				description="Comment and profile reports sorted by risk signal."
+				title="Moderation Queue"
+			>
+				<SegmentedTabs
+					active={status}
+					onChange={onStatusChange}
+					values={reportStatuses}
+				/>
+			</PanelHeader>
+			{reports.length ? (
+				<div className="admin-table-wrap">
+					<table className="admin-table">
+						<thead>
+							<tr>
+								<th>Target</th>
+								<th>Reason</th>
+								<th>People</th>
+								<th>Updated</th>
+								<th>Note</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{reports.map((report) => (
+								<ReportRow
+									busyAction={busyAction}
+									key={report.id}
+									note={adminNotes[report.id] ?? ""}
+									onAction={onAction}
+									onNoteChange={(value) => onNoteChange(report.id, value)}
+									report={report}
+								/>
+							))}
+						</tbody>
+					</table>
+				</div>
+			) : (
+				<EmptyPanel description="No reports in this status." title="Queue clear" />
+			)}
+		</section>
+	);
+}
+
+function PeoplePage({
+	busyAction,
+	currentAdminUserId,
+	onAction,
+	onDeleteRequest,
+	onQueryChange,
+	query,
+	users,
+}: {
+	busyAction: string;
+	currentAdminUserId: string;
+	onAction: (userId: string, action: string) => Promise<void>;
+	onDeleteRequest: (user: AdminUser) => void;
+	onQueryChange: (value: string) => void;
+	query: string;
+	users: AdminUser[];
+}) {
+	return (
+		<section className="admin-console-section">
+			<PanelHeader
+				description="Search accounts, inspect footprint, and manage profile or deletion actions."
+				title="People Control"
+			/>
+			<label className="admin-search">
+				<Search aria-hidden="true" />
+				<input
+					onChange={(event) => onQueryChange(event.target.value)}
+					placeholder="Search email, username, reviewer claim, trust status"
+					value={query}
+				/>
+			</label>
+			<div className="admin-table-wrap">
+				<table className="admin-table admin-people-table">
+					<thead>
+						<tr>
+							<th>User</th>
+							<th>Public profile</th>
+							<th>Footprint</th>
+							<th>Trust</th>
+							<th>Last sign in</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{users.map((adminUser) => (
+							<UserRow
+								adminUser={adminUser}
+								busyAction={busyAction}
+								currentAdminUserId={currentAdminUserId}
+								key={adminUser.id}
+								onAction={onAction}
+								onDeleteRequest={onDeleteRequest}
+							/>
+						))}
+					</tbody>
+				</table>
+				{!users.length ? (
+					<EmptyPanel
+						description="Try a different email, username, or role."
+						title="No matching users"
+					/>
+				) : null}
+			</div>
+		</section>
+	);
+}
+
+function ReviewersPage({
+	applications,
+	busyAction,
+	onAction,
+	onStatusChange,
+	status,
+}: {
+	applications: ReviewerApplicationPreview[];
+	busyAction: string;
+	onAction: (applicationId: string, action: string) => Promise<void>;
+	onStatusChange: (value: string) => void;
+	status: ReviewerApplicationStatus;
+}) {
+	return (
+		<section className="admin-console-section">
+			<PanelHeader
+				description="Approve reviewer trust only when proof and profile match."
+				title="Reviewer Trust Queue"
+			>
+				<SegmentedTabs
+					active={status}
+					onChange={onStatusChange}
+					values={reviewerStatuses}
+				/>
+			</PanelHeader>
+			{applications.length ? (
+				<div className="admin-table-wrap">
+					<table className="admin-table">
+						<thead>
+							<tr>
+								<th>Applicant</th>
+								<th>Claim</th>
+								<th>Proof</th>
+								<th>Signal</th>
+								<th>Updated</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{applications.map((application) => (
+								<ReviewerRow
+									application={application}
+									busyAction={busyAction}
+									key={application.id}
+									onAction={onAction}
+								/>
+							))}
+						</tbody>
+					</table>
+				</div>
+			) : (
+				<EmptyPanel
+					description="Applications in this status will appear here."
+					title="No trust applications"
+				/>
+			)}
+		</section>
+	);
+}
+
+function ContentPage({ overview }: { overview: AdminOverview | null }) {
+	return (
+		<section className="admin-console-section">
+			<PanelHeader
+				description="Newest submissions and feedback for launch monitoring."
+				title="Content Watch"
+			/>
+			<div className="admin-content-grid">
+				<RecentContentList
+					items={overview?.activity.recentResumes ?? []}
+					kind="resume"
+				/>
+				<RecentContentList
+					items={overview?.activity.recentRoasts ?? []}
+					kind="feedback"
+				/>
+			</div>
+		</section>
+	);
+}
+
+function AuditPage({ actions }: { actions: ModerationAction[] }) {
+	return (
+		<section className="admin-console-section">
+			<PanelHeader
+				description="Recent moderation actions with admin attribution."
+				title="Audit Trail"
+			/>
+			<div className="admin-table-wrap">
+				<table className="admin-table">
+					<thead>
+						<tr>
+							<th>Action</th>
+							<th>Target</th>
+							<th>Admin</th>
+							<th>Reason</th>
+							<th>Time</th>
+						</tr>
+					</thead>
+					<tbody>
+						{actions.map((action) => (
+							<ActionLogRow action={action} key={action.id} />
+						))}
+					</tbody>
+				</table>
+				{!actions.length ? (
+					<EmptyPanel
+						description="Actions taken from admin pages will appear here."
+						title="No audit entries"
+					/>
+				) : null}
+			</div>
+		</section>
+	);
+}
+
+function DataPage({ inventory }: { inventory: AdminDataInventory | null }) {
+	const tables = inventory?.tables ?? [];
+	const storage = inventory?.storage ?? [];
+	const lifecycle = inventory?.lifecycle ?? [];
+
+	return (
+		<section className="admin-console-section">
+			<PanelHeader
+				description="Operational inventory for data ownership and deletion checks."
+				title="Data Control"
+			/>
+			<div className="admin-data-grid">
+				<MetricList metrics={tables} title="Tables" />
+				<MetricList metrics={storage} title="Storage" />
+				<MetricList metrics={lifecycle} title="User Deletion Path" />
+			</div>
+		</section>
+	);
+}
+
+function MetricList({ metrics, title }: { metrics: DataMetric[]; title: string }) {
+	return (
+		<div className="admin-data-panel">
+			<h3>{title}</h3>
+			{metrics.map((metric) => (
+				<div className="admin-data-row" key={metric.key}>
+					<div>
+						<strong>{metric.label}</strong>
+						{metric.detail ? <span>{metric.detail}</span> : null}
+					</div>
+					<b>{metric.value}</b>
+				</div>
+			))}
+			{!metrics.length ? <p className="muted-text">No data loaded.</p> : null}
 		</div>
 	);
 }
@@ -809,7 +1235,8 @@ function ReportRow({
 						icon={<ShieldCheck aria-hidden="true" />}
 						label="Reviewing"
 						onClick={() => onAction(report.id, "mark_report_reviewing")}
-						reportId={report.id}
+						scope="report"
+						targetId={report.id}
 					/>
 					<ActionButton
 						action="dismiss_report"
@@ -817,7 +1244,8 @@ function ReportRow({
 						icon={<XCircle aria-hidden="true" />}
 						label="Dismiss"
 						onClick={() => onAction(report.id, "dismiss_report")}
-						reportId={report.id}
+						scope="report"
+						targetId={report.id}
 					/>
 					<ActionButton
 						action="mark_report_actioned"
@@ -825,7 +1253,8 @@ function ReportRow({
 						icon={<CheckCircle2 aria-hidden="true" />}
 						label="Actioned"
 						onClick={() => onAction(report.id, "mark_report_actioned")}
-						reportId={report.id}
+						scope="report"
+						targetId={report.id}
 					/>
 					{report.roast ? (
 						report.roast.is_deleted ? (
@@ -835,7 +1264,8 @@ function ReportRow({
 								icon={<RotateCcw aria-hidden="true" />}
 								label="Restore"
 								onClick={() => onAction(report.id, "restore_roast")}
-								reportId={report.id}
+								scope="report"
+								targetId={report.id}
 							/>
 						) : (
 							<ActionButton
@@ -844,7 +1274,8 @@ function ReportRow({
 								icon={<Trash2 aria-hidden="true" />}
 								label="Remove comment"
 								onClick={() => onAction(report.id, "remove_roast")}
-								reportId={report.id}
+								scope="report"
+								targetId={report.id}
 								tone="danger"
 							/>
 						)
@@ -858,7 +1289,8 @@ function ReportRow({
 								icon={<Trash2 aria-hidden="true" />}
 								label="Clear text"
 								onClick={() => onAction(report.id, "clear_public_profile_text")}
-								reportId={report.id}
+								scope="report"
+								targetId={report.id}
 								tone="danger"
 							/>
 							<ActionButton
@@ -868,7 +1300,8 @@ function ReportRow({
 								icon={<RotateCcw aria-hidden="true" />}
 								label="Reset trust"
 								onClick={() => onAction(report.id, "reset_reviewer_trust")}
-								reportId={report.id}
+								scope="report"
+								targetId={report.id}
 							/>
 							<ActionButton
 								action="clear_reviewer_profile"
@@ -877,7 +1310,8 @@ function ReportRow({
 								icon={<ShieldAlert aria-hidden="true" />}
 								label="Clear reviewer"
 								onClick={() => onAction(report.id, "clear_reviewer_profile")}
-								reportId={report.id}
+								scope="report"
+								targetId={report.id}
 								tone="danger"
 							/>
 						</>
@@ -895,7 +1329,8 @@ function ActionButton({
 	icon,
 	label,
 	onClick,
-	reportId,
+	scope,
+	targetId,
 	tone = "normal",
 }: {
 	action: string;
@@ -904,10 +1339,11 @@ function ActionButton({
 	icon?: ReactNode;
 	label: string;
 	onClick: () => Promise<void>;
-	reportId: string;
+	scope: "report" | "reviewer" | "user";
+	targetId: string;
 	tone?: "danger" | "normal";
 }) {
-	const isBusy = busyAction === `report:${reportId}:${action}`;
+	const isBusy = busyAction === `${scope}:${targetId}:${action}`;
 	return (
 		<button
 			className={tone === "danger" ? "admin-danger-action" : undefined}
@@ -948,7 +1384,12 @@ function ReviewerRow({
 				</span>
 			</td>
 			<td>
-				<a className="admin-inline-link" href={application.proof_url} rel="noreferrer" target="_blank">
+				<a
+					className="admin-inline-link"
+					href={application.proof_url}
+					rel="noreferrer"
+					target="_blank"
+				>
 					<ExternalLink aria-hidden="true" />
 					Open proof
 				</a>
@@ -963,30 +1404,33 @@ function ReviewerRow({
 			<td>
 				<div className="admin-action-row admin-action-column">
 					<Link href={`/profile/${application.user_id}`}>Profile</Link>
-					<button
-						disabled={busyAction === `reviewer:${application.id}:approve_reviewer`}
-						onClick={() => void onAction(application.id, "approve_reviewer")}
-						type="button"
-					>
-						<CheckCircle2 aria-hidden="true" />
-						Approve
-					</button>
-					<button
-						disabled={busyAction === `reviewer:${application.id}:reject_reviewer`}
-						onClick={() => void onAction(application.id, "reject_reviewer")}
-						type="button"
-					>
-						<XCircle aria-hidden="true" />
-						Reject
-					</button>
-					<button
-						disabled={busyAction === `reviewer:${application.id}:reset_reviewer`}
-						onClick={() => void onAction(application.id, "reset_reviewer")}
-						type="button"
-					>
-						<RotateCcw aria-hidden="true" />
-						Reset
-					</button>
+					<ActionButton
+						action="approve_reviewer"
+						busyAction={busyAction}
+						icon={<CheckCircle2 aria-hidden="true" />}
+						label="Approve"
+						onClick={() => onAction(application.id, "approve_reviewer")}
+						scope="reviewer"
+						targetId={application.id}
+					/>
+					<ActionButton
+						action="reject_reviewer"
+						busyAction={busyAction}
+						icon={<XCircle aria-hidden="true" />}
+						label="Reject"
+						onClick={() => onAction(application.id, "reject_reviewer")}
+						scope="reviewer"
+						targetId={application.id}
+					/>
+					<ActionButton
+						action="reset_reviewer"
+						busyAction={busyAction}
+						icon={<RotateCcw aria-hidden="true" />}
+						label="Reset"
+						onClick={() => onAction(application.id, "reset_reviewer")}
+						scope="reviewer"
+						targetId={application.id}
+					/>
 				</div>
 			</td>
 		</tr>
@@ -996,14 +1440,20 @@ function ReviewerRow({
 function UserRow({
 	adminUser,
 	busyAction,
+	currentAdminUserId,
 	onAction,
+	onDeleteRequest,
 }: {
 	adminUser: AdminUser;
 	busyAction: string;
+	currentAdminUserId: string;
 	onAction: (userId: string, action: string) => Promise<void>;
+	onDeleteRequest: (user: AdminUser) => void;
 }) {
 	const profile = adminUser.profile;
 	const label = profile ? getProfileLabel(profile) : adminUser.email || adminUser.id;
+	const footprint = adminUser.dataFootprint;
+	const isSelf = currentAdminUserId === adminUser.id;
 
 	return (
 		<tr>
@@ -1020,15 +1470,20 @@ function UserRow({
 				</div>
 			</td>
 			<td>
+				<div className="admin-cell-stack">
+					<strong>{getFootprintTotal(footprint)} linked records</strong>
+					<span>
+						{footprint?.resumes ?? 0} resumes, {footprint?.reviews ?? 0} reviews
+					</span>
+					<span>
+						{footprint?.votes ?? 0} votes, {footprint?.attachments ?? 0} uploads
+					</span>
+				</div>
+			</td>
+			<td>
 				<span className="admin-pill">
 					{profile?.reviewer_verification_status ?? "none"}
 				</span>
-			</td>
-			<td>
-				<div className="admin-cell-stack">
-					<span>{profile?.helpful_votes ?? 0} lint points</span>
-					<span>{profile?.roast_count ?? 0} reviews</span>
-				</div>
 			</td>
 			<td>{formatDate(adminUser.last_sign_in_at)}</td>
 			<td>
@@ -1037,26 +1492,95 @@ function UserRow({
 						<ExternalLink aria-hidden="true" />
 						Open
 					</Link>
-					<button
-						disabled={busyAction === `user:${adminUser.id}:reset_reviewer_trust`}
-						onClick={() => void onAction(adminUser.id, "reset_reviewer_trust")}
-						type="button"
-					>
-						<RotateCcw aria-hidden="true" />
-						Reset trust
-					</button>
-					<button
-						className="admin-danger-action"
-						disabled={busyAction === `user:${adminUser.id}:clear_public_profile_text`}
-						onClick={() => void onAction(adminUser.id, "clear_public_profile_text")}
-						type="button"
-					>
-						<Trash2 aria-hidden="true" />
-						Clear text
-					</button>
+					<ActionButton
+						action="reset_reviewer_trust"
+						busyAction={busyAction}
+						icon={<RotateCcw aria-hidden="true" />}
+						label="Reset trust"
+						onClick={() => onAction(adminUser.id, "reset_reviewer_trust")}
+						scope="user"
+						targetId={adminUser.id}
+					/>
+					<ActionButton
+						action="clear_public_profile_text"
+						busyAction={busyAction}
+						icon={<Trash2 aria-hidden="true" />}
+						label="Clear text"
+						onClick={() => onAction(adminUser.id, "clear_public_profile_text")}
+						scope="user"
+						targetId={adminUser.id}
+						tone="danger"
+					/>
+					<ActionButton
+						action="clear_reviewer_profile"
+						busyAction={busyAction}
+						icon={<ShieldAlert aria-hidden="true" />}
+						label="Clear reviewer"
+						onClick={() => onAction(adminUser.id, "clear_reviewer_profile")}
+						scope="user"
+						targetId={adminUser.id}
+						tone="danger"
+					/>
+					<ActionButton
+						action="delete_user_account"
+						busyAction={busyAction}
+						disabled={isSelf}
+						icon={<UserX aria-hidden="true" />}
+						label="Delete user"
+						onClick={() => {
+							onDeleteRequest(adminUser);
+							return Promise.resolve();
+						}}
+						scope="user"
+						targetId={adminUser.id}
+						tone="danger"
+					/>
 				</div>
 			</td>
 		</tr>
+	);
+}
+
+function DeleteUserDialog({
+	busy,
+	onConfirm,
+	onOpenChange,
+	user,
+}: {
+	busy: boolean;
+	onConfirm: () => Promise<void>;
+	onOpenChange: (open: boolean) => void;
+	user: AdminUser | null;
+}) {
+	const label =
+		user?.email || getProfileLabel(user?.profile ?? null) || "this user";
+	const footprintTotal = getFootprintTotal(user?.dataFootprint);
+
+	return (
+		<AlertDialog open={Boolean(user)} onOpenChange={onOpenChange}>
+			<AlertDialogContent size="sm">
+				<AlertDialogHeader>
+					<AlertDialogTitle>Delete user?</AlertDialogTitle>
+					<AlertDialogDescription>
+						This will remove {label}, their account, profile, resumes, reviews,
+						votes, notifications, uploads, and {footprintTotal} linked records.
+						This cannot be undone.
+					</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
+					<AlertDialogAction
+						disabled={busy}
+						onClick={(event) => {
+							event.preventDefault();
+							void onConfirm();
+						}}
+					>
+						{busy ? "Deleting..." : "Delete user"}
+					</AlertDialogAction>
+				</AlertDialogFooter>
+			</AlertDialogContent>
+		</AlertDialog>
 	);
 }
 

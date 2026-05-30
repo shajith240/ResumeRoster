@@ -6,7 +6,7 @@ export default function AdminPage() {
 	return (
 		<AuthGate>
 			<RouteHeader />
-			<AdminDashboard />
+			<AdminDashboard view="overview" />
 		</AuthGate>
 	);
 }
