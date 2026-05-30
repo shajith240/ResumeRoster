@@ -34,6 +34,7 @@
 0027_review_query_hygiene.sql
 0028_authenticated_write_rate_limits.sql
 0029_saved_resumes_api_contract.sql
+0030_rate_limit_pgcrypto_schema.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.
