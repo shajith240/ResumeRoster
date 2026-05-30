@@ -145,9 +145,11 @@
 	font-variant-numeric: tabular-nums;
 }
 
-.lintPointsBadge svg {
+.lintPointsBadge svg,
+.lintPointsFlame {
 	width: 15px;
 	height: 15px;
+	flex: 0 0 auto;
 	color: var(--brand);
 	stroke-width: 2;
 }

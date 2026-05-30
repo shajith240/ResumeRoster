@@ -2,17 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-	Bell,
-	CheckCheck,
-	MessageCircle,
-	Megaphone,
-	ShieldCheck,
-	ThumbsUp,
-	UserCheck,
-} from "lucide-react";
+import { Bell } from "lucide-react";
 import { toast } from "sonner";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
+import TeamNotifications, {
+	type TeamNotification,
+} from "@/components/TeamNotifications";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -22,61 +17,18 @@ import {
 	NOTIFICATIONS_OPEN_EVENT,
 	NOTIFICATION_SELECT,
 	getNotificationHref,
-	getNotificationTone,
 	isNotificationsFeatureError,
 	unreadNotificationCount,
 } from "@/lib/notifications";
 import { supabase } from "@/lib/supabase/client";
-import type {
-	LintedNotification,
-	NotificationType,
-} from "@/lib/supabase/types";
+import type { LintedNotification } from "@/lib/supabase/types";
 import { cn } from "@/lib/utils";
 
 type NotificationCenterProps = {
 	userId: string;
 };
 
-type NotificationFilter = "all" | "unread";
-
 const NOTIFICATION_LIMIT = 30;
-
-function formatNotificationAge(value: string) {
-	const date = new Date(value);
-	if (Number.isNaN(date.getTime())) return "";
-
-	const elapsedSeconds = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
-	if (elapsedSeconds < 60) return "now";
-
-	const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-	if (elapsedMinutes < 60) return `${elapsedMinutes}m`;
-
-	const elapsedHours = Math.floor(elapsedMinutes / 60);
-	if (elapsedHours < 24) return `${elapsedHours}h`;
-
-	const elapsedDays = Math.floor(elapsedHours / 24);
-	if (elapsedDays < 7) return `${elapsedDays}d`;
-
-	return new Intl.DateTimeFormat(undefined, {
-		day: "numeric",
-		month: "short",
-	}).format(date);
-}
-
-function NotificationGlyph({ type }: { type: NotificationType }) {
-	const props = {
-		"aria-hidden": true,
-		size: 17,
-		strokeWidth: 2.1,
-	};
-
-	if (type === "helpful_vote") return <ThumbsUp {...props} />;
-	if (type === "reviewer_status") return <UserCheck {...props} />;
-	if (type === "moderation") return <ShieldCheck {...props} />;
-	if (type === "system") return <Megaphone {...props} />;
-
-	return <MessageCircle {...props} />;
-}
 
 function normalizeNotification(row: LintedNotification): LintedNotification {
 	return {
@@ -87,10 +39,60 @@ function normalizeNotification(row: LintedNotification): LintedNotification {
 	};
 }
 
+function getMetadataString(
+	metadata: Record<string, unknown>,
+	keys: string[],
+): string | undefined {
+	for (const key of keys) {
+		const value = metadata[key];
+		if (typeof value === "string" && value.trim()) {
+			return value.trim();
+		}
+	}
+
+	return undefined;
+}
+
+function toTeamNotification(notification: LintedNotification): TeamNotification {
+	const metadata = notification.metadata ?? {};
+	const actorName = getMetadataString(metadata, [
+		"actor_name",
+		"actor_full_name",
+		"actor_username",
+		"user_name",
+		"username",
+	]);
+	const actorAvatar = getMetadataString(metadata, [
+		"actor_avatar_url",
+		"avatar_url",
+		"user_avatar_url",
+	]);
+
+	return {
+		id: notification.id,
+		type: notification.type,
+		title: notification.title,
+		message: notification.body,
+		read: Boolean(notification.read_at),
+		timestamp: new Date(notification.created_at),
+		link: getNotificationHref(notification),
+		metadata,
+		user: actorName
+			? {
+					id:
+						notification.actor_id ??
+						notification.related_user_id ??
+						notification.id,
+					name: actorName,
+					avatar: actorAvatar,
+				}
+			: undefined,
+	};
+}
+
 export default function NotificationCenter({ userId }: NotificationCenterProps) {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
-	const [filter, setFilter] = useState<NotificationFilter>("all");
 	const [notifications, setNotifications] = useState<LintedNotification[]>([]);
 	const [unreadCount, setUnreadCount] = useState(0);
 	const [loading, setLoading] = useState(true);
@@ -203,6 +205,32 @@ export default function NotificationCenter({ userId }: NotificationCenterProps) 
 		}
 	}, [loadNotifications, unreadCount, userId]);
 
+	const deleteNotification = useCallback(
+		async (notificationId: string) => {
+			const notification = notifications.find((item) => item.id === notificationId);
+			if (!notification) return;
+
+			setNotifications((current) =>
+				current.filter((item) => item.id !== notificationId),
+			);
+			if (!notification.read_at) {
+				setUnreadCount((current) => Math.max(0, current - 1));
+			}
+
+			const { error } = await supabase
+				.from("notifications")
+				.delete()
+				.eq("id", notificationId)
+				.eq("recipient_id", userId);
+
+			if (error) {
+				toast.error("Could not delete notification.");
+				void loadNotifications();
+			}
+		},
+		[loadNotifications, notifications, userId],
+	);
+
 	useEffect(() => {
 		void loadNotifications(true);
 	}, [loadNotifications]);
@@ -281,12 +309,37 @@ export default function NotificationCenter({ userId }: NotificationCenterProps) 
 		};
 	}, [featureReady, loadNotifications, openNotification, userId]);
 
-	const visibleNotifications = useMemo(
+	const notificationById = useMemo(
 		() =>
-			filter === "unread"
-				? notifications.filter((notification) => !notification.read_at)
-				: notifications,
-		[filter, notifications],
+			new Map(
+				notifications.map((notification) => [notification.id, notification]),
+			),
+		[notifications],
+	);
+
+	const teamNotifications = useMemo(
+		() => notifications.map(toTeamNotification),
+		[notifications],
+	);
+
+	const markNotificationIdRead = useCallback(
+		async (notificationId: string) => {
+			const notification = notificationById.get(notificationId);
+			if (!notification) return;
+
+			await markNotificationRead(notification);
+		},
+		[markNotificationRead, notificationById],
+	);
+
+	const openTeamNotification = useCallback(
+		async (notification: TeamNotification) => {
+			const sourceNotification = notificationById.get(notification.id);
+			if (!sourceNotification) return;
+
+			await openNotification(sourceNotification);
+		},
+		[notificationById, openNotification],
 	);
 
 	if (!featureReady) return null;
@@ -321,88 +374,16 @@ export default function NotificationCenter({ userId }: NotificationCenterProps) 
 				collisionPadding={12}
 				sideOffset={12}
 			>
-				<header className="notification-panel-header">
-					<div>
-						<h2>Notifications</h2>
-						<p>{unreadCount ? `${unreadCount} unread` : "All caught up"}</p>
-					</div>
-					<button
-						className="notification-mark-all"
-						disabled={!unreadCount}
-						onClick={() => void markAllRead()}
-						type="button"
-					>
-						<CheckCheck aria-hidden="true" size={16} strokeWidth={2.1} />
-						Mark read
-					</button>
-				</header>
-
-				<div className="notification-tabs" role="tablist" aria-label="Notifications filter">
-					<button
-						aria-selected={filter === "all"}
-						className={filter === "all" ? "active" : ""}
-						onClick={() => setFilter("all")}
-						role="tab"
-						type="button"
-					>
-						All
-					</button>
-					<button
-						aria-selected={filter === "unread"}
-						className={filter === "unread" ? "active" : ""}
-						onClick={() => setFilter("unread")}
-						role="tab"
-						type="button"
-					>
-						Unread
-					</button>
-				</div>
-
-				<div className="notification-list" role="list">
-					{loading ? (
-						<div className="notification-empty">Loading notifications...</div>
-					) : null}
-
-					{!loading && visibleNotifications.length === 0 ? (
-						<div className="notification-empty">
-							{filter === "unread" ? "No unread notifications." : "No notifications yet."}
-						</div>
-					) : null}
-
-					{!loading
-						? visibleNotifications.map((notification) => {
-								const unread = !notification.read_at;
-								const tone = getNotificationTone(notification.type);
-
-								return (
-									<div key={notification.id} role="listitem">
-										<button
-											className={cn(
-												"notification-item",
-												unread ? "is-unread" : "",
-											)}
-											onClick={() => void openNotification(notification)}
-											type="button"
-										>
-											<span className={`notification-icon tone-${tone}`}>
-												<NotificationGlyph type={notification.type} />
-											</span>
-											<span className="notification-copy">
-												<span className="notification-title-row">
-													<strong>{notification.title}</strong>
-													<time dateTime={notification.created_at}>
-														{formatNotificationAge(notification.created_at)}
-													</time>
-												</span>
-												{notification.body ? <span>{notification.body}</span> : null}
-											</span>
-											{unread ? <span className="notification-dot" /> : null}
-										</button>
-									</div>
-								);
-							})
-						: null}
-				</div>
+				<TeamNotifications
+					className="h-full"
+					loading={loading}
+					notifications={teamNotifications}
+					onMarkAllAsRead={markAllRead}
+					onMarkAsRead={markNotificationIdRead}
+					onDelete={deleteNotification}
+					onOpen={openTeamNotification}
+					unreadCount={unreadCount}
+				/>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

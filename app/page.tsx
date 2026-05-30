@@ -517,7 +517,15 @@ export default function Home() {
 
             <div className="feature-cards" data-pin-track ref={pinTrackRef}>
               <div className="feature-card">
-                <div className="sketch-icon magnifier" />
+                <div className="feature-illustration feature-illustration-privacy">
+                  <img
+                    src={asset("post_without_exposing.png")}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
                 <h3>Post without exposing yourself</h3>
                 <p>
                   Upload a redacted resume to the public feed so the work gets judged,
@@ -526,7 +534,15 @@ export default function Home() {
               </div>
 
               <div className="feature-card">
-                <div className="sketch-icon compass" />
+                <div className="feature-illustration feature-illustration-compiler">
+                  <img
+                    src={asset("Catch bugs before the compiler.png")}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
                 <h3>Catch bugs before the compiler</h3>
                 <p>
                   Students, job seekers, and trusted reviewers point out vague
@@ -535,7 +551,15 @@ export default function Home() {
               </div>
 
               <div className="feature-card">
-                <div className="sketch-icon flag" />
+                <div className="feature-illustration feature-illustration-promote">
+                  <img
+                    src={asset("promote the fix not the noise.png")}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
                 <h3>Promote the fix, not the noise</h3>
                 <p>
                   Votes push the most useful fixes upward, while trusted reviewers

@@ -19,6 +19,7 @@
 		"hooks": "@/hooks"
 	},
 	"registries": {
-		"@lucide-animated": "https://lucide-animated.com/r/{name}.json"
+		"@lucide-animated": "https://lucide-animated.com/r/{name}.json",
+		"@hextaui": "https://hextaui.com/r/{name}.json"
 	}
 }

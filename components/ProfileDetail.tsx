@@ -15,7 +15,6 @@ import {
 	CalendarDays,
 	Camera,
 	Flag,
-	Flame,
 	GraduationCap,
 	MapPin,
 	Pencil,
@@ -26,6 +25,7 @@ import {
 	X,
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
+import LintPointsFlame from "@/components/LintPointsFlame";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -1184,7 +1184,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								className={styles.lintPointsBadge}
 								aria-label={`${profile.helpful_votes.toLocaleString()} lint points`}
 							>
-								<Flame aria-hidden="true" />
+								<LintPointsFlame className={styles.lintPointsFlame} />
 								<strong>{profile.helpful_votes.toLocaleString()}</strong>
 								<span>Lint Points</span>
 							</div>
