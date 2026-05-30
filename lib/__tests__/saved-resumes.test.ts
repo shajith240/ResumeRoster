@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	getSaveButtonState,
 	getSavedResumeIds,
+	isSavedResumeSchemaMissingError,
 	mergeSavedResumeState,
 } from "@/lib/saved-resumes";
 
@@ -42,5 +43,37 @@ describe("saved resumes", () => {
 		});
 		expect(getSaveButtonState(false, true).label).toBe("Saving...");
 		expect(getSaveButtonState(true, true).label).toBe("Removing...");
+	});
+
+	it("detects only missing saved-resume schema errors", () => {
+		expect(
+			isSavedResumeSchemaMissingError({
+				code: "PGRST205",
+				message:
+					"Could not find the table 'public.saved_resumes' in the schema cache",
+			}),
+		).toBe(true);
+		expect(
+			isSavedResumeSchemaMissingError({
+				code: "42P01",
+				message: 'relation "public.saved_resumes" does not exist',
+			}),
+		).toBe(true);
+	});
+
+	it("does not mislabel saved-resume permission errors as migrations", () => {
+		expect(
+			isSavedResumeSchemaMissingError({
+				code: "42501",
+				message: 'permission denied for table "saved_resumes"',
+			}),
+		).toBe(false);
+		expect(
+			isSavedResumeSchemaMissingError({
+				code: "42501",
+				message:
+					'new row violates row-level security policy for table "saved_resumes"',
+			}),
+		).toBe(false);
 	});
 });

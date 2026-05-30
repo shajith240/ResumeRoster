@@ -24,7 +24,9 @@ import {
 import {
   getSaveButtonState,
   getSavedResumeIds,
+  isSavedResumeSchemaMissingError,
   mergeSavedResumeState,
+  SAVED_RESUMES_UNAVAILABLE_MESSAGE,
   type SavedResumeReference,
 } from "@/lib/saved-resumes";
 import { supabase } from "@/lib/supabase/client";
@@ -46,8 +48,6 @@ const AUTHOR_PROFILE_SELECT_WITH_STATUS =
   "id,username,full_name,avatar_url,avatar_path,college,target_role,current_position,app_status";
 const AUTHOR_PROFILE_SELECT_BASE =
   "id,username,full_name,avatar_url,college,target_role";
-const SAVED_RESUMES_MIGRATION_MESSAGE =
-  "Run the pending Supabase migration to enable saved resumes.";
 const FEED_PREVIEW_SIGNED_URL_TTL_SECONDS = 60 * 20;
 
 type SavedResumeSummary = ResumeSummary & {
@@ -238,12 +238,6 @@ function isReviewPreviewFeatureError(error: { message?: string } | null) {
   );
 }
 
-function isSavedResumeFeatureError(error: { message?: string } | null) {
-  return /saved_resumes|schema cache|relation|does not exist/i.test(
-    error?.message ?? "",
-  );
-}
-
 function isDuplicateSavedResumeError(error: { code?: string; message?: string } | null) {
   return error?.code === "23505" || /duplicate key|unique/i.test(error?.message ?? "");
 }
@@ -338,7 +332,7 @@ async function fetchSavedResumeIds(userId: string | null) {
   if (!userId) {
     return {
       savedResumeIds: new Set<string>(),
-      requiresMigration: false,
+      schemaMissing: false,
       error: null,
     };
   }
@@ -351,14 +345,14 @@ async function fetchSavedResumeIds(userId: string | null) {
   if (error) {
     return {
       savedResumeIds: new Set<string>(),
-      requiresMigration: isSavedResumeFeatureError(error),
+      schemaMissing: isSavedResumeSchemaMissingError(error),
       error,
     };
   }
 
   return {
     savedResumeIds: getSavedResumeIds((data ?? []) as SavedResumeReference[]),
-    requiresMigration: false,
+    schemaMissing: false,
     error: null,
   };
 }
@@ -463,7 +457,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
       }
 
       if (!active) return;
-      setSaveFeatureReady(!savedResult.requiresMigration);
+      setSaveFeatureReady(!savedResult.schemaMissing);
 
       if (resumeError) {
         setMessage(resumeError.message);
@@ -474,8 +468,8 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
         if (!active) return;
         if (savedResult.error && savedOnly) {
           setMessage(
-            savedResult.requiresMigration
-              ? SAVED_RESUMES_MIGRATION_MESSAGE
+            savedResult.schemaMissing
+              ? SAVED_RESUMES_UNAVAILABLE_MESSAGE
               : savedResult.error.message,
           );
           setResumes([]);
@@ -655,7 +649,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
     if (savingIds.has(resume.id)) return;
 
     if (!saveFeatureReady) {
-      toast.error(SAVED_RESUMES_MIGRATION_MESSAGE);
+      toast.error(SAVED_RESUMES_UNAVAILABLE_MESSAGE);
       return;
     }
 
@@ -706,9 +700,9 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
         );
       });
 
-      if (isSavedResumeFeatureError(result.error)) {
+      if (isSavedResumeSchemaMissingError(result.error)) {
         setSaveFeatureReady(false);
-        toast.error(SAVED_RESUMES_MIGRATION_MESSAGE);
+        toast.error(SAVED_RESUMES_UNAVAILABLE_MESSAGE);
       } else {
         toast.error("Could not update saved resumes.", {
           description: result.error.message,

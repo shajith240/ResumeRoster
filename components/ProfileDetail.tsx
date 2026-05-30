@@ -114,7 +114,7 @@ const fallbackAvatar = "/assets/logo.png";
 const VERIFIED_TICK_SRC = "/assets/verified_tick.png";
 const PROFILE_CHANGE_EVENT = "linted-profile-change";
 const SUPABASE_MIGRATION_MESSAGE =
-	"Run the pending Supabase migrations, then refresh this page.";
+	"Profile controls are temporarily unavailable. Please refresh and try again.";
 const REVIEWER_EXPERTISE_OPTIONS = Array.from(
 	new Set([
 		"ATS",

@@ -277,7 +277,7 @@ export default function OnboardingFlow() {
 
 		if (error) {
 			if (isOnboardingMigrationError(error)) {
-				setMessage("Run the pending Supabase migration, then refresh.");
+				setMessage("Profile setup is temporarily unavailable. Please refresh and try again.");
 				return;
 			}
 

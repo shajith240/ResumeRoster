@@ -40,7 +40,7 @@ const PROFILE_FALLBACK_SELECT =
 	"id,username,college,target_role,roast_count,helpful_votes";
 const LEADERBOARD_LIMIT = 100;
 const SUPABASE_MIGRATION_MESSAGE =
-	"Run the pending Supabase migrations, then refresh this page.";
+	"Leaderboard data is temporarily unavailable. Please refresh and try again.";
 
 const rangeLabels: Record<TimeRange, string> = {
 	week: "This Week",

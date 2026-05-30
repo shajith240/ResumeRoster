@@ -33,7 +33,7 @@ const NAV_PROFILE_SELECT_WITH_STATUS =
 	"full_name, username, avatar_url, app_status";
 const NAV_PROFILE_SELECT_BASE = "full_name, username, avatar_url";
 const SUPABASE_MIGRATION_MESSAGE =
-	"Run the pending Supabase migrations to enable saved status.";
+	"Status controls are temporarily unavailable. Please refresh and try again.";
 
 function getMetadataName(user: User | null) {
 	return user?.user_metadata?.full_name

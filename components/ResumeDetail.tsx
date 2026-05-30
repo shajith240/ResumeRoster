@@ -129,7 +129,7 @@ const RESUME_AUTHOR_PROFILE_SELECT_WITH_STATUS =
 const RESUME_AUTHOR_PROFILE_SELECT_BASE =
 	"id,username,full_name,avatar_url,college,target_role";
 const SUPABASE_MIGRATION_MESSAGE =
-	"Run the pending Supabase migrations, then refresh.";
+	"Discussion controls are temporarily unavailable. Please refresh and try again.";
 
 function formatDate(value: string) {
 	return new Intl.DateTimeFormat("en", {
