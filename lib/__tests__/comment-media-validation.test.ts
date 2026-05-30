@@ -3,6 +3,7 @@ import {
 	detectCommentImageMimeType,
 	getCommentImageUploadIssue,
 	getReviewContentIssue,
+	normalizeCommentContent,
 } from "@/lib/comment-media-validation";
 
 const pngBytes = new Uint8Array([
@@ -108,6 +109,37 @@ describe("review content validation", () => {
 				contentFormat: "plain",
 			}),
 		).toBe("");
+	});
+
+	it("accepts emoji in review and reply text", () => {
+		expect(
+			getReviewContentIssue({
+				content: "Lead with impact 🔥 and quantify wins 👍",
+				contentFormat: "plain",
+			}),
+		).toBe("");
+
+		expect(
+			getReviewContentIssue({
+				content: "🔥".repeat(10),
+				contentFormat: "plain",
+			}),
+		).toBe("");
+	});
+
+	it("normalizes comment unicode without stripping emoji", () => {
+		expect(normalizeCommentContent("  Cafe\u0301 looks stronger 🚀\r\n")).toBe(
+			"Caf\u00e9 looks stronger 🚀",
+		);
+	});
+
+	it("keeps the emoji-aware limit aligned with database storage length", () => {
+		expect(
+			getReviewContentIssue({
+				content: "👍🏽".repeat(2001),
+				contentFormat: "plain",
+			}),
+		).toBe("Keep feedback under 4000 characters.");
 	});
 
 	it("rejects invalid formats and malformed attachment ids", () => {

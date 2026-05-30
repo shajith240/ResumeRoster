@@ -42,7 +42,10 @@ import {
 	REPORT_REASON_OPTIONS,
 	type ReportReason,
 } from "@/lib/report-validation";
-import { getReviewContentIssue } from "@/lib/comment-media-validation";
+import {
+	getReviewContentIssue,
+	normalizeCommentContent,
+} from "@/lib/comment-media-validation";
 import {
 	getResumeAffiliationLabel,
 	getResumePosterLabel,
@@ -938,7 +941,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		const reviewContent = content.trim();
+		const reviewContent = normalizeCommentContent(content);
 		const payloadIssue = getReviewContentIssue({
 			attachmentId: selectedAttachment?.id,
 			content: reviewContent,
@@ -1049,7 +1052,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		const replyText = replyContent.trim();
+		const replyText = normalizeCommentContent(replyContent);
 		const payloadIssue = getReviewContentIssue({
 			attachmentId: replyAttachment?.id,
 			content: replyText,

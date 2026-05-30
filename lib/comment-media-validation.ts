@@ -16,6 +16,22 @@ export type CommentImageMimeType =
 	(typeof COMMENT_IMAGE_ALLOWED_MIME_TYPES)[number];
 export type CommentContentFormat = (typeof COMMENT_CONTENT_FORMATS)[number];
 
+type SegmenterLike = {
+	segment(value: string): Iterable<{ segment: string }>;
+};
+
+type IntlWithSegmenter = typeof Intl & {
+	Segmenter?: new (
+		locale?: string | string[],
+		options?: { granularity?: "grapheme" | "word" | "sentence" },
+	) => SegmenterLike;
+};
+
+const GraphemeSegmenter = (Intl as IntlWithSegmenter).Segmenter;
+const commentSegmenter = GraphemeSegmenter
+	? new GraphemeSegmenter(undefined, { granularity: "grapheme" })
+	: null;
+
 export type CommentImageFileInput = {
 	bytes: Uint8Array;
 	name: string;
@@ -94,6 +110,25 @@ export function isCommentContentFormat(
 	return COMMENT_CONTENT_FORMATS.includes(value as CommentContentFormat);
 }
 
+export function normalizeCommentContent(content: string) {
+	return content.normalize("NFC").replace(/\r\n?/g, "\n").trim();
+}
+
+function getVisibleGraphemeCount(content: string) {
+	const normalizedContent = normalizeCommentContent(content);
+	if (!normalizedContent) return 0;
+
+	const segments = commentSegmenter
+		? Array.from(commentSegmenter.segment(normalizedContent), (item) => item.segment)
+		: Array.from(normalizedContent);
+
+	return segments.filter((segment) => segment.trim()).length;
+}
+
+function getStorageCharacterCount(content: string) {
+	return Array.from(normalizeCommentContent(content)).length;
+}
+
 export function getReviewContentIssue({
 	attachmentId,
 	content,
@@ -103,13 +138,15 @@ export function getReviewContentIssue({
 	content: string;
 	contentFormat: unknown;
 }) {
-	const normalizedContent = content.trim();
+	const normalizedContent = normalizeCommentContent(content);
+	const visibleCharacterCount = getVisibleGraphemeCount(normalizedContent);
+	const storageCharacterCount = getStorageCharacterCount(normalizedContent);
 
-	if (normalizedContent.length < REVIEW_CONTENT_MIN_LENGTH) {
+	if (visibleCharacterCount < REVIEW_CONTENT_MIN_LENGTH) {
 		return "Write at least 10 characters of useful feedback.";
 	}
 
-	if (normalizedContent.length > REVIEW_CONTENT_MAX_LENGTH) {
+	if (storageCharacterCount > REVIEW_CONTENT_MAX_LENGTH) {
 		return "Keep feedback under 4000 characters.";
 	}
 
