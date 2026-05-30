@@ -2,20 +2,14 @@ import { describe, expect, it } from "vitest";
 import {
 	bestRoastMap,
 	enhanceRoaster,
-	improvement,
 	roastPoints,
 	roleTag,
 	sortRoasters,
 } from "@/lib/leaderboard-ranking";
 
 describe("leaderboard ranking", () => {
-	it("scores roast points from helpful votes and roast count", () => {
-		expect(roastPoints(2, 3)).toBe(420);
-	});
-
-	it("keeps improvement in a sensible range", () => {
-		expect(improvement(0, 0)).toBe(18);
-		expect(improvement(100, 100)).toBe(96);
+	it("uses helpful votes as lint points", () => {
+		expect(roastPoints(2)).toBe(2);
 	});
 
 	it("derives professional role tags from profile context", () => {
@@ -25,14 +19,14 @@ describe("leaderboard ranking", () => {
 		expect(roleTag({ college: null, target_role: "Product Manager", helpful_votes: 0, roast_count: 0 })).toBe("Job Seeker");
 	});
 
-	it("sorts by points, helpful votes, then roast count", () => {
+	it("sorts by lint points, helpful votes, then review count", () => {
 		expect(
 			sortRoasters([
-				{ id: "a", roast_points: 60, helpful_votes: 0, roast_count: 1 },
-				{ id: "b", roast_points: 240, helpful_votes: 2, roast_count: 0 },
-				{ id: "c", roast_points: 240, helpful_votes: 1, roast_count: 2 },
+				{ id: "a", roast_points: 0, helpful_votes: 0, roast_count: 1 },
+				{ id: "b", roast_points: 2, helpful_votes: 2, roast_count: 0 },
+				{ id: "c", roast_points: 2, helpful_votes: 2, roast_count: 2 },
 			]).map((roaster) => roaster.id),
-		).toEqual(["b", "c", "a"]);
+		).toEqual(["c", "b", "a"]);
 	});
 
 	it("selects each roaster's most helpful recent roast", () => {
@@ -79,7 +73,7 @@ describe("leaderboard ranking", () => {
 			},
 		);
 
-		expect(enhanced.roast_points).toBe(240);
+		expect(enhanced.roast_points).toBe(1);
 		expect(enhanced.role_tag).toBe("Student");
 		expect(enhanced.top_roast?.resume_id).toBe("resume-1");
 	});

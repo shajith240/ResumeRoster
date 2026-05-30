@@ -9,7 +9,6 @@ import {
 	Flame,
 	ListOrdered,
 	Search,
-	TrendingUp,
 	X,
 } from "lucide-react";
 
@@ -31,7 +30,6 @@ export type LeaderboardRoastPreview = {
 };
 
 export type LeaderboardRoaster = RoasterLeaderboardEntry & {
-	improvement?: number;
 	roast_points?: number;
 	role_tag?: string;
 	top_roast?: LeaderboardRoastPreview;
@@ -122,17 +120,7 @@ function tagClass(label: string) {
 }
 
 function roastPoints(roaster: LeaderboardRoaster) {
-	return (
-		roaster.roast_points ??
-		roaster.helpful_votes * 120 + roaster.roast_count * 60
-	);
-}
-
-function improvement(roaster: LeaderboardRoaster) {
-	return (
-		roaster.improvement ??
-		Math.min(96, 18 + roaster.helpful_votes * 4 + roaster.roast_count * 2)
-	);
+	return roaster.roast_points ?? roaster.helpful_votes;
 }
 
 function tableQuote(roaster: LeaderboardRoaster) {
@@ -151,15 +139,14 @@ function normalizeSearchValue(value: string) {
 
 function buildSearchText(roaster: LeaderboardRoaster, rank: number) {
 	const points = roastPoints(roaster);
-	const improve = improvement(roaster);
 
 	return normalizeSearchValue(
 		[
 			`rank ${rank}`,
 			`#${rank}`,
 			String(rank),
+			`${points} lint points`,
 			`${points} points`,
-			`${improve} improvement`,
 			roasterName(roaster),
 			roaster.username,
 			roaster.target_role,
@@ -255,7 +242,7 @@ function LeaderboardRow({
 			animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
 			exit={reducedMotion ? undefined : { opacity: 0, y: -6 }}
 			transition={reducedMotion ? { duration: 0 } : rowSpring}
-			className="group grid grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_118px_minmax(180px,1fr)_120px] items-center gap-4 border-b border-[var(--border-subtle)] px-5 py-4 last:border-b-0 hover:bg-[color-mix(in_srgb,var(--bg-elevated)_58%,transparent)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_118px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-cell]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px_112px] max-[1080px]:[&_.top-roast-cell]:hidden max-[760px]:grid-cols-[48px_minmax(0,1fr)] max-[760px]:items-start max-[760px]:gap-3 max-[760px]:px-4"
+			className="group grid grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] items-center gap-4 border-b border-[var(--border-subtle)] px-5 py-4 last:border-b-0 hover:bg-[color-mix(in_srgb,var(--bg-elevated)_58%,transparent)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-cell]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-roast-cell]:hidden max-[760px]:grid-cols-[48px_minmax(0,1fr)] max-[760px]:items-start max-[760px]:gap-3 max-[760px]:px-4"
 		>
 			<RankCell rank={rank} />
 
@@ -291,11 +278,6 @@ function LeaderboardRow({
 			<div className="flex items-center gap-2 font-[var(--font-app-body)] text-base font-medium tabular-nums text-[var(--text-primary)] max-[760px]:col-start-2">
 				<Flame className="h-4 w-4 text-[var(--brand)]" aria-hidden="true" />
 				{points.toLocaleString()}
-			</div>
-
-			<div className="flex items-center gap-2 text-sm font-medium tabular-nums text-[var(--success)] max-[760px]:col-start-2">
-				<TrendingUp className="h-4 w-4" aria-hidden="true" />+
-				{improvement(roaster)}%
 			</div>
 
 			<div className="top-roast-cell min-w-0">
@@ -376,7 +358,7 @@ function DirectoryRow({
 					{name}
 				</strong>
 				<span className="mt-1 block truncate text-xs font-normal text-[var(--text-secondary)]">
-					Rank #{rank} - {roastPoints(roaster).toLocaleString()} points
+					Rank #{rank} - {roastPoints(roaster).toLocaleString()} lint points
 				</span>
 			</Link>
 			<span
@@ -495,12 +477,11 @@ export function StackedList({
 				</label>
 			</div>
 
-			<div className="hidden grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_118px_minmax(180px,1fr)_120px] gap-4 border-b border-[var(--border-subtle)] px-5 py-3 text-xs font-medium uppercase tracking-[0.06em] text-[var(--text-tertiary)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_118px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-head]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px_112px] max-[1080px]:[&_.top-roast-head]:hidden md:grid">
+			<div className="hidden grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] gap-4 border-b border-[var(--border-subtle)] px-5 py-3 text-xs font-medium uppercase tracking-[0.06em] text-[var(--text-tertiary)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-head]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-roast-head]:hidden md:grid">
 				<span>Rank</span>
 				<span>Reviewer</span>
 				<span className="role-head">Role</span>
-				<span>Points</span>
-				<span>Improve</span>
+				<span>Lint Points</span>
 				<span className="top-roast-head">Top feedback</span>
 				<span>Action</span>
 			</div>

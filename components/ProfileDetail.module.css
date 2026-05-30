@@ -111,11 +111,19 @@
 	object-fit: contain;
 }
 
-.roleTag {
+.profileSignals {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 12px;
+}
+
+.roleTag,
+.lintPointsBadge {
 	display: inline-flex;
 	align-items: center;
 	width: fit-content;
-	margin-top: 12px;
 	border: 1px solid rgba(92, 72, 180, 0.2);
 	border-radius: 999px;
 	padding: 6px 12px;
@@ -123,6 +131,34 @@
 	color: #4230a3;
 	font-size: 13px;
 	font-weight: 500;
+}
+
+.lintPointsBadge {
+	gap: 7px;
+	border-color: color-mix(in srgb, var(--brand) 24%, var(--border-subtle));
+	background: color-mix(in srgb, var(--bg-surface) 86%, var(--brand) 14%);
+	color: var(--text-primary);
+	font-variant-numeric: tabular-nums;
+}
+
+.lintPointsBadge svg {
+	width: 15px;
+	height: 15px;
+	color: var(--brand);
+	stroke-width: 2;
+}
+
+.lintPointsBadge strong {
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.lintPointsBadge span {
+	color: var(--text-secondary);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1;
 }
 
 .identity p {
@@ -163,8 +199,7 @@
 	margin-bottom: 14px;
 }
 
-.panelHeader a,
-.resumeHighlight a {
+.panelHeader a {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
@@ -191,63 +226,9 @@
 	font-weight: 500;
 }
 
-.statsGrid {
-	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
-	border: 1px solid var(--border-subtle);
-	border-radius: 10px;
-	padding: 8px;
-	background: color-mix(in srgb, var(--bg-surface) 92%, var(--bg-base));
-}
-
-.statCard {
-	position: relative;
-	display: grid;
-	grid-template-columns: auto minmax(0, 1fr);
-	gap: 4px 12px;
-	align-items: center;
-	min-height: 86px;
-	border: 1px solid transparent;
-	border-radius: 8px;
-	padding: clamp(14px, 1.1vw, 18px);
-	background: var(--bg-surface);
-}
-
-.statCard svg {
-	grid-row: span 2;
-	width: 22px;
-	height: 22px;
-	color: var(--text-tertiary);
-	stroke-width: 1.7;
-}
-
-.statPrimary {
-	border-color: color-mix(in srgb, var(--brand) 20%, var(--border-subtle));
-	background: color-mix(in srgb, var(--bg-surface) 88%, var(--brand) 12%);
-}
-
-.statPrimary svg {
-	color: var(--brand);
-}
-
-.statCard strong {
-	color: var(--text-primary);
-	font-size: clamp(26px, 2.05vw, 36px);
-	font-weight: 600;
-	font-variant-numeric: tabular-nums;
-	line-height: 1;
-}
-
-.statCard span {
-	color: var(--text-secondary);
-	font-size: 11px;
-	font-weight: 600;
-	line-height: 1.2;
-}
-
 .profileGrid {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr) minmax(360px, 1.25fr);
+	grid-template-columns: minmax(0, 1fr) minmax(300px, 0.85fr);
 	gap: clamp(14px, 1.35vw, 22px);
 	min-width: 0;
 }
@@ -261,7 +242,6 @@
 
 .aboutPanel,
 .skillsPanel,
-.highlightPanel,
 .reviewerPanel,
 .activityPanel,
 .roastsPanel {
@@ -447,77 +427,6 @@
 	overflow-wrap: anywhere;
 }
 
-.resumeHighlight {
-	display: grid;
-	grid-template-columns: 92px minmax(0, 1fr);
-	gap: 16px;
-	align-items: center;
-}
-
-.resumePreview {
-	display: grid;
-	place-items: center;
-	width: 92px;
-	height: 120px;
-	border: 1px solid var(--border-default);
-	border-radius: 8px;
-	background:
-		linear-gradient(var(--bg-elevated) 0 0) padding-box,
-		repeating-linear-gradient(
-			180deg,
-			color-mix(in srgb, var(--text-primary) 16%, transparent) 0 1px,
-			transparent 1px 13px
-		);
-}
-
-.resumePreview svg {
-	width: 30px;
-	height: 30px;
-	color: #9f7529;
-}
-
-.resumeHighlight strong,
-.resumeHighlight span {
-	display: block;
-}
-
-.resumeHighlight strong {
-	overflow: hidden;
-	color: var(--text-primary);
-	font-size: 14px;
-	font-weight: 600;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.resumeHighlight span {
-	margin-top: 6px;
-	color: var(--text-secondary);
-	font-size: 12px;
-}
-
-.resumeHighlight a {
-	width: fit-content;
-	margin-top: 14px;
-	border: 1px solid var(--border-default);
-	border-radius: var(--button-radius);
-	padding: 8px 12px;
-	background: var(--bg-elevated);
-	transition:
-		background-color 0.2s var(--button-ease),
-		border-color 0.2s var(--button-ease),
-		color 0.2s var(--button-ease),
-		transform 0.16s var(--button-ease);
-}
-
-.resumeHighlight a:hover {
-	transform: translateY(-1px);
-}
-
-.resumeHighlight a:active {
-	transform: translateY(1px);
-}
-
 .activityList,
 .roastList {
 	display: grid;
@@ -535,38 +444,20 @@
 }
 
 .activityRow {
-	grid-template-columns: 36px minmax(0, 1fr) auto;
-	gap: 10px;
-	padding: 10px 0;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 14px;
+	padding: 12px 0;
 }
 
 .roastRow {
-	grid-template-columns: 34px minmax(0, 1fr) auto;
-	gap: 12px;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 16px;
 	padding: 14px 0;
 }
 
 .activityRow:last-child,
 .roastRow:last-child {
 	border-bottom: 0;
-}
-
-.activityIcon,
-.roastRow > svg {
-	display: grid;
-	place-items: center;
-	width: 30px;
-	height: 30px;
-	border: 1px solid var(--border-default);
-	border-radius: 7px;
-	background: var(--bg-elevated);
-	color: #ad751f;
-}
-
-.activityIcon svg {
-	width: 16px;
-	height: 16px;
-	color: #ad751f;
 }
 
 .activityRow strong,
@@ -821,7 +712,7 @@
 .editFields {
 	display: grid;
 	flex: 1;
-	grid-template-columns: minmax(320px, 0.9fr) minmax(420px, 1.1fr);
+	grid-template-columns: minmax(340px, 0.95fr) minmax(420px, 1.05fr);
 	gap: 16px;
 	min-height: 0;
 	overflow-y: auto;
@@ -949,7 +840,7 @@
 }
 
 .aboutTextarea {
-	min-height: 138px;
+	min-height: 168px;
 }
 
 .highlightSelectTrigger {
@@ -993,7 +884,9 @@
 
 .skillEditor {
 	display: grid;
+	align-content: start;
 	gap: 12px;
+	min-height: 210px;
 	border: 1px solid hsl(var(--input));
 	border-radius: var(--button-radius-sm);
 	padding: 12px;
@@ -1233,10 +1126,6 @@
 		justify-self: start;
 	}
 
-	.statsGrid {
-		grid-template-columns: repeat(2, 1fr);
-	}
-
 	.editFields {
 		grid-template-columns: 1fr;
 	}
@@ -1305,17 +1194,8 @@
 		align-items: flex-start;
 	}
 
-	.statsGrid {
-		grid-template-columns: 1fr;
-	}
-
-	.statCard {
-		min-height: 78px;
-	}
-
 	.aboutPanel,
 	.skillsPanel,
-	.highlightPanel,
 	.reviewerPanel,
 	.activityPanel,
 	.roastsPanel {
@@ -1345,14 +1225,12 @@
 		white-space: normal;
 	}
 
-	.resumeHighlight,
 	.activityRow,
 	.roastRow,
 	.editFieldGrid {
 		grid-template-columns: 1fr;
 	}
 
-	.resumeHighlight strong,
 	.activityRow strong,
 	.roastRow p {
 		display: -webkit-box;
@@ -1385,18 +1263,15 @@
 	color: var(--text-primary);
 }
 
-:global(body.main-app-dark) .statPrimary svg,
-:global(body.main-app-dark) .resumePreview svg,
-:global(body.main-app-dark) .activityIcon,
-:global(body.main-app-dark) .activityIcon svg,
-:global(body.main-app-dark) .roastRow > svg {
-	color: var(--brand);
-}
-
 :global(body.main-app-dark) .roleTag {
 	border-color: rgba(169, 149, 255, 0.24);
 	background: rgba(169, 149, 255, 0.12);
 	color: #cfc3ff;
+}
+
+:global(body.main-app-dark) .lintPointsBadge {
+	border-color: rgba(255, 184, 95, 0.28);
+	background: rgba(255, 184, 95, 0.13);
 }
 
 :global(body.main-app-dark) .editDialog,

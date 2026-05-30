@@ -10,26 +10,20 @@ import {
 	useState,
 } from "react";
 import {
-	ArrowRight,
 	BadgeCheck,
 	BriefcaseBusiness,
 	CalendarDays,
 	Camera,
-	FileText,
 	Flame,
 	GraduationCap,
 	MapPin,
-	MessageSquareText,
 	Pencil,
 	Plus,
 	Search,
 	ShieldCheck,
-	TrendingUp,
-	Trophy,
 	Upload,
 	X,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import {
@@ -96,7 +90,6 @@ type ProfileDetailProps = {
 
 type ActivityItem = {
 	id: string;
-	icon: LucideIcon;
 	title: string;
 	detail: string;
 	result: string;
@@ -113,7 +106,6 @@ type UsernameAvailability = {
 const fallbackAvatar = "/assets/logo.png";
 const VERIFIED_TICK_SRC = "/assets/verified_tick.png";
 const PROFILE_CHANGE_EVENT = "linted-profile-change";
-const LATEST_RESUME_VALUE = "__latest_public_resume__";
 const SUPABASE_MIGRATION_MESSAGE =
 	"Run the pending Supabase migrations, then refresh this page.";
 const REVIEWER_EXPERTISE_OPTIONS = Array.from(
@@ -242,17 +234,6 @@ function getInitials(name: string) {
 		.join("");
 }
 
-function highlightedResume(
-	profile: PublicProfile,
-	resumes: PublicProfileResume[],
-) {
-	return (
-		resumes.find((resume) => resume.id === profile.resume_highlight_id) ||
-		resumes.find((resume) => resume.is_highlight) ||
-		resumes[0]
-	);
-}
-
 function getActivity(
 	roasts: PublicProfileRoast[],
 	resumes: PublicProfileResume[],
@@ -260,7 +241,6 @@ function getActivity(
 ): ActivityItem[] {
 	const resumeItems: ActivityItem[] = resumes.slice(0, 5).map((resume) => ({
 		id: `resume-${resume.id}`,
-		icon: FileText,
 		title: `Posted ${resume.title}`,
 		detail: formatActivityDate(resume.created_at),
 		result: `${resume.roast_count} comments`,
@@ -270,7 +250,6 @@ function getActivity(
 
 	const roastItems: ActivityItem[] = roasts.slice(0, 5).map((roast) => ({
 		id: `roast-${roast.id}`,
-		icon: MessageSquareText,
 		title: `Reviewed ${roast.resume_title}`,
 		detail: formatActivityDate(roast.created_at),
 		result: `${roast.helpful_votes} helpful`,
@@ -287,7 +266,6 @@ function getActivity(
 	return [
 		{
 			id: "profile-created",
-			icon: ShieldCheck,
 			title: "Joined Linted",
 			detail: `Member since ${formatDate(profile.created_at)}`,
 			result: "Ready",
@@ -296,7 +274,6 @@ function getActivity(
 		},
 		{
 			id: "ready-to-roast",
-			icon: MessageSquareText,
 			title: "Ready to review resumes",
 			detail: "No public activity yet",
 			result: "Open",
@@ -334,7 +311,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	const [reviewerProofUrl, setReviewerProofUrl] = useState("");
 	const [reviewerApplicationNote, setReviewerApplicationNote] = useState("");
 	const [reviewerApplying, setReviewerApplying] = useState(false);
-	const [resumeHighlightId, setResumeHighlightId] = useState("");
 	const [avatarFile, setAvatarFile] = useState<File | null>(null);
 	const [avatarPreview, setAvatarPreview] = useState("");
 	const [loading, setLoading] = useState(true);
@@ -543,11 +519,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			);
 			setReviewerProofUrl("");
 			setReviewerApplicationNote("");
-			setResumeHighlightId(
-				loadedProfile.resume_highlight_id ||
-					loadedResumes.find((resume) => resume.is_highlight)?.id ||
-					"",
-			);
 
 			const elapsed = Date.now() - started;
 			window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
@@ -648,10 +619,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			const nextPosition =
 				limitText(currentPosition, PROFILE_FIELD_LIMITS.currentPosition).trim() ||
 				null;
-			const selectedHighlight =
-				resumes.some((resume) => resume.id === resumeHighlightId) && resumeHighlightId
-					? resumeHighlightId
-					: null;
 			const nextCommunityRole = isCommunityRole(communityRole)
 				? communityRole
 				: "candidate";
@@ -696,7 +663,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								REVIEWER_FIELD_LIMITS.headline,
 							) || null,
 				reviewer_type: nextReviewerType,
-				resume_highlight_id: selectedHighlight,
 				...(avatarUpdate ?? {}),
 			};
 
@@ -723,7 +689,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							...current,
 							...nextProfile,
 							skills: nextSkills,
-							resume_highlight_id: selectedHighlight,
 						}
 					: current,
 			);
@@ -952,7 +917,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			profile.current_position ||
 			profile.target_role ||
 			"Community resume reviewer";
-		const resumeHighlight = highlightedResume(profile, resumes);
 		const skills = profile.skills?.length ? profile.skills : fallbackSkills(profile);
 		const reviewerVisible = canShowReviewerProfile(
 			profile.community_role,
@@ -980,7 +944,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			reviewerLabel: getReviewerDisplayLabel(profile),
 			reviewerStatus: profile.reviewer_verification_status,
 			reviewerVisible,
-			resumeHighlight,
 			roleTag: getProfileRoleLabel(profile),
 			skills,
 			tagline:
@@ -1072,7 +1035,17 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								</span>
 							) : null}
 						</div>
-						<div className={styles.roleTag}>{profileView.roleTag}</div>
+						<div className={styles.profileSignals}>
+							<div className={styles.roleTag}>{profileView.roleTag}</div>
+							<div
+								className={styles.lintPointsBadge}
+								aria-label={`${profile.helpful_votes.toLocaleString()} lint points`}
+							>
+								<Flame aria-hidden="true" />
+								<strong>{profile.helpful_votes.toLocaleString()}</strong>
+								<span>Lint Points</span>
+							</div>
+						</div>
 						<p>{profileView.tagline}</p>
 						<div className={styles.metaList}>
 							<span>
@@ -1118,14 +1091,11 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								onCurrentPositionChange={setCurrentPosition}
 								onFullNameChange={setFullName}
 								profileOwnerId={profile.id}
-								onResumeHighlightChange={setResumeHighlightId}
 								onSave={saveProfile}
 								onSkillsChange={setSkillsInput}
 								onTaglineChange={setTagline}
 								onUsernameChange={setUsername}
 								originalUsername={profile.username ?? ""}
-								resumeHighlightId={resumeHighlightId}
-								resumes={resumes}
 								saveMessage={saveMessage}
 								saving={saving}
 								skillsInput={skillsInput}
@@ -1135,30 +1105,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 						</Dialog>
 					) : null}
 				</header>
-
-				<section className={styles.statsGrid} aria-label="Profile stats">
-					<StatCard
-						highlight
-						icon={Flame}
-						label="Lint Points"
-						value={profile.roast_points.toLocaleString()}
-					/>
-					<StatCard
-						icon={TrendingUp}
-						label="Resume Improvement"
-						value={`+${profile.resume_improvement}%`}
-					/>
-					<StatCard
-						icon={FileText}
-						label="Resumes Reviewed"
-						value={profile.resumes_roasted_count.toLocaleString()}
-					/>
-					<StatCard
-						icon={Trophy}
-						label="Best Reviews"
-						value={profile.best_roast_count.toLocaleString()}
-					/>
-				</section>
 
 				<div className={styles.profileGrid}>
 					{profileView.reviewerVisible ? (
@@ -1281,38 +1227,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							))}
 						</div>
 					</section>
-
-					<section className={styles.highlightPanel}>
-						<div className={styles.panelHeader}>
-							<h2>Resume Highlight</h2>
-							{profileView.resumeHighlight ? (
-								<Link href={`/resume/${profileView.resumeHighlight.id}`}>
-									View Resume <ArrowRight aria-hidden="true" />
-								</Link>
-							) : null}
-						</div>
-						{profileView.resumeHighlight ? (
-							<div className={styles.resumeHighlight}>
-								<div className={styles.resumePreview}>
-									<FileText aria-hidden="true" />
-								</div>
-								<div>
-									<strong>{profileView.resumeHighlight.title}</strong>
-									<span>
-										{profileView.resumeHighlight.roast_count} comments -{" "}
-										{formatActivityDate(profileView.resumeHighlight.created_at)}
-									</span>
-									<Link href={`/resume/${profileView.resumeHighlight.id}`}>
-										View Resume
-									</Link>
-								</div>
-							</div>
-						) : (
-							<p className={styles.mutedCopy}>
-								No public resume is highlighted yet.
-							</p>
-						)}
-					</section>
 				</div>
 
 				<div className={styles.activityGrid}>
@@ -1351,33 +1265,9 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	);
 }
 
-function StatCard({
-	highlight = false,
-	icon: Icon,
-	label,
-	value,
-}: {
-	highlight?: boolean;
-	icon: LucideIcon;
-	label: string;
-	value: string;
-}) {
-	return (
-		<div className={`${styles.statCard} ${highlight ? styles.statPrimary : ""}`}>
-			<Icon aria-hidden="true" />
-			<strong>{value}</strong>
-			<span>{label}</span>
-		</div>
-	);
-}
-
 function ActivityRow({ item }: { item: ActivityItem }) {
-	const Icon = item.icon;
 	const content = (
 		<>
-			<div className={styles.activityIcon}>
-				<Icon aria-hidden="true" />
-			</div>
 			<div>
 				<strong>{item.title}</strong>
 				<span>{item.detail}</span>
@@ -1400,7 +1290,6 @@ function ActivityRow({ item }: { item: ActivityItem }) {
 function RoastRow({ roast }: { roast: PublicProfileRoast }) {
 	return (
 		<Link className={styles.roastRow} href={`/resume/${roast.resume_id}`}>
-			<MessageSquareText aria-hidden="true" />
 			<div>
 				<p>"{roast.content}"</p>
 				<span>
@@ -1898,14 +1787,11 @@ function ProfileEditDialog({
 	onCurrentPositionChange,
 	onFullNameChange,
 	profileOwnerId,
-	onResumeHighlightChange,
 	onSave,
 	onSkillsChange,
 	onTaglineChange,
 	onUsernameChange,
 	originalUsername,
-	resumeHighlightId,
-	resumes,
 	saveMessage,
 	saving,
 	skillsInput,
@@ -1927,14 +1813,11 @@ function ProfileEditDialog({
 	onCurrentPositionChange: (value: string) => void;
 	onFullNameChange: (value: string) => void;
 	profileOwnerId: string;
-	onResumeHighlightChange: (value: string) => void;
 	onSave: (event: FormEvent<HTMLFormElement>) => void;
 	onSkillsChange: (value: string) => void;
 	onTaglineChange: (value: string) => void;
 	onUsernameChange: (value: string) => void;
 	originalUsername: string;
-	resumeHighlightId: string;
-	resumes: PublicProfileResume[];
 	saveMessage: string;
 	saving: boolean;
 	skillsInput: string;
@@ -2314,45 +2197,6 @@ function ProfileEditDialog({
 							/>
 						</div>
 
-						<div>
-							<FieldHeader htmlFor="profile-resume-highlight">
-								Resume highlight
-							</FieldHeader>
-							<Select
-								onValueChange={(value) =>
-									onResumeHighlightChange(
-										value === LATEST_RESUME_VALUE ? "" : value,
-									)
-								}
-								value={resumeHighlightId || LATEST_RESUME_VALUE}
-							>
-								<SelectTrigger
-									className={styles.highlightSelectTrigger}
-									id="profile-resume-highlight"
-								>
-									<SelectValue placeholder="Latest public resume" />
-								</SelectTrigger>
-								<SelectContent className={styles.highlightSelectContent}>
-									<SelectGroup>
-										<SelectItem
-											className={styles.highlightSelectItem}
-											value={LATEST_RESUME_VALUE}
-										>
-											Latest public resume
-										</SelectItem>
-										{resumes.map((resume) => (
-											<SelectItem
-												className={styles.highlightSelectItem}
-												key={resume.id}
-												value={resume.id}
-											>
-												{resume.title}
-											</SelectItem>
-										))}
-									</SelectGroup>
-								</SelectContent>
-							</Select>
-						</div>
 					</div>
 
 					<div className={styles.editColumn}>

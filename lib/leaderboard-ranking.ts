@@ -52,12 +52,8 @@ export function roleTag(roaster: LeaderboardStatsInput) {
 	return "Job Seeker";
 }
 
-export function roastPoints(helpfulVotes: number, roastCount: number) {
-	return helpfulVotes * 120 + roastCount * 60;
-}
-
-export function improvement(helpfulVotes: number, roastCount: number) {
-	return Math.min(96, Math.max(12, 18 + helpfulVotes * 4 + roastCount * 2));
+export function roastPoints(helpfulVotes: number) {
+	return helpfulVotes;
 }
 
 export function sortRoasters<
@@ -69,7 +65,8 @@ export function sortRoasters<
 >(roasters: T[]) {
 	return [...roasters].sort(
 		(a, b) =>
-			(b.roast_points ?? 0) - (a.roast_points ?? 0) ||
+			(b.roast_points ?? b.helpful_votes) -
+				(a.roast_points ?? a.helpful_votes) ||
 			b.helpful_votes - a.helpful_votes ||
 			b.roast_count - a.roast_count,
 	);
@@ -105,9 +102,8 @@ export function enhanceRoaster<
 	return {
 		...roaster,
 		helpful_votes: helpfulVotes,
-		improvement: improvement(helpfulVotes, roastCount),
 		roast_count: roastCount,
-		roast_points: roastPoints(helpfulVotes, roastCount),
+		roast_points: roastPoints(helpfulVotes),
 		role_tag: roleTag(roaster),
 		top_roast: topRoast
 			? {
