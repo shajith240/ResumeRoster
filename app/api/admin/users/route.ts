@@ -52,7 +52,7 @@ export async function GET(request: Request) {
 
 		const [
 			resumesResult,
-			roastsResult,
+			reviewsResult,
 			votesResult,
 			attachmentsResult,
 			reportsResult,
@@ -86,7 +86,7 @@ export async function GET(request: Request) {
 
 		for (const result of [
 			resumesResult,
-			roastsResult,
+			reviewsResult,
 			votesResult,
 			attachmentsResult,
 			reportsResult,
@@ -96,7 +96,7 @@ export async function GET(request: Request) {
 		}
 
 		const resumeCounts = countByUserId(resumesResult.data ?? [], "user_id");
-		const roastCounts = countByUserId(roastsResult.data ?? [], "author_id");
+		const reviewCounts = countByUserId(reviewsResult.data ?? [], "author_id");
 		const voteCounts = countByUserId(votesResult.data ?? [], "voter_id");
 		const attachmentCounts = countByUserId(
 			attachmentsResult.data ?? [],
@@ -120,7 +120,7 @@ export async function GET(request: Request) {
 					reportsFiled: reportCounts.get(authUser.id) ?? 0,
 					resumes: resumeCounts.get(authUser.id) ?? 0,
 					reviewerApplications: applicationCounts.get(authUser.id) ?? 0,
-					reviews: roastCounts.get(authUser.id) ?? 0,
+					reviews: reviewCounts.get(authUser.id) ?? 0,
 					votes: voteCounts.get(authUser.id) ?? 0,
 				},
 			})),

@@ -85,8 +85,8 @@ import type {
 	CommunityRole,
 	PublicProfile,
 	PublicProfileReview,
+	PublicProfileReviewLegacy,
 	PublicProfileResume,
-	PublicProfileRoast,
 	ReviewerType,
 } from "@/lib/supabase/types";
 import { toast } from "sonner";
@@ -243,7 +243,7 @@ function getInitials(name: string) {
 }
 
 function getActivity(
-	roasts: PublicProfileRoast[],
+	reviews: PublicProfileReview[],
 	resumes: PublicProfileResume[],
 	profile: PublicProfile,
 ): ActivityItem[] {
@@ -256,16 +256,16 @@ function getActivity(
 		timestamp: new Date(resume.created_at).getTime(),
 	}));
 
-	const roastItems: ActivityItem[] = roasts.slice(0, 5).map((roast) => ({
-		id: `roast-${roast.id}`,
-		title: `Reviewed ${roast.resume_title}`,
-		detail: formatActivityDate(roast.created_at),
-		result: `${roast.helpful_votes} helpful`,
-		href: `/resume/${roast.resume_id}`,
-		timestamp: new Date(roast.created_at).getTime(),
+	const reviewItems: ActivityItem[] = reviews.slice(0, 5).map((review) => ({
+		id: `review-${review.id}`,
+		title: `Reviewed ${review.resume_title}`,
+		detail: formatActivityDate(review.created_at),
+		result: `${review.lint_points} lint points`,
+		href: `/resume/${review.resume_id}`,
+		timestamp: new Date(review.created_at).getTime(),
 	}));
 
-	const activity = [...resumeItems, ...roastItems]
+	const activity = [...resumeItems, ...reviewItems]
 		.sort((a, b) => b.timestamp - a.timestamp)
 		.slice(0, 5);
 
@@ -281,7 +281,7 @@ function getActivity(
 			timestamp: new Date(profile.created_at).getTime(),
 		},
 		{
-			id: "ready-to-roast",
+			id: "ready-to-review",
 			title: "Ready to review resumes",
 			detail: "No public activity yet",
 			result: "Open",
@@ -304,9 +304,9 @@ function isReportFeatureError(message: string) {
 }
 
 function normalizePublicProfileReview(
-	row: PublicProfileRoast | PublicProfileReview,
-): PublicProfileRoast {
-	const review = row as PublicProfileRoast & Partial<PublicProfileReview>;
+	row: PublicProfileReviewLegacy | PublicProfileReview,
+): PublicProfileReview {
+	const review = row as PublicProfileReviewLegacy & Partial<PublicProfileReview>;
 
 	return {
 		id: review.id,
@@ -314,7 +314,7 @@ function normalizePublicProfileReview(
 		resume_title: review.resume_title,
 		resume_status: review.resume_status,
 		content: review.content,
-		helpful_votes: review.helpful_votes ?? review.lint_points ?? 0,
+		lint_points: review.lint_points ?? review.helpful_votes ?? 0,
 		created_at: review.created_at,
 	};
 }
@@ -335,7 +335,7 @@ async function loadPublicProfileReviews(profileId: string) {
 	}
 
 	if (!/get_public_profile_reviews|schema cache|function/i.test(reviewResult.error.message)) {
-		return { data: [] as PublicProfileRoast[], error: reviewResult.error };
+		return { data: [] as PublicProfileReview[], error: reviewResult.error };
 	}
 
 	const legacyResult = await supabase.rpc("get_public_profile_roasts", {
@@ -344,7 +344,7 @@ async function loadPublicProfileReviews(profileId: string) {
 	});
 
 	return {
-		data: ((legacyResult.data ?? []) as PublicProfileRoast[]).map(
+		data: ((legacyResult.data ?? []) as PublicProfileReviewLegacy[]).map(
 			normalizePublicProfileReview,
 		),
 		error: legacyResult.error,
@@ -354,7 +354,7 @@ async function loadPublicProfileReviews(profileId: string) {
 export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	const [user, setUser] = useState<User | null>(null);
 	const [profile, setProfile] = useState<PublicProfile | null>(null);
-	const [roasts, setRoasts] = useState<PublicProfileRoast[]>([]);
+	const [reviews, setReviews] = useState<PublicProfileReview[]>([]);
 	const [resumes, setResumes] = useState<PublicProfileResume[]>([]);
 	const [fullName, setFullName] = useState("");
 	const [username, setUsername] = useState("");
@@ -464,7 +464,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				}
 			}
 
-			const [profileResult, roastsResult, resumesResult] = await Promise.all([
+			const [profileResult, reviewsResult, resumesResult] = await Promise.all([
 				supabase.rpc("get_public_profile", { profile_id: resolvedProfileId }),
 				loadPublicProfileReviews(resolvedProfileId),
 				supabase.rpc("get_public_profile_resumes", {
@@ -522,11 +522,11 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				}
 			}
 
-			const loadedRoasts = (roastsResult.data ?? []) as PublicProfileRoast[];
+			const loadedReviews = (reviewsResult.data ?? []) as PublicProfileReview[];
 			const loadedResumes = (resumesResult.data ?? []) as PublicProfileResume[];
 
 			setProfile(loadedProfile);
-			setRoasts(loadedRoasts);
+			setReviews(loadedReviews);
 			setResumes(loadedResumes);
 			setFullName(
 				limitText(
@@ -1075,7 +1075,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			: skills.slice(0, 6);
 
 		return {
-			activity: getActivity(roasts, resumes, profile),
+			activity: getActivity(reviews, resumes, profile),
 			avatarUrl: profile.avatar_url || metadataAvatar || fallbackAvatar,
 			collegeLabel: profile.college || "College not set",
 			collegeLocation: profile.college_location || "College location not set",
@@ -1098,7 +1098,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				profile.tagline ||
 				"Building better resumes, one thoughtful lint pass at a time.",
 		};
-	}, [isOwnProfile, profile, resumes, roasts, user]);
+	}, [isOwnProfile, profile, resumes, reviews, user]);
 
 	if (loading) {
 		return (
@@ -1407,15 +1407,15 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 						</div>
 					</section>
 
-					<section className={styles.roastsPanel}>
+					<section className={styles.reviewsPanel}>
 						<div className={styles.panelHeader}>
 							<h2>Recent Reviews</h2>
 							<Link href="/feed">View all</Link>
 						</div>
-						{roasts.length ? (
-							<div className={styles.roastList}>
-								{roasts.slice(0, 4).map((roast) => (
-									<RoastRow roast={roast} key={roast.id} />
+						{reviews.length ? (
+							<div className={styles.reviewList}>
+								{reviews.slice(0, 4).map((review) => (
+									<ReviewRow review={review} key={review.id} />
 								))}
 							</div>
 						) : (
@@ -1529,16 +1529,16 @@ function ActivityRow({ item }: { item: ActivityItem }) {
 	return <div className={styles.activityRow}>{content}</div>;
 }
 
-function RoastRow({ roast }: { roast: PublicProfileRoast }) {
+function ReviewRow({ review }: { review: PublicProfileReview }) {
 	return (
-		<Link className={styles.roastRow} href={`/resume/${roast.resume_id}`}>
+		<Link className={styles.reviewRow} href={`/resume/${review.resume_id}`}>
 			<div>
-				<p>"{roast.content}"</p>
+				<p>"{review.content}"</p>
 				<span>
-					{roast.resume_title} - {formatActivityDate(roast.created_at)}
+					{review.resume_title} - {formatActivityDate(review.created_at)}
 				</span>
 			</div>
-			<strong>{roast.helpful_votes} helpful</strong>
+			<strong>{review.lint_points} lint points</strong>
 		</Link>
 	);
 }

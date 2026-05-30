@@ -30,8 +30,10 @@ export type LeaderboardReviewPreview = {
 };
 
 export type LeaderboardReviewer = ReviewerProfileStats & {
+	lint_points?: number;
 	roast_points?: number;
 	role_tag?: string;
+	top_review?: LeaderboardReviewPreview;
 	top_roast?: LeaderboardReviewPreview;
 };
 
@@ -43,15 +45,15 @@ type StackedListProps = {
 	heading?: string;
 	message?: string;
 	onSearchQueryChange?: (value: string) => void;
-	roasters: LeaderboardRoaster[];
+	reviewers: LeaderboardReviewer[];
 	searchQuery?: string;
 	searchPlaceholder?: string;
 	startRank?: number;
 };
 
-type RankedRoaster = {
+type RankedReviewer = {
 	rank: number;
-	roaster: LeaderboardRoaster;
+	reviewer: LeaderboardReviewer;
 	searchText: string;
 };
 
@@ -74,18 +76,18 @@ function initials(name: string) {
 	return letters || "#";
 }
 
-function roasterName(roaster: LeaderboardRoaster) {
-	return roaster.full_name || roaster.username || "Anonymous reviewer";
+function reviewerName(reviewer: LeaderboardReviewer) {
+	return reviewer.full_name || reviewer.username || "Anonymous reviewer";
 }
 
-function roleTag(roaster: LeaderboardRoaster) {
-	if (roaster.role_tag) return roaster.role_tag;
+function roleTag(reviewer: LeaderboardReviewer) {
+	if (reviewer.role_tag) return reviewer.role_tag;
 
-	if (canShowReviewerProfile(roaster.community_role, roaster.reviewer_type)) {
-		return getReviewerDisplayLabel(roaster);
+	if (canShowReviewerProfile(reviewer.community_role, reviewer.reviewer_type)) {
+		return getReviewerDisplayLabel(reviewer);
 	}
 
-	const role = `${roaster.target_role ?? ""} ${roaster.college ?? ""}`.toLowerCase();
+	const role = `${reviewer.target_role ?? ""} ${reviewer.college ?? ""}`.toLowerCase();
 
 	if (role.includes("student") || role.includes("college") || role.includes("iit")) {
 		return "Student";
@@ -122,12 +124,12 @@ function tagClass(label: string) {
 	return "border-[#F6D794] bg-[#FFF3D8] text-[#8A5B11] dark:border-[rgba(255,184,95,0.28)] dark:bg-[rgba(255,184,95,0.14)] dark:text-[#ffd28a]";
 }
 
-function reviewerLintPoints(roaster: LeaderboardRoaster) {
-	return roaster.roast_points ?? roaster.helpful_votes;
+function reviewerLintPoints(reviewer: LeaderboardReviewer) {
+	return reviewer.lint_points ?? reviewer.roast_points ?? reviewer.helpful_votes;
 }
 
-function tableQuote(roaster: LeaderboardRoaster) {
-	return roaster.top_roast?.content ?? "No top feedback yet.";
+function tableQuote(reviewer: LeaderboardReviewer) {
+	return reviewer.top_review?.content ?? reviewer.top_roast?.content ?? "No top feedback yet.";
 }
 
 function normalizeSearchValue(value: string) {
@@ -140,8 +142,9 @@ function normalizeSearchValue(value: string) {
 		.trim();
 }
 
-function buildSearchText(roaster: LeaderboardRoaster, rank: number) {
-	const points = reviewerLintPoints(roaster);
+function buildSearchText(reviewer: LeaderboardReviewer, rank: number) {
+	const points = reviewerLintPoints(reviewer);
+	const topReview = reviewer.top_review ?? reviewer.top_roast;
 
 	return normalizeSearchValue(
 		[
@@ -150,17 +153,17 @@ function buildSearchText(roaster: LeaderboardRoaster, rank: number) {
 			String(rank),
 			`${points} lint points`,
 			`${points} points`,
-			roasterName(roaster),
-			roaster.username,
-			roaster.target_role,
-			roaster.college,
-			roaster.reviewer_headline,
-			roaster.reviewer_expertise?.join(" "),
-			roaster.reviewer_verification_status,
-			roleTag(roaster),
-			roaster.top_roast?.content,
-			roaster.top_roast?.helpful_votes
-				? `${roaster.top_roast.helpful_votes} helpful`
+			reviewerName(reviewer),
+			reviewer.username,
+			reviewer.target_role,
+			reviewer.college,
+			reviewer.reviewer_headline,
+			reviewer.reviewer_expertise?.join(" "),
+			reviewer.reviewer_verification_status,
+			roleTag(reviewer),
+			topReview?.content,
+			topReview?.helpful_votes
+				? `${topReview.helpful_votes} helpful`
 				: "",
 		]
 			.filter(Boolean)
@@ -180,12 +183,12 @@ function matchesQuery(searchText: string, terms: string[]) {
 
 function LeaderboardAvatar({
 	name,
-	roaster,
+	reviewer,
 }: {
 	name: string;
-	roaster: LeaderboardRoaster;
+	reviewer: LeaderboardReviewer;
 }) {
-	const avatarUrl = resolveAvatarUrl(roaster.avatar_url, roaster.avatar_path);
+	const avatarUrl = resolveAvatarUrl(reviewer.avatar_url, reviewer.avatar_path);
 
 	return (
 		<div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full border border-[rgba(214,179,100,0.52)] bg-[var(--bg-elevated)]">
@@ -225,18 +228,19 @@ function RankCell({ rank }: { rank: number }) {
 function LeaderboardRow({
 	rank,
 	reducedMotion,
-	roaster,
+	reviewer,
 }: {
 	rank: number;
 	reducedMotion: boolean;
-	roaster: LeaderboardRoaster;
+	reviewer: LeaderboardReviewer;
 }) {
-	const name = roasterName(roaster);
-	const tag = roleTag(roaster);
-	const points = reviewerLintPoints(roaster);
-	const topRoastHref = roaster.top_roast
-		? `/resume/${roaster.top_roast.resume_id}`
-		: `/profile/${roaster.id}`;
+	const name = reviewerName(reviewer);
+	const tag = roleTag(reviewer);
+	const points = reviewerLintPoints(reviewer);
+	const topReview = reviewer.top_review ?? reviewer.top_roast;
+	const topReviewHref = topReview
+		? `/resume/${topReview.resume_id}`
+		: `/profile/${reviewer.id}`;
 
 	return (
 		<motion.article
@@ -245,23 +249,23 @@ function LeaderboardRow({
 			animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
 			exit={reducedMotion ? undefined : { opacity: 0, y: -6 }}
 			transition={reducedMotion ? { duration: 0 } : rowSpring}
-			className="group grid grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] items-center gap-4 border-b border-[var(--border-subtle)] px-5 py-4 last:border-b-0 hover:bg-[color-mix(in_srgb,var(--bg-elevated)_58%,transparent)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-cell]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-roast-cell]:hidden max-[760px]:grid-cols-[48px_minmax(0,1fr)] max-[760px]:items-start max-[760px]:gap-3 max-[760px]:px-4"
+			className="group grid grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] items-center gap-4 border-b border-[var(--border-subtle)] px-5 py-4 last:border-b-0 hover:bg-[color-mix(in_srgb,var(--bg-elevated)_58%,transparent)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-cell]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-review-cell]:hidden max-[760px]:grid-cols-[48px_minmax(0,1fr)] max-[760px]:items-start max-[760px]:gap-3 max-[760px]:px-4"
 		>
 			<RankCell rank={rank} />
 
 			<Link
-				href={`/profile/${roaster.id}`}
+				href={`/profile/${reviewer.id}`}
 				className="flex min-w-0 items-center gap-3 text-[var(--text-primary)]"
 			>
-				<LeaderboardAvatar name={name} roaster={roaster} />
+				<LeaderboardAvatar name={name} reviewer={reviewer} />
 				<div className="min-w-0">
 					<strong className="block truncate font-[var(--font-app-body)] text-[15px] font-medium leading-tight">
 						{name}
 					</strong>
 					<span className="mt-1 block truncate text-xs font-normal text-[var(--text-secondary)]">
-						{roaster.reviewer_headline ||
-							roaster.target_role ||
-							roaster.college ||
+						{reviewer.reviewer_headline ||
+							reviewer.target_role ||
+							reviewer.college ||
 							"Community reviewer"}
 					</span>
 				</div>
@@ -283,14 +287,14 @@ function LeaderboardRow({
 				{points.toLocaleString()}
 			</div>
 
-			<div className="top-roast-cell min-w-0">
+			<div className="top-review-cell min-w-0">
 				<p className="truncate text-sm font-normal text-[var(--text-secondary)]">
-					"{tableQuote(roaster)}"
+					"{tableQuote(reviewer)}"
 				</p>
 			</div>
 
 			<Link
-				href={topRoastHref}
+				href={topReviewHref}
 				className="inline-flex min-h-11 w-fit select-none items-center gap-2 rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-3 py-2 text-xs font-medium text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px max-[760px]:col-start-2"
 			>
 				View
@@ -300,27 +304,27 @@ function LeaderboardRow({
 	);
 }
 
-function AvatarStack({ roasters }: { roasters: RankedRoaster[] }) {
-	const visible = roasters.slice(0, 3);
-	const remaining = Math.max(0, roasters.length - visible.length);
+function AvatarStack({ reviewers }: { reviewers: RankedReviewer[] }) {
+	const visible = reviewers.slice(0, 3);
+	const remaining = Math.max(0, reviewers.length - visible.length);
 
 	return (
 		<div className="flex -space-x-3">
-			{visible.map(({ roaster }) => {
-				const name = roasterName(roaster);
-				const avatarUrl = resolveAvatarUrl(roaster.avatar_url, roaster.avatar_path);
+			{visible.map(({ reviewer }) => {
+				const name = reviewerName(reviewer);
+				const avatarUrl = resolveAvatarUrl(reviewer.avatar_url, reviewer.avatar_path);
 
 				return avatarUrl ? (
 					<img
 						alt={`${name} profile photo`}
 						className="h-10 w-10 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elevated)] object-cover ring-2 ring-[var(--bg-surface)]"
-						key={roaster.id}
+						key={reviewer.id}
 						src={avatarUrl}
 					/>
 				) : (
 					<div
 						className="grid h-10 w-10 place-items-center rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs font-medium text-[var(--text-primary)] ring-2 ring-[var(--bg-surface)]"
-						key={roaster.id}
+						key={reviewer.id}
 					>
 						{initials(name)}
 					</div>
@@ -339,12 +343,12 @@ function DirectoryRow({
 	item,
 	reducedMotion,
 }: {
-	item: RankedRoaster;
+	item: RankedReviewer;
 	reducedMotion: boolean;
 }) {
-	const { rank, roaster } = item;
-	const name = roasterName(roaster);
-	const tag = roleTag(roaster);
+	const { rank, reviewer } = item;
+	const name = reviewerName(reviewer);
+	const tag = roleTag(reviewer);
 
 	return (
 		<motion.div
@@ -355,13 +359,13 @@ function DirectoryRow({
 			transition={reducedMotion ? { duration: 0 } : rowSpring}
 			className="flex items-center gap-3 border-b border-[var(--border-subtle)] py-3 last:border-b-0"
 		>
-			<LeaderboardAvatar name={name} roaster={roaster} />
-			<Link href={`/profile/${roaster.id}`} className="min-w-0 flex-1">
+			<LeaderboardAvatar name={name} reviewer={reviewer} />
+			<Link href={`/profile/${reviewer.id}`} className="min-w-0 flex-1">
 				<strong className="block truncate text-sm font-medium text-[var(--text-primary)]">
 					{name}
 				</strong>
 				<span className="mt-1 block truncate text-xs font-normal text-[var(--text-secondary)]">
-					Rank #{rank} - {reviewerLintPoints(roaster).toLocaleString()} lint points
+					Rank #{rank} - {reviewerLintPoints(reviewer).toLocaleString()} lint points
 				</span>
 			</Link>
 			<span
@@ -381,7 +385,7 @@ export function StackedList({
 	heading = "Top 100",
 	message = "",
 	onSearchQueryChange,
-	roasters,
+	reviewers,
 	searchQuery = "",
 	searchPlaceholder = "Search reviewers, roles, top feedback...",
 	startRank = 1,
@@ -403,31 +407,31 @@ export function StackedList({
 		() => queryTerms(deferredDirectoryQuery),
 		[deferredDirectoryQuery],
 	);
-	const rankedRoasters = useMemo<RankedRoaster[]>(
+	const rankedReviewers = useMemo<RankedReviewer[]>(
 		() =>
-			roasters.slice(0, 100).map((roaster, index) => {
+			reviewers.slice(0, 100).map((reviewer, index) => {
 				const rank = startRank + index;
 
 				return {
 					rank,
-					roaster,
-					searchText: buildSearchText(roaster, rank),
+					reviewer,
+					searchText: buildSearchText(reviewer, rank),
 				};
 			}),
-		[roasters, startRank],
+		[reviewers, startRank],
 	);
-	const filteredRoasters = useMemo(
+	const filteredReviewers = useMemo(
 		() =>
-			rankedRoasters.filter(({ searchText }) =>
+			rankedReviewers.filter(({ searchText }) =>
 				matchesQuery(searchText, activeTerms),
 			),
-		[activeTerms, rankedRoasters],
+		[activeTerms, rankedReviewers],
 	);
 	const directoryResults = useMemo(() => {
-		return rankedRoasters.filter(({ searchText }) =>
+		return rankedReviewers.filter(({ searchText }) =>
 			matchesQuery(searchText, directoryTerms),
 		);
-	}, [directoryTerms, rankedRoasters]);
+	}, [directoryTerms, rankedReviewers]);
 
 	function handleSearch(value: string) {
 		if (onSearchQueryChange) {
@@ -480,12 +484,12 @@ export function StackedList({
 				</label>
 			</div>
 
-			<div className="hidden grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] gap-4 border-b border-[var(--border-subtle)] px-5 py-3 text-xs font-medium uppercase tracking-[0.06em] text-[var(--text-tertiary)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-head]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-roast-head]:hidden md:grid">
+			<div className="hidden grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] gap-4 border-b border-[var(--border-subtle)] px-5 py-3 text-xs font-medium uppercase tracking-[0.06em] text-[var(--text-tertiary)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-head]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-review-head]:hidden md:grid">
 				<span>Rank</span>
 				<span>Reviewer</span>
 				<span className="role-head">Role</span>
 				<span>Lint Points</span>
-				<span className="top-roast-head">Top feedback</span>
+				<span className="top-review-head">Top feedback</span>
 				<span>Action</span>
 			</div>
 
@@ -496,18 +500,18 @@ export function StackedList({
 				layout={!reducedMotion}
 			>
 				<AnimatePresence initial={false}>
-					{filteredRoasters.map(({ rank, roaster }) => (
+					{filteredReviewers.map(({ rank, reviewer }) => (
 						<LeaderboardRow
-							key={roaster.id}
+							key={reviewer.id}
 							rank={rank}
 							reducedMotion={reducedMotion}
-							roaster={roaster}
+							reviewer={reviewer}
 						/>
 					))}
 				</AnimatePresence>
 			</motion.div>
 
-			{!filteredRoasters.length && !message ? (
+			{!filteredReviewers.length && !message ? (
 				<div className="leaderboard-empty">
 					<span className="empty-icon">
 						<FileText aria-hidden="true" />
@@ -558,7 +562,7 @@ export function StackedList({
 								Reviewer Directory
 							</h3>
 							<p className="mt-1 truncate text-xs font-normal text-[var(--text-secondary)]">
-								{rankedRoasters.length} reviewers ranked
+								{rankedReviewers.length} reviewers ranked
 							</p>
 						</div>
 					</div>
@@ -577,7 +581,7 @@ export function StackedList({
 								<X className="h-4 w-4" aria-hidden="true" />
 							</button>
 						) : (
-							<AvatarStack roasters={rankedRoasters} />
+							<AvatarStack reviewers={rankedReviewers} />
 						)}
 					</div>
 				</div>
@@ -621,7 +625,7 @@ export function StackedList({
 									{directoryResults.map((item) => (
 										<DirectoryRow
 											item={item}
-											key={`directory-${item.roaster.id}`}
+											key={`directory-${item.reviewer.id}`}
 											reducedMotion={reducedMotion}
 										/>
 									))}

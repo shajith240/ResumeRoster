@@ -21,7 +21,7 @@ export async function GET(request: Request) {
 		const [
 			profiles,
 			resumes,
-			roasts,
+			reviews,
 			votes,
 			commentAttachments,
 			reports,
@@ -135,7 +135,7 @@ export async function GET(request: Request) {
 			tables: [
 				{ key: "profiles", label: "Profiles", value: profiles },
 				{ key: "resumes", label: "Resumes", value: resumes },
-				{ key: "roasts", label: "Reviews", value: roasts },
+				{ key: "roasts", label: "Reviews", value: reviews },
 				{ key: "votes", label: "Lint votes", value: votes },
 				{
 					key: "comment_attachments",

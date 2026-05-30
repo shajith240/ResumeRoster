@@ -60,14 +60,15 @@ export function lintPoints(helpfulVotes: number) {
 export function sortReviewers<
 	T extends {
 		helpful_votes: number;
+		lint_points?: number;
 		roast_count: number;
 		roast_points?: number;
 	},
 >(reviewers: T[]) {
 	return [...reviewers].sort(
 		(a, b) =>
-			(b.roast_points ?? b.helpful_votes) -
-				(a.roast_points ?? a.helpful_votes) ||
+			(b.lint_points ?? b.roast_points ?? b.helpful_votes) -
+				(a.lint_points ?? a.roast_points ?? a.helpful_votes) ||
 			b.helpful_votes - a.helpful_votes ||
 			b.roast_count - a.roast_count,
 	);
@@ -95,26 +96,30 @@ export function enhanceReviewer<
 >(
 	reviewer: T,
 	topReview?: R,
-	stats?: { helpfulVotes: number; roastCount: number },
+	stats?: { helpfulVotes: number; reviewCount?: number; roastCount?: number },
 ) {
 	const helpfulVotes = stats?.helpfulVotes ?? reviewer.helpful_votes;
-	const roastCount = stats?.roastCount ?? reviewer.roast_count;
+	const reviewCount =
+		stats?.reviewCount ?? stats?.roastCount ?? reviewer.roast_count;
+	const reviewPreview = topReview
+		? {
+				id: topReview.id,
+				resume_id: topReview.resume_id,
+				content: topReview.content,
+				helpful_votes: topReview.helpful_votes,
+				created_at: topReview.created_at,
+			}
+		: undefined;
 
 	return {
 		...reviewer,
 		helpful_votes: helpfulVotes,
-		roast_count: roastCount,
+		lint_points: lintPoints(helpfulVotes),
+		roast_count: reviewCount,
 		roast_points: lintPoints(helpfulVotes),
-		role_tag: roleTag(reviewer),
-		top_roast: topReview
-			? {
-					id: topReview.id,
-					resume_id: topReview.resume_id,
-					content: topReview.content,
-					helpful_votes: topReview.helpful_votes,
-					created_at: topReview.created_at,
-				}
-			: undefined,
+		role_tag: roleTag({ ...reviewer, helpful_votes: helpfulVotes, roast_count: reviewCount }),
+		top_review: reviewPreview,
+		top_roast: reviewPreview,
 	};
 }
 

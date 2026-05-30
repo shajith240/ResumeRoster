@@ -172,29 +172,29 @@ async function fetchProfilesById(authorIds: string[]) {
 }
 
 function mergeProfileMetadata(
-	roaster: ReviewerProfileStats,
+	reviewer: ReviewerProfileStats,
 	profile?: ReviewerProfileStats,
 ) {
-	if (!profile) return roaster;
+	if (!profile) return reviewer;
 
 	return {
-		...roaster,
-		full_name: profile.full_name ?? roaster.full_name ?? null,
-		avatar_url: profile.avatar_url ?? roaster.avatar_url ?? null,
-		avatar_path: profile.avatar_path ?? roaster.avatar_path ?? null,
-		community_role: profile.community_role ?? roaster.community_role ?? null,
-		username: profile.username ?? roaster.username,
-		college: profile.college ?? roaster.college,
+		...reviewer,
+		full_name: profile.full_name ?? reviewer.full_name ?? null,
+		avatar_url: profile.avatar_url ?? reviewer.avatar_url ?? null,
+		avatar_path: profile.avatar_path ?? reviewer.avatar_path ?? null,
+		community_role: profile.community_role ?? reviewer.community_role ?? null,
+		username: profile.username ?? reviewer.username,
+		college: profile.college ?? reviewer.college,
 		reviewer_expertise:
-			profile.reviewer_expertise ?? roaster.reviewer_expertise ?? null,
+			profile.reviewer_expertise ?? reviewer.reviewer_expertise ?? null,
 		reviewer_headline:
-			profile.reviewer_headline ?? roaster.reviewer_headline ?? null,
-		reviewer_type: profile.reviewer_type ?? roaster.reviewer_type ?? null,
+			profile.reviewer_headline ?? reviewer.reviewer_headline ?? null,
+		reviewer_type: profile.reviewer_type ?? reviewer.reviewer_type ?? null,
 		reviewer_verification_status:
 			profile.reviewer_verification_status ??
-			roaster.reviewer_verification_status ??
+			reviewer.reviewer_verification_status ??
 			null,
-		target_role: profile.target_role ?? roaster.target_role,
+		target_role: profile.target_role ?? reviewer.target_role,
 	};
 }
 
@@ -248,10 +248,10 @@ async function fetchReviewerDirectory(filter: ReviewerFilter) {
 
 	if (profileResult.error) {
 		if (isMissingProfileMetadataColumn(profileResult.error.message)) {
-			return { message: SUPABASE_MIGRATION_MESSAGE, roasters: [] };
+			return { message: SUPABASE_MIGRATION_MESSAGE, reviewers: [] };
 		}
 
-		return { message: profileResult.error.message, roasters: [] };
+		return { message: profileResult.error.message, reviewers: [] };
 	}
 
 	const profiles = applyReviewerFilter(
@@ -262,8 +262,8 @@ async function fetchReviewerDirectory(filter: ReviewerFilter) {
 	let topReviews: Record<string, ReviewRow> = {};
 
 	if (authorIds.length) {
-		const { data: roasts } = await fetchReviewRows({ authorIds });
-		topReviews = bestReviewMap((roasts ?? []) as ReviewRow[]);
+		const { data: reviewRows } = await fetchReviewRows({ authorIds });
+		topReviews = bestReviewMap((reviewRows ?? []) as ReviewRow[]);
 	}
 
 	const ranked = sortReviewers(
@@ -278,7 +278,7 @@ async function fetchReviewerDirectory(filter: ReviewerFilter) {
 
 	return {
 		message: "",
-		roasters: ranked.slice(0, LEADERBOARD_LIMIT),
+		reviewers: ranked.slice(0, LEADERBOARD_LIMIT),
 	};
 }
 
@@ -291,35 +291,37 @@ async function fetchLeaderboardData(range: TimeRange) {
 		});
 
 		if (reviewError) {
-			return { message: reviewError.message, roasters: [] };
+			return { message: reviewError.message, reviewers: [] };
 		}
 
-		const roasts = (periodReviews ?? []) as ReviewRow[];
-		const authorIds = Array.from(new Set(roasts.map((roast) => roast.author_id)));
+		const reviewRows = (periodReviews ?? []) as ReviewRow[];
+		const authorIds = Array.from(
+			new Set(reviewRows.map((review) => review.author_id)),
+		);
 
 		if (!authorIds.length) {
-			return { message: "", roasters: [] };
+			return { message: "", reviewers: [] };
 		}
 
 		const { profiles, errorMessage } = await fetchProfilesById(authorIds);
 
 		if (errorMessage) {
-			return { message: errorMessage, roasters: [] };
+			return { message: errorMessage, reviewers: [] };
 		}
 
-		const stats = roasts.reduce<
-			Record<string, { helpfulVotes: number; roastCount: number }>
-		>((map, roast) => {
-			map[roast.author_id] ??= { helpfulVotes: 0, roastCount: 0 };
-			map[roast.author_id].helpfulVotes += roast.helpful_votes;
-			map[roast.author_id].roastCount += 1;
+		const stats = reviewRows.reduce<
+			Record<string, { helpfulVotes: number; reviewCount: number }>
+		>((map, review) => {
+			map[review.author_id] ??= { helpfulVotes: 0, reviewCount: 0 };
+			map[review.author_id].helpfulVotes += review.helpful_votes;
+			map[review.author_id].reviewCount += 1;
 			return map;
 		}, {});
-		const topReviews = bestReviewMap(roasts);
+		const topReviews = bestReviewMap(reviewRows);
 
 		return {
 			message: "",
-			roasters: sortReviewers(
+			reviewers: sortReviewers(
 				profiles.map((profile) =>
 					enhanceReviewer(profile, topReviews[profile.id], stats[profile.id]),
 				),
@@ -342,14 +344,14 @@ async function fetchLeaderboardData(range: TimeRange) {
 	if (error) {
 		return {
 			message: SUPABASE_MIGRATION_MESSAGE,
-			roasters: [],
+			reviewers: [],
 		};
 	}
 
-	const baseRoasters = (
+	const baseReviewers = (
 		(data ?? []) as Array<ReviewerProfileStats | ReviewerLeaderboardEntry>
 	).map(normalizeLeaderboardEntry);
-	const authorIds = baseRoasters.map((roaster) => roaster.id);
+	const authorIds = baseReviewers.map((reviewer) => reviewer.id);
 	const { profiles, errorMessage } = await fetchProfilesById(authorIds);
 	const profilesById = Object.fromEntries(
 		profiles.map((profile) => [profile.id, profile]),
@@ -357,17 +359,17 @@ async function fetchLeaderboardData(range: TimeRange) {
 	let topReviews: Record<string, ReviewRow> = {};
 
 	if (authorIds.length) {
-		const { data: roasts } = await fetchReviewRows({ authorIds });
-		topReviews = bestReviewMap((roasts ?? []) as ReviewRow[]);
+		const { data: reviewRows } = await fetchReviewRows({ authorIds });
+		topReviews = bestReviewMap((reviewRows ?? []) as ReviewRow[]);
 	}
 
 	return {
 		message: errorMessage,
-		roasters: sortReviewers(
-			baseRoasters.map((roaster) =>
+		reviewers: sortReviewers(
+			baseReviewers.map((reviewer) =>
 				enhanceReviewer(
-					mergeProfileMetadata(roaster, profilesById[roaster.id]),
-					topReviews[roaster.id],
+					mergeProfileMetadata(reviewer, profilesById[reviewer.id]),
+					topReviews[reviewer.id],
 				),
 			),
 		).slice(0, LEADERBOARD_LIMIT),
@@ -375,7 +377,7 @@ async function fetchLeaderboardData(range: TimeRange) {
 }
 
 export default function Leaderboard() {
-	const [roasters, setRoasters] = useState<LeaderboardReviewer[]>([]);
+	const [reviewers, setReviewers] = useState<LeaderboardReviewer[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [message, setMessage] = useState("");
 	const [mode, setMode] = useState<DirectoryMode>("leaderboard");
@@ -401,7 +403,7 @@ export default function Leaderboard() {
 
 			if (!active) return;
 
-			setRoasters(result.roasters);
+			setReviewers(result.reviewers);
 			setMessage(result.message);
 
 			const finish = () => {
@@ -563,7 +565,7 @@ export default function Leaderboard() {
 				heading={mode === "reviewers" ? "Reviewer Directory" : "Top 100"}
 				message={message}
 				onSearchQueryChange={setSearchQuery}
-				roasters={roasters}
+				reviewers={reviewers}
 				searchQuery={searchQuery}
 				searchPlaceholder={
 					mode === "reviewers"

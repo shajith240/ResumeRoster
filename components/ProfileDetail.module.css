@@ -267,7 +267,7 @@
 .skillsPanel,
 .reviewerPanel,
 .activityPanel,
-.roastsPanel {
+.reviewsPanel {
 	min-width: 0;
 	max-width: 100%;
 	overflow: hidden;
@@ -451,13 +451,13 @@
 }
 
 .activityList,
-.roastList {
+.reviewList {
 	display: grid;
 	gap: 0;
 }
 
 .activityRow,
-.roastRow {
+.reviewRow {
 	display: grid;
 	align-items: center;
 	min-width: 0;
@@ -472,19 +472,19 @@
 	padding: 12px 0;
 }
 
-.roastRow {
+.reviewRow {
 	grid-template-columns: minmax(0, 1fr) auto;
 	gap: 16px;
 	padding: 14px 0;
 }
 
 .activityRow:last-child,
-.roastRow:last-child {
+.reviewRow:last-child {
 	border-bottom: 0;
 }
 
 .activityRow strong,
-.roastRow p {
+.reviewRow p {
 	display: block;
 	overflow: hidden;
 	color: var(--text-primary);
@@ -495,7 +495,7 @@
 }
 
 .activityRow span,
-.roastRow span {
+.reviewRow span {
 	display: block;
 	min-width: 0;
 	margin-top: 2px;
@@ -505,7 +505,7 @@
 }
 
 .activityRow em,
-.roastRow strong {
+.reviewRow strong {
 	color: var(--text-primary);
 	font-size: 11px;
 	font-style: normal;
@@ -1226,7 +1226,7 @@
 	.skillsPanel,
 	.reviewerPanel,
 	.activityPanel,
-	.roastsPanel {
+	.reviewsPanel {
 		padding: 16px;
 	}
 
@@ -1254,13 +1254,13 @@
 	}
 
 	.activityRow,
-	.roastRow,
+	.reviewRow,
 	.editFieldGrid {
 		grid-template-columns: 1fr;
 	}
 
 	.activityRow strong,
-	.roastRow p {
+	.reviewRow p {
 		display: -webkit-box;
 		white-space: normal;
 		overflow-wrap: anywhere;
@@ -1269,12 +1269,12 @@
 	}
 
 	.activityRow span,
-	.roastRow span {
+	.reviewRow span {
 		white-space: normal;
 	}
 
 	.activityRow em,
-	.roastRow strong {
+	.reviewRow strong {
 		justify-self: start;
 		white-space: normal;
 	}
