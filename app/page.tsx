@@ -651,11 +651,12 @@ function Footer() {
           <Link href="/submit">Invite Reviewers!</Link>
         </div>
         <div className="footer-links">
-          <Link href="/feed">Blog</Link>
-          <Link href="/submit">Privacy Policy</Link>
-          <Link href="/submit">Terms of Usage</Link>
-          <Link href="/feed">Cookie Policy</Link>
-          <Link href="/submit">Contact Us</Link>
+          <Link href="/guidelines">Community Guidelines</Link>
+          <Link href="/privacy">Privacy Policy</Link>
+          <Link href="/terms">Terms of Service</Link>
+          <Link href="/copyright">Copyright Policy</Link>
+          <Link href="/privacy">Cookie Notice</Link>
+          <a href="mailto:shajith240@gmail.com">Contact Us</a>
         </div>
         <div className="socials" aria-label="Social links">
           <div className="social-links">

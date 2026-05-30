@@ -582,6 +582,11 @@ export function SignUp() {
 							</span>
 							<ArrowRight aria-hidden="true" size={16} strokeWidth={1.8} />
 						</Button>
+						<p className="auth-legal-copy">
+							By continuing, you agree to{" "}
+							<Link href="/terms">Terms</Link> and{" "}
+							<Link href="/privacy">Privacy Policy</Link>.
+						</p>
 					</form>
 				</div>
 
