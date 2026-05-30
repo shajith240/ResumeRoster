@@ -58,6 +58,7 @@ type TeamNotificationsProps = {
 	onMarkAllAsRead?: () => Promise<void>;
 	onDelete?: (notificationId: string) => Promise<void>;
 	className?: string;
+	pushControl?: ReactNode;
 	showFilters?: boolean;
 	unreadCount?: number;
 };
@@ -149,6 +150,7 @@ export default function TeamNotifications({
 	onMarkAllAsRead,
 	onDelete,
 	className,
+	pushControl,
 	showFilters = true,
 	unreadCount,
 }: TeamNotificationsProps) {
@@ -215,18 +217,21 @@ export default function TeamNotifications({
 								)}
 							</p>
 						</div>
-						{onMarkAllAsRead ? (
-							<Button
-								disabled={!displayUnreadCount}
-								onClick={() => void onMarkAllAsRead()}
-								size="xs"
-								type="button"
-								variant="outline"
-							>
-								<CheckCheck className="size-3" />
-								Mark read
-							</Button>
-						) : null}
+						<div className="flex shrink-0 flex-wrap items-center justify-end gap-1.5">
+							{pushControl}
+							{onMarkAllAsRead ? (
+								<Button
+									disabled={!displayUnreadCount}
+									onClick={() => void onMarkAllAsRead()}
+									size="xs"
+									type="button"
+									variant="outline"
+								>
+									<CheckCheck className="size-3" />
+									Mark read
+								</Button>
+							) : null}
+						</div>
 					</div>
 
 					{showFilters ? (

@@ -7,6 +7,7 @@ import "./feed-canvas.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://linted.space"),
+  manifest: "/manifest.webmanifest",
   title: {
     default: "Linted",
     template: "%s | Linted",

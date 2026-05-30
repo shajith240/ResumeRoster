@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bell } from "lucide-react";
 import { toast } from "sonner";
+import PushNotificationsControl from "@/components/PushNotificationsControl";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import TeamNotifications, {
 	type TeamNotification,
@@ -382,6 +383,7 @@ export default function NotificationCenter({ userId }: NotificationCenterProps) 
 					onMarkAsRead={markNotificationIdRead}
 					onDelete={deleteNotification}
 					onOpen={openTeamNotification}
+					pushControl={<PushNotificationsControl />}
 					unreadCount={unreadCount}
 				/>
 			</DropdownMenuContent>
