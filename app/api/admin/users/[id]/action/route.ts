@@ -101,18 +101,16 @@ export async function POST(request: Request, context: RouteContext) {
 					admin.auth.admin.getUserById(profileId),
 					admin
 						.from("profiles")
-						.select(
-							"id,username,full_name,avatar_url,avatar_path,tagline,about,skills,community_role,reviewer_type,reviewer_headline,reviewer_verification_status,created_at",
-						)
+						.select("id,avatar_path")
 						.eq("id", profileId)
 						.maybeSingle(),
 					admin
 						.from("resumes")
-						.select("id,title,file_path,status,created_at")
+						.select("id,file_path")
 						.eq("user_id", profileId),
 					admin
 						.from("comment_attachments")
-						.select("id,storage_path,created_at")
+						.select("id,storage_path")
 						.eq("user_id", profileId),
 				]);
 
@@ -137,8 +135,7 @@ export async function POST(request: Request, context: RouteContext) {
 					admin_user_id: user.id,
 					metadata: {
 						delete_status: "started",
-						target_email: targetEmail,
-						target_profile: profileResult.data,
+						profile_existed: Boolean(profileResult.data?.id),
 						user_data_counts: {
 							attachments: attachments.length,
 							resumes: resumes.length,
