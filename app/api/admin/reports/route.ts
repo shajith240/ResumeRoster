@@ -25,7 +25,7 @@ export async function GET(request: Request) {
 		let query = admin
 			.from("content_reports")
 			.select(
-				"id,reporter_id,reported_user_id,resume_id,roast_id,target_type,reason,details,status,moderator_note,reviewed_by,reviewed_at,report_count,last_reported_at,created_at,updated_at",
+				"id,reporter_id,reported_user_id,resume_id,roast_id,profile_id,target_type,reason,details,status,moderator_note,reviewed_by,reviewed_at,report_count,last_reported_at,created_at,updated_at",
 			)
 			.order("status", { ascending: true })
 			.order("report_count", { ascending: false })
@@ -44,6 +44,7 @@ export async function GET(request: Request) {
 			reportRows.flatMap((report) => [
 				report.reporter_id,
 				report.reported_user_id,
+				report.profile_id,
 				report.reviewed_by,
 			]),
 		);
@@ -54,7 +55,9 @@ export async function GET(request: Request) {
 			profileIds.length
 				? admin
 						.from("profiles")
-						.select("id,username,full_name,avatar_url")
+						.select(
+							"id,username,full_name,avatar_url,current_position,community_role,reviewer_type,reviewer_headline,reviewer_verification_status,roast_count,helpful_votes",
+						)
 						.in("id", profileIds)
 				: Promise.resolve({ data: [], error: null }),
 			resumeIds.length
@@ -92,6 +95,9 @@ export async function GET(request: Request) {
 					? profilesById.get(report.reported_user_id) ?? null
 					: null,
 				reporter: profilesById.get(report.reporter_id) ?? null,
+				profile: report.profile_id
+					? profilesById.get(report.profile_id) ?? null
+					: null,
 				resume: report.resume_id ? resumesById.get(report.resume_id) ?? null : null,
 				reviewedBy: report.reviewed_by
 					? profilesById.get(report.reviewed_by) ?? null

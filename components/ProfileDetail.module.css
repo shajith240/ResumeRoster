@@ -226,6 +226,29 @@
 	font-weight: 500;
 }
 
+.reportProfileButton {
+	position: absolute;
+	top: 4px;
+	right: 0;
+	gap: 8px;
+	border-color: var(--border-default);
+	border-radius: var(--button-radius);
+	background: var(--bg-surface);
+	color: var(--text-secondary);
+	font-weight: 600;
+}
+
+.reportProfileButton:hover:not(:disabled) {
+	border-color: rgba(255, 138, 77, 0.38);
+	background: var(--brand-muted);
+	color: var(--brand);
+}
+
+.reportProfileButton svg {
+	width: 15px;
+	height: 15px;
+}
+
 .profileGrid {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(300px, 0.85fr);
@@ -1126,6 +1149,11 @@
 		justify-self: start;
 	}
 
+	.reportProfileButton {
+		position: static;
+		justify-self: start;
+	}
+
 	.editFields {
 		grid-template-columns: 1fr;
 	}
@@ -1257,7 +1285,8 @@
 }
 
 :global(body.main-app-dark) .avatarEdit,
-:global(body.main-app-dark) .editButton {
+:global(body.main-app-dark) .editButton,
+:global(body.main-app-dark) .reportProfileButton {
 	border-color: var(--border-default);
 	background: var(--bg-elevated);
 	color: var(--text-primary);

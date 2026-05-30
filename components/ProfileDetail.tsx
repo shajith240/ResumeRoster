@@ -14,6 +14,7 @@ import {
 	BriefcaseBusiness,
 	CalendarDays,
 	Camera,
+	Flag,
 	Flame,
 	GraduationCap,
 	MapPin,
@@ -57,6 +58,12 @@ import {
 	parseSkills,
 	usernameTakenMessage,
 } from "@/lib/profile-validation";
+import {
+	REPORT_DETAILS_MAX_LENGTH,
+	REPORT_REASON_OPTIONS,
+	getReportIssue,
+	type ReportReason,
+} from "@/lib/report-validation";
 import { ONBOARDING_PROFILE_POSITION_OPTIONS } from "@/lib/onboarding-validation";
 import {
 	COMMUNITY_ROLES,
@@ -289,6 +296,12 @@ function isProfileFeatureError(message: string) {
 	);
 }
 
+function isReportFeatureError(message: string) {
+	return /content_reports|report_content|profile_id|schema cache|column|function/i.test(
+		message,
+	);
+}
+
 export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	const [user, setUser] = useState<User | null>(null);
 	const [profile, setProfile] = useState<PublicProfile | null>(null);
@@ -319,6 +332,12 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	const [reviewerEditOpen, setReviewerEditOpen] = useState(false);
 	const [message, setMessage] = useState("");
 	const [saveMessage, setSaveMessage] = useState("");
+	const [profileReportOpen, setProfileReportOpen] = useState(false);
+	const [profileReportReason, setProfileReportReason] =
+		useState<ReportReason>("personal_info");
+	const [profileReportDetails, setProfileReportDetails] = useState("");
+	const [profileReportSubmitting, setProfileReportSubmitting] = useState(false);
+	const [profileReportSchemaReady, setProfileReportSchemaReady] = useState(true);
 
 	const isOwnProfile = Boolean(user && profile?.id === user.id);
 
@@ -906,6 +925,89 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		}
 	}
 
+	function openProfileReportDialog() {
+		setSaveMessage("");
+
+		if (!profileReportSchemaReady) {
+			const errorMessage = `${SUPABASE_MIGRATION_MESSAGE} Profile reports are not ready yet.`;
+			setSaveMessage(errorMessage);
+			toast.error(errorMessage);
+			return;
+		}
+
+		if (!user) {
+			const errorMessage = "Sign in to report a profile.";
+			setSaveMessage(errorMessage);
+			toast.error(errorMessage);
+			return;
+		}
+
+		if (isOwnProfile) {
+			const errorMessage = "You cannot report your own profile.";
+			setSaveMessage(errorMessage);
+			toast.error(errorMessage);
+			return;
+		}
+
+		setProfileReportReason("personal_info");
+		setProfileReportDetails("");
+		setProfileReportOpen(true);
+	}
+
+	async function submitProfileReport(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		setSaveMessage("");
+
+		if (!profile || !user) {
+			return;
+		}
+
+		const issue = getReportIssue({
+			reason: profileReportReason,
+			details: profileReportDetails,
+		});
+
+		if (issue) {
+			setSaveMessage(issue);
+			toast.error(issue);
+			return;
+		}
+
+		setProfileReportSubmitting(true);
+
+		const { data, error } = await supabase.rpc("report_content", {
+			report_target_type: "profile",
+			target_profile_id: profile.id,
+			report_reason: profileReportReason,
+			report_details: profileReportDetails.trim(),
+		});
+
+		setProfileReportSubmitting(false);
+
+		if (error) {
+			if (isReportFeatureError(error.message)) {
+				setProfileReportSchemaReady(false);
+				const errorMessage = `${SUPABASE_MIGRATION_MESSAGE} Profile reports are not ready yet.`;
+				setSaveMessage(errorMessage);
+				toast.error(errorMessage);
+				return;
+			}
+
+			setSaveMessage(error.message);
+			toast.error(error.message);
+			return;
+		}
+
+		const reportResult = Array.isArray(data) ? data[0] : null;
+		setProfileReportOpen(false);
+		setProfileReportDetails("");
+		toast.success(
+			reportResult?.was_duplicate
+				? "Profile report updated in the moderation queue."
+				: "Profile report sent for moderation review.",
+		);
+	}
+
 	const profileView = useMemo(() => {
 		if (!profile) return null;
 
@@ -1104,6 +1206,23 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							/>
 						</Dialog>
 					) : null}
+					{!isOwnProfile ? (
+						<Button
+							className={styles.reportProfileButton}
+							disabled={!profileReportSchemaReady}
+							onClick={openProfileReportDialog}
+							title={
+								profileReportSchemaReady
+									? undefined
+									: `${SUPABASE_MIGRATION_MESSAGE} Profile reports are not ready yet.`
+							}
+							type="button"
+							variant="outline"
+						>
+							<Flag aria-hidden="true" />
+							Report Profile
+						</Button>
+					) : null}
 				</header>
 
 				<div className={styles.profileGrid}>
@@ -1261,6 +1380,83 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					</section>
 				</div>
 			</div>
+			<Dialog
+				open={profileReportOpen}
+				onOpenChange={(open) => {
+					if (!open && !profileReportSubmitting) {
+						setProfileReportOpen(false);
+						setProfileReportDetails("");
+					}
+				}}
+			>
+				<DialogContent className="report-dialog-content">
+					<DialogHeader>
+						<DialogTitle>Report profile</DialogTitle>
+						<DialogDescription>
+							Send this profile to the moderation queue. Reports are private and
+							help keep reviewer identities trustworthy.
+						</DialogDescription>
+					</DialogHeader>
+					<form className="report-form" onSubmit={submitProfileReport}>
+						<div className="report-target-preview">
+							<span>{profileView.displayName}</span>
+							<p>{profileView.tagline}</p>
+						</div>
+						<div className="report-reason-grid" aria-label="Report reason">
+							{REPORT_REASON_OPTIONS.map((option) => (
+								<button
+									aria-pressed={profileReportReason === option.value}
+									className={
+										profileReportReason === option.value ? "is-selected" : ""
+									}
+									key={option.value}
+									onClick={() => setProfileReportReason(option.value)}
+									type="button"
+								>
+									<span>{option.label}</span>
+									<small>{option.description}</small>
+								</button>
+							))}
+						</div>
+						<label className="report-details-field">
+							<span>Context for moderators</span>
+							<textarea
+								maxLength={REPORT_DETAILS_MAX_LENGTH}
+								onChange={(event) => setProfileReportDetails(event.target.value)}
+								placeholder="Optional, unless you choose Other."
+								rows={4}
+								value={profileReportDetails}
+							/>
+						</label>
+						<div className="report-form-meta">
+							<span>
+								{REPORT_DETAILS_MAX_LENGTH - profileReportDetails.length} characters
+								left
+							</span>
+						</div>
+						<DialogFooter>
+							<Button
+								disabled={profileReportSubmitting}
+								onClick={() => {
+									setProfileReportOpen(false);
+									setProfileReportDetails("");
+								}}
+								type="button"
+								variant="outline"
+							>
+								Cancel
+							</Button>
+							<Button
+								className="btn-brand"
+								disabled={profileReportSubmitting}
+								type="submit"
+							>
+								{profileReportSubmitting ? "Sending..." : "Send report"}
+							</Button>
+						</DialogFooter>
+					</form>
+				</DialogContent>
+			</Dialog>
 		</section>
 	);
 }

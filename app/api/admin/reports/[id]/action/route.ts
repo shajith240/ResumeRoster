@@ -10,7 +10,10 @@ type AdminReportAction =
 	| "remove_roast"
 	| "restore_roast"
 	| "close_resume"
-	| "reopen_resume";
+	| "reopen_resume"
+	| "reset_reviewer_trust"
+	| "clear_public_profile_text"
+	| "clear_reviewer_profile";
 
 type RouteContext = {
 	params: Promise<{ id: string }>;
@@ -24,6 +27,9 @@ const ACTIONS = new Set<AdminReportAction>([
 	"restore_roast",
 	"close_resume",
 	"reopen_resume",
+	"reset_reviewer_trust",
+	"clear_public_profile_text",
+	"clear_reviewer_profile",
 ]);
 
 function badRequest(message: string, status = 400) {
@@ -67,7 +73,7 @@ export async function POST(request: Request, context: RouteContext) {
 		const reportResult = await admin
 			.from("content_reports")
 			.select(
-				"id,target_type,resume_id,roast_id,status,moderator_note,report_count",
+				"id,target_type,resume_id,roast_id,profile_id,reported_user_id,status,moderator_note,report_count",
 			)
 			.eq("id", reportId)
 			.maybeSingle();
@@ -76,7 +82,7 @@ export async function POST(request: Request, context: RouteContext) {
 		if (!reportResult.data) return badRequest("Report not found.", 404);
 
 		const report = reportResult.data;
-		let targetType: "report" | "roast" | "resume" = "report";
+		let targetType: "report" | "roast" | "resume" | "profile" = "report";
 		let targetId: string | null = report.id;
 		let nextStatus: "pending" | "reviewing" | "dismissed" | "actioned" =
 			report.status;
@@ -191,6 +197,70 @@ export async function POST(request: Request, context: RouteContext) {
 				.eq("id", report.resume_id);
 
 			if (updateResume.error) throw new Error(updateResume.error.message);
+		}
+
+		if (
+			action === "reset_reviewer_trust" ||
+			action === "clear_public_profile_text" ||
+			action === "clear_reviewer_profile"
+		) {
+			const profileId = report.profile_id ?? report.reported_user_id;
+			if (!profileId) return badRequest("This report has no profile target.");
+
+			targetType = "profile";
+			targetId = profileId;
+			nextStatus = "actioned";
+
+			const profileResult = await admin
+				.from("profiles")
+				.select(
+					"id,tagline,about,skills,community_role,reviewer_type,reviewer_headline,reviewer_bio,reviewer_expertise,reviewer_verification_status",
+				)
+				.eq("id", profileId)
+				.maybeSingle();
+
+			if (profileResult.error) throw new Error(profileResult.error.message);
+			if (!profileResult.data) return badRequest("Profile not found.", 404);
+
+			metadata = { previous_profile: profileResult.data };
+
+			let profilePatch: Record<string, unknown> = {};
+
+			if (action === "reset_reviewer_trust") {
+				profilePatch = {
+					reviewer_verification_status: "none",
+					reviewer_verified_at: null,
+					reviewer_verified_by: null,
+				};
+			}
+
+			if (action === "clear_public_profile_text") {
+				profilePatch = {
+					about: null,
+					skills: [],
+					tagline: null,
+				};
+			}
+
+			if (action === "clear_reviewer_profile") {
+				profilePatch = {
+					community_role: "candidate",
+					reviewer_bio: null,
+					reviewer_expertise: [],
+					reviewer_headline: null,
+					reviewer_type: null,
+					reviewer_verification_status: "none",
+					reviewer_verified_at: null,
+					reviewer_verified_by: null,
+				};
+			}
+
+			const updateProfile = await admin
+				.from("profiles")
+				.update(profilePatch)
+				.eq("id", profileId);
+
+			if (updateProfile.error) throw new Error(updateProfile.error.message);
 		}
 
 		const updateReport = await admin

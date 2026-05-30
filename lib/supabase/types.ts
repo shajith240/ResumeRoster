@@ -13,6 +13,7 @@ export type ContentReportStatus =
   | "reviewing"
   | "dismissed"
   | "actioned";
+export type ContentReportTargetType = "resume" | "roast" | "profile";
 export type CommentContentFormat = "plain" | "markdown";
 export type CommentAttachmentKind = "image";
 export type CommentAttachmentSource = "upload";

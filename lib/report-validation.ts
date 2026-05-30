@@ -9,7 +9,7 @@ export const REPORT_REASON_OPTIONS = [
 	{
 		value: "harassment",
 		label: "Harassment",
-		description: "The roast attacks the person instead of the resume.",
+		description: "The content attacks the person instead of staying useful.",
 	},
 	{
 		value: "spam",
@@ -24,7 +24,7 @@ export const REPORT_REASON_OPTIONS = [
 	{
 		value: "off_topic",
 		label: "Off topic",
-		description: "Not useful for improving the resume.",
+		description: "Not useful for the profile, resume, or feedback thread.",
 	},
 	{
 		value: "other",
