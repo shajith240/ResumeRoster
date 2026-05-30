@@ -6,12 +6,12 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import {
 	ArrowRight,
 	FileText,
-	Flame,
 	ListOrdered,
 	Search,
 	X,
 } from "lucide-react";
 
+import LintPointsFlame from "@/components/LintPointsFlame";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { resolveAvatarUrl } from "@/lib/supabase/avatars";
@@ -250,7 +250,7 @@ function LeaderboardRow({
 			animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
 			exit={reducedMotion ? undefined : { opacity: 0, y: -6 }}
 			transition={reducedMotion ? { duration: 0 } : rowSpring}
-			className="group grid grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] items-center gap-4 border-b border-[var(--border-subtle)] px-5 py-4 last:border-b-0 hover:bg-[color-mix(in_srgb,var(--bg-elevated)_58%,transparent)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-cell]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-review-cell]:hidden max-[760px]:grid-cols-[42px_minmax(0,1fr)_44px] max-[760px]:items-start max-[760px]:gap-x-3 max-[760px]:gap-y-2 max-[760px]:px-4"
+			className="group grid grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] items-center gap-4 border-b border-[var(--border-subtle)] px-5 py-4 last:border-b-0 hover:bg-[color-mix(in_srgb,var(--bg-elevated)_58%,transparent)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-cell]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-review-cell]:hidden max-[760px]:grid-cols-[38px_minmax(0,1fr)_auto_42px] max-[760px]:items-center max-[760px]:gap-x-3 max-[760px]:gap-y-0 max-[760px]:px-4"
 		>
 			<RankCell rank={rank} />
 
@@ -283,8 +283,11 @@ function LeaderboardRow({
 				</span>
 			</div>
 
-			<div className="flex items-center gap-2 font-[var(--font-app-body)] text-base font-medium tabular-nums text-[var(--text-primary)] max-[760px]:col-start-2 max-[760px]:row-start-2">
-				<Flame className="h-4 w-4 text-[var(--brand)]" aria-hidden="true" />
+			<div className="flex items-center gap-1.5 font-[var(--font-app-body)] text-base font-medium tabular-nums text-[var(--text-primary)] max-[760px]:col-start-3 max-[760px]:row-start-1 max-[760px]:justify-self-end max-[760px]:text-sm max-[760px]:leading-none">
+				<LintPointsFlame
+					className="h-[18px] w-[18px]"
+					fallbackClassName="h-4 w-4"
+				/>
 				{points.toLocaleString()}
 			</div>
 
@@ -297,7 +300,7 @@ function LeaderboardRow({
 			<Link
 				href={topReviewHref}
 				aria-label={`View ${name}`}
-				className="inline-grid h-10 w-10 select-none place-items-center rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px max-[760px]:col-start-3 max-[760px]:row-start-1 max-[760px]:h-11 max-[760px]:w-11 max-[760px]:self-start"
+				className="inline-grid h-10 w-10 select-none place-items-center rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px max-[760px]:col-start-4 max-[760px]:row-start-1 max-[760px]:h-10 max-[760px]:w-10 max-[760px]:self-center"
 			>
 				<span className="sr-only">View</span>
 				<ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -351,6 +354,7 @@ function DirectoryRow({
 	const { rank, reviewer } = item;
 	const name = reviewerName(reviewer);
 	const tag = roleTag(reviewer);
+	const points = reviewerLintPoints(reviewer);
 
 	return (
 		<motion.div
@@ -366,8 +370,13 @@ function DirectoryRow({
 				<strong className="block truncate text-sm font-medium text-[var(--text-primary)]">
 					{name}
 				</strong>
-				<span className="mt-1 block truncate text-xs font-normal text-[var(--text-secondary)]">
-					Rank #{rank} - {reviewerLintPoints(reviewer).toLocaleString()} lint points
+				<span className="mt-1 flex min-w-0 items-center gap-1.5 truncate text-xs font-normal text-[var(--text-secondary)]">
+					<span className="shrink-0">Rank #{rank}</span>
+					<span aria-hidden="true" className="shrink-0">
+						-
+					</span>
+					<LintPointsFlame className="h-4 w-4" fallbackClassName="h-3.5 w-3.5" />
+					<span className="truncate">{points.toLocaleString()} lint points</span>
 				</span>
 			</Link>
 			<span

@@ -70,7 +70,6 @@ import {
 	REVIEWER_FIELD_LIMITS,
 	REVIEWER_TYPES,
 	canShowReviewerProfile,
-	getCommunityRoleLabel,
 	getProfileRoleLabel,
 	getReviewerDisplayLabel,
 	getReviewerTypeLabel,
@@ -78,7 +77,6 @@ import {
 	isCommunityRole,
 	isReviewerType,
 	limitReviewerText,
-	parseReviewerExpertise,
 } from "@/lib/reviewer-validation";
 import { ensureActiveUserSession } from "@/lib/session-lock";
 import type {
@@ -115,26 +113,18 @@ const VERIFIED_TICK_SRC = "/assets/verified_tick.png";
 const PROFILE_CHANGE_EVENT = "linted-profile-change";
 const SUPABASE_MIGRATION_MESSAGE =
 	"Profile controls are temporarily unavailable. Please refresh and try again.";
-const REVIEWER_EXPERTISE_OPTIONS = Array.from(
-	new Set([
-		"ATS",
-		"Recruiter Screen",
-		"Behavioral Interviews",
-		"System Design",
-		"Frontend",
-		"Backend",
-		"Data",
-		"Design",
-		"Product",
-		"Career Switchers",
-		"Internships",
-		"Portfolio Review",
-		...SKILL_OPTIONS,
-	]),
-);
 const NO_POSITION_VALUE = "__not_set__";
 const uuidPattern =
 	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const SHORT_COMMUNITY_ROLE_LABELS: Record<CommunityRole, string> = {
+	both: "Both",
+	candidate: "Get feedback",
+	reviewer: "Review resumes",
+};
+
+function getShortCommunityRoleLabel(role: CommunityRole) {
+	return SHORT_COMMUNITY_ROLE_LABELS[role];
+}
 
 function isUuid(value: string) {
 	return uuidPattern.test(value);
@@ -364,7 +354,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	const [reviewerType, setReviewerType] = useState<ReviewerType | "">("");
 	const [reviewerHeadline, setReviewerHeadline] = useState("");
 	const [reviewerBio, setReviewerBio] = useState("");
-	const [reviewerExpertiseInput, setReviewerExpertiseInput] = useState("");
 	const [reviewerProofUrl, setReviewerProofUrl] = useState("");
 	const [reviewerApplicationNote, setReviewerApplicationNote] = useState("");
 	const [reviewerApplying, setReviewerApplying] = useState(false);
@@ -574,9 +563,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					REVIEWER_FIELD_LIMITS.bio,
 				),
 			);
-			setReviewerExpertiseInput(
-				(loadedProfile.reviewer_expertise ?? []).join(", "),
-			);
 			setReviewerProofUrl("");
 			setReviewerApplicationNote("");
 
@@ -688,10 +674,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					: isReviewerType(reviewerType)
 						? reviewerType
 						: "other";
-			const nextReviewerExpertise =
-				nextCommunityRole === "candidate"
-					? []
-					: parseReviewerExpertise(reviewerExpertiseInput);
 
 			const nextProfile = {
 				full_name:
@@ -714,7 +696,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								reviewerBio,
 								REVIEWER_FIELD_LIMITS.bio,
 							) || null,
-				reviewer_expertise: nextReviewerExpertise,
+				reviewer_expertise: [],
 				reviewer_headline:
 					nextCommunityRole === "candidate"
 						? null
@@ -807,10 +789,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					: isReviewerType(reviewerType)
 						? reviewerType
 						: "other";
-			const nextReviewerExpertise =
-				nextCommunityRole === "candidate"
-					? []
-					: parseReviewerExpertise(reviewerExpertiseInput);
 			const nextReviewerProfile = {
 				community_role: nextCommunityRole,
 				reviewer_bio:
@@ -818,7 +796,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 						? null
 						: limitReviewerText(reviewerBio, REVIEWER_FIELD_LIMITS.bio) ||
 							null,
-				reviewer_expertise: nextReviewerExpertise,
+				reviewer_expertise: [],
 				reviewer_headline:
 					nextCommunityRole === "candidate"
 						? null
@@ -847,7 +825,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					? {
 							...current,
 							...nextReviewerProfile,
-							reviewer_expertise: nextReviewerExpertise,
+							reviewer_expertise: [],
 						}
 					: current,
 			);
@@ -878,7 +856,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			? communityRole
 			: "candidate";
 		const nextReviewerType = isReviewerType(reviewerType) ? reviewerType : null;
-		const nextReviewerExpertise = parseReviewerExpertise(reviewerExpertiseInput);
 		const issue = getReviewerApplicationIssue({
 			communityRole: nextCommunityRole,
 			note: reviewerApplicationNote,
@@ -912,7 +889,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 					note: reviewerApplicationNote,
 					proofUrl: reviewerProofUrl,
 					reviewerBio,
-					reviewerExpertise: nextReviewerExpertise,
+					reviewerExpertise: [],
 					reviewerHeadline,
 					reviewerType: nextReviewerType,
 				}),
@@ -940,7 +917,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								reviewerBio,
 								REVIEWER_FIELD_LIMITS.bio,
 							),
-							reviewer_expertise: nextReviewerExpertise,
+							reviewer_expertise: [],
 							reviewer_headline: limitReviewerText(
 								reviewerHeadline,
 								REVIEWER_FIELD_LIMITS.headline,
@@ -1065,10 +1042,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			profile.community_role,
 			profile.reviewer_type,
 		);
-		const reviewerExpertise = profile.reviewer_expertise?.length
-			? profile.reviewer_expertise
-			: skills.slice(0, 6);
-
 		return {
 			activity: getActivity(reviews, resumes, profile),
 			avatarUrl: profile.avatar_url || metadataAvatar || fallbackAvatar,
@@ -1080,7 +1053,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			reviewerBio:
 				profile.reviewer_bio ||
 				"Open to reviewing resumes with practical, role-aware feedback.",
-			reviewerExpertise,
 			reviewerHeadline:
 				profile.reviewer_headline ||
 				`${getReviewerTypeLabel(profile.reviewer_type)} focused on useful resume feedback.`,
@@ -1296,13 +1268,11 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 											onCommunityRoleChange={setCommunityRole}
 											onOpenChange={setReviewerEditOpen}
 											onReviewerBioChange={setReviewerBio}
-											onReviewerExpertiseChange={setReviewerExpertiseInput}
 											onReviewerHeadlineChange={setReviewerHeadline}
 											onReviewerTypeChange={setReviewerType}
 											onSave={saveReviewerProfile}
 											open={reviewerEditOpen}
 											reviewerBio={reviewerBio}
-											reviewerExpertiseInput={reviewerExpertiseInput}
 											reviewerHeadline={reviewerHeadline}
 											reviewerType={reviewerType}
 											saving={saving}
@@ -1324,11 +1294,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								</div>
 							</div>
 							<p>{profileView.reviewerBio}</p>
-							<div className={styles.skillCloud}>
-								{profileView.reviewerExpertise.map((skill) => (
-									<span key={skill}>{skill}</span>
-								))}
-							</div>
 						</section>
 					) : null}
 
@@ -1353,13 +1318,11 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 										onCommunityRoleChange={setCommunityRole}
 										onOpenChange={setReviewerEditOpen}
 										onReviewerBioChange={setReviewerBio}
-										onReviewerExpertiseChange={setReviewerExpertiseInput}
 										onReviewerHeadlineChange={setReviewerHeadline}
 										onReviewerTypeChange={setReviewerType}
 										onSave={saveReviewerProfile}
 										open={reviewerEditOpen}
 										reviewerBio={reviewerBio}
-										reviewerExpertiseInput={reviewerExpertiseInput}
 										reviewerHeadline={reviewerHeadline}
 										reviewerType={reviewerType}
 										saving={saving}
@@ -1544,13 +1507,11 @@ function ReviewerProfileDialog({
 	onCommunityRoleChange,
 	onOpenChange,
 	onReviewerBioChange,
-	onReviewerExpertiseChange,
 	onReviewerHeadlineChange,
 	onReviewerTypeChange,
 	onSave,
 	open,
 	reviewerBio,
-	reviewerExpertiseInput,
 	reviewerHeadline,
 	reviewerType,
 	saving,
@@ -1560,101 +1521,16 @@ function ReviewerProfileDialog({
 	onCommunityRoleChange: (value: CommunityRole) => void;
 	onOpenChange: (value: boolean) => void;
 	onReviewerBioChange: (value: string) => void;
-	onReviewerExpertiseChange: (value: string) => void;
 	onReviewerHeadlineChange: (value: string) => void;
 	onReviewerTypeChange: (value: ReviewerType | "") => void;
 	onSave: (event: FormEvent<HTMLFormElement>) => void;
 	open: boolean;
 	reviewerBio: string;
-	reviewerExpertiseInput: string;
 	reviewerHeadline: string;
 	reviewerType: ReviewerType | "";
 	saving: boolean;
 }) {
-	const [reviewerExpertiseQuery, setReviewerExpertiseQuery] = useState("");
-	const selectedReviewerExpertise = useMemo(
-		() => parseReviewerExpertise(reviewerExpertiseInput),
-		[reviewerExpertiseInput],
-	);
-	const normalizedReviewerExpertiseQuery = reviewerExpertiseQuery
-		.trim()
-		.replace(/\s+/g, " ");
-	const selectedReviewerExpertiseKeys = useMemo(
-		() =>
-			new Set(selectedReviewerExpertise.map((skill) => skill.toLowerCase())),
-		[selectedReviewerExpertise],
-	);
 	const reviewerModeEnabled = communityRole !== "candidate";
-	const reviewerExpertiseSuggestions = useMemo(() => {
-		const query = normalizedReviewerExpertiseQuery.toLowerCase();
-
-		return REVIEWER_EXPERTISE_OPTIONS.filter((skill) => {
-			const key = skill.toLowerCase();
-			return (
-				!selectedReviewerExpertiseKeys.has(key) &&
-				(!query || key.includes(query))
-			);
-		}).slice(0, 8);
-	}, [normalizedReviewerExpertiseQuery, selectedReviewerExpertiseKeys]);
-	const canAddCustomReviewerExpertise =
-		selectedReviewerExpertise.length < REVIEWER_FIELD_LIMITS.expertise &&
-		normalizedReviewerExpertiseQuery.length >= 2 &&
-		normalizedReviewerExpertiseQuery.length <=
-			REVIEWER_FIELD_LIMITS.expertiseItem &&
-		!selectedReviewerExpertiseKeys.has(
-			normalizedReviewerExpertiseQuery.toLowerCase(),
-		) &&
-		!REVIEWER_EXPERTISE_OPTIONS.some(
-			(skill) =>
-				skill.toLowerCase() === normalizedReviewerExpertiseQuery.toLowerCase(),
-		);
-
-	function commitReviewerExpertise(nextExpertise: string[]) {
-		onReviewerExpertiseChange(nextExpertise.join(", "));
-	}
-
-	function addReviewerExpertise(skill: string) {
-		const cleanedSkill = skill.trim().replace(/\s+/g, " ");
-		if (
-			cleanedSkill.length < 2 ||
-			cleanedSkill.length > REVIEWER_FIELD_LIMITS.expertiseItem ||
-			selectedReviewerExpertiseKeys.has(cleanedSkill.toLowerCase()) ||
-			selectedReviewerExpertise.length >= REVIEWER_FIELD_LIMITS.expertise
-		) {
-			return;
-		}
-
-		commitReviewerExpertise([...selectedReviewerExpertise, cleanedSkill]);
-		setReviewerExpertiseQuery("");
-	}
-
-	function removeReviewerExpertise(skill: string) {
-		commitReviewerExpertise(
-			selectedReviewerExpertise.filter(
-				(selectedSkill) => selectedSkill.toLowerCase() !== skill.toLowerCase(),
-			),
-		);
-	}
-
-	function handleReviewerExpertiseKeyDown(
-		event: KeyboardEvent<HTMLInputElement>,
-	) {
-		if (event.key === "Enter") {
-			event.preventDefault();
-			addReviewerExpertise(
-				reviewerExpertiseSuggestions[0] ?? normalizedReviewerExpertiseQuery,
-			);
-			return;
-		}
-
-		if (
-			event.key === "Backspace" &&
-			!reviewerExpertiseQuery &&
-			selectedReviewerExpertise.length
-		) {
-			commitReviewerExpertise(selectedReviewerExpertise.slice(0, -1));
-		}
-	}
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
@@ -1694,7 +1570,7 @@ function ReviewerProfileDialog({
 										}}
 										type="button"
 									>
-										{getCommunityRoleLabel(role)}
+										{getShortCommunityRoleLabel(role)}
 									</button>
 								))}
 							</div>
@@ -1781,79 +1657,6 @@ function ReviewerProfileDialog({
 										placeholder="Mention what resumes you can review well and how you give feedback."
 										value={reviewerBio}
 									/>
-								</div>
-
-								<div>
-									<div className={styles.skillEditorHeader}>
-										<Label htmlFor="reviewer-dialog-expertise">
-											Reviewer expertise
-										</Label>
-										<span>
-											{selectedReviewerExpertise.length}/
-											{REVIEWER_FIELD_LIMITS.expertise}
-										</span>
-									</div>
-									<div className={styles.skillEditor}>
-										<div className={styles.selectedSkillList}>
-											{selectedReviewerExpertise.length ? (
-												selectedReviewerExpertise.map((skill) => (
-													<button
-														aria-label={`Remove ${skill}`}
-														key={skill}
-														onClick={() => removeReviewerExpertise(skill)}
-														type="button"
-													>
-														{skill}
-														<X aria-hidden="true" />
-													</button>
-												))
-											) : (
-												<span>Add areas where your feedback is strongest.</span>
-											)}
-										</div>
-										<div className={styles.skillSearch}>
-											<Search aria-hidden="true" />
-											<Input
-												id="reviewer-dialog-expertise"
-												maxLength={REVIEWER_FIELD_LIMITS.expertiseItem}
-												onChange={(event) =>
-													setReviewerExpertiseQuery(event.target.value)
-												}
-												onKeyDown={handleReviewerExpertiseKeyDown}
-												placeholder="Search or add expertise"
-												value={reviewerExpertiseQuery}
-											/>
-										</div>
-										<div className={styles.skillSuggestions}>
-											{canAddCustomReviewerExpertise ? (
-												<button
-													onClick={() =>
-														addReviewerExpertise(
-															normalizedReviewerExpertiseQuery,
-														)
-													}
-													type="button"
-												>
-													<Plus aria-hidden="true" />
-													Add &quot;{normalizedReviewerExpertiseQuery}&quot;
-												</button>
-											) : null}
-											{reviewerExpertiseSuggestions.map((skill) => (
-												<button
-													disabled={
-														selectedReviewerExpertise.length >=
-														REVIEWER_FIELD_LIMITS.expertise
-													}
-													key={skill}
-													onClick={() => addReviewerExpertise(skill)}
-													type="button"
-												>
-													<Plus aria-hidden="true" />
-													{skill}
-												</button>
-											))}
-										</div>
-									</div>
 								</div>
 							</>
 						) : null}

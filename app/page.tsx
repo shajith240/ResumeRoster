@@ -99,7 +99,7 @@ const featureContent: Record<
     listTitle: "Reputation signals",
     points: [
       "Reward people whose feedback gets marked helpful.",
-      "Show reviewer roles, expertise, and strong feedback history.",
+      "Show reviewer roles and strong feedback history.",
       "Turn good reviewers into the reason people return.",
     ],
   },

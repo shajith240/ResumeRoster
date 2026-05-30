@@ -4,7 +4,6 @@ import {
 	isReviewerType,
 	limitReviewerText,
 	normalizeProofUrl,
-	parseReviewerExpertise,
 	REVIEWER_FIELD_LIMITS,
 } from "@/lib/reviewer-validation";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
@@ -57,13 +56,7 @@ export async function POST(request: Request) {
 				getString(record, "reviewerBio"),
 				REVIEWER_FIELD_LIMITS.bio,
 			) || null;
-		const reviewerExpertise = parseReviewerExpertise(
-			Array.isArray(record.reviewerExpertise)
-				? record.reviewerExpertise.filter(
-						(item): item is string => typeof item === "string",
-					)
-				: getString(record, "reviewerExpertise"),
-		);
+		const reviewerExpertise: string[] = [];
 
 		if (!isCommunityRole(communityRole)) {
 			return badRequest("Choose how you want to participate.");

@@ -17,7 +17,7 @@ export type PushCapability = {
 const PUSH_SERVICE_WORKER_PATH = "/push-sw.js";
 
 function getPublicKey() {
-	return process.env.NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY ?? "";
+	return (process.env.NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY ?? "").trim();
 }
 
 function isPushSupported() {
@@ -45,13 +45,57 @@ function urlBase64ToUint8Array(base64String: string) {
 	return outputArray;
 }
 
+function getApplicationServerKey() {
+	const publicKey = getPublicKey();
+	if (!publicKey) return null;
+
+	try {
+		const key = urlBase64ToUint8Array(publicKey);
+		return key.byteLength === 65 ? key : null;
+	} catch {
+		return null;
+	}
+}
+
+function applicationServerKeysMatch(
+	currentKey: ArrayBuffer | null,
+	nextKey: Uint8Array,
+) {
+	if (!currentKey) return false;
+
+	const currentBytes = new Uint8Array(currentKey);
+	if (currentBytes.byteLength !== nextKey.byteLength) return false;
+
+	return currentBytes.every((byte, index) => byte === nextKey[index]);
+}
+
+function normalizeSubscribeError(error: unknown) {
+	const message = error instanceof Error ? error.message : "";
+
+	if (/push service error|registration failed/i.test(message)) {
+		return new Error(
+			"Your browser could not reach its push service. Try Chrome or Edge with VPN, ad-block DNS, and strict shields disabled for Linted, then enable alerts again.",
+		);
+	}
+
+	if (/applicationServerKey|VAPID|InvalidAccessError/i.test(message)) {
+		return new Error(
+			"Device alerts are not configured correctly. Regenerate the Web Push keys and redeploy.",
+		);
+	}
+
+	return error instanceof Error
+		? error
+		: new Error("Could not register this browser for device alerts.");
+}
+
 async function getAuthHeader() {
 	const {
 		data: { session },
 	} = await supabase.auth.getSession();
 
 	if (!session?.access_token) {
-		throw new Error("Sign in again before enabling phone alerts.");
+		throw new Error("Sign in again before enabling device alerts.");
 	}
 
 	return {
@@ -61,13 +105,15 @@ async function getAuthHeader() {
 }
 
 async function getServiceWorkerRegistration() {
-	const existing = await navigator.serviceWorker.getRegistration("/");
-	if (existing) return existing;
+	const registration = await navigator.serviceWorker.register(
+		PUSH_SERVICE_WORKER_PATH,
+		{
+			scope: "/",
+			updateViaCache: "none",
+		},
+	);
 
-	await navigator.serviceWorker.register(PUSH_SERVICE_WORKER_PATH, {
-		scope: "/",
-		updateViaCache: "none",
-	});
+	await registration.update().catch(() => undefined);
 
 	return navigator.serviceWorker.ready;
 }
@@ -83,7 +129,7 @@ async function saveSubscription(subscription: PushSubscription) {
 		const payload = (await response.json().catch(() => null)) as
 			| { message?: string }
 			| null;
-		throw new Error(payload?.message || "Could not enable phone alerts.");
+		throw new Error(payload?.message || "Could not enable device alerts.");
 	}
 }
 
@@ -92,7 +138,7 @@ export async function getPushCapability(): Promise<PushCapability> {
 		return { permission: "unsupported", status: "unsupported" };
 	}
 
-	if (!getPublicKey()) {
+	if (!getApplicationServerKey()) {
 		return { permission: Notification.permission, status: "unavailable" };
 	}
 
@@ -111,12 +157,12 @@ export async function getPushCapability(): Promise<PushCapability> {
 
 export async function enablePushNotifications() {
 	if (!isPushSupported()) {
-		throw new Error("This browser does not support phone alerts yet.");
+		throw new Error("This browser does not support device alerts yet.");
 	}
 
-	const publicKey = getPublicKey();
-	if (!publicKey) {
-		throw new Error("Phone alerts are not configured yet.");
+	const applicationServerKey = getApplicationServerKey();
+	if (!applicationServerKey) {
+		throw new Error("Device alerts are not configured correctly yet.");
 	}
 
 	const permission =
@@ -129,14 +175,30 @@ export async function enablePushNotifications() {
 	}
 
 	const registration = await getServiceWorkerRegistration();
-	const existingSubscription =
-		await registration.pushManager.getSubscription();
-	const subscription =
-		existingSubscription ??
-		(await registration.pushManager.subscribe({
-			applicationServerKey: urlBase64ToUint8Array(publicKey),
-			userVisibleOnly: true,
-		}));
+	const existingSubscription = await registration.pushManager.getSubscription();
+
+	if (
+		existingSubscription &&
+		!applicationServerKeysMatch(
+			existingSubscription.options.applicationServerKey,
+			applicationServerKey,
+		)
+	) {
+		await existingSubscription.unsubscribe();
+	}
+
+	const currentSubscription = await registration.pushManager.getSubscription();
+	let subscription = currentSubscription;
+	if (!subscription) {
+		try {
+			subscription = await registration.pushManager.subscribe({
+				applicationServerKey,
+				userVisibleOnly: true,
+			});
+		} catch (error) {
+			throw normalizeSubscribeError(error);
+		}
+	}
 
 	await saveSubscription(subscription);
 
@@ -173,7 +235,7 @@ export async function disablePushNotifications() {
 		const payload = (await response.json().catch(() => null)) as
 			| { message?: string }
 			| null;
-		throw new Error(payload?.message || "Could not disable phone alerts.");
+		throw new Error(payload?.message || "Could not disable device alerts.");
 	}
 
 	await subscription?.unsubscribe();

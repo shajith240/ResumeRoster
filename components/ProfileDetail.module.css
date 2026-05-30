@@ -591,6 +591,7 @@
 }
 
 .reviewerDialog {
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	width: min(680px, calc(100vw - 32px));
@@ -602,10 +603,12 @@
 }
 
 .reviewerDialogForm {
+	box-sizing: border-box;
 	display: flex;
 	flex: 1 1 auto;
 	flex-direction: column;
 	gap: 16px;
+	max-width: 100%;
 	min-height: 0;
 	margin-top: 18px;
 	overflow-y: auto;
@@ -966,7 +969,7 @@
 }
 
 .highlightSelectContent {
-	z-index: 130;
+	z-index: 260 !important;
 	border-color: var(--border-default);
 	border-radius: var(--button-radius);
 	background: var(--bg-elevated);
@@ -1079,8 +1082,11 @@
 }
 
 .reviewerEditBlock {
+	box-sizing: border-box;
 	display: grid;
 	gap: 16px;
+	max-width: 100%;
+	min-width: 0;
 	border: 1px solid var(--border-subtle);
 	border-radius: 12px;
 	padding: 14px;
@@ -1090,7 +1096,7 @@
 .segmentedControl {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 6px;
+	gap: 4px;
 	margin-top: 8px;
 	border: 1px solid var(--border-default);
 	border-radius: var(--button-radius);
@@ -1099,13 +1105,13 @@
 }
 
 .segmentedControl button {
-	min-height: 38px;
+	min-height: 36px;
 	border-radius: var(--button-radius-sm);
-	padding: 7px 9px;
+	padding: 7px 8px;
 	color: var(--text-secondary);
 	font-size: 12px;
-	font-weight: 600;
-	line-height: 1.2;
+	font-weight: 500;
+	line-height: 1;
 	transition:
 		background-color 0.18s var(--button-ease),
 		color 0.18s var(--button-ease);

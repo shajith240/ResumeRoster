@@ -39,7 +39,7 @@ export default function PushNotificationsControl() {
 		try {
 			await enablePushNotifications();
 			setStatus("enabled");
-			toast.success("Phone alerts enabled.");
+			toast.success("Device alerts enabled.");
 		} catch (error) {
 			await refresh();
 			toast.error(
@@ -55,7 +55,7 @@ export default function PushNotificationsControl() {
 		try {
 			await disablePushNotifications();
 			setStatus("disabled");
-			toast.success("Phone alerts disabled.");
+			toast.success("Device alerts disabled.");
 		} catch (error) {
 			await refresh();
 			toast.error(
@@ -105,7 +105,7 @@ export default function PushNotificationsControl() {
 			) : (
 				<BellRing className="size-3" />
 			)}
-			{enabled ? "Phone on" : "Phone alerts"}
+			{enabled ? "Alerts on" : "Device alerts"}
 		</Button>
 	);
 }
