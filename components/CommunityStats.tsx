@@ -11,11 +11,11 @@ import {
 import { supabase } from "@/lib/supabase/client";
 
 type CommunityStatsState = {
-	resumesRoastedThisWeek: number;
+	resumesReviewedThisWeek: number;
 };
 
 const EMPTY_STATS: CommunityStatsState = {
-	resumesRoastedThisWeek: 0,
+	resumesReviewedThisWeek: 0,
 };
 
 function getWeekStartIso() {
@@ -53,7 +53,7 @@ async function loadCommunityStats() {
 	const rows = result.data ?? [];
 
 	return {
-		resumesRoastedThisWeek: new Set(rows.map((row) => row.resume_id)).size,
+		resumesReviewedThisWeek: new Set(rows.map((row) => row.resume_id)).size,
 	};
 }
 
@@ -288,7 +288,7 @@ export default function CommunityStats() {
 			<div>
 				<span>Resumes reviewed this week</span>
 				<strong>
-					{statsLoading ? "--" : formatStat(stats.resumesRoastedThisWeek)}
+					{statsLoading ? "--" : formatStat(stats.resumesReviewedThisWeek)}
 				</strong>
 			</div>
 			<div>

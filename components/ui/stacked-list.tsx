@@ -15,13 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { resolveAvatarUrl } from "@/lib/supabase/avatars";
-import type { RoasterLeaderboardEntry } from "@/lib/supabase/types";
+import type { ReviewerProfileStats } from "@/lib/supabase/types";
 import {
 	canShowReviewerProfile,
 	getReviewerDisplayLabel,
 } from "@/lib/reviewer-validation";
 
-export type LeaderboardRoastPreview = {
+export type LeaderboardReviewPreview = {
 	id: string;
 	resume_id: string;
 	content: string;
@@ -29,11 +29,14 @@ export type LeaderboardRoastPreview = {
 	created_at: string;
 };
 
-export type LeaderboardRoaster = RoasterLeaderboardEntry & {
+export type LeaderboardReviewer = ReviewerProfileStats & {
 	roast_points?: number;
 	role_tag?: string;
-	top_roast?: LeaderboardRoastPreview;
+	top_roast?: LeaderboardReviewPreview;
 };
+
+export type LeaderboardRoastPreview = LeaderboardReviewPreview;
+export type LeaderboardRoaster = LeaderboardReviewer;
 
 type StackedListProps = {
 	description?: string;
@@ -119,7 +122,7 @@ function tagClass(label: string) {
 	return "border-[#F6D794] bg-[#FFF3D8] text-[#8A5B11] dark:border-[rgba(255,184,95,0.28)] dark:bg-[rgba(255,184,95,0.14)] dark:text-[#ffd28a]";
 }
 
-function roastPoints(roaster: LeaderboardRoaster) {
+function reviewerLintPoints(roaster: LeaderboardRoaster) {
 	return roaster.roast_points ?? roaster.helpful_votes;
 }
 
@@ -138,7 +141,7 @@ function normalizeSearchValue(value: string) {
 }
 
 function buildSearchText(roaster: LeaderboardRoaster, rank: number) {
-	const points = roastPoints(roaster);
+	const points = reviewerLintPoints(roaster);
 
 	return normalizeSearchValue(
 		[
@@ -230,7 +233,7 @@ function LeaderboardRow({
 }) {
 	const name = roasterName(roaster);
 	const tag = roleTag(roaster);
-	const points = roastPoints(roaster);
+	const points = reviewerLintPoints(roaster);
 	const topRoastHref = roaster.top_roast
 		? `/resume/${roaster.top_roast.resume_id}`
 		: `/profile/${roaster.id}`;
@@ -358,7 +361,7 @@ function DirectoryRow({
 					{name}
 				</strong>
 				<span className="mt-1 block truncate text-xs font-normal text-[var(--text-secondary)]">
-					Rank #{rank} - {roastPoints(roaster).toLocaleString()} lint points
+					Rank #{rank} - {reviewerLintPoints(roaster).toLocaleString()} lint points
 				</span>
 			</Link>
 			<span

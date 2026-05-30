@@ -59,13 +59,15 @@ export type AdminDashboardView =
 	| "reviewers";
 
 type AdminStats = {
-	activeRoasters: number;
+	activeReviewers: number;
+	activeRoasters?: number;
 	openResumes: number;
 	pendingReports: number;
 	pendingReviewers: number;
 	replies: number;
 	resumes: number;
-	roasts: number;
+	reviews: number;
+	roasts?: number;
 	users: number;
 };
 
@@ -78,7 +80,7 @@ type AdminResume = {
 	created_at: string;
 };
 
-type AdminRoast = {
+type AdminReview = {
 	id: string;
 	resume_id: string;
 	content: string;
@@ -89,7 +91,8 @@ type AdminRoast = {
 type AdminOverview = {
 	activity: {
 		recentResumes: AdminResume[];
-		recentRoasts: AdminRoast[];
+		recentReviews: AdminReview[];
+		recentRoasts?: AdminReview[];
 	};
 	stats: AdminStats;
 };
@@ -117,7 +120,7 @@ type ReportPreview = {
 	reporter: ProfilePreview | null;
 	profile: ProfilePreview | null;
 	resume: AdminResume | null;
-	roast: AdminRoast | null;
+	roast: AdminReview | null;
 	status: ContentReportStatus;
 	target_type: ContentReportTargetType;
 	updated_at: string;
@@ -652,12 +655,12 @@ export default function AdminDashboard({
 				<MetricCard
 					icon={<MessageSquare aria-hidden="true" />}
 					label="Feedback"
-					value={stats?.roasts ?? 0}
+					value={stats?.reviews ?? stats?.roasts ?? 0}
 				/>
 				<MetricCard
 					icon={<UserRound aria-hidden="true" />}
 					label="Active now"
-					value={stats?.activeRoasters ?? 0}
+					value={stats?.activeReviewers ?? stats?.activeRoasters ?? 0}
 				/>
 			</section>
 
@@ -1043,7 +1046,11 @@ function ContentPage({ overview }: { overview: AdminOverview | null }) {
 					kind="resume"
 				/>
 				<RecentContentList
-					items={overview?.activity.recentRoasts ?? []}
+					items={
+						overview?.activity.recentReviews ??
+						overview?.activity.recentRoasts ??
+						[]
+					}
 					kind="feedback"
 				/>
 			</div>
@@ -1606,7 +1613,7 @@ function RecentContentList({
 	items,
 	kind,
 }: {
-	items: Array<AdminResume | AdminRoast>;
+	items: Array<AdminResume | AdminReview>;
 	kind: "feedback" | "resume";
 }) {
 	return (
@@ -1616,13 +1623,13 @@ function RecentContentList({
 				const href =
 					kind === "resume"
 						? `/resume/${item.id}`
-						: `/resume/${(item as AdminRoast).resume_id}`;
+						: `/resume/${(item as AdminReview).resume_id}`;
 				const title =
-					"title" in item ? item.title : (item as AdminRoast).content;
+					"title" in item ? item.title : (item as AdminReview).content;
 				const detail =
 					"status" in item
 						? item.status
-						: (item as AdminRoast).is_deleted
+						: (item as AdminReview).is_deleted
 							? "removed"
 							: "live";
 

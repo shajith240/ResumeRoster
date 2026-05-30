@@ -16,13 +16,13 @@ export type LeaderboardStatsInput = {
 	target_role?: string | null;
 };
 
-export type LeaderboardRoastInput = {
+export type LeaderboardReviewInput = {
 	author_id: string;
 	created_at: string;
 	helpful_votes: number;
 };
 
-export type LeaderboardTopRoast = {
+export type LeaderboardTopReview = {
 	id: string;
 	resume_id: string;
 	content: string;
@@ -30,12 +30,13 @@ export type LeaderboardTopRoast = {
 	created_at: string;
 };
 
-export function roleTag(roaster: LeaderboardStatsInput) {
-	if (canShowReviewerProfile(roaster.community_role, roaster.reviewer_type)) {
-		return getReviewerDisplayLabel(roaster);
+export function roleTag(reviewer: LeaderboardStatsInput) {
+	if (canShowReviewerProfile(reviewer.community_role, reviewer.reviewer_type)) {
+		return getReviewerDisplayLabel(reviewer);
 	}
 
-	const role = `${roaster.target_role ?? ""} ${roaster.college ?? ""}`.toLowerCase();
+	const role =
+		`${reviewer.target_role ?? ""} ${reviewer.college ?? ""}`.toLowerCase();
 
 	if (role.includes("student") || role.includes("college") || role.includes("iit")) {
 		return "Student";
@@ -52,18 +53,18 @@ export function roleTag(roaster: LeaderboardStatsInput) {
 	return "Job Seeker";
 }
 
-export function roastPoints(helpfulVotes: number) {
+export function lintPoints(helpfulVotes: number) {
 	return helpfulVotes;
 }
 
-export function sortRoasters<
+export function sortReviewers<
 	T extends {
 		helpful_votes: number;
 		roast_count: number;
 		roast_points?: number;
 	},
->(roasters: T[]) {
-	return [...roasters].sort(
+>(reviewers: T[]) {
+	return [...reviewers].sort(
 		(a, b) =>
 			(b.roast_points ?? b.helpful_votes) -
 				(a.roast_points ?? a.helpful_votes) ||
@@ -72,47 +73,54 @@ export function sortRoasters<
 	);
 }
 
-export function bestRoastMap<T extends LeaderboardRoastInput>(roasts: T[]) {
-	return roasts.reduce<Record<string, T>>((map, roast) => {
-		const current = map[roast.author_id];
+export function bestReviewMap<T extends LeaderboardReviewInput>(reviews: T[]) {
+	return reviews.reduce<Record<string, T>>((map, review) => {
+		const current = map[review.author_id];
 		if (
 			!current ||
-			roast.helpful_votes > current.helpful_votes ||
-			(roast.helpful_votes === current.helpful_votes &&
-				new Date(roast.created_at).getTime() >
+			review.helpful_votes > current.helpful_votes ||
+			(review.helpful_votes === current.helpful_votes &&
+				new Date(review.created_at).getTime() >
 					new Date(current.created_at).getTime())
 		) {
-			map[roast.author_id] = roast;
+			map[review.author_id] = review;
 		}
 		return map;
 	}, {});
 }
 
-export function enhanceRoaster<
+export function enhanceReviewer<
 	T extends LeaderboardStatsInput,
-	R extends LeaderboardTopRoast | undefined,
+	R extends LeaderboardTopReview | undefined,
 >(
-	roaster: T,
-	topRoast?: R,
+	reviewer: T,
+	topReview?: R,
 	stats?: { helpfulVotes: number; roastCount: number },
 ) {
-	const helpfulVotes = stats?.helpfulVotes ?? roaster.helpful_votes;
-	const roastCount = stats?.roastCount ?? roaster.roast_count;
+	const helpfulVotes = stats?.helpfulVotes ?? reviewer.helpful_votes;
+	const roastCount = stats?.roastCount ?? reviewer.roast_count;
 
 	return {
-		...roaster,
+		...reviewer,
 		helpful_votes: helpfulVotes,
 		roast_count: roastCount,
-		roast_points: roastPoints(helpfulVotes),
-		role_tag: roleTag(roaster),
-		top_roast: topRoast
+		roast_points: lintPoints(helpfulVotes),
+		role_tag: roleTag(reviewer),
+		top_roast: topReview
 			? {
-					id: topRoast.id,
-					resume_id: topRoast.resume_id,
-					content: topRoast.content,
-					helpful_votes: topRoast.helpful_votes,
-					created_at: topRoast.created_at,
+					id: topReview.id,
+					resume_id: topReview.resume_id,
+					content: topReview.content,
+					helpful_votes: topReview.helpful_votes,
+					created_at: topReview.created_at,
 				}
 			: undefined,
 	};
 }
+
+export type LeaderboardRoastInput = LeaderboardReviewInput;
+export type LeaderboardTopRoast = LeaderboardTopReview;
+export const roastPoints = lintPoints;
+export const sortRoasters = sortReviewers;
+export const bestRoastMap = bestReviewMap;
+export const enhanceRoaster = enhanceReviewer;

@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
-	buildThreadRoastTree,
-	buildThreadRoasts,
+	buildThreadReviewTree,
+	buildThreadReviews,
 	getReactionBlockReason,
 	getReplyBlockReason,
-	normalizeRoast,
+	normalizeReview,
 } from "@/lib/resume-thread";
-import type { ResumeSummary, Roast } from "@/lib/supabase/types";
+import type { ResumeSummary, Review } from "@/lib/supabase/types";
 
 const resume: ResumeSummary = {
 	id: "resume-1",
@@ -22,12 +22,12 @@ const resume: ResumeSummary = {
 	created_at: "2026-05-23T00:00:00.000Z",
 };
 
-function roast(overrides: Partial<Roast>): Roast {
+function review(overrides: Partial<Review>): Review {
 	return {
-		id: "roast-1",
+		id: "review-1",
 		resume_id: "resume-1",
 		parent_id: null,
-		author_id: "roaster-1",
+		author_id: "reviewer-1",
 		content: "Add stronger quantified impact to the project bullets.",
 		helpful_votes: 0,
 		dislike_count: 0,
@@ -40,28 +40,28 @@ function roast(overrides: Partial<Roast>): Roast {
 }
 
 describe("resume thread rules", () => {
-	it("blocks resume owners and roast authors from reacting", () => {
-		const targetRoast = roast({ author_id: "roaster-1" });
+	it("blocks resume owners and review authors from reacting", () => {
+		const targetReview = review({ author_id: "reviewer-1" });
 
 		expect(
-			getReactionBlockReason({ id: "owner-1" }, resume, targetRoast),
+			getReactionBlockReason({ id: "owner-1" }, resume, targetReview),
 		).toBe("Resume owners cannot react to feedback on their own resume.");
 
 		expect(
-			getReactionBlockReason({ id: "roaster-1" }, resume, targetRoast),
+			getReactionBlockReason({ id: "reviewer-1" }, resume, targetReview),
 		).toBe("You cannot react to your own feedback.");
 
 		expect(
-			getReactionBlockReason({ id: "roaster-2" }, resume, targetRoast),
+			getReactionBlockReason({ id: "reviewer-2" }, resume, targetReview),
 		).toBeNull();
 	});
 
-	it("allows resume owners to reply for clarification when it is not their own roast", () => {
+	it("allows resume owners to reply for clarification when it is not their own review", () => {
 		expect(
 			getReplyBlockReason({
 				isClosed: false,
 				isDeleted: false,
-				isOwnRoast: false,
+				isOwnReview: false,
 				migrationMessage: "Run migrations.",
 				replySchemaReady: true,
 			}),
@@ -73,7 +73,7 @@ describe("resume thread rules", () => {
 			getReplyBlockReason({
 				isClosed: true,
 				isDeleted: false,
-				isOwnRoast: false,
+				isOwnReview: false,
 				migrationMessage: "Run migrations.",
 				replySchemaReady: true,
 			}),
@@ -83,7 +83,7 @@ describe("resume thread rules", () => {
 			getReplyBlockReason({
 				isClosed: false,
 				isDeleted: true,
-				isOwnRoast: false,
+				isOwnReview: false,
 				migrationMessage: "Run migrations.",
 				replySchemaReady: true,
 			}),
@@ -93,7 +93,7 @@ describe("resume thread rules", () => {
 			getReplyBlockReason({
 				isClosed: false,
 				isDeleted: false,
-				isOwnRoast: true,
+				isOwnReview: true,
 				migrationMessage: "Run migrations.",
 				replySchemaReady: true,
 			}),
@@ -103,19 +103,19 @@ describe("resume thread rules", () => {
 			getReplyBlockReason({
 				isClosed: false,
 				isDeleted: false,
-				isOwnRoast: false,
+				isOwnReview: false,
 				migrationMessage: "Run migrations.",
 				replySchemaReady: false,
 			}),
 		).toBe("Run migrations. Replies are not ready yet.");
 	});
 
-	it("normalizes legacy roast rows with missing optional fields", () => {
+	it("normalizes legacy review rows with missing optional fields", () => {
 		expect(
-			normalizeRoast({
-				id: "roast-1",
+			normalizeReview({
+				id: "review-1",
 				resume_id: "resume-1",
-				author_id: "roaster-1",
+				author_id: "reviewer-1",
 				content: "Useful feedback goes here.",
 				helpful_votes: 1,
 				created_at: "2026-05-23T00:00:00.000Z",
@@ -129,31 +129,31 @@ describe("resume thread rules", () => {
 		});
 	});
 
-	it("flattens threaded roasts with top-level score order and reply chronology", () => {
-		const roasts = [
-			roast({
+	it("flattens threaded reviews with top-level score order and reply chronology", () => {
+		const reviews = [
+			review({
 				id: "low-score",
 				helpful_votes: 1,
 				created_at: "2026-05-23T02:00:00.000Z",
 			}),
-			roast({
+			review({
 				id: "top-score",
 				helpful_votes: 5,
 				created_at: "2026-05-23T01:00:00.000Z",
 			}),
-			roast({
+			review({
 				id: "reply-new",
 				parent_id: "top-score",
 				created_at: "2026-05-23T04:00:00.000Z",
 			}),
-			roast({
+			review({
 				id: "reply-old",
 				parent_id: "top-score",
 				created_at: "2026-05-23T03:00:00.000Z",
 			}),
 		];
 
-		const flattened = buildThreadRoasts(roasts, new Set());
+		const flattened = buildThreadReviews(reviews, new Set());
 
 		expect(flattened.map((item) => item.id)).toEqual([
 			"top-score",
@@ -166,10 +166,10 @@ describe("resume thread rules", () => {
 	});
 
 	it("hides collapsed replies while preserving parent child counts", () => {
-		const flattened = buildThreadRoasts(
+		const flattened = buildThreadReviews(
 			[
-				roast({ id: "parent", helpful_votes: 1 }),
-				roast({ id: "child", parent_id: "parent" }),
+				review({ id: "parent", helpful_votes: 1 }),
+				review({ id: "child", parent_id: "parent" }),
 			],
 			new Set(["parent"]),
 		);
@@ -178,12 +178,12 @@ describe("resume thread rules", () => {
 		expect(flattened[0].childCount).toBe(1);
 	});
 
-	it("builds nested roast trees for continuous reply connectors", () => {
-		const tree = buildThreadRoastTree(
+	it("builds nested review trees for continuous reply connectors", () => {
+		const tree = buildThreadReviewTree(
 			[
-				roast({ id: "parent", helpful_votes: 2 }),
-				roast({ id: "child", parent_id: "parent" }),
-				roast({ id: "grandchild", parent_id: "child" }),
+				review({ id: "parent", helpful_votes: 2 }),
+				review({ id: "child", parent_id: "parent" }),
+				review({ id: "grandchild", parent_id: "child" }),
 			],
 			new Set(),
 		);

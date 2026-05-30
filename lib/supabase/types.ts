@@ -14,6 +14,7 @@ export type ContentReportStatus =
   | "dismissed"
   | "actioned";
 export type ContentReportTargetType = "resume" | "roast" | "profile";
+export type ContentReportInputTargetType = "resume" | "review" | "profile";
 export type CommentContentFormat = "plain" | "markdown";
 export type CommentAttachmentKind = "image";
 export type CommentAttachmentSource = "upload";
@@ -92,7 +93,7 @@ export type ResumeSummary = {
   author_profile?: ResumeAuthorProfile | null;
 };
 
-export type Roast = {
+export type Review = {
   id: string;
   resume_id: string;
   parent_id?: string | null;
@@ -107,6 +108,8 @@ export type Roast = {
   deleted_at?: string | null;
   created_at: string;
 };
+
+export type Roast = Review;
 
 export type ResumeReview = {
   id: string;
@@ -138,7 +141,7 @@ export type CommentAttachment = {
   created_at: string;
 };
 
-export type RoasterLeaderboardEntry = {
+export type ReviewerProfileStats = {
   id: string;
   username: string | null;
   full_name?: string | null;
@@ -155,6 +158,8 @@ export type RoasterLeaderboardEntry = {
   roast_count: number;
   helpful_votes: number;
 };
+
+export type RoasterLeaderboardEntry = ReviewerProfileStats;
 
 export type ReviewerLeaderboardEntry = {
   id: string;
@@ -174,7 +179,7 @@ export type ReviewerLeaderboardEntry = {
   lint_points: number;
 };
 
-export type PublicProfile = RoasterLeaderboardEntry & {
+export type PublicProfile = ReviewerProfileStats & {
   avatar_path: string | null;
   tagline: string | null;
   current_position: string | null;
@@ -235,7 +240,7 @@ export type PublicProfileResume = {
   is_highlight: boolean;
 };
 
-export type PublicProfileRoast = {
+export type PublicProfileReviewLegacy = {
   id: string;
   resume_id: string;
   resume_title: string;
@@ -244,6 +249,8 @@ export type PublicProfileRoast = {
   helpful_votes: number;
   created_at: string;
 };
+
+export type PublicProfileRoast = PublicProfileReviewLegacy;
 
 export type PublicProfileReview = {
   id: string;

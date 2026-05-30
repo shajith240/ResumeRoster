@@ -75,16 +75,16 @@ export function sortResumes<T extends ResumeSummary>(
 	});
 }
 
-export function mergeRoastCountsFromRows<
+export function mergeReviewCountsFromRows<
 	T extends ResumeSummary,
 	R extends { resume_id: string },
->(resumes: T[], roasts: R[]) {
+>(resumes: T[], reviews: R[]) {
 	const countsByResume = new Map<string, number>();
 
-	for (const roast of roasts) {
+	for (const review of reviews) {
 		countsByResume.set(
-			roast.resume_id,
-			(countsByResume.get(roast.resume_id) ?? 0) + 1,
+			review.resume_id,
+			(countsByResume.get(review.resume_id) ?? 0) + 1,
 		);
 	}
 
@@ -93,3 +93,5 @@ export function mergeRoastCountsFromRows<
 		roast_count: countsByResume.get(resume.id) ?? 0,
 	}));
 }
+
+export const mergeRoastCountsFromRows = mergeReviewCountsFromRows;

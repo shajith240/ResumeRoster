@@ -16,7 +16,7 @@ import {
 } from "@/lib/resume-display";
 import {
   formatCount,
-  mergeRoastCountsFromRows,
+  mergeReviewCountsFromRows,
   sortResumes,
   withResumeDefaults,
   type FeedSort,
@@ -265,26 +265,26 @@ const sortOptions: Array<{
   },
 ];
 
-async function mergeLiveRoastCounts(resumeRows: ResumeSummary[]) {
+async function mergeLiveReviewCounts(resumeRows: ResumeSummary[]) {
   if (!resumeRows.length) return resumeRows;
 
-  const activeRoastResult = await supabase
+  const activeReviewResult = await supabase
     .from("roasts")
     .select("resume_id")
     .in("resume_id", resumeRows.map((resume) => resume.id))
     .eq("is_deleted", false);
 
   const { data, error } =
-    activeRoastResult.error && /is_deleted|schema cache|column/i.test(activeRoastResult.error.message)
+    activeReviewResult.error && /is_deleted|schema cache|column/i.test(activeReviewResult.error.message)
       ? await supabase
           .from("roasts")
           .select("resume_id")
           .in("resume_id", resumeRows.map((resume) => resume.id))
-      : activeRoastResult;
+      : activeReviewResult;
 
   if (error) return resumeRows;
 
-  return mergeRoastCountsFromRows(resumeRows, data ?? []);
+  return mergeReviewCountsFromRows(resumeRows, data ?? []);
 }
 
 async function fetchPublicAuthorProfiles(resumeRows: ResumeSummary[]) {
@@ -470,7 +470,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
       } else {
         const rowsWithProfiles = await attachPublicAuthorProfiles(resumeRows);
         if (!active) return;
-        const rowsWithLiveCounts = await mergeLiveRoastCounts(rowsWithProfiles);
+        const rowsWithLiveCounts = await mergeLiveReviewCounts(rowsWithProfiles);
         if (!active) return;
         if (savedResult.error && savedOnly) {
           setMessage(

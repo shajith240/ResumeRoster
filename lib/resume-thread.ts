@@ -1,22 +1,22 @@
-import type { ResumeSummary, Roast } from "@/lib/supabase/types";
+import type { ResumeSummary, Review } from "@/lib/supabase/types";
 
 type ActiveUserLike = {
 	id: string;
 } | null;
 
-export type ThreadRoast = Roast & {
+export type ThreadReview = Review & {
 	childCount: number;
 	depth: number;
 };
 
-export type ThreadRoastNode = ThreadRoast & {
-	children: ThreadRoastNode[];
+export type ThreadReviewNode = ThreadReview & {
+	children: ThreadReviewNode[];
 };
 
 export function getReactionBlockReason(
 	activeUser: ActiveUserLike,
 	activeResume: ResumeSummary | null,
-	roast: Roast,
+	review: Review,
 ) {
 	if (!activeUser) return null;
 
@@ -24,7 +24,7 @@ export function getReactionBlockReason(
 		return "Resume owners cannot react to feedback on their own resume.";
 	}
 
-	if (roast.author_id === activeUser.id) {
+	if (review.author_id === activeUser.id) {
 		return "You cannot react to your own feedback.";
 	}
 
@@ -34,105 +34,113 @@ export function getReactionBlockReason(
 export function getReplyBlockReason({
 	isClosed,
 	isDeleted,
+	isOwnReview,
 	isOwnRoast,
 	migrationMessage,
 	replySchemaReady,
 }: {
 	isClosed: boolean;
 	isDeleted: boolean;
-	isOwnRoast: boolean;
+	isOwnReview?: boolean;
+	isOwnRoast?: boolean;
 	migrationMessage: string;
 	replySchemaReady: boolean;
 }) {
 	if (isClosed) return "This resume is closed for new replies.";
 	if (isDeleted) return "Deleted feedback cannot receive new replies.";
-	if (isOwnRoast) return "You cannot reply to your own feedback.";
+	if (isOwnReview ?? isOwnRoast) return "You cannot reply to your own feedback.";
 	if (!replySchemaReady) return `${migrationMessage} Replies are not ready yet.`;
 	return null;
 }
 
-export function normalizeRoast(roast: Roast): Roast {
+export function normalizeReview(review: Review): Review {
 	return {
-		...roast,
-		parent_id: roast.parent_id ?? null,
-		attachment_id: roast.attachment_id ?? null,
-		content_format: roast.content_format ?? "plain",
-		dislike_count: roast.dislike_count ?? 0,
-		reply_count: roast.reply_count ?? 0,
-		is_deleted: roast.is_deleted ?? false,
-		deleted_at: roast.deleted_at ?? null,
+		...review,
+		parent_id: review.parent_id ?? null,
+		attachment_id: review.attachment_id ?? null,
+		content_format: review.content_format ?? "plain",
+		dislike_count: review.dislike_count ?? 0,
+		reply_count: review.reply_count ?? 0,
+		is_deleted: review.is_deleted ?? false,
+		deleted_at: review.deleted_at ?? null,
 	};
 }
 
-function sortTopLevelRoasts(a: Roast, b: Roast) {
+function sortTopLevelReviews(a: Review, b: Review) {
 	return (
 		b.helpful_votes - a.helpful_votes ||
 		new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 	);
 }
 
-function sortReplyRoasts(a: Roast, b: Roast) {
+function sortReplyReviews(a: Review, b: Review) {
 	return (
 		new Date(a.created_at).getTime() - new Date(b.created_at).getTime() ||
 		b.helpful_votes - a.helpful_votes
 	);
 }
 
-function buildChildrenByParent(roasts: Roast[]) {
-	const childrenByParent = new Map<string | null, Roast[]>();
+function buildChildrenByParent(reviews: Review[]) {
+	const childrenByParent = new Map<string | null, Review[]>();
 
-	for (const roast of roasts) {
-		const parentId = roast.parent_id ?? null;
+	for (const review of reviews) {
+		const parentId = review.parent_id ?? null;
 		const siblings = childrenByParent.get(parentId) ?? [];
-		siblings.push(roast);
+		siblings.push(review);
 		childrenByParent.set(parentId, siblings);
 	}
 
-	childrenByParent.get(null)?.sort(sortTopLevelRoasts);
+	childrenByParent.get(null)?.sort(sortTopLevelReviews);
 	for (const [parentId, children] of childrenByParent.entries()) {
 		if (parentId !== null) {
-			children.sort(sortReplyRoasts);
+			children.sort(sortReplyReviews);
 		}
 	}
 
 	return childrenByParent;
 }
 
-export function buildThreadRoastTree(
-	roasts: Roast[],
-	collapsedRoastIds: Set<string>,
-): ThreadRoastNode[] {
-	const childrenByParent = buildChildrenByParent(roasts);
+export function buildThreadReviewTree(
+	reviews: Review[],
+	collapsedReviewIds: Set<string>,
+): ThreadReviewNode[] {
+	const childrenByParent = buildChildrenByParent(reviews);
 
-	function buildNode(roast: Roast, depth: number): ThreadRoastNode {
-		const children = childrenByParent.get(roast.id) ?? [];
-		const visibleChildren = collapsedRoastIds.has(roast.id)
+	function buildNode(review: Review, depth: number): ThreadReviewNode {
+		const children = childrenByParent.get(review.id) ?? [];
+		const visibleChildren = collapsedReviewIds.has(review.id)
 			? []
 			: children.map((child) => buildNode(child, depth + 1));
 
 		return {
-			...roast,
+			...review,
 			childCount: children.length,
 			depth,
 			children: visibleChildren,
 		};
 	}
 
-	return (childrenByParent.get(null) ?? []).map((roast) => buildNode(roast, 0));
+	return (childrenByParent.get(null) ?? []).map((review) => buildNode(review, 0));
 }
 
-export function buildThreadRoasts(
-	roasts: Roast[],
-	collapsedRoastIds: Set<string>,
-): ThreadRoast[] {
-	const flattened: ThreadRoast[] = [];
+export function buildThreadReviews(
+	reviews: Review[],
+	collapsedReviewIds: Set<string>,
+): ThreadReview[] {
+	const flattened: ThreadReview[] = [];
 
-	function visit(node: ThreadRoastNode) {
-		const { children, ...roast } = node;
-		flattened.push(roast);
+	function visit(node: ThreadReviewNode) {
+		const { children, ...review } = node;
+		flattened.push(review);
 		children.forEach(visit);
 	}
 
-	buildThreadRoastTree(roasts, collapsedRoastIds).forEach(visit);
+	buildThreadReviewTree(reviews, collapsedReviewIds).forEach(visit);
 	return flattened;
 }
+
+export type ThreadRoast = ThreadReview;
+export type ThreadRoastNode = ThreadReviewNode;
+export const normalizeRoast = normalizeReview;
+export const buildThreadRoastTree = buildThreadReviewTree;
+export const buildThreadRoasts = buildThreadReviews;

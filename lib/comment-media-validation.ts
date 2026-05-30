@@ -1,6 +1,8 @@
 export const COMMENT_IMAGE_MAX_FILE_SIZE_BYTES = 3 * 1024 * 1024;
-export const ROAST_CONTENT_MIN_LENGTH = 10;
-export const ROAST_CONTENT_MAX_LENGTH = 4000;
+export const REVIEW_CONTENT_MIN_LENGTH = 10;
+export const REVIEW_CONTENT_MAX_LENGTH = 4000;
+export const ROAST_CONTENT_MIN_LENGTH = REVIEW_CONTENT_MIN_LENGTH;
+export const ROAST_CONTENT_MAX_LENGTH = REVIEW_CONTENT_MAX_LENGTH;
 
 export const COMMENT_IMAGE_ALLOWED_MIME_TYPES = [
 	"image/png",
@@ -92,7 +94,7 @@ export function isCommentContentFormat(
 	return COMMENT_CONTENT_FORMATS.includes(value as CommentContentFormat);
 }
 
-export function getRoastContentIssue({
+export function getReviewContentIssue({
 	attachmentId,
 	content,
 	contentFormat,
@@ -103,11 +105,11 @@ export function getRoastContentIssue({
 }) {
 	const normalizedContent = content.trim();
 
-	if (normalizedContent.length < ROAST_CONTENT_MIN_LENGTH) {
+	if (normalizedContent.length < REVIEW_CONTENT_MIN_LENGTH) {
 		return "Write at least 10 characters of useful feedback.";
 	}
 
-	if (normalizedContent.length > ROAST_CONTENT_MAX_LENGTH) {
+	if (normalizedContent.length > REVIEW_CONTENT_MAX_LENGTH) {
 		return "Keep feedback under 4000 characters.";
 	}
 
@@ -121,3 +123,5 @@ export function getRoastContentIssue({
 
 	return "";
 }
+
+export const getRoastContentIssue = getReviewContentIssue;

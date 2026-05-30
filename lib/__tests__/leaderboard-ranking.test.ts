@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
 import {
-	bestRoastMap,
-	enhanceRoaster,
-	roastPoints,
+	bestReviewMap,
+	enhanceReviewer,
+	lintPoints,
 	roleTag,
-	sortRoasters,
+	sortReviewers,
 } from "@/lib/leaderboard-ranking";
 
 describe("leaderboard ranking", () => {
 	it("uses helpful votes as lint points", () => {
-		expect(roastPoints(2)).toBe(2);
+		expect(lintPoints(2)).toBe(2);
 	});
 
 	it("derives professional role tags from profile context", () => {
@@ -21,16 +21,16 @@ describe("leaderboard ranking", () => {
 
 	it("sorts by lint points, helpful votes, then review count", () => {
 		expect(
-			sortRoasters([
+			sortReviewers([
 				{ id: "a", roast_points: 0, helpful_votes: 0, roast_count: 1 },
 				{ id: "b", roast_points: 2, helpful_votes: 2, roast_count: 0 },
 				{ id: "c", roast_points: 2, helpful_votes: 2, roast_count: 2 },
-			]).map((roaster) => roaster.id),
+			]).map((reviewer) => reviewer.id),
 		).toEqual(["c", "b", "a"]);
 	});
 
-	it("selects each roaster's most helpful recent roast", () => {
-		const top = bestRoastMap([
+	it("selects each reviewer's most helpful recent review", () => {
+		const top = bestReviewMap([
 			{
 				id: "old",
 				author_id: "user-1",
@@ -55,8 +55,8 @@ describe("leaderboard ranking", () => {
 		expect(top["user-2"].id).toBe("winner");
 	});
 
-	it("enhances a roaster with display ranking fields", () => {
-		const enhanced = enhanceRoaster(
+	it("enhances a reviewer with display ranking fields", () => {
+		const enhanced = enhanceReviewer(
 			{
 				id: "user-1",
 				college: "IIT",
@@ -65,7 +65,7 @@ describe("leaderboard ranking", () => {
 				roast_count: 2,
 			},
 			{
-				id: "roast-1",
+				id: "review-1",
 				resume_id: "resume-1",
 				content: "Add metrics to the project bullets.",
 				helpful_votes: 3,

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	formatCount,
 	getBestScore,
-	mergeRoastCountsFromRows,
+	mergeReviewCountsFromRows,
 	sortResumes,
 	withResumeDefaults,
 } from "@/lib/feed-ranking";
@@ -141,7 +141,7 @@ describe("feed ranking", () => {
 	});
 
 	it("merges live roast counts without trusting stale resume counters", () => {
-		const merged = mergeRoastCountsFromRows(
+		const merged = mergeReviewCountsFromRows(
 			[
 				resume({ id: "resume-1", roast_count: 9 }),
 				resume({ id: "resume-2", roast_count: 5 }),

@@ -22,12 +22,12 @@ export async function GET(request: Request) {
 			userCount,
 			resumeCount,
 			openResumeCount,
-			roastCount,
+			reviewCount,
 			replyCount,
 			pendingReportCount,
 			pendingReviewerCount,
 			recentResumes,
-			recentRoasts,
+			recentReviews,
 			activePresence,
 		] = await Promise.all([
 			getCount(admin.from("profiles").select("id", { count: "exact", head: true })),
@@ -84,26 +84,26 @@ export async function GET(request: Request) {
 		]);
 
 		if (recentResumes.error) throw new Error(recentResumes.error.message);
-		if (recentRoasts.error) throw new Error(recentRoasts.error.message);
+		if (recentReviews.error) throw new Error(recentReviews.error.message);
 		if (activePresence.error) throw new Error(activePresence.error.message);
 
-		const activeRoasterCount = new Set(
+		const activeReviewerCount = new Set(
 			(activePresence.data ?? []).map((row) => row.user_id).filter(Boolean),
 		).size;
 
 		return Response.json({
 			activity: {
 				recentResumes: recentResumes.data ?? [],
-				recentRoasts: recentRoasts.data ?? [],
+				recentReviews: recentReviews.data ?? [],
 			},
 			stats: {
-				activeRoasters: activeRoasterCount,
+				activeReviewers: activeReviewerCount,
 				openResumes: openResumeCount,
 				pendingReports: pendingReportCount,
 				pendingReviewers: pendingReviewerCount,
 				replies: replyCount,
 				resumes: resumeCount,
-				roasts: roastCount,
+				reviews: reviewCount,
 				users: userCount,
 			},
 		});

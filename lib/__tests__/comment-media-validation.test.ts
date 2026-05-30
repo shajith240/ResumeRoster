@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	detectCommentImageMimeType,
 	getCommentImageUploadIssue,
-	getRoastContentIssue,
+	getReviewContentIssue,
 } from "@/lib/comment-media-validation";
 
 const pngBytes = new Uint8Array([
@@ -80,12 +80,12 @@ describe("comment media upload validation", () => {
 	});
 });
 
-describe("roast content validation", () => {
+describe("review content validation", () => {
 	const attachmentId = "1bd2bea3-d892-4d46-97cd-98a558846fd3";
 
 	it("still requires useful text when media is selected", () => {
 		expect(
-			getRoastContentIssue({
+			getReviewContentIssue({
 				attachmentId,
 				content: "nice",
 				contentFormat: "markdown",
@@ -95,7 +95,7 @@ describe("roast content validation", () => {
 
 	it("accepts plain and markdown comments with optional media", () => {
 		expect(
-			getRoastContentIssue({
+			getReviewContentIssue({
 				attachmentId,
 				content: "**Lead with impact** and quantify the first bullet.",
 				contentFormat: "markdown",
@@ -103,7 +103,7 @@ describe("roast content validation", () => {
 		).toBe("");
 
 		expect(
-			getRoastContentIssue({
+			getReviewContentIssue({
 				content: "Lead with impact and quantify the first bullet.",
 				contentFormat: "plain",
 			}),
@@ -112,14 +112,14 @@ describe("roast content validation", () => {
 
 	it("rejects invalid formats and malformed attachment ids", () => {
 		expect(
-			getRoastContentIssue({
+			getReviewContentIssue({
 				content: "Lead with impact and quantify the first bullet.",
 				contentFormat: "html",
 			}),
 		).toBe("Choose a valid comment format.");
 
 		expect(
-			getRoastContentIssue({
+			getReviewContentIssue({
 				attachmentId: "not-a-uuid",
 				content: "Lead with impact and quantify the first bullet.",
 				contentFormat: "plain",

@@ -42,7 +42,7 @@ import {
 	REPORT_REASON_OPTIONS,
 	type ReportReason,
 } from "@/lib/report-validation";
-import { getRoastContentIssue } from "@/lib/comment-media-validation";
+import { getReviewContentIssue } from "@/lib/comment-media-validation";
 import {
 	getResumeAffiliationLabel,
 	getResumePosterLabel,
@@ -54,11 +54,11 @@ import {
 	isTrustedReviewer,
 } from "@/lib/reviewer-validation";
 import {
-	buildThreadRoastTree,
+	buildThreadReviewTree,
 	getReactionBlockReason,
 	getReplyBlockReason,
-	normalizeRoast,
-	type ThreadRoastNode,
+	normalizeReview,
+	type ThreadReviewNode,
 } from "@/lib/resume-thread";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { supabase } from "@/lib/supabase/client";
@@ -70,7 +70,7 @@ import type {
 	ResumeSummary,
 	ReviewerType,
 	ReviewerVerificationStatus,
-	Roast,
+	Review,
 } from "@/lib/supabase/types";
 import { toast } from "sonner";
 
@@ -390,7 +390,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [resume, setResume] = useState<ResumeSummary | null>(null);
 	const [resumeAuthorProfile, setResumeAuthorProfile] =
 		useState<ResumeAuthorProfile | null>(null);
-	const [roasts, setRoasts] = useState<Roast[]>([]);
+	const [roasts, setRoasts] = useState<Review[]>([]);
 	const [authorProfiles, setAuthorProfiles] = useState<
 		Record<string, AuthorProfile>
 	>({});
@@ -413,11 +413,11 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [replyingToId, setReplyingToId] = useState<string | null>(null);
 	const [submittingReplyId, setSubmittingReplyId] = useState("");
 	const [deletingRoastId, setDeletingRoastId] = useState("");
-	const [deleteTargetRoast, setDeleteTargetRoast] = useState<Roast | null>(null);
+	const [deleteTargetRoast, setDeleteTargetRoast] = useState<Review | null>(null);
 	const [pendingResumeAction, setPendingResumeAction] =
 		useState<ResumeOwnerAction | null>(null);
 	const [resumeActionBusy, setResumeActionBusy] = useState(false);
-	const [reportTargetRoast, setReportTargetRoast] = useState<Roast | null>(null);
+	const [reportTargetRoast, setReportTargetRoast] = useState<Review | null>(null);
 	const [reportReason, setReportReason] =
 		useState<ReportReason>("personal_info");
 	const [reportDetails, setReportDetails] = useState("");
@@ -437,7 +437,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const [message, setMessage] = useState("");
 
 	const threadRoasts = useMemo(
-		() => buildThreadRoastTree(roasts, collapsedRoastIds),
+		() => buildThreadReviewTree(roasts, collapsedRoastIds),
 		[collapsedRoastIds, roasts],
 	);
 	const isOwner = Boolean(user && resume?.user_id === user.id);
@@ -595,7 +595,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		return (primaryResult.data ?? null) as ResumeAuthorProfile | null;
 	}
 
-	async function loadRoastAttachments(loadedRoasts: Roast[]) {
+	async function loadRoastAttachments(loadedRoasts: Review[]) {
 		const attachmentIds = Array.from(
 			new Set(
 				loadedRoasts
@@ -714,8 +714,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		const loadedRoasts = ((roastResult.data ?? []) as Roast[]).map((roast) =>
-			normalizeRoast(roast),
+		const loadedRoasts = ((roastResult.data ?? []) as Review[]).map((roast) =>
+			normalizeReview(roast),
 		);
 		setRoasts(loadedRoasts);
 		await loadRoastAttachments(loadedRoasts);
@@ -939,7 +939,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		const roastContent = content.trim();
-		const payloadIssue = getRoastContentIssue({
+		const payloadIssue = getReviewContentIssue({
 			attachmentId: selectedAttachment?.id,
 			content: roastContent,
 			contentFormat,
@@ -996,7 +996,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		setRoasts((current) => [normalizeRoast(data as unknown as Roast), ...current]);
+		setRoasts((current) => [normalizeReview(data as unknown as Review), ...current]);
 		if (selectedAttachment) {
 			setAttachmentsById((current) => ({
 				...current,
@@ -1022,7 +1022,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 
 	async function handleReplySubmit(
 		event: FormEvent<HTMLFormElement>,
-		parentRoast: Roast,
+		parentRoast: Review,
 	) {
 		event.preventDefault();
 		setMessage("");
@@ -1048,7 +1048,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 
 		const replyText = replyContent.trim();
-		const payloadIssue = getRoastContentIssue({
+		const payloadIssue = getReviewContentIssue({
 			attachmentId: replyAttachment?.id,
 			content: replyText,
 			contentFormat: replyContentFormat,
@@ -1116,7 +1116,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			return;
 		}
 
-		const nextReply = normalizeRoast(data as unknown as Roast);
+		const nextReply = normalizeReview(data as unknown as Review);
 		setRoasts((current) => [
 			nextReply,
 			...current.map((roast) =>
@@ -1166,7 +1166,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		});
 	}
 
-	async function reactToRoast(targetRoast: Roast, reaction: Reaction) {
+	async function reactToRoast(targetRoast: Review, reaction: Reaction) {
 		setMessage("");
 
 		if (!user) {
@@ -1402,7 +1402,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		}
 	}
 
-	async function requestDeleteRoast(targetRoast: Roast) {
+	async function requestDeleteRoast(targetRoast: Review) {
 		setMessage("");
 
 		if (!deleteSchemaReady) {
@@ -1428,7 +1428,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setDeleteTargetRoast(targetRoast);
 	}
 
-	async function deleteRoast(targetRoast: Roast | null) {
+	async function deleteRoast(targetRoast: Review | null) {
 		setMessage("");
 
 		if (!targetRoast) {
@@ -1482,7 +1482,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		toast.success(targetRoast.parent_id ? "Reply deleted." : "Comment deleted.");
 	}
 
-	function openReportDialog(targetRoast: Roast) {
+	function openReportDialog(targetRoast: Review) {
 		setMessage("");
 
 		if (!reportSchemaReady) {
@@ -1618,7 +1618,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		REPORT_DETAILS_MAX_LENGTH - reportDetails.length;
 	let threadRenderIndex = 0;
 
-	function renderThreadRoast(roast: ThreadRoastNode) {
+	function renderThreadRoast(roast: ThreadReviewNode) {
 		const voted = votedRoastIds.has(roast.id);
 		const disliked = dislikedRoastIds.has(roast.id);
 		const authorProfile = authorProfiles[roast.author_id];
@@ -1636,7 +1636,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		const replyBlockReason = getReplyBlockReason({
 			isClosed,
 			isDeleted,
-			isOwnRoast,
+			isOwnReview: isOwnRoast,
 			migrationMessage: SUPABASE_MIGRATION_MESSAGE,
 			replySchemaReady,
 		});

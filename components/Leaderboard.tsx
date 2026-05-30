@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { CalendarDays } from "lucide-react";
 
 import StackedList, {
-	type LeaderboardRoastPreview,
-	type LeaderboardRoaster,
+	type LeaderboardReviewPreview,
+	type LeaderboardReviewer,
 } from "@/components/ui/stacked-list";
 import {
 	Select,
@@ -16,14 +16,14 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import {
-	bestRoastMap,
-	enhanceRoaster,
-	sortRoasters,
+	bestReviewMap,
+	enhanceReviewer,
+	sortReviewers,
 } from "@/lib/leaderboard-ranking";
 import { supabase } from "@/lib/supabase/client";
 import type {
 	ReviewerLeaderboardEntry,
-	RoasterLeaderboardEntry,
+	ReviewerProfileStats,
 } from "@/lib/supabase/types";
 import styles from "./Leaderboard.module.css";
 
@@ -37,11 +37,11 @@ type ReviewerFilter =
 	| "career_coaches"
 	| "students";
 
-type RoastRow = LeaderboardRoastPreview & {
+type ReviewRow = LeaderboardReviewPreview & {
 	author_id: string;
 };
 
-const ROAST_SELECT = "id,resume_id,author_id,content,helpful_votes,created_at";
+const REVIEW_SELECT = "id,resume_id,author_id,content,helpful_votes,created_at";
 const PROFILE_SELECT =
 	"id,username,full_name,avatar_url,avatar_path,college,target_role,community_role,reviewer_type,reviewer_headline,reviewer_expertise,reviewer_verification_status,roast_count,helpful_votes";
 const PROFILE_FALLBACK_SELECT =
@@ -85,9 +85,9 @@ function isMissingReviewerLeaderboardRpc(message: string) {
 }
 
 function normalizeLeaderboardEntry(
-	row: RoasterLeaderboardEntry | ReviewerLeaderboardEntry,
-): RoasterLeaderboardEntry {
-	const entry = row as RoasterLeaderboardEntry & Partial<ReviewerLeaderboardEntry>;
+	row: ReviewerProfileStats | ReviewerLeaderboardEntry,
+): ReviewerProfileStats {
+	const entry = row as ReviewerProfileStats & Partial<ReviewerLeaderboardEntry>;
 
 	return {
 		...entry,
@@ -96,7 +96,7 @@ function normalizeLeaderboardEntry(
 	};
 }
 
-async function fetchRoastRows({
+async function fetchReviewRows({
 	authorIds,
 	since,
 }: {
@@ -104,7 +104,7 @@ async function fetchRoastRows({
 	since?: string;
 }) {
 	async function run(filterDeleted: boolean) {
-		let query = supabase.from("roasts").select(ROAST_SELECT);
+		let query = supabase.from("roasts").select(REVIEW_SELECT);
 
 		if (filterDeleted) {
 			query = query.eq("is_deleted", false);
@@ -124,21 +124,21 @@ async function fetchRoastRows({
 			.limit(1000);
 	}
 
-	const activeRoasts = await run(true);
+	const activeReviews = await run(true);
 
 	if (
-		activeRoasts.error &&
-		isMissingSoftDeleteColumn(activeRoasts.error.message)
+		activeReviews.error &&
+		isMissingSoftDeleteColumn(activeReviews.error.message)
 	) {
 		return run(false);
 	}
 
-	return activeRoasts;
+	return activeReviews;
 }
 
 async function fetchProfilesById(authorIds: string[]) {
 	if (!authorIds.length) {
-		return { profiles: [] as RoasterLeaderboardEntry[], errorMessage: "" };
+		return { profiles: [] as ReviewerProfileStats[], errorMessage: "" };
 	}
 
 	const profileResult = await supabase
@@ -148,14 +148,14 @@ async function fetchProfilesById(authorIds: string[]) {
 
 	if (!profileResult.error) {
 		return {
-			profiles: (profileResult.data ?? []) as RoasterLeaderboardEntry[],
+			profiles: (profileResult.data ?? []) as ReviewerProfileStats[],
 			errorMessage: "",
 		};
 	}
 
 	if (!isMissingProfileMetadataColumn(profileResult.error.message)) {
 		return {
-			profiles: [] as RoasterLeaderboardEntry[],
+			profiles: [] as ReviewerProfileStats[],
 			errorMessage: profileResult.error.message,
 		};
 	}
@@ -166,14 +166,14 @@ async function fetchProfilesById(authorIds: string[]) {
 		.in("id", authorIds);
 
 	return {
-		profiles: (fallbackResult.data ?? []) as RoasterLeaderboardEntry[],
+		profiles: (fallbackResult.data ?? []) as ReviewerProfileStats[],
 		errorMessage: fallbackResult.error?.message ?? "",
 	};
 }
 
 function mergeProfileMetadata(
-	roaster: RoasterLeaderboardEntry,
-	profile?: RoasterLeaderboardEntry,
+	roaster: ReviewerProfileStats,
+	profile?: ReviewerProfileStats,
 ) {
 	if (!profile) return roaster;
 
@@ -199,7 +199,7 @@ function mergeProfileMetadata(
 }
 
 function applyReviewerFilter(
-	profiles: RoasterLeaderboardEntry[],
+	profiles: ReviewerProfileStats[],
 	filter: ReviewerFilter,
 ) {
 	return profiles.filter((profile) => {
@@ -255,19 +255,19 @@ async function fetchReviewerDirectory(filter: ReviewerFilter) {
 	}
 
 	const profiles = applyReviewerFilter(
-		(profileResult.data ?? []) as RoasterLeaderboardEntry[],
+		(profileResult.data ?? []) as ReviewerProfileStats[],
 		filter,
 	);
 	const authorIds = profiles.map((profile) => profile.id);
-	let topRoasts: Record<string, RoastRow> = {};
+	let topReviews: Record<string, ReviewRow> = {};
 
 	if (authorIds.length) {
-		const { data: roasts } = await fetchRoastRows({ authorIds });
-		topRoasts = bestRoastMap((roasts ?? []) as RoastRow[]);
+		const { data: roasts } = await fetchReviewRows({ authorIds });
+		topReviews = bestReviewMap((roasts ?? []) as ReviewRow[]);
 	}
 
-	const ranked = sortRoasters(
-		profiles.map((profile) => enhanceRoaster(profile, topRoasts[profile.id])),
+	const ranked = sortReviewers(
+		profiles.map((profile) => enhanceReviewer(profile, topReviews[profile.id])),
 	).sort(
 		(a, b) =>
 			Number(b.reviewer_verification_status === "verified") -
@@ -286,15 +286,15 @@ async function fetchLeaderboardData(range: TimeRange) {
 	const since = getRangeStart(range);
 
 	if (since) {
-		const { data: periodRoasts, error: roastError } = await fetchRoastRows({
+		const { data: periodReviews, error: reviewError } = await fetchReviewRows({
 			since,
 		});
 
-		if (roastError) {
-			return { message: roastError.message, roasters: [] };
+		if (reviewError) {
+			return { message: reviewError.message, roasters: [] };
 		}
 
-		const roasts = (periodRoasts ?? []) as RoastRow[];
+		const roasts = (periodReviews ?? []) as ReviewRow[];
 		const authorIds = Array.from(new Set(roasts.map((roast) => roast.author_id)));
 
 		if (!authorIds.length) {
@@ -315,13 +315,13 @@ async function fetchLeaderboardData(range: TimeRange) {
 			map[roast.author_id].roastCount += 1;
 			return map;
 		}, {});
-		const topRoasts = bestRoastMap(roasts);
+		const topReviews = bestReviewMap(roasts);
 
 		return {
 			message: "",
-			roasters: sortRoasters(
+			roasters: sortReviewers(
 				profiles.map((profile) =>
-					enhanceRoaster(profile, topRoasts[profile.id], stats[profile.id]),
+					enhanceReviewer(profile, topReviews[profile.id], stats[profile.id]),
 				),
 			).slice(0, LEADERBOARD_LIMIT),
 		};
@@ -347,27 +347,27 @@ async function fetchLeaderboardData(range: TimeRange) {
 	}
 
 	const baseRoasters = (
-		(data ?? []) as Array<RoasterLeaderboardEntry | ReviewerLeaderboardEntry>
+		(data ?? []) as Array<ReviewerProfileStats | ReviewerLeaderboardEntry>
 	).map(normalizeLeaderboardEntry);
 	const authorIds = baseRoasters.map((roaster) => roaster.id);
 	const { profiles, errorMessage } = await fetchProfilesById(authorIds);
 	const profilesById = Object.fromEntries(
 		profiles.map((profile) => [profile.id, profile]),
 	);
-	let topRoasts: Record<string, RoastRow> = {};
+	let topReviews: Record<string, ReviewRow> = {};
 
 	if (authorIds.length) {
-		const { data: roasts } = await fetchRoastRows({ authorIds });
-		topRoasts = bestRoastMap((roasts ?? []) as RoastRow[]);
+		const { data: roasts } = await fetchReviewRows({ authorIds });
+		topReviews = bestReviewMap((roasts ?? []) as ReviewRow[]);
 	}
 
 	return {
 		message: errorMessage,
-		roasters: sortRoasters(
+		roasters: sortReviewers(
 			baseRoasters.map((roaster) =>
-				enhanceRoaster(
+				enhanceReviewer(
 					mergeProfileMetadata(roaster, profilesById[roaster.id]),
-					topRoasts[roaster.id],
+					topReviews[roaster.id],
 				),
 			),
 		).slice(0, LEADERBOARD_LIMIT),
@@ -375,7 +375,7 @@ async function fetchLeaderboardData(range: TimeRange) {
 }
 
 export default function Leaderboard() {
-	const [roasters, setRoasters] = useState<LeaderboardRoaster[]>([]);
+	const [roasters, setRoasters] = useState<LeaderboardReviewer[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [message, setMessage] = useState("");
 	const [mode, setMode] = useState<DirectoryMode>("leaderboard");
