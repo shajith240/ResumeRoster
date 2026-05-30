@@ -101,7 +101,7 @@ export async function POST(request: Request, context: RouteContext) {
 		}
 
 		if (action === "remove_roast") {
-			if (!report.roast_id) return badRequest("This report has no roast target.");
+			if (!report.roast_id) return badRequest("This report has no review target.");
 			targetType = "roast";
 			targetId = report.roast_id;
 			nextStatus = "actioned";
@@ -113,7 +113,7 @@ export async function POST(request: Request, context: RouteContext) {
 				.maybeSingle();
 
 			if (roastResult.error) throw new Error(roastResult.error.message);
-			if (!roastResult.data) return badRequest("Roast not found.", 404);
+			if (!roastResult.data) return badRequest("Review not found.", 404);
 
 			metadata = {
 				previous_content: roastResult.data.content,
@@ -132,7 +132,7 @@ export async function POST(request: Request, context: RouteContext) {
 				const updateRoast = await admin
 					.from("roasts")
 					.update({
-						content: "This roast was removed by moderation.",
+						content: "This review was removed by moderation.",
 						deleted_at: new Date().toISOString(),
 						dislike_count: 0,
 						helpful_votes: 0,
@@ -144,7 +144,7 @@ export async function POST(request: Request, context: RouteContext) {
 		}
 
 		if (action === "restore_roast") {
-			if (!report.roast_id) return badRequest("This report has no roast target.");
+			if (!report.roast_id) return badRequest("This report has no review target.");
 			targetType = "roast";
 			targetId = report.roast_id;
 			nextStatus = "actioned";
@@ -169,7 +169,7 @@ export async function POST(request: Request, context: RouteContext) {
 					: "";
 
 			if (!previousContent) {
-				return badRequest("This roast cannot be restored from admin history.");
+				return badRequest("This review cannot be restored from admin history.");
 			}
 
 			const restoreRoast = await admin

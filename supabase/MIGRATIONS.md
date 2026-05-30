@@ -29,6 +29,7 @@
 0022_lint_points_helpful_votes.sql
 0023_profile_reports_admin_controls.sql
 0024_admin_user_lifecycle.sql
+0025_linted_naming_compatibility.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.

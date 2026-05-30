@@ -21,7 +21,10 @@ import {
 	sortRoasters,
 } from "@/lib/leaderboard-ranking";
 import { supabase } from "@/lib/supabase/client";
-import type { RoasterLeaderboardEntry } from "@/lib/supabase/types";
+import type {
+	ReviewerLeaderboardEntry,
+	RoasterLeaderboardEntry,
+} from "@/lib/supabase/types";
 import styles from "./Leaderboard.module.css";
 
 type TimeRange = "week" | "month" | "all";
@@ -75,6 +78,22 @@ function isMissingSoftDeleteColumn(message: string) {
 
 function isMissingProfileMetadataColumn(message: string) {
 	return /full_name|avatar_url|avatar_path|community_role|reviewer_|schema cache|column/i.test(message);
+}
+
+function isMissingReviewerLeaderboardRpc(message: string) {
+	return /get_reviewer_leaderboard|schema cache|function/i.test(message);
+}
+
+function normalizeLeaderboardEntry(
+	row: RoasterLeaderboardEntry | ReviewerLeaderboardEntry,
+): RoasterLeaderboardEntry {
+	const entry = row as RoasterLeaderboardEntry & Partial<ReviewerLeaderboardEntry>;
+
+	return {
+		...entry,
+		roast_count: entry.roast_count ?? entry.review_count ?? 0,
+		helpful_votes: entry.helpful_votes ?? entry.lint_points ?? 0,
+	};
 }
 
 async function fetchRoastRows({
@@ -308,9 +327,17 @@ async function fetchLeaderboardData(range: TimeRange) {
 		};
 	}
 
-	const { data, error } = await supabase.rpc("get_roaster_leaderboard", {
+	const reviewerResult = await supabase.rpc("get_reviewer_leaderboard", {
 		limit_count: LEADERBOARD_LIMIT,
 	});
+
+	const { data, error } =
+		reviewerResult.error &&
+		isMissingReviewerLeaderboardRpc(reviewerResult.error.message)
+			? await supabase.rpc("get_roaster_leaderboard", {
+					limit_count: LEADERBOARD_LIMIT,
+				})
+			: reviewerResult;
 
 	if (error) {
 		return {
@@ -319,7 +346,9 @@ async function fetchLeaderboardData(range: TimeRange) {
 		};
 	}
 
-	const baseRoasters = (data ?? []) as RoasterLeaderboardEntry[];
+	const baseRoasters = (
+		(data ?? []) as Array<RoasterLeaderboardEntry | ReviewerLeaderboardEntry>
+	).map(normalizeLeaderboardEntry);
 	const authorIds = baseRoasters.map((roaster) => roaster.id);
 	const { profiles, errorMessage } = await fetchProfilesById(authorIds);
 	const profilesById = Object.fromEntries(

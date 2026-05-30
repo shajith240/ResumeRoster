@@ -290,6 +290,10 @@ function formatReason(value: string) {
 	return value.replaceAll("_", " ");
 }
 
+function formatTargetType(value: string) {
+	return value === "roast" ? "review" : formatReason(value);
+}
+
 function getTargetTitle(report: ReportPreview) {
 	if (report.target_type === "profile") {
 		return `Profile: ${getProfileLabel(report.profile ?? report.reportedUser)}`;
@@ -1196,7 +1200,7 @@ function ReportRow({
 						{formatReason(report.reason)}
 					</span>
 					<span className="admin-pill">{report.report_count} reports</span>
-					<span className="admin-pill">{report.target_type}</span>
+					<span className="admin-pill">{formatTargetType(report.target_type)}</span>
 				</div>
 			</td>
 			<td>
@@ -1590,7 +1594,7 @@ function ActionLogRow({ action }: { action: ModerationAction }) {
 			<td>
 				<strong>{formatReason(action.action)}</strong>
 			</td>
-			<td>{action.target_type}</td>
+			<td>{formatTargetType(action.target_type)}</td>
 			<td>{getProfileLabel(action.adminProfile)}</td>
 			<td>{action.reason || "No note"}</td>
 			<td>{formatDate(action.created_at)}</td>

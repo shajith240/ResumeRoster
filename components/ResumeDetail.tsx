@@ -1536,7 +1536,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 		setSubmittingReport(true);
 
 		const { data, error } = await supabase.rpc("report_content", {
-			report_target_type: "roast",
+			report_target_type: "review",
 			target_resume_id: reportTargetRoast.resume_id,
 			target_roast_id: reportTargetRoast.id,
 			report_reason: reportReason,
@@ -1724,8 +1724,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 										type="button"
 										aria-label={
 											voted
-												? "Remove like from this roast"
-												: "Like this roast"
+												? "Remove like from this review"
+												: "Like this review"
 										}
 										title={reactionBlockReason ?? undefined}
 									>
@@ -1748,8 +1748,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 										type="button"
 										aria-label={
 											disliked
-												? "Remove dislike from this roast"
-												: "Dislike this roast"
+												? "Remove dislike from this review"
+												: "Dislike this review"
 										}
 										title={reactionBlockReason ?? undefined}
 									>

@@ -57,10 +57,17 @@ async function loadCommunityStats() {
 	};
 }
 
-async function loadActiveRoasters() {
-	const { data, error } = await supabase.rpc("get_active_roaster_count", {
+async function loadActiveReviewers() {
+	const reviewerResult = await supabase.rpc("get_active_reviewer_count", {
 		window_seconds: APP_PRESENCE_ACTIVE_WINDOW_SECONDS,
 	});
+
+	const { data, error } =
+		reviewerResult.error && isPresenceFeatureError(reviewerResult.error)
+			? await supabase.rpc("get_active_roaster_count", {
+					window_seconds: APP_PRESENCE_ACTIVE_WINDOW_SECONDS,
+				})
+			: reviewerResult;
 
 	if (error) {
 		if (isPresenceFeatureError(error)) {
@@ -72,7 +79,7 @@ async function loadActiveRoasters() {
 	return { count: Number(data ?? 0), featureReady: true };
 }
 
-function countRealtimeRoasters(
+function countRealtimeReviewers(
 	presenceState: Record<string, Array<AppPresencePayload>>,
 ) {
 	const activeUserIds = new Set<string>();
@@ -93,15 +100,15 @@ function formatStat(value: number) {
 export default function CommunityStats() {
 	const [stats, setStats] = useState<CommunityStatsState>(EMPTY_STATS);
 	const [statsLoading, setStatsLoading] = useState(true);
-	const [activeRoastersLoading, setActiveRoastersLoading] = useState(true);
-	const [serverActiveRoasters, setServerActiveRoasters] = useState<number | null>(
+	const [activeReviewersLoading, setActiveReviewersLoading] = useState(true);
+	const [serverActiveReviewers, setServerActiveReviewers] = useState<number | null>(
 		null,
 	);
-	const [realtimeActiveRoasters, setRealtimeActiveRoasters] = useState(0);
+	const [realtimeActiveReviewers, setRealtimeActiveReviewers] = useState(0);
 	const [localSessionActive, setLocalSessionActive] = useState(false);
-	const activeRoasters = Math.max(
-		serverActiveRoasters ?? 0,
-		realtimeActiveRoasters,
+	const activeReviewers = Math.max(
+		serverActiveReviewers ?? 0,
+		realtimeActiveReviewers,
 		localSessionActive ? 1 : 0,
 	);
 
@@ -152,23 +159,23 @@ export default function CommunityStats() {
 			if (syncTimer) window.clearTimeout(syncTimer);
 			syncTimer = window.setTimeout(() => {
 				if (!active) return;
-				setRealtimeActiveRoasters(
-					countRealtimeRoasters(
+				setRealtimeActiveReviewers(
+					countRealtimeReviewers(
 						channel.presenceState() as Record<
 							string,
 							Array<AppPresencePayload>
 						>,
 					),
 				);
-				setActiveRoastersLoading(false);
+				setActiveReviewersLoading(false);
 			}, 80);
 		}
 
 		function handleLocalPresence(event: Event) {
 			const presence = (event as CustomEvent<AppPresencePayload>).detail;
 			if (!presence?.user_id) return;
-			setRealtimeActiveRoasters((current) => Math.max(current, 1));
-			setActiveRoastersLoading(false);
+			setRealtimeActiveReviewers((current) => Math.max(current, 1));
+			setActiveReviewersLoading(false);
 		}
 
 		const channel = supabase
@@ -198,7 +205,7 @@ export default function CommunityStats() {
 			setLocalSessionActive(
 				hasUser && document.visibilityState !== "hidden",
 			);
-			if (hasUser) setActiveRoastersLoading(false);
+			if (hasUser) setActiveReviewersLoading(false);
 		}
 
 		function handleVisibilityChange() {
@@ -232,37 +239,37 @@ export default function CommunityStats() {
 		let refreshTimer: number | null = null;
 		let pollTimer: number | null = null;
 
-		async function refreshActiveRoasters() {
+		async function refreshActiveReviewers() {
 			if (!presenceFeatureReady) return;
 
 			try {
-				const nextActiveRoasters = await loadActiveRoasters();
-				presenceFeatureReady = nextActiveRoasters.featureReady;
+				const nextActiveReviewers = await loadActiveReviewers();
+				presenceFeatureReady = nextActiveReviewers.featureReady;
 				if (!presenceFeatureReady && pollTimer) {
 					window.clearInterval(pollTimer);
 					pollTimer = null;
 				}
 				if (active) {
-					setServerActiveRoasters(
-						nextActiveRoasters.featureReady ? nextActiveRoasters.count : null,
+					setServerActiveReviewers(
+						nextActiveReviewers.featureReady ? nextActiveReviewers.count : null,
 					);
 				}
 			} catch {
-				if (active) setServerActiveRoasters(null);
+				if (active) setServerActiveReviewers(null);
 			} finally {
-				if (active) setActiveRoastersLoading(false);
+				if (active) setActiveReviewersLoading(false);
 			}
 		}
 
 		function queueActiveRefresh() {
 			if (refreshTimer) window.clearTimeout(refreshTimer);
-			refreshTimer = window.setTimeout(() => void refreshActiveRoasters(), 120);
+			refreshTimer = window.setTimeout(() => void refreshActiveReviewers(), 120);
 		}
 
 		window.addEventListener(APP_PRESENCE_CHANGE_EVENT, queueActiveRefresh);
-		void refreshActiveRoasters();
+		void refreshActiveReviewers();
 		pollTimer = window.setInterval(() => {
-			void refreshActiveRoasters();
+			void refreshActiveReviewers();
 		}, 15_000);
 
 		return () => {
@@ -276,7 +283,7 @@ export default function CommunityStats() {
 	return (
 		<div
 			className="feed-stats-grid"
-			aria-busy={statsLoading || activeRoastersLoading}
+			aria-busy={statsLoading || activeReviewersLoading}
 		>
 			<div>
 				<span>Resumes reviewed this week</span>
@@ -287,7 +294,7 @@ export default function CommunityStats() {
 			<div>
 				<span>Active reviewers</span>
 				<strong>
-					{activeRoastersLoading ? "--" : formatStat(activeRoasters)}
+					{activeReviewersLoading ? "--" : formatStat(activeReviewers)}
 				</strong>
 			</div>
 		</div>

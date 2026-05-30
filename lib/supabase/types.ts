@@ -108,6 +108,23 @@ export type Roast = {
   created_at: string;
 };
 
+export type ResumeReview = {
+  id: string;
+  resume_id: string;
+  parent_review_id?: string | null;
+  reviewer_id: string;
+  content: string;
+  attachment_id?: string | null;
+  content_format?: CommentContentFormat;
+  sticker_id?: string | null;
+  lint_points: number;
+  dislike_count?: number;
+  reply_count?: number;
+  is_deleted?: boolean;
+  deleted_at?: string | null;
+  created_at: string;
+};
+
 export type CommentAttachment = {
   id: string;
   user_id?: string | null;
@@ -137,6 +154,24 @@ export type RoasterLeaderboardEntry = {
   reviewer_verification_status?: ReviewerVerificationStatus | null;
   roast_count: number;
   helpful_votes: number;
+};
+
+export type ReviewerLeaderboardEntry = {
+  id: string;
+  username: string | null;
+  full_name?: string | null;
+  avatar_url?: string | null;
+  avatar_path?: string | null;
+  college: string | null;
+  target_role: string | null;
+  app_status?: AppStatus | null;
+  community_role?: CommunityRole | null;
+  reviewer_type?: ReviewerType | null;
+  reviewer_headline?: string | null;
+  reviewer_expertise?: string[] | null;
+  reviewer_verification_status?: ReviewerVerificationStatus | null;
+  review_count: number;
+  lint_points: number;
 };
 
 export type PublicProfile = RoasterLeaderboardEntry & {
@@ -207,6 +242,16 @@ export type PublicProfileRoast = {
   resume_status: ResumeStatus;
   content: string;
   helpful_votes: number;
+  created_at: string;
+};
+
+export type PublicProfileReview = {
+  id: string;
+  resume_id: string;
+  resume_title: string;
+  resume_status: ResumeStatus;
+  content: string;
+  lint_points: number;
   created_at: string;
 };
 

@@ -631,7 +631,7 @@ export function StackedList({
 												No reviewers found
 											</strong>
 											<p className="mt-1 text-xs text-[var(--text-secondary)]">
-												Try a different name, role, or roast keyword.
+												Try a different name, role, or feedback keyword.
 											</p>
 										</div>
 									</div>

@@ -84,6 +84,7 @@ import { ensureActiveUserSession } from "@/lib/session-lock";
 import type {
 	CommunityRole,
 	PublicProfile,
+	PublicProfileReview,
 	PublicProfileResume,
 	PublicProfileRoast,
 	ReviewerType,
@@ -291,7 +292,7 @@ function getActivity(
 }
 
 function isProfileFeatureError(message: string) {
-	return /avatar_url|tagline|current_position|college_location|about|skills|community_role|reviewer_|reviewer_applications|resume_highlight_id|get_public_profile_resumes|schema cache|column|function/i.test(
+	return /avatar_url|tagline|current_position|college_location|about|skills|community_role|reviewer_|reviewer_applications|resume_highlight_id|get_public_profile_reviews|get_public_profile_resumes|schema cache|column|function/i.test(
 		message,
 	);
 }
@@ -300,6 +301,54 @@ function isReportFeatureError(message: string) {
 	return /content_reports|report_content|profile_id|schema cache|column|function/i.test(
 		message,
 	);
+}
+
+function normalizePublicProfileReview(
+	row: PublicProfileRoast | PublicProfileReview,
+): PublicProfileRoast {
+	const review = row as PublicProfileRoast & Partial<PublicProfileReview>;
+
+	return {
+		id: review.id,
+		resume_id: review.resume_id,
+		resume_title: review.resume_title,
+		resume_status: review.resume_status,
+		content: review.content,
+		helpful_votes: review.helpful_votes ?? review.lint_points ?? 0,
+		created_at: review.created_at,
+	};
+}
+
+async function loadPublicProfileReviews(profileId: string) {
+	const reviewResult = await supabase.rpc("get_public_profile_reviews", {
+		profile_id: profileId,
+		limit_count: 20,
+	});
+
+	if (!reviewResult.error) {
+		return {
+			data: ((reviewResult.data ?? []) as PublicProfileReview[]).map(
+				normalizePublicProfileReview,
+			),
+			error: null,
+		};
+	}
+
+	if (!/get_public_profile_reviews|schema cache|function/i.test(reviewResult.error.message)) {
+		return { data: [] as PublicProfileRoast[], error: reviewResult.error };
+	}
+
+	const legacyResult = await supabase.rpc("get_public_profile_roasts", {
+		profile_id: profileId,
+		limit_count: 20,
+	});
+
+	return {
+		data: ((legacyResult.data ?? []) as PublicProfileRoast[]).map(
+			normalizePublicProfileReview,
+		),
+		error: legacyResult.error,
+	};
 }
 
 export default function ProfileDetail({ profileId }: ProfileDetailProps) {
@@ -417,10 +466,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 
 			const [profileResult, roastsResult, resumesResult] = await Promise.all([
 				supabase.rpc("get_public_profile", { profile_id: resolvedProfileId }),
-				supabase.rpc("get_public_profile_roasts", {
-					profile_id: resolvedProfileId,
-					limit_count: 20,
-				}),
+				loadPublicProfileReviews(resolvedProfileId),
 				supabase.rpc("get_public_profile_resumes", {
 					profile_id: resolvedProfileId,
 					limit_count: 20,
