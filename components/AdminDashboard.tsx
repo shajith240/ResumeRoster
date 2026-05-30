@@ -120,6 +120,7 @@ type ReportPreview = {
 	reporter: ProfilePreview | null;
 	profile: ProfilePreview | null;
 	resume: AdminResume | null;
+	review?: AdminReview | null;
 	roast: AdminReview | null;
 	status: ContentReportStatus;
 	target_type: ContentReportTargetType;
@@ -303,7 +304,7 @@ function getTargetTitle(report: ReportPreview) {
 	}
 
 	if (report.target_type === "roast") {
-		return report.roast?.content || "Reported feedback";
+		return report.review?.content || report.roast?.content || "Reported feedback";
 	}
 
 	return report.resume?.title || "Reported resume";
@@ -1191,6 +1192,7 @@ function ReportRow({
 	report: ReportPreview;
 }) {
 	const reportProfile = report.profile ?? report.reportedUser;
+	const reportReview = report.review ?? report.roast;
 	const profileActionDisabled = !reportProfile;
 
 	return (
@@ -1267,8 +1269,8 @@ function ReportRow({
 						scope="report"
 						targetId={report.id}
 					/>
-					{report.roast ? (
-						report.roast.is_deleted ? (
+					{reportReview ? (
+						reportReview.is_deleted ? (
 							<ActionButton
 								action="restore_roast"
 								busyAction={busyAction}

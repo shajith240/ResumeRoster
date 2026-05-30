@@ -106,30 +106,30 @@ export async function POST(request: Request, context: RouteContext) {
 			targetId = report.roast_id;
 			nextStatus = "actioned";
 
-			const roastResult = await admin
+			const reviewResult = await admin
 				.from("roasts")
 				.select("id,content,helpful_votes,dislike_count,is_deleted")
 				.eq("id", report.roast_id)
 				.maybeSingle();
 
-			if (roastResult.error) throw new Error(roastResult.error.message);
-			if (!roastResult.data) return badRequest("Review not found.", 404);
+			if (reviewResult.error) throw new Error(reviewResult.error.message);
+			if (!reviewResult.data) return badRequest("Review not found.", 404);
 
 			metadata = {
-				previous_content: roastResult.data.content,
-				previous_dislike_count: roastResult.data.dislike_count ?? 0,
-				previous_helpful_votes: roastResult.data.helpful_votes ?? 0,
-				was_deleted: Boolean(roastResult.data.is_deleted),
+				previous_content: reviewResult.data.content,
+				previous_dislike_count: reviewResult.data.dislike_count ?? 0,
+				previous_helpful_votes: reviewResult.data.helpful_votes ?? 0,
+				was_deleted: Boolean(reviewResult.data.is_deleted),
 			};
 
-			if (!roastResult.data.is_deleted) {
+			if (!reviewResult.data.is_deleted) {
 				const removeVotes = await admin
 					.from("votes")
 					.delete()
 					.eq("roast_id", report.roast_id);
 				if (removeVotes.error) throw new Error(removeVotes.error.message);
 
-				const updateRoast = await admin
+				const updateReview = await admin
 					.from("roasts")
 					.update({
 						content: "This review was removed by moderation.",
@@ -139,7 +139,7 @@ export async function POST(request: Request, context: RouteContext) {
 						is_deleted: true,
 					})
 					.eq("id", report.roast_id);
-				if (updateRoast.error) throw new Error(updateRoast.error.message);
+				if (updateReview.error) throw new Error(updateReview.error.message);
 			}
 		}
 
@@ -172,7 +172,7 @@ export async function POST(request: Request, context: RouteContext) {
 				return badRequest("This review cannot be restored from admin history.");
 			}
 
-			const restoreRoast = await admin
+			const restoreReview = await admin
 				.from("roasts")
 				.update({
 					content: previousContent,
@@ -181,7 +181,7 @@ export async function POST(request: Request, context: RouteContext) {
 				})
 				.eq("id", report.roast_id);
 
-			if (restoreRoast.error) throw new Error(restoreRoast.error.message);
+			if (restoreReview.error) throw new Error(restoreReview.error.message);
 			metadata = { restored_content: true };
 		}
 

@@ -49,9 +49,9 @@ export async function GET(request: Request) {
 			]),
 		);
 		const resumeIds = uniqueIds(reportRows.map((report) => report.resume_id));
-		const roastIds = uniqueIds(reportRows.map((report) => report.roast_id));
+		const reviewIds = uniqueIds(reportRows.map((report) => report.roast_id));
 
-		const [profilesResult, resumesResult, roastsResult] = await Promise.all([
+		const [profilesResult, resumesResult, reviewsResult] = await Promise.all([
 			profileIds.length
 				? admin
 						.from("profiles")
@@ -66,17 +66,17 @@ export async function GET(request: Request) {
 						.select("id,user_id,title,status,created_at")
 						.in("id", resumeIds)
 				: Promise.resolve({ data: [], error: null }),
-			roastIds.length
+			reviewIds.length
 				? admin
 						.from("roasts")
 						.select("id,resume_id,parent_id,author_id,content,attachment_id,content_format,is_deleted,created_at")
-						.in("id", roastIds)
+						.in("id", reviewIds)
 				: Promise.resolve({ data: [], error: null }),
 		]);
 
 		if (profilesResult.error) throw new Error(profilesResult.error.message);
 		if (resumesResult.error) throw new Error(resumesResult.error.message);
-		if (roastsResult.error) throw new Error(roastsResult.error.message);
+		if (reviewsResult.error) throw new Error(reviewsResult.error.message);
 
 		const profilesById = new Map(
 			(profilesResult.data ?? []).map((profile) => [profile.id, profile]),
@@ -84,8 +84,8 @@ export async function GET(request: Request) {
 		const resumesById = new Map(
 			(resumesResult.data ?? []).map((resume) => [resume.id, resume]),
 		);
-		const roastsById = new Map(
-			(roastsResult.data ?? []).map((roast) => [roast.id, roast]),
+		const reviewsById = new Map(
+			(reviewsResult.data ?? []).map((review) => [review.id, review]),
 		);
 
 		return Response.json({
@@ -102,7 +102,8 @@ export async function GET(request: Request) {
 				reviewedBy: report.reviewed_by
 					? profilesById.get(report.reviewed_by) ?? null
 					: null,
-				roast: report.roast_id ? roastsById.get(report.roast_id) ?? null : null,
+				review: report.roast_id ? reviewsById.get(report.roast_id) ?? null : null,
+				roast: report.roast_id ? reviewsById.get(report.roast_id) ?? null : null,
 			})),
 		});
 	} catch (error) {
