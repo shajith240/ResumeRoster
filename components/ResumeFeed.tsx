@@ -796,26 +796,28 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
           <article className="resume-card" style={{ animationDelay: `${index * 50}ms` }} key={resume.id}>
             <div className="post-content">
               <div className="post-meta">
-                {resume.is_anonymous ? (
-                  <span>{posterLabel}</span>
-                ) : (
-                  <Link className="post-author-link" href={`/profile/${resume.user_id}`}>
-                    {posterLabel}
-                  </Link>
-                )}
-                <time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
-                <span className="post-read-count">
-                  <EyeIcon className="post-meta-icon" size={15} aria-hidden="true" />
-                  {formatCount(resume.read_count)} reads
+                <div className="post-meta-main">
+                  {resume.is_anonymous ? (
+                    <span>{posterLabel}</span>
+                  ) : (
+                    <Link className="post-author-link" href={`/profile/${resume.user_id}`}>
+                      {posterLabel}
+                    </Link>
+                  )}
+                  <time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
+                  <span className="post-read-count">
+                    <EyeIcon className="post-meta-icon" size={15} aria-hidden="true" />
+                    {formatCount(resume.read_count)} reads
+                  </span>
+                </div>
+                <span className={`feed-status-pill ${reviewSignal.className}`}>
+                  {reviewSignal.label}
                 </span>
               </div>
               <div className="feed-title-row">
                 <Link className="post-title-link" href={`/resume/${resume.id}`}>
                   <h2>{resume.title}</h2>
                 </Link>
-                <span className={`feed-status-pill ${reviewSignal.className}`}>
-                  {reviewSignal.label}
-                </span>
               </div>
 
               <div className="post-tags">

@@ -180,7 +180,7 @@
 	}
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1024px) {
 	.page {
 		padding-bottom: var(--mobile-dock-space);
 	}

@@ -100,7 +100,6 @@ type ActivityItem = {
 	id: string;
 	title: string;
 	detail: string;
-	result: string;
 	href?: string;
 	timestamp: number;
 };
@@ -251,7 +250,6 @@ function getActivity(
 		id: `resume-${resume.id}`,
 		title: `Posted ${resume.title}`,
 		detail: formatActivityDate(resume.created_at),
-		result: `${resume.roast_count} comments`,
 		href: `/resume/${resume.id}`,
 		timestamp: new Date(resume.created_at).getTime(),
 	}));
@@ -260,7 +258,6 @@ function getActivity(
 		id: `review-${review.id}`,
 		title: `Reviewed ${review.resume_title}`,
 		detail: formatActivityDate(review.created_at),
-		result: `${review.lint_points} lint points`,
 		href: `/resume/${review.resume_id}`,
 		timestamp: new Date(review.created_at).getTime(),
 	}));
@@ -276,7 +273,6 @@ function getActivity(
 			id: "profile-created",
 			title: "Joined Linted",
 			detail: `Member since ${formatDate(profile.created_at)}`,
-			result: "Ready",
 			href: "/feed",
 			timestamp: new Date(profile.created_at).getTime(),
 		},
@@ -284,7 +280,6 @@ function getActivity(
 			id: "ready-to-review",
 			title: "Ready to review resumes",
 			detail: "No public activity yet",
-			result: "Open",
 			href: "/feed",
 			timestamp: new Date(profile.created_at).getTime(),
 		},
@@ -1195,80 +1190,82 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							</div>
 						</div>
 						<p>{profileView.tagline}</p>
-						<div className={styles.metaList}>
-							<span>
-								<BriefcaseBusiness aria-hidden="true" />
-								{profileView.currentRole}
-							</span>
-							<span>
-								<GraduationCap aria-hidden="true" />
-								{profileView.collegeLabel}
-							</span>
-							<span>
-								<MapPin aria-hidden="true" />
-								{profileView.collegeLocation}
-							</span>
-							<span>
-								<CalendarDays aria-hidden="true" />
-								Member since {formatDate(profile.created_at)}
-							</span>
+						<div className={styles.profileDetailsRow}>
+							<div className={styles.metaList}>
+								<span>
+									<BriefcaseBusiness aria-hidden="true" />
+									{profileView.currentRole}
+								</span>
+								<span>
+									<GraduationCap aria-hidden="true" />
+									{profileView.collegeLabel}
+								</span>
+								<span>
+									<MapPin aria-hidden="true" />
+									{profileView.collegeLocation}
+								</span>
+								<span>
+									<CalendarDays aria-hidden="true" />
+									Member since {formatDate(profile.created_at)}
+								</span>
+							</div>
+
+							{isOwnProfile ? (
+								<Dialog open={editOpen} onOpenChange={setEditOpen}>
+									<DialogTrigger asChild>
+										<Button className={styles.editButton} type="button">
+											<Pencil aria-hidden="true" />
+											Edit Profile
+										</Button>
+									</DialogTrigger>
+									<ProfileEditDialog
+										about={about}
+										avatarPreview={avatarPreview || profileView.avatarUrl}
+										college={college}
+										collegeLocation={collegeLocation}
+										currentPosition={currentPosition}
+										displayName={profileView.displayName}
+										fullName={fullName}
+										handleAvatarChange={handleAvatarChange}
+										initials={profileView.initials}
+										onAboutChange={setAbout}
+										onCollegeChange={setCollege}
+										onCollegeLocationChange={setCollegeLocation}
+										onCurrentPositionChange={setCurrentPosition}
+										onFullNameChange={setFullName}
+										profileOwnerId={profile.id}
+										onSave={saveProfile}
+										onSkillsChange={setSkillsInput}
+										onTaglineChange={setTagline}
+										onUsernameChange={setUsername}
+										originalUsername={profile.username ?? ""}
+										saveMessage={saveMessage}
+										saving={saving}
+										skillsInput={skillsInput}
+										tagline={tagline}
+										username={username}
+									/>
+								</Dialog>
+							) : null}
+							{!isOwnProfile ? (
+								<Button
+									className={styles.reportProfileButton}
+									disabled={!profileReportSchemaReady}
+									onClick={openProfileReportDialog}
+									title={
+										profileReportSchemaReady
+											? undefined
+											: `${SUPABASE_MIGRATION_MESSAGE} Profile reports are not ready yet.`
+									}
+									type="button"
+									variant="outline"
+								>
+									<Flag aria-hidden="true" />
+									Report Profile
+								</Button>
+							) : null}
 						</div>
 					</div>
-
-					{isOwnProfile ? (
-						<Dialog open={editOpen} onOpenChange={setEditOpen}>
-							<DialogTrigger asChild>
-								<Button className={styles.editButton} type="button">
-									<Pencil aria-hidden="true" />
-									Edit Profile
-								</Button>
-							</DialogTrigger>
-							<ProfileEditDialog
-								about={about}
-								avatarPreview={avatarPreview || profileView.avatarUrl}
-								college={college}
-								collegeLocation={collegeLocation}
-								currentPosition={currentPosition}
-								displayName={profileView.displayName}
-								fullName={fullName}
-								handleAvatarChange={handleAvatarChange}
-								initials={profileView.initials}
-								onAboutChange={setAbout}
-								onCollegeChange={setCollege}
-								onCollegeLocationChange={setCollegeLocation}
-								onCurrentPositionChange={setCurrentPosition}
-								onFullNameChange={setFullName}
-								profileOwnerId={profile.id}
-								onSave={saveProfile}
-								onSkillsChange={setSkillsInput}
-								onTaglineChange={setTagline}
-								onUsernameChange={setUsername}
-								originalUsername={profile.username ?? ""}
-								saveMessage={saveMessage}
-								saving={saving}
-								skillsInput={skillsInput}
-								tagline={tagline}
-								username={username}
-							/>
-						</Dialog>
-					) : null}
-					{!isOwnProfile ? (
-						<Button
-							className={styles.reportProfileButton}
-							disabled={!profileReportSchemaReady}
-							onClick={openProfileReportDialog}
-							title={
-								profileReportSchemaReady
-									? undefined
-									: `${SUPABASE_MIGRATION_MESSAGE} Profile reports are not ready yet.`
-							}
-							type="button"
-							variant="outline"
-						>
-							<Flag aria-hidden="true" />
-							Report Profile
-						</Button>
-					) : null}
 				</header>
 
 				<div className={styles.profileGrid}>
@@ -1514,7 +1511,6 @@ function ActivityRow({ item }: { item: ActivityItem }) {
 				<strong>{item.title}</strong>
 				<span>{item.detail}</span>
 			</div>
-			<em>{item.result}</em>
 		</>
 	);
 
@@ -1538,7 +1534,6 @@ function ReviewRow({ review }: { review: PublicProfileReview }) {
 					{review.resume_title} - {formatActivityDate(review.created_at)}
 				</span>
 			</div>
-			<strong>{review.lint_points} lint points</strong>
 		</Link>
 	);
 }
@@ -1665,7 +1660,7 @@ function ReviewerProfileDialog({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogTrigger asChild>
 				<Button
-					className={styles.trustApplyButton}
+					className={`${styles.trustApplyButton} ${styles.reviewerEditButton}`}
 					type="button"
 					variant="outline"
 				>
@@ -1914,7 +1909,11 @@ function TrustApplicationDialog({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button className={styles.trustApplyButton} type="button" variant="outline">
+				<Button
+					className={`${styles.trustApplyButton} ${styles.trustApplicationButton}`}
+					type="button"
+					variant="outline"
+				>
 					<BadgeCheck aria-hidden="true" />
 					{buttonLabel}
 				</Button>

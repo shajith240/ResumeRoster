@@ -1,15 +1,12 @@
 "use client";
 
 import {
-	ChangeEvent,
-	DragEvent,
 	FormEvent,
 	useEffect,
 	useRef,
 	useState,
 } from "react";
 import { useRouter } from "next/navigation";
-import { UploadCloud } from "lucide-react";
 import type {
 	TextItem,
 	TextMarkedContent,
@@ -17,6 +14,12 @@ import type {
 import type { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
+import FileUpload, {
+	DropZone,
+	FileError,
+	FileList,
+	type FileInfo,
+} from "@/components/ui/file-upload";
 import {
 	assessResumePrivacyText,
 	MAX_PRIVACY_SCAN_PAGES,
@@ -34,7 +37,6 @@ import {
 	POST_DESCRIPTION_MAX_LENGTH,
 	POST_DESCRIPTION_MIN_LENGTH,
 	TARGET_ROLES,
-	formatFileSize,
 	getSubmitIssue,
 } from "@/lib/submit-validation";
 import { supabase } from "@/lib/supabase/client";
@@ -180,7 +182,6 @@ async function getSubmitProfile(activeUser: User | null) {
 
 export default function SubmitResumeForm() {
 	const router = useRouter();
-	const inputRef = useRef<HTMLInputElement | null>(null);
 	const privacyScanRunRef = useRef(0);
 	const [user, setUser] = useState<User | null>(null);
 	const [profile, setProfile] = useState<SubmitProfile | null>(null);
@@ -189,6 +190,7 @@ export default function SubmitResumeForm() {
 	const [jobDescription, setJobDescription] = useState("");
 	const [postDescription, setPostDescription] = useState("");
 	const [file, setFile] = useState<File | null>(null);
+	const [uploadFiles, setUploadFiles] = useState<FileInfo[]>([]);
 	const [privacyMode, setPrivacyMode] =
 		useState<ResumePrivacyMode>("contact_hidden");
 	const [privacyScan, setPrivacyScan] = useState<PrivacyScanState>({
@@ -196,7 +198,6 @@ export default function SubmitResumeForm() {
 		findings: [],
 		message: "",
 	});
-	const [dragging, setDragging] = useState(false);
 	const [message, setMessage] = useState("");
 	const [submitting, setSubmitting] = useState(false);
 	const [success, setSuccess] = useState(false);
@@ -226,10 +227,14 @@ export default function SubmitResumeForm() {
 		const scanRun = privacyScanRunRef.current;
 		setPrivacyScan({ status: "idle", findings: [], message: "" });
 
-		if (!nextFile) return;
+		if (!nextFile) {
+			setUploadFiles([]);
+			return;
+		}
 
 		if (nextFile.type && nextFile.type !== "application/pdf") {
 			setFile(null);
+			setUploadFiles([]);
 			setMessage("PDF only. Your resume deserves standards.");
 			toast.error("Upload a PDF resume.");
 			return;
@@ -237,6 +242,7 @@ export default function SubmitResumeForm() {
 
 		if (nextFile.size > 5 * 1024 * 1024) {
 			setFile(null);
+			setUploadFiles([]);
 			setMessage("Keep the PDF under 5MB.");
 			toast.error("Keep the PDF under 5MB.");
 			return;
@@ -253,6 +259,7 @@ export default function SubmitResumeForm() {
 			if (!(await hasPdfSignature(nextFile))) {
 				if (scanRun !== privacyScanRunRef.current) return;
 				setFile(null);
+				setUploadFiles([]);
 				setPrivacyScan({
 					status: "error",
 					findings: [],
@@ -278,14 +285,24 @@ export default function SubmitResumeForm() {
 		}
 	}
 
-	function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
-		void pickFile(event.target.files?.[0]);
+	function handleFileSelect(files: File[]) {
+		void pickFile(files[0]);
 	}
 
-	function handleDrop(event: DragEvent<HTMLButtonElement>) {
-		event.preventDefault();
-		setDragging(false);
-		void pickFile(event.dataTransfer.files?.[0]);
+	function handleFileSelectChange(files: FileInfo[]) {
+		setUploadFiles(files.slice(0, 1));
+	}
+
+	function clearSelectedFile() {
+		privacyScanRunRef.current += 1;
+		setFile(null);
+		setUploadFiles([]);
+		setMessage("");
+		setPrivacyScan({
+			status: "idle",
+			findings: [],
+			message: "",
+		});
 	}
 
 	const publicProfileName = profileDisplayName(profile, user);
@@ -438,57 +455,30 @@ export default function SubmitResumeForm() {
 
 					<div className="field-block submit-upload-field">
 						<span>Resume PDF</span>
-						<input
-							className="hidden-file-input"
-							accept="application/pdf"
-							required
-							ref={inputRef}
-							type="file"
-							onChange={handleFileChange}
-						/>
-						<button
-							className={`dropzone${dragging ? " drag-over" : ""}${file ? " has-file" : ""}`}
-							type="button"
-							onClick={() => inputRef.current?.click()}
-							onDragOver={(event) => {
-								event.preventDefault();
-								setDragging(true);
-							}}
-							onDragLeave={() => setDragging(false)}
-							onDrop={handleDrop}
+						<FileUpload
+							accept=".pdf,application/pdf"
+							className="submit-file-upload"
+							files={uploadFiles}
+							maxCount={1}
+							maxSize={5}
+							onFileSelect={handleFileSelect}
+							onFileSelectChange={handleFileSelectChange}
+							onRemove={clearSelectedFile}
 						>
-							{file ? (
-								<>
-									<span className="file-check">OK</span>
-									<strong>{file.name}</strong>
-									<small>{formatFileSize(file.size)}</small>
-									<em
-										onClick={(event) => {
-											event.stopPropagation();
-											privacyScanRunRef.current += 1;
-											setFile(null);
-											setPrivacyScan({
-												status: "idle",
-												findings: [],
-												message: "",
-											});
-											if (inputRef.current) inputRef.current.value = "";
-										}}
-									>
-										Remove file
-									</em>
-								</>
-							) : (
-								<>
-									<span className="upload-icon" aria-hidden="true">
-										<UploadCloud size={24} strokeWidth={1.8} />
-									</span>
-									<strong>Drop your PDF here</strong>
-									<small>or click to browse</small>
-									<em>Max 5MB - PDF only</em>
-								</>
-							)}
-						</button>
+							<DropZone
+								browseText="or click to browse"
+								className="submit-pdf-dropzone"
+								prompt="Drop your PDF here"
+							/>
+							<FileError />
+							<FileList
+								canRemove
+								className="submit-file-list"
+								onClear={clearSelectedFile}
+								onRemove={clearSelectedFile}
+								showHeader={false}
+							/>
+						</FileUpload>
 						{file ? (
 							<div className={`privacy-check privacy-check-${privacyScan.status}`}>
 								<div>

@@ -42,6 +42,7 @@ export type LeaderboardRoaster = LeaderboardReviewer;
 
 type StackedListProps = {
 	description?: string;
+	directoryReviewers?: LeaderboardReviewer[];
 	heading?: string;
 	message?: string;
 	onSearchQueryChange?: (value: string) => void;
@@ -213,10 +214,10 @@ function RankCell({ rank }: { rank: number }) {
 	return (
 		<div
 			className={cn(
-				"flex h-10 w-10 items-center justify-center rounded-[12px] border font-[var(--font-app-body)] text-sm font-medium tabular-nums",
+				"flex h-10 w-10 items-center justify-start rounded-none border-0 bg-transparent font-[var(--font-app-body)] text-sm font-semibold tabular-nums",
 				isTopThree
-					? "border-[rgba(255,184,95,0.42)] bg-[var(--brand-muted)] text-[var(--brand)]"
-					: "border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-secondary)]",
+					? "text-[var(--brand)]"
+					: "text-[var(--text-secondary)]",
 			)}
 			aria-label={`Rank ${rank}`}
 		>
@@ -249,7 +250,7 @@ function LeaderboardRow({
 			animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
 			exit={reducedMotion ? undefined : { opacity: 0, y: -6 }}
 			transition={reducedMotion ? { duration: 0 } : rowSpring}
-			className="group grid grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] items-center gap-4 border-b border-[var(--border-subtle)] px-5 py-4 last:border-b-0 hover:bg-[color-mix(in_srgb,var(--bg-elevated)_58%,transparent)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-cell]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-review-cell]:hidden max-[760px]:grid-cols-[48px_minmax(0,1fr)] max-[760px]:items-start max-[760px]:gap-3 max-[760px]:px-4"
+			className="group grid grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] items-center gap-4 border-b border-[var(--border-subtle)] px-5 py-4 last:border-b-0 hover:bg-[color-mix(in_srgb,var(--bg-elevated)_58%,transparent)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-cell]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-review-cell]:hidden max-[760px]:grid-cols-[42px_minmax(0,1fr)_44px] max-[760px]:items-start max-[760px]:gap-x-3 max-[760px]:gap-y-2 max-[760px]:px-4"
 		>
 			<RankCell rank={rank} />
 
@@ -282,7 +283,7 @@ function LeaderboardRow({
 				</span>
 			</div>
 
-			<div className="flex items-center gap-2 font-[var(--font-app-body)] text-base font-medium tabular-nums text-[var(--text-primary)] max-[760px]:col-start-2">
+			<div className="flex items-center gap-2 font-[var(--font-app-body)] text-base font-medium tabular-nums text-[var(--text-primary)] max-[760px]:col-start-2 max-[760px]:row-start-2">
 				<Flame className="h-4 w-4 text-[var(--brand)]" aria-hidden="true" />
 				{points.toLocaleString()}
 			</div>
@@ -295,10 +296,11 @@ function LeaderboardRow({
 
 			<Link
 				href={topReviewHref}
-				className="inline-flex min-h-11 w-fit select-none items-center gap-2 rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-3 py-2 text-xs font-medium text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px max-[760px]:col-start-2"
+				aria-label={`View ${name}`}
+				className="inline-grid h-10 w-10 select-none place-items-center rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px max-[760px]:col-start-3 max-[760px]:row-start-1 max-[760px]:h-11 max-[760px]:w-11 max-[760px]:self-start"
 			>
-				View
-				<ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+				<span className="sr-only">View</span>
+				<ArrowRight className="h-4 w-4" aria-hidden="true" />
 			</Link>
 		</motion.article>
 	);
@@ -382,6 +384,7 @@ function DirectoryRow({
 
 export function StackedList({
 	description = "Reviewer directory ranked by useful resume feedback.",
+	directoryReviewers,
 	heading = "Top 100",
 	message = "",
 	onSearchQueryChange,
@@ -420,6 +423,19 @@ export function StackedList({
 			}),
 		[reviewers, startRank],
 	);
+	const directoryRankedReviewers = useMemo<RankedReviewer[]>(
+		() =>
+			(directoryReviewers ?? reviewers).slice(0, 100).map((reviewer, index) => {
+				const rank = index + 1;
+
+				return {
+					rank,
+					reviewer,
+					searchText: buildSearchText(reviewer, rank),
+				};
+			}),
+		[directoryReviewers, reviewers],
+	);
 	const filteredReviewers = useMemo(
 		() =>
 			rankedReviewers.filter(({ searchText }) =>
@@ -428,10 +444,10 @@ export function StackedList({
 		[activeTerms, rankedReviewers],
 	);
 	const directoryResults = useMemo(() => {
-		return rankedReviewers.filter(({ searchText }) =>
+		return directoryRankedReviewers.filter(({ searchText }) =>
 			matchesQuery(searchText, directoryTerms),
 		);
-	}, [directoryTerms, rankedReviewers]);
+	}, [directoryRankedReviewers, directoryTerms]);
 
 	function handleSearch(value: string) {
 		if (onSearchQueryChange) {
@@ -443,7 +459,7 @@ export function StackedList({
 	}
 
 	return (
-		<section className="relative min-h-[560px] w-full overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] pb-24 font-[var(--font-app-body)] shadow-none max-[760px]:pb-0">
+		<section className="relative min-h-[560px] w-full overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] pb-24 font-[var(--font-app-body)] shadow-none">
 			<div className="border-b border-[var(--border-subtle)] p-5 pb-4">
 				<div className="mb-4 flex items-center justify-between gap-4">
 					<div className="min-w-0">
@@ -530,7 +546,7 @@ export function StackedList({
 					right: directoryOpen ? 10 : 16,
 					borderRadius: directoryOpen ? 16 : 18,
 				}}
-				className="absolute z-30 flex flex-col overflow-hidden border border-[var(--border-default)] bg-[var(--bg-elevated)] shadow-[0_18px_48px_rgba(0,0,0,0.22)] max-[760px]:hidden"
+				className="absolute z-30 flex flex-col overflow-hidden border border-[var(--border-default)] bg-[var(--bg-elevated)] shadow-[0_18px_48px_rgba(0,0,0,0.22)]"
 				initial={false}
 				onClick={() => {
 					if (!directoryOpen) setDirectoryOpen(true);
@@ -562,7 +578,7 @@ export function StackedList({
 								Reviewer Directory
 							</h3>
 							<p className="mt-1 truncate text-xs font-normal text-[var(--text-secondary)]">
-								{rankedReviewers.length} reviewers ranked
+								{directoryRankedReviewers.length} reviewers ranked
 							</p>
 						</div>
 					</div>
@@ -581,7 +597,7 @@ export function StackedList({
 								<X className="h-4 w-4" aria-hidden="true" />
 							</button>
 						) : (
-							<AvatarStack reviewers={rankedReviewers} />
+							<AvatarStack reviewers={directoryRankedReviewers} />
 						)}
 					</div>
 				</div>
@@ -603,7 +619,7 @@ export function StackedList({
 								<span className="sr-only">Search reviewer directory</span>
 								<Input
 									autoComplete="off"
-									className="h-11 rounded-[12px] border-transparent bg-[var(--bg-surface)] pl-10 pr-4 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
+									className="h-11 rounded-[12px] border-[var(--border-default)] bg-[var(--bg-elevated)] pl-10 pr-4 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
 									onChange={(event) => setDirectoryQuery(event.target.value)}
 									placeholder="Search reviewers..."
 									spellCheck={false}

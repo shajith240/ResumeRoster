@@ -1996,6 +1996,23 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 				)}
 			</article>
 
+			<aside className="thread-context-panel" aria-label="Resume context">
+				<div className="thread-context-grid" aria-label="Resume context">
+					<ResumeContextCard
+						eyebrow="Ask"
+						title="What they want help with"
+						content={postDescription}
+						emptyMessage="No post description was attached to this older post."
+					/>
+					<ResumeContextCard
+						eyebrow="JD"
+						title="Job description"
+						content={jobDescription}
+						emptyMessage="No JD was attached to this older post."
+					/>
+				</div>
+			</aside>
+
 			<section className="thread-discussion-panel" aria-label="Feedback discussion">
 					{isClosed || isOwner ? (
 						<div className="closed-note">
@@ -2082,22 +2099,6 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					</div>
 				</section>
 			</div>
-			<aside className="thread-context-panel" aria-label="Resume context">
-				<div className="thread-context-grid" aria-label="Resume context">
-					<ResumeContextCard
-						eyebrow="Ask"
-						title="What they want help with"
-						content={postDescription}
-						emptyMessage="No post description was attached to this older post."
-					/>
-					<ResumeContextCard
-						eyebrow="JD"
-						title="Job description"
-						content={jobDescription}
-						emptyMessage="No JD was attached to this older post."
-					/>
-				</div>
-			</aside>
 		</section>
 		<Dialog
 			open={Boolean(reportTargetReview)}

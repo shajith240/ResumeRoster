@@ -28,14 +28,6 @@ import type {
 import styles from "./Leaderboard.module.css";
 
 type TimeRange = "week" | "month" | "all";
-type DirectoryMode = "leaderboard" | "reviewers";
-type ReviewerFilter =
-	| "all"
-	| "trusted"
-	| "recruiters"
-	| "engineers"
-	| "career_coaches"
-	| "students";
 
 type ReviewRow = LeaderboardReviewPreview & {
 	author_id: string;
@@ -54,14 +46,6 @@ const rangeLabels: Record<TimeRange, string> = {
 	week: "This Week",
 	month: "This Month",
 	all: "All Time",
-};
-const reviewerFilterLabels: Record<ReviewerFilter, string> = {
-	all: "All",
-	career_coaches: "Career coaches",
-	engineers: "Engineers",
-	recruiters: "Recruiters",
-	students: "Students/placed",
-	trusted: "Trusted",
 };
 
 function getRangeStart(range: TimeRange) {
@@ -198,46 +182,7 @@ function mergeProfileMetadata(
 	};
 }
 
-function applyReviewerFilter(
-	profiles: ReviewerProfileStats[],
-	filter: ReviewerFilter,
-) {
-	return profiles.filter((profile) => {
-		const isReviewer =
-			profile.community_role === "reviewer" || profile.community_role === "both";
-		if (!isReviewer) return false;
-
-		if (filter === "trusted") {
-			return profile.reviewer_verification_status === "verified";
-		}
-
-		if (filter === "recruiters") {
-			return (
-				profile.reviewer_type === "recruiter" ||
-				profile.reviewer_type === "hiring_manager"
-			);
-		}
-
-		if (filter === "engineers") {
-			return profile.reviewer_type === "engineer";
-		}
-
-		if (filter === "career_coaches") {
-			return profile.reviewer_type === "career_coach";
-		}
-
-		if (filter === "students") {
-			return (
-				profile.reviewer_type === "student" ||
-				profile.reviewer_type === "placed_professional"
-			);
-		}
-
-		return true;
-	});
-}
-
-async function fetchReviewerDirectory(filter: ReviewerFilter) {
+async function fetchReviewerDirectory() {
 	const profileResult = await supabase
 		.from("profiles")
 		.select(PROFILE_SELECT)
@@ -254,10 +199,7 @@ async function fetchReviewerDirectory(filter: ReviewerFilter) {
 		return { message: profileResult.error.message, reviewers: [] };
 	}
 
-	const profiles = applyReviewerFilter(
-		(profileResult.data ?? []) as ReviewerProfileStats[],
-		filter,
-	);
+	const profiles = (profileResult.data ?? []) as ReviewerProfileStats[];
 	const authorIds = profiles.map((profile) => profile.id);
 	let topReviews: Record<string, ReviewRow> = {};
 
@@ -378,11 +320,12 @@ async function fetchLeaderboardData(range: TimeRange) {
 
 export default function Leaderboard() {
 	const [reviewers, setReviewers] = useState<LeaderboardReviewer[]>([]);
+	const [directoryReviewers, setDirectoryReviewers] = useState<
+		LeaderboardReviewer[]
+	>([]);
 	const [loading, setLoading] = useState(true);
 	const [message, setMessage] = useState("");
-	const [mode, setMode] = useState<DirectoryMode>("leaderboard");
 	const [range, setRange] = useState<TimeRange>("month");
-	const [reviewerFilter, setReviewerFilter] = useState<ReviewerFilter>("all");
 	const [searchQuery, setSearchQuery] = useState("");
 
 	useEffect(() => {
@@ -396,15 +339,16 @@ export default function Leaderboard() {
 			}
 			setMessage("");
 
-			const result =
-				mode === "reviewers"
-					? await fetchReviewerDirectory(reviewerFilter)
-					: await fetchLeaderboardData(range);
+			const [leaderboardResult, directoryResult] = await Promise.all([
+				fetchLeaderboardData(range),
+				fetchReviewerDirectory(),
+			]);
 
 			if (!active) return;
 
-			setReviewers(result.reviewers);
-			setMessage(result.message);
+			setReviewers(leaderboardResult.reviewers);
+			setDirectoryReviewers(directoryResult.reviewers);
+			setMessage(leaderboardResult.message || directoryResult.message);
 
 			const finish = () => {
 				if (!active) return;
@@ -432,9 +376,7 @@ export default function Leaderboard() {
 
 		void loadLeaderboard();
 
-		const channel = supabase.channel(
-			`leaderboard-live-${mode}-${range}-${reviewerFilter}`,
-		);
+		const channel = supabase.channel(`leaderboard-live-${range}`);
 		channel
 			.on(
 				"postgres_changes",
@@ -455,7 +397,7 @@ export default function Leaderboard() {
 			}
 			void supabase.removeChannel(channel);
 		};
-	}, [mode, range, reviewerFilter]);
+	}, [range]);
 
 	if (loading) {
 		return (
@@ -471,107 +413,47 @@ export default function Leaderboard() {
 			<header className={styles.header}>
 				<div>
 					<h1>Leaderboard</h1>
-					<p>
-						{mode === "reviewers"
-							? "Find credible people who can give useful resume feedback."
-							: "Top reviewers. Better resumes. Stronger careers."}
-					</p>
+					<p>Top reviewers. Better resumes. Stronger careers.</p>
 				</div>
 
 				<div className={styles.toolbar}>
-					<div className={styles.modeTabs}>
-						<button
-							aria-pressed={mode === "leaderboard"}
-							onClick={() => setMode("leaderboard")}
-							type="button"
+					<Select
+						value={range}
+						onValueChange={(value) => setRange(value as TimeRange)}
+					>
+						<SelectTrigger
+							aria-label="Leaderboard time range"
+							className={styles.rangeTrigger}
 						>
-							Leaderboard
-						</button>
-						<button
-							aria-pressed={mode === "reviewers"}
-							onClick={() => setMode("reviewers")}
-							type="button"
-						>
-							Reviewers
-						</button>
-					</div>
-					{mode === "leaderboard" ? (
-						<Select value={range} onValueChange={(value) => setRange(value as TimeRange)}>
-							<SelectTrigger
-								aria-label="Leaderboard time range"
-								className={styles.rangeTrigger}
-							>
-								<CalendarDays className={styles.rangeIcon} aria-hidden="true" />
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent className={styles.rangeContent}>
-								<SelectGroup>
-									{(["week", "month", "all"] as const).map((value) => (
-										<SelectItem
-											className={styles.rangeItem}
-											key={value}
-											value={value}
-										>
-											{rangeLabels[value]}
-										</SelectItem>
-									))}
-								</SelectGroup>
-							</SelectContent>
-						</Select>
-					) : (
-						<Select
-							value={reviewerFilter}
-							onValueChange={(value) => setReviewerFilter(value as ReviewerFilter)}
-						>
-							<SelectTrigger
-								aria-label="Reviewer directory filter"
-								className={styles.rangeTrigger}
-							>
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent className={styles.rangeContent}>
-								<SelectGroup>
-									{(
-										[
-											"all",
-											"trusted",
-											"recruiters",
-											"engineers",
-											"career_coaches",
-											"students",
-										] as const
-									).map((value) => (
-										<SelectItem
-											className={styles.rangeItem}
-											key={value}
-											value={value}
-										>
-											{reviewerFilterLabels[value]}
-										</SelectItem>
-									))}
-								</SelectGroup>
-							</SelectContent>
-						</Select>
-					)}
+							<CalendarDays className={styles.rangeIcon} aria-hidden="true" />
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent className={styles.rangeContent}>
+							<SelectGroup>
+								{(["week", "month", "all"] as const).map((value) => (
+									<SelectItem
+										className={styles.rangeItem}
+										key={value}
+										value={value}
+									>
+										{rangeLabels[value]}
+									</SelectItem>
+								))}
+							</SelectGroup>
+						</SelectContent>
+					</Select>
 				</div>
 			</header>
 
 			<StackedList
-				description={
-					mode === "reviewers"
-						? "People who opted into reviewing resumes, sorted by trust and helpfulness."
-						: "Reviewer directory ranked by useful resume feedback."
-				}
-				heading={mode === "reviewers" ? "Reviewer Directory" : "Top 100"}
+				description="Reviewer directory ranked by useful resume feedback."
+				directoryReviewers={directoryReviewers}
+				heading="Top 100"
 				message={message}
 				onSearchQueryChange={setSearchQuery}
 				reviewers={reviewers}
 				searchQuery={searchQuery}
-				searchPlaceholder={
-					mode === "reviewers"
-						? "Search reviewers, expertise, roles..."
-						: "Search reviewers, roles, top feedback..."
-				}
+				searchPlaceholder="Search reviewers, roles, top feedback..."
 				startRank={1}
 			/>
 		</section>
