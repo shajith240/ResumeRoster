@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { Maximize2, Minus, Plus, X } from "lucide-react";
 import * as pdfjs from "pdfjs-dist";
 import type {
 	PDFDocumentProxy,
@@ -16,6 +18,8 @@ const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
 
 pdfjs.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
 
+type ReaderMode = "fit" | "read";
+
 type SecureResumePreviewProps = {
 	fileUrl: string;
 	privacyMode: ResumePrivacyMode;
@@ -27,6 +31,9 @@ type PagePreviewProps = {
 	containerWidth: number;
 	pageNumber: number;
 	pdf: PDFDocumentProxy;
+	readerMode?: ReaderMode;
+	variant?: "inline" | "reader";
+	zoom?: number;
 };
 
 type LinkAnnotation = {
@@ -101,11 +108,26 @@ function renderLinkLayer(
 	}
 }
 
+function clamp(value: number, min: number, max: number) {
+	return Math.min(max, Math.max(min, value));
+}
+
+function getTouchDistance(touches: React.TouchList) {
+	if (touches.length < 2) return 0;
+
+	const first = touches[0];
+	const second = touches[1];
+	return Math.hypot(first.clientX - second.clientX, first.clientY - second.clientY);
+}
+
 function SecureResumePage({
 	allowInteractions,
 	containerWidth,
 	pageNumber,
 	pdf,
+	readerMode = "fit",
+	variant = "inline",
+	zoom = 1,
 }: PagePreviewProps) {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const linkLayerRef = useRef<HTMLDivElement | null>(null);
@@ -128,11 +150,20 @@ function SecureResumePage({
 			if (cancelled) return;
 
 			const baseViewport = page.getViewport({ scale: 1 });
-			const targetWidth = Math.min(Math.max(containerWidth - 32, 280), 980);
-			const scale = Math.max(
-				0.45,
-				Math.min(1.55, targetWidth / baseViewport.width),
+			const inlineTargetWidth = Math.min(Math.max(containerWidth - 32, 280), 980);
+			const readerFitWidth = Math.min(Math.max(containerWidth - 32, 280), 1120);
+			const readerReadWidth = Math.min(
+				Math.max(containerWidth * 1.55, 560),
+				1040,
 			);
+			const targetWidth =
+				variant === "reader"
+					? readerMode === "read"
+						? readerReadWidth
+						: readerFitWidth
+					: inlineTargetWidth;
+			const maxScale = variant === "reader" ? 2.4 : 1.55;
+			const scale = clamp((targetWidth / baseViewport.width) * zoom, 0.45, maxScale);
 			const viewport = page.getViewport({ scale });
 			const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
 			const pageShell = pageShellRef.current;
@@ -204,7 +235,7 @@ function SecureResumePage({
 			renderTask?.cancel();
 			textLayer?.cancel();
 		};
-	}, [allowInteractions, containerWidth, pageNumber, pdf]);
+	}, [allowInteractions, containerWidth, pageNumber, pdf, readerMode, variant, zoom]);
 
 	return (
 		<div className="secure-resume-page">
@@ -230,6 +261,231 @@ function SecureResumePage({
 	);
 }
 
+function SecureResumeReader({
+	allowInteractions,
+	isLocked,
+	onClose,
+	onProtectedKeyDown,
+	open,
+	pageCount,
+	pdf,
+	title,
+}: {
+	allowInteractions: boolean;
+	isLocked: boolean;
+	onClose: () => void;
+	onProtectedKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+	open: boolean;
+	pageCount: number;
+	pdf: PDFDocumentProxy | null;
+	title: string;
+}) {
+	const scrollRef = useRef<HTMLDivElement | null>(null);
+	const pinchRef = useRef<{ distance: number; zoom: number } | null>(null);
+	const lastTapRef = useRef(0);
+	const [mounted, setMounted] = useState(false);
+	const [readerWidth, setReaderWidth] = useState(0);
+	const [mode, setMode] = useState<ReaderMode>("read");
+	const [zoom, setZoom] = useState(1);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	useEffect(() => {
+		if (!open) return;
+
+		const onKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Escape") onClose();
+		};
+
+		document.body.classList.add("secure-resume-reader-active");
+		window.addEventListener("keydown", onKeyDown);
+
+		return () => {
+			document.body.classList.remove("secure-resume-reader-active");
+			window.removeEventListener("keydown", onKeyDown);
+		};
+	}, [onClose, open]);
+
+	useEffect(() => {
+		if (!open) return;
+
+		setMode("read");
+		setZoom(1);
+	}, [open]);
+
+	useEffect(() => {
+		const element = scrollRef.current;
+		if (!element || !open) return;
+
+		const observer = new ResizeObserver(([entry]) => {
+			setReaderWidth(entry.contentRect.width);
+		});
+
+		observer.observe(element);
+		setReaderWidth(element.getBoundingClientRect().width);
+
+		return () => observer.disconnect();
+	}, [open]);
+
+	if (!open || !mounted || !pdf) return null;
+
+	function updateZoom(nextZoom: number) {
+		setZoom(clamp(nextZoom, 0.75, 2.25));
+	}
+
+	function selectMode(nextMode: ReaderMode) {
+		setMode(nextMode);
+		setZoom(1);
+	}
+
+	function toggleReaderMode() {
+		selectMode(mode === "read" ? "fit" : "read");
+	}
+
+	function handleTouchStart(event: React.TouchEvent<HTMLDivElement>) {
+		if (event.touches.length === 2) {
+			pinchRef.current = {
+				distance: getTouchDistance(event.touches),
+				zoom,
+			};
+			return;
+		}
+
+		if (event.touches.length === 1) {
+			const now = window.performance.now();
+			if (now - lastTapRef.current < 280) {
+				event.preventDefault();
+				toggleReaderMode();
+				lastTapRef.current = 0;
+				return;
+			}
+
+			lastTapRef.current = now;
+		}
+	}
+
+	function handleTouchMove(event: React.TouchEvent<HTMLDivElement>) {
+		if (event.touches.length !== 2 || !pinchRef.current) return;
+
+		event.preventDefault();
+		const distance = getTouchDistance(event.touches);
+		if (!distance || !pinchRef.current.distance) return;
+
+		const nextZoom =
+			pinchRef.current.zoom * (distance / pinchRef.current.distance);
+		if (Math.abs(nextZoom - zoom) >= 0.04) updateZoom(nextZoom);
+	}
+
+	function handleTouchEnd(event: React.TouchEvent<HTMLDivElement>) {
+		if (event.touches.length < 2) pinchRef.current = null;
+	}
+
+	function handleWheel(event: React.WheelEvent<HTMLDivElement>) {
+		if (!event.ctrlKey && !event.metaKey) return;
+
+		event.preventDefault();
+		updateZoom(zoom + (event.deltaY < 0 ? 0.12 : -0.12));
+	}
+
+	return createPortal(
+		<div
+			aria-label={`Protected reader for ${title}`}
+			aria-modal="true"
+			className={`secure-resume-reader ${isLocked ? "is-locked" : "is-interactive"}`}
+			onContextMenu={isLocked ? (event) => event.preventDefault() : undefined}
+			onKeyDown={isLocked ? onProtectedKeyDown : undefined}
+			role="dialog"
+			tabIndex={-1}
+		>
+			<header className="secure-resume-reader-bar">
+				<div className="secure-resume-reader-title">
+					<strong>{title}</strong>
+					<span>{pageCount} page{pageCount === 1 ? "" : "s"} - protected canvas reader</span>
+				</div>
+				<div className="secure-resume-reader-controls">
+					<div className="secure-resume-reader-mode" aria-label="Resume view mode">
+						<button
+							aria-pressed={mode === "fit"}
+							onClick={() => selectMode("fit")}
+							type="button"
+						>
+							Fit
+						</button>
+						<button
+							aria-pressed={mode === "read"}
+							onClick={() => selectMode("read")}
+							type="button"
+						>
+							Read
+						</button>
+					</div>
+					<div className="secure-resume-reader-zoom" aria-label="Zoom controls">
+						<button
+							aria-label="Zoom out"
+							disabled={zoom <= 0.76}
+							onClick={() => updateZoom(zoom - 0.15)}
+							type="button"
+						>
+							<Minus aria-hidden="true" />
+						</button>
+						<span>{Math.round(zoom * 100)}%</span>
+						<button
+							aria-label="Zoom in"
+							disabled={zoom >= 2.24}
+							onClick={() => updateZoom(zoom + 0.15)}
+							type="button"
+						>
+							<Plus aria-hidden="true" />
+						</button>
+					</div>
+					<button
+						aria-label="Close protected reader"
+						className="secure-resume-reader-close"
+						onClick={onClose}
+						type="button"
+					>
+						<X aria-hidden="true" />
+					</button>
+				</div>
+			</header>
+			<div
+				className="secure-resume-reader-pages"
+				onTouchEnd={handleTouchEnd}
+				onTouchMove={handleTouchMove}
+				onTouchStart={handleTouchStart}
+				onWheel={handleWheel}
+				ref={scrollRef}
+			>
+				{readerWidth > 0 ? (
+					<div className="secure-resume-reader-stack">
+						{Array.from({ length: pageCount }, (_, index) => (
+							<SecureResumePage
+								allowInteractions={allowInteractions}
+								containerWidth={readerWidth}
+								key={index + 1}
+								pageNumber={index + 1}
+								pdf={pdf}
+								readerMode={mode}
+								variant="reader"
+								zoom={zoom}
+							/>
+						))}
+					</div>
+				) : (
+					<div className="secure-resume-loading">Preparing reader...</div>
+				)}
+			</div>
+			<footer className="secure-resume-reader-foot">
+				<span>Double tap to switch Fit and Read. Pinch or use zoom controls for detail.</span>
+				<span>{isLocked ? "Copy, save, print, and links stay disabled." : "Selectable text and resume links are enabled."}</span>
+			</footer>
+		</div>,
+		document.body,
+	);
+}
+
 export default function SecureResumePreview({
 	fileUrl,
 	privacyMode,
@@ -240,6 +496,7 @@ export default function SecureResumePreview({
 	const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
 	const [pageCount, setPageCount] = useState(0);
 	const [error, setError] = useState("");
+	const [readerOpen, setReaderOpen] = useState(false);
 
 	useEffect(() => {
 		const element = containerRef.current;
@@ -312,49 +569,71 @@ export default function SecureResumePreview({
 		: "This PDF keeps selectable text and opens resume links in a new tab.";
 
 	return (
-		<section
-			aria-label={`Protected preview for ${title}`}
-			className={`secure-resume-preview ${
-				isLocked ? "is-locked" : "is-interactive"
-			}`}
-			onContextMenu={isLocked ? (event) => event.preventDefault() : undefined}
-			onKeyDown={isLocked ? blockProtectedShortcuts : undefined}
-			ref={containerRef}
-			tabIndex={isLocked ? 0 : undefined}
-		>
-			<div className="secure-resume-preview-bar">
-				<div>
-					<strong>{previewTitle}</strong>
-					<span>{previewDescription}</span>
+		<>
+			<section
+				aria-label={`Protected preview for ${title}`}
+				className={`secure-resume-preview ${
+					isLocked ? "is-locked" : "is-interactive"
+				}`}
+				onContextMenu={isLocked ? (event) => event.preventDefault() : undefined}
+				onKeyDown={isLocked ? blockProtectedShortcuts : undefined}
+				ref={containerRef}
+				tabIndex={isLocked ? 0 : undefined}
+			>
+				<div className="secure-resume-preview-bar">
+					<div>
+						<strong>{previewTitle}</strong>
+						<span>{previewDescription}</span>
+					</div>
+					<div className="secure-resume-preview-actions">
+						<span>
+							{pageCount
+								? `${pageCount} page${pageCount === 1 ? "" : "s"}`
+								: "Loading"}
+						</span>
+						<button
+							disabled={!pdf || Boolean(error)}
+							onClick={() => setReaderOpen(true)}
+							type="button"
+						>
+							<Maximize2 aria-hidden="true" />
+							Read resume
+						</button>
+					</div>
 				</div>
-				<span>
-					{pageCount
-						? `${pageCount} page${pageCount === 1 ? "" : "s"}`
-						: "Loading"}
-				</span>
-			</div>
 
-			{error ? (
-				<div className="secure-resume-error">
-					<p>{error}</p>
-				</div>
-			) : null}
+				{error ? (
+					<div className="secure-resume-error">
+						<p>{error}</p>
+					</div>
+				) : null}
 
-			{pdf && containerWidth > 0 ? (
-				<div className="secure-resume-pages">
-					{Array.from({ length: pageCount }, (_, index) => (
-						<SecureResumePage
-							allowInteractions={allowInteractions}
-							containerWidth={containerWidth}
-							key={index + 1}
-							pageNumber={index + 1}
-							pdf={pdf}
-						/>
-					))}
-				</div>
-			) : !error ? (
-				<div className="secure-resume-loading">Preparing protected preview...</div>
-			) : null}
-		</section>
+				{pdf && containerWidth > 0 ? (
+					<div className="secure-resume-pages">
+						{Array.from({ length: pageCount }, (_, index) => (
+							<SecureResumePage
+								allowInteractions={allowInteractions}
+								containerWidth={containerWidth}
+								key={index + 1}
+								pageNumber={index + 1}
+								pdf={pdf}
+							/>
+						))}
+					</div>
+				) : !error ? (
+					<div className="secure-resume-loading">Preparing protected preview...</div>
+				) : null}
+			</section>
+			<SecureResumeReader
+				allowInteractions={allowInteractions}
+				isLocked={isLocked}
+				onClose={() => setReaderOpen(false)}
+				onProtectedKeyDown={blockProtectedShortcuts}
+				open={readerOpen}
+				pageCount={pageCount}
+				pdf={pdf}
+				title={title}
+			/>
+		</>
 	);
 }

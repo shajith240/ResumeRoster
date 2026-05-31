@@ -4258,7 +4258,7 @@ body.main-app-dark .toggle-ui::after {
 	color: white;
 }
 
-.secure-resume-preview-bar div {
+.secure-resume-preview-bar > div:first-child {
 	display: grid;
 	gap: 2px;
 	min-width: 0;
@@ -4273,6 +4273,62 @@ body.main-app-dark .toggle-ui::after {
 	color: rgba(255, 255, 255, 0.68);
 	font-size: 12px;
 	line-height: 1.4;
+}
+
+.secure-resume-preview-actions {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	flex: 0 0 auto;
+}
+
+.secure-resume-preview-actions button,
+.secure-resume-reader-controls button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	border-radius: var(--button-radius-sm);
+	background: rgba(255, 255, 255, 0.08);
+	color: rgba(255, 255, 255, 0.92);
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 1;
+	transition:
+		background-color 0.18s ease,
+		border-color 0.18s ease,
+		color 0.18s ease,
+		transform 0.18s ease;
+}
+
+.secure-resume-preview-actions button {
+	min-height: 34px;
+	padding: 0 11px;
+}
+
+.secure-resume-preview-actions button:hover,
+.secure-resume-reader-controls button:hover {
+	border-color: rgba(255, 255, 255, 0.26);
+	background: rgba(255, 255, 255, 0.14);
+}
+
+.secure-resume-preview-actions button:active,
+.secure-resume-reader-controls button:active {
+	transform: translateY(1px);
+}
+
+.secure-resume-preview-actions button:disabled,
+.secure-resume-reader-controls button:disabled {
+	cursor: not-allowed;
+	opacity: 0.48;
+	transform: none;
+}
+
+.secure-resume-preview-actions svg {
+	width: 14px;
+	height: 14px;
 }
 
 .secure-resume-pages {
@@ -4409,6 +4465,188 @@ body.main-app-dark .toggle-ui::after {
 	inset: 0;
 	z-index: 1;
 	background: #242321;
+}
+
+body.secure-resume-reader-active {
+	overflow: hidden;
+}
+
+.secure-resume-reader {
+	position: fixed;
+	inset: 0;
+	z-index: 10050;
+	display: grid;
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	background:
+		radial-gradient(
+			circle at top,
+			rgba(232, 93, 38, 0.08),
+			transparent 34%
+		),
+		#11110f;
+	color: rgba(255, 255, 255, 0.92);
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.secure-resume-reader.is-interactive {
+	user-select: text;
+	-webkit-user-select: text;
+}
+
+.secure-resume-reader-bar,
+.secure-resume-reader-foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	border-color: rgba(255, 255, 255, 0.1);
+	background: rgba(17, 17, 15, 0.92);
+	backdrop-filter: blur(18px);
+}
+
+.secure-resume-reader-bar {
+	min-height: 64px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	padding: calc(12px + env(safe-area-inset-top)) clamp(14px, 3vw, 24px) 12px;
+}
+
+.secure-resume-reader-title {
+	display: grid;
+	gap: 3px;
+	min-width: 0;
+}
+
+.secure-resume-reader-title strong {
+	overflow: hidden;
+	max-width: min(52vw, 720px);
+	color: white;
+	font-size: 14px;
+	font-weight: 750;
+	line-height: 1.2;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.secure-resume-reader-title span,
+.secure-resume-reader-foot span {
+	color: rgba(255, 255, 255, 0.58);
+	font-size: 12px;
+	line-height: 1.35;
+}
+
+.secure-resume-reader-controls {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	flex: 0 0 auto;
+}
+
+.secure-resume-reader-mode,
+.secure-resume-reader-zoom {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: var(--button-radius);
+	padding: 3px;
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.secure-resume-reader-mode button {
+	min-width: 54px;
+	min-height: 34px;
+	padding: 0 12px;
+	border-color: transparent;
+	background: transparent;
+	color: rgba(255, 255, 255, 0.64);
+}
+
+.secure-resume-reader-mode button[aria-pressed="true"] {
+	border-color: rgba(255, 255, 255, 0.18);
+	background: rgba(255, 255, 255, 0.94);
+	color: #151412;
+}
+
+.secure-resume-reader-zoom button,
+.secure-resume-reader-close {
+	width: 38px;
+	height: 38px;
+	padding: 0;
+}
+
+.secure-resume-reader-zoom span {
+	min-width: 44px;
+	color: rgba(255, 255, 255, 0.76);
+	font-size: 12px;
+	font-weight: 750;
+	text-align: center;
+}
+
+.secure-resume-reader-controls svg {
+	width: 15px;
+	height: 15px;
+}
+
+.secure-resume-reader-pages {
+	min-width: 0;
+	overflow: auto;
+	padding: clamp(14px, 3vw, 28px);
+	background:
+		linear-gradient(
+			90deg,
+			rgba(0, 0, 0, 0.22),
+			transparent 42px,
+			transparent calc(100% - 42px),
+			rgba(0, 0, 0, 0.22)
+		),
+		#1c1b19;
+	overscroll-behavior: contain;
+	touch-action: pan-x pan-y;
+	scrollbar-color: rgba(255, 255, 255, 0.32) transparent;
+	scrollbar-width: thin;
+}
+
+.secure-resume-reader-pages::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+.secure-resume-reader-pages::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.secure-resume-reader-pages::-webkit-scrollbar-thumb {
+	border: 3px solid transparent;
+	border-radius: var(--radius-pill);
+	background: rgba(255, 255, 255, 0.3) padding-box;
+}
+
+.secure-resume-reader-stack {
+	display: grid;
+	align-content: start;
+	gap: clamp(18px, 4vw, 30px);
+	width: fit-content;
+	min-width: 100%;
+	margin: 0 auto;
+}
+
+.secure-resume-reader .secure-resume-page {
+	min-width: 100%;
+}
+
+.secure-resume-reader .secure-resume-page-shell {
+	max-width: none;
+	box-shadow:
+		0 24px 80px rgba(0, 0, 0, 0.42),
+		0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.secure-resume-reader-foot {
+	min-height: 44px;
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+	padding: 10px clamp(14px, 3vw, 24px) calc(10px + env(safe-area-inset-bottom));
 }
 
 .owner-actions {
@@ -5523,6 +5761,47 @@ body.main-app-dark .bottom-nav {
 		align-items: flex-start;
 		flex-direction: column;
 		gap: 6px;
+	}
+
+	.secure-resume-preview-actions {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.secure-resume-reader-bar {
+		align-items: stretch;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.secure-resume-reader-title strong {
+		max-width: 100%;
+	}
+
+	.secure-resume-reader-controls {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto auto;
+		gap: 8px;
+		width: 100%;
+	}
+
+	.secure-resume-reader-mode {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.secure-resume-reader-mode button {
+		min-width: 0;
+	}
+
+	.secure-resume-reader-zoom span {
+		min-width: 38px;
+	}
+
+	.secure-resume-reader-foot {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 4px;
 	}
 
 	.thread-header,
