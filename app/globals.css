@@ -4627,20 +4627,27 @@ body.secure-resume-reader-active {
 	display: grid;
 	align-content: start;
 	gap: clamp(18px, 4vw, 30px);
-	width: fit-content;
-	min-width: 100%;
+	width: max-content;
+	min-width: max-content;
 	margin: 0 auto;
 }
 
 .secure-resume-reader .secure-resume-page {
-	min-width: 100%;
+	width: max-content;
+	min-width: max-content;
+	justify-content: flex-start;
 }
 
 .secure-resume-reader .secure-resume-page-shell {
+	flex: 0 0 auto;
 	max-width: none;
 	box-shadow:
 		0 24px 80px rgba(0, 0, 0, 0.42),
 		0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.secure-resume-reader .secure-resume-page canvas {
+	max-width: none;
 }
 
 .secure-resume-reader-foot {
