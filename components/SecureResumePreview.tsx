@@ -133,6 +133,7 @@ function SecureResumePage({
 	const linkLayerRef = useRef<HTMLDivElement | null>(null);
 	const pageShellRef = useRef<HTMLDivElement | null>(null);
 	const textLayerRef = useRef<HTMLDivElement | null>(null);
+	const hasRenderedRef = useRef(false);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -144,7 +145,7 @@ function SecureResumePage({
 			const canvas = canvasRef.current;
 			if (!canvas || containerWidth <= 0) return;
 
-			setLoading(true);
+			if (!hasRenderedRef.current) setLoading(true);
 
 			const page = await pdf.getPage(pageNumber);
 			if (cancelled) return;
@@ -166,31 +167,51 @@ function SecureResumePage({
 			const scale = clamp((targetWidth / baseViewport.width) * zoom, 0.45, maxScale);
 			const viewport = page.getViewport({ scale });
 			const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-			const pageShell = pageShellRef.current;
-			const context = canvas.getContext("2d", {
+			const draftCanvas = document.createElement("canvas");
+			const draftContext = draftCanvas.getContext("2d", {
 				alpha: false,
 				willReadFrequently: false,
 			});
 
-			if (!context) return;
+			if (!draftContext) return;
+
+			draftCanvas.width = Math.floor(viewport.width * pixelRatio);
+			draftCanvas.height = Math.floor(viewport.height * pixelRatio);
+			draftCanvas.style.width = `${viewport.width}px`;
+			draftCanvas.style.height = `${viewport.height}px`;
+
+			draftContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+			draftContext.fillStyle = "#fff";
+			draftContext.fillRect(0, 0, viewport.width, viewport.height);
+
+			renderTask = page.render({
+				canvas: draftCanvas,
+				canvasContext: draftContext,
+				viewport,
+			});
+			await renderTask.promise;
+
+			if (cancelled) return;
+
+			const pageShell = pageShellRef.current;
+			const visibleContext = canvas.getContext("2d", {
+				alpha: false,
+				willReadFrequently: false,
+			});
+
+			if (!visibleContext) return;
+
 			if (pageShell) {
 				pageShell.style.width = `${viewport.width}px`;
 				pageShell.style.height = `${viewport.height}px`;
 			}
 
-			canvas.width = Math.floor(viewport.width * pixelRatio);
-			canvas.height = Math.floor(viewport.height * pixelRatio);
+			canvas.width = draftCanvas.width;
+			canvas.height = draftCanvas.height;
 			canvas.style.width = `${viewport.width}px`;
 			canvas.style.height = `${viewport.height}px`;
-
-			context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-			context.fillStyle = "#fff";
-			context.fillRect(0, 0, viewport.width, viewport.height);
-
-			renderTask = page.render({ canvas, canvasContext: context, viewport });
-			await renderTask.promise;
-
-			if (cancelled) return;
+			visibleContext.setTransform(1, 0, 0, 1, 0, 0);
+			visibleContext.drawImage(draftCanvas, 0, 0);
 
 			if (allowInteractions) {
 				const textContent = await page.getTextContent();
@@ -222,6 +243,7 @@ function SecureResumePage({
 			}
 
 			page.cleanup();
+			hasRenderedRef.current = true;
 			setLoading(false);
 		}
 
@@ -283,6 +305,8 @@ function SecureResumeReader({
 	const scrollRef = useRef<HTMLDivElement | null>(null);
 	const pinchRef = useRef<{ distance: number; zoom: number } | null>(null);
 	const lastTapRef = useRef(0);
+	const pendingZoomRef = useRef(1);
+	const zoomFrameRef = useRef<number | null>(null);
 	const [mounted, setMounted] = useState(false);
 	const [readerWidth, setReaderWidth] = useState(0);
 	const [mode, setMode] = useState<ReaderMode>("read");
@@ -290,6 +314,12 @@ function SecureResumeReader({
 
 	useEffect(() => {
 		setMounted(true);
+
+		return () => {
+			if (zoomFrameRef.current !== null) {
+				window.cancelAnimationFrame(zoomFrameRef.current);
+			}
+		};
 	}, []);
 
 	useEffect(() => {
@@ -313,6 +343,7 @@ function SecureResumeReader({
 
 		setMode("read");
 		setZoom(1);
+		pendingZoomRef.current = 1;
 	}, [open]);
 
 	useEffect(() => {
@@ -332,11 +363,19 @@ function SecureResumeReader({
 	if (!open || !mounted || !pdf) return null;
 
 	function updateZoom(nextZoom: number) {
-		setZoom(clamp(nextZoom, 0.75, 2.25));
+		pendingZoomRef.current = clamp(nextZoom, 0.75, 2.25);
+
+		if (zoomFrameRef.current !== null) return;
+
+		zoomFrameRef.current = window.requestAnimationFrame(() => {
+			zoomFrameRef.current = null;
+			setZoom(pendingZoomRef.current);
+		});
 	}
 
 	function selectMode(nextMode: ReaderMode) {
 		setMode(nextMode);
+		pendingZoomRef.current = 1;
 		setZoom(1);
 	}
 
