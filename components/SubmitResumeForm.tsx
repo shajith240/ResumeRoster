@@ -20,6 +20,7 @@ import FileUpload, {
 	FileList,
 	type FileInfo,
 } from "@/components/ui/file-upload";
+import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import {
 	assessResumePrivacyText,
 	MAX_PRIVACY_SCAN_PAGES,
@@ -74,8 +75,7 @@ function profileDisplayName(profile: SubmitProfile | null, user: User | null) {
 	return (
 		profile?.full_name?.trim() ||
 		profile?.username?.trim().replace(/^@+/, "") ||
-		user?.user_metadata?.full_name ||
-		user?.email?.split("@")[0] ||
+		(user ? getAnonymousProfileUsername(user.id) : "") ||
 		"your profile"
 	);
 }

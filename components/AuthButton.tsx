@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import NotificationCenter from "@/components/NotificationCenter";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { UserDropdown } from "@/components/ui/user-dropdown";
+import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import { PROFILE_CHANGE_EVENT, normalizeAppStatus } from "@/lib/app-presence";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { NOTIFICATIONS_OPEN_EVENT } from "@/lib/notifications";
@@ -34,20 +35,6 @@ const NAV_PROFILE_SELECT_WITH_STATUS =
 const NAV_PROFILE_SELECT_BASE = "full_name, username, avatar_url";
 const SUPABASE_MIGRATION_MESSAGE =
 	"Status controls are temporarily unavailable. Please refresh and try again.";
-
-function getMetadataName(user: User | null) {
-	return user?.user_metadata?.full_name
-		? String(user.user_metadata.full_name)
-		: "";
-}
-
-function getMetadataAvatar(user: User | null) {
-	return (
-		(user?.user_metadata?.avatar_url as string | undefined) ||
-		(user?.user_metadata?.picture as string | undefined) ||
-		""
-	);
-}
 
 async function getNavProfile(activeUser: User | null): Promise<NavProfile | null> {
 	if (!activeUser) return null;
@@ -167,19 +154,14 @@ export default function AuthButton() {
 		);
 	}
 
+	const anonymousUsername = getAnonymousProfileUsername(user.id);
 	const displayName = String(
-		profile?.full_name ||
-			getMetadataName(user) ||
-			profile?.username ||
-			user.email?.split("@")[0] ||
-			"Resume reviewer",
+		profile?.full_name || profile?.username || anonymousUsername,
 	);
-	const avatarUrl = profile?.avatar_url || getMetadataAvatar(user) || undefined;
+	const avatarUrl = profile?.avatar_url || undefined;
 	const username = profile?.username
 		? `@${profile.username.replace(/^@+/, "")}`
-		: user.email
-			? `@${user.email.split("@")[0]}`
-			: "@linted";
+		: `@${anonymousUsername}`;
 	const initials = displayName
 		.split(/\s+/)
 		.map((part: string) => part[0])

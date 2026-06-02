@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js";
-import { redactResumePdf } from "@/lib/pdf-redaction";
+import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
+import {
+	buildRedactionProfileFromUser,
+	redactResumePdf,
+} from "@/lib/pdf-redaction";
 import { isResumePrivacyMode } from "@/lib/resume-privacy";
 import {
 	JOB_DESCRIPTION_MAX_LENGTH,
@@ -35,22 +39,6 @@ function getBearerToken(request: Request) {
 	return /^bearer$/i.test(scheme) && token ? token : "";
 }
 
-function getMetadataName(user: User) {
-	return (
-		(user.user_metadata?.full_name as string | undefined) ||
-		(user.user_metadata?.name as string | undefined) ||
-		null
-	);
-}
-
-function getMetadataAvatar(user: User) {
-	return (
-		(user.user_metadata?.avatar_url as string | undefined) ||
-		(user.user_metadata?.picture as string | undefined) ||
-		null
-	);
-}
-
 async function ensureSubmitProfile(
 	admin: SupabaseClient,
 	activeUser: User,
@@ -66,8 +54,7 @@ async function ensureSubmitProfile(
 
 	const insertProfile = await admin.from("profiles").insert({
 		id: activeUser.id,
-		full_name: getMetadataName(activeUser),
-		avatar_url: getMetadataAvatar(activeUser),
+		username: getAnonymousProfileUsername(activeUser.id),
 	});
 
 	if (insertProfile.error && insertProfile.error.code !== "23505") {
@@ -185,19 +172,10 @@ export async function POST(request: Request) {
 		processedPdf = await redactResumePdf({
 			bytes: originalBytes,
 			mode: privacyMode,
-			profile: {
-				email: user.email,
-				fullName:
-					profile?.full_name ??
-					(user.user_metadata?.full_name as string | undefined) ??
-					(user.user_metadata?.name as string | undefined) ??
-					null,
-				username:
-					profile?.username ??
-					(user.user_metadata?.user_name as string | undefined) ??
-					(user.user_metadata?.preferred_username as string | undefined) ??
-					null,
-			},
+			profile: buildRedactionProfileFromUser(user, {
+				fullName: profile?.full_name ?? null,
+				username: profile?.username ?? null,
+			}),
 		});
 	} catch (error) {
 		return badRequest(

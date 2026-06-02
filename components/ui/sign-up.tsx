@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, Lock, Mail, UserRound } from "lucide-react";
+import { ArrowRight, Lock, Mail } from "lucide-react";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -202,7 +202,6 @@ export function SignUp() {
 	const [mode, setMode] = useState<AuthMode>(
 		searchParams.get("mode") === "signup" ? "signup" : "signin",
 	);
-	const [fullName, setFullName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [message, setMessage] = useState("");
@@ -292,8 +291,6 @@ export function SignUp() {
 		setExistingAccount(null);
 
 		const trimmedEmail = email.trim().toLowerCase();
-		const trimmedFullName = fullName.trim();
-
 		if (!trimmedEmail) {
 			setMessage("Enter your email address.");
 			return;
@@ -301,11 +298,6 @@ export function SignUp() {
 
 		if (password.length < 8) {
 			setMessage("Use at least 8 characters for your password.");
-			return;
-		}
-
-		if (mode === "signup" && trimmedFullName.length < 2) {
-			setMessage("Add the name you want on your profile.");
 			return;
 		}
 
@@ -339,9 +331,6 @@ export function SignUp() {
 						email: trimmedEmail,
 						password,
 						options: {
-							data: {
-								full_name: trimmedFullName,
-							},
 							emailRedirectTo: getEmailRedirectUrl(nextPath),
 						},
 					});
@@ -471,25 +460,6 @@ export function SignUp() {
 					</div>
 
 					<form className="auth-form" onSubmit={handleEmailSubmit}>
-						{mode === "signup" ? (
-							<div className="auth-field">
-								<Label htmlFor="auth-full-name">Display name</Label>
-								<div className="auth-input-wrap">
-									<UserRound aria-hidden="true" size={16} strokeWidth={1.8} />
-									<Input
-										autoComplete="name"
-										id="auth-full-name"
-										maxLength={64}
-										onChange={(event) => setFullName(event.target.value)}
-										placeholder="Alex Morgan"
-										required
-										type="text"
-										value={fullName}
-									/>
-								</div>
-							</div>
-						) : null}
-
 						<div className="auth-field">
 							<Label htmlFor="auth-email">Email</Label>
 							<div className="auth-input-wrap">

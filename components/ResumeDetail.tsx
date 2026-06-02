@@ -36,6 +36,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import {
 	getReportIssue,
 	REPORT_DETAILS_MAX_LENGTH,
@@ -142,7 +143,7 @@ function getAuthorHandle(authorId: string, profile?: AuthorProfile) {
 	const name =
 		profile?.username ||
 		profile?.full_name ||
-		`reviewer-${authorId.slice(0, 8)}`;
+		getAnonymousProfileUsername(authorId);
 	return name.startsWith("@") ? name : `@${name}`;
 }
 
@@ -1012,8 +1013,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			...current,
 			[user.id]: {
 				id: user.id,
-				username: user.email?.split("@")[0] ?? null,
-				full_name: user.user_metadata?.full_name ?? null,
+				username: getAnonymousProfileUsername(user.id),
+				full_name: null,
 			},
 		}));
 		setResume((current) =>
@@ -1147,8 +1148,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 			...current,
 			[user.id]: {
 				id: user.id,
-				username: user.email?.split("@")[0] ?? null,
-				full_name: user.user_metadata?.full_name ?? null,
+				username: getAnonymousProfileUsername(user.id),
+				full_name: null,
 			},
 		}));
 		setResume((current) =>

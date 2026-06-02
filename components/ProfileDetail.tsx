@@ -47,6 +47,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import { supabase } from "@/lib/supabase/client";
 import {
 	PROFILE_FIELD_LIMITS,
@@ -206,20 +207,6 @@ function formatActivityDate(value: string) {
 		month: "short",
 		day: "numeric",
 	}).format(new Date(value));
-}
-
-function getMetadataName(user: User | null) {
-	return user?.user_metadata?.full_name
-		? String(user.user_metadata.full_name)
-		: "";
-}
-
-function getMetadataAvatar(user: User | null) {
-	return (
-		(user?.user_metadata?.avatar_url as string | undefined) ||
-		(user?.user_metadata?.picture as string | undefined) ||
-		""
-	);
 }
 
 function getInitials(name: string) {
@@ -427,14 +414,9 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			}
 
 			if (activeUser?.id === resolvedProfileId) {
-				const defaultUsername =
-					activeUser.email?.split("@")[0]?.replace(/[^a-zA-Z0-9_-]/g, "") ||
-					`user-${activeUser.id.slice(0, 8)}`;
 				const seedResult = await supabase.from("profiles").insert({
 					id: activeUser.id,
-					full_name: getMetadataName(activeUser) || null,
-					username: defaultUsername,
-					avatar_url: getMetadataAvatar(activeUser) || null,
+					username: getAnonymousProfileUsername(activeUser.id),
 				});
 
 				if (
@@ -473,7 +455,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				return;
 			}
 
-			let loadedProfile = (profileResult.data?.[0] ?? null) as PublicProfile | null;
+			const loadedProfile = (profileResult.data?.[0] ?? null) as PublicProfile | null;
 
 			if (!loadedProfile) {
 				setMessage(
@@ -485,27 +467,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				return;
 			}
 
-			if (activeUser?.id === resolvedProfileId) {
-				const profilePatch: Partial<PublicProfile> = {};
-				const metadataName = getMetadataName(activeUser);
-				const metadataAvatar = getMetadataAvatar(activeUser);
-
-				if (!loadedProfile.full_name && metadataName) {
-					profilePatch.full_name = metadataName;
-				}
-				if (!loadedProfile.avatar_url && metadataAvatar) {
-					profilePatch.avatar_url = metadataAvatar;
-				}
-
-				if (Object.keys(profilePatch).length) {
-					await supabase
-						.from("profiles")
-						.update(profilePatch)
-						.eq("id", activeUser.id);
-					loadedProfile = { ...loadedProfile, ...profilePatch };
-				}
-			}
-
 			const loadedReviews = (reviewsResult.data ?? []) as PublicProfileReview[];
 			const loadedResumes = (resumesResult.data ?? []) as PublicProfileResume[];
 
@@ -514,7 +475,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			setResumes(loadedResumes);
 			setFullName(
 				limitText(
-					loadedProfile.full_name ?? getMetadataName(activeUser) ?? "",
+					loadedProfile.full_name ?? "",
 					PROFILE_FIELD_LIMITS.fullName,
 				),
 			);
@@ -740,11 +701,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 						id: user.id,
 						full_name: nextProfile.full_name,
 						username: nextProfile.username,
-						avatar_url:
-							avatarUpdate?.avatar_url ||
-							profile?.avatar_url ||
-							getMetadataAvatar(user) ||
-							null,
+						avatar_url: avatarUpdate?.avatar_url || profile?.avatar_url || null,
 					},
 				}),
 			);
@@ -1029,10 +986,10 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	const profileView = useMemo(() => {
 		if (!profile) return null;
 
-		const metadataName = isOwnProfile ? getMetadataName(user) : "";
-		const metadataAvatar = isOwnProfile ? getMetadataAvatar(user) : "";
 		const displayName =
-			profile.full_name || metadataName || profile.username || "Anonymous reviewer";
+			profile.full_name ||
+			profile.username ||
+			getAnonymousProfileUsername(profile.id);
 		const currentRole =
 			profile.current_position ||
 			profile.target_role ||
@@ -1044,7 +1001,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		);
 		return {
 			activity: getActivity(reviews, resumes, profile),
-			avatarUrl: profile.avatar_url || metadataAvatar || fallbackAvatar,
+			avatarUrl: profile.avatar_url || fallbackAvatar,
 			collegeLabel: profile.college || "College not set",
 			collegeLocation: profile.college_location || "College location not set",
 			currentRole,
