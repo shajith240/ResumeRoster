@@ -12,6 +12,7 @@ import {
 	type LucideIcon,
 } from "lucide-react";
 import AuthButton from "./AuthButton";
+import BrandMark from "./BrandMark";
 import { useAdminAccess } from "@/lib/use-admin-access";
 
 type DockLink = {
@@ -82,7 +83,7 @@ export default function RouteHeader() {
 		<>
 			<header className="app-header">
 				<Link href="/feed" className="app-logo" aria-label="Linted home">
-					Linted
+					<BrandMark />
 				</Link>
 
 				<AuthButton />

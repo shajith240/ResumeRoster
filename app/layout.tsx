@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import "./feed-canvas.css";
 
+const lintyFaviconPath = "/assets/linty-favicon.png";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://linted.space"),
   manifest: "/manifest.webmanifest",
@@ -15,9 +17,27 @@ export const metadata: Metadata = {
   description:
     "Linted is a human-powered career linter for resumes. Post anonymously, catch structural bugs before recruiters do, and ship a cleaner version.",
   icons: {
-    apple: "/assets/Linted-favicon.png",
-    icon: "/assets/Linted-favicon.png",
-    shortcut: "/assets/Linted-favicon.png",
+    apple: [
+      {
+        url: lintyFaviconPath,
+        sizes: "750x750",
+        type: "image/png",
+      },
+    ],
+    icon: [
+      {
+        url: lintyFaviconPath,
+        sizes: "750x750",
+        type: "image/png",
+      },
+    ],
+    shortcut: [
+      {
+        url: lintyFaviconPath,
+        sizes: "750x750",
+        type: "image/png",
+      },
+    ],
   },
   openGraph: {
     title: "Linted",

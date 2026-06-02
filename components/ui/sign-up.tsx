@@ -4,6 +4,7 @@ import Link from "next/link";
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Lock, Mail } from "lucide-react";
+import BrandMark from "@/components/BrandMark";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -406,7 +407,7 @@ export function SignUp() {
 			<section className="auth-card" aria-labelledby="auth-title">
 				<div className="auth-card-surface">
 					<Link className="auth-wordmark" href="/" aria-label="Linted home">
-						Linted
+						<BrandMark />
 					</Link>
 
 					<div className="auth-heading">

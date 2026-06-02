@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandMark from "@/components/BrandMark";
 
 export const metadata = {
 	title: "Privacy Policy - Linted",
@@ -15,7 +16,7 @@ export default function PrivacyPolicyPage() {
 		<main className="legal-page">
 			<article className="legal-document">
 				<Link className="legal-back-link" href="/">
-					Linted
+					<BrandMark />
 				</Link>
 				<header className="legal-hero">
 					<p>Legal</p>

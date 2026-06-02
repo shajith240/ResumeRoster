@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { Star } from "lucide-react";
+import BrandMark from "@/components/BrandMark";
 import LandingCta from "@/components/LandingCta";
 import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
@@ -342,7 +343,7 @@ export default function Home() {
       <nav className={`navbar${navHidden ? " nav-hidden" : ""}`}>
         <div className="container nav-content">
           <Link className="landing-wordmark" href="/" aria-label="Linted home">
-            Linted
+            <BrandMark />
           </Link>
 
           <div className="nav-links">

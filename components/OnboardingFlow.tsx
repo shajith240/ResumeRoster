@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import BrandMark from "@/components/BrandMark";
 import { Button } from "@/components/ui/button";
 import {
 	ArrowRightIcon,
@@ -207,7 +208,7 @@ export default function OnboardingFlow() {
 			<section className="onboarding-shell" aria-labelledby="onboarding-title">
 				<header className="onboarding-header">
 					<Link className="auth-wordmark" href="/" aria-label="Linted home">
-						Linted
+						<BrandMark />
 					</Link>
 					<div className="onboarding-progress" aria-label="Onboarding progress">
 						{Array.from({ length: totalSteps }, (_, index) => index + 1).map((item) => (

@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
 		display: "standalone",
 		icons: [
 			{
-				src: "/assets/Linted-favicon.png",
-				sizes: "512x512",
+				src: "/assets/linty-favicon.png",
+				sizes: "750x750",
 				type: "image/png",
 			},
 		],

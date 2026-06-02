@@ -471,12 +471,26 @@ body.main-app-dark .app-header {
 .app-logo {
 	display: inline-flex;
 	align-items: center;
+	gap: 9px;
 	min-width: 0;
+	--brand-mark-size: 31px;
 	color: var(--text-primary);
 	font-size: 25px;
 	letter-spacing: 0;
 	line-height: 0.95;
 	white-space: nowrap;
+}
+
+.brand-mark-icon {
+	flex: 0 0 auto;
+	width: var(--brand-mark-size, 32px);
+	height: var(--brand-mark-size, 32px);
+	object-fit: contain;
+}
+
+.brand-mark-text {
+	display: inline-block;
+	line-height: inherit;
 }
 
 .submit-icon {
@@ -1179,14 +1193,22 @@ html[data-app-theme="dark"] .full-page-loader {
 }
 
 .auth-wordmark {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
 	width: fit-content;
 	margin: 0 auto 24px;
+	--brand-mark-size: 34px;
 	color: var(--text-primary);
 	font-family: var(--font-display);
 	font-size: 30px;
 	font-weight: 400;
 	line-height: 1;
+}
+
+.onboarding-header .auth-wordmark {
+	margin: 0;
 }
 
 .auth-heading {
@@ -1508,8 +1530,10 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 .legal-back-link {
 	display: inline-flex;
 	align-items: center;
+	gap: 10px;
 	width: fit-content;
 	margin-bottom: clamp(24px, 4vw, 44px);
+	--brand-mark-size: 34px;
 	color: var(--text-primary);
 	font-family: var(--font-display);
 	font-size: 30px;
@@ -1558,6 +1582,12 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	font-weight: 600;
 	text-decoration: underline;
 	text-underline-offset: 3px;
+}
+
+.legal-document .legal-back-link {
+	color: var(--text-primary);
+	font-weight: 400;
+	text-decoration: none;
 }
 
 .legal-document section {
@@ -6342,7 +6372,11 @@ body.main-app-dark .form-message {
 }
 
 .landing-wordmark {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
 	justify-self: start;
+	--brand-mark-size: 36px;
 	color: #17130f;
 	font-family: var(--font-display);
 	font-size: 28px;

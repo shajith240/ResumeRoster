@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandMark from "@/components/BrandMark";
 
 export const metadata = {
 	title: "Terms of Service - Linted",
@@ -30,7 +31,7 @@ export default function TermsOfServicePage() {
 		<main className="legal-page">
 			<article className="legal-document">
 				<Link className="legal-back-link" href="/">
-					Linted
+					<BrandMark />
 				</Link>
 				<header className="legal-hero">
 					<p>Legal</p>
