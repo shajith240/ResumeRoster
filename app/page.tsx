@@ -537,7 +537,6 @@ export default function Home() {
               </button>
 
               <div className="feature-mobile-status" aria-live="polite">
-                <span>{String(activeFeatureIndex + 1).padStart(2, "0")}/05</span>
                 <strong>{activeFeatureTab.mobileLabel}</strong>
               </div>
 
