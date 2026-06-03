@@ -49,6 +49,22 @@ async function removeStorageObjects(
 	return uniquePaths.length;
 }
 
+async function deleteRowsByColumn(
+	admin: SupabaseClient,
+	table: string,
+	column: string,
+	value: string,
+) {
+	const { count, error } = await admin
+		.from(table)
+		.delete({ count: "exact" })
+		.eq(column, value);
+
+	if (error) throw new Error(`${table}: ${error.message}`);
+
+	return count ?? 0;
+}
+
 async function getPayload(request: Request) {
 	try {
 		return await request.json();
@@ -179,6 +195,81 @@ export async function POST(request: Request, context: RouteContext) {
 					}
 				}
 
+				const cleanupCounts = {
+					activeSessions: await deleteRowsByColumn(
+						admin,
+						"active_user_sessions",
+						"user_id",
+						profileId,
+					),
+					contentReportsFiled: await deleteRowsByColumn(
+						admin,
+						"content_reports",
+						"reporter_id",
+						profileId,
+					),
+					notificationPreferences: await deleteRowsByColumn(
+						admin,
+						"notification_preferences",
+						"user_id",
+						profileId,
+					),
+					onboarding: await deleteRowsByColumn(
+						admin,
+						"profile_onboarding",
+						"user_id",
+						profileId,
+					),
+					presenceSessions: await deleteRowsByColumn(
+						admin,
+						"app_presence_sessions",
+						"user_id",
+						profileId,
+					),
+					pushSubscriptions: await deleteRowsByColumn(
+						admin,
+						"push_subscriptions",
+						"user_id",
+						profileId,
+					),
+					resumeReads: await deleteRowsByColumn(
+						admin,
+						"resume_reads",
+						"reader_id",
+						profileId,
+					),
+					reviewerApplications: await deleteRowsByColumn(
+						admin,
+						"reviewer_applications",
+						"user_id",
+						profileId,
+					),
+					reviews: await deleteRowsByColumn(
+						admin,
+						"roasts",
+						"author_id",
+						profileId,
+					),
+					savedResumes: await deleteRowsByColumn(
+						admin,
+						"saved_resumes",
+						"user_id",
+						profileId,
+					),
+					submittedResumes: await deleteRowsByColumn(
+						admin,
+						"resumes",
+						"user_id",
+						profileId,
+					),
+					votes: await deleteRowsByColumn(
+						admin,
+						"votes",
+						"voter_id",
+						profileId,
+					),
+				};
+
 				const deleteAuthUser = await admin.auth.admin.deleteUser(profileId);
 				if (deleteAuthUser.error) throw new Error(deleteAuthUser.error.message);
 
@@ -193,6 +284,7 @@ export async function POST(request: Request, context: RouteContext) {
 								commentMedia: removedCommentFiles,
 								resumes: removedResumeFiles,
 							},
+							removed_table_rows: cleanupCounts,
 						},
 					})
 					.eq("id", logResult.data.id);

@@ -10,7 +10,7 @@ export const metadata = {
 
 const lastUpdated = "May 30, 2026";
 const contactEmail = "shajith240@gmail.com";
-const siteUrl = "https://linted-space.vercel.app";
+const siteUrl = "https://linted.space";
 
 function Section({
 	children,

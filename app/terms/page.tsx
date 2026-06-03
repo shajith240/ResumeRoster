@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 const lastUpdated = "May 30, 2026";
-const websiteUrl = "https://linted-space.vercel.app";
+const websiteUrl = "https://linted.space";
 const contactEmail = "shajith240@gmail.com";
 
 function Section({
