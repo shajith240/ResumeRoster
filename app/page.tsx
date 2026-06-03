@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import BrandMark from "@/components/BrandMark";
 import LandingCta from "@/components/LandingCta";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -124,12 +124,12 @@ const featureContent: Record<
   },
 };
 
-const featureTabs: Array<{ key: FeatureKey; label: string }> = [
-  { key: "ats", label: "Resume Lint" },
-  { key: "jd", label: "Reviewer Checks" },
-  { key: "roast", label: "Useful Fixes" },
-  { key: "skills", label: "Reviewer Trust" },
-  { key: "optimize", label: "Improvement" },
+const featureTabs: Array<{ key: FeatureKey; label: string; mobileLabel: string }> = [
+  { key: "ats", label: "Resume Lint", mobileLabel: "Post" },
+  { key: "jd", label: "Reviewer Checks", mobileLabel: "Check" },
+  { key: "roast", label: "Useful Fixes", mobileLabel: "Vote" },
+  { key: "skills", label: "Reviewer Trust", mobileLabel: "Trust" },
+  { key: "optimize", label: "Improvement", mobileLabel: "Improve" },
 ];
 
 const trustSignals = [
@@ -228,6 +228,16 @@ export default function Home() {
   const lastScrollY = useRef(0);
 
   const feature = featureContent[activeFeature];
+  const fallbackFeatureTab = featureTabs[0];
+  const foundFeatureIndex = featureTabs.findIndex((tab) => tab.key === activeFeature);
+  const activeFeatureIndex = foundFeatureIndex >= 0 ? foundFeatureIndex : 0;
+  const activeFeatureTab = featureTabs[activeFeatureIndex] ?? fallbackFeatureTab;
+  const setAdjacentFeature = (direction: -1 | 1) => {
+    const nextIndex =
+      (activeFeatureIndex + direction + featureTabs.length) % featureTabs.length;
+    const nextFeature = featureTabs[nextIndex] ?? fallbackFeatureTab;
+    setActiveFeature(nextFeature.key);
+  };
   const benefitImage = benefitImages[activeBenefit];
 
   const isSignedIn = Boolean(user);
@@ -511,6 +521,55 @@ export default function Home() {
                   </button>
                 );
               })}
+            </div>
+
+            <div
+              className="feature-mobile-control"
+              aria-label="Linted feature showcase controls"
+            >
+              <button
+                aria-label="Previous feature"
+                className="feature-mobile-arrow"
+                onClick={() => setAdjacentFeature(-1)}
+                type="button"
+              >
+                <ChevronLeft aria-hidden="true" size={16} strokeWidth={2.2} />
+              </button>
+
+              <div className="feature-mobile-status" aria-live="polite">
+                <span>{String(activeFeatureIndex + 1).padStart(2, "0")}/05</span>
+                <strong>{activeFeatureTab.mobileLabel}</strong>
+              </div>
+
+              <div
+                className="feature-dots"
+                role="tablist"
+                aria-label="Select showcase step"
+              >
+                {featureTabs.map((tab) => {
+                  const isActive = activeFeature === tab.key;
+                  return (
+                    <button
+                      aria-label={`Show ${tab.label}`}
+                      aria-selected={isActive}
+                      className={`feature-dot${isActive ? " active" : ""}`}
+                      key={tab.key}
+                      onClick={() => setActiveFeature(tab.key)}
+                      role="tab"
+                      type="button"
+                    />
+                  );
+                })}
+              </div>
+
+              <button
+                aria-label="Next feature"
+                className="feature-mobile-arrow"
+                onClick={() => setAdjacentFeature(1)}
+                type="button"
+              >
+                <ChevronRight aria-hidden="true" size={16} strokeWidth={2.2} />
+              </button>
             </div>
           </div>
 
