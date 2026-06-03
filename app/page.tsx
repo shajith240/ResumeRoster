@@ -450,51 +450,52 @@ export default function Home() {
       </nav>
 
       <main className="landing-main">
-        <section className="hero">
-          <div className="container hero-content">
-            <div className="hero-visual">
-              <video
-                className="hero-illustration"
-                autoPlay
-                muted
-                loop
-                playsInline
-                aria-label="Linted preview"
-              >
-                <source src={asset("Hero_section_animation.webm")} type="video/webm" />
-              </video>
-            </div>
-
-            <h1>Resume feedback before you apply</h1>
-
-            <p className="hero-subtext">
-              Post anonymously. Get specific fixes from real people.
-            </p>
-
-            <LandingCta className="hero-btn" href={isSignedIn ? "/feed" : "/submit"} isSignedIn={isSignedIn}>
-              {authReady && isSignedIn ? "Go to lint feed" : "Lint my resume"}
-            </LandingCta>
-          </div>
-        </section>
-
-        <section className="trust-section" aria-label="Linted trust signals">
-          <div className="trust-marquee">
-            {[0, 1].map((groupIndex) => (
-              <div
-                aria-hidden={groupIndex === 1 ? "true" : undefined}
-                className="trust-track"
-                key={groupIndex}
-              >
-                {trustSignals.map((signal) => (
-                  <div className="trust-signal" key={`${groupIndex}-${signal}`}>
-                    <span>{signal}</span>
-                    <span aria-hidden="true" className="trust-divider" />
-                  </div>
-                ))}
+        <div className="landing-first-screen">
+          <section className="hero">
+            <div className="container hero-content">
+              <div className="hero-visual">
+                <video
+                  className="hero-illustration"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  aria-label="Linted preview"
+                >
+                  <source src={asset("Hero_section_animation.webm")} type="video/webm" />
+                </video>
               </div>
-            ))}
-          </div>
-        </section>
+
+              <h1>Resume feedback before you apply</h1>
+
+              <p className="hero-subtext">
+                Post anonymously. Get specific fixes from real people.
+              </p>
+
+              <LandingCta className="hero-btn" href={isSignedIn ? "/feed" : "/submit"} isSignedIn={isSignedIn}>
+                {authReady && isSignedIn ? "Go to lint feed" : "Lint my resume"}
+              </LandingCta>
+            </div>
+          </section>
+
+          <section className="trust-section" aria-label="Linted trust signals">
+            <div className="trust-marquee">
+              {[0, 1].map((groupIndex) => (
+                <div
+                  aria-hidden={groupIndex === 1 ? "true" : undefined}
+                  className="trust-track"
+                  key={groupIndex}
+                >
+                  {trustSignals.map((signal) => (
+                    <div className="trust-signal" key={`${groupIndex}-${signal}`}>
+                      <span>{signal}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
 
         <section className="feature-lint-section" id="how-it-works">
           <div className="feature-header">
