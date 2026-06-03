@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -132,15 +132,14 @@ const featureTabs: Array<{ key: FeatureKey; label: string }> = [
   { key: "optimize", label: "Improvement" },
 ];
 
-const tagAssets = [
-  ["campus placement tag.png", "Campus Placements"],
-  ["internship application tag.png", "Internship Applications"],
-  ["firstjob hunt tag.png", "First Job Hunt"],
-  ["career Switches tag.png", "Career Switches"],
-  ["ats updates tag.png", "ATS Uploads"],
-  ["jd matching tag.png", "JD Matching"],
-  ["recruter screenig tag.png", "Recruiter Screening"],
-  ["linkedin easy apply tag.png", "LinkedIn Easy Apply"],
+const trustSignals = [
+  "Anonymous by default",
+  "Identity redaction",
+  "Human resume feedback",
+  "Useful fixes rise",
+  "Community guidelines",
+  "No fake resume score",
+  "Built for public critique",
 ];
 
 const benefitImages: Record<BenefitKey, { src: string; alt: string }> = {
@@ -225,12 +224,12 @@ export default function Home() {
   const pinSectionRef = useRef<HTMLElement | null>(null);
   const pinTrackRef = useRef<HTMLDivElement | null>(null);
   const pinHeadingRef = useRef<HTMLDivElement | null>(null);
+  const cardsStackRef = useRef<HTMLElement | null>(null);
   const lastScrollY = useRef(0);
 
   const feature = featureContent[activeFeature];
   const benefitImage = benefitImages[activeBenefit];
 
-  const repeatedTags = useMemo(() => [tagAssets, tagAssets], []);
   const isSignedIn = Boolean(user);
 
   useEffect(() => {
@@ -299,6 +298,7 @@ export default function Home() {
         pinTrack.scrollHeight - viewportHeight * 0.48,
         0,
       );
+
       const rect = pinSection.getBoundingClientRect();
       const scrollable = pinSection.offsetHeight - viewportHeight;
       const progress = Math.min(Math.max(-rect.top / scrollable, 0), 1);
@@ -327,6 +327,75 @@ export default function Home() {
     return () => {
       window.removeEventListener("scroll", updatePinnedFeature);
       window.removeEventListener("resize", updatePinnedFeature);
+    };
+  }, []);
+
+  useEffect(() => {
+    let animationFrame = 0;
+
+    function updateCardsStack() {
+      animationFrame = 0;
+
+      const section = cardsStackRef.current;
+      const stage = section?.querySelector<HTMLElement>(".stack-stage");
+      const heading = section?.querySelector<HTMLElement>("h2");
+      const cards = section
+        ? Array.from(section.querySelectorAll<HTMLElement>(".stack-card"))
+        : [];
+
+      if (!section || !stage || cards.length === 0) return;
+
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      const smallScreen = isSmallScreen();
+      const step = viewportHeight * (smallScreen ? 0.78 : 0.72);
+      const hold = viewportHeight * (smallScreen ? 0.82 : 0.76);
+      const travel = viewportHeight * (smallScreen ? 0.68 : 0.62);
+      const totalProgress = step * (cards.length - 1) + hold;
+      const headingStyles = heading ? window.getComputedStyle(heading) : null;
+      const stageOffset = heading
+        ? heading.offsetTop +
+          heading.offsetHeight +
+          Number.parseFloat(headingStyles?.marginBottom ?? "0")
+        : 0;
+      const sectionTop = window.scrollY + section.getBoundingClientRect().top;
+      const progress = Math.min(
+        Math.max(window.scrollY - sectionTop - stageOffset, 0),
+        totalProgress,
+      );
+
+      section.style.height = `${stageOffset + viewportHeight + totalProgress}px`;
+
+      cards.forEach((card, index) => {
+        const enterProgress =
+          index === 0
+            ? 1
+            : Math.min(Math.max((progress - step * (index - 1)) / step, 0), 1);
+        const easedProgress = 1 - (1 - enterProgress) ** 3;
+        const y = index === 0 ? 0 : (1 - easedProgress) * travel;
+
+        card.style.setProperty("--stack-y", `${y}px`);
+        card.style.setProperty(
+          "--stack-opacity",
+          index === 0 || enterProgress > 0.02 ? "1" : "0",
+        );
+      });
+    }
+
+    function requestStackUpdate() {
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame(updateCardsStack);
+    }
+
+    requestStackUpdate();
+    window.addEventListener("scroll", requestStackUpdate, { passive: true });
+    window.addEventListener("resize", requestStackUpdate);
+    window.visualViewport?.addEventListener("resize", requestStackUpdate);
+
+    return () => {
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", requestStackUpdate);
+      window.removeEventListener("resize", requestStackUpdate);
+      window.visualViewport?.removeEventListener("resize", requestStackUpdate);
     };
   }, []);
 
@@ -386,11 +455,10 @@ export default function Home() {
               </video>
             </div>
 
-            <h1>Lint your resume before recruiters compile it</h1>
+            <h1>Resume feedback before you apply</h1>
 
             <p className="hero-subtext">
-              Post anonymously. Get reviewers to catch weak bullets and recruiter
-              red flags before you apply.
+              Post anonymously. Get specific fixes from real people.
             </p>
 
             <LandingCta className="hero-btn" href={isSignedIn ? "/feed" : "/submit"} isSignedIn={isSignedIn}>
@@ -399,98 +467,99 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="trust-section" aria-label="Linted use cases">
-          <div className="logos-track">
-            {repeatedTags.map((group, groupIndex) => (
+        <section className="trust-section" aria-label="Linted trust signals">
+          <div className="trust-marquee">
+            {[0, 1].map((groupIndex) => (
               <div
-                className="logos-group"
                 aria-hidden={groupIndex === 1 ? "true" : undefined}
+                className="trust-track"
                 key={groupIndex}
               >
-                {group.map(([filename, label]) => (
-                  <img
-                    src={asset(filename)}
-                    alt={groupIndex === 0 ? label : ""}
-                    key={`${groupIndex}-${filename}`}
-                  />
+                {trustSignals.map((signal) => (
+                  <div className="trust-signal" key={`${groupIndex}-${signal}`}>
+                    <span>{signal}</span>
+                    <span aria-hidden="true" className="trust-divider" />
+                  </div>
                 ))}
               </div>
             ))}
           </div>
         </section>
 
-        <section className="feature-header" id="how-it-works">
-          <h2>A static analysis pass for your career</h2>
+        <section className="feature-lint-section" id="how-it-works">
+          <div className="feature-header">
+            <h2>A lint pass for your career</h2>
+
+            <div
+              className="feature-tabs"
+              role="tablist"
+              aria-label="Linted community features"
+            >
+              {featureTabs.map((tab) => {
+                const isActive = activeFeature === tab.key;
+                return (
+                  <button
+                    className={`feature-tab${isActive ? " active" : ""}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    data-feature={tab.key}
+                    onClick={() => setActiveFeature(tab.key)}
+                    key={tab.key}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <div
-            className="feature-tabs"
-            role="tablist"
-            aria-label="Linted community features"
+            className="feature-showcase"
+            data-feature-section
+            data-theme={feature.theme}
           >
-            {featureTabs.map((tab) => {
-              const isActive = activeFeature === tab.key;
-              return (
-                <button
-                  className={`feature-tab${isActive ? " active" : ""}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  data-feature={tab.key}
-                  onClick={() => setActiveFeature(tab.key)}
-                  key={tab.key}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-        </section>
+            <div className="showcase-wrapper">
+              <div className="showcase-info">
+                <h3>{feature.title}</h3>
+                <p>{feature.copy}</p>
+                <Link className="showcase-link" href="/feed">Open the lint feed</Link>
+              </div>
 
-        <section
-          className="feature-showcase"
-          data-feature-section
-          data-theme={feature.theme}
-        >
-          <div className="showcase-wrapper">
-            <div className="showcase-info">
-              <h3>{feature.title}</h3>
-              <p>{feature.copy}</p>
-              <Link className="showcase-link" href="/feed">Open the lint feed</Link>
-            </div>
-
-            <div className="showcase-video">
-              <div className="resume-window">
-                <div className="window-top">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-                <div className="score-strip">
-                  <div>
-                    <strong>{feature.score}</strong>
-                    <span>{feature.scoreLabel}</span>
+              <div className="showcase-video">
+                <div className="resume-window">
+                  <div className="window-top">
+                    <span />
+                    <span />
+                    <span />
                   </div>
-                  <p>{feature.insight}</p>
-                </div>
-                <div className="resume-grid">
-                  <div className="resume-page">
-                    <h4>{feature.panelTitle}</h4>
-                    <p className="line wide" />
-                    <p className="line" />
-                    <p className="line short" />
-                    <div className="note good">{feature.good}</div>
-                    <div className="note warn">{feature.warn}</div>
-                    <p className="line wide" />
-                    <p className="line" />
-                    <p className="line short" />
+                  <div className="score-strip">
+                    <div>
+                      <strong>{feature.score}</strong>
+                      <span>{feature.scoreLabel}</span>
+                    </div>
+                    <p>{feature.insight}</p>
                   </div>
-                  <div className="insight-panel">
-                    <h4>{feature.listTitle}</h4>
-                    <ul>
-                      {feature.points.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
+                  <div className="resume-grid">
+                    <div className="resume-page">
+                      <h4>{feature.panelTitle}</h4>
+                      <p className="line wide" />
+                      <p className="line" />
+                      <p className="line short" />
+                      <div className="note good">{feature.good}</div>
+                      <div className="note warn">{feature.warn}</div>
+                      <p className="line wide" />
+                      <p className="line" />
+                      <p className="line short" />
+                    </div>
+                    <div className="insight-panel">
+                      <h4>{feature.listTitle}</h4>
+                      <ul>
+                        {feature.points.map((point) => (
+                          <li key={point}>{point}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -509,11 +578,7 @@ export default function Home() {
               <img className="stack-doodle doodle-tryharder" src={asset("tryharder_doodle.png")} alt="" />
             </div>
             <div className="sticky-heading" ref={pinHeadingRef}>
-              <h2>
-                Human reviewers catch
-                <br />
-                what automated scans miss
-              </h2>
+              <h2>Humans catch what scans miss</h2>
             </div>
 
             <div className="feature-cards" data-pin-track ref={pinTrackRef}>
@@ -586,7 +651,7 @@ export default function Home() {
 
         <section className="benefits" id="use-cases">
           <div className="benefits-copy">
-            <h2>Built for career linting in public</h2>
+            <h2>Career linting, in public</h2>
             {benefits.map((benefit) => {
               const isActive = activeBenefit === benefit.key;
               return (
@@ -613,16 +678,18 @@ export default function Home() {
           </figure>
         </section>
 
-        <section className="cards-stack">
-          <h2>From resume source to cleaner application</h2>
-          <div className="stack-list">
-            {stackCards.map((card) => (
-              <article className={`stack-card ${card.className}`} key={card.title}>
-                <img className="stack-art" src={asset(card.image)} alt="" aria-hidden="true" />
-                <h3>{card.title}</h3>
-                <p>{card.copy}</p>
-              </article>
-            ))}
+        <section className="cards-stack" ref={cardsStackRef}>
+          <h2>Post. Fix. Apply.</h2>
+          <div className="stack-stage">
+            <div className="stack-list">
+              {stackCards.map((card) => (
+                <article className={`stack-card ${card.className}`} key={card.title}>
+                  <img className="stack-art" src={asset(card.image)} alt="" aria-hidden="true" />
+                  <h3>{card.title}</h3>
+                  <p>{card.copy}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -641,7 +708,7 @@ export default function Home() {
 
         <section className="cta-banner">
           <div>
-            <h2>Your resume should pass the first scan</h2>
+            <h2>Pass the first scan</h2>
             <p>
               Run it through Linted before the recruiter/compiler rejects it. Post
               anonymously, collect fixes, and ship a cleaner version.
