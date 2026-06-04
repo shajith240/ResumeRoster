@@ -4,9 +4,9 @@
 
 - Source path: `app/api/resumes/submit/route.ts`
 - Kind: Next API route
-- Size: 6102 bytes
-- Lines: 226
-- Source hash: `058bc657553285645b14bd21979338fb1fce2d0c1aa612bb97d08594cfb9484a`
+- Size: 6583 bytes
+- Lines: 253
+- Source hash: `d0af74de5e8dce44491299c79cc168bb92735db5a79c20927949f5f928d3c47c`
 
 ## What This File Does
 
@@ -34,18 +34,20 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 27 | `badRequest` | Function | top-level | no | `message`, `status` | `NextResponse<{ message: string; }>` | not documented |
-| 31 | `getRequiredString` | Function | top-level | no | `formData`, `key` | `string` | not documented |
-| 36 | `getBearerToken` | Function | top-level | no | `request` | `string` | not documented |
-| 42 | `ensureSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<import("@supabase/postgrest-js").PostgrestError \| null>` | not documented |
-| 67 | `getSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<SubmitProfile \| null>` | not documented |
-| 81 | `POST` | API handler async | top-level | yes | `request` | `Promise<NextResponse<{ message: string; }> \| NextResponse<{ id: any; privacyMode: "public" \| "contact_hidden" \| "anonymous"; redaction...` | not documented |
+| 31 | `badRequest` | Function | top-level | no | `message`, `status` | `NextResponse<{ message: string; }>` | not documented |
+| 35 | `serverFailure` | Function | top-level | no | `message` | `NextResponse<{ message: string; }>` | not documented |
+| 39 | `getRequiredString` | Function | top-level | no | `formData`, `key` | `string` | not documented |
+| 44 | `getBearerToken` | Function | top-level | no | `request` | `string` | not documented |
+| 50 | `ensureSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<import("@supabase/postgrest-js").PostgrestError \| null>` | not documented |
+| 75 | `getSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<SubmitProfile \| null>` | not documented |
+| 89 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `filePath` | `Promise<void>` | not documented |
+| 101 | `POST` | API handler async | top-level | yes | `request` | `Promise<NextResponse<{ message: string; }> \| NextResponse<{ id: any; privacyMode: "public" \| "contact_hidden" \| "anonymous"; redaction...` | not documented |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 22 | `SubmitProfile` | type |
+| 26 | `SubmitProfile` | type |
 
 ## Related Tests
 

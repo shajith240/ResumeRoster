@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 286 source-controlled files.
-Manifest hash: `ff19a2f7a737d254e041866708f7a3b7014bba45a9770b9e9c1886b9cf512cd0`
+Generated from 288 source-controlled files.
+Manifest hash: `8eabf0906afeeac93eca793f3ac9d9c67297befef6898e6d243b213e659ef1e0`
 
 ## Folder Coverage
 
@@ -17,7 +17,7 @@ Manifest hash: `ff19a2f7a737d254e041866708f7a3b7014bba45a9770b9e9c1886b9cf512cd0
 | `lib` | 52 |
 | `public` | 30 |
 | `scripts` | 4 |
-| `supabase` | 58 |
+| `supabase` | 60 |
 
 ## File Kinds
 
@@ -37,7 +37,7 @@ Manifest hash: `ff19a2f7a737d254e041866708f7a3b7014bba45a9770b9e9c1886b9cf512cd0
 | React component | 25 |
 | Repository automation | 4 |
 | Root documentation | 3 |
-| Supabase migration | 38 |
+| Supabase migration | 40 |
 | UI primitive | 23 |
 | Unit test | 20 |
 
@@ -312,6 +312,8 @@ Manifest hash: `ff19a2f7a737d254e041866708f7a3b7014bba45a9770b9e9c1886b9cf512cd0
 | `supabase/migrations/0036_refine_linted_usernames.sql` | Supabase migration | [open](source/supabase_migrations_0036_refine_linted_usernames_sql.md) |
 | `supabase/migrations/0037_admin_delete_user_transaction.sql` | Supabase migration | [open](source/supabase_migrations_0037_admin_delete_user_transaction_sql.md) |
 | `supabase/migrations/0038_remove_auth_email_lookup.sql` | Supabase migration | [open](source/supabase_migrations_0038_remove_auth_email_lookup_sql.md) |
+| `supabase/migrations/0039_transactional_admin_messages.sql` | Supabase migration | [open](source/supabase_migrations_0039_transactional_admin_messages_sql.md) |
+| `supabase/migrations/0040_scheduled_temporary_data_cleanup.sql` | Supabase migration | [open](source/supabase_migrations_0040_scheduled_temporary_data_cleanup_sql.md) |
 | `supabase/phase1-hardening.sql` | Legacy Supabase SQL reference | [open](source/supabase_phase1_hardening_sql.md) |
 | `supabase/profile-features.sql` | Legacy Supabase SQL reference | [open](source/supabase_profile_features_sql.md) |
 | `supabase/profile-status.sql` | Legacy Supabase SQL reference | [open](source/supabase_profile_status_sql.md) |

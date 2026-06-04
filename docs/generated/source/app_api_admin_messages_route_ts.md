@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/messages/route.ts`
 - Kind: Next API route
-- Size: 8079 bytes
-- Lines: 345
-- Source hash: `7df62179656ffc24f27bfc3d1991d74129aeef6f477cab07674ac65ce8a6b851`
+- Size: 3327 bytes
+- Lines: 137
+- Source hash: `8f7f6f70dd06c58fe3d4c529b342305970090279206adf3ae7e2a556162df653`
 
 ## What This File Does
 
@@ -26,32 +26,23 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 - `@/lib/admin`
 - `@/lib/admin-messages`
-- `@supabase/supabase-js`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 48 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
-| 52 | `getErrorMessage` | Function | top-level | no | `error` | `string` | not documented |
-| 56 | `chunkValues` | Function | top-level | no | `values`, `chunkSize` | `T[][]` | not documented |
-| 64 | `getPreferenceMap` | Function async | top-level | no | `admin`, `userIds` | `Promise<Map<string, NotificationPreferenceRow>>` | not documented |
-| 78 | `getEligibleRecipientIds` | Function async | top-level | no | `admin`, `userIds` | `Promise<{ eligibleIds: string[]; skipped: number; }>` | not documented |
-| 103 | `insertNotifications` | Function async | top-level | no | `admin`, `recipientIds`, `context` | `Promise<number>` | not documented |
-| 138 | `deliverToUser` | Function async | top-level | no | `admin`, `context`, `userId` | `Promise<DeliveryCounts>` | not documented |
-| 163 | `deliverToAll` | Function async | top-level | no | `admin`, `context` | `Promise<DeliveryCounts>` | not documented |
-| 210 | `getAuditMetadata` | Function | top-level | no | `message`, `delivery`, `status`, `errorMessage` | `{ admin_message: { body: string; link_href: string; target: import("@/lib/admin-messages").AdminMessageTarget; title: string; }; delivere...` | not documented |
-| 232 | `updateAuditMetadata` | Action helper async | top-level | no | `admin`, `auditLogId`, `message`, `delivery`, `status`, `errorMessage` | `Promise<void>` | not documented |
-| 250 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 31 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
+| 35 | `adminMessageFailure` | Function | top-level | no | `status` | `Response` | not documented |
+| 42 | `firstRpcResult` | Function | top-level | no | `data` | `AdminSendMessageResult \| null` | not documented |
+| 49 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | not documented |
+| 57 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 11 | `ProfileRecipientRow` | type |
-| 15 | `NotificationPreferenceRow` | type |
-| 21 | `DeliveryCounts` | type |
-| 28 | `DeliveryContext` | type |
+| 7 | `ProfileRecipientRow` | type |
+| 11 | `AdminSendMessageResult` | type |
 
 ## Related Tests
 

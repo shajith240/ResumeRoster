@@ -4,9 +4,9 @@
 
 - Source path: `lib/admin-messages.ts`
 - Kind: Application library module
-- Size: 3340 bytes
-- Lines: 148
-- Source hash: `c90e3541a8842183dda9098050326f61e004aa26b35ee97c3827e327218fe8f8`
+- Size: 3540 bytes
+- Lines: 155
+- Source hash: `42970eda863a9533861005f446c9db74744a2bde766c19cea9a3d51eb424077f`
 
 ## What This File Does
 
@@ -36,12 +36,12 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 35 | `isRecord` | Function | top-level | no | `value` | `boolean` | not documented |
-| 39 | `getTrimmedString` | Function | top-level | no | `value` | `string` | not documented |
-| 43 | `isSafeAdminMessageLink` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 62 | `normalizeAdminMessageLink` | Validation or normalization helper | top-level | yes | `value` | `string` | not documented |
-| 70 | `validateTarget` | Validation or normalization helper | top-level | no | `value` | `string \| AdminMessageTarget` | not documented |
-| 91 | `validateAdminMessagePayload` | Validation or normalization helper | top-level | yes | `payload` | `AdminMessageValidationResult` | not documented |
+| 36 | `isRecord` | Function | top-level | no | `value` | `boolean` | not documented |
+| 40 | `getTrimmedString` | Function | top-level | no | `value` | `string` | not documented |
+| 44 | `isSafeAdminMessageLink` | Function | top-level | yes | `value` | `boolean` | not documented |
+| 63 | `normalizeAdminMessageLink` | Validation or normalization helper | top-level | yes | `value` | `string` | not documented |
+| 71 | `validateTarget` | Validation or normalization helper | top-level | no | `value` | `string \| AdminMessageTarget` | not documented |
+| 92 | `validateAdminMessagePayload` | Validation or normalization helper | top-level | yes | `payload` | `AdminMessageValidationResult` | not documented |
 
 ## Types
 
@@ -49,7 +49,7 @@ None detected.
 | --- | --- | --- |
 | 5 | `AdminMessageTarget` | type |
 | 14 | `AdminMessageInput` | type |
-| 21 | `AdminMessageValidationResult` | type |
+| 22 | `AdminMessageValidationResult` | type |
 
 ## Related Tests
 

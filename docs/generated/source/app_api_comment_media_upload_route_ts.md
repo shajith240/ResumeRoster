@@ -4,9 +4,9 @@
 
 - Source path: `app/api/comment-media/upload/route.ts`
 - Kind: Next API route
-- Size: 2591 bytes
-- Lines: 95
-- Source hash: `5eceec86603c0c4327d43588d15b069c14953b0cc73f84104f92b4cb7d98f36a`
+- Size: 3015 bytes
+- Lines: 118
+- Source hash: `859f5c650f4d1c4220c84eff56e6e7d6c505245b6eee0d4d96126a58bcb44b26`
 
 ## What This File Does
 
@@ -26,14 +26,17 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 - `@/lib/comment-media-validation`
 - `@/lib/server-auth`
+- `@supabase/supabase-js`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 12 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
-| 16 | `cleanTitle` | Function | top-level | no | `fileName` | `string` | not documented |
-| 26 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 16 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
+| 20 | `uploadFailure` | Action helper | top-level | no | none | `Response` | not documented |
+| 27 | `cleanTitle` | Function | top-level | no | `fileName` | `string` | not documented |
+| 37 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `storagePath` | `Promise<void>` | not documented |
+| 49 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
 
 ## Types
 
