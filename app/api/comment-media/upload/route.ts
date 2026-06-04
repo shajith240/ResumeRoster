@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import {
 	detectCommentImageMimeType,
 	getCommentImageExtension,
@@ -9,8 +10,18 @@ import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth"
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const COMMENT_IMAGE_UPLOAD_FAILED_MESSAGE =
+	"Image upload failed. Please try again.";
+
 function badRequest(message: string, status = 400) {
 	return Response.json({ message }, { status });
+}
+
+function uploadFailure() {
+	return Response.json(
+		{ message: COMMENT_IMAGE_UPLOAD_FAILED_MESSAGE },
+		{ status: 500 },
+	);
 }
 
 function cleanTitle(fileName: string) {
@@ -21,6 +32,18 @@ function cleanTitle(fileName: string) {
 			.trim()
 			.slice(0, 120) || "Comment image"
 	);
+}
+
+async function removeUploadedFile(
+	admin: SupabaseClient,
+	bucket: string,
+	storagePath: string,
+) {
+	try {
+		await admin.storage.from(bucket).remove([storagePath]);
+	} catch {
+		// The client still gets the original upload failure response.
+	}
 }
 
 export async function POST(request: Request) {
@@ -55,7 +78,7 @@ export async function POST(request: Request) {
 				upsert: false,
 			});
 
-		if (upload.error) throw new Error(upload.error.message);
+		if (upload.error) return uploadFailure();
 
 		const insert = await admin
 			.from("comment_attachments")
@@ -73,8 +96,8 @@ export async function POST(request: Request) {
 			.single();
 
 		if (insert.error) {
-			void admin.storage.from("comment-media").remove([storagePath]);
-			throw new Error(insert.error.message);
+			await removeUploadedFile(admin, "comment-media", storagePath);
+			return uploadFailure();
 		}
 
 		return Response.json({
@@ -86,7 +109,7 @@ export async function POST(request: Request) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return uploadFailure();
 		}
 
 		return serverAuthErrorResponse(error);

@@ -18,6 +18,10 @@ import {
 export const runtime = "nodejs";
 
 const MAX_PDF_SIZE_BYTES = 5 * 1024 * 1024;
+const RESUME_SUBMIT_FAILED_MESSAGE =
+	"Resume upload failed. Please try again.";
+const RESUME_PROFILE_UPDATE_FAILED_MESSAGE =
+	"We could not save your target role. Please try again.";
 
 type SubmitProfile = {
 	full_name: string | null;
@@ -26,6 +30,10 @@ type SubmitProfile = {
 
 function badRequest(message: string, status = 400) {
 	return NextResponse.json({ message }, { status });
+}
+
+function serverFailure(message = RESUME_SUBMIT_FAILED_MESSAGE) {
+	return badRequest(message, 500);
 }
 
 function getRequiredString(formData: FormData, key: string) {
@@ -76,6 +84,18 @@ async function getSubmitProfile(
 
 	if (result.error) return null;
 	return result.data as SubmitProfile | null;
+}
+
+async function removeUploadedFile(
+	admin: SupabaseClient,
+	bucket: string,
+	filePath: string,
+) {
+	try {
+		await admin.storage.from(bucket).remove([filePath]);
+	} catch {
+		// The client still gets the original upload failure response.
+	}
 }
 
 export async function POST(request: Request) {
@@ -161,7 +181,7 @@ export async function POST(request: Request) {
 
 	const profileError = await ensureSubmitProfile(admin, user);
 	if (profileError) {
-		return badRequest(`Profile setup failed: ${profileError.message}`, 500);
+		return serverFailure();
 	}
 
 	const profile = await getSubmitProfile(admin, user);
@@ -186,6 +206,15 @@ export async function POST(request: Request) {
 		);
 	}
 
+	const profileUpdate = await admin
+		.from("profiles")
+		.update({ target_role: targetRole })
+		.eq("id", user.id);
+
+	if (profileUpdate.error) {
+		return serverFailure(RESUME_PROFILE_UPDATE_FAILED_MESSAGE);
+	}
+
 	const filePath = `${user.id}/${Date.now()}-${cleanResumeFileName(file.name)}`;
 	const upload = await admin.storage.from("resumes").upload(filePath, processedPdf.bytes, {
 		contentType: "application/pdf",
@@ -193,10 +222,8 @@ export async function POST(request: Request) {
 	});
 
 	if (upload.error) {
-		return badRequest(`Upload failed: ${upload.error.message}`, 500);
+		return serverFailure();
 	}
-
-	await admin.from("profiles").update({ target_role: targetRole }).eq("id", user.id);
 
 	const insert = await admin
 		.from("resumes")
@@ -213,8 +240,8 @@ export async function POST(request: Request) {
 		.single();
 
 	if (insert.error) {
-		void admin.storage.from("resumes").remove([filePath]);
-		return badRequest(`Upload failed: ${insert.error.message}`, 500);
+		await removeUploadedFile(admin, "resumes", filePath);
+		return serverFailure();
 	}
 
 	return NextResponse.json({
