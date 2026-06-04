@@ -14,6 +14,7 @@ export type AdminMessageTarget =
 export type AdminMessageInput = {
 	body: string;
 	linkHref: string;
+	requestId: string;
 	target: AdminMessageTarget;
 	title: string;
 };
@@ -100,6 +101,11 @@ export function validateAdminMessagePayload(
 		return { message: target, ok: false };
 	}
 
+	const requestId = getTrimmedString(payload.requestId);
+	if (!UUID_PATTERN.test(requestId)) {
+		return { message: "Message request id is required.", ok: false };
+	}
+
 	const title = getTrimmedString(payload.title);
 	if (!title) {
 		return { message: "Add a message title.", ok: false };
@@ -140,6 +146,7 @@ export function validateAdminMessagePayload(
 		value: {
 			body,
 			linkHref,
+			requestId,
 			target,
 			title,
 		},

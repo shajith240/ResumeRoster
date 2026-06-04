@@ -8,11 +8,13 @@ import {
 } from "@/lib/admin-messages";
 
 const userId = "11111111-1111-4111-8111-111111111111";
+const requestId = "22222222-2222-4222-8222-222222222222";
 
 function getPayload(overrides: Record<string, unknown> = {}) {
 	return {
 		body: "A short update.",
 		linkHref: "/feed",
+		requestId,
 		target: { mode: "user", userId },
 		title: "Linted update",
 		...overrides,
@@ -20,6 +22,15 @@ function getPayload(overrides: Record<string, unknown> = {}) {
 }
 
 describe("admin message validation", () => {
+	it("requires a stable request id", () => {
+		expect(validateAdminMessagePayload(getPayload({ requestId: "" })).ok).toBe(
+			false,
+		);
+		expect(
+			validateAdminMessagePayload(getPayload({ requestId: "not-a-uuid" })).ok,
+		).toBe(false);
+	});
+
 	it("rejects empty and long titles", () => {
 		expect(validateAdminMessagePayload(getPayload({ title: "   " })).ok).toBe(
 			false,
