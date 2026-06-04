@@ -30,7 +30,7 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 25 | `review` | Function | top-level | no | `overrides` | `Review` | not documented |
+| 25 | `review` | Function | top-level | no | `overrides` | `Review` | Implements the review helper. |
 
 ## Types
 

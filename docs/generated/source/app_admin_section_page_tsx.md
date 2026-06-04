@@ -32,7 +32,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 21 | `AdminSectionPage` | React component async | top-level | yes | `{ params, }` | `Promise<import("react").JSX.Element>` | not documented |
+| 21 | `AdminSectionPage` | React component async | top-level | yes | `{ params, }` | `Promise<import("react").JSX.Element>` | Renders the AdminSectionPage UI component. |
 
 ## Types
 

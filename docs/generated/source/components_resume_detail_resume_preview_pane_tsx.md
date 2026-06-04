@@ -35,7 +35,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 32 | `ResumePreviewPane` | React component | top-level | yes | `{ isClosed, isOwner, onLogin, onOpenFile, onRequestDelete, onRequestStatusCha...` | `import("react").JSX.Element` | not documented |
+| 32 | `ResumePreviewPane` | React component | top-level | yes | `{ isClosed, isOwner, onLogin, onOpenFile, onRequestDelete, onRequestStatusCha...` | `import("react").JSX.Element` | Renders the ResumePreviewPane UI component. |
 
 ## Types
 

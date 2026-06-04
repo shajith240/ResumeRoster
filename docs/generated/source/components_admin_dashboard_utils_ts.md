@@ -41,19 +41,19 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 11 | `formatDate` | Function | top-level | yes | `value` | `string` | not documented |
-| 19 | `getProfileLabel` | Function | top-level | yes | `profile` | `string` | not documented |
-| 24 | `getProfileSecondary` | Function | top-level | yes | `profile` | `string` | not documented |
-| 35 | `formatReason` | Function | top-level | yes | `value` | `string` | not documented |
-| 39 | `formatTargetType` | Function | top-level | yes | `value` | `string` | not documented |
-| 43 | `getTargetTitle` | Function | top-level | yes | `report` | `string` | not documented |
-| 55 | `getFootprintTotal` | Function | top-level | yes | `footprint` | `number` | not documented |
-| 67 | `getAdminMessageAudienceLabel` | Function | top-level | yes | `target` | `string` | not documented |
-| 75 | `getAdminMessageLinkChoice` | Function | top-level | yes | `linkHref` | `string` | not documented |
-| 82 | `createAdminMessageRequestId` | Action helper | top-level | yes | none | `string` | not documented |
-| 105 | `getSectionBadge` | Function | top-level | yes | `sectionId`, `stats` | `number \| null` | not documented |
-| 126 | `formatRelativeAdminTime` | Function | top-level | yes | `value` | `string` | not documented |
-| 144 | `formatAdminPresenceStatus` | Function | top-level | yes | `value` | `string` | not documented |
+| 11 | `formatDate` | Function | top-level | yes | `value` | `string` | Implements the formatdate helper. |
+| 19 | `getProfileLabel` | Function | top-level | yes | `profile` | `string` | Implements the getprofilelabel helper. |
+| 24 | `getProfileSecondary` | Function | top-level | yes | `profile` | `string` | Implements the getprofilesecondary helper. |
+| 35 | `formatReason` | Function | top-level | yes | `value` | `string` | Implements the formatreason helper. |
+| 39 | `formatTargetType` | Function | top-level | yes | `value` | `string` | Implements the formattargettype helper. |
+| 43 | `getTargetTitle` | Function | top-level | yes | `report` | `string` | Implements the gettargettitle helper. |
+| 55 | `getFootprintTotal` | Function | top-level | yes | `footprint` | `number` | Implements the getfootprinttotal helper. |
+| 67 | `getAdminMessageAudienceLabel` | Function | top-level | yes | `target` | `string` | Implements the getadminmessageaudiencelabel helper. |
+| 75 | `getAdminMessageLinkChoice` | Function | top-level | yes | `linkHref` | `string` | Implements the getadminmessagelinkchoice helper. |
+| 82 | `createAdminMessageRequestId` | Action helper | top-level | yes | none | `string` | Runs the createadminmessagerequestid workflow for callers. |
+| 105 | `getSectionBadge` | Function | top-level | yes | `sectionId`, `stats` | `number \| null` | Implements the getsectionbadge helper. |
+| 126 | `formatRelativeAdminTime` | Function | top-level | yes | `value` | `string` | Implements the formatrelativeadmintime helper. |
+| 144 | `formatAdminPresenceStatus` | Function | top-level | yes | `value` | `string` | Implements the formatadminpresencestatus helper. |
 
 ## Types
 

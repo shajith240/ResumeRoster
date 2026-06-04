@@ -37,12 +37,12 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 20 | `asset` | Function | top-level | no | `path` | `string` | not documented |
-| 243 | `isSmallScreen` | Function | top-level | no | none | `boolean` | not documented |
-| 249 | `Home` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
-| 267 | `setAdjacentFeature` | Function | nested | no | `direction` | `void` | not documented |
-| 817 | `Footer` | React component | top-level | no | none | `import("react").JSX.Element` | not documented |
-| 818 | `renderFooterLink` | Function | nested | no | `link` | `import("react").JSX.Element` | not documented |
+| 20 | `asset` | Function | top-level | no | `path` | `string` | Implements the asset helper. |
+| 243 | `isSmallScreen` | Function | top-level | no | none | `boolean` | Implements the issmallscreen helper. |
+| 249 | `Home` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the Home UI component. |
+| 267 | `setAdjacentFeature` | Function | nested | no | `direction` | `void` | Implements the setadjacentfeature helper. |
+| 817 | `Footer` | React component | top-level | no | none | `import("react").JSX.Element` | Renders the Footer UI component. |
+| 818 | `renderFooterLink` | Function | nested | no | `link` | `import("react").JSX.Element` | Implements the renderfooterlink helper. |
 
 ## Types
 

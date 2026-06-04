@@ -32,13 +32,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 16 | `isAppRoute` | Function | top-level | no | `pathname` | `boolean` | not documented |
-| 22 | `isModifiedClick` | Function | top-level | no | `event` | `boolean` | not documented |
-| 26 | `getAnchorFromEvent` | Function | top-level | no | `event` | `HTMLAnchorElement \| null` | not documented |
-| 31 | `getInternalNavigationUrl` | Function | top-level | no | `anchor` | `URL \| null` | not documented |
-| 49 | `getLoaderTheme` | Action helper | top-level | no | `nextPathname` | `LoaderTheme` | not documented |
-| 68 | `announceRouteTransition` | Function | top-level | yes | `href` | `void` | not documented |
-| 78 | `RouteTransitionLoader` | React component | top-level | yes | none | `import("react").JSX.Element \| null` | not documented |
+| 16 | `isAppRoute` | Function | top-level | no | `pathname` | `boolean` | Implements the isapproute helper. |
+| 22 | `isModifiedClick` | Function | top-level | no | `event` | `boolean` | Implements the ismodifiedclick helper. |
+| 26 | `getAnchorFromEvent` | Function | top-level | no | `event` | `HTMLAnchorElement \| null` | Implements the getanchorfromevent helper. |
+| 31 | `getInternalNavigationUrl` | Function | top-level | no | `anchor` | `URL \| null` | Implements the getinternalnavigationurl helper. |
+| 49 | `getLoaderTheme` | Action helper | top-level | no | `nextPathname` | `LoaderTheme` | Runs the getloadertheme workflow for callers. |
+| 68 | `announceRouteTransition` | Function | top-level | yes | `href` | `void` | Implements the announceroutetransition helper. |
+| 78 | `RouteTransitionLoader` | React component | top-level | yes | none | `import("react").JSX.Element \| null` | Renders the RouteTransitionLoader UI component. |
 
 ## Types
 

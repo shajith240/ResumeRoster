@@ -32,8 +32,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 6 | `ContentPage` | React component | top-level | yes | `{ overview }` | `import("react").JSX.Element` | not documented |
-| 31 | `RecentContentList` | React component | top-level | yes | `{ items, kind, }` | `import("react").JSX.Element` | not documented |
+| 6 | `ContentPage` | React component | top-level | yes | `{ overview }` | `import("react").JSX.Element` | Renders the ContentPage UI component. |
+| 31 | `RecentContentList` | React component | top-level | yes | `{ items, kind, }` | `import("react").JSX.Element` | Renders the RecentContentList UI component. |
 
 ## Types
 

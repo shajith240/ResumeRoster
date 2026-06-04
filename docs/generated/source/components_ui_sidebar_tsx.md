@@ -33,8 +33,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 29 | `SidebarNavItem` | React component | top-level | no | `{ item }` | `import("react").JSX.Element` | not documented |
-| 77 | `SessionNavBar` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 29 | `SidebarNavItem` | React component | top-level | no | `{ item }` | `import("react").JSX.Element` | Renders the SidebarNavItem UI component. |
+| 77 | `SessionNavBar` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the SessionNavBar UI component. |
 
 ## Types
 

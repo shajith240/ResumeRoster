@@ -30,7 +30,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 13 | `LandingCta` | React component | top-level | yes | `{ children, className, href, isSignedIn, }` | `import("react").JSX.Element` | not documented |
+| 13 | `LandingCta` | React component | top-level | yes | `{ children, className, href, isSignedIn, }` | `import("react").JSX.Element` | Renders the LandingCta UI component. |
 
 ## Types
 

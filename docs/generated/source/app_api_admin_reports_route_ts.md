@@ -31,8 +31,8 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 14 | `uniqueIds` | Function | top-level | no | `values` | `string[]` | not documented |
-| 18 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 14 | `uniqueIds` | Function | top-level | no | `values` | `string[]` | Implements the uniqueids helper. |
+| 18 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
 
 ## Types
 

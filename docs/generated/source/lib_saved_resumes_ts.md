@@ -34,10 +34,10 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 20 | `isSavedResumeSchemaMissingError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 37 | `getSavedResumeIds` | Function | top-level | yes | `savedRows` | `Set<string>` | not documented |
-| 41 | `mergeSavedResumeState` | Function | top-level | yes | `resumes`, `savedResumeIds` | `(T & { is_saved: boolean; })[]` | not documented |
-| 51 | `getSaveButtonState` | Function | top-level | yes | `isSaved`, `isPending` | `SaveButtonState` | not documented |
+| 20 | `isSavedResumeSchemaMissingError` | Function | top-level | yes | `error` | `boolean` | Implements the issavedresumeschemamissingerror helper. |
+| 37 | `getSavedResumeIds` | Function | top-level | yes | `savedRows` | `Set<string>` | Implements the getsavedresumeids helper. |
+| 41 | `mergeSavedResumeState` | Function | top-level | yes | `resumes`, `savedResumeIds` | `(T & { is_saved: boolean; })[]` | Implements the mergesavedresumestate helper. |
+| 51 | `getSaveButtonState` | Function | top-level | yes | `isSaved`, `isPending` | `SaveButtonState` | Implements the getsavebuttonstate helper. |
 
 ## Types
 

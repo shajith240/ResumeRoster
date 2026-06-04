@@ -4,9 +4,9 @@
 
 - Source path: `components/ResumeFeed.tsx`
 - Kind: React component
-- Size: 29854 bytes
-- Lines: 934
-- Source hash: `5ffbd6d1413d64c6ac6eaa5ae0d682fc0e471967bd17f78ea18c98e07847c497`
+- Size: 29678 bytes
+- Lines: 931
+- Source hash: `aedc1fff246b0eefb6f622049fe99878bd7edff1a5d44381b5e9f3752df854b7`
 
 ## What This File Does
 
@@ -25,10 +25,6 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `@/components/FeedResumePreview`
-- `@/components/ui/bookmark`
-- `@/components/ui/eye`
-- `@/components/ui/link`
-- `@/components/ui/message-circle`
 - `@/lib/auth-errors`
 - `@/lib/auth-redirect`
 - `@/lib/auth-session`
@@ -37,6 +33,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/lib/saved-resumes`
 - `@/lib/supabase/client`
 - `@/lib/supabase/types`
+- `lucide-react`
 - `next/link`
 - `react`
 - `sonner`
@@ -45,36 +42,36 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 95 | `formatDate` | Function | top-level | no | `value` | `string` | not documented |
-| 102 | `getReviewSignal` | Function | top-level | no | `resume` | `ReviewSignal` | not documented |
-| 118 | `cleanReviewExcerpt` | Function | top-level | no | `content` | `string` | not documented |
-| 130 | `isFeatureWorthyReview` | Function | top-level | no | `excerpt` | `boolean` | not documented |
-| 142 | `getReviewPreview` | Function | top-level | no | `row` | `ReviewPreview \| null` | not documented |
-| 168 | `getThreadPrompt` | Function | top-level | no | `resume` | `string` | not documented |
-| 185 | `getThreadActionLabel` | Function | top-level | no | `resume` | `"Thread" \| "Review" \| "Fixes" \| "Comment" \| "Comments"` | not documented |
-| 197 | `getThreadActionAria` | Function | top-level | no | `resume` | `string` | not documented |
-| 207 | `getReviewPreviewsByResumeId` | Function | top-level | no | `rows` | `{ [k: string]: ReviewPreview; }` | not documented |
-| 228 | `isReadCountFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 232 | `isResumeContextFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 238 | `isAuthorProfileFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 244 | `isReviewPreviewFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 250 | `isDuplicateSavedResumeError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 271 | `mergeLiveReviewCounts` | Function async | top-level | no | `resumeRows` | `Promise<ResumeSummary[]>` | not documented |
-| 293 | `fetchPublicAuthorProfiles` | Action helper async | top-level | no | `resumeRows` | `Promise<Map<string, ResumeAuthorProfile>>` | not documented |
-| 327 | `attachPublicAuthorProfiles` | Function async | top-level | no | `resumeRows` | `Promise<ResumeSummary[]>` | not documented |
-| 340 | `fetchSavedResumeIds` | Action helper async | top-level | no | `userId` | `Promise<{ savedResumeIds: Set<string>; schemaMissing: boolean; error: null; } \| { savedResumeIds: Set<string>; schemaMissing: boolean; e...` | not documented |
-| 369 | `FeedSkeleton` | React component | top-level | no | none | `import("react").JSX.Element` | not documented |
-| 393 | `ResumeFeed` | React component | top-level | yes | `{ activeSort = "best", savedOnly = false }` | `import("react").JSX.Element` | not documented |
+| 92 | `formatDate` | Function | top-level | no | `value` | `string` | Implements the formatdate helper. |
+| 99 | `getReviewSignal` | Function | top-level | no | `resume` | `ReviewSignal` | Implements the getreviewsignal helper. |
+| 115 | `cleanReviewExcerpt` | Function | top-level | no | `content` | `string` | Implements the cleanreviewexcerpt helper. |
+| 127 | `isFeatureWorthyReview` | Function | top-level | no | `excerpt` | `boolean` | Implements the isfeatureworthyreview helper. |
+| 139 | `getReviewPreview` | Function | top-level | no | `row` | `ReviewPreview \| null` | Implements the getreviewpreview helper. |
+| 165 | `getThreadPrompt` | Function | top-level | no | `resume` | `string` | Implements the getthreadprompt helper. |
+| 182 | `getThreadActionLabel` | Function | top-level | no | `resume` | `"Thread" \| "Review" \| "Fixes" \| "Comment" \| "Comments"` | Implements the getthreadactionlabel helper. |
+| 194 | `getThreadActionAria` | Function | top-level | no | `resume` | `string` | Implements the getthreadactionaria helper. |
+| 204 | `getReviewPreviewsByResumeId` | Function | top-level | no | `rows` | `{ [k: string]: ReviewPreview; }` | Implements the getreviewpreviewsbyresumeid helper. |
+| 225 | `isReadCountFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isreadcountfeatureerror helper. |
+| 229 | `isResumeContextFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isresumecontextfeatureerror helper. |
+| 235 | `isAuthorProfileFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isauthorprofilefeatureerror helper. |
+| 241 | `isReviewPreviewFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isreviewpreviewfeatureerror helper. |
+| 247 | `isDuplicateSavedResumeError` | Function | top-level | no | `error` | `boolean` | Implements the isduplicatesavedresumeerror helper. |
+| 268 | `mergeLiveReviewCounts` | Function async | top-level | no | `resumeRows` | `Promise<ResumeSummary[]>` | Implements the mergelivereviewcounts helper. |
+| 290 | `fetchPublicAuthorProfiles` | Action helper async | top-level | no | `resumeRows` | `Promise<Map<string, ResumeAuthorProfile>>` | Runs the fetchpublicauthorprofiles workflow for callers. |
+| 324 | `attachPublicAuthorProfiles` | Function async | top-level | no | `resumeRows` | `Promise<ResumeSummary[]>` | Implements the attachpublicauthorprofiles helper. |
+| 337 | `fetchSavedResumeIds` | Action helper async | top-level | no | `userId` | `Promise<{ savedResumeIds: Set<string>; schemaMissing: boolean; error: null; } \| { savedResumeIds: Set<string>; schemaMissing: boolean; e...` | Runs the fetchsavedresumeids workflow for callers. |
+| 366 | `FeedSkeleton` | React component | top-level | no | none | `import("react").JSX.Element` | Renders the FeedSkeleton UI component. |
+| 390 | `ResumeFeed` | React component | top-level | yes | `{ activeSort = "best", savedOnly = false }` | `import("react").JSX.Element` | Renders the ResumeFeed UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 62 | `SavedResumeSummary` | type |
-| 66 | `ReviewSignal` | type |
-| 71 | `ReviewPreviewRow` | type |
-| 84 | `ReviewPreview` | type |
-| 388 | `ResumeFeedProps` | type |
+| 59 | `SavedResumeSummary` | type |
+| 63 | `ReviewSignal` | type |
+| 68 | `ReviewPreviewRow` | type |
+| 81 | `ReviewPreview` | type |
+| 385 | `ResumeFeedProps` | type |
 
 ## Related Tests
 

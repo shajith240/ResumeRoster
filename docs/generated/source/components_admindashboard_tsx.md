@@ -48,7 +48,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 49 | `AdminDashboard` | React component | top-level | yes | `{ view = "overview", }` | `import("react").JSX.Element` | not documented |
+| 49 | `AdminDashboard` | React component | top-level | yes | `{ view = "overview", }` | `import("react").JSX.Element` | Renders the AdminDashboard UI component. |
 
 ## Types
 

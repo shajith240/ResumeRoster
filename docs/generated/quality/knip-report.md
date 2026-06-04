@@ -4,10 +4,6 @@ Command: `npx knip --no-exit-code --no-progress --reporter compact`
 Exit code: `0`
 
 ```text
-Unused dependencies (1)
-package.json: @hugeicons/core-free-icons, @hugeicons/react
-Unused devDependencies (1)
-package.json: @testing-library/react
 Unused exports (12)
 lib/admin.ts: AdminAuthError, createAdminSupabaseClient
 lib/app-presence.ts: APP_PRESENCE_ACTIVE_WINDOW_SECONDS

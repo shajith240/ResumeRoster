@@ -30,8 +30,8 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 4 | `cn` | Function | top-level | yes | `inputs` | `string` | not documented |
-| 8 | `generateUniqueId` | Function | top-level | yes | `prefix` | `string` | not documented |
+| 4 | `cn` | Function | top-level | yes | `inputs` | `string` | Implements the cn helper. |
+| 8 | `generateUniqueId` | Function | top-level | yes | `prefix` | `string` | Implements the generateuniqueid helper. |
 
 ## Types
 

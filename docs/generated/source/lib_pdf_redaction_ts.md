@@ -35,24 +35,24 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 52 | `unique` | Function | top-level | no | `values` | `string[]` | not documented |
-| 62 | `titleCaseName` | Function | top-level | no | `value` | `string` | not documented |
-| 70 | `buildNameRedactionCandidates` | Function | top-level | yes | `profile` | `string[]` | not documented |
-| 90 | `getPatternMatches` | Function | top-level | no | `text`, `pattern`, `reason` | `{ reason: RedactionReason; text: string; }[]` | not documented |
-| 101 | `getPhoneMatches` | Function | top-level | no | `text` | `RedactionMatch[]` | not documented |
-| 114 | `getRedactionMatches` | Function | top-level | no | `text`, `mode`, `nameCandidates` | `{ reason: RedactionReason; text: string; }[]` | not documented |
-| 145 | `quadToRect` | Function | top-level | no | `quad` | `Rect` | not documented |
-| 156 | `expandRect` | Function | top-level | no | `rect`, `padding` | `Rect` | not documented |
-| 165 | `rectsIntersect` | Function | top-level | no | `a`, `b` | `boolean` | not documented |
-| 169 | `collectLines` | Function | top-level | no | `page` | `PageLine[]` | not documented |
-| 196 | `findHeaderNameRects` | Function | top-level | no | `lines`, `nameCandidates`, `pageBounds` | `Rect[]` | not documented |
-| 213 | `addRedactionRect` | Function | top-level | no | `rects`, `counts`, `reason`, `rect` | `void` | not documented |
-| 224 | `removeSensitiveLinks` | Function | top-level | no | `page`, `mode`, `redactionRects` | `void` | not documented |
-| 248 | `scrubMetadata` | Function | top-level | no | `pdf` | `void` | not documented |
-| 266 | `extractDocumentText` | Function | top-level | no | `pdf` | `string` | not documented |
-| 280 | `assertNoForbiddenText` | Function | top-level | no | `pdf`, `mode`, `nameCandidates` | `void` | not documented |
-| 295 | `redactResumePdf` | Function async | top-level | yes | `{ bytes, mode, profile, }` | `Promise<RedactionResult>` | not documented |
-| 401 | `buildRedactionProfileFromUser` | Function | top-level | yes | `user`, `profile` | `RedactionProfile` | not documented |
+| 52 | `unique` | Function | top-level | no | `values` | `string[]` | Implements the unique helper. |
+| 62 | `titleCaseName` | Function | top-level | no | `value` | `string` | Implements the titlecasename helper. |
+| 70 | `buildNameRedactionCandidates` | Function | top-level | yes | `profile` | `string[]` | Implements the buildnameredactioncandidates helper. |
+| 90 | `getPatternMatches` | Function | top-level | no | `text`, `pattern`, `reason` | `{ reason: RedactionReason; text: string; }[]` | Implements the getpatternmatches helper. |
+| 101 | `getPhoneMatches` | Function | top-level | no | `text` | `RedactionMatch[]` | Implements the getphonematches helper. |
+| 114 | `getRedactionMatches` | Function | top-level | no | `text`, `mode`, `nameCandidates` | `{ reason: RedactionReason; text: string; }[]` | Implements the getredactionmatches helper. |
+| 145 | `quadToRect` | Function | top-level | no | `quad` | `Rect` | Implements the quadtorect helper. |
+| 156 | `expandRect` | Function | top-level | no | `rect`, `padding` | `Rect` | Implements the expandrect helper. |
+| 165 | `rectsIntersect` | Function | top-level | no | `a`, `b` | `boolean` | Implements the rectsintersect helper. |
+| 169 | `collectLines` | Function | top-level | no | `page` | `PageLine[]` | Implements the collectlines helper. |
+| 196 | `findHeaderNameRects` | Function | top-level | no | `lines`, `nameCandidates`, `pageBounds` | `Rect[]` | Implements the findheadernamerects helper. |
+| 213 | `addRedactionRect` | Function | top-level | no | `rects`, `counts`, `reason`, `rect` | `void` | Implements the addredactionrect helper. |
+| 224 | `removeSensitiveLinks` | Function | top-level | no | `page`, `mode`, `redactionRects` | `void` | Implements the removesensitivelinks helper. |
+| 248 | `scrubMetadata` | Function | top-level | no | `pdf` | `void` | Implements the scrubmetadata helper. |
+| 266 | `extractDocumentText` | Function | top-level | no | `pdf` | `string` | Implements the extractdocumenttext helper. |
+| 280 | `assertNoForbiddenText` | Function | top-level | no | `pdf`, `mode`, `nameCandidates` | `void` | Implements the assertnoforbiddentext helper. |
+| 295 | `redactResumePdf` | Function async | top-level | yes | `{ bytes, mode, profile, }` | `Promise<RedactionResult>` | Implements the redactresumepdf helper. |
+| 401 | `buildRedactionProfileFromUser` | Function | top-level | yes | `user`, `profile` | `RedactionProfile` | Implements the buildredactionprofilefromuser helper. |
 
 ## Types
 

@@ -31,10 +31,10 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3 | `PanelHeader` | React component | top-level | yes | `{ children, description, title, }` | `import("react").JSX.Element` | not documented |
-| 23 | `SegmentedTabs` | React component | top-level | yes | `{ active, onChange, values, }` | `import("react").JSX.Element` | not documented |
-| 49 | `ActionButton` | React component | top-level | yes | `{ action, busyAction, disabled, icon, label, onClick, scope, targetId, tone =...` | `import("react").JSX.Element` | not documented |
-| 84 | `EmptyPanel` | React component | top-level | yes | `{ description, title, }` | `import("react").JSX.Element` | not documented |
+| 3 | `PanelHeader` | React component | top-level | yes | `{ children, description, title, }` | `import("react").JSX.Element` | Renders the PanelHeader UI component. |
+| 23 | `SegmentedTabs` | React component | top-level | yes | `{ active, onChange, values, }` | `import("react").JSX.Element` | Renders the SegmentedTabs UI component. |
+| 49 | `ActionButton` | React component | top-level | yes | `{ action, busyAction, disabled, icon, label, onClick, scope, targetId, tone =...` | `import("react").JSX.Element` | Renders the ActionButton UI component. |
+| 84 | `EmptyPanel` | React component | top-level | yes | `{ description, title, }` | `import("react").JSX.Element` | Renders the EmptyPanel UI component. |
 
 ## Types
 

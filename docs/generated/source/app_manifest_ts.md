@@ -29,7 +29,7 @@ Edit this when tooling, dependency behavior, build settings, or CI requirements 
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3 | `manifest` | Function | top-level | yes | none | `import("next/dist/lib/metadata/types/manifest-types").Manifest` | not documented |
+| 3 | `manifest` | Function | top-level | yes | none | `import("next/dist/lib/metadata/types/manifest-types").Manifest` | Implements the manifest helper. |
 
 ## Types
 

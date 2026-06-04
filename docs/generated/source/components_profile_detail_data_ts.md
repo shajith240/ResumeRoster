@@ -32,8 +32,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 11 | `getActivity` | Function | top-level | yes | `reviews`, `resumes`, `profile` | `ActivityItem[]` | not documented |
-| 56 | `loadPublicProfileReviews` | Action helper async | top-level | yes | `profileId` | `Promise<{ data: PublicProfileReview[]; error: import("@supabase/postgrest-js").PostgrestError \| null; }>` | not documented |
+| 11 | `getActivity` | Function | top-level | yes | `reviews`, `resumes`, `profile` | `ActivityItem[]` | Implements the getactivity helper. |
+| 56 | `loadPublicProfileReviews` | Action helper async | top-level | yes | `profileId` | `Promise<{ data: PublicProfileReview[]; error: import("@supabase/postgrest-js").PostgrestError \| null; }>` | Runs the loadpublicprofilereviews workflow for callers. |
 
 ## Types
 

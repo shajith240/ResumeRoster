@@ -38,8 +38,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 47 | `AdminMessageDialog` | React component | top-level | yes | `{ busy, onOpenChange, onSend, target, }` | `import("react").JSX.Element` | not documented |
-| 257 | `DeleteUserDialog` | React component | top-level | yes | `{ busy, onConfirm, onOpenChange, user, }` | `import("react").JSX.Element` | not documented |
+| 47 | `AdminMessageDialog` | React component | top-level | yes | `{ busy, onOpenChange, onSend, target, }` | `import("react").JSX.Element` | Renders the AdminMessageDialog UI component. |
+| 257 | `DeleteUserDialog` | React component | top-level | yes | `{ busy, onConfirm, onOpenChange, user, }` | `import("react").JSX.Element` | Renders the DeleteUserDialog UI component. |
 
 ## Types
 

@@ -41,8 +41,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 51 | `AlertDialogHeader` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | not documented |
-| 59 | `AlertDialogFooter` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | not documented |
+| 51 | `AlertDialogHeader` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | Renders the AlertDialogHeader UI component. |
+| 59 | `AlertDialogFooter` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | Renders the AlertDialogFooter UI component. |
 
 ## Types
 

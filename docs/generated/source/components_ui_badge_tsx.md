@@ -32,7 +32,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 30 | `Badge` | React component | top-level | yes | `{ className, variant, ...props }` | `React.JSX.Element` | not documented |
+| 30 | `Badge` | React component | top-level | yes | `{ className, variant, ...props }` | `React.JSX.Element` | Renders the Badge UI component. |
 
 ## Types
 

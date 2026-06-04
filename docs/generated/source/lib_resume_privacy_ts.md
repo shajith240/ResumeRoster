@@ -36,11 +36,11 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 34 | `isResumePrivacyMode` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 41 | `isAnonymousResumeMode` | Function | top-level | yes | `mode` | `boolean` | not documented |
-| 45 | `isResumePreviewLocked` | Function | top-level | yes | `mode` | `boolean` | not documented |
-| 49 | `allowsResumePreviewInteractions` | Function | top-level | yes | `mode` | `boolean` | not documented |
-| 53 | `getPrivacyModeHelpText` | Function | top-level | yes | `mode` | `"Best when you want reviewers to judge your full profile and resume together." \| "Good default: hides direct contact details while prese...` | not documented |
+| 34 | `isResumePrivacyMode` | Function | top-level | yes | `value` | `boolean` | Implements the isresumeprivacymode helper. |
+| 41 | `isAnonymousResumeMode` | Function | top-level | yes | `mode` | `boolean` | Implements the isanonymousresumemode helper. |
+| 45 | `isResumePreviewLocked` | Function | top-level | yes | `mode` | `boolean` | Implements the isresumepreviewlocked helper. |
+| 49 | `allowsResumePreviewInteractions` | Function | top-level | yes | `mode` | `boolean` | Implements the allowsresumepreviewinteractions helper. |
+| 53 | `getPrivacyModeHelpText` | Function | top-level | yes | `mode` | `"Best when you want reviewers to judge your full profile and resume together." \| "Good default: hides direct contact details while prese...` | Implements the getprivacymodehelptext helper. |
 
 ## Types
 

@@ -4,9 +4,9 @@
 
 - Source path: `app/global-error.tsx`
 - Kind: Project file
-- Size: 1531 bytes
-- Lines: 70
-- Source hash: `a8637eeaed9394db3ada157addaa499d9d3ea86ce10d6ded69dab1e09c52021c`
+- Size: 1752 bytes
+- Lines: 83
+- Source hash: `b64102e86429695c5b96657f806ac701230a99fcab08e206cea06c55fefbadec`
 
 ## What This File Does
 
@@ -23,20 +23,19 @@ Edit this when the documented behavior or supporting repository file changes.
 
 ## Imports
 
-- `@sentry/nextjs`
 - `react`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 11 | `GlobalError` | React component | top-level | yes | `{ error, reset }` | `import("react").JSX.Element` | not documented |
+| 10 | `GlobalError` | React component | top-level | yes | `{ error, reset }` | `import("react").JSX.Element` | Renders the GlobalError UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 6 | `GlobalErrorProps` | type |
+| 5 | `GlobalErrorProps` | type |
 
 ## Related Tests
 

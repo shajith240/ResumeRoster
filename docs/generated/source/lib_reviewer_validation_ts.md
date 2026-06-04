@@ -51,21 +51,21 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 62 | `isCommunityRole` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 66 | `isReviewerType` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 70 | `isReviewerVerificationStatus` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 78 | `isReviewerApplicationStatus` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 86 | `limitReviewerText` | Function | top-level | yes | `value`, `limit` | `string` | not documented |
-| 90 | `parseReviewerExpertise` | Validation or normalization helper | top-level | yes | `value` | `string[]` | not documented |
-| 110 | `getCommunityRoleLabel` | Function | top-level | yes | `role` | `string` | not documented |
-| 114 | `getReviewerTypeLabel` | Function | top-level | yes | `type` | `string` | not documented |
-| 118 | `canShowReviewerProfile` | Function | top-level | yes | `role`, `type` | `boolean` | not documented |
-| 128 | `isTrustedReviewer` | Function | top-level | yes | `status` | `boolean` | not documented |
-| 134 | `getReviewerDisplayLabel` | Function | top-level | yes | `profile` | `string` | not documented |
-| 145 | `getProfileRoleLabel` | Function | top-level | yes | `profile` | `string` | not documented |
-| 182 | `normalizeProofUrl` | Validation or normalization helper | top-level | yes | `value` | `string` | not documented |
-| 186 | `getProofUrlIssue` | Function | top-level | yes | `value` | `"" \| "Add a public proof link before applying." \| "Use a public http or https proof link." \| "Enter a valid public proof link."` | not documented |
-| 203 | `getReviewerApplicationIssue` | Function | top-level | yes | `input` | `string` | not documented |
+| 62 | `isCommunityRole` | Function | top-level | yes | `value` | `boolean` | Implements the iscommunityrole helper. |
+| 66 | `isReviewerType` | Function | top-level | yes | `value` | `boolean` | Implements the isreviewertype helper. |
+| 70 | `isReviewerVerificationStatus` | Function | top-level | yes | `value` | `boolean` | Implements the isreviewerverificationstatus helper. |
+| 78 | `isReviewerApplicationStatus` | Function | top-level | yes | `value` | `boolean` | Implements the isreviewerapplicationstatus helper. |
+| 86 | `limitReviewerText` | Function | top-level | yes | `value`, `limit` | `string` | Implements the limitreviewertext helper. |
+| 90 | `parseReviewerExpertise` | Validation or normalization helper | top-level | yes | `value` | `string[]` | Validates or normalizes parsereviewerexpertise values for callers. |
+| 110 | `getCommunityRoleLabel` | Function | top-level | yes | `role` | `string` | Implements the getcommunityrolelabel helper. |
+| 114 | `getReviewerTypeLabel` | Function | top-level | yes | `type` | `string` | Implements the getreviewertypelabel helper. |
+| 118 | `canShowReviewerProfile` | Function | top-level | yes | `role`, `type` | `boolean` | Implements the canshowreviewerprofile helper. |
+| 128 | `isTrustedReviewer` | Function | top-level | yes | `status` | `boolean` | Implements the istrustedreviewer helper. |
+| 134 | `getReviewerDisplayLabel` | Function | top-level | yes | `profile` | `string` | Implements the getreviewerdisplaylabel helper. |
+| 145 | `getProfileRoleLabel` | Function | top-level | yes | `profile` | `string` | Implements the getprofilerolelabel helper. |
+| 182 | `normalizeProofUrl` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeproofurl values for callers. |
+| 186 | `getProofUrlIssue` | Function | top-level | yes | `value` | `"" \| "Add a public proof link before applying." \| "Use a public http or https proof link." \| "Enter a valid public proof link."` | Implements the getproofurlissue helper. |
+| 203 | `getReviewerApplicationIssue` | Function | top-level | yes | `input` | `string` | Implements the getreviewerapplicationissue helper. |
 
 ## Types
 

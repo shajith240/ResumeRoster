@@ -32,10 +32,10 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 18 | `getBearerToken` | Function | top-level | no | `request` | `string` | not documented |
-| 24 | `createServiceSupabaseClient` | Action helper | top-level | yes | none | `SupabaseClient<any, "public", "public", any, any>` | not documented |
-| 40 | `requireSignedInUser` | Function async | top-level | yes | `request` | `Promise<SignedInUserResult>` | not documented |
-| 61 | `serverAuthErrorResponse` | Function | top-level | yes | `error` | `Response` | not documented |
+| 18 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
+| 24 | `createServiceSupabaseClient` | Action helper | top-level | yes | none | `SupabaseClient<any, "public", "public", any, any>` | Runs the createservicesupabaseclient workflow for callers. |
+| 40 | `requireSignedInUser` | Function async | top-level | yes | `request` | `Promise<SignedInUserResult>` | Implements the requiresignedinuser helper. |
+| 61 | `serverAuthErrorResponse` | Function | top-level | yes | `error` | `Response` | Implements the serverautherrorresponse helper. |
 
 ## Types
 

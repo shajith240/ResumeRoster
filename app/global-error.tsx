@@ -1,6 +1,5 @@
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
 import { useEffect } from "react";
 
 type GlobalErrorProps = {
@@ -10,7 +9,21 @@ type GlobalErrorProps = {
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
 	useEffect(() => {
-		Sentry.captureException(error);
+		let isMounted = true;
+
+		void import("@sentry/react")
+			.then(({ captureException }) => {
+				if (isMounted) {
+					captureException(error);
+				}
+			})
+			.catch(() => {
+				// The error UI must remain usable even if monitoring cannot load.
+			});
+
+		return () => {
+			isMounted = false;
+		};
 	}, [error]);
 
 	return (

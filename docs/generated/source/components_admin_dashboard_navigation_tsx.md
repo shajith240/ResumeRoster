@@ -31,7 +31,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 6 | `AdminSectionNav` | React component | top-level | yes | `{ activeView, stats, }` | `import("react").JSX.Element` | not documented |
+| 6 | `AdminSectionNav` | React component | top-level | yes | `{ activeView, stats, }` | `import("react").JSX.Element` | Renders the AdminSectionNav UI component. |
 
 ## Types
 

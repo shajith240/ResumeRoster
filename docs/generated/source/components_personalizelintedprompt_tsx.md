@@ -33,8 +33,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 15 | `isOnboardingFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 21 | `PersonalizeLintedPrompt` | React component | top-level | yes | `{ disabled = false, }` | `import("react").JSX.Element \| null` | not documented |
+| 15 | `isOnboardingFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isonboardingfeatureerror helper. |
+| 21 | `PersonalizeLintedPrompt` | React component | top-level | yes | `{ disabled = false, }` | `import("react").JSX.Element \| null` | Renders the PersonalizeLintedPrompt UI component. |
 
 ## Types
 

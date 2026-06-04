@@ -31,7 +31,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 9 | `ResumePage` | React component async | top-level | yes | `{ params }` | `Promise<import("react").JSX.Element>` | not documented |
+| 9 | `ResumePage` | React component async | top-level | yes | `{ params }` | `Promise<import("react").JSX.Element>` | Renders the ResumePage UI component. |
 
 ## Types
 

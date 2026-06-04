@@ -39,11 +39,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 85 | `formatRelativeTime` | Function | top-level | no | `date` | `string` | not documented |
-| 105 | `getInitials` | Function | top-level | no | `name` | `string` | not documented |
-| 114 | `NotificationTypeIcon` | React component | top-level | no | `{ type }` | `import("react").JSX.Element` | not documented |
-| 131 | `NotificationEmpty` | React component | top-level | no | `{ children, }` | `import("react").JSX.Element` | not documented |
-| 146 | `TeamNotifications` | React component | top-level | yes | `{ notifications = [], loading = false, onOpen, onMarkAsRead, onMarkAllAsRead,...` | `import("react").JSX.Element` | not documented |
+| 85 | `formatRelativeTime` | Function | top-level | no | `date` | `string` | Implements the formatrelativetime helper. |
+| 105 | `getInitials` | Function | top-level | no | `name` | `string` | Implements the getinitials helper. |
+| 114 | `NotificationTypeIcon` | React component | top-level | no | `{ type }` | `import("react").JSX.Element` | Renders the NotificationTypeIcon UI component. |
+| 131 | `NotificationEmpty` | React component | top-level | no | `{ children, }` | `import("react").JSX.Element` | Renders the NotificationEmpty UI component. |
+| 146 | `TeamNotifications` | React component | top-level | yes | `{ notifications = [], loading = false, onOpen, onMarkAsRead, onMarkAllAsRead,...` | `import("react").JSX.Element` | Renders the TeamNotifications UI component. |
 
 ## Types
 

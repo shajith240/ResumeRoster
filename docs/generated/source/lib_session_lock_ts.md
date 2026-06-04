@@ -38,19 +38,19 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 17 | `isActiveSessionFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 23 | `isValidClientSessionId` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 27 | `createClientSessionId` | Action helper | top-level | yes | none | `string` | not documented |
-| 36 | `getClientSessionId` | Function | top-level | yes | `userId` | `string` | not documented |
-| 51 | `consumeSessionSupersededNotice` | Function | top-level | yes | none | `string` | not documented |
-| 59 | `persistSessionSupersededNotice` | Function | top-level | no | none | `void` | not documented |
-| 67 | `activeStatus` | Function | top-level | no | `sessionId`, `active` | `ActiveSessionStatus` | not documented |
-| 75 | `featureNotReadyStatus` | Function | top-level | no | `sessionId` | `ActiveSessionStatus` | not documented |
-| 83 | `claimActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<ActiveSessionStatus>` | not documented |
-| 102 | `verifyActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<ActiveSessionStatus>` | not documented |
-| 121 | `releaseActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<void>` | not documented |
-| 133 | `endSupersededSession` | Function async | top-level | yes | none | `Promise<void>` | not documented |
-| 142 | `ensureActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<boolean>` | not documented |
+| 17 | `isActiveSessionFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isactivesessionfeatureerror helper. |
+| 23 | `isValidClientSessionId` | Function | top-level | yes | `value` | `boolean` | Implements the isvalidclientsessionid helper. |
+| 27 | `createClientSessionId` | Action helper | top-level | yes | none | `string` | Runs the createclientsessionid workflow for callers. |
+| 36 | `getClientSessionId` | Function | top-level | yes | `userId` | `string` | Implements the getclientsessionid helper. |
+| 51 | `consumeSessionSupersededNotice` | Function | top-level | yes | none | `string` | Implements the consumesessionsupersedednotice helper. |
+| 59 | `persistSessionSupersededNotice` | Function | top-level | no | none | `void` | Implements the persistsessionsupersedednotice helper. |
+| 67 | `activeStatus` | Function | top-level | no | `sessionId`, `active` | `ActiveSessionStatus` | Implements the activestatus helper. |
+| 75 | `featureNotReadyStatus` | Function | top-level | no | `sessionId` | `ActiveSessionStatus` | Implements the featurenotreadystatus helper. |
+| 83 | `claimActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<ActiveSessionStatus>` | Implements the claimactiveusersession helper. |
+| 102 | `verifyActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<ActiveSessionStatus>` | Implements the verifyactiveusersession helper. |
+| 121 | `releaseActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<void>` | Implements the releaseactiveusersession helper. |
+| 133 | `endSupersededSession` | Function async | top-level | yes | none | `Promise<void>` | Implements the endsupersededsession helper. |
+| 142 | `ensureActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<boolean>` | Implements the ensureactiveusersession helper. |
 
 ## Types
 

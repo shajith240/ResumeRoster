@@ -32,13 +32,13 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3 | `clean` | Function | top-level | no | `value` | `string` | not documented |
-| 7 | `cleanUsername` | Function | top-level | no | `value` | `string` | not documented |
-| 11 | `roleFromResumeTitle` | Function | top-level | yes | `title` | `"Data Analyst" \| "Product Manager" \| "MBA" \| "SDE Intern" \| "Full-time SDE"` | not documented |
-| 20 | `getProfileDisplayName` | Function | top-level | yes | `profile` | `string` | not documented |
-| 24 | `getResumePosterLabel` | Function | top-level | yes | `resume`, `profile` | `string` | not documented |
-| 34 | `getResumeRoleLabel` | Function | top-level | yes | `resume`, `profile` | `string` | not documented |
-| 47 | `getResumeAffiliationLabel` | Function | top-level | yes | `resume`, `profile` | `string` | not documented |
+| 3 | `clean` | Function | top-level | no | `value` | `string` | Implements the clean helper. |
+| 7 | `cleanUsername` | Function | top-level | no | `value` | `string` | Implements the cleanusername helper. |
+| 11 | `roleFromResumeTitle` | Function | top-level | yes | `title` | `"Data Analyst" \| "Product Manager" \| "MBA" \| "SDE Intern" \| "Full-time SDE"` | Implements the rolefromresumetitle helper. |
+| 20 | `getProfileDisplayName` | Function | top-level | yes | `profile` | `string` | Implements the getprofiledisplayname helper. |
+| 24 | `getResumePosterLabel` | Function | top-level | yes | `resume`, `profile` | `string` | Implements the getresumeposterlabel helper. |
+| 34 | `getResumeRoleLabel` | Function | top-level | yes | `resume`, `profile` | `string` | Implements the getresumerolelabel helper. |
+| 47 | `getResumeAffiliationLabel` | Function | top-level | yes | `resume`, `profile` | `string` | Implements the getresumeaffiliationlabel helper. |
 
 ## Types
 

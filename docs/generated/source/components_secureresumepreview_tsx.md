@@ -34,14 +34,14 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 45 | `normalizeExternalUrl` | Validation or normalization helper | top-level | no | `value` | `string` | not documented |
-| 69 | `renderLinkLayer` | Function | top-level | no | `layer`, `annotations`, `viewport` | `void` | not documented |
-| 111 | `clamp` | Function | top-level | no | `value`, `min`, `max` | `number` | not documented |
-| 115 | `getTouchDistance` | Function | top-level | no | `touches` | `number` | not documented |
-| 123 | `SecureResumePage` | React component | top-level | no | `{ allowInteractions, containerWidth, pageNumber, pdf, readerMode = "fit", var...` | `import("react").JSX.Element` | not documented |
-| 286 | `SecureResumeReader` | React component | top-level | no | `{ allowInteractions, isLocked, onClose, onProtectedKeyDown, open, pageCount,...` | `import("react").ReactPortal \| null` | not documented |
-| 328 | `onKeyDown` | Function | nested | no | `event` | `void` | not documented |
-| 528 | `SecureResumePreview` | React component | top-level | yes | `{ fileUrl, privacyMode, title, }` | `import("react").JSX.Element` | not documented |
+| 45 | `normalizeExternalUrl` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizeexternalurl values for callers. |
+| 69 | `renderLinkLayer` | Function | top-level | no | `layer`, `annotations`, `viewport` | `void` | Implements the renderlinklayer helper. |
+| 111 | `clamp` | Function | top-level | no | `value`, `min`, `max` | `number` | Implements the clamp helper. |
+| 115 | `getTouchDistance` | Function | top-level | no | `touches` | `number` | Implements the gettouchdistance helper. |
+| 123 | `SecureResumePage` | React component | top-level | no | `{ allowInteractions, containerWidth, pageNumber, pdf, readerMode = "fit", var...` | `import("react").JSX.Element` | Renders the SecureResumePage UI component. |
+| 286 | `SecureResumeReader` | React component | top-level | no | `{ allowInteractions, isLocked, onClose, onProtectedKeyDown, open, pageCount,...` | `import("react").ReactPortal \| null` | Renders the SecureResumeReader UI component. |
+| 328 | `onKeyDown` | Function | nested | no | `event` | `void` | Implements the onkeydown helper. |
+| 528 | `SecureResumePreview` | React component | top-level | yes | `{ fileUrl, privacyMode, title, }` | `import("react").JSX.Element` | Renders the SecureResumePreview UI component. |
 
 ## Types
 

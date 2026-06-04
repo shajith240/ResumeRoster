@@ -30,12 +30,12 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 75 | `hashString` | Function | top-level | no | `value` | `number` | not documented |
-| 86 | `getAnonymousProfileParts` | Function | top-level | no | `seed` | `{ adjective: "helpful" \| "kind" \| "bright" \| "calm" \| "clear" \| "steady" \| "keen" \| "wise" \| "bold" \| "brave" \| "fresh" \| "sha...` | not documented |
-| 96 | `titleCase` | Function | top-level | no | `value` | `string` | not documented |
-| 100 | `getAnonymousProfileUsername` | Function | top-level | yes | `seed` | `string` | not documented |
-| 105 | `getAnonymousProfileDisplayName` | Function | top-level | yes | `seed` | `string` | not documented |
-| 110 | `isGeneratedAnonymousUsername` | Function | top-level | yes | `username`, `seed` | `boolean` | not documented |
+| 75 | `hashString` | Function | top-level | no | `value` | `number` | Implements the hashstring helper. |
+| 86 | `getAnonymousProfileParts` | Function | top-level | no | `seed` | `{ adjective: "helpful" \| "kind" \| "bright" \| "calm" \| "clear" \| "steady" \| "keen" \| "wise" \| "bold" \| "brave" \| "fresh" \| "sha...` | Implements the getanonymousprofileparts helper. |
+| 96 | `titleCase` | Function | top-level | no | `value` | `string` | Implements the titlecase helper. |
+| 100 | `getAnonymousProfileUsername` | Function | top-level | yes | `seed` | `string` | Implements the getanonymousprofileusername helper. |
+| 105 | `getAnonymousProfileDisplayName` | Function | top-level | yes | `seed` | `string` | Implements the getanonymousprofiledisplayname helper. |
+| 110 | `isGeneratedAnonymousUsername` | Function | top-level | yes | `username`, `seed` | `boolean` | Implements the isgeneratedanonymoususername helper. |
 
 ## Types
 

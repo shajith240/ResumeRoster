@@ -35,12 +35,12 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 20 | `countMatches` | Function | top-level | no | `text`, `pattern` | `number` | not documented |
-| 24 | `countPhoneMatches` | Function | top-level | no | `text` | `number` | not documented |
-| 37 | `assessResumePrivacyText` | Function | top-level | yes | `text` | `PrivacyTextAssessment` | not documented |
-| 64 | `containsContactSignal` | Function | top-level | yes | `text` | `boolean` | not documented |
-| 68 | `containsDirectContactSignal` | Function | top-level | yes | `text` | `boolean` | not documented |
-| 74 | `getPrivacyUploadIssue` | Action helper | top-level | yes | `status` | `"" \| "Wait for the PDF privacy check to finish." \| "Upload a standard, readable PDF so we can check it before posting."` | not documented |
+| 20 | `countMatches` | Function | top-level | no | `text`, `pattern` | `number` | Implements the countmatches helper. |
+| 24 | `countPhoneMatches` | Function | top-level | no | `text` | `number` | Implements the countphonematches helper. |
+| 37 | `assessResumePrivacyText` | Function | top-level | yes | `text` | `PrivacyTextAssessment` | Implements the assessresumeprivacytext helper. |
+| 64 | `containsContactSignal` | Function | top-level | yes | `text` | `boolean` | Implements the containscontactsignal helper. |
+| 68 | `containsDirectContactSignal` | Function | top-level | yes | `text` | `boolean` | Implements the containsdirectcontactsignal helper. |
+| 74 | `getPrivacyUploadIssue` | Action helper | top-level | yes | `status` | `"" \| "Wait for the PDF privacy check to finish." \| "Upload a standard, readable PDF so we can check it before posting."` | Runs the getprivacyuploadissue workflow for callers. |
 
 ## Types
 

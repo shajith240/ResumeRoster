@@ -43,19 +43,19 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 13 | `getShortCommunityRoleLabel` | Function | top-level | yes | `role` | `string` | not documented |
-| 17 | `isUuid` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 21 | `normalizeProfileToken` | Validation or normalization helper | top-level | yes | `value` | `string` | not documented |
-| 25 | `cleanFileName` | Function | top-level | yes | `value` | `string` | not documented |
-| 33 | `limitLiveText` | Function | top-level | yes | `value`, `limit` | `string` | not documented |
-| 37 | `isUsernameConstraintError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 44 | `getUsernameAvailability` | Function async | top-level | yes | `username`, `profileOwnerId` | `Promise<{ taken: boolean; suggestions: string[]; }>` | not documented |
-| 85 | `formatDate` | Function | top-level | yes | `value` | `string` | not documented |
-| 92 | `formatActivityDate` | Function | top-level | yes | `value` | `string` | not documented |
-| 99 | `getInitials` | Function | top-level | yes | `name` | `string` | not documented |
-| 108 | `isProfileFeatureError` | Function | top-level | yes | `message` | `boolean` | not documented |
-| 114 | `isReportFeatureError` | Function | top-level | yes | `message` | `boolean` | not documented |
-| 120 | `normalizePublicProfileReview` | Validation or normalization helper | top-level | yes | `row` | `PublicProfileReview` | not documented |
+| 13 | `getShortCommunityRoleLabel` | Function | top-level | yes | `role` | `string` | Implements the getshortcommunityrolelabel helper. |
+| 17 | `isUuid` | Function | top-level | yes | `value` | `boolean` | Implements the isuuid helper. |
+| 21 | `normalizeProfileToken` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeprofiletoken values for callers. |
+| 25 | `cleanFileName` | Function | top-level | yes | `value` | `string` | Implements the cleanfilename helper. |
+| 33 | `limitLiveText` | Function | top-level | yes | `value`, `limit` | `string` | Implements the limitlivetext helper. |
+| 37 | `isUsernameConstraintError` | Function | top-level | yes | `error` | `boolean` | Implements the isusernameconstrainterror helper. |
+| 44 | `getUsernameAvailability` | Function async | top-level | yes | `username`, `profileOwnerId` | `Promise<{ taken: boolean; suggestions: string[]; }>` | Implements the getusernameavailability helper. |
+| 85 | `formatDate` | Function | top-level | yes | `value` | `string` | Implements the formatdate helper. |
+| 92 | `formatActivityDate` | Function | top-level | yes | `value` | `string` | Implements the formatactivitydate helper. |
+| 99 | `getInitials` | Function | top-level | yes | `name` | `string` | Implements the getinitials helper. |
+| 108 | `isProfileFeatureError` | Function | top-level | yes | `message` | `boolean` | Implements the isprofilefeatureerror helper. |
+| 114 | `isReportFeatureError` | Function | top-level | yes | `message` | `boolean` | Implements the isreportfeatureerror helper. |
+| 120 | `normalizePublicProfileReview` | Validation or normalization helper | top-level | yes | `row` | `PublicProfileReview` | Validates or normalizes normalizepublicprofilereview values for callers. |
 
 ## Types
 

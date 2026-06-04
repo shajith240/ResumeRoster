@@ -42,8 +42,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 43 | `getNavProfile` | Function async | top-level | no | `activeUser` | `Promise<NavProfile \| null>` | not documented |
-| 71 | `AuthButton` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 43 | `getNavProfile` | Function async | top-level | no | `activeUser` | `Promise<NavProfile \| null>` | Implements the getnavprofile helper. |
+| 71 | `AuthButton` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the AuthButton UI component. |
 
 ## Types
 

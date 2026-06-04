@@ -33,10 +33,10 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 8 | `isNotificationsFeatureError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 14 | `getNotificationHref` | Function | top-level | yes | `notification` | `string` | not documented |
-| 26 | `getNotificationTone` | Function | top-level | yes | `type` | `"helpful" \| "system" \| "moderation" \| "trust" \| "feedback"` | not documented |
-| 34 | `unreadNotificationCount` | Function | top-level | yes | `notifications` | `number` | not documented |
+| 8 | `isNotificationsFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isnotificationsfeatureerror helper. |
+| 14 | `getNotificationHref` | Function | top-level | yes | `notification` | `string` | Implements the getnotificationhref helper. |
+| 26 | `getNotificationTone` | Function | top-level | yes | `type` | `"helpful" \| "system" \| "moderation" \| "trust" \| "feedback"` | Implements the getnotificationtone helper. |
+| 34 | `unreadNotificationCount` | Function | top-level | yes | `notifications` | `number` | Implements the unreadnotificationcount helper. |
 
 ## Types
 

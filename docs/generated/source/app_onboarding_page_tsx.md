@@ -32,7 +32,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 6 | `OnboardingPage` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 6 | `OnboardingPage` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the OnboardingPage UI component. |
 
 ## Types
 

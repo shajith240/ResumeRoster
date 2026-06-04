@@ -33,8 +33,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 7 | `MetricCard` | React component | top-level | yes | `{ icon, label, tone = "normal", value, }` | `import("react").JSX.Element` | not documented |
-| 27 | `OverviewPage` | React component | top-level | yes | `{ stats }` | `import("react").JSX.Element` | not documented |
+| 7 | `MetricCard` | React component | top-level | yes | `{ icon, label, tone = "normal", value, }` | `import("react").JSX.Element` | Renders the MetricCard UI component. |
+| 27 | `OverviewPage` | React component | top-level | yes | `{ stats }` | `import("react").JSX.Element` | Renders the OverviewPage UI component. |
 
 ## Types
 

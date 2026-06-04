@@ -38,7 +38,7 @@ Edit this when the documented behavior or supporting repository file changes.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 75 | `RootLayout` | React component | top-level | yes | `{ children, }` | `import("react").JSX.Element` | not documented |
+| 75 | `RootLayout` | React component | top-level | yes | `{ children, }` | `import("react").JSX.Element` | Renders the RootLayout UI component. |
 
 ## Types
 

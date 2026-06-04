@@ -30,10 +30,10 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 14 | `getSubscriptionPayload` | Action helper | top-level | no | `payload` | `{ auth: string; endpoint: string; expirationTime: string \| null; p256dh: string; } \| null` | not documented |
-| 48 | `setPushPreference` | Function async | top-level | no | `admin`, `userId`, `pushEnabled` | `Promise<void>` | not documented |
-| 63 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
-| 106 | `DELETE` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 14 | `getSubscriptionPayload` | Action helper | top-level | no | `payload` | `{ auth: string; endpoint: string; expirationTime: string \| null; p256dh: string; } \| null` | Runs the getsubscriptionpayload workflow for callers. |
+| 48 | `setPushPreference` | Function async | top-level | no | `admin`, `userId`, `pushEnabled` | `Promise<void>` | Implements the setpushpreference helper. |
+| 63 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
+| 106 | `DELETE` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the DELETE request for this API route. |
 
 ## Types
 

@@ -49,6 +49,9 @@ jobs:
       - name: Check generated documentation
         run: npm run docs:check
 
+      - name: Check generated quality reports
+        run: npm run docs:quality:check
+
       - name: Lint documentation
         run: npm run docs:lint
 

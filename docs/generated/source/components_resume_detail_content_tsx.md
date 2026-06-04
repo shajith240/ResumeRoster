@@ -37,11 +37,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 12 | `ReviewerTrustChip` | React component | top-level | yes | `{ profile }` | `import("react").JSX.Element \| null` | not documented |
-| 32 | `ResumeContextCard` | React component | top-level | yes | `{ eyebrow, title, content, emptyMessage, }` | `import("react").JSX.Element` | not documented |
-| 56 | `renderInlineMarkdown` | Function | top-level | yes | `text`, `keyPrefix` | `ReactNode[]` | not documented |
-| 98 | `FormattedReviewContent` | React component | top-level | yes | `{ content, format, isDeleted, }` | `import("react").JSX.Element` | not documented |
-| 174 | `ReviewAttachment` | React component | top-level | yes | `{ attachment, }` | `import("react").JSX.Element \| null` | not documented |
+| 12 | `ReviewerTrustChip` | React component | top-level | yes | `{ profile }` | `import("react").JSX.Element \| null` | Renders the ReviewerTrustChip UI component. |
+| 32 | `ResumeContextCard` | React component | top-level | yes | `{ eyebrow, title, content, emptyMessage, }` | `import("react").JSX.Element` | Renders the ResumeContextCard UI component. |
+| 56 | `renderInlineMarkdown` | Function | top-level | yes | `text`, `keyPrefix` | `ReactNode[]` | Implements the renderinlinemarkdown helper. |
+| 98 | `FormattedReviewContent` | React component | top-level | yes | `{ content, format, isDeleted, }` | `import("react").JSX.Element` | Renders the FormattedReviewContent UI component. |
+| 174 | `ReviewAttachment` | React component | top-level | yes | `{ attachment, }` | `import("react").JSX.Element \| null` | Renders the ReviewAttachment UI component. |
 
 ## Types
 

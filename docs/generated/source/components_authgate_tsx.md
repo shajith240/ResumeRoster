@@ -39,11 +39,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 29 | `getStoredAppTheme` | Function | top-level | no | none | `AppTheme` | not documented |
-| 36 | `applyAppTheme` | Function | top-level | no | `theme` | `void` | not documented |
-| 43 | `isOnboardingFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 49 | `shouldRedirectToOnboarding` | Function async | top-level | no | `userId` | `Promise<boolean>` | not documented |
-| 66 | `AuthGate` | React component | top-level | yes | `{ children, showChrome = true }` | `import("react").JSX.Element` | not documented |
+| 29 | `getStoredAppTheme` | Function | top-level | no | none | `AppTheme` | Implements the getstoredapptheme helper. |
+| 36 | `applyAppTheme` | Function | top-level | no | `theme` | `void` | Implements the applyapptheme helper. |
+| 43 | `isOnboardingFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isonboardingfeatureerror helper. |
+| 49 | `shouldRedirectToOnboarding` | Function async | top-level | no | `userId` | `Promise<boolean>` | Implements the shouldredirecttoonboarding helper. |
+| 66 | `AuthGate` | React component | top-level | yes | `{ children, showChrome = true }` | `import("react").JSX.Element` | Renders the AuthGate UI component. |
 
 ## Types
 

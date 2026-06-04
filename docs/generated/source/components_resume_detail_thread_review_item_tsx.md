@@ -38,8 +38,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 20 | `createThreadRenderIndexMap` | Action helper | top-level | yes | `reviews` | `Map<string, number>` | not documented |
-| 38 | `ThreadReviewItem` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, deleteSchemaReady, del...` | `import("react").JSX.Element` | not documented |
+| 20 | `createThreadRenderIndexMap` | Action helper | top-level | yes | `reviews` | `Map<string, number>` | Runs the createthreadrenderindexmap workflow for callers. |
+| 38 | `ThreadReviewItem` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, deleteSchemaReady, del...` | `import("react").JSX.Element` | Renders the ThreadReviewItem UI component. |
 
 ## Types
 

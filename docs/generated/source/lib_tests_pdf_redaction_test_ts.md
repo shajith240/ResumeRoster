@@ -30,9 +30,9 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 5 | `createResumePdf` | Action helper | top-level | no | none | `Uint8Array<ArrayBuffer>` | not documented |
-| 34 | `extractText` | Function | top-level | no | `bytes` | `string` | not documented |
-| 47 | `extractLinks` | Function | top-level | no | `bytes` | `string[]` | not documented |
+| 5 | `createResumePdf` | Action helper | top-level | no | none | `Uint8Array<ArrayBuffer>` | Runs the createresumepdf workflow for callers. |
+| 34 | `extractText` | Function | top-level | no | `bytes` | `string` | Implements the extracttext helper. |
+| 47 | `extractLinks` | Function | top-level | no | `bytes` | `string[]` | Implements the extractlinks helper. |
 
 ## Types
 

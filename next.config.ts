@@ -12,8 +12,24 @@ const shouldUploadErrorMonitoringSourceMaps = Boolean(
 );
 
 const nextConfig: NextConfig = {
+	eslint: {
+		// CI runs `npm run lint` with the flat ESLint config. Skipping Next's
+		// build-time lint avoids duplicate linting and its legacy plugin detector.
+		ignoreDuringBuilds: true,
+	},
 	outputFileTracingRoot: join(projectRoot),
 	serverExternalPackages: ["mupdf"],
+	webpack(config) {
+		config.ignoreWarnings = [
+			...(config.ignoreWarnings ?? []),
+			{
+				message:
+					/Critical dependency: the request of a dependency is an expression/,
+				module: /@opentelemetry[\\/]instrumentation/,
+			},
+		];
+		return config;
+	},
 };
 
 export default shouldUploadErrorMonitoringSourceMaps

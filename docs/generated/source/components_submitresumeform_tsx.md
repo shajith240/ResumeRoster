@@ -40,13 +40,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 74 | `profileDisplayName` | Function | top-level | no | `profile`, `user` | `string` | not documented |
-| 83 | `isTextItem` | Function | top-level | no | `item` | `boolean` | not documented |
-| 87 | `hasPdfSignature` | Function async | top-level | no | `file` | `Promise<boolean>` | not documented |
-| 92 | `getPdfJs` | Function async | top-level | no | none | `Promise<{ default: typeof import("pdfjs-dist"); AbortException: typeof import("pdfjs-dist").AbortException; AnnotationEditorLayer: typeof...` | not documented |
-| 98 | `scanPdfPrivacy` | Function async | top-level | no | `file` | `Promise<PrivacyScanState>` | not documented |
-| 155 | `getSubmitProfile` | Action helper async | top-level | no | `activeUser` | `Promise<SubmitProfile \| null>` | not documented |
-| 183 | `SubmitResumeForm` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 74 | `profileDisplayName` | Function | top-level | no | `profile`, `user` | `string` | Implements the profiledisplayname helper. |
+| 83 | `isTextItem` | Function | top-level | no | `item` | `boolean` | Implements the istextitem helper. |
+| 87 | `hasPdfSignature` | Function async | top-level | no | `file` | `Promise<boolean>` | Implements the haspdfsignature helper. |
+| 92 | `getPdfJs` | Function async | top-level | no | none | `Promise<{ default: typeof import("pdfjs-dist"); AbortException: typeof import("pdfjs-dist").AbortException; AnnotationEditorLayer: typeof...` | Implements the getpdfjs helper. |
+| 98 | `scanPdfPrivacy` | Function async | top-level | no | `file` | `Promise<PrivacyScanState>` | Implements the scanpdfprivacy helper. |
+| 155 | `getSubmitProfile` | Action helper async | top-level | no | `activeUser` | `Promise<SubmitProfile \| null>` | Runs the getsubmitprofile workflow for callers. |
+| 183 | `SubmitResumeForm` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the SubmitResumeForm UI component. |
 
 ## Types
 

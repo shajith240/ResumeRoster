@@ -32,8 +32,8 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 15 | `Section` | React component | top-level | no | `{ children, title, }` | `import("react").JSX.Element` | not documented |
-| 30 | `CopyrightPolicyPage` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 15 | `Section` | React component | top-level | no | `{ children, title, }` | `import("react").JSX.Element` | Renders the Section UI component. |
+| 30 | `CopyrightPolicyPage` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the CopyrightPolicyPage UI component. |
 
 ## Types
 

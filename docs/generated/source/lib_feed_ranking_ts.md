@@ -35,12 +35,12 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 13 | `formatCount` | Function | top-level | yes | `value` | `string` | not documented |
-| 25 | `withResumeDefaults` | Function | top-level | yes | `resume` | `ResumeSummary` | not documented |
-| 34 | `getBestScore` | Function | top-level | yes | `resume`, `now` | `number` | not documented |
-| 43 | `sortResumes` | Function | top-level | yes | `resumes`, `sort`, `now` | `T[]` | not documented |
-| 61 | `statusScore` | Function | nested | no | `resume` | `0 \| 1` | not documented |
-| 78 | `mergeReviewCountsFromRows` | Function | top-level | yes | `resumes`, `reviews` | `(T & { roast_count: number; })[]` | not documented |
+| 13 | `formatCount` | Function | top-level | yes | `value` | `string` | Implements the formatcount helper. |
+| 25 | `withResumeDefaults` | Function | top-level | yes | `resume` | `ResumeSummary` | Implements the withresumedefaults helper. |
+| 34 | `getBestScore` | Function | top-level | yes | `resume`, `now` | `number` | Implements the getbestscore helper. |
+| 43 | `sortResumes` | Function | top-level | yes | `resumes`, `sort`, `now` | `T[]` | Implements the sortresumes helper. |
+| 61 | `statusScore` | Function | nested | no | `resume` | `0 \| 1` | Implements the statusscore helper. |
+| 78 | `mergeReviewCountsFromRows` | Function | top-level | yes | `resumes`, `reviews` | `(T & { roast_count: number; })[]` | Implements the mergereviewcountsfromrows helper. |
 
 ## Types
 

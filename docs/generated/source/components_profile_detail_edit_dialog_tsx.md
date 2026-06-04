@@ -41,7 +41,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 43 | `ProfileEditDialog` | React component | top-level | yes | `{ about, avatarPreview, college, collegeLocation, currentPosition, displayNam...` | `import("react").JSX.Element` | not documented |
+| 43 | `ProfileEditDialog` | React component | top-level | yes | `{ about, avatarPreview, college, collegeLocation, currentPosition, displayNam...` | `import("react").JSX.Element` | Renders the ProfileEditDialog UI component. |
 
 ## Types
 

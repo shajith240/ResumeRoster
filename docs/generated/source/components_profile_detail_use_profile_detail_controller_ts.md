@@ -40,7 +40,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 53 | `useProfileDetailController` | React hook | top-level | yes | `profileId` | `{ about: string; applyForTrustedReviewer: () => Promise<void>; avatarPreview: string; college: string; collegeLocation: string; community...` | not documented |
+| 53 | `useProfileDetailController` | React hook | top-level | yes | `profileId` | `{ about: string; applyForTrustedReviewer: () => Promise<void>; avatarPreview: string; college: string; collegeLocation: string; community...` | Provides reusable useprofiledetailcontroller state and side effects. |
 
 ## Types
 

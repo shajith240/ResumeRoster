@@ -34,8 +34,8 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 15 | `normalizeAppStatus` | Validation or normalization helper | top-level | yes | `value` | `AppStatus` | not documented |
-| 19 | `isPresenceFeatureError` | Function | top-level | yes | `error` | `boolean` | not documented |
+| 15 | `normalizeAppStatus` | Validation or normalization helper | top-level | yes | `value` | `AppStatus` | Validates or normalizes normalizeappstatus values for callers. |
+| 19 | `isPresenceFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the ispresencefeatureerror helper. |
 
 ## Types
 

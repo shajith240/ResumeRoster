@@ -32,8 +32,8 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 42 | `isReportReason` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 46 | `getReportIssue` | Function | top-level | yes | `{ details, reason, }` | `"" \| "Choose a report reason." \| "Keep report details under 800 characters." \| "Add a short note so moderators know what to review."` | not documented |
+| 42 | `isReportReason` | Function | top-level | yes | `value` | `boolean` | Implements the isreportreason helper. |
+| 46 | `getReportIssue` | Function | top-level | yes | `{ details, reason, }` | `"" \| "Choose a report reason." \| "Keep report details under 800 characters." \| "Add a short note so moderators know what to review."` | Implements the getreportissue helper. |
 
 ## Types
 

@@ -40,12 +40,12 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 29 | `ReportsPage` | React component | top-level | yes | `{ adminNotes, busyAction, onAction, onNoteChange, onStatusChange, reports, st...` | `import("react").JSX.Element` | not documented |
-| 92 | `ReviewersPage` | React component | top-level | yes | `{ applications, busyAction, onAction, onStatusChange, status, }` | `import("react").JSX.Element` | not documented |
-| 152 | `ReportRow` | React component | top-level | yes | `{ busyAction, note, onAction, onNoteChange, report, }` | `import("react").JSX.Element` | not documented |
-| 309 | `ReviewerRow` | React component | top-level | yes | `{ application, busyAction, onAction, }` | `import("react").JSX.Element` | not documented |
-| 389 | `AuditPage` | React component | top-level | yes | `{ actions }` | `import("react").JSX.Element` | not documented |
-| 424 | `ActionLogRow` | React component | top-level | yes | `{ action }` | `import("react").JSX.Element` | not documented |
+| 29 | `ReportsPage` | React component | top-level | yes | `{ adminNotes, busyAction, onAction, onNoteChange, onStatusChange, reports, st...` | `import("react").JSX.Element` | Renders the ReportsPage UI component. |
+| 92 | `ReviewersPage` | React component | top-level | yes | `{ applications, busyAction, onAction, onStatusChange, status, }` | `import("react").JSX.Element` | Renders the ReviewersPage UI component. |
+| 152 | `ReportRow` | React component | top-level | yes | `{ busyAction, note, onAction, onNoteChange, report, }` | `import("react").JSX.Element` | Renders the ReportRow UI component. |
+| 309 | `ReviewerRow` | React component | top-level | yes | `{ application, busyAction, onAction, }` | `import("react").JSX.Element` | Renders the ReviewerRow UI component. |
+| 389 | `AuditPage` | React component | top-level | yes | `{ actions }` | `import("react").JSX.Element` | Renders the AuditPage UI component. |
+| 424 | `ActionLogRow` | React component | top-level | yes | `{ action }` | `import("react").JSX.Element` | Renders the ActionLogRow UI component. |
 
 ## Types
 

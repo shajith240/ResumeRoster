@@ -39,14 +39,14 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 16 | `getReactionBlockReason` | Function | top-level | yes | `activeUser`, `activeResume`, `review` | `"Resume owners cannot react to feedback on their own resume." \| "You cannot react to your own feedback." \| null` | not documented |
-| 34 | `getReplyBlockReason` | Function | top-level | yes | `{ isClosed, isDeleted, isOwnReview, isOwnRoast, migrationMessage, replySchema...` | `string \| null` | not documented |
-| 56 | `normalizeReview` | Validation or normalization helper | top-level | yes | `review` | `Review` | not documented |
-| 69 | `sortTopLevelReviews` | Function | top-level | no | `a`, `b` | `number` | not documented |
-| 76 | `sortReplyReviews` | Function | top-level | no | `a`, `b` | `number` | not documented |
-| 83 | `buildChildrenByParent` | Function | top-level | no | `reviews` | `Map<string \| null, Review[]>` | not documented |
-| 103 | `buildThreadReviewTree` | Function | top-level | yes | `reviews`, `collapsedReviewIds` | `ThreadReviewNode[]` | not documented |
-| 126 | `buildThreadReviews` | Function | top-level | yes | `reviews`, `collapsedReviewIds` | `ThreadReview[]` | not documented |
+| 16 | `getReactionBlockReason` | Function | top-level | yes | `activeUser`, `activeResume`, `review` | `"Resume owners cannot react to feedback on their own resume." \| "You cannot react to your own feedback." \| null` | Implements the getreactionblockreason helper. |
+| 34 | `getReplyBlockReason` | Function | top-level | yes | `{ isClosed, isDeleted, isOwnReview, isOwnRoast, migrationMessage, replySchema...` | `string \| null` | Implements the getreplyblockreason helper. |
+| 56 | `normalizeReview` | Validation or normalization helper | top-level | yes | `review` | `Review` | Validates or normalizes normalizereview values for callers. |
+| 69 | `sortTopLevelReviews` | Function | top-level | no | `a`, `b` | `number` | Implements the sorttoplevelreviews helper. |
+| 76 | `sortReplyReviews` | Function | top-level | no | `a`, `b` | `number` | Implements the sortreplyreviews helper. |
+| 83 | `buildChildrenByParent` | Function | top-level | no | `reviews` | `Map<string \| null, Review[]>` | Implements the buildchildrenbyparent helper. |
+| 103 | `buildThreadReviewTree` | Function | top-level | yes | `reviews`, `collapsedReviewIds` | `ThreadReviewNode[]` | Implements the buildthreadreviewtree helper. |
+| 126 | `buildThreadReviews` | Function | top-level | yes | `reviews`, `collapsedReviewIds` | `ThreadReview[]` | Implements the buildthreadreviews helper. |
 
 ## Types
 

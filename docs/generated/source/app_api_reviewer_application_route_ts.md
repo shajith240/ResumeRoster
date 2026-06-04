@@ -32,10 +32,10 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 15 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
-| 19 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | not documented |
-| 27 | `getString` | Function | top-level | no | `payload`, `key` | `string` | not documented |
-| 32 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 15 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 19 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
+| 27 | `getString` | Function | top-level | no | `payload`, `key` | `string` | Implements the getstring helper. |
+| 32 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 

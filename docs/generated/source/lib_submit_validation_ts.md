@@ -36,9 +36,9 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 23 | `cleanResumeFileName` | Function | top-level | yes | `name` | `string` | not documented |
-| 30 | `formatFileSize` | Function | top-level | yes | `size` | `string` | not documented |
-| 34 | `getSubmitIssue` | Action helper | top-level | yes | `{ title, hasFile, jobDescription, postDescription, privacyIssue, }` | `string` | not documented |
+| 23 | `cleanResumeFileName` | Function | top-level | yes | `name` | `string` | Implements the cleanresumefilename helper. |
+| 30 | `formatFileSize` | Function | top-level | yes | `size` | `string` | Implements the formatfilesize helper. |
+| 34 | `getSubmitIssue` | Action helper | top-level | yes | `{ title, hasFile, jobDescription, postDescription, privacyIssue, }` | `string` | Runs the getsubmitissue workflow for callers. |
 
 ## Types
 

@@ -34,11 +34,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 141 | `UserDropdown` | React component | top-level | yes | `{ user = { name: "Resume reviewer", username: "@linted", avatar: "https://ima...` | `import("react").JSX.Element` | not documented |
-| 160 | `renderMenuItem` | Function | nested | no | `item`, `index` | `import("react").JSX.Element` | not documented |
-| 190 | `getStatusColor` | Function | nested | no | `status` | `string` | not documented |
-| 211 | `renderMobilePanelTrigger` | Function | nested | no | `panel`, `icon`, `label`, `valueLabel` | `import("react").JSX.Element` | not documented |
-| 234 | `renderMobileDrilldown` | Function | nested | no | none | `import("react").JSX.Element` | not documented |
+| 141 | `UserDropdown` | React component | top-level | yes | `{ user = { name: "Resume reviewer", username: "@linted", avatar: "https://ima...` | `import("react").JSX.Element` | Renders the UserDropdown UI component. |
+| 160 | `renderMenuItem` | Function | nested | no | `item`, `index` | `import("react").JSX.Element` | Implements the rendermenuitem helper. |
+| 190 | `getStatusColor` | Function | nested | no | `status` | `string` | Implements the getstatuscolor helper. |
+| 211 | `renderMobilePanelTrigger` | Function | nested | no | `panel`, `icon`, `label`, `valueLabel` | `import("react").JSX.Element` | Implements the rendermobilepaneltrigger helper. |
+| 234 | `renderMobileDrilldown` | Function | nested | no | none | `import("react").JSX.Element` | Implements the rendermobiledrilldown helper. |
 
 ## Types
 

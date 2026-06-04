@@ -34,12 +34,12 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 18 | `parseAdminEmails` | Validation or normalization helper | top-level | yes | `value` | `Set<string>` | not documented |
-| 27 | `isAdminEmail` | Function | top-level | yes | `email`, `adminEmails` | `boolean` | not documented |
-| 36 | `getBearerToken` | Function | top-level | no | `request` | `string` | not documented |
-| 42 | `createAdminSupabaseClient` | Action helper | top-level | yes | none | `SupabaseClient<any, "public", "public", any, any>` | not documented |
-| 58 | `requireAdmin` | Function async | top-level | yes | `request` | `Promise<AdminAuthResult>` | not documented |
-| 81 | `adminErrorResponse` | Function | top-level | yes | `error` | `Response` | not documented |
+| 18 | `parseAdminEmails` | Validation or normalization helper | top-level | yes | `value` | `Set<string>` | Validates or normalizes parseadminemails values for callers. |
+| 27 | `isAdminEmail` | Function | top-level | yes | `email`, `adminEmails` | `boolean` | Implements the isadminemail helper. |
+| 36 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
+| 42 | `createAdminSupabaseClient` | Action helper | top-level | yes | none | `SupabaseClient<any, "public", "public", any, any>` | Runs the createadminsupabaseclient workflow for callers. |
+| 58 | `requireAdmin` | Function async | top-level | yes | `request` | `Promise<AdminAuthResult>` | Implements the requireadmin helper. |
+| 81 | `adminErrorResponse` | Function | top-level | yes | `error` | `Response` | Implements the adminerrorresponse helper. |
 
 ## Types
 

@@ -29,7 +29,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 12 | `useAdminAccess` | React hook | top-level | yes | none | `AdminAccessState` | not documented |
+| 12 | `useAdminAccess` | React hook | top-level | yes | none | `AdminAccessState` | Provides reusable useadminaccess state and side effects. |
 
 ## Types
 

@@ -33,7 +33,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 17 | `PushNotificationsControl` | React component | top-level | yes | none | `import("react").JSX.Element \| null` | not documented |
+| 17 | `PushNotificationsControl` | React component | top-level | yes | none | `import("react").JSX.Element \| null` | Renders the PushNotificationsControl UI component. |
 
 ## Types
 

@@ -30,8 +30,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 4 | `DataPage` | React component | top-level | yes | `{ inventory }` | `import("react").JSX.Element` | not documented |
-| 24 | `MetricList` | React component | top-level | yes | `{ metrics, title }` | `import("react").JSX.Element` | not documented |
+| 4 | `DataPage` | React component | top-level | yes | `{ inventory }` | `import("react").JSX.Element` | Renders the DataPage UI component. |
+| 24 | `MetricList` | React component | top-level | yes | `{ metrics, title }` | `import("react").JSX.Element` | Renders the MetricList UI component. |
 
 ## Types
 

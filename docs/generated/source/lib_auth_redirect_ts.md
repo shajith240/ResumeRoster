@@ -31,9 +31,9 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3 | `getSafeNextPath` | Function | top-level | yes | `value` | `string` | not documented |
-| 11 | `getLoginPath` | Function | top-level | yes | `nextPath` | `string` | not documented |
-| 16 | `getCurrentPathForLogin` | Function | top-level | yes | none | `string` | not documented |
+| 3 | `getSafeNextPath` | Function | top-level | yes | `value` | `string` | Implements the getsafenextpath helper. |
+| 11 | `getLoginPath` | Function | top-level | yes | `nextPath` | `string` | Implements the getloginpath helper. |
+| 16 | `getCurrentPathForLogin` | Function | top-level | yes | none | `string` | Implements the getcurrentpathforlogin helper. |
 
 ## Types
 

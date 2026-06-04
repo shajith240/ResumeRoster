@@ -34,7 +34,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 26 | `DiscussionPanel` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, content, contentFormat...` | `import("react").JSX.Element` | not documented |
+| 26 | `DiscussionPanel` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, content, contentFormat...` | `import("react").JSX.Element` | Renders the DiscussionPanel UI component. |
 
 ## Types
 

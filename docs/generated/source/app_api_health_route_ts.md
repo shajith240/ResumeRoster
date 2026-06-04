@@ -29,7 +29,7 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3 | `GET` | API handler | top-level | yes | none | `Response` | not documented |
+| 3 | `GET` | API handler | top-level | yes | none | `Response` | Handles the GET request for this API route. |
 
 ## Types
 

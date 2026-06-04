@@ -31,11 +31,11 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 31 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
-| 35 | `adminMessageFailure` | Function | top-level | no | `status` | `Response` | not documented |
-| 42 | `firstRpcResult` | Function | top-level | no | `data` | `AdminSendMessageResult \| null` | not documented |
-| 49 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | not documented |
-| 57 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 31 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 35 | `adminMessageFailure` | Function | top-level | no | `status` | `Response` | Implements the adminmessagefailure helper. |
+| 42 | `firstRpcResult` | Function | top-level | no | `data` | `AdminSendMessageResult \| null` | Implements the firstrpcresult helper. |
+| 49 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
+| 57 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 

@@ -35,12 +35,12 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 48 | `limitText` | Function | top-level | yes | `value`, `limit` | `string` | not documented |
-| 52 | `normalizeUsername` | Validation or normalization helper | top-level | yes | `value` | `string` | not documented |
-| 59 | `buildUsernameCandidates` | Function | top-level | yes | `username` | `string[]` | not documented |
-| 85 | `usernameTakenMessage` | Function | top-level | yes | `suggestions` | `string` | not documented |
-| 95 | `parseSkills` | Validation or normalization helper | top-level | yes | `value` | `string[]` | not documented |
-| 113 | `fallbackSkills` | Function | top-level | yes | `profile` | `string[]` | not documented |
+| 48 | `limitText` | Function | top-level | yes | `value`, `limit` | `string` | Implements the limittext helper. |
+| 52 | `normalizeUsername` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeusername values for callers. |
+| 59 | `buildUsernameCandidates` | Function | top-level | yes | `username` | `string[]` | Implements the buildusernamecandidates helper. |
+| 85 | `usernameTakenMessage` | Function | top-level | yes | `suggestions` | `string` | Implements the usernametakenmessage helper. |
+| 95 | `parseSkills` | Validation or normalization helper | top-level | yes | `value` | `string[]` | Validates or normalizes parseskills values for callers. |
+| 113 | `fallbackSkills` | Function | top-level | yes | `profile` | `string[]` | Implements the fallbackskills helper. |
 
 ## Types
 

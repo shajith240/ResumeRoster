@@ -29,7 +29,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 13 | `LoadingScreen` | React component | top-level | yes | `{ caption, className, label = "Loading Linted", theme = "auto", variant = "pa...` | `import("react").JSX.Element` | not documented |
+| 13 | `LoadingScreen` | React component | top-level | yes | `{ caption, className, label = "Loading Linted", theme = "auto", variant = "pa...` | `import("react").JSX.Element` | Renders the LoadingScreen UI component. |
 
 ## Types
 

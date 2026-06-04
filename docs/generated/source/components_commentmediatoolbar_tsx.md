@@ -34,9 +34,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 25 | `getAccessToken` | Function async | top-level | no | none | `Promise<string>` | not documented |
-| 32 | `readErrorMessage` | Function async | top-level | no | `response`, `fallback` | `Promise<string>` | not documented |
-| 37 | `CommentMediaToolbar` | React component | top-level | yes | `{ attachment, contentFormat, disabled = false, onAttachmentChange, onFormatCh...` | `import("react").JSX.Element` | not documented |
+| 25 | `getAccessToken` | Function async | top-level | no | none | `Promise<string>` | Implements the getaccesstoken helper. |
+| 32 | `readErrorMessage` | Function async | top-level | no | `response`, `fallback` | `Promise<string>` | Implements the readerrormessage helper. |
+| 37 | `CommentMediaToolbar` | React component | top-level | yes | `{ attachment, contentFormat, disabled = false, onAttachmentChange, onFormatCh...` | `import("react").JSX.Element` | Renders the CommentMediaToolbar UI component. |
 
 ## Types
 

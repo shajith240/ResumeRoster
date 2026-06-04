@@ -20,11 +20,11 @@
       "exportCount": 0
     },
     {
-      "hash": "5281906ed7de15b9ba4b6ceed5e380af73ac419c1cab609113a83d4b35a11bae",
+      "hash": "91702b8eaa01a914063e87866296343a689c5816dbe5a3c0f20c0f15cab479b7",
       "kind": "GitHub workflow",
-      "lineCount": 63,
+      "lineCount": 66,
       "relativePath": ".github/workflows/ci.yml",
-      "size": 1257,
+      "size": 1344,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -280,13 +280,13 @@
       "exportCount": 2
     },
     {
-      "hash": "a8637eeaed9394db3ada157addaa499d9d3ea86ce10d6ded69dab1e09c52021c",
+      "hash": "b64102e86429695c5b96657f806ac701230a99fcab08e206cea06c55fefbadec",
       "kind": "Project file",
-      "lineCount": 70,
+      "lineCount": 83,
       "relativePath": "app/global-error.tsx",
-      "size": 1531,
+      "size": 1752,
       "functionCount": 1,
-      "importCount": 2,
+      "importCount": 1,
       "exportCount": 2
     },
     {
@@ -940,13 +940,13 @@
       "exportCount": 2
     },
     {
-      "hash": "5ffbd6d1413d64c6ac6eaa5ae0d682fc0e471967bd17f78ea18c98e07847c497",
+      "hash": "aedc1fff246b0eefb6f622049fe99878bd7edff1a5d44381b5e9f3752df854b7",
       "kind": "React component",
-      "lineCount": 934,
+      "lineCount": 931,
       "relativePath": "components/ResumeFeed.tsx",
-      "size": 29854,
+      "size": 29678,
       "functionCount": 20,
-      "importCount": 16,
+      "importCount": 13,
       "exportCount": 3
     },
     {
@@ -1000,16 +1000,6 @@
       "exportCount": 3
     },
     {
-      "hash": "b69a590bb0f744eb92c276a9d388b4420e6bc269f92e53768fb8fd7cfb7b42a7",
-      "kind": "UI primitive",
-      "lineCount": 173,
-      "relativePath": "components/ui/accessibility.tsx",
-      "size": 3803,
-      "functionCount": 0,
-      "importCount": 5,
-      "exportCount": 2
-    },
-    {
       "hash": "daea0f88ebcf62e299aac2ed71a474aa846a360c11c810ed0fd1f12d48b8d514",
       "kind": "UI primitive",
       "lineCount": 146,
@@ -1038,16 +1028,6 @@
       "functionCount": 1,
       "importCount": 3,
       "exportCount": 3
-    },
-    {
-      "hash": "3cc4e20a194b9c2c329b4603b29ac3eb35e6b3f2e16124d5f936abdf7b2e9918",
-      "kind": "UI primitive",
-      "lineCount": 99,
-      "relativePath": "components/ui/bookmark.tsx",
-      "size": 2484,
-      "functionCount": 0,
-      "importCount": 5,
-      "exportCount": 2
     },
     {
       "hash": "5aa5e4afeba22c8d95f576089efa7d40e0d9b006eb30b01523f28c2117919471",
@@ -1080,21 +1060,11 @@
       "exportCount": 15
     },
     {
-      "hash": "5e2e042da88b97d1499b0a7180a568514220f2cadddffb24ecadd935fa11324e",
-      "kind": "UI primitive",
-      "lineCount": 101,
-      "relativePath": "components/ui/eye.tsx",
-      "size": 2723,
-      "functionCount": 0,
-      "importCount": 4,
-      "exportCount": 2
-    },
-    {
-      "hash": "2279ad0cc28ab2044117f6aa7805df5b9d50312f0d3cd09d1cdfff7e2f1afe31",
+      "hash": "ac085e02176d30bedb73f017da514619767c414fb42e21feb59553e5db2f85bc",
       "kind": "UI primitive",
       "lineCount": 659,
       "relativePath": "components/ui/file-upload.tsx",
-      "size": 15744,
+      "size": 15743,
       "functionCount": 11,
       "importCount": 5,
       "exportCount": 20
@@ -1118,26 +1088,6 @@
       "functionCount": 0,
       "importCount": 2,
       "exportCount": 1
-    },
-    {
-      "hash": "1028dcb9020fae2c5381261f1b3d993456272ecc86f14d9d2a78c9ae1564910f",
-      "kind": "UI primitive",
-      "lineCount": 108,
-      "relativePath": "components/ui/link.tsx",
-      "size": 2716,
-      "functionCount": 0,
-      "importCount": 5,
-      "exportCount": 2
-    },
-    {
-      "hash": "5ac22575feced47c2244a723f5797fd2105f54878847eeca914f9101b4f27787",
-      "kind": "UI primitive",
-      "lineCount": 108,
-      "relativePath": "components/ui/message-circle.tsx",
-      "size": 2426,
-      "functionCount": 0,
-      "importCount": 5,
-      "exportCount": 2
     },
     {
       "hash": "6fef5fbee533de8d7ca806b07bc3a30452cc0c67e1bc6d52a362881ca6c4a0f1",
@@ -1228,6 +1178,16 @@
       "functionCount": 5,
       "importCount": 6,
       "exportCount": 2
+    },
+    {
+      "hash": "76481efe6bbec7bd3b5eb4d455ed2fefc2ee983486bfe8c28f31ea4fb1b20f96",
+      "kind": "Documentation",
+      "lineCount": 0,
+      "relativePath": "docs/assets/readme_hero image.png",
+      "size": 1290946,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
     },
     {
       "hash": "276cdc2dfc1d15536841b563a3c8d6ff83261b79fb8d8b27ee8c023c2662880c",
@@ -2170,31 +2130,31 @@
       "exportCount": 0
     },
     {
-      "hash": "f70c160c26123a7f8910e1b41412f8e305960547f703df1dfd2d9ce822f1117b",
+      "hash": "282c00961f322615c9c80a2ecdc8e7b9daf17bd8b6dd5faca2e3bc58ea0b0b84",
       "kind": "Project configuration",
-      "lineCount": 30,
+      "lineCount": 46,
       "relativePath": "next.config.ts",
-      "size": 988,
+      "size": 1436,
       "functionCount": 0,
       "importCount": 4,
       "exportCount": 1
     },
     {
-      "hash": "4f97f132509db0978f864e566ab30773e4bef4bb610971b49970f846aafd5e50",
+      "hash": "978041f0903144ec42ed654c3e11f52dd8fcdc3b24aa3511c8001679eeed4931",
       "kind": "Project configuration",
-      "lineCount": 13148,
+      "lineCount": 12984,
       "relativePath": "package-lock.json",
-      "size": 472033,
+      "size": 466055,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "ee4801d448ea84c417fd963bf251e7a70b09615cfc493c6de5a3020217811363",
+      "hash": "924e6babfc4d077c73acd7455f2a54f14d47389ce1bab57661a6a2e73ca6794b",
       "kind": "Project configuration",
-      "lineCount": 82,
+      "lineCount": 83,
       "relativePath": "package.json",
-      "size": 2551,
+      "size": 2547,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2340,26 +2300,6 @@
       "exportCount": 0
     },
     {
-      "hash": "354a934b1f9b2c9f22990ace1d7837d5699597a37648410e804d7034bd3ca4fb",
-      "kind": "Public visual asset",
-      "lineCount": 0,
-      "relativePath": "public/assets/lv_0_20260518014512.gif",
-      "size": 12592050,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "056d1da831fe3b0904d5039746d6cefe115c74748a35d06fa0d0652829aaf876",
-      "kind": "Public visual asset",
-      "lineCount": 0,
-      "relativePath": "public/assets/nav_bar_animation_transpirant.webm",
-      "size": 1599378,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
       "hash": "52fadd5b81b6abd1eb665bab0c3749a8ad6a293fcb6ee9d9e0309f29d4f82619",
       "kind": "Public visual asset",
       "lineCount": 31,
@@ -2385,16 +2325,6 @@
       "lineCount": 0,
       "relativePath": "public/assets/promote the fix not the noise.png",
       "size": 609024,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "76481efe6bbec7bd3b5eb4d455ed2fefc2ee983486bfe8c28f31ea4fb1b20f96",
-      "kind": "Public visual asset",
-      "lineCount": 0,
-      "relativePath": "public/assets/readme_hero image.png",
-      "size": 1290946,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2435,16 +2365,6 @@
       "lineCount": 0,
       "relativePath": "public/assets/riphope_doodle.png",
       "size": 216166,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "3eb4e783eef470966dbaa17679d8491047312d5bd29acc03675c443623c24ccb",
-      "kind": "Public visual asset",
-      "lineCount": 0,
-      "relativePath": "public/assets/rules explaining image.png",
-      "size": 2404129,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2510,11 +2430,11 @@
       "exportCount": 0
     },
     {
-      "hash": "88c7e5dd55a5baf2a7c9dfabe26abd42c9d73040ea0e5a9727627e49a019e9af",
+      "hash": "f7b267f70147bea02dbec8da1a73af07a6ee258db13fa94f17a8a0b4220c9f54",
       "kind": "Root documentation",
       "lineCount": 175,
       "relativePath": "README.md",
-      "size": 6722,
+      "size": 6719,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2540,21 +2460,21 @@
       "exportCount": 0
     },
     {
-      "hash": "0077ec69eb085d70b30758058d8dd6185d32c9f4824fc0eb0e29cac60e476bef",
+      "hash": "a87c92ae420f00afaa43c3d662db075987bcb070a30b78431b878c1863d14b16",
       "kind": "Repository automation",
-      "lineCount": 737,
+      "lineCount": 803,
       "relativePath": "scripts/docs/generate.mjs",
-      "size": 22460,
+      "size": 24367,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "e765b7986651196af3cae50e439d58384374c97723b325d81a202073115d8e66",
+      "hash": "2a7ac11588371a3db8fe3be281025e5020ab8a195943781d42d243e8518cc2a4",
       "kind": "Repository automation",
-      "lineCount": 88,
+      "lineCount": 171,
       "relativePath": "scripts/docs/quality.mjs",
-      "size": 2420,
+      "size": 4796,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -3060,5 +2980,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df"
+  "manifestHash": "ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3"
 }

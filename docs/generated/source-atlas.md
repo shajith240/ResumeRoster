@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 305 source-controlled files.
-Manifest hash: `579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df`
+Generated from 297 source-controlled files.
+Manifest hash: `ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3`
 
 ## Folder Coverage
 
@@ -12,10 +12,10 @@ Manifest hash: `579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df
 | `.github` | 1 |
 | `(root)` | 19 |
 | `app` | 41 |
-| `components` | 77 |
-| `docs` | 35 |
+| `components` | 72 |
+| `docs` | 36 |
 | `lib` | 53 |
-| `public` | 30 |
+| `public` | 26 |
 | `scripts` | 5 |
 | `supabase` | 44 |
 
@@ -24,7 +24,7 @@ Manifest hash: `579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df
 | Kind | Files |
 | --- | ---: |
 | Application library module | 32 |
-| Documentation | 35 |
+| Documentation | 36 |
 | GitHub workflow | 1 |
 | Next API route | 17 |
 | Next page route | 16 |
@@ -32,12 +32,12 @@ Manifest hash: `579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df
 | Project configuration | 17 |
 | Project file | 9 |
 | Public browser asset | 1 |
-| Public visual asset | 29 |
+| Public visual asset | 25 |
 | React component | 54 |
 | Repository automation | 5 |
 | Root documentation | 3 |
 | Supabase migration | 41 |
-| UI primitive | 23 |
+| UI primitive | 18 |
 | Unit test | 21 |
 
 ## Files
@@ -143,20 +143,15 @@ Manifest hash: `579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df
 | `components/SecureResumePreview.tsx` | React component | [open](source/components_secureresumepreview_tsx.md) |
 | `components/SubmitResumeForm.tsx` | React component | [open](source/components_submitresumeform_tsx.md) |
 | `components/TeamNotifications.tsx` | React component | [open](source/components_teamnotifications_tsx.md) |
-| `components/ui/accessibility.tsx` | UI primitive | [open](source/components_ui_accessibility_tsx.md) |
 | `components/ui/alert-dialog.tsx` | UI primitive | [open](source/components_ui_alert_dialog_tsx.md) |
 | `components/ui/avatar.tsx` | UI primitive | [open](source/components_ui_avatar_tsx.md) |
 | `components/ui/badge.tsx` | UI primitive | [open](source/components_ui_badge_tsx.md) |
-| `components/ui/bookmark.tsx` | UI primitive | [open](source/components_ui_bookmark_tsx.md) |
 | `components/ui/button.tsx` | UI primitive | [open](source/components_ui_button_tsx.md) |
 | `components/ui/dialog.tsx` | UI primitive | [open](source/components_ui_dialog_tsx.md) |
 | `components/ui/dropdown-menu.tsx` | UI primitive | [open](source/components_ui_dropdown_menu_tsx.md) |
-| `components/ui/eye.tsx` | UI primitive | [open](source/components_ui_eye_tsx.md) |
 | `components/ui/file-upload.tsx` | UI primitive | [open](source/components_ui_file_upload_tsx.md) |
 | `components/ui/input.tsx` | UI primitive | [open](source/components_ui_input_tsx.md) |
 | `components/ui/label.tsx` | UI primitive | [open](source/components_ui_label_tsx.md) |
-| `components/ui/link.tsx` | UI primitive | [open](source/components_ui_link_tsx.md) |
-| `components/ui/message-circle.tsx` | UI primitive | [open](source/components_ui_message_circle_tsx.md) |
 | `components/ui/scroll-area.tsx` | UI primitive | [open](source/components_ui_scroll_area_tsx.md) |
 | `components/ui/select.tsx` | UI primitive | [open](source/components_ui_select_tsx.md) |
 | `components/ui/separator.tsx` | UI primitive | [open](source/components_ui_separator_tsx.md) |
@@ -166,6 +161,7 @@ Manifest hash: `579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df
 | `components/ui/sonner.tsx` | UI primitive | [open](source/components_ui_sonner_tsx.md) |
 | `components/ui/stacked-list.tsx` | UI primitive | [open](source/components_ui_stacked_list_tsx.md) |
 | `components/ui/user-dropdown.tsx` | UI primitive | [open](source/components_ui_user_dropdown_tsx.md) |
+| `docs/assets/readme_hero image.png` | Documentation | [open](source/docs_assets_readme_hero_image_png.md) |
 | `docs/backend/admin.md` | Documentation | [open](source/docs_backend_admin_md.md) |
 | `docs/backend/api-routes.md` | Documentation | [open](source/docs_backend_api_routes_md.md) |
 | `docs/backend/auth-and-sessions.md` | Documentation | [open](source/docs_backend_auth_and_sessions_md.md) |
@@ -277,17 +273,13 @@ Manifest hash: `579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df
 | `public/assets/linty-favicon.png` | Public visual asset | [open](source/public_assets_linty_favicon_png.md) |
 | `public/assets/lodingscreen animation.webm` | Public visual asset | [open](source/public_assets_lodingscreen_animation_webm.md) |
 | `public/assets/logo.png` | Public visual asset | [open](source/public_assets_logo_png.md) |
-| `public/assets/lv_0_20260518014512.gif` | Public visual asset | [open](source/public_assets_lv_0_20260518014512_gif.md) |
-| `public/assets/nav_bar_animation_transpirant.webm` | Public visual asset | [open](source/public_assets_nav_bar_animation_transpirant_webm.md) |
 | `public/assets/pdf.worker.min.mjs` | Public visual asset | [open](source/public_assets_pdf_worker_min_mjs.md) |
 | `public/assets/post_without_exposing.png` | Public visual asset | [open](source/public_assets_post_without_exposing_png.md) |
 | `public/assets/promote the fix not the noise.png` | Public visual asset | [open](source/public_assets_promote_the_fix_not_the_noise_png.md) |
-| `public/assets/readme_hero image.png` | Public visual asset | [open](source/public_assets_readme_hero_image_png.md) |
 | `public/assets/Recruter_roast.png` | Public visual asset | [open](source/public_assets_recruter_roast_png.md) |
 | `public/assets/rejected_doodle.png` | Public visual asset | [open](source/public_assets_rejected_doodle_png.md) |
 | `public/assets/Resume_upload.png` | Public visual asset | [open](source/public_assets_resume_upload_png.md) |
 | `public/assets/riphope_doodle.png` | Public visual asset | [open](source/public_assets_riphope_doodle_png.md) |
-| `public/assets/rules explaining image.png` | Public visual asset | [open](source/public_assets_rules_explaining_image_png.md) |
 | `public/assets/students.png` | Public visual asset | [open](source/public_assets_students_png.md) |
 | `public/assets/trashcan_doodle.png` | Public visual asset | [open](source/public_assets_trashcan_doodle_png.md) |
 | `public/assets/tryharder_doodle.png` | Public visual asset | [open](source/public_assets_tryharder_doodle_png.md) |

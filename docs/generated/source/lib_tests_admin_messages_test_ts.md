@@ -29,7 +29,7 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 13 | `getPayload` | Action helper | top-level | no | `overrides` | `{ body: string; linkHref: string; requestId: string; target: { mode: string; userId: string; }; title: string; }` | not documented |
+| 13 | `getPayload` | Action helper | top-level | no | `overrides` | `{ body: string; linkHref: string; requestId: string; target: { mode: string; userId: string; }; title: string; }` | Runs the getpayload workflow for callers. |
 
 ## Types
 

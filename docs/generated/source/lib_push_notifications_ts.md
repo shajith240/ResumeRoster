@@ -33,19 +33,19 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 19 | `getPublicKey` | Function | top-level | no | none | `string` | not documented |
-| 23 | `isPushSupported` | Function | top-level | no | none | `boolean` | not documented |
-| 33 | `urlBase64ToUint8Array` | Function | top-level | no | `base64String` | `Uint8Array<ArrayBuffer>` | not documented |
-| 48 | `getApplicationServerKey` | Function | top-level | no | none | `Uint8Array<ArrayBuffer> \| null` | not documented |
-| 60 | `applicationServerKeysMatch` | Function | top-level | no | `currentKey`, `nextKey` | `boolean` | not documented |
-| 72 | `normalizeSubscribeError` | Validation or normalization helper | top-level | no | `error` | `Error` | not documented |
-| 92 | `getAuthHeader` | Function async | top-level | no | none | `Promise<{ Authorization: string; "Content-Type": string; }>` | not documented |
-| 107 | `getServiceWorkerRegistration` | Function async | top-level | no | none | `Promise<ServiceWorkerRegistration>` | not documented |
-| 121 | `saveSubscription` | Function async | top-level | no | `subscription` | `Promise<void>` | not documented |
-| 136 | `getPushCapability` | Function async | top-level | yes | none | `Promise<PushCapability>` | not documented |
-| 158 | `enablePushNotifications` | Function async | top-level | yes | none | `Promise<PushSubscription>` | not documented |
-| 208 | `syncPushSubscription` | Function async | top-level | yes | none | `Promise<PushCapability>` | not documented |
-| 221 | `disablePushNotifications` | Function async | top-level | yes | none | `Promise<void>` | not documented |
+| 19 | `getPublicKey` | Function | top-level | no | none | `string` | Implements the getpublickey helper. |
+| 23 | `isPushSupported` | Function | top-level | no | none | `boolean` | Implements the ispushsupported helper. |
+| 33 | `urlBase64ToUint8Array` | Function | top-level | no | `base64String` | `Uint8Array<ArrayBuffer>` | Implements the urlbase64touint8array helper. |
+| 48 | `getApplicationServerKey` | Function | top-level | no | none | `Uint8Array<ArrayBuffer> \| null` | Implements the getapplicationserverkey helper. |
+| 60 | `applicationServerKeysMatch` | Function | top-level | no | `currentKey`, `nextKey` | `boolean` | Implements the applicationserverkeysmatch helper. |
+| 72 | `normalizeSubscribeError` | Validation or normalization helper | top-level | no | `error` | `Error` | Validates or normalizes normalizesubscribeerror values for callers. |
+| 92 | `getAuthHeader` | Function async | top-level | no | none | `Promise<{ Authorization: string; "Content-Type": string; }>` | Implements the getauthheader helper. |
+| 107 | `getServiceWorkerRegistration` | Function async | top-level | no | none | `Promise<ServiceWorkerRegistration>` | Implements the getserviceworkerregistration helper. |
+| 121 | `saveSubscription` | Function async | top-level | no | `subscription` | `Promise<void>` | Implements the savesubscription helper. |
+| 136 | `getPushCapability` | Function async | top-level | yes | none | `Promise<PushCapability>` | Implements the getpushcapability helper. |
+| 158 | `enablePushNotifications` | Function async | top-level | yes | none | `Promise<PushSubscription>` | Implements the enablepushnotifications helper. |
+| 208 | `syncPushSubscription` | Function async | top-level | yes | none | `Promise<PushCapability>` | Implements the syncpushsubscription helper. |
+| 221 | `disablePushNotifications` | Function async | top-level | yes | none | `Promise<void>` | Implements the disablepushnotifications helper. |
 
 ## Types
 

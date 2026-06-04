@@ -34,10 +34,10 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 58 | `normalizeSort` | Validation or normalization helper | top-level | no | `value` | `FeedSort` | not documented |
-| 64 | `normalizeSaved` | Validation or normalization helper | top-level | no | `value` | `boolean` | not documented |
-| 70 | `normalizeWelcome` | Validation or normalization helper | top-level | no | `value` | `FeedWelcome \| null` | not documented |
-| 80 | `FeedPage` | React component async | top-level | yes | `{ searchParams }` | `Promise<import("react").JSX.Element>` | not documented |
+| 58 | `normalizeSort` | Validation or normalization helper | top-level | no | `value` | `FeedSort` | Validates or normalizes normalizesort values for callers. |
+| 64 | `normalizeSaved` | Validation or normalization helper | top-level | no | `value` | `boolean` | Validates or normalizes normalizesaved values for callers. |
+| 70 | `normalizeWelcome` | Validation or normalization helper | top-level | no | `value` | `FeedWelcome \| null` | Validates or normalizes normalizewelcome values for callers. |
+| 80 | `FeedPage` | React component async | top-level | yes | `{ searchParams }` | `Promise<import("react").JSX.Element>` | Renders the FeedPage UI component. |
 
 ## Types
 

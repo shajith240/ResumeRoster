@@ -29,7 +29,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 4 | `FieldHeader` | React component | top-level | yes | `{ children, htmlFor, max, value, }` | `import("react").JSX.Element` | not documented |
+| 4 | `FieldHeader` | React component | top-level | yes | `{ children, htmlFor, max, value, }` | `import("react").JSX.Element` | Renders the FieldHeader UI component. |
 
 ## Types
 

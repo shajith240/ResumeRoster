@@ -32,11 +32,11 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 16 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
-| 20 | `uploadFailure` | Action helper | top-level | no | none | `Response` | not documented |
-| 27 | `cleanTitle` | Function | top-level | no | `fileName` | `string` | not documented |
-| 37 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `storagePath` | `Promise<void>` | not documented |
-| 49 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 16 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 20 | `uploadFailure` | Action helper | top-level | no | none | `Response` | Runs the uploadfailure workflow for callers. |
+| 27 | `cleanTitle` | Function | top-level | no | `fileName` | `string` | Implements the cleantitle helper. |
+| 37 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `storagePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
+| 49 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 

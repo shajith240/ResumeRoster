@@ -46,7 +46,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 31 | `createSidebarIcon` | Action helper | top-level | no | `displayName`, `renderIcon` | `ForwardRefExoticComponent<SidebarAnimatedIconProps & RefAttributes<SidebarAnimatedIconHandle>>` | not documented |
+| 31 | `createSidebarIcon` | Action helper | top-level | no | `displayName`, `renderIcon` | `ForwardRefExoticComponent<SidebarAnimatedIconProps & RefAttributes<SidebarAnimatedIconHandle>>` | Runs the createsidebaricon workflow for callers. |
 
 ## Types
 

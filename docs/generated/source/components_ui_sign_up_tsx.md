@@ -40,15 +40,15 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 23 | `getStoredAppTheme` | Function | top-level | no | none | `AppTheme` | not documented |
-| 30 | `applyAppTheme` | Function | top-level | no | `theme` | `void` | not documented |
-| 37 | `getEmailRedirectUrl` | Function | top-level | no | `nextPath` | `string \| undefined` | not documented |
-| 44 | `authErrorMessage` | Function | top-level | no | `error` | `string` | not documented |
-| 83 | `isExistingAccountError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 95 | `confirmationNotice` | Function | top-level | no | none | `string` | not documented |
-| 99 | `GoogleIcon` | React component | top-level | no | none | `import("react").JSX.Element` | not documented |
-| 122 | `GitHubIcon` | React component | top-level | no | none | `import("react").JSX.Element` | not documented |
-| 135 | `SignUp` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 23 | `getStoredAppTheme` | Function | top-level | no | none | `AppTheme` | Implements the getstoredapptheme helper. |
+| 30 | `applyAppTheme` | Function | top-level | no | `theme` | `void` | Implements the applyapptheme helper. |
+| 37 | `getEmailRedirectUrl` | Function | top-level | no | `nextPath` | `string \| undefined` | Implements the getemailredirecturl helper. |
+| 44 | `authErrorMessage` | Function | top-level | no | `error` | `string` | Implements the autherrormessage helper. |
+| 83 | `isExistingAccountError` | Function | top-level | no | `error` | `boolean` | Implements the isexistingaccounterror helper. |
+| 95 | `confirmationNotice` | Function | top-level | no | none | `string` | Implements the confirmationnotice helper. |
+| 99 | `GoogleIcon` | React component | top-level | no | none | `import("react").JSX.Element` | Renders the GoogleIcon UI component. |
+| 122 | `GitHubIcon` | React component | top-level | no | none | `import("react").JSX.Element` | Renders the GitHubIcon UI component. |
+| 135 | `SignUp` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the SignUp UI component. |
 
 ## Types
 

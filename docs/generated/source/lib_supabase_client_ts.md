@@ -32,10 +32,10 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 21 | `getAuthCallbackUrl` | Function | top-level | no | `nextPath` | `string \| undefined` | not documented |
-| 29 | `signInWithProvider` | Function async | top-level | yes | `provider`, `nextPath` | `Promise<{ provider: Provider; url: string; }>` | not documented |
-| 57 | `signInWithGoogle` | Function async | top-level | yes | `nextPath` | `Promise<{ provider: Provider; url: string; }>` | not documented |
-| 61 | `signOut` | Function async | top-level | yes | none | `Promise<{ error: import("@supabase/auth-js").AuthError \| null; }>` | not documented |
+| 21 | `getAuthCallbackUrl` | Function | top-level | no | `nextPath` | `string \| undefined` | Implements the getauthcallbackurl helper. |
+| 29 | `signInWithProvider` | Function async | top-level | yes | `provider`, `nextPath` | `Promise<{ provider: Provider; url: string; }>` | Implements the signinwithprovider helper. |
+| 57 | `signInWithGoogle` | Function async | top-level | yes | `nextPath` | `Promise<{ provider: Provider; url: string; }>` | Implements the signinwithgoogle helper. |
+| 61 | `signOut` | Function async | top-level | yes | none | `Promise<{ error: import("@supabase/auth-js").AuthError \| null; }>` | Implements the signout helper. |
 
 ## Types
 

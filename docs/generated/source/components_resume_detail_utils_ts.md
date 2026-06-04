@@ -43,19 +43,19 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 6 | `formatDate` | Function | top-level | yes | `value` | `string` | not documented |
-| 13 | `getAuthorHandle` | Function | top-level | yes | `authorId`, `profile` | `string` | not documented |
-| 21 | `getAuthorAvatar` | Function | top-level | yes | `authorId`, `profile` | `string` | not documented |
-| 26 | `isMissingColumnError` | Function | top-level | yes | `error`, `column` | `boolean` | not documented |
-| 30 | `isReadCountFeatureError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 36 | `isDeleteFeatureError` | Action helper | top-level | yes | `error` | `boolean` | not documented |
-| 42 | `isReportFeatureError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 48 | `isCommentMediaFeatureError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 54 | `isPermissionPolicyError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 60 | `isResumeContextFeatureError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 66 | `isAuthorProfileFeatureError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 72 | `withResumeDefaults` | Function | top-level | yes | `resume` | `ResumeSummary` | not documented |
-| 81 | `getAttachmentUrl` | Function | top-level | yes | `attachment` | `string` | not documented |
+| 6 | `formatDate` | Function | top-level | yes | `value` | `string` | Implements the formatdate helper. |
+| 13 | `getAuthorHandle` | Function | top-level | yes | `authorId`, `profile` | `string` | Implements the getauthorhandle helper. |
+| 21 | `getAuthorAvatar` | Function | top-level | yes | `authorId`, `profile` | `string` | Implements the getauthoravatar helper. |
+| 26 | `isMissingColumnError` | Function | top-level | yes | `error`, `column` | `boolean` | Implements the ismissingcolumnerror helper. |
+| 30 | `isReadCountFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isreadcountfeatureerror helper. |
+| 36 | `isDeleteFeatureError` | Action helper | top-level | yes | `error` | `boolean` | Runs the isdeletefeatureerror workflow for callers. |
+| 42 | `isReportFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isreportfeatureerror helper. |
+| 48 | `isCommentMediaFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the iscommentmediafeatureerror helper. |
+| 54 | `isPermissionPolicyError` | Function | top-level | yes | `error` | `boolean` | Implements the ispermissionpolicyerror helper. |
+| 60 | `isResumeContextFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isresumecontextfeatureerror helper. |
+| 66 | `isAuthorProfileFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isauthorprofilefeatureerror helper. |
+| 72 | `withResumeDefaults` | Function | top-level | yes | `resume` | `ResumeSummary` | Implements the withresumedefaults helper. |
+| 81 | `getAttachmentUrl` | Function | top-level | yes | `attachment` | `string` | Implements the getattachmenturl helper. |
 
 ## Types
 

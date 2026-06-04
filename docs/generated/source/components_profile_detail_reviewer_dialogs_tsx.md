@@ -40,8 +40,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 36 | `ReviewerProfileDialog` | React component | top-level | yes | `{ buttonLabel, communityRole, onCommunityRoleChange, onOpenChange, onReviewer...` | `import("react").JSX.Element` | not documented |
-| 214 | `TrustApplicationDialog` | React component | top-level | yes | `{ applicationNote, applying, onApply, onNoteChange, onProofUrlChange, proofUr...` | `import("react").JSX.Element` | not documented |
+| 36 | `ReviewerProfileDialog` | React component | top-level | yes | `{ buttonLabel, communityRole, onCommunityRoleChange, onOpenChange, onReviewer...` | `import("react").JSX.Element` | Renders the ReviewerProfileDialog UI component. |
+| 214 | `TrustApplicationDialog` | React component | top-level | yes | `{ applicationNote, applying, onApply, onNoteChange, onProofUrlChange, proofUr...` | `import("react").JSX.Element` | Renders the TrustApplicationDialog UI component. |
 
 ## Types
 

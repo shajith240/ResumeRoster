@@ -41,11 +41,11 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 33 | `roleTag` | Function | top-level | yes | `reviewer` | `string` | not documented |
-| 56 | `lintPoints` | Function | top-level | yes | `helpfulVotes` | `number` | not documented |
-| 60 | `sortReviewers` | Function | top-level | yes | `reviewers` | `T[]` | not documented |
-| 77 | `bestReviewMap` | Function | top-level | yes | `reviews` | `Record<string, T>` | not documented |
-| 93 | `enhanceReviewer` | Function | top-level | yes | `reviewer`, `topReview`, `stats` | `T & { helpful_votes: number; lint_points: number; roast_count: number; roast_points: number; role_tag: string; top_review: { id: string;...` | not documented |
+| 33 | `roleTag` | Function | top-level | yes | `reviewer` | `string` | Implements the roletag helper. |
+| 56 | `lintPoints` | Function | top-level | yes | `helpfulVotes` | `number` | Implements the lintpoints helper. |
+| 60 | `sortReviewers` | Function | top-level | yes | `reviewers` | `T[]` | Implements the sortreviewers helper. |
+| 77 | `bestReviewMap` | Function | top-level | yes | `reviews` | `Record<string, T>` | Implements the bestreviewmap helper. |
+| 93 | `enhanceReviewer` | Function | top-level | yes | `reviewer`, `topReview`, `stats` | `T & { helpful_votes: number; lint_points: number; roast_count: number; roast_points: number; role_tag: string; top_review: { id: string;...` | Implements the enhancereviewer helper. |
 
 ## Types
 

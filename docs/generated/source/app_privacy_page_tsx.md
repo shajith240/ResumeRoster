@@ -31,7 +31,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 14 | `PrivacyPolicyPage` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 14 | `PrivacyPolicyPage` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the PrivacyPolicyPage UI component. |
 
 ## Types
 

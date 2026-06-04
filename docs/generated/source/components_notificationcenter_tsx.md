@@ -40,10 +40,10 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 34 | `normalizeNotification` | Validation or normalization helper | top-level | no | `row` | `LintedNotification` | not documented |
-| 43 | `getMetadataString` | Function | top-level | no | `metadata`, `keys` | `string \| undefined` | not documented |
-| 57 | `toTeamNotification` | Function | top-level | no | `notification` | `TeamNotification` | not documented |
-| 94 | `NotificationCenter` | React component | top-level | yes | `{ userId }` | `import("react").JSX.Element \| null` | not documented |
+| 34 | `normalizeNotification` | Validation or normalization helper | top-level | no | `row` | `LintedNotification` | Validates or normalizes normalizenotification values for callers. |
+| 43 | `getMetadataString` | Function | top-level | no | `metadata`, `keys` | `string \| undefined` | Implements the getmetadatastring helper. |
+| 57 | `toTeamNotification` | Function | top-level | no | `notification` | `TeamNotification` | Implements the toteamnotification helper. |
+| 94 | `NotificationCenter` | React component | top-level | yes | `{ userId }` | `import("react").JSX.Element \| null` | Renders the NotificationCenter UI component. |
 
 ## Types
 

@@ -28,7 +28,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 5 | `resolveAvatarUrl` | Function | top-level | yes | `avatarUrl`, `avatarPath` | `string` | not documented |
+| 5 | `resolveAvatarUrl` | Function | top-level | yes | `avatarUrl`, `avatarPath` | `string` | Implements the resolveavatarurl helper. |
 
 ## Types
 

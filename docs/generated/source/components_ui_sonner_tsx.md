@@ -29,9 +29,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 8 | `getAppToastTheme` | Function | top-level | no | none | `Theme` | not documented |
-| 13 | `Toaster` | React component | top-level | yes | `props` | `import("react").JSX.Element` | not documented |
-| 17 | `syncTheme` | Function | nested | no | none | `void` | not documented |
+| 8 | `getAppToastTheme` | Function | top-level | no | none | `Theme` | Implements the getapptoasttheme helper. |
+| 13 | `Toaster` | React component | top-level | yes | `props` | `import("react").JSX.Element` | Renders the Toaster UI component. |
+| 17 | `syncTheme` | Function | nested | no | none | `void` | Implements the synctheme helper. |
 
 ## Types
 

@@ -31,8 +31,8 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 14 | `Section` | React component | top-level | no | `{ children, title, }` | `import("react").JSX.Element` | not documented |
-| 29 | `TermsOfServicePage` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 14 | `Section` | React component | top-level | no | `{ children, title, }` | `import("react").JSX.Element` | Renders the Section UI component. |
+| 29 | `TermsOfServicePage` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the TermsOfServicePage UI component. |
 
 ## Types
 

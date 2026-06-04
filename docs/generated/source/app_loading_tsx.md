@@ -29,7 +29,7 @@ Edit this when the documented behavior or supporting repository file changes.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3 | `Loading` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 3 | `Loading` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the Loading UI component. |
 
 ## Types
 

@@ -30,8 +30,8 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 11 | `getCount` | Function async | top-level | no | `query` | `Promise<number>` | not documented |
-| 17 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 11 | `getCount` | Function async | top-level | no | `query` | `Promise<number>` | Implements the getcount helper. |
+| 17 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
 
 ## Types
 

@@ -42,7 +42,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 34 | `ProfileDetail` | React component | top-level | yes | `{ profileId }` | `import("react").JSX.Element` | not documented |
+| 34 | `ProfileDetail` | React component | top-level | yes | `{ profileId }` | `import("react").JSX.Element` | Renders the ProfileDetail UI component. |
 
 ## Types
 

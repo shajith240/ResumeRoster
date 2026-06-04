@@ -31,7 +31,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 5 | `LoginPage` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 5 | `LoginPage` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the LoginPage UI component. |
 
 ## Types
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/file-upload.tsx`
 - Kind: UI primitive
-- Size: 15744 bytes
+- Size: 15743 bytes
 - Lines: 659
-- Source hash: `2279ad0cc28ab2044117f6aa7805df5b9d50312f0d3cd09d1cdfff7e2f1afe31`
+- Source hash: `ac085e02176d30bedb73f017da514619767c414fb42e21feb59553e5db2f85bc`
 
 ## What This File Does
 
@@ -43,25 +43,25 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 - `@/components/ui/button`
 - `@/lib/utils`
-- `framer-motion`
 - `lucide-react`
+- `motion/react`
 - `react`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 71 | `useFileUpload` | React hook | top-level | yes | none | `FileUploadContextType` | not documented |
-| 85 | `FileError` | React component | top-level | yes | `{ message, onClose, className }` | `import("react").JSX.Element \| null` | not documented |
-| 132 | `formatFileSize` | Function | top-level | yes | `bytes` | `string` | not documented |
-| 141 | `FileTypeIcon` | React component | top-level | yes | `{ type }` | `import("react").JSX.Element` | not documented |
-| 156 | `FileProgress` | React component | top-level | yes | `{ progress, status, fileId, className, }` | `import("react").JSX.Element \| null` | not documented |
-| 209 | `FileItem` | React component | top-level | yes | `{ file: propFile, fileId, onPause = () => {}, onResume = () => {}, onRemove =...` | `import("react").JSX.Element \| null` | not documented |
-| 310 | `FileList` | React component | top-level | yes | `{ files: propFiles, onPause, onResume, onRemove, onClear = () => {}, showHead...` | `import("react").JSX.Element \| null` | not documented |
-| 378 | `getFileInfos` | Function | top-level | no | `files` | `{ id: string; name: string; size: number; type: string; progress: number; file: File; status: FileStatus; }[]` | not documented |
-| 390 | `DropZone` | React component | top-level | yes | `{ onFileSelect: propOnFileSelect, prompt = "Drop your file here", browseText...` | `import("react").JSX.Element` | not documented |
-| 543 | `FileUploadProvider` | React component | top-level | yes | `{ children, files = [], multiple = false, accept, maxCount = 1, maxSize = 1,...` | `import("react").JSX.Element` | not documented |
-| 639 | `FileUpload` | React component | top-level | yes | `{ className, children, disabled, ...providerProps }` | `import("react").JSX.Element` | not documented |
+| 71 | `useFileUpload` | React hook | top-level | yes | none | `FileUploadContextType` | Provides reusable usefileupload state and side effects. |
+| 85 | `FileError` | React component | top-level | yes | `{ message, onClose, className }` | `import("react").JSX.Element \| null` | Renders the FileError UI component. |
+| 132 | `formatFileSize` | Function | top-level | yes | `bytes` | `string` | Implements the formatfilesize helper. |
+| 141 | `FileTypeIcon` | React component | top-level | yes | `{ type }` | `import("react").JSX.Element` | Renders the FileTypeIcon UI component. |
+| 156 | `FileProgress` | React component | top-level | yes | `{ progress, status, fileId, className, }` | `import("react").JSX.Element \| null` | Renders the FileProgress UI component. |
+| 209 | `FileItem` | React component | top-level | yes | `{ file: propFile, fileId, onPause = () => {}, onResume = () => {}, onRemove =...` | `import("react").JSX.Element \| null` | Renders the FileItem UI component. |
+| 310 | `FileList` | React component | top-level | yes | `{ files: propFiles, onPause, onResume, onRemove, onClear = () => {}, showHead...` | `import("react").JSX.Element \| null` | Renders the FileList UI component. |
+| 378 | `getFileInfos` | Function | top-level | no | `files` | `{ id: string; name: string; size: number; type: string; progress: number; file: File; status: FileStatus; }[]` | Implements the getfileinfos helper. |
+| 390 | `DropZone` | React component | top-level | yes | `{ onFileSelect: propOnFileSelect, prompt = "Drop your file here", browseText...` | `import("react").JSX.Element` | Renders the DropZone UI component. |
+| 543 | `FileUploadProvider` | React component | top-level | yes | `{ children, files = [], multiple = false, accept, maxCount = 1, maxSize = 1,...` | `import("react").JSX.Element` | Renders the FileUploadProvider UI component. |
+| 639 | `FileUpload` | React component | top-level | yes | `{ className, children, disabled, ...providerProps }` | `import("react").JSX.Element` | Renders the FileUpload UI component. |
 
 ## Types
 

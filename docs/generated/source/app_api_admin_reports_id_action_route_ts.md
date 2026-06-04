@@ -30,10 +30,10 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 35 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
-| 39 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | not documented |
-| 43 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | not documented |
-| 51 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | not documented |
+| 35 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 39 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizenote values for callers. |
+| 43 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
+| 51 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 

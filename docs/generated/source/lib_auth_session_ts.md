@@ -31,8 +31,8 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 10 | `getFreshAuthSession` | Function async | top-level | yes | none | `Promise<FreshSessionResult>` | not documented |
-| 28 | `refreshAuthSessionAfterError` | Function async | top-level | yes | `error` | `Promise<boolean>` | not documented |
+| 10 | `getFreshAuthSession` | Function async | top-level | yes | none | `Promise<FreshSessionResult>` | Implements the getfreshauthsession helper. |
+| 28 | `refreshAuthSessionAfterError` | Function async | top-level | yes | `error` | `Promise<boolean>` | Implements the refreshauthsessionaftererror helper. |
 
 ## Types
 

@@ -31,14 +31,14 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 16 | `isRecord` | Function | top-level | no | `value` | `boolean` | not documented |
-| 20 | `redactString` | Function | top-level | no | `value` | `string` | not documented |
-| 26 | `shouldDropKey` | Function | top-level | no | `key` | `boolean` | not documented |
-| 31 | `scrubValue` | Function | top-level | no | `value`, `depth` | `unknown` | not documented |
-| 56 | `getErrorMonitoringDsn` | Function | top-level | yes | none | `string` | not documented |
-| 66 | `getErrorMonitoringEnvironment` | Function | top-level | yes | none | `string` | not documented |
-| 77 | `getErrorMonitoringTracesSampleRate` | Function | top-level | yes | `fallback` | `number` | not documented |
-| 89 | `scrubErrorMonitoringEvent` | Function | top-level | yes | `event` | `T` | not documented |
+| 16 | `isRecord` | Function | top-level | no | `value` | `boolean` | Implements the isrecord helper. |
+| 20 | `redactString` | Function | top-level | no | `value` | `string` | Implements the redactstring helper. |
+| 26 | `shouldDropKey` | Function | top-level | no | `key` | `boolean` | Implements the shoulddropkey helper. |
+| 31 | `scrubValue` | Function | top-level | no | `value`, `depth` | `unknown` | Implements the scrubvalue helper. |
+| 56 | `getErrorMonitoringDsn` | Function | top-level | yes | none | `string` | Implements the geterrormonitoringdsn helper. |
+| 66 | `getErrorMonitoringEnvironment` | Function | top-level | yes | none | `string` | Implements the geterrormonitoringenvironment helper. |
+| 77 | `getErrorMonitoringTracesSampleRate` | Function | top-level | yes | `fallback` | `number` | Implements the geterrormonitoringtracessamplerate helper. |
+| 89 | `scrubErrorMonitoringEvent` | Function | top-level | yes | `event` | `T` | Implements the scruberrormonitoringevent helper. |
 
 ## Types
 

@@ -30,11 +30,11 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 15 | `getSecretFromRequest` | Function | top-level | no | `request` | `string` | not documented |
-| 22 | `isAuthorized` | Function | top-level | no | `request` | `boolean` | not documented |
-| 28 | `getWebhookEvent` | Function | top-level | no | `payload` | `string` | not documented |
-| 41 | `getNotificationId` | Function | top-level | no | `record` | `string` | not documented |
-| 47 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 15 | `getSecretFromRequest` | Function | top-level | no | `request` | `string` | Implements the getsecretfromrequest helper. |
+| 22 | `isAuthorized` | Function | top-level | no | `request` | `boolean` | Implements the isauthorized helper. |
+| 28 | `getWebhookEvent` | Function | top-level | no | `payload` | `string` | Implements the getwebhookevent helper. |
+| 41 | `getNotificationId` | Function | top-level | no | `record` | `string` | Implements the getnotificationid helper. |
+| 47 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 

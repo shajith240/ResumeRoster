@@ -38,12 +38,12 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 31 | `PeoplePage` | React component | top-level | yes | `{ activeUsers, busyAction, currentAdminUserId, latestUsers, onAction, onDelet...` | `import("react").JSX.Element` | not documented |
-| 132 | `LatestPeoplePanel` | React component | top-level | yes | `{ users }` | `import("react").JSX.Element` | not documented |
-| 161 | `ActiveUsersPanel` | React component | top-level | yes | `{ activeUsers, }` | `import("react").JSX.Element` | not documented |
-| 199 | `MiniUserRow` | React component | top-level | yes | `{ detail, href, meta, timestamp, title, }` | `import("react").JSX.Element` | not documented |
-| 231 | `PeoplePagination` | React component | top-level | yes | `{ onPageChange, pagination, }` | `import("react").JSX.Element` | not documented |
-| 273 | `UserRow` | React component | top-level | yes | `{ adminUser, busyAction, currentAdminUserId, onAction, onDeleteRequest, onMes...` | `import("react").JSX.Element` | not documented |
+| 31 | `PeoplePage` | React component | top-level | yes | `{ activeUsers, busyAction, currentAdminUserId, latestUsers, onAction, onDelet...` | `import("react").JSX.Element` | Renders the PeoplePage UI component. |
+| 132 | `LatestPeoplePanel` | React component | top-level | yes | `{ users }` | `import("react").JSX.Element` | Renders the LatestPeoplePanel UI component. |
+| 161 | `ActiveUsersPanel` | React component | top-level | yes | `{ activeUsers, }` | `import("react").JSX.Element` | Renders the ActiveUsersPanel UI component. |
+| 199 | `MiniUserRow` | React component | top-level | yes | `{ detail, href, meta, timestamp, title, }` | `import("react").JSX.Element` | Renders the MiniUserRow UI component. |
+| 231 | `PeoplePagination` | React component | top-level | yes | `{ onPageChange, pagination, }` | `import("react").JSX.Element` | Renders the PeoplePagination UI component. |
+| 273 | `UserRow` | React component | top-level | yes | `{ adminUser, busyAction, currentAdminUserId, onAction, onDeleteRequest, onMes...` | `import("react").JSX.Element` | Renders the UserRow UI component. |
 
 ## Types
 

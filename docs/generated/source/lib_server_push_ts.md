@@ -33,13 +33,13 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 32 | `getWebPushConfig` | Function | top-level | no | none | `WebPushConfig \| null` | not documented |
-| 42 | `truncatePushText` | Function | top-level | no | `value`, `maxLength` | `string` | not documented |
-| 48 | `getPushPayload` | Action helper | top-level | no | `notification` | `string` | not documented |
-| 61 | `getPushStatusCode` | Function | top-level | no | `error` | `number` | not documented |
-| 67 | `revokeDeadSubscription` | Function async | top-level | no | `admin`, `subscriptionId` | `Promise<void>` | not documented |
-| 78 | `sendPushForNotification` | Action helper async | top-level | yes | `admin`, `notification` | `Promise<PushDispatchResult>` | not documented |
-| 194 | `sendPushForNotificationId` | Action helper async | top-level | yes | `admin`, `notificationId` | `Promise<PushDispatchResult>` | not documented |
+| 32 | `getWebPushConfig` | Function | top-level | no | none | `WebPushConfig \| null` | Implements the getwebpushconfig helper. |
+| 42 | `truncatePushText` | Function | top-level | no | `value`, `maxLength` | `string` | Implements the truncatepushtext helper. |
+| 48 | `getPushPayload` | Action helper | top-level | no | `notification` | `string` | Runs the getpushpayload workflow for callers. |
+| 61 | `getPushStatusCode` | Function | top-level | no | `error` | `number` | Implements the getpushstatuscode helper. |
+| 67 | `revokeDeadSubscription` | Function async | top-level | no | `admin`, `subscriptionId` | `Promise<void>` | Implements the revokedeadsubscription helper. |
+| 78 | `sendPushForNotification` | Action helper async | top-level | yes | `admin`, `notification` | `Promise<PushDispatchResult>` | Runs the sendpushfornotification workflow for callers. |
+| 194 | `sendPushForNotificationId` | Action helper async | top-level | yes | `admin`, `notificationId` | `Promise<PushDispatchResult>` | Runs the sendpushfornotificationid workflow for callers. |
 
 ## Types
 

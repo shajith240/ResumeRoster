@@ -4,9 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import FeedResumePreview from "@/components/FeedResumePreview";
 import { toast } from "sonner";
-import { BookmarkIcon } from "@/components/ui/bookmark";
-import { EyeIcon } from "@/components/ui/eye";
-import { LinkIcon } from "@/components/ui/link";
+import { Bookmark, Eye, Link2, MessageCircle } from "lucide-react";
 import { getLoginPath } from "@/lib/auth-redirect";
 import {
 	AUTH_SESSION_EXPIRED_MESSAGE,
@@ -17,7 +15,6 @@ import {
 	getFreshAuthSession,
 	refreshAuthSessionAfterError,
 } from "@/lib/auth-session";
-import { MessageCircleIcon } from "@/components/ui/message-circle";
 import {
   getResumeAffiliationLabel,
   getResumePosterLabel,
@@ -842,7 +839,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                   )}
                   <time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
                   <span className="post-read-count">
-                    <EyeIcon className="post-meta-icon" size={15} aria-hidden="true" />
+                    <Eye className="post-meta-icon" size={15} aria-hidden="true" />
                     {formatCount(resume.read_count)} reads
                   </span>
                 </div>
@@ -899,7 +896,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
 
               <div className="post-actions">
                 <Link className="post-action-button" href={`/resume/${resume.id}`} aria-label={getThreadActionAria(resume)}>
-                  <MessageCircleIcon className="post-action-icon" size={16} aria-hidden="true" />
+                  <MessageCircle className="post-action-icon" size={16} aria-hidden="true" />
                   {resume.roast_count > 0 ? (
                     <span className="post-action-count">
                       {formatCount(resume.roast_count)}
@@ -908,7 +905,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                   <span className="post-action-label">{threadActionLabel}</span>
                 </Link>
                 <button className="post-action-button copy-button" type="button" onClick={() => void shareResume(resume)} aria-label="Share resume">
-                  <LinkIcon className="post-action-icon" size={16} aria-hidden="true" />
+                  <Link2 className="post-action-icon" size={16} aria-hidden="true" />
                   <span className="post-action-label">Share</span>
                   {copiedId === resume.id ? <em>Copied!</em> : null}
                 </button>
@@ -920,7 +917,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
                   onClick={() => void toggleSavedResume(resume)}
                   type="button"
                 >
-                  <BookmarkIcon className="post-action-icon" size={16} aria-hidden="true" />
+                  <Bookmark className="post-action-icon" size={16} aria-hidden="true" />
                   <span className="post-action-label">{saveButtonState.label}</span>
                 </button>
               </div>

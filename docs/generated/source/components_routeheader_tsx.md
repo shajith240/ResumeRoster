@@ -34,7 +34,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 64 | `RouteHeader` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 64 | `RouteHeader` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the RouteHeader UI component. |
 
 ## Types
 

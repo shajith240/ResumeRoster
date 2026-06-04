@@ -31,9 +31,9 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 22 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
-| 26 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | not documented |
-| 34 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | not documented |
+| 22 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 26 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
+| 34 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 

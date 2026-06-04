@@ -30,8 +30,8 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 10 | `isAuthSessionError` | Function | top-level | yes | `error` | `boolean` | not documented |
-| 22 | `getSafeAuthErrorMessage` | Function | top-level | yes | `error`, `fallback` | `string` | not documented |
+| 10 | `isAuthSessionError` | Function | top-level | yes | `error` | `boolean` | Implements the isauthsessionerror helper. |
+| 22 | `getSafeAuthErrorMessage` | Function | top-level | yes | `error`, `fallback` | `string` | Implements the getsafeautherrormessage helper. |
 
 ## Types
 

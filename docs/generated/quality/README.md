@@ -1,6 +1,6 @@
 # Code Quality Reports
 
-These reports are generated for review only. They do not delete files and they do not block CI in V1.
+These reports are generated artifacts. CI checks that they are fresh so dead-code and duplicate-code findings cannot drift silently.
 
 - [Knip dead-code report](knip-report.md)
 - [jscpd duplicate-code report](jscpd-report.md)

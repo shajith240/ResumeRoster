@@ -44,15 +44,15 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 45 | `hasBytes` | Function | top-level | no | `bytes`, `values`, `offset` | `boolean` | not documented |
-| 49 | `detectCommentImageMimeType` | Function | top-level | yes | `bytes` | `"" \| "image/png" \| "image/jpeg" \| "image/webp"` | not documented |
-| 70 | `getCommentImageExtension` | Function | top-level | yes | `mimeType` | `"jpg" \| "webp" \| "png"` | not documented |
-| 81 | `getCommentImageUploadIssue` | Action helper | top-level | yes | `file` | `"" \| "Upload a PNG, JPG, or WebP image." \| "Choose an image file." \| "Choose a non-empty image file." \| "Keep comment images under 3M...` | not documented |
-| 107 | `isCommentContentFormat` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 113 | `normalizeCommentContent` | Validation or normalization helper | top-level | yes | `content` | `string` | not documented |
-| 117 | `getVisibleGraphemeCount` | Function | top-level | no | `content` | `number` | not documented |
-| 128 | `getStorageCharacterCount` | Function | top-level | no | `content` | `number` | not documented |
-| 132 | `getReviewContentIssue` | Function | top-level | yes | `{ attachmentId, content, contentFormat, }` | `"" \| "Write at least 10 characters of useful feedback." \| "Keep feedback under 4000 characters." \| "Choose a valid comment format." \|...` | not documented |
+| 45 | `hasBytes` | Function | top-level | no | `bytes`, `values`, `offset` | `boolean` | Implements the hasbytes helper. |
+| 49 | `detectCommentImageMimeType` | Function | top-level | yes | `bytes` | `"" \| "image/png" \| "image/jpeg" \| "image/webp"` | Implements the detectcommentimagemimetype helper. |
+| 70 | `getCommentImageExtension` | Function | top-level | yes | `mimeType` | `"jpg" \| "webp" \| "png"` | Implements the getcommentimageextension helper. |
+| 81 | `getCommentImageUploadIssue` | Action helper | top-level | yes | `file` | `"" \| "Upload a PNG, JPG, or WebP image." \| "Choose an image file." \| "Choose a non-empty image file." \| "Keep comment images under 3M...` | Runs the getcommentimageuploadissue workflow for callers. |
+| 107 | `isCommentContentFormat` | Function | top-level | yes | `value` | `boolean` | Implements the iscommentcontentformat helper. |
+| 113 | `normalizeCommentContent` | Validation or normalization helper | top-level | yes | `content` | `string` | Validates or normalizes normalizecommentcontent values for callers. |
+| 117 | `getVisibleGraphemeCount` | Function | top-level | no | `content` | `number` | Implements the getvisiblegraphemecount helper. |
+| 128 | `getStorageCharacterCount` | Function | top-level | no | `content` | `number` | Implements the getstoragecharactercount helper. |
+| 132 | `getReviewContentIssue` | Function | top-level | yes | `{ attachmentId, content, contentFormat, }` | `"" \| "Write at least 10 characters of useful feedback." \| "Keep feedback under 4000 characters." \| "Choose a valid comment format." \|...` | Implements the getreviewcontentissue helper. |
 
 ## Types
 

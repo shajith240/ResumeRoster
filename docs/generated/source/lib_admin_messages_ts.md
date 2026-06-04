@@ -36,12 +36,12 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 36 | `isRecord` | Function | top-level | no | `value` | `boolean` | not documented |
-| 40 | `getTrimmedString` | Function | top-level | no | `value` | `string` | not documented |
-| 44 | `isSafeAdminMessageLink` | Function | top-level | yes | `value` | `boolean` | not documented |
-| 63 | `normalizeAdminMessageLink` | Validation or normalization helper | top-level | yes | `value` | `string` | not documented |
-| 71 | `validateTarget` | Validation or normalization helper | top-level | no | `value` | `string \| AdminMessageTarget` | not documented |
-| 92 | `validateAdminMessagePayload` | Validation or normalization helper | top-level | yes | `payload` | `AdminMessageValidationResult` | not documented |
+| 36 | `isRecord` | Function | top-level | no | `value` | `boolean` | Implements the isrecord helper. |
+| 40 | `getTrimmedString` | Function | top-level | no | `value` | `string` | Implements the gettrimmedstring helper. |
+| 44 | `isSafeAdminMessageLink` | Function | top-level | yes | `value` | `boolean` | Implements the issafeadminmessagelink helper. |
+| 63 | `normalizeAdminMessageLink` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeadminmessagelink values for callers. |
+| 71 | `validateTarget` | Validation or normalization helper | top-level | no | `value` | `string \| AdminMessageTarget` | Validates or normalizes validatetarget values for callers. |
+| 92 | `validateAdminMessagePayload` | Validation or normalization helper | top-level | yes | `payload` | `AdminMessageValidationResult` | Validates or normalizes validateadminmessagepayload values for callers. |
 
 ## Types
 

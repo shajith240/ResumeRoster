@@ -30,8 +30,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 29 | `loadPdfJs` | Action helper async | top-level | no | none | `Promise<typeof import("pdfjs-dist")>` | not documented |
-| 40 | `FeedResumePreview` | React component | top-level | yes | `{ fileUrl, isLoading = false, title, }` | `import("react").JSX.Element` | not documented |
+| 29 | `loadPdfJs` | Action helper async | top-level | no | none | `Promise<typeof import("pdfjs-dist")>` | Runs the loadpdfjs workflow for callers. |
+| 40 | `FeedResumePreview` | React component | top-level | yes | `{ fileUrl, isLoading = false, title, }` | `import("react").JSX.Element` | Renders the FeedResumePreview UI component. |
 
 ## Types
 

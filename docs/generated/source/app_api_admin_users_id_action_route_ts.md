@@ -31,19 +31,19 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 49 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
-| 53 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | not documented |
-| 57 | `uniqueStrings` | Function | top-level | no | `values` | `string[]` | not documented |
-| 63 | `removeStorageObjects` | Function async | top-level | no | `admin`, `bucket`, `paths` | `Promise<number>` | not documented |
-| 81 | `listUserStorageFolder` | Function async | top-level | no | `admin`, `bucket`, `userId` | `Promise<string[]>` | not documented |
-| 110 | `removeAccountStorageObjects` | Function async | top-level | no | `admin`, `profileId`, `appData` | `Promise<StorageRemovalCounts>` | not documented |
-| 144 | `firstDeleteResult` | Action helper | top-level | no | `data` | `DeleteUserAppDataResult \| null` | not documented |
-| 151 | `errorMessage` | Function | top-level | no | `error` | `string` | not documented |
-| 155 | `deleteFailureStatus` | Action helper | top-level | no | `stage` | `DeleteFailureStatus` | not documented |
-| 161 | `buildDeleteAuditMetadata` | Action helper | top-level | no | `{ authUserDeleted = false, baseMetadata, error, stage, storageCounts, appData, }` | `Record<string, unknown>` | not documented |
-| 203 | `tryUpdateDeleteAuditMetadata` | Action helper async | top-level | no | `admin`, `auditLogId`, `metadata` | `Promise<void>` | not documented |
-| 216 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | not documented |
-| 224 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | not documented |
+| 49 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 53 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizenote values for callers. |
+| 57 | `uniqueStrings` | Function | top-level | no | `values` | `string[]` | Implements the uniquestrings helper. |
+| 63 | `removeStorageObjects` | Function async | top-level | no | `admin`, `bucket`, `paths` | `Promise<number>` | Implements the removestorageobjects helper. |
+| 81 | `listUserStorageFolder` | Function async | top-level | no | `admin`, `bucket`, `userId` | `Promise<string[]>` | Implements the listuserstoragefolder helper. |
+| 110 | `removeAccountStorageObjects` | Function async | top-level | no | `admin`, `profileId`, `appData` | `Promise<StorageRemovalCounts>` | Implements the removeaccountstorageobjects helper. |
+| 144 | `firstDeleteResult` | Action helper | top-level | no | `data` | `DeleteUserAppDataResult \| null` | Runs the firstdeleteresult workflow for callers. |
+| 151 | `errorMessage` | Function | top-level | no | `error` | `string` | Implements the errormessage helper. |
+| 155 | `deleteFailureStatus` | Action helper | top-level | no | `stage` | `DeleteFailureStatus` | Runs the deletefailurestatus workflow for callers. |
+| 161 | `buildDeleteAuditMetadata` | Action helper | top-level | no | `{ authUserDeleted = false, baseMetadata, error, stage, storageCounts, appData, }` | `Record<string, unknown>` | Runs the builddeleteauditmetadata workflow for callers. |
+| 203 | `tryUpdateDeleteAuditMetadata` | Action helper async | top-level | no | `admin`, `auditLogId`, `metadata` | `Promise<void>` | Runs the tryupdatedeleteauditmetadata workflow for callers. |
+| 216 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
+| 224 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 

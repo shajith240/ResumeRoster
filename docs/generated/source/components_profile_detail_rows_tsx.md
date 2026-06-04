@@ -33,8 +33,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 7 | `ActivityRow` | React component | top-level | yes | `{ item }` | `import("react").JSX.Element` | not documented |
-| 28 | `ReviewRow` | React component | top-level | yes | `{ review }` | `import("react").JSX.Element` | not documented |
+| 7 | `ActivityRow` | React component | top-level | yes | `{ item }` | `import("react").JSX.Element` | Renders the ActivityRow UI component. |
+| 28 | `ReviewRow` | React component | top-level | yes | `{ review }` | `import("react").JSX.Element` | Renders the ReviewRow UI component. |
 
 ## Types
 

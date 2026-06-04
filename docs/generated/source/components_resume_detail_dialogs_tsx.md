@@ -36,9 +36,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 42 | `ReportCommentDialog` | React component | top-level | yes | `{ details, onDetailsChange, onOpenChange, onReasonChange, onSubmit, reason, r...` | `import("react").JSX.Element` | not documented |
-| 129 | `ResumeOwnerActionDialog` | React component | top-level | yes | `{ busy, copy, onConfirm, onOpenChange, pendingAction, }` | `import("react").JSX.Element` | not documented |
-| 168 | `DeleteReviewDialog` | React component | top-level | yes | `{ busy, isReply, onConfirm, onOpenChange, targetReview, }` | `import("react").JSX.Element` | not documented |
+| 42 | `ReportCommentDialog` | React component | top-level | yes | `{ details, onDetailsChange, onOpenChange, onReasonChange, onSubmit, reason, r...` | `import("react").JSX.Element` | Renders the ReportCommentDialog UI component. |
+| 129 | `ResumeOwnerActionDialog` | React component | top-level | yes | `{ busy, copy, onConfirm, onOpenChange, pendingAction, }` | `import("react").JSX.Element` | Renders the ResumeOwnerActionDialog UI component. |
+| 168 | `DeleteReviewDialog` | React component | top-level | yes | `{ busy, isReply, onConfirm, onOpenChange, targetReview, }` | `import("react").JSX.Element` | Renders the DeleteReviewDialog UI component. |
 
 ## Types
 

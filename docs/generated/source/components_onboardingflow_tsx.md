@@ -38,9 +38,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 55 | `isOnboardingMigrationError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 61 | `OnboardingChoiceCard` | React component | top-level | no | `{ children, description, icon: Icon, isSelected, label, onSelect, }` | `import("react").JSX.Element` | not documented |
-| 109 | `OnboardingFlow` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 55 | `isOnboardingMigrationError` | Function | top-level | no | `error` | `boolean` | Implements the isonboardingmigrationerror helper. |
+| 61 | `OnboardingChoiceCard` | React component | top-level | no | `{ children, description, icon: Icon, isSelected, label, onSelect, }` | `import("react").JSX.Element` | Renders the OnboardingChoiceCard UI component. |
+| 109 | `OnboardingFlow` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the OnboardingFlow UI component. |
 
 ## Types
 

@@ -32,9 +32,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 16 | `usePrefersReducedMotion` | React hook | top-level | no | none | `boolean` | not documented |
-| 21 | `update` | Action helper | nested | no | none | `void` | not documented |
-| 31 | `LintPointsFlame` | React component | top-level | yes | `{ animated = true, className, fallbackClassName, }` | `import("react").JSX.Element` | not documented |
+| 16 | `usePrefersReducedMotion` | React hook | top-level | no | none | `boolean` | Provides reusable useprefersreducedmotion state and side effects. |
+| 21 | `update` | Action helper | nested | no | none | `void` | Runs the update workflow for callers. |
+| 31 | `LintPointsFlame` | React component | top-level | yes | `{ animated = true, className, fallbackClassName, }` | `import("react").JSX.Element` | Renders the LintPointsFlame UI component. |
 
 ## Types
 

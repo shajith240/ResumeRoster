@@ -40,8 +40,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 61 | `DialogHeader` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | not documented |
-| 66 | `DialogFooter` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | not documented |
+| 61 | `DialogHeader` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | Renders the DialogHeader UI component. |
+| 66 | `DialogFooter` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | Renders the DialogFooter UI component. |
 
 ## Types
 

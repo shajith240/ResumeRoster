@@ -29,7 +29,7 @@ Edit this when tooling, dependency behavior, build settings, or CI requirements 
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3 | `register` | Function async | top-level | yes | none | `Promise<void>` | not documented |
+| 3 | `register` | Function async | top-level | yes | none | `Promise<void>` | Implements the register helper. |
 
 ## Types
 

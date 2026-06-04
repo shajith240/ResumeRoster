@@ -4,9 +4,9 @@
 
 - Source path: `.github/workflows/ci.yml`
 - Kind: GitHub workflow
-- Size: 1257 bytes
-- Lines: 63
-- Source hash: `5281906ed7de15b9ba4b6ceed5e380af73ac419c1cab609113a83d4b35a11bae`
+- Size: 1344 bytes
+- Lines: 66
+- Source hash: `91702b8eaa01a914063e87866296343a689c5816dbe5a3c0f20c0f15cab479b7`
 
 ## What This File Does
 

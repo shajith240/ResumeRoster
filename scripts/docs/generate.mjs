@@ -16,6 +16,21 @@ import { TSDocParser } from "@microsoft/tsdoc";
 const checkMode = process.argv.includes("--check");
 const sourceRoot = path.join(repoRoot);
 const tsdocParser = new TSDocParser();
+const generationIssues = [];
+
+function recordGenerationIssue(relativePath, stage, error) {
+	const detail =
+		error instanceof Error
+			? error.stack || error.message
+			: typeof error === "string"
+				? error
+				: JSON.stringify(error);
+	generationIssues.push({
+		detail,
+		relativePath,
+		stage,
+	});
+}
 
 function runGit(args) {
 	return execFileSync("git", args, {
@@ -265,6 +280,11 @@ function classifyFunction(name, relativePath) {
 function collectTsDetails(project, relativePath) {
 	const sourceFile = project.getSourceFile(path.join(repoRoot, relativePath));
 	if (!sourceFile) {
+		recordGenerationIssue(
+			relativePath,
+			"typescript-load",
+			"TypeScript parser could not load this file.",
+		);
 		return {
 			error: "TypeScript parser could not load this file.",
 			exports: [],
@@ -303,13 +323,13 @@ function collectTsDetails(project, relativePath) {
 		seen.add(key);
 		functions.push({
 			async: declaration.isAsync(),
-			doc: getDocSummary(declaration),
+			doc: getDocSummary(declaration, relativePath, name),
 			exported: exported.has(name) || declaration.isExported(),
 			kind: classifyFunction(name, relativePath),
 			line,
 			name,
 			params: declaration.getParameters().map((param) => param.getName()),
-			returnType: safeTypeText(declaration),
+			returnType: safeTypeText(declaration, relativePath, name),
 			scope: "top-level",
 		});
 	}
@@ -335,13 +355,13 @@ function collectTsDetails(project, relativePath) {
 			async: initializer.isKind(SyntaxKind.ArrowFunction)
 				? initializer.isAsync()
 				: initializer.getAsyncKeyword() !== undefined,
-			doc: getDocSummary(node),
+			doc: getDocSummary(node, relativePath, name),
 			exported: exported.has(name),
 			kind: classifyFunction(name, relativePath),
 			line,
 			name,
 			params: initializer.getParameters().map((param) => param.getName()),
-			returnType: safeTypeText(initializer),
+			returnType: safeTypeText(initializer, relativePath, name),
 			scope: isTopLevelVariable(node) ? "top-level" : "nested",
 		});
 	});
@@ -353,7 +373,7 @@ function collectTsDetails(project, relativePath) {
 	};
 }
 
-function getDocSummary(node) {
+function getDocSummary(node, relativePath, symbolName) {
 	const docs = typeof node.getJsDocs === "function" ? node.getJsDocs() : [];
 	const docText = docs.at(-1)?.getText();
 	if (!docText) {
@@ -364,12 +384,12 @@ function getDocSummary(node) {
 		if (!statementText) {
 			return "";
 		}
-		return parseDocSummary(statementText);
+		return parseDocSummary(statementText, relativePath, symbolName);
 	}
-	return parseDocSummary(docText);
+	return parseDocSummary(docText, relativePath, symbolName);
 }
 
-function parseDocSummary(docText) {
+function parseDocSummary(docText, relativePath, symbolName) {
 	try {
 		const context = tsdocParser.parseString(docText);
 		const summary = context.docComment.summarySection
@@ -379,7 +399,12 @@ function parseDocSummary(docText) {
 			.replace(/\s+/g, " ")
 			.trim();
 		return summary;
-	} catch {
+	} catch (error) {
+		recordGenerationIssue(
+			relativePath,
+			`tsdoc:${symbolName}`,
+			error,
+		);
 		return "";
 	}
 }
@@ -389,10 +414,15 @@ function isTopLevelVariable(node) {
 	return statement?.getParentIfKind(SyntaxKind.SourceFile) !== undefined;
 }
 
-function safeTypeText(node) {
+function safeTypeText(node, relativePath, symbolName) {
 	try {
 		return node.getReturnType().getText(node);
-	} catch {
+	} catch (error) {
+		recordGenerationIssue(
+			relativePath,
+			`type:${symbolName}`,
+			error,
+		);
 		return "unknown";
 	}
 }
@@ -462,11 +492,32 @@ function formatFunctionTable(functions) {
 		const params = item.params
 			.map((param) => `\`${cleanInline(param, 80)}\``)
 			.join(", ");
+		const summary = item.doc || inferFunctionSummary(item);
 		rows.push(
-			`| ${item.line} | \`${cleanInline(item.name, 80)}\` | ${item.kind}${item.async ? " async" : ""} | ${item.scope} | ${item.exported ? "yes" : "no"} | ${params || "none"} | \`${cleanInline(item.returnType, 140)}\` | ${cleanInline(item.doc, 140) || "not documented"} |`,
+			`| ${item.line} | \`${cleanInline(item.name, 80)}\` | ${item.kind}${item.async ? " async" : ""} | ${item.scope} | ${item.exported ? "yes" : "no"} | ${params || "none"} | \`${cleanInline(item.returnType, 140)}\` | ${cleanInline(summary, 140)} |`,
 		);
 	}
 	return rows.join("\n");
+}
+
+function inferFunctionSummary(item) {
+	const name = humanizeName(item.name).toLowerCase();
+	if (item.kind === "API handler") {
+		return `Handles the ${item.name} request for this API route.`;
+	}
+	if (item.kind === "React hook") {
+		return `Provides reusable ${name} state and side effects.`;
+	}
+	if (item.kind === "React component") {
+		return `Renders the ${humanizeName(item.name)} UI component.`;
+	}
+	if (item.kind === "Validation or normalization helper") {
+		return `Validates or normalizes ${name} values for callers.`;
+	}
+	if (item.kind === "Action helper") {
+		return `Runs the ${name} workflow for callers.`;
+	}
+	return `Implements the ${name} helper.`;
 }
 
 function cleanInline(value, maxLength = 120) {
@@ -727,7 +778,22 @@ function checkOutputs(outputs) {
 	console.log("Generated documentation is up to date.");
 }
 
+function failOnGenerationIssues() {
+	if (generationIssues.length === 0) {
+		return;
+	}
+	console.error("Generated documentation extraction failed:");
+	for (const issue of generationIssues) {
+		console.error(`- ${issue.relativePath} [${issue.stage}]`);
+		if (issue.detail) {
+			console.error(`  ${String(issue.detail).split("\n")[0]}`);
+		}
+	}
+	process.exit(1);
+}
+
 const outputs = buildOutputs();
+failOnGenerationIssues();
 if (checkMode) {
 	checkOutputs(outputs);
 } else {

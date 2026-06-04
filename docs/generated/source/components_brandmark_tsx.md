@@ -29,7 +29,7 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 7 | `BrandMark` | React component | top-level | yes | `{ text = "Linted" }` | `import("react").JSX.Element` | not documented |
+| 7 | `BrandMark` | React component | top-level | yes | `{ text = "Linted" }` | `import("react").JSX.Element` | Renders the BrandMark UI component. |
 
 ## Types
 

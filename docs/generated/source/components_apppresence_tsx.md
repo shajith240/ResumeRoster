@@ -34,11 +34,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 24 | `getSavedStatus` | Function async | top-level | no | `userId` | `Promise<AppStatus>` | not documented |
-| 36 | `getPresenceSessionId` | Function | top-level | no | `userId` | `string` | not documented |
-| 51 | `buildPresencePayload` | Action helper | top-level | no | `userId`, `sessionId`, `status` | `AppPresencePayload` | not documented |
-| 64 | `announcePresenceChange` | Function | top-level | no | `payload` | `void` | not documented |
-| 72 | `AppPresence` | React component | top-level | yes | `{ userId }` | `null` | not documented |
+| 24 | `getSavedStatus` | Function async | top-level | no | `userId` | `Promise<AppStatus>` | Implements the getsavedstatus helper. |
+| 36 | `getPresenceSessionId` | Function | top-level | no | `userId` | `string` | Implements the getpresencesessionid helper. |
+| 51 | `buildPresencePayload` | Action helper | top-level | no | `userId`, `sessionId`, `status` | `AppPresencePayload` | Runs the buildpresencepayload workflow for callers. |
+| 64 | `announcePresenceChange` | Function | top-level | no | `payload` | `void` | Implements the announcepresencechange helper. |
+| 72 | `AppPresence` | React component | top-level | yes | `{ userId }` | `null` | Renders the AppPresence UI component. |
 
 ## Types
 

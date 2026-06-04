@@ -31,18 +31,18 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 66 | `countByUserId` | Function | top-level | no | `rows`, `column` | `Map<string, number>` | not documented |
-| 81 | `getPositiveInt` | Function | top-level | no | `value`, `fallback` | `number` | not documented |
-| 86 | `clampPageSize` | Function | top-level | no | `value` | `number` | not documented |
-| 90 | `getProfilesById` | Function async | top-level | no | `admin`, `userIds` | `Promise<Map<string, ProfileRow>>` | not documented |
-| 104 | `getAuthUsersById` | Function async | top-level | no | `admin`, `userIds` | `Promise<User[]>` | not documented |
-| 129 | `buildAdminUsers` | Function async | top-level | no | `admin`, `authUsers`, `knownProfilesById` | `Promise<AdminUserRow[]>` | not documented |
-| 212 | `normalizeSearchPayload` | Validation or normalization helper | top-level | no | `data`, `fallbackPage`, `perPage` | `AdminUserSearchPayload` | not documented |
-| 236 | `searchAdminUsers` | Function async | top-level | no | `admin`, `query`, `page`, `perPage` | `Promise<AdminUserSearchPayload>` | not documented |
-| 255 | `getLatestUsers` | Function async | top-level | no | `admin` | `Promise<AdminUserRow[]>` | not documented |
-| 284 | `getActiveUsers` | Function async | top-level | no | `admin` | `Promise<{ email: string \| null; lastSeenAt: string; profile: ProfileRow \| null; status: string; userId: string; }[]>` | not documented |
-| 320 | `getProfilePage` | Function async | top-level | no | `admin`, `page`, `perPage` | `Promise<{ profiles: ProfileRow[]; total: number; }>` | not documented |
-| 342 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 66 | `countByUserId` | Function | top-level | no | `rows`, `column` | `Map<string, number>` | Implements the countbyuserid helper. |
+| 81 | `getPositiveInt` | Function | top-level | no | `value`, `fallback` | `number` | Implements the getpositiveint helper. |
+| 86 | `clampPageSize` | Function | top-level | no | `value` | `number` | Implements the clamppagesize helper. |
+| 90 | `getProfilesById` | Function async | top-level | no | `admin`, `userIds` | `Promise<Map<string, ProfileRow>>` | Implements the getprofilesbyid helper. |
+| 104 | `getAuthUsersById` | Function async | top-level | no | `admin`, `userIds` | `Promise<User[]>` | Implements the getauthusersbyid helper. |
+| 129 | `buildAdminUsers` | Function async | top-level | no | `admin`, `authUsers`, `knownProfilesById` | `Promise<AdminUserRow[]>` | Implements the buildadminusers helper. |
+| 212 | `normalizeSearchPayload` | Validation or normalization helper | top-level | no | `data`, `fallbackPage`, `perPage` | `AdminUserSearchPayload` | Validates or normalizes normalizesearchpayload values for callers. |
+| 236 | `searchAdminUsers` | Function async | top-level | no | `admin`, `query`, `page`, `perPage` | `Promise<AdminUserSearchPayload>` | Implements the searchadminusers helper. |
+| 255 | `getLatestUsers` | Function async | top-level | no | `admin` | `Promise<AdminUserRow[]>` | Implements the getlatestusers helper. |
+| 284 | `getActiveUsers` | Function async | top-level | no | `admin` | `Promise<{ email: string \| null; lastSeenAt: string; profile: ProfileRow \| null; status: string; userId: string; }[]>` | Implements the getactiveusers helper. |
+| 320 | `getProfilePage` | Function async | top-level | no | `admin`, `page`, `perPage` | `Promise<{ profiles: ProfileRow[]; total: number; }>` | Implements the getprofilepage helper. |
+| 342 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
 
 ## Types
 

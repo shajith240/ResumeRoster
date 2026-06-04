@@ -30,7 +30,7 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 12 | `createReturnsChain` | Action helper | top-level | no | `data` | `{ gte: import("vitest").Mock<() => { gte: import("vitest").Mock<any>; limit: import("vitest").Mock<() => { gte: import("vitest").Mock<any...` | not documented |
+| 12 | `createReturnsChain` | Action helper | top-level | no | `data` | `{ gte: import("vitest").Mock<() => { gte: import("vitest").Mock<any>; limit: import("vitest").Mock<() => { gte: import("vitest").Mock<any...` | Runs the createreturnschain workflow for callers. |
 
 ## Types
 

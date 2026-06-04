@@ -30,7 +30,7 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 11 | `resume` | Function | top-level | no | `overrides` | `ResumeSummary` | not documented |
+| 11 | `resume` | Function | top-level | no | `overrides` | `ResumeSummary` | Implements the resume helper. |
 
 ## Types
 

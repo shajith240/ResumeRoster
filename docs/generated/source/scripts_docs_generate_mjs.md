@@ -4,9 +4,9 @@
 
 - Source path: `scripts/docs/generate.mjs`
 - Kind: Repository automation
-- Size: 22460 bytes
-- Lines: 737
-- Source hash: `0077ec69eb085d70b30758058d8dd6185d32c9f4824fc0eb0e29cac60e476bef`
+- Size: 24367 bytes
+- Lines: 803
+- Source hash: `a87c92ae420f00afaa43c3d662db075987bcb070a30b78431b878c1863d14b16`
 
 ## What This File Does
 
