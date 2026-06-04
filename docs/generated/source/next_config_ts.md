@@ -4,9 +4,9 @@
 
 - Source path: `next.config.ts`
 - Kind: Project configuration
-- Size: 1436 bytes
-- Lines: 46
-- Source hash: `282c00961f322615c9c80a2ecdc8e7b9daf17bd8b6dd5faca2e3bc58ea0b0b84`
+- Size: 1616 bytes
+- Lines: 55
+- Source hash: `420cf03cd2493221cabdecc60c70a58479a5945b62b25feb129a0e0f772ea4b3`
 
 ## What This File Does
 
@@ -22,6 +22,7 @@ Edit this when tooling, dependency behavior, build settings, or CI requirements 
 
 ## Imports
 
+- `./lib/security/headers`
 - `@sentry/nextjs`
 - `next`
 - `node:path`

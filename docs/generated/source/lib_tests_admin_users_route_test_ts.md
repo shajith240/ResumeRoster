@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/admin-users-route.test.ts`
 - Kind: Unit test
-- Size: 2561 bytes
-- Lines: 109
-- Source hash: `6986e891e625177594b6946bdc9f9eb5706e169961dbe3a7114e4ad7145095d4`
+- Size: 3803 bytes
+- Lines: 162
+- Source hash: `6100fa7a9ce8f0c87e3ac53c35a9f6a96edec67a843320dfe779091111c025de`
 
 ## What This File Does
 
@@ -24,13 +24,14 @@ None detected.
 
 - `@/app/api/admin/users/route`
 - `@/lib/admin`
+- `@/lib/monitoring/capture-errors`
 - `vitest`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 12 | `createReturnsChain` | Action helper | top-level | no | `data` | `{ gte: import("vitest").Mock<() => { gte: import("vitest").Mock<any>; limit: import("vitest").Mock<() => { gte: import("vitest").Mock<any...` | Runs the createreturnschain workflow for callers. |
+| 17 | `createReturnsChain` | Action helper | top-level | no | `{ data = [], error = null, }` | `{ gte: import("vitest").Mock<() => { gte: import("vitest").Mock<any>; limit: import("vitest").Mock<() => { gte: import("vitest").Mock<any...` | Runs the createreturnschain workflow for callers. |
 
 ## Types
 

@@ -4,6 +4,8 @@ Command: `npx knip --no-exit-code --no-progress --reporter compact`
 Exit code: `0`
 
 ```text
+Unused devDependencies (1)
+package.json: @axe-core/playwright
 Unused exports (12)
 lib/admin.ts: AdminAuthError, createAdminSupabaseClient
 lib/app-presence.ts: APP_PRESENCE_ACTIVE_WINDOW_SECONDS
@@ -17,12 +19,13 @@ lib/server-auth.ts: ServerAuthError
 lib/server/push.ts: sendPushForNotification
 lib/session-lock.ts: SESSION_SUPERSEDED_MESSAGE, isValidClientSessionId, createClientSessionId, getClientSessionId, releaseActiveUserSession
 lib/supabase/client.ts: signInWithGoogle
-Unused exported types (6)
+Unused exported types (7)
 lib/admin-messages.ts: AdminMessageTarget, AdminMessageInput
 lib/leaderboard-ranking.ts: LeaderboardRoastInput, LeaderboardTopRoast
 lib/onboarding-validation.ts: OnboardingStatus
 lib/pdf-privacy.ts: PrivacyFindingType
 lib/resume-thread.ts: ThreadRoast, ThreadRoastNode
+lib/server/upload-security.ts: UploadKind, UploadScanVerdict
 lib/supabase/types.ts: ResumeStatus, ResumePrivacyMode, ContentReportReason, ContentReportInputTargetType, CommentAttachmentKind, CommentAttachmentSource, ReviewerApplicationStatus, OnboardingGoalId, OnboardingPersonaId, OnboardingStatus, Roast, ResumeReview, RoasterLeaderboardEntry, ReviewerApplication, PublicProfileRoast
 Duplicate exports (14)
 components/ui/sign-up.tsx: SignUp, Component, default

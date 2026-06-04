@@ -177,6 +177,22 @@ Clone found (sql):
    supabase\migrations\0004_profiles_avatars_public_profile.sql [89:3 - 185:5]
 
 Clone found (typescript):
+ - lib\__tests__\push-subscriptions-route.test.ts [15:4 - 30:9] (15 lines, 120 tokens)
+   lib\__tests__\reviewer-application-route.test.ts [4:62 - 18:6]
+
+Clone found (typescript):
+ - lib\__tests__\comment-media-upload-route.test.ts [1:60 - 14:34] (13 lines, 146 tokens)
+   lib\__tests__\profile-avatar-route.test.ts [1:62 - 14:39]
+
+Clone found (typescript):
+ - lib\__tests__\comment-media-upload-route.test.ts [4:69 - 18:3] (14 lines, 135 tokens)
+   lib\__tests__\reviewer-application-route.test.ts [3:62 - 17:6]
+
+Clone found (typescript):
+ - lib\__tests__\admin-data-route.test.ts [1:49 - 17:9] (16 lines, 161 tokens)
+   lib\__tests__\admin-users-route.test.ts [1:50 - 17:9]
+
+Clone found (typescript):
  - lib\supabase\types.ts [164:38 - 178:15] (14 lines, 155 tokens)
    lib\supabase\types.ts [144:34 - 158:14]
 
@@ -189,34 +205,30 @@ Clone found (tsx):
    components\ui\sign-up.tsx [150:63 - 173:8]
 
 Clone found (typescript):
- - app\api\admin\reports\[id]\action\route.ts [54:24 - 69:47] (15 lines, 167 tokens)
-   app\api\admin\users\[id]\action\route.ts [227:25 - 242:45]
-
-Clone found (typescript):
- - app\api\admin\reports\[id]\action\route.ts [225:55 - 261:26] (36 lines, 242 tokens)
-   app\api\admin\users\[id]\action\route.ts [371:72 - 408:5]
+ - app\api\admin\reports\[id]\action\route.ts [143:24 - 158:47] (15 lines, 167 tokens)
+   app\api\admin\users\[id]\action\route.ts [228:25 - 243:45]
 
 ┌────────────┬────────────────┬─────────────┬──────────────┬──────────────┬──────────────────┬───────────────────┐
 │ Format     │ Files analyzed │ Total lines │ Total tokens │ Clones found │ Duplicated lines │ Duplicated tokens │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ sql        │ 41             │ 9379        │ 79848        │ 43           │ 2096 (22.35%)    │ 16784 (21.02%)    │
+│ sql        │ 46             │ 10440       │ 87800        │ 43           │ 2096 (20.08%)    │ 16784 (19.12%)    │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ markdown   │ 1              │ 92          │ 429          │ 0            │ 0 (0%)           │ 0 (0%)            │
+│ markdown   │ 1              │ 97          │ 439          │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
 │ bash       │ 1              │ 34          │ 39           │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
 │ toml       │ 1              │ 410         │ 1286         │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ javascript │ 74             │ 9942        │ 85331        │ 0            │ 0 (0%)           │ 0 (0%)            │
+│ javascript │ 75             │ 10044       │ 86280        │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ typescript │ 82             │ 9794        │ 83994        │ 3            │ 65 (0.66%)       │ 564 (0.67%)       │
+│ typescript │ 103            │ 12965       │ 109251       │ 6            │ 87 (0.67%)       │ 884 (0.81%)       │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ tsx        │ 77             │ 17197       │ 144496       │ 2            │ 44 (0.26%)       │ 377 (0.26%)       │
+│ tsx        │ 77             │ 17211       │ 144576       │ 2            │ 44 (0.26%)       │ 377 (0.26%)       │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
 │ css        │ 2              │ 494         │ 3451         │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ Total:     │ 279            │ 47342       │ 398874       │ 48           │ 2205 (4.66%)     │ 17725 (4.44%)     │
+│ Total:     │ 306            │ 51695       │ 433122       │ 51           │ 2227 (4.31%)     │ 18045 (4.17%)     │
 └────────────┴────────────────┴─────────────┴──────────────┴──────────────┴──────────────────┴───────────────────┘
-Found 48 clones.
+Found 51 clones.
 time: deterministic
 ```

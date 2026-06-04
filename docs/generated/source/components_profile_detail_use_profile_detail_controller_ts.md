@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/use-profile-detail-controller.ts`
 - Kind: React component
-- Size: 22464 bytes
-- Lines: 813
-- Source hash: `68cd45a7c80d72463587fb3b2db4849034563c6d33b5f628869bfc012b362837`
+- Size: 24169 bytes
+- Lines: 888
+- Source hash: `9630ea1e8423c98861430e5ee7d61a91ba534c9090e3b6f732e3b7972bb2d5bb`
 
 ## What This File Does
 
@@ -26,6 +26,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./data`
 - `./utils`
 - `@/lib/anonymous-profile`
+- `@/lib/avatar-validation`
 - `@/lib/profile-validation`
 - `@/lib/report-validation`
 - `@/lib/reviewer-validation`
@@ -40,11 +41,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 53 | `useProfileDetailController` | React hook | top-level | yes | `profileId` | `{ about: string; applyForTrustedReviewer: () => Promise<void>; avatarPreview: string; college: string; collegeLocation: string; community...` | Provides reusable useprofiledetailcontroller state and side effects. |
+| 62 | `useProfileDetailController` | React hook | top-level | yes | `profileId` | `{ about: string; applyForTrustedReviewer: () => Promise<void>; avatarPreview: string; college: string; collegeLocation: string; community...` | Provides reusable useprofiledetailcontroller state and side effects. |
 
 ## Types
 
-No top-level interfaces or type aliases detected.
+| Line | Name | Kind |
+| --- | --- | --- |
+| 57 | `AvatarUploadResult` | type |
 
 ## Related Tests
 

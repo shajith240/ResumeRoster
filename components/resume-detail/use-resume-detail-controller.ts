@@ -10,6 +10,7 @@ import { getLoginPath } from "@/lib/auth-redirect";
 import { getReviewContentIssue, normalizeCommentContent } from "@/lib/comment-media-validation";
 import { buildThreadReviewTree, normalizeReview } from "@/lib/resume-thread";
 import { getReportIssue, type ReportReason } from "@/lib/report-validation";
+import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { supabase } from "@/lib/supabase/client";
 import type {
 	CommentAttachment,
@@ -120,6 +121,31 @@ export function useResumeDetailController(resumeId: string) {
 		toast.error(errorMessage);
 	}
 
+	function captureResumeDetailError(
+		error: unknown,
+		operation: string,
+		extra: Record<string, unknown> = {},
+	) {
+		capturePrivateError(error, {
+			area: "resume_detail",
+			operation,
+			resumeId,
+			route: "/resume/[id]",
+			userId: user?.id ?? null,
+			...extra,
+		});
+	}
+
+	function reportInternalError(
+		error: unknown,
+		userMessage: string,
+		operation: string,
+		extra: Record<string, unknown> = {},
+	) {
+		captureResumeDetailError(error, operation, extra);
+		reportError(userMessage);
+	}
+
 	function clearFeedbackDrafts() {
 		setContent("");
 		setContentFormat("plain");
@@ -194,7 +220,8 @@ export function useResumeDetailController(resumeId: string) {
 
 		if (signed.error) {
 			setSignedUrl("");
-			setSignedUrlError(signed.error.message);
+			captureResumeDetailError(signed.error, "create_resume_signed_url");
+			setSignedUrlError("Resume preview could not be loaded.");
 			return;
 		}
 
@@ -214,6 +241,7 @@ export function useResumeDetailController(resumeId: string) {
 		});
 
 		if (error) {
+			captureResumeDetailError(error, "record_resume_read");
 			if (process.env.NODE_ENV !== "production") {
 				console.warn("Resume read tracking failed:", error.message);
 			}
@@ -505,7 +533,8 @@ export function useResumeDetailController(resumeId: string) {
 			}
 
 			if (resumeResult.error) {
-				setMessage(resumeResult.error.message ?? "Resume could not be loaded.");
+				captureResumeDetailError(resumeResult.error, "load_resume");
+				setMessage("Resume could not be loaded. Refresh and try again.");
 				setLoading(false);
 				return;
 			}
@@ -660,7 +689,11 @@ export function useResumeDetailController(resumeId: string) {
 				return;
 			}
 
-			reportError(error.message);
+			reportInternalError(
+				error,
+				"We could not post your feedback. Please try again.",
+				"post_feedback",
+			);
 			return;
 		}
 
@@ -782,7 +815,12 @@ export function useResumeDetailController(resumeId: string) {
 				return;
 			}
 
-			reportError(error.message);
+			reportInternalError(
+				error,
+				"We could not post your reply. Please try again.",
+				"post_reply",
+				{ parentReviewId: parentReview.id },
+			);
 			return;
 		}
 
@@ -911,7 +949,12 @@ export function useResumeDetailController(resumeId: string) {
 				.eq("voter_id", user.id);
 
 			if (error) {
-				reportError(error.message);
+				reportInternalError(
+					error,
+					"We could not update your reaction. Please try again.",
+					"delete_review_reaction",
+					{ reviewId: targetReview.id, reaction },
+				);
 				return;
 			}
 
@@ -935,11 +978,20 @@ export function useResumeDetailController(resumeId: string) {
 		const { error } = await voteQuery;
 
 		if (error) {
-			reportError(
-				error.message.includes("reaction")
-					? `${SUPABASE_MIGRATION_MESSAGE} Reactions are not ready yet.`
-					: error.message,
-			);
+			if (error.message.includes("reaction")) {
+				captureResumeDetailError(error, "save_review_reaction", {
+					reaction,
+					reviewId: targetReview.id,
+				});
+				reportError(`${SUPABASE_MIGRATION_MESSAGE} Reactions are not ready yet.`);
+			} else {
+				reportInternalError(
+					error,
+					"We could not update your reaction. Please try again.",
+					"save_review_reaction",
+					{ reaction, reviewId: targetReview.id },
+				);
+			}
 			return;
 		}
 
@@ -1222,7 +1274,12 @@ export function useResumeDetailController(resumeId: string) {
 				return;
 			}
 
-			reportError(error.message);
+			reportInternalError(
+				error,
+				"We could not send this report. Please try again.",
+				"report_review",
+				{ reportReason, reviewId: reportTargetReview.id },
+			);
 			return;
 		}
 

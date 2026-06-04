@@ -6,14 +6,88 @@ import {
 	normalizeProofUrl,
 	REVIEWER_FIELD_LIMITS,
 } from "@/lib/reviewer-validation";
+import { internalErrorResponse } from "@/lib/api-errors";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
+import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import type { CommunityRole, ReviewerType } from "@/lib/supabase/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+type ReviewerApplicationRpcResult = {
+	application: unknown | null;
+	error_code: string | null;
+	ok: boolean;
+};
+
+const RPC_FAILURES: Record<string, { message: string; status: number }> = {
+	details_too_long: {
+		message: "Reviewer application details are too long.",
+		status: 400,
+	},
+	invalid_community_role: {
+		message: "Choose how you want to participate.",
+		status: 400,
+	},
+	invalid_reviewer_type: {
+		message: "Choose a valid reviewer role.",
+		status: 400,
+	},
+	profile_not_found: {
+		message: "Profile not found.",
+		status: 404,
+	},
+	profile_required: {
+		message: "Profile is required.",
+		status: 400,
+	},
+	too_many_expertise: {
+		message: "Choose fewer expertise areas.",
+		status: 400,
+	},
+};
+
 function badRequest(message: string, status = 400) {
 	return Response.json({ message }, { status });
+}
+
+function applicationFailure(error?: unknown, status = 500) {
+	const publicMessage = "Reviewer application failed. No changes were saved.";
+
+	if (error) {
+		return internalErrorResponse(error, {
+			context: {
+				area: "reviewer_application",
+				operation: "submit_reviewer_application",
+				route: "POST /api/reviewer-application",
+			},
+			publicMessage,
+			status,
+		});
+	}
+
+	return Response.json({ message: publicMessage }, { status });
+}
+
+function firstRpcResult(
+	data:
+		| ReviewerApplicationRpcResult[]
+		| ReviewerApplicationRpcResult
+		| null,
+) {
+	if (Array.isArray(data)) return data[0] ?? null;
+	return data;
+}
+
+function rpcFailureResponse(code: string | null | undefined) {
+	const failure = code ? RPC_FAILURES[code] : null;
+	if (!failure) {
+		return applicationFailure(
+			new Error("Unknown reviewer application RPC failure."),
+		);
+	}
+
+	return badRequest(failure.message, failure.status);
 }
 
 async function getPayload(request: Request) {
@@ -75,52 +149,52 @@ export async function POST(request: Request) {
 
 		if (issue) return badRequest(issue);
 
-		const profileUpdate = await admin
-			.from("profiles")
-			.update({
-				community_role: communityRole,
-				reviewer_bio: reviewerBio,
-				reviewer_expertise: reviewerExpertise,
-				reviewer_headline: reviewerHeadline,
-				reviewer_type: reviewerType,
-				reviewer_verification_status: "pending",
-			})
-			.eq("id", user.id);
+		const rateLimitResponse = await enforceApiRateLimit(
+			admin,
+			user.id,
+			"reviewerApplicationSubmit",
+		);
+		if (rateLimitResponse) return rateLimitResponse;
 
-		if (profileUpdate.error) throw new Error(profileUpdate.error.message);
+		const applicationResult = await admin.rpc("submit_reviewer_application", {
+			requested_community_role: communityRole,
+			requested_expertise: reviewerExpertise,
+			requested_note: note,
+			requested_proof_url: proofUrl,
+			requested_reviewer_bio: reviewerBio,
+			requested_reviewer_headline: reviewerHeadline,
+			requested_reviewer_type: reviewerType,
+			target_user_id: user.id,
+		});
 
-		const applicationResult = await admin
-			.from("reviewer_applications")
-			.upsert(
-				{
-					admin_note: "",
-					expertise: reviewerExpertise,
-					note,
-					proof_url: proofUrl,
-					requested_type: reviewerType,
-					reviewed_at: null,
-					reviewed_by: null,
-					status: "pending",
-					user_id: user.id,
-				},
-				{ onConflict: "user_id" },
-			)
-			.select(
-				"id,user_id,requested_type,expertise,proof_url,note,status,admin_note,reviewed_by,reviewed_at,created_at,updated_at",
-			)
-			.single();
+		if (applicationResult.error) return applicationFailure(applicationResult.error);
 
-		if (applicationResult.error) {
-			throw new Error(applicationResult.error.message);
+		const result = firstRpcResult(
+			applicationResult.data as
+				| ReviewerApplicationRpcResult[]
+				| ReviewerApplicationRpcResult
+				| null,
+		);
+
+		if (!result) {
+			return applicationFailure(
+				new Error("Reviewer application RPC returned no result."),
+			);
+		}
+		if (!result.ok) return rpcFailureResponse(result.error_code);
+		if (!result.application) {
+			return applicationFailure(
+				new Error("Reviewer application RPC returned no application."),
+			);
 		}
 
 		return Response.json({
-			application: applicationResult.data,
+			application: result.application,
 			status: "ok",
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return applicationFailure(error);
 		}
 
 		return serverAuthErrorResponse(error);

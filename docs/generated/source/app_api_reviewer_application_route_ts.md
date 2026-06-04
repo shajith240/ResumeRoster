@@ -4,9 +4,9 @@
 
 - Source path: `app/api/reviewer-application/route.ts`
 - Kind: Next API route
-- Size: 3556 bytes
-- Lines: 129
-- Source hash: `c0d3b5de3ac415cae884e363f2dabafcb67ebe44c1ec6a0a239b864b43908930`
+- Size: 5303 bytes
+- Lines: 203
+- Source hash: `d6b010fc893ab01fcfbfec66b908cfce30b85f78ceb38a50bce95089580074f2`
 
 ## What This File Does
 
@@ -24,26 +24,40 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 ## Imports
 
+- `@/lib/api-errors`
 - `@/lib/reviewer-validation`
 - `@/lib/server-auth`
+- `@/lib/server/rate-limit`
 - `@/lib/supabase/types`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 15 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
-| 19 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
-| 27 | `getString` | Function | top-level | no | `payload`, `key` | `string` | Implements the getstring helper. |
-| 32 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
+| 50 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 54 | `applicationFailure` | Function | top-level | no | `error`, `status` | `Response` | Implements the applicationfailure helper. |
+| 72 | `firstRpcResult` | Function | top-level | no | `data` | `ReviewerApplicationRpcResult \| null` | Implements the firstrpcresult helper. |
+| 82 | `rpcFailureResponse` | Function | top-level | no | `code` | `Response` | Implements the rpcfailureresponse helper. |
+| 93 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
+| 101 | `getString` | Function | top-level | no | `payload`, `key` | `string` | Implements the getstring helper. |
+| 106 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
-No top-level interfaces or type aliases detected.
+| Line | Name | Kind |
+| --- | --- | --- |
+| 17 | `ReviewerApplicationRpcResult` | type |
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

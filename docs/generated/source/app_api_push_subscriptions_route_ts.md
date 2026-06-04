@@ -4,9 +4,9 @@
 
 - Source path: `app/api/push/subscriptions/route.ts`
 - Kind: Next API route
-- Size: 3601 bytes
-- Lines: 149
-- Source hash: `ca2701d532feaf17e9d81dab3df0b171bb494c1d309d5ee4d4a5d19ed0bd3e21`
+- Size: 4986 bytes
+- Lines: 208
+- Source hash: `31429f173a3fb6062c7fb8b8a63aa9bff8fa641cbac52d55ac26d47533ac1728`
 
 ## What This File Does
 
@@ -24,26 +24,36 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 ## Imports
 
+- `@/lib/api-errors`
 - `@/lib/server-auth`
+- `@/lib/server/rate-limit`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 14 | `getSubscriptionPayload` | Action helper | top-level | no | `payload` | `{ auth: string; endpoint: string; expirationTime: string \| null; p256dh: string; } \| null` | Runs the getsubscriptionpayload workflow for callers. |
-| 48 | `setPushPreference` | Function async | top-level | no | `admin`, `userId`, `pushEnabled` | `Promise<void>` | Implements the setpushpreference helper. |
-| 63 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
-| 106 | `DELETE` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the DELETE request for this API route. |
+| 18 | `pushDatabaseFailure` | Function | top-level | no | `error`, `operation`, `publicMessage` | `Response` | Implements the pushdatabasefailure helper. |
+| 33 | `getSubscriptionPayload` | Action helper | top-level | no | `payload` | `{ auth: string; endpoint: string; expirationTime: string \| null; p256dh: string; } \| null` | Runs the getsubscriptionpayload workflow for callers. |
+| 67 | `setPushPreference` | Function async | top-level | no | `admin`, `userId`, `pushEnabled` | `Promise<import("@supabase/postgrest-js").PostgrestError \| null>` | Implements the setpushpreference helper. |
+| 84 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
+| 142 | `DELETE` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the DELETE request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 5 | `PushSubscriptionRequest` | type |
+| 7 | `PushSubscriptionRequest` | type |
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

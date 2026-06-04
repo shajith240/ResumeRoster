@@ -4,9 +4,9 @@
 
 - Source path: `app/api/resumes/submit/route.ts`
 - Kind: Next API route
-- Size: 6583 bytes
-- Lines: 253
-- Source hash: `d0af74de5e8dce44491299c79cc168bb92735db5a79c20927949f5f928d3c47c`
+- Size: 7158 bytes
+- Lines: 275
+- Source hash: `250315ee10d5d1de56d60901ef2b461f7f7db825fb00b27f672f28f1281646ad`
 
 ## What This File Does
 
@@ -26,6 +26,8 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 - `@/lib/anonymous-profile`
 - `@/lib/pdf-redaction`
 - `@/lib/resume-privacy`
+- `@/lib/server/rate-limit`
+- `@/lib/server/upload-security`
 - `@/lib/submit-validation`
 - `@supabase/supabase-js`
 - `next/server`
@@ -34,24 +36,31 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 31 | `badRequest` | Function | top-level | no | `message`, `status` | `NextResponse<{ message: string; }>` | Implements the badrequest helper. |
-| 35 | `serverFailure` | Function | top-level | no | `message` | `NextResponse<{ message: string; }>` | Implements the serverfailure helper. |
-| 39 | `getRequiredString` | Function | top-level | no | `formData`, `key` | `string` | Implements the getrequiredstring helper. |
-| 44 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
-| 50 | `ensureSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<import("@supabase/postgrest-js").PostgrestError \| null>` | Runs the ensuresubmitprofile workflow for callers. |
-| 75 | `getSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<SubmitProfile \| null>` | Runs the getsubmitprofile workflow for callers. |
-| 89 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `filePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
-| 101 | `POST` | API handler async | top-level | yes | `request` | `Promise<NextResponse<{ message: string; }> \| NextResponse<{ id: any; privacyMode: "public" \| "contact_hidden" \| "anonymous"; redaction...` | Handles the POST request for this API route. |
+| 33 | `badRequest` | Function | top-level | no | `message`, `status` | `NextResponse<{ message: string; }>` | Implements the badrequest helper. |
+| 37 | `serverFailure` | Function | top-level | no | `message` | `NextResponse<{ message: string; }>` | Implements the serverfailure helper. |
+| 41 | `getRequiredString` | Function | top-level | no | `formData`, `key` | `string` | Implements the getrequiredstring helper. |
+| 46 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
+| 52 | `ensureSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<import("@supabase/postgrest-js").PostgrestError \| null>` | Runs the ensuresubmitprofile workflow for callers. |
+| 77 | `getSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<SubmitProfile \| null>` | Runs the getsubmitprofile workflow for callers. |
+| 91 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `filePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
+| 103 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 26 | `SubmitProfile` | type |
+| 28 | `SubmitProfile` | type |
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

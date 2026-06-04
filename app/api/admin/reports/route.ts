@@ -1,4 +1,5 @@
 import { adminErrorResponse, requireAdmin } from "@/lib/admin";
+import { internalErrorResponse } from "@/lib/api-errors";
 import type { ContentReportStatus } from "@/lib/supabase/types";
 
 export const runtime = "nodejs";
@@ -108,7 +109,14 @@ export async function GET(request: Request) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return internalErrorResponse(error, {
+				context: {
+					area: "admin",
+					operation: "list_reports",
+					route: "GET /api/admin/reports",
+				},
+				publicMessage: "Admin reports could not be loaded.",
+			});
 		}
 		return adminErrorResponse(error);
 	}

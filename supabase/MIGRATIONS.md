@@ -46,6 +46,11 @@
 0039_transactional_admin_messages.sql
 0040_scheduled_temporary_data_cleanup.sql
 0041_admin_user_search_rpc.sql
+0042_transactional_admin_moderation_actions.sql
+0043_transactional_reviewer_application_submit.sql
+0044_upload_security_quarantine.sql
+0045_authenticated_api_rate_limits.sql
+0046_health_readiness_checks.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.

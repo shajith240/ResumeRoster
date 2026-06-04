@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/reviewers/route.ts`
 - Kind: Next API route
-- Size: 2606 bytes
-- Lines: 84
-- Source hash: `b04fd9a904e7331fac3a9198fbbc7f11fdeb291e4d97352f755040f954927cd9`
+- Size: 2825 bytes
+- Lines: 92
+- Source hash: `d19cd97eb39ee60fe8d511952c8b7c87d396d95d4d3f234a1e28ed1521c74058`
 
 ## What This File Does
 
@@ -25,24 +25,32 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 ## Imports
 
 - `@/lib/admin`
+- `@/lib/api-errors`
 - `@/lib/reviewer-validation`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 17 | `uniqueIds` | Function | top-level | no | `values` | `string[]` | Implements the uniqueids helper. |
-| 21 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
+| 18 | `uniqueIds` | Function | top-level | no | `values` | `string[]` | Implements the uniqueids helper. |
+| 22 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 10 | `ProfilePreview` | type |
+| 11 | `ProfilePreview` | type |
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

@@ -4,9 +4,9 @@
 
 - Source path: `app/api/comment-media/upload/route.ts`
 - Kind: Next API route
-- Size: 3015 bytes
-- Lines: 118
-- Source hash: `859f5c650f4d1c4220c84eff56e6e7d6c505245b6eee0d4d96126a58bcb44b26`
+- Size: 3589 bytes
+- Lines: 140
+- Source hash: `bfec40657369f50beb34e88742dded24bb99ad4b4bd0b3d1f8260c664a5f6994`
 
 ## What This File Does
 
@@ -26,17 +26,19 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 - `@/lib/comment-media-validation`
 - `@/lib/server-auth`
+- `@/lib/server/rate-limit`
+- `@/lib/server/upload-security`
 - `@supabase/supabase-js`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 16 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
-| 20 | `uploadFailure` | Action helper | top-level | no | none | `Response` | Runs the uploadfailure workflow for callers. |
-| 27 | `cleanTitle` | Function | top-level | no | `fileName` | `string` | Implements the cleantitle helper. |
-| 37 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `storagePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
-| 49 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
+| 18 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 22 | `uploadFailure` | Action helper | top-level | no | none | `Response` | Runs the uploadfailure workflow for callers. |
+| 29 | `cleanTitle` | Function | top-level | no | `fileName` | `string` | Implements the cleantitle helper. |
+| 39 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `storagePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
+| 51 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
@@ -44,7 +46,14 @@ No top-level interfaces or type aliases detected.
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

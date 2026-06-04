@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Suspense, type ReactNode } from "react";
 import RouteTransitionLoader from "@/components/RouteTransitionLoader";
 import { Toaster } from "@/components/ui/sonner";
+import { THEME_BOOTSTRAP_SCRIPT } from "@/lib/security/theme-bootstrap";
 import "./globals.css";
 import "./notifications.css";
 import "./feed.css";
@@ -63,24 +65,20 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-const themeBootstrapScript = `
-try {
-  var theme = window.localStorage.getItem("linted-theme") === "light" ? "light" : "dark";
-  document.documentElement.dataset.appTheme = theme;
-} catch (error) {
-  document.documentElement.dataset.appTheme = "dark";
-}
-`;
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
+        />
         <div className="app-root">{children}</div>
         <Suspense fallback={null}>
           <RouteTransitionLoader />

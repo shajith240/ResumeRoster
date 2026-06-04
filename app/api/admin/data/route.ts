@@ -1,4 +1,5 @@
 import { adminErrorResponse, requireAdmin } from "@/lib/admin";
+import { internalErrorResponse } from "@/lib/api-errors";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -158,7 +159,14 @@ export async function GET(request: Request) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return internalErrorResponse(error, {
+				context: {
+					area: "admin",
+					operation: "load_data_inventory",
+					route: "GET /api/admin/data",
+				},
+				publicMessage: "Admin data inventory could not be loaded.",
+			});
 		}
 
 		return adminErrorResponse(error);

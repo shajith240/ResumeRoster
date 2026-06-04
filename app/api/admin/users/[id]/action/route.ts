@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { adminErrorResponse, isAdminEmail, requireAdmin } from "@/lib/admin";
+import { internalErrorResponse } from "@/lib/api-errors";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -429,7 +430,14 @@ export async function POST(request: Request, context: RouteContext) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return internalErrorResponse(error, {
+				context: {
+					area: "admin",
+					operation: "mutate_user",
+					route: "POST /api/admin/users/[id]/action",
+				},
+				publicMessage: "Admin user action failed. No changes were saved.",
+			});
 		}
 
 		return adminErrorResponse(error);

@@ -3,6 +3,11 @@
 import { type ChangeEvent, type FormEvent, useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
+import {
+	AVATAR_IMAGE_ALLOWED_MIME_TYPES,
+	AVATAR_IMAGE_MAX_FILE_SIZE_BYTES,
+	type AvatarImageMimeType,
+} from "@/lib/avatar-validation";
 import { supabase } from "@/lib/supabase/client";
 import {
 	PROFILE_FIELD_LIMITS,
@@ -40,7 +45,6 @@ import {
 } from "./constants";
 import { getActivity, loadPublicProfileReviews } from "./data";
 import {
-	cleanFileName,
 	getInitials,
 	getUsernameAvailability,
 	isProfileFeatureError,
@@ -49,6 +53,11 @@ import {
 	isUuid,
 	normalizeProfileToken,
 } from "./utils";
+
+type AvatarUploadResult = {
+	avatar_path: string;
+	avatar_url: string;
+};
 
 export function useProfileDetailController(profileId: string) {
 	const [user, setUser] = useState<User | null>(null);
@@ -271,14 +280,18 @@ export function useProfileDetailController(profileId: string) {
 			return;
 		}
 
-		if (!nextFile.type.startsWith("image/")) {
-			const errorMessage = "Upload a JPG, PNG, WEBP, or GIF profile image.";
+		if (
+			!AVATAR_IMAGE_ALLOWED_MIME_TYPES.includes(
+				nextFile.type.toLowerCase() as AvatarImageMimeType,
+			)
+		) {
+			const errorMessage = "Upload a PNG, JPG, or WebP profile image.";
 			setSaveMessage(errorMessage);
 			toast.error(errorMessage);
 			return;
 		}
 
-		if (nextFile.size > 5 * 1024 * 1024) {
+		if (nextFile.size > AVATAR_IMAGE_MAX_FILE_SIZE_BYTES) {
 			const errorMessage = "Profile image must be 5 MB or smaller.";
 			setSaveMessage(errorMessage);
 			toast.error(errorMessage);
@@ -293,29 +306,75 @@ export function useProfileDetailController(profileId: string) {
 		setAvatarPreview(URL.createObjectURL(nextFile));
 	}
 
-	async function uploadAvatar(activeUser: User) {
+	async function getAuthenticatedJsonHeaders(message: string) {
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
+
+		if (!session?.access_token) {
+			throw new Error(message);
+		}
+
+		return {
+			Authorization: `Bearer ${session.access_token}`,
+			"Content-Type": "application/json",
+		};
+	}
+
+	async function uploadAvatar(activeUser: User): Promise<AvatarUploadResult | null> {
 		if (!avatarFile) return null;
 
-		const filePath = `${activeUser.id}/${Date.now()}-${cleanFileName(avatarFile.name)}`;
-		const upload = await supabase.storage.from("avatars").upload(filePath, avatarFile, {
-			contentType: avatarFile.type,
-			upsert: false,
-		});
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
 
-		if (upload.error) {
+		if (!session?.access_token) {
+			throw new Error("Sign in again before uploading a profile image.");
+		}
+
+		const formData = new FormData();
+		formData.set("file", avatarFile);
+
+		const response = await fetch("/api/profile/avatar", {
+			body: formData,
+			headers: {
+				Authorization: `Bearer ${session.access_token}`,
+			},
+			method: "POST",
+		});
+		const payload = (await response.json().catch(() => ({}))) as Partial<
+			AvatarUploadResult & { message: string }
+		>;
+
+		if (!response.ok || !payload.avatar_path || !payload.avatar_url) {
 			throw new Error(
-				`${upload.error.message}. ${SUPABASE_MIGRATION_MESSAGE}`,
+				payload.message ?? "Profile image upload failed. Please try again.",
 			);
 		}
 
-		const publicUrl = supabase.storage.from("avatars").getPublicUrl(filePath)
-			.data.publicUrl;
-
-		if (profile?.avatar_path?.startsWith(`${activeUser.id}/`)) {
-			void supabase.storage.from("avatars").remove([profile.avatar_path]);
+		if (!payload.avatar_path.startsWith(`${activeUser.id}/`)) {
+			throw new Error("Profile image upload failed. Please try again.");
 		}
 
-		return { avatar_path: filePath, avatar_url: publicUrl };
+		return {
+			avatar_path: payload.avatar_path,
+			avatar_url: payload.avatar_url,
+		};
+	}
+
+	async function cleanupAvatar(avatarPath: string) {
+		const headers = await getAuthenticatedJsonHeaders(
+			"Sign in again before cleaning up a profile image.",
+		);
+		const response = await fetch("/api/profile/avatar", {
+			body: JSON.stringify({ avatarPath }),
+			headers,
+			method: "DELETE",
+		});
+
+		if (!response.ok) {
+			throw new Error("Profile image cleanup failed.");
+		}
 	}
 
 	async function saveProfile(event: FormEvent<HTMLFormElement>) {
@@ -350,6 +409,10 @@ export function useProfileDetailController(profileId: string) {
 			}
 
 			const avatarUpdate = await uploadAvatar(user);
+			const previousAvatarPath =
+				avatarUpdate && profile?.avatar_path?.startsWith(`${user.id}/`)
+					? profile.avatar_path
+					: "";
 			const nextPosition =
 				limitText(currentPosition, PROFILE_FIELD_LIMITS.currentPosition).trim() ||
 				null;
@@ -402,6 +465,10 @@ export function useProfileDetailController(profileId: string) {
 				.eq("id", user.id);
 
 			if (error) {
+				if (avatarUpdate) {
+					await cleanupAvatar(avatarUpdate.avatar_path).catch(() => undefined);
+				}
+
 				if (isUsernameConstraintError(error)) {
 					throw new Error("That username is already taken. Try another name.");
 				}
@@ -411,6 +478,14 @@ export function useProfileDetailController(profileId: string) {
 						? SUPABASE_MIGRATION_MESSAGE
 						: error.message,
 				);
+			}
+
+			if (
+				avatarUpdate &&
+				previousAvatarPath &&
+				previousAvatarPath !== avatarUpdate.avatar_path
+			) {
+				await cleanupAvatar(previousAvatarPath).catch(() => undefined);
 			}
 
 			setProfile((current) =>
@@ -428,7 +503,7 @@ export function useProfileDetailController(profileId: string) {
 						id: user.id,
 						full_name: nextProfile.full_name,
 						username: nextProfile.username,
-						avatar_url: avatarUpdate?.avatar_url || profile?.avatar_url || null,
+						avatar_url: avatarUpdate?.avatar_url ?? profile?.avatar_url ?? null,
 					},
 				}),
 			);

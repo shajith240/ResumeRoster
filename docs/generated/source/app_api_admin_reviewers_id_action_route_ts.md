@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/reviewers/[id]/action/route.ts`
 - Kind: Next API route
-- Size: 4432 bytes
-- Lines: 156
-- Source hash: `2b4db9c6630adc37b06d2dd3167737e7818c02b30617dcaf8e3a9049a6d453b8`
+- Size: 4104 bytes
+- Lines: 162
+- Source hash: `39e4c1a193eb81644e5de41b7ce9b09fc3fb80bffedc7af90aeffb1c598e575a`
 
 ## What This File Does
 
@@ -25,26 +25,39 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 ## Imports
 
 - `@/lib/admin`
+- `@/lib/api-errors`
 - `@/lib/reviewer-validation`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 22 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
-| 26 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
-| 34 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | Handles the POST request for this API route. |
+| 51 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 55 | `actionFailure` | Function | top-level | no | `error`, `status` | `Response` | Implements the actionfailure helper. |
+| 73 | `isUuid` | Function | top-level | no | `value` | `boolean` | Implements the isuuid helper. |
+| 77 | `firstRpcResult` | Function | top-level | no | `data` | `AdminReviewerRpcResult \| null` | Implements the firstrpcresult helper. |
+| 84 | `rpcFailureResponse` | Function | top-level | no | `code` | `Response` | Implements the rpcfailureresponse helper. |
+| 93 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
+| 101 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 7 | `AdminReviewerAction` | type |
-| 12 | `RouteContext` | type |
+| 8 | `AdminReviewerAction` | type |
+| 13 | `AdminReviewerRpcResult` | type |
+| 19 | `RouteContext` | type |
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

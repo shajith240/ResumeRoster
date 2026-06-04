@@ -4,9 +4,9 @@
 
 - Source path: `vitest.config.ts`
 - Kind: Project configuration
-- Size: 283 bytes
-- Lines: 15
-- Source hash: `3acfa260c02f247936948892d21944f1839406cf8651a32ee9c81d61b5e45f2b`
+- Size: 734 bytes
+- Lines: 38
+- Source hash: `e39d671b4fb4682590692eb14fefd2410f1e13543977b189a12782a7e7be1a41`
 
 ## What This File Does
 

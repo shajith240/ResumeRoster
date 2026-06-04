@@ -14,6 +14,8 @@ import {
 	TARGET_ROLES,
 	cleanResumeFileName,
 } from "@/lib/submit-validation";
+import { enforceApiRateLimit } from "@/lib/server/rate-limit";
+import { enforceUploadSecurity } from "@/lib/server/upload-security";
 
 export const runtime = "nodejs";
 
@@ -179,6 +181,13 @@ export async function POST(request: Request) {
 		return badRequest("Add what you want help with.");
 	}
 
+	const rateLimitResponse = await enforceApiRateLimit(
+		admin,
+		user.id,
+		"resumeSubmit",
+	);
+	if (rateLimitResponse) return rateLimitResponse;
+
 	const profileError = await ensureSubmitProfile(admin, user);
 	if (profileError) {
 		return serverFailure();
@@ -186,6 +195,19 @@ export async function POST(request: Request) {
 
 	const profile = await getSubmitProfile(admin, user);
 	const originalBytes = new Uint8Array(await file.arrayBuffer());
+	const uploadSecurity = await enforceUploadSecurity(admin, {
+		bytes: originalBytes,
+		fileName: file.name,
+		fileSize: file.size,
+		mimeType: "application/pdf",
+		uploadKind: "resume",
+		userId: user.id,
+	});
+
+	if (!uploadSecurity.ok) {
+		return badRequest(uploadSecurity.message, uploadSecurity.status);
+	}
+
 	let processedPdf: Awaited<ReturnType<typeof redactResumePdf>>;
 
 	try {

@@ -10,3 +10,6 @@ vercel
 .vercel
 *.tsbuildinfo
 docs/generated/typedoc/
+coverage/
+playwright-report/
+test-results/

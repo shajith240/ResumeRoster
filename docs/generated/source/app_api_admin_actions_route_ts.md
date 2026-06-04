@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/actions/route.ts`
 - Kind: Next API route
-- Size: 1675 bytes
-- Lines: 57
-- Source hash: `7a8f2a3bb2f650f0949c4ec91e9219d0bac02fe56af1e2e98857a61208ee58f5`
+- Size: 1892 bytes
+- Lines: 65
+- Source hash: `a953315c65b838be0953befbc723f39047e9a9ea60c09fa1c3388d3bb601c6bd`
 
 ## What This File Does
 
@@ -25,13 +25,14 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 ## Imports
 
 - `@/lib/admin`
+- `@/lib/api-errors`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 6 | `uniqueIds` | Function | top-level | no | `values` | `string[]` | Implements the uniqueids helper. |
-| 10 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
+| 7 | `uniqueIds` | Function | top-level | no | `values` | `string[]` | Implements the uniqueids helper. |
+| 11 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
 
 ## Types
 
@@ -39,7 +40,14 @@ No top-level interfaces or type aliases detected.
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

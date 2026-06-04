@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/data/route.ts`
 - Kind: Next API route
-- Size: 4217 bytes
-- Lines: 167
-- Source hash: `fcb7f6546ed904a428b8126a4bc9467c3c4474da32f051d03c3d742d7f422f2f`
+- Size: 4433 bytes
+- Lines: 175
+- Source hash: `dbd89aa89eb5b5059985ef5f7033dcf3bdc832ca0a6bd1b0655bd70e63ff4b2b`
 
 ## What This File Does
 
@@ -25,23 +25,31 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 ## Imports
 
 - `@/lib/admin`
+- `@/lib/api-errors`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 11 | `getCount` | Function async | top-level | no | `query` | `Promise<number>` | Implements the getcount helper. |
-| 17 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
+| 12 | `getCount` | Function async | top-level | no | `query` | `Promise<number>` | Implements the getcount helper. |
+| 18 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 6 | `CountQuery` | type |
+| 7 | `CountQuery` | type |
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

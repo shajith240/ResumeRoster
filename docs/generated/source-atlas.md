@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 297 source-controlled files.
-Manifest hash: `ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3`
+Generated from 324 source-controlled files.
+Manifest hash: `ad8469032047251f9bc731ae5df36a8c31e9a66e6d6b47ae7f199f73122895ae`
 
 ## Folder Coverage
 
@@ -11,22 +11,22 @@ Manifest hash: `ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3
 | --- | ---: |
 | `.github` | 1 |
 | `(root)` | 19 |
-| `app` | 41 |
+| `app` | 42 |
 | `components` | 72 |
 | `docs` | 36 |
-| `lib` | 53 |
+| `lib` | 73 |
 | `public` | 26 |
-| `scripts` | 5 |
-| `supabase` | 44 |
+| `scripts` | 6 |
+| `supabase` | 49 |
 
 ## File Kinds
 
 | Kind | Files |
 | --- | ---: |
-| Application library module | 32 |
+| Application library module | 40 |
 | Documentation | 36 |
 | GitHub workflow | 1 |
-| Next API route | 17 |
+| Next API route | 18 |
 | Next page route | 16 |
 | Next root layout | 1 |
 | Project configuration | 17 |
@@ -34,11 +34,11 @@ Manifest hash: `ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3
 | Public browser asset | 1 |
 | Public visual asset | 25 |
 | React component | 54 |
-| Repository automation | 5 |
+| Repository automation | 6 |
 | Root documentation | 3 |
-| Supabase migration | 41 |
+| Supabase migration | 46 |
 | UI primitive | 18 |
-| Unit test | 21 |
+| Unit test | 33 |
 
 ## Files
 
@@ -63,6 +63,7 @@ Manifest hash: `ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3
 | `app/api/admin/users/route.ts` | Next API route | [open](source/app_api_admin_users_route_ts.md) |
 | `app/api/comment-media/upload/route.ts` | Next API route | [open](source/app_api_comment_media_upload_route_ts.md) |
 | `app/api/health/route.ts` | Next API route | [open](source/app_api_health_route_ts.md) |
+| `app/api/profile/avatar/route.ts` | Next API route | [open](source/app_api_profile_avatar_route_ts.md) |
 | `app/api/push/dispatch/route.ts` | Next API route | [open](source/app_api_push_dispatch_route_ts.md) |
 | `app/api/push/subscriptions/route.ts` | Next API route | [open](source/app_api_push_subscriptions_route_ts.md) |
 | `app/api/resumes/submit/route.ts` | Next API route | [open](source/app_api_resumes_submit_route_ts.md) |
@@ -201,37 +202,53 @@ Manifest hash: `ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3
 | `instrumentation-client.ts` | Project configuration | [open](source/instrumentation_client_ts.md) |
 | `instrumentation.ts` | Project configuration | [open](source/instrumentation_ts.md) |
 | `knip.json` | Project configuration | [open](source/knip_json.md) |
+| `lib/__tests__/admin-data-route.test.ts` | Unit test | [open](source/lib_tests_admin_data_route_test_ts.md) |
 | `lib/__tests__/admin-messages.test.ts` | Unit test | [open](source/lib_tests_admin_messages_test_ts.md) |
+| `lib/__tests__/admin-moderation-actions-route.test.ts` | Unit test | [open](source/lib_tests_admin_moderation_actions_route_test_ts.md) |
 | `lib/__tests__/admin-users-route.test.ts` | Unit test | [open](source/lib_tests_admin_users_route_test_ts.md) |
 | `lib/__tests__/admin.test.ts` | Unit test | [open](source/lib_tests_admin_test_ts.md) |
 | `lib/__tests__/anonymous-profile.test.ts` | Unit test | [open](source/lib_tests_anonymous_profile_test_ts.md) |
+| `lib/__tests__/api-rate-limit.test.ts` | Unit test | [open](source/lib_tests_api_rate_limit_test_ts.md) |
 | `lib/__tests__/auth-errors.test.ts` | Unit test | [open](source/lib_tests_auth_errors_test_ts.md) |
+| `lib/__tests__/avatar-validation.test.ts` | Unit test | [open](source/lib_tests_avatar_validation_test_ts.md) |
+| `lib/__tests__/comment-media-upload-route.test.ts` | Unit test | [open](source/lib_tests_comment_media_upload_route_test_ts.md) |
 | `lib/__tests__/comment-media-validation.test.ts` | Unit test | [open](source/lib_tests_comment_media_validation_test_ts.md) |
 | `lib/__tests__/feed-ranking.test.ts` | Unit test | [open](source/lib_tests_feed_ranking_test_ts.md) |
+| `lib/__tests__/health-route.test.ts` | Unit test | [open](source/lib_tests_health_route_test_ts.md) |
 | `lib/__tests__/leaderboard-ranking.test.ts` | Unit test | [open](source/lib_tests_leaderboard_ranking_test_ts.md) |
 | `lib/__tests__/monitoring-sentry.test.ts` | Unit test | [open](source/lib_tests_monitoring_sentry_test_ts.md) |
 | `lib/__tests__/notifications.test.ts` | Unit test | [open](source/lib_tests_notifications_test_ts.md) |
 | `lib/__tests__/onboarding-validation.test.ts` | Unit test | [open](source/lib_tests_onboarding_validation_test_ts.md) |
 | `lib/__tests__/pdf-privacy.test.ts` | Unit test | [open](source/lib_tests_pdf_privacy_test_ts.md) |
 | `lib/__tests__/pdf-redaction.test.ts` | Unit test | [open](source/lib_tests_pdf_redaction_test_ts.md) |
+| `lib/__tests__/profile-avatar-route.test.ts` | Unit test | [open](source/lib_tests_profile_avatar_route_test_ts.md) |
 | `lib/__tests__/profile-validation.test.ts` | Unit test | [open](source/lib_tests_profile_validation_test_ts.md) |
+| `lib/__tests__/push-subscriptions-route.test.ts` | Unit test | [open](source/lib_tests_push_subscriptions_route_test_ts.md) |
 | `lib/__tests__/report-validation.test.ts` | Unit test | [open](source/lib_tests_report_validation_test_ts.md) |
 | `lib/__tests__/resume-display.test.ts` | Unit test | [open](source/lib_tests_resume_display_test_ts.md) |
 | `lib/__tests__/resume-privacy.test.ts` | Unit test | [open](source/lib_tests_resume_privacy_test_ts.md) |
+| `lib/__tests__/resume-submit-route.test.ts` | Unit test | [open](source/lib_tests_resume_submit_route_test_ts.md) |
 | `lib/__tests__/resume-thread.test.ts` | Unit test | [open](source/lib_tests_resume_thread_test_ts.md) |
+| `lib/__tests__/reviewer-application-route.test.ts` | Unit test | [open](source/lib_tests_reviewer_application_route_test_ts.md) |
 | `lib/__tests__/reviewer-validation.test.ts` | Unit test | [open](source/lib_tests_reviewer_validation_test_ts.md) |
 | `lib/__tests__/saved-resumes.test.ts` | Unit test | [open](source/lib_tests_saved_resumes_test_ts.md) |
+| `lib/__tests__/security-headers.test.ts` | Unit test | [open](source/lib_tests_security_headers_test_ts.md) |
 | `lib/__tests__/submit-validation.test.ts` | Unit test | [open](source/lib_tests_submit_validation_test_ts.md) |
+| `lib/__tests__/upload-security.test.ts` | Unit test | [open](source/lib_tests_upload_security_test_ts.md) |
 | `lib/admin-messages.ts` | Application library module | [open](source/lib_admin_messages_ts.md) |
 | `lib/admin.ts` | Application library module | [open](source/lib_admin_ts.md) |
 | `lib/anonymous-profile.ts` | Application library module | [open](source/lib_anonymous_profile_ts.md) |
+| `lib/api-errors.ts` | Application library module | [open](source/lib_api_errors_ts.md) |
 | `lib/app-presence.ts` | Application library module | [open](source/lib_app_presence_ts.md) |
 | `lib/auth-errors.ts` | Application library module | [open](source/lib_auth_errors_ts.md) |
 | `lib/auth-redirect.ts` | Application library module | [open](source/lib_auth_redirect_ts.md) |
 | `lib/auth-session.ts` | Application library module | [open](source/lib_auth_session_ts.md) |
+| `lib/avatar-validation.ts` | Application library module | [open](source/lib_avatar_validation_ts.md) |
 | `lib/comment-media-validation.ts` | Application library module | [open](source/lib_comment_media_validation_ts.md) |
 | `lib/feed-ranking.ts` | Application library module | [open](source/lib_feed_ranking_ts.md) |
+| `lib/image-upload-validation.ts` | Application library module | [open](source/lib_image_upload_validation_ts.md) |
 | `lib/leaderboard-ranking.ts` | Application library module | [open](source/lib_leaderboard_ranking_ts.md) |
+| `lib/monitoring/capture-errors.ts` | Application library module | [open](source/lib_monitoring_capture_errors_ts.md) |
 | `lib/monitoring/error-monitoring.ts` | Application library module | [open](source/lib_monitoring_error_monitoring_ts.md) |
 | `lib/notifications.ts` | Application library module | [open](source/lib_notifications_ts.md) |
 | `lib/onboarding-validation.ts` | Application library module | [open](source/lib_onboarding_validation_ts.md) |
@@ -245,8 +262,12 @@ Manifest hash: `ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3
 | `lib/resume-thread.ts` | Application library module | [open](source/lib_resume_thread_ts.md) |
 | `lib/reviewer-validation.ts` | Application library module | [open](source/lib_reviewer_validation_ts.md) |
 | `lib/saved-resumes.ts` | Application library module | [open](source/lib_saved_resumes_ts.md) |
+| `lib/security/headers.ts` | Application library module | [open](source/lib_security_headers_ts.md) |
+| `lib/security/theme-bootstrap.ts` | Application library module | [open](source/lib_security_theme_bootstrap_ts.md) |
 | `lib/server-auth.ts` | Application library module | [open](source/lib_server_auth_ts.md) |
 | `lib/server/push.ts` | Application library module | [open](source/lib_server_push_ts.md) |
+| `lib/server/rate-limit.ts` | Application library module | [open](source/lib_server_rate_limit_ts.md) |
+| `lib/server/upload-security.ts` | Application library module | [open](source/lib_server_upload_security_ts.md) |
 | `lib/session-lock.ts` | Application library module | [open](source/lib_session_lock_ts.md) |
 | `lib/submit-validation.ts` | Application library module | [open](source/lib_submit_validation_ts.md) |
 | `lib/supabase/avatars.ts` | Application library module | [open](source/lib_supabase_avatars_ts.md) |
@@ -291,6 +312,7 @@ Manifest hash: `ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3
 | `scripts/docs/docs-config.mjs` | Repository automation | [open](source/scripts_docs_docs_config_mjs.md) |
 | `scripts/docs/generate.mjs` | Repository automation | [open](source/scripts_docs_generate_mjs.md) |
 | `scripts/docs/quality.mjs` | Repository automation | [open](source/scripts_docs_quality_mjs.md) |
+| `scripts/performance/check-budgets.mjs` | Repository automation | [open](source/scripts_performance_check_budgets_mjs.md) |
 | `scripts/supabase/check-sql-source-of-truth.mjs` | Repository automation | [open](source/scripts_supabase_check_sql_source_of_truth_mjs.md) |
 | `supabase/.gitignore` | Project file | [open](source/supabase_gitignore.md) |
 | `supabase/config.toml` | Project configuration | [open](source/supabase_config_toml.md) |
@@ -336,6 +358,11 @@ Manifest hash: `ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3
 | `supabase/migrations/0039_transactional_admin_messages.sql` | Supabase migration | [open](source/supabase_migrations_0039_transactional_admin_messages_sql.md) |
 | `supabase/migrations/0040_scheduled_temporary_data_cleanup.sql` | Supabase migration | [open](source/supabase_migrations_0040_scheduled_temporary_data_cleanup_sql.md) |
 | `supabase/migrations/0041_admin_user_search_rpc.sql` | Supabase migration | [open](source/supabase_migrations_0041_admin_user_search_rpc_sql.md) |
+| `supabase/migrations/0042_transactional_admin_moderation_actions.sql` | Supabase migration | [open](source/supabase_migrations_0042_transactional_admin_moderation_actions_sql.md) |
+| `supabase/migrations/0043_transactional_reviewer_application_submit.sql` | Supabase migration | [open](source/supabase_migrations_0043_transactional_reviewer_application_submit_sql.md) |
+| `supabase/migrations/0044_upload_security_quarantine.sql` | Supabase migration | [open](source/supabase_migrations_0044_upload_security_quarantine_sql.md) |
+| `supabase/migrations/0045_authenticated_api_rate_limits.sql` | Supabase migration | [open](source/supabase_migrations_0045_authenticated_api_rate_limits_sql.md) |
+| `supabase/migrations/0046_health_readiness_checks.sql` | Supabase migration | [open](source/supabase_migrations_0046_health_readiness_checks_sql.md) |
 | `tailwind.config.ts` | Project configuration | [open](source/tailwind_config_ts.md) |
 | `tsconfig.json` | Project configuration | [open](source/tsconfig_json.md) |
 | `typedoc.json` | Project configuration | [open](source/typedoc_json.md) |

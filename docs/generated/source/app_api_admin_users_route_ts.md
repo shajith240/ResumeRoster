@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/users/route.ts`
 - Kind: Next API route
-- Size: 11153 bytes
-- Lines: 414
-- Source hash: `5e0ba2047d4a08bb29105c530bb4dcaf39d280db9d10ec7d4ea71d57966620c6`
+- Size: 11352 bytes
+- Lines: 422
+- Source hash: `1002002feab25a605331c7337ba3262a9592dbaaea1b7a9ee1ebccd8fea2c420`
 
 ## What This File Does
 
@@ -25,38 +25,46 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 ## Imports
 
 - `@/lib/admin`
+- `@/lib/api-errors`
 - `@supabase/supabase-js`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 66 | `countByUserId` | Function | top-level | no | `rows`, `column` | `Map<string, number>` | Implements the countbyuserid helper. |
-| 81 | `getPositiveInt` | Function | top-level | no | `value`, `fallback` | `number` | Implements the getpositiveint helper. |
-| 86 | `clampPageSize` | Function | top-level | no | `value` | `number` | Implements the clamppagesize helper. |
-| 90 | `getProfilesById` | Function async | top-level | no | `admin`, `userIds` | `Promise<Map<string, ProfileRow>>` | Implements the getprofilesbyid helper. |
-| 104 | `getAuthUsersById` | Function async | top-level | no | `admin`, `userIds` | `Promise<User[]>` | Implements the getauthusersbyid helper. |
-| 129 | `buildAdminUsers` | Function async | top-level | no | `admin`, `authUsers`, `knownProfilesById` | `Promise<AdminUserRow[]>` | Implements the buildadminusers helper. |
-| 212 | `normalizeSearchPayload` | Validation or normalization helper | top-level | no | `data`, `fallbackPage`, `perPage` | `AdminUserSearchPayload` | Validates or normalizes normalizesearchpayload values for callers. |
-| 236 | `searchAdminUsers` | Function async | top-level | no | `admin`, `query`, `page`, `perPage` | `Promise<AdminUserSearchPayload>` | Implements the searchadminusers helper. |
-| 255 | `getLatestUsers` | Function async | top-level | no | `admin` | `Promise<AdminUserRow[]>` | Implements the getlatestusers helper. |
-| 284 | `getActiveUsers` | Function async | top-level | no | `admin` | `Promise<{ email: string \| null; lastSeenAt: string; profile: ProfileRow \| null; status: string; userId: string; }[]>` | Implements the getactiveusers helper. |
-| 320 | `getProfilePage` | Function async | top-level | no | `admin`, `page`, `perPage` | `Promise<{ profiles: ProfileRow[]; total: number; }>` | Implements the getprofilepage helper. |
-| 342 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
+| 67 | `countByUserId` | Function | top-level | no | `rows`, `column` | `Map<string, number>` | Implements the countbyuserid helper. |
+| 82 | `getPositiveInt` | Function | top-level | no | `value`, `fallback` | `number` | Implements the getpositiveint helper. |
+| 87 | `clampPageSize` | Function | top-level | no | `value` | `number` | Implements the clamppagesize helper. |
+| 91 | `getProfilesById` | Function async | top-level | no | `admin`, `userIds` | `Promise<Map<string, ProfileRow>>` | Implements the getprofilesbyid helper. |
+| 105 | `getAuthUsersById` | Function async | top-level | no | `admin`, `userIds` | `Promise<User[]>` | Implements the getauthusersbyid helper. |
+| 130 | `buildAdminUsers` | Function async | top-level | no | `admin`, `authUsers`, `knownProfilesById` | `Promise<AdminUserRow[]>` | Implements the buildadminusers helper. |
+| 213 | `normalizeSearchPayload` | Validation or normalization helper | top-level | no | `data`, `fallbackPage`, `perPage` | `AdminUserSearchPayload` | Validates or normalizes normalizesearchpayload values for callers. |
+| 237 | `searchAdminUsers` | Function async | top-level | no | `admin`, `query`, `page`, `perPage` | `Promise<AdminUserSearchPayload>` | Implements the searchadminusers helper. |
+| 256 | `getLatestUsers` | Function async | top-level | no | `admin` | `Promise<AdminUserRow[]>` | Implements the getlatestusers helper. |
+| 285 | `getActiveUsers` | Function async | top-level | no | `admin` | `Promise<{ email: string \| null; lastSeenAt: string; profile: ProfileRow \| null; status: string; userId: string; }[]>` | Implements the getactiveusers helper. |
+| 321 | `getProfilePage` | Function async | top-level | no | `admin`, `page`, `perPage` | `Promise<{ profiles: ProfileRow[]; total: number; }>` | Implements the getprofilepage helper. |
+| 343 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 17 | `ProfileRow` | type |
-| 35 | `PresenceRow` | type |
-| 41 | `AdminUserDataFootprint` | type |
-| 50 | `AdminUserRow` | type |
-| 59 | `AdminUserSearchPayload` | type |
+| 18 | `ProfileRow` | type |
+| 36 | `PresenceRow` | type |
+| 42 | `AdminUserDataFootprint` | type |
+| 51 | `AdminUserRow` | type |
+| 60 | `AdminUserSearchPayload` | type |
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

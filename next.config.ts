@@ -2,6 +2,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildStaticSecurityHeaders } from "./lib/security/headers";
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 const shouldUploadErrorMonitoringSourceMaps = Boolean(
@@ -16,6 +17,14 @@ const nextConfig: NextConfig = {
 		// CI runs `npm run lint` with the flat ESLint config. Skipping Next's
 		// build-time lint avoids duplicate linting and its legacy plugin detector.
 		ignoreDuringBuilds: true,
+	},
+	async headers() {
+		return [
+			{
+				source: "/(.*)",
+				headers: buildStaticSecurityHeaders(),
+			},
+		];
 	},
 	outputFileTracingRoot: join(projectRoot),
 	serverExternalPackages: ["mupdf"],

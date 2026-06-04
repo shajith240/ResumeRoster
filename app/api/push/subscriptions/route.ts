@@ -1,4 +1,6 @@
+import { internalErrorResponse } from "@/lib/api-errors";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
+import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -10,6 +12,23 @@ type PushSubscriptionRequest = {
 		p256dh?: unknown;
 	};
 };
+
+const PUSH_ROUTE = "POST/DELETE /api/push/subscriptions";
+
+function pushDatabaseFailure(
+	error: unknown,
+	operation: string,
+	publicMessage: string,
+) {
+	return internalErrorResponse(error, {
+		context: {
+			area: "push_notifications",
+			operation,
+			route: PUSH_ROUTE,
+		},
+		publicMessage,
+	});
+}
 
 function getSubscriptionPayload(payload: unknown) {
 	if (!payload || typeof payload !== "object") return null;
@@ -50,7 +69,7 @@ async function setPushPreference(
 	userId: string,
 	pushEnabled: boolean,
 ) {
-	await admin.from("notification_preferences").upsert(
+	const { error } = await admin.from("notification_preferences").upsert(
 		{
 			push_enabled: pushEnabled,
 			updated_at: new Date().toISOString(),
@@ -58,6 +77,8 @@ async function setPushPreference(
 		},
 		{ onConflict: "user_id" },
 	);
+
+	return error ?? null;
 }
 
 export async function POST(request: Request) {
@@ -71,6 +92,13 @@ export async function POST(request: Request) {
 				{ status: 400 },
 			);
 		}
+
+		const rateLimitResponse = await enforceApiRateLimit(
+			admin,
+			user.id,
+			"pushSubscriptionWrite",
+		);
+		if (rateLimitResponse) return rateLimitResponse;
 
 		const now = new Date().toISOString();
 		const { error } = await admin.from("push_subscriptions").upsert(
@@ -89,13 +117,21 @@ export async function POST(request: Request) {
 		);
 
 		if (error) {
-			return Response.json(
-				{ message: "Could not save push subscription." },
-				{ status: 500 },
+			return pushDatabaseFailure(
+				error,
+				"save_push_subscription",
+				"Could not save push subscription.",
 			);
 		}
 
-		await setPushPreference(admin, user.id, true);
+		const preferenceError = await setPushPreference(admin, user.id, true);
+		if (preferenceError) {
+			return pushDatabaseFailure(
+				preferenceError,
+				"enable_push_preference",
+				"Could not enable push notifications.",
+			);
+		}
 
 		return Response.json({ ok: true });
 	} catch (error) {
@@ -113,6 +149,13 @@ export async function DELETE(request: Request) {
 			typeof payload?.endpoint === "string" ? payload.endpoint.trim() : "";
 		const now = new Date().toISOString();
 
+		const rateLimitResponse = await enforceApiRateLimit(
+			admin,
+			user.id,
+			"pushSubscriptionWrite",
+		);
+		if (rateLimitResponse) return rateLimitResponse;
+
 		let update = admin
 			.from("push_subscriptions")
 			.update({ revoked_at: now, updated_at: now })
@@ -125,20 +168,36 @@ export async function DELETE(request: Request) {
 
 		const { error } = await update;
 		if (error) {
-			return Response.json(
-				{ message: "Could not disable push notifications." },
-				{ status: 500 },
+			return pushDatabaseFailure(
+				error,
+				"revoke_push_subscription",
+				"Could not disable push notifications.",
 			);
 		}
 
-		const { count } = await admin
+		const { count, error: countError } = await admin
 			.from("push_subscriptions")
 			.select("id", { count: "exact", head: true })
 			.eq("user_id", user.id)
 			.is("revoked_at", null);
 
+		if (countError) {
+			return pushDatabaseFailure(
+				countError,
+				"count_active_push_subscriptions",
+				"Could not verify push notification settings.",
+			);
+		}
+
 		if (!count) {
-			await setPushPreference(admin, user.id, false);
+			const preferenceError = await setPushPreference(admin, user.id, false);
+			if (preferenceError) {
+				return pushDatabaseFailure(
+					preferenceError,
+					"disable_push_preference",
+					"Could not disable push notifications.",
+				);
+			}
 		}
 
 		return Response.json({ ok: true });

@@ -6,6 +6,8 @@ import {
 	type CommentImageMimeType,
 } from "@/lib/comment-media-validation";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
+import { enforceApiRateLimit } from "@/lib/server/rate-limit";
+import { enforceUploadSecurity } from "@/lib/server/upload-security";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -56,6 +58,13 @@ export async function POST(request: Request) {
 			return badRequest("Upload a PNG, JPG, or WebP image.");
 		}
 
+		const rateLimitResponse = await enforceApiRateLimit(
+			admin,
+			user.id,
+			"commentMediaUpload",
+		);
+		if (rateLimitResponse) return rateLimitResponse;
+
 		const bytes = new Uint8Array(await file.arrayBuffer());
 		const issue = getCommentImageUploadIssue({
 			bytes,
@@ -67,6 +76,19 @@ export async function POST(request: Request) {
 		if (issue) return badRequest(issue);
 
 		const mimeType = detectCommentImageMimeType(bytes) as CommentImageMimeType;
+		const uploadSecurity = await enforceUploadSecurity(admin, {
+			bytes,
+			fileName: file.name,
+			fileSize: file.size,
+			mimeType,
+			uploadKind: "comment-media",
+			userId: user.id,
+		});
+
+		if (!uploadSecurity.ok) {
+			return badRequest(uploadSecurity.message, uploadSecurity.status);
+		}
+
 		const extension = getCommentImageExtension(mimeType);
 		const storagePath = `${user.id}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
 		const title = cleanTitle(file.name);

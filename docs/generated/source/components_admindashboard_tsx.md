@@ -4,9 +4,9 @@
 
 - Source path: `components/AdminDashboard.tsx`
 - Kind: React component
-- Size: 15276 bytes
-- Lines: 547
-- Source hash: `1423b34dd3427242c1c5037b94064ca7873e27f8860adc3044ec0165844a918b`
+- Size: 15401 bytes
+- Lines: 563
+- Source hash: `6682b0b476fce25cdfa54bfe58a595361c634e324525351882c523e219c51edd`
 
 ## What This File Does
 
@@ -48,7 +48,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 49 | `AdminDashboard` | React component | top-level | yes | `{ view = "overview", }` | `import("react").JSX.Element` | Renders the AdminDashboard UI component. |
+| 56 | `AdminDashboard` | React component | top-level | yes | `{ view = "overview", }` | `import("react").JSX.Element` | Renders the AdminDashboard UI component. |
 
 ## Types
 

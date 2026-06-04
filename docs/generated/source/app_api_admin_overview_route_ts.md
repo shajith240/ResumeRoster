@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/overview/route.ts`
 - Kind: Next API route
-- Size: 3340 bytes
-- Lines: 117
-- Source hash: `db91c63404b04b11d71fbfc8544f2e3b31627406f9a6ef3e4bd9eed8157dd62c`
+- Size: 3540 bytes
+- Lines: 125
+- Source hash: `1846b23c0bfa126f2d0a332ffacc1c680c9572bf091bd7e501d550aaca8122f8`
 
 ## What This File Does
 
@@ -25,13 +25,14 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 ## Imports
 
 - `@/lib/admin`
+- `@/lib/api-errors`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 8 | `getCount` | Function async | top-level | no | `query` | `Promise<number>` | Implements the getcount helper. |
-| 16 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
+| 9 | `getCount` | Function async | top-level | no | `query` | `Promise<number>` | Implements the getcount helper. |
+| 17 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the GET request for this API route. |
 
 ## Types
 
@@ -39,7 +40,14 @@ No top-level interfaces or type aliases detected.
 
 ## Related Tests
 
+- `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
+- `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/health-route.test.ts`
+- `lib/__tests__/profile-avatar-route.test.ts`
+- `lib/__tests__/push-subscriptions-route.test.ts`
+- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

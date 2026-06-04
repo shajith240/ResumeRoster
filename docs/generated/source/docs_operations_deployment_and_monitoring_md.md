@@ -4,9 +4,9 @@
 
 - Source path: `docs/operations/deployment-and-monitoring.md`
 - Kind: Documentation
-- Size: 722 bytes
-- Lines: 34
-- Source hash: `a72a848ecfdf3f1a44f12477edee998c889eaabf5e0b8a8cc23e06f95f450ebd`
+- Size: 1100 bytes
+- Lines: 39
+- Source hash: `b95145dc10d825eaf13143a9f573cdf0169bdba89e4710195beceec1bccb6274`
 
 ## What This File Does
 

@@ -23,11 +23,16 @@ Relevant files:
 
 ## Health Check
 
-`app/api/health/route.ts` provides a simple health endpoint.
+`app/api/health/route.ts` provides the readiness endpoint. It checks Supabase
+database connectivity, required Storage buckets, the scheduled temporary-data
+cleanup cron job, and Web Push delivery configuration. Healthy responses return
+HTTP `200`; failed readiness returns HTTP `503` with safe public component
+messages.
 
 ## Deployment Safety
 
 - Keep source-map upload tokens in environment variables.
 - Do not commit production secrets.
-- Confirm CI passes before deploy.
+- Confirm the full CI quality gate passes before deploy, including coverage,
+  browser, accessibility, responsive layout, and performance budget checks.
 - Run database dry-run before schema changes.

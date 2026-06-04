@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/use-resume-detail-controller.ts`
 - Kind: React component
-- Size: 33384 bytes
-- Lines: 1305
-- Source hash: `d47d90f98a507a5b264d63a774adaf6c4fb92c79844e45d49ff6d6d9faeb4fe2`
+- Size: 34912 bytes
+- Lines: 1362
+- Source hash: `55f9a88a48c0edeadaf1c03c2f9b6edbe3faf948d8cf87df1ec12d20f81ea7af`
 
 ## What This File Does
 
@@ -31,6 +31,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/lib/anonymous-profile`
 - `@/lib/auth-redirect`
 - `@/lib/comment-media-validation`
+- `@/lib/monitoring/capture-errors`
 - `@/lib/report-validation`
 - `@/lib/resume-thread`
 - `@/lib/supabase/client`
@@ -44,8 +45,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 49 | `useResumeDetailController` | React hook | top-level | yes | `resumeId` | `{ attachmentsById: Record<string, CommentAttachmentOption>; authorProfiles: Record<string, AuthorProfile>; collapsedReviewIds: Set<string...` | Provides reusable useresumedetailcontroller state and side effects. |
-| 863 | `applyLocalReaction` | Function | nested | no | `nextReaction` | `void` | Implements the applylocalreaction helper. |
+| 50 | `useResumeDetailController` | React hook | top-level | yes | `resumeId` | `{ attachmentsById: Record<string, CommentAttachmentOption>; authorProfiles: Record<string, AuthorProfile>; collapsedReviewIds: Set<string...` | Provides reusable useresumedetailcontroller state and side effects. |
+| 901 | `applyLocalReaction` | Function | nested | no | `nextReaction` | `void` | Implements the applylocalreaction helper. |
 
 ## Types
 

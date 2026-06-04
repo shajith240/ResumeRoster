@@ -26,6 +26,11 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL: https://ci.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
       SUPABASE_SERVICE_ROLE_KEY: ci-placeholder-service-role-key
+      NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY: ci-placeholder-public-key
+      WEB_PUSH_PRIVATE_KEY: ci-placeholder-private-key
+      WEB_PUSH_SUBJECT: mailto:ci@example.com
+      PUSH_WEBHOOK_SECRET: ci-placeholder-webhook-secret
+      UPLOAD_MALWARE_SCAN_MODE: off
 
     steps:
       - name: Checkout repository
@@ -40,11 +45,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install browser dependencies
+        run: npx playwright install --with-deps chromium
+
       - name: Check Supabase SQL source of truth
         run: npm run db:check
 
-      - name: Run tests
-        run: npm run test
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
 
       - name: Check generated documentation
         run: npm run docs:check
@@ -63,3 +71,15 @@ jobs:
 
       - name: Build production bundle
         run: npm run build
+
+      - name: Check production bundle budgets
+        run: npm run test:performance
+
+      - name: Run E2E browser tests
+        run: npm run test:e2e
+
+      - name: Run accessibility browser tests
+        run: npm run test:a11y
+
+      - name: Run responsive visual layout tests
+        run: npm run test:visual

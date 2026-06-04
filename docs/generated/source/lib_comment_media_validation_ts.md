@@ -4,9 +4,9 @@
 
 - Source path: `lib/comment-media-validation.ts`
 - Kind: Application library module
-- Size: 4522 bytes
-- Lines: 165
-- Source hash: `7a9b7dceecd586c5d3b3c5a15cabebe84aada8626eb5a223a7edd2c8e691a722`
+- Size: 3960 bytes
+- Lines: 134
+- Source hash: `669bce05bcb05b0ade056510c7349a4e82b0607d672ce39023c6318ae4ec70b1`
 
 ## What This File Does
 
@@ -38,31 +38,28 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Imports
 
-None detected.
+- `@/lib/image-upload-validation`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 45 | `hasBytes` | Function | top-level | no | `bytes`, `values`, `offset` | `boolean` | Implements the hasbytes helper. |
-| 49 | `detectCommentImageMimeType` | Function | top-level | yes | `bytes` | `"" \| "image/png" \| "image/jpeg" \| "image/webp"` | Implements the detectcommentimagemimetype helper. |
-| 70 | `getCommentImageExtension` | Function | top-level | yes | `mimeType` | `"jpg" \| "webp" \| "png"` | Implements the getcommentimageextension helper. |
-| 81 | `getCommentImageUploadIssue` | Action helper | top-level | yes | `file` | `"" \| "Upload a PNG, JPG, or WebP image." \| "Choose an image file." \| "Choose a non-empty image file." \| "Keep comment images under 3M...` | Runs the getcommentimageuploadissue workflow for callers. |
-| 107 | `isCommentContentFormat` | Function | top-level | yes | `value` | `boolean` | Implements the iscommentcontentformat helper. |
-| 113 | `normalizeCommentContent` | Validation or normalization helper | top-level | yes | `content` | `string` | Validates or normalizes normalizecommentcontent values for callers. |
-| 117 | `getVisibleGraphemeCount` | Function | top-level | no | `content` | `number` | Implements the getvisiblegraphemecount helper. |
-| 128 | `getStorageCharacterCount` | Function | top-level | no | `content` | `number` | Implements the getstoragecharactercount helper. |
-| 132 | `getReviewContentIssue` | Function | top-level | yes | `{ attachmentId, content, contentFormat, }` | `"" \| "Write at least 10 characters of useful feedback." \| "Keep feedback under 4000 characters." \| "Choose a valid comment format." \|...` | Implements the getreviewcontentissue helper. |
+| 50 | `getCommentImageUploadIssue` | Action helper | top-level | yes | `file` | `"" \| "Upload a PNG, JPG, or WebP image." \| "Choose an image file." \| "Choose a non-empty image file." \| "Keep comment images under 3M...` | Runs the getcommentimageuploadissue workflow for callers. |
+| 76 | `isCommentContentFormat` | Function | top-level | yes | `value` | `boolean` | Implements the iscommentcontentformat helper. |
+| 82 | `normalizeCommentContent` | Validation or normalization helper | top-level | yes | `content` | `string` | Validates or normalizes normalizecommentcontent values for callers. |
+| 86 | `getVisibleGraphemeCount` | Function | top-level | no | `content` | `number` | Implements the getvisiblegraphemecount helper. |
+| 97 | `getStorageCharacterCount` | Function | top-level | no | `content` | `number` | Implements the getstoragecharactercount helper. |
+| 101 | `getReviewContentIssue` | Function | top-level | yes | `{ attachmentId, content, contentFormat, }` | `"" \| "Write at least 10 characters of useful feedback." \| "Keep feedback under 4000 characters." \| "Choose a valid comment format." \|...` | Implements the getreviewcontentissue helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 15 | `CommentImageMimeType` | type |
-| 17 | `CommentContentFormat` | type |
-| 19 | `SegmenterLike` | type |
-| 23 | `IntlWithSegmenter` | type |
-| 35 | `CommentImageFileInput` | type |
+| 18 | `CommentImageMimeType` | type |
+| 19 | `CommentContentFormat` | type |
+| 21 | `SegmenterLike` | type |
+| 25 | `IntlWithSegmenter` | type |
+| 37 | `CommentImageFileInput` | type |
 
 ## Related Tests
 

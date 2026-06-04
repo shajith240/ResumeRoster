@@ -1,4 +1,5 @@
 import { adminErrorResponse, requireAdmin } from "@/lib/admin";
+import { internalErrorResponse } from "@/lib/api-errors";
 import { REVIEWER_FIELD_LIMITS, limitReviewerText } from "@/lib/reviewer-validation";
 
 export const runtime = "nodejs";
@@ -9,9 +10,18 @@ type AdminReviewerAction =
 	| "reject_reviewer"
 	| "reset_reviewer";
 
+type AdminReviewerRpcResult = {
+	application: unknown | null;
+	error_code: string | null;
+	ok: boolean;
+};
+
 type RouteContext = {
 	params: Promise<{ id: string }>;
 };
+
+const UUID_PATTERN =
+	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const ACTIONS = new Set<AdminReviewerAction>([
 	"approve_reviewer",
@@ -19,8 +29,65 @@ const ACTIONS = new Set<AdminReviewerAction>([
 	"reset_reviewer",
 ]);
 
+const RPC_FAILURES: Record<string, { message: string; status: number }> = {
+	admin_user_required: {
+		message: "Admin user is required.",
+		status: 400,
+	},
+	application_not_found: {
+		message: "Application not found.",
+		status: 404,
+	},
+	invalid_action: {
+		message: "Choose a valid reviewer action.",
+		status: 400,
+	},
+	profile_not_found: {
+		message: "Profile not found.",
+		status: 404,
+	},
+};
+
 function badRequest(message: string, status = 400) {
 	return Response.json({ message }, { status });
+}
+
+function actionFailure(error?: unknown, status = 500) {
+	const publicMessage = "Reviewer action failed. No changes were saved.";
+
+	if (error) {
+		return internalErrorResponse(error, {
+			context: {
+				area: "admin",
+				operation: "review_reviewer_application",
+				route: "POST /api/admin/reviewers/[id]/action",
+			},
+			publicMessage,
+			status,
+		});
+	}
+
+	return Response.json({ message: publicMessage }, { status });
+}
+
+function isUuid(value: string) {
+	return UUID_PATTERN.test(value);
+}
+
+function firstRpcResult(
+	data: AdminReviewerRpcResult[] | AdminReviewerRpcResult | null,
+) {
+	if (Array.isArray(data)) return data[0] ?? null;
+	return data;
+}
+
+function rpcFailureResponse(code: string | null | undefined) {
+	const failure = code ? RPC_FAILURES[code] : null;
+	if (!failure) {
+		return actionFailure(new Error("Unknown reviewer action RPC failure."));
+	}
+
+	return badRequest(failure.message, failure.status);
 }
 
 async function getPayload(request: Request) {
@@ -57,97 +124,36 @@ export async function POST(request: Request, context: RouteContext) {
 			return badRequest("Choose a valid reviewer action.");
 		}
 
-		const applicationResult = await admin
-			.from("reviewer_applications")
-			.select(
-				"id,user_id,requested_type,expertise,proof_url,note,status,admin_note,reviewed_by,reviewed_at,created_at,updated_at",
-			)
-			.eq("id", applicationId)
-			.maybeSingle();
+		if (!isUuid(applicationId)) return badRequest("Application not found.", 404);
 
-		if (applicationResult.error) {
-			throw new Error(applicationResult.error.message);
-		}
-		if (!applicationResult.data) return badRequest("Application not found.", 404);
-
-		const application = applicationResult.data;
-		const now = new Date().toISOString();
-		let nextStatus: "pending" | "approved" | "rejected" = "pending";
-		let profilePatch: Record<string, unknown> = {};
-
-		if (action === "approve_reviewer") {
-			nextStatus = "approved";
-			profilePatch = {
-				reviewer_expertise: application.expertise ?? [],
-				reviewer_type: application.requested_type,
-				reviewer_verification_status: "verified",
-				reviewer_verified_at: now,
-				reviewer_verified_by: user.id,
-			};
-		}
-
-		if (action === "reject_reviewer") {
-			nextStatus = "rejected";
-			profilePatch = {
-				reviewer_verification_status: "rejected",
-				reviewer_verified_at: null,
-				reviewer_verified_by: null,
-			};
-		}
-
-		if (action === "reset_reviewer") {
-			nextStatus = "pending";
-			profilePatch = {
-				reviewer_verification_status: "pending",
-				reviewer_verified_at: null,
-				reviewer_verified_by: null,
-			};
-		}
-
-		const [applicationUpdate, profileUpdate] = await Promise.all([
-			admin
-				.from("reviewer_applications")
-				.update({
-					admin_note: adminNote,
-					reviewed_at: action === "reset_reviewer" ? null : now,
-					reviewed_by: action === "reset_reviewer" ? null : user.id,
-					status: nextStatus,
-				})
-				.eq("id", application.id)
-				.select(
-					"id,user_id,requested_type,expertise,proof_url,note,status,admin_note,reviewed_by,reviewed_at,created_at,updated_at",
-				)
-				.single(),
-			admin.from("profiles").update(profilePatch).eq("id", application.user_id),
-		]);
-
-		if (applicationUpdate.error) {
-			throw new Error(applicationUpdate.error.message);
-		}
-		if (profileUpdate.error) throw new Error(profileUpdate.error.message);
-
-		const logResult = await admin.from("moderation_actions").insert({
-			action,
-			admin_user_id: user.id,
-			metadata: {
-				application_status: nextStatus,
-				requested_type: application.requested_type,
-				user_id: application.user_id,
-			},
-			reason: adminNote,
-			target_id: application.id,
-			target_type: "reviewer_application",
+		const rpcResult = await admin.rpc("admin_review_reviewer_application", {
+			reviewer_action: action,
+			reviewer_admin_note: adminNote,
+			reviewing_admin_user_id: user.id,
+			target_application_id: applicationId,
 		});
 
-		if (logResult.error) throw new Error(logResult.error.message);
+		if (rpcResult.error) return actionFailure(rpcResult.error);
+
+		const result = firstRpcResult(
+			rpcResult.data as AdminReviewerRpcResult[] | AdminReviewerRpcResult | null,
+		);
+
+		if (!result) {
+			return actionFailure(new Error("Reviewer action RPC returned no result."));
+		}
+		if (!result.ok) return rpcFailureResponse(result.error_code);
+		if (!result.application) {
+			return actionFailure(new Error("Reviewer action RPC returned no application."));
+		}
 
 		return Response.json({
-			application: applicationUpdate.data,
+			application: result.application,
 			status: "ok",
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return actionFailure(error);
 		}
 
 		return adminErrorResponse(error);

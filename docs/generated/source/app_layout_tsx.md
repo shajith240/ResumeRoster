@@ -4,9 +4,9 @@
 
 - Source path: `app/layout.tsx`
 - Kind: Next root layout
-- Size: 2324 bytes
-- Lines: 93
-- Source hash: `fffa328476c10ffc7acd4bbfc14cd86427e0b6b5debc6286c5d897d06ac9c56b`
+- Size: 2293 bytes
+- Lines: 91
+- Source hash: `5d27a6a982d9c02af0021b6562eb6779e576517af701a5154fec20af02c6602e`
 
 ## What This File Does
 
@@ -31,14 +31,16 @@ Edit this when the documented behavior or supporting repository file changes.
 - `./notifications.css`
 - `@/components/RouteTransitionLoader`
 - `@/components/ui/sonner`
+- `@/lib/security/theme-bootstrap`
 - `next`
+- `next/headers`
 - `react`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 75 | `RootLayout` | React component | top-level | yes | `{ children, }` | `import("react").JSX.Element` | Renders the RootLayout UI component. |
+| 68 | `RootLayout` | React component async | top-level | yes | `{ children, }` | `Promise<import("react").JSX.Element>` | Renders the RootLayout UI component. |
 
 ## Types
 

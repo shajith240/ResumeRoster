@@ -23,8 +23,15 @@ import type { ReviewerApplicationStatus } from "@/lib/reviewer-validation";
 import { adminSections } from "./admin-dashboard/constants";
 import { ContentPage } from "./admin-dashboard/content";
 import { DataPage } from "./admin-dashboard/data";
-import { AdminMessageDialog, DeleteUserDialog } from "./admin-dashboard/dialogs";
-import { AuditPage, ReportsPage, ReviewersPage } from "./admin-dashboard/moderation";
+import {
+	AdminMessageDialog,
+	DeleteUserDialog,
+} from "./admin-dashboard/dialogs";
+import {
+	AuditPage,
+	ReportsPage,
+	ReviewersPage,
+} from "./admin-dashboard/moderation";
 import { AdminSectionNav } from "./admin-dashboard/navigation";
 import { MetricCard, OverviewPage } from "./admin-dashboard/overview";
 import { PeoplePage } from "./admin-dashboard/people";
@@ -144,100 +151,108 @@ export default function AdminDashboard({
 		[headers],
 	);
 
-	const loadAdminData = useCallback(async function loadAdminData() {
-		if (!accessToken || !isAdmin) return;
+	const loadAdminData = useCallback(
+		async function loadAdminData() {
+			if (!accessToken || !isAdmin) return;
 
-		setPageLoading(true);
+			setPageLoading(true);
 
-		try {
-			const overviewPromise = fetchJson<AdminOverview>("/api/admin/overview");
-			const sectionPromise = (() => {
+			try {
+				const overviewPromise = fetchJson<AdminOverview>("/api/admin/overview");
+				const sectionPromise = (() => {
+					if (view === "reports") {
+						return fetchJson<{ reports: ReportPreview[] }>(
+							`/api/admin/reports?status=${reportStatus}&limit=100`,
+						);
+					}
+					if (view === "reviewers") {
+						return fetchJson<{ applications: ReviewerApplicationPreview[] }>(
+							`/api/admin/reviewers?status=${reviewerStatus}&limit=100`,
+						);
+					}
+					if (view === "people") {
+						const params = new URLSearchParams({
+							page: String(peoplePage),
+							perPage: "10",
+						});
+						if (userQuery.trim()) {
+							params.set("query", userQuery.trim());
+						}
+						return fetchJson<AdminUsersResponse>(
+							`/api/admin/users?${params.toString()}`,
+						);
+					}
+					if (view === "audit") {
+						return fetchJson<{ actions: ModerationAction[] }>(
+							"/api/admin/actions?limit=100",
+						);
+					}
+					if (view === "data") {
+						return fetchJson<AdminDataInventory>("/api/admin/data");
+					}
+					return Promise.resolve(null);
+				})();
+
+				const [overviewData, sectionData] = await Promise.all([
+					overviewPromise,
+					sectionPromise,
+				]);
+
+				setOverview(overviewData);
+
 				if (view === "reports") {
-					return fetchJson<{ reports: ReportPreview[] }>(
-						`/api/admin/reports?status=${reportStatus}&limit=100`,
+					setReports(
+						(sectionData as { reports: ReportPreview[] } | null)?.reports ?? [],
 					);
 				}
 				if (view === "reviewers") {
-					return fetchJson<{ applications: ReviewerApplicationPreview[] }>(
-						`/api/admin/reviewers?status=${reviewerStatus}&limit=100`,
+					setReviewerApplications(
+						(
+							sectionData as {
+								applications: ReviewerApplicationPreview[];
+							} | null
+						)?.applications ?? [],
 					);
 				}
 				if (view === "people") {
-					const params = new URLSearchParams({
-						page: String(peoplePage),
-						perPage: "10",
-					});
-					if (userQuery.trim()) {
-						params.set("query", userQuery.trim());
+					const peopleData = sectionData as AdminUsersResponse | null;
+					setUsers(peopleData?.users ?? []);
+					setLatestUsers(peopleData?.latestUsers ?? []);
+					setActiveUsers(peopleData?.activeUsers ?? []);
+					if (peopleData?.pagination) {
+						setPeoplePagination(peopleData.pagination);
 					}
-					return fetchJson<AdminUsersResponse>(
-						`/api/admin/users?${params.toString()}`,
-					);
 				}
 				if (view === "audit") {
-					return fetchJson<{ actions: ModerationAction[] }>(
-						"/api/admin/actions?limit=100",
+					setActions(
+						(sectionData as { actions: ModerationAction[] } | null)?.actions ??
+							[],
 					);
 				}
 				if (view === "data") {
-					return fetchJson<AdminDataInventory>("/api/admin/data");
+					setDataInventory(sectionData as AdminDataInventory | null);
 				}
-				return Promise.resolve(null);
-			})();
-
-			const [overviewData, sectionData] = await Promise.all([
-				overviewPromise,
-				sectionPromise,
-			]);
-
-			setOverview(overviewData);
-
-			if (view === "reports") {
-				setReports(
-					(sectionData as { reports: ReportPreview[] } | null)?.reports ?? [],
-				);
+			} finally {
+				setPageLoading(false);
 			}
-			if (view === "reviewers") {
-				setReviewerApplications(
-					(sectionData as { applications: ReviewerApplicationPreview[] } | null)
-						?.applications ?? [],
-				);
-			}
-			if (view === "people") {
-				const peopleData = sectionData as AdminUsersResponse | null;
-				setUsers(peopleData?.users ?? []);
-				setLatestUsers(peopleData?.latestUsers ?? []);
-				setActiveUsers(peopleData?.activeUsers ?? []);
-				if (peopleData?.pagination) {
-					setPeoplePagination(peopleData.pagination);
-				}
-			}
-			if (view === "audit") {
-				setActions(
-					(sectionData as { actions: ModerationAction[] } | null)?.actions ??
-						[],
-				);
-			}
-			if (view === "data") {
-				setDataInventory(sectionData as AdminDataInventory | null);
-			}
-		} finally {
-			setPageLoading(false);
-		}
-	}, [
-		accessToken,
-		fetchJson,
-		isAdmin,
-		peoplePage,
-		reportStatus,
-		reviewerStatus,
-		userQuery,
-		view,
-	]);
+		},
+		[
+			accessToken,
+			fetchJson,
+			isAdmin,
+			peoplePage,
+			reportStatus,
+			reviewerStatus,
+			userQuery,
+			view,
+		],
+	);
 
 	useEffect(() => {
 		void loadAdminData().catch((error) => {
-			toast.error(error instanceof Error ? error.message : "Admin load failed.");
+			toast.error(
+				error instanceof Error ? error.message : "Admin load failed.",
+			);
 		});
 	}, [loadAdminData]);
 
@@ -246,7 +261,9 @@ export default function AdminDashboard({
 
 		const timer = window.setInterval(() => {
 			void loadAdminData().catch((error) => {
-				toast.error(error instanceof Error ? error.message : "Admin refresh failed.");
+				toast.error(
+					error instanceof Error ? error.message : "Admin refresh failed.",
+				);
 			});
 		}, 30_000);
 
@@ -341,7 +358,9 @@ export default function AdminDashboard({
 			const skippedText = response.skipped
 				? ` ${response.skipped} skipped by preferences.`
 				: "";
-			toast.success(`Message sent to ${response.delivered} users.${skippedText}`);
+			toast.success(
+				`Message sent to ${response.delivered} users.${skippedText}`,
+			);
 			setMessageTarget(null);
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Message failed.");
@@ -370,7 +389,9 @@ export default function AdminDashboard({
 	}
 
 	if (loading) {
-		return <main className="admin-route page-enter">Checking admin access...</main>;
+		return (
+			<main className="admin-route page-enter">Checking admin access...</main>
+		);
 	}
 
 	if (!isAdmin) {
@@ -459,9 +480,7 @@ export default function AdminDashboard({
 					{pageLoading ? (
 						<div className="admin-page-loading">Refreshing admin data</div>
 					) : null}
-					{view === "overview" ? (
-						<OverviewPage stats={stats} />
-					) : null}
+					{view === "overview" ? <OverviewPage stats={stats} /> : null}
 					{view === "reports" ? (
 						<ReportsPage
 							adminNotes={adminNotes}
@@ -510,9 +529,7 @@ export default function AdminDashboard({
 							status={reviewerStatus}
 						/>
 					) : null}
-					{view === "content" ? (
-						<ContentPage overview={overview} />
-					) : null}
+					{view === "content" ? <ContentPage overview={overview} /> : null}
 					{view === "audit" ? <AuditPage actions={actions} /> : null}
 					{view === "data" ? <DataPage inventory={dataInventory} /> : null}
 				</div>
@@ -520,8 +537,7 @@ export default function AdminDashboard({
 			<DeleteUserDialog
 				busy={Boolean(
 					deleteTarget &&
-						busyAction ===
-							`user:${deleteTarget.id}:delete_user_account`,
+					busyAction === `user:${deleteTarget.id}:delete_user_account`,
 				)}
 				onConfirm={() =>
 					deleteTarget

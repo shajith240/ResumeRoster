@@ -10,31 +10,31 @@
   ],
   "files": [
     {
-      "hash": "8fd1288db9aeb0f8ff68ca1a6d719e8dd46d56f2d1e74605a2240cb368815dd1",
+      "hash": "c985724063c18c8882908853093ccfa0bb051b2c8e146f1bff24aff408abf8a8",
       "kind": "Project file",
       "lineCount": 0,
       "relativePath": ".env.example",
-      "size": 417,
+      "size": 539,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "91702b8eaa01a914063e87866296343a689c5816dbe5a3c0f20c0f15cab479b7",
+      "hash": "a20e47feb417b586024e0a0cbd2091507ed0bfc7a3a7b3c1a1ff378890d8eb2c",
       "kind": "GitHub workflow",
-      "lineCount": 66,
+      "lineCount": 86,
       "relativePath": ".github/workflows/ci.yml",
-      "size": 1344,
+      "size": 2045,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "154a177ff09561ef6adf1b3f08a87a3503d15731844f1284412efd15af52985a",
+      "hash": "4e8980a63efa29faa9207d77871709b9c5633b20fed130d9c06bfa4c7e8af4e2",
       "kind": "Project file",
       "lineCount": 0,
       "relativePath": ".gitignore",
-      "size": 147,
+      "size": 190,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -70,23 +70,23 @@
       "exportCount": 2
     },
     {
-      "hash": "7a8f2a3bb2f650f0949c4ec91e9219d0bac02fe56af1e2e98857a61208ee58f5",
+      "hash": "a953315c65b838be0953befbc723f39047e9a9ea60c09fa1c3388d3bb601c6bd",
       "kind": "Next API route",
-      "lineCount": 57,
+      "lineCount": 65,
       "relativePath": "app/api/admin/actions/route.ts",
-      "size": 1675,
+      "size": 1892,
       "functionCount": 2,
-      "importCount": 1,
+      "importCount": 2,
       "exportCount": 3
     },
     {
-      "hash": "fcb7f6546ed904a428b8126a4bc9467c3c4474da32f051d03c3d742d7f422f2f",
+      "hash": "dbd89aa89eb5b5059985ef5f7033dcf3bdc832ca0a6bd1b0655bd70e63ff4b2b",
       "kind": "Next API route",
-      "lineCount": 167,
+      "lineCount": 175,
       "relativePath": "app/api/admin/data/route.ts",
-      "size": 4217,
+      "size": 4433,
       "functionCount": 2,
-      "importCount": 1,
+      "importCount": 2,
       "exportCount": 3
     },
     {
@@ -110,94 +110,104 @@
       "exportCount": 3
     },
     {
-      "hash": "db91c63404b04b11d71fbfc8544f2e3b31627406f9a6ef3e4bd9eed8157dd62c",
+      "hash": "1846b23c0bfa126f2d0a332ffacc1c680c9572bf091bd7e501d550aaca8122f8",
       "kind": "Next API route",
-      "lineCount": 117,
+      "lineCount": 125,
       "relativePath": "app/api/admin/overview/route.ts",
-      "size": 3340,
+      "size": 3540,
       "functionCount": 2,
-      "importCount": 1,
+      "importCount": 2,
       "exportCount": 3
     },
     {
-      "hash": "8012ae0ee2fd1aca21b887987310ac7df7c0036e8edd79afc8bbe9d54af6b170",
+      "hash": "9183b60b384aef8cc9a4f1c5e80c1783ac0719f48d0b6779406c747fd3b4bd53",
       "kind": "Next API route",
-      "lineCount": 303,
+      "lineCount": 194,
       "relativePath": "app/api/admin/reports/[id]/action/route.ts",
-      "size": 8548,
-      "functionCount": 4,
-      "importCount": 1,
+      "size": 4758,
+      "functionCount": 8,
+      "importCount": 2,
       "exportCount": 3
     },
     {
-      "hash": "98c8e70c6c8b7ec48276bc03da5be83ed437483e0193d92533170a572b01804b",
+      "hash": "7d36fa434f536bc8921c6938ee2c5b3165b19a7cdd20f91d099640c8dff09ba0",
       "kind": "Next API route",
-      "lineCount": 116,
+      "lineCount": 124,
       "relativePath": "app/api/admin/reports/route.ts",
-      "size": 4062,
+      "size": 4258,
       "functionCount": 2,
-      "importCount": 2,
-      "exportCount": 3
-    },
-    {
-      "hash": "2b4db9c6630adc37b06d2dd3167737e7818c02b30617dcaf8e3a9049a6d453b8",
-      "kind": "Next API route",
-      "lineCount": 156,
-      "relativePath": "app/api/admin/reviewers/[id]/action/route.ts",
-      "size": 4432,
-      "functionCount": 3,
-      "importCount": 2,
-      "exportCount": 3
-    },
-    {
-      "hash": "b04fd9a904e7331fac3a9198fbbc7f11fdeb291e4d97352f755040f954927cd9",
-      "kind": "Next API route",
-      "lineCount": 84,
-      "relativePath": "app/api/admin/reviewers/route.ts",
-      "size": 2606,
-      "functionCount": 2,
-      "importCount": 2,
-      "exportCount": 3
-    },
-    {
-      "hash": "b7397f1833901977eb237077851b902da75e7ea3b1a31e446ebf3c7ea4c06023",
-      "kind": "Next API route",
-      "lineCount": 438,
-      "relativePath": "app/api/admin/users/[id]/action/route.ts",
-      "size": 11284,
-      "functionCount": 13,
-      "importCount": 2,
-      "exportCount": 3
-    },
-    {
-      "hash": "5e0ba2047d4a08bb29105c530bb4dcaf39d280db9d10ec7d4ea71d57966620c6",
-      "kind": "Next API route",
-      "lineCount": 414,
-      "relativePath": "app/api/admin/users/route.ts",
-      "size": 11153,
-      "functionCount": 12,
-      "importCount": 2,
-      "exportCount": 3
-    },
-    {
-      "hash": "859f5c650f4d1c4220c84eff56e6e7d6c505245b6eee0d4d96126a58bcb44b26",
-      "kind": "Next API route",
-      "lineCount": 118,
-      "relativePath": "app/api/comment-media/upload/route.ts",
-      "size": 3015,
-      "functionCount": 5,
       "importCount": 3,
       "exportCount": 3
     },
     {
-      "hash": "d37ec64b729dc257058c4819f6f287f3d6e80db6a5b6fb6d6192de864deae02c",
+      "hash": "39e4c1a193eb81644e5de41b7ce9b09fc3fb80bffedc7af90aeffb1c598e575a",
       "kind": "Next API route",
-      "lineCount": 19,
+      "lineCount": 162,
+      "relativePath": "app/api/admin/reviewers/[id]/action/route.ts",
+      "size": 4104,
+      "functionCount": 7,
+      "importCount": 3,
+      "exportCount": 3
+    },
+    {
+      "hash": "d19cd97eb39ee60fe8d511952c8b7c87d396d95d4d3f234a1e28ed1521c74058",
+      "kind": "Next API route",
+      "lineCount": 92,
+      "relativePath": "app/api/admin/reviewers/route.ts",
+      "size": 2825,
+      "functionCount": 2,
+      "importCount": 3,
+      "exportCount": 3
+    },
+    {
+      "hash": "942bc50a6381c7107a9e0dc5ac58bdf02f9fe8952abfacb1ffc07776e9374fc1",
+      "kind": "Next API route",
+      "lineCount": 446,
+      "relativePath": "app/api/admin/users/[id]/action/route.ts",
+      "size": 11513,
+      "functionCount": 13,
+      "importCount": 3,
+      "exportCount": 3
+    },
+    {
+      "hash": "1002002feab25a605331c7337ba3262a9592dbaaea1b7a9ee1ebccd8fea2c420",
+      "kind": "Next API route",
+      "lineCount": 422,
+      "relativePath": "app/api/admin/users/route.ts",
+      "size": 11352,
+      "functionCount": 12,
+      "importCount": 3,
+      "exportCount": 3
+    },
+    {
+      "hash": "bfec40657369f50beb34e88742dded24bb99ad4b4bd0b3d1f8260c664a5f6994",
+      "kind": "Next API route",
+      "lineCount": 140,
+      "relativePath": "app/api/comment-media/upload/route.ts",
+      "size": 3589,
+      "functionCount": 5,
+      "importCount": 5,
+      "exportCount": 3
+    },
+    {
+      "hash": "501e0e0514ff49b22a5ec3334e8f1c821d7a94ad3727f34ba5a5717dad19f784",
+      "kind": "Next API route",
+      "lineCount": 291,
       "relativePath": "app/api/health/route.ts",
-      "size": 389,
-      "functionCount": 1,
-      "importCount": 0,
-      "exportCount": 2
+      "size": 6962,
+      "functionCount": 11,
+      "importCount": 3,
+      "exportCount": 3
+    },
+    {
+      "hash": "77a77655e6d060411d36a11f531de4fa6a8596787b5e1aba3bb2e37d7d528cd3",
+      "kind": "Next API route",
+      "lineCount": 169,
+      "relativePath": "app/api/profile/avatar/route.ts",
+      "size": 4457,
+      "functionCount": 7,
+      "importCount": 7,
+      "exportCount": 4
     },
     {
       "hash": "cb7481cf391367aedde9bb4ee96449f2a632737c0ff403c178b1b8f7677f21c2",
@@ -210,33 +220,33 @@
       "exportCount": 2
     },
     {
-      "hash": "ca2701d532feaf17e9d81dab3df0b171bb494c1d309d5ee4d4a5d19ed0bd3e21",
+      "hash": "31429f173a3fb6062c7fb8b8a63aa9bff8fa641cbac52d55ac26d47533ac1728",
       "kind": "Next API route",
-      "lineCount": 149,
+      "lineCount": 208,
       "relativePath": "app/api/push/subscriptions/route.ts",
-      "size": 3601,
-      "functionCount": 4,
-      "importCount": 1,
+      "size": 4986,
+      "functionCount": 5,
+      "importCount": 3,
       "exportCount": 3
     },
     {
-      "hash": "d0af74de5e8dce44491299c79cc168bb92735db5a79c20927949f5f928d3c47c",
+      "hash": "250315ee10d5d1de56d60901ef2b461f7f7db825fb00b27f672f28f1281646ad",
       "kind": "Next API route",
-      "lineCount": 253,
+      "lineCount": 275,
       "relativePath": "app/api/resumes/submit/route.ts",
-      "size": 6583,
+      "size": 7158,
       "functionCount": 8,
-      "importCount": 6,
+      "importCount": 8,
       "exportCount": 2
     },
     {
-      "hash": "c0d3b5de3ac415cae884e363f2dabafcb67ebe44c1ec6a0a239b864b43908930",
+      "hash": "d6b010fc893ab01fcfbfec66b908cfce30b85f78ceb38a50bce95089580074f2",
       "kind": "Next API route",
-      "lineCount": 129,
+      "lineCount": 203,
       "relativePath": "app/api/reviewer-application/route.ts",
-      "size": 3556,
-      "functionCount": 4,
-      "importCount": 3,
+      "size": 5303,
+      "functionCount": 7,
+      "importCount": 5,
       "exportCount": 3
     },
     {
@@ -310,13 +320,13 @@
       "exportCount": 3
     },
     {
-      "hash": "fffa328476c10ffc7acd4bbfc14cd86427e0b6b5debc6286c5d897d06ac9c56b",
+      "hash": "5d27a6a982d9c02af0021b6562eb6779e576517af701a5154fec20af02c6602e",
       "kind": "Next root layout",
-      "lineCount": 93,
+      "lineCount": 91,
       "relativePath": "app/layout.tsx",
-      "size": 2324,
+      "size": 2293,
       "functionCount": 1,
-      "importCount": 8,
+      "importCount": 10,
       "exportCount": 4
     },
     {
@@ -570,11 +580,11 @@
       "exportCount": 13
     },
     {
-      "hash": "1423b34dd3427242c1c5037b94064ca7873e27f8860adc3044ec0165844a918b",
+      "hash": "6682b0b476fce25cdfa54bfe58a595361c634e324525351882c523e219c51edd",
       "kind": "React component",
-      "lineCount": 547,
+      "lineCount": 563,
       "relativePath": "components/AdminDashboard.tsx",
-      "size": 15276,
+      "size": 15401,
       "functionCount": 1,
       "importCount": 19,
       "exportCount": 3
@@ -790,13 +800,13 @@
       "exportCount": 3
     },
     {
-      "hash": "68cd45a7c80d72463587fb3b2db4849034563c6d33b5f628869bfc012b362837",
+      "hash": "9630ea1e8423c98861430e5ee7d61a91ba534c9090e3b6f732e3b7972bb2d5bb",
       "kind": "React component",
-      "lineCount": 813,
+      "lineCount": 888,
       "relativePath": "components/profile-detail/use-profile-detail-controller.ts",
-      "size": 22464,
+      "size": 24169,
       "functionCount": 1,
-      "importCount": 13,
+      "importCount": 14,
       "exportCount": 1
     },
     {
@@ -910,13 +920,13 @@
       "exportCount": 7
     },
     {
-      "hash": "d47d90f98a507a5b264d63a774adaf6c4fb92c79844e45d49ff6d6d9faeb4fe2",
+      "hash": "55f9a88a48c0edeadaf1c03c2f9b6edbe3faf948d8cf87df1ec12d20f81ea7af",
       "kind": "React component",
-      "lineCount": 1305,
+      "lineCount": 1362,
       "relativePath": "components/resume-detail/use-resume-detail-controller.ts",
-      "size": 33384,
+      "size": 34912,
       "functionCount": 2,
-      "importCount": 17,
+      "importCount": 18,
       "exportCount": 1
     },
     {
@@ -1400,21 +1410,21 @@
       "exportCount": 0
     },
     {
-      "hash": "ba3268c5997d8a58423469ede9e7eed166a0993b2276f6865c25e7d09d19e895",
+      "hash": "899a298e34ed15c7c759bb17f19e35e7f9d6cc43396ef0d6cb65119ccdf96998",
       "kind": "Documentation",
-      "lineCount": 36,
+      "lineCount": 71,
       "relativePath": "docs/operations/ci-and-docs.md",
-      "size": 635,
+      "size": 1565,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "a72a848ecfdf3f1a44f12477edee998c889eaabf5e0b8a8cc23e06f95f450ebd",
+      "hash": "b95145dc10d825eaf13143a9f573cdf0169bdba89e4710195beceec1bccb6274",
       "kind": "Documentation",
-      "lineCount": 34,
+      "lineCount": 39,
       "relativePath": "docs/operations/deployment-and-monitoring.md",
-      "size": 722,
+      "size": 1100,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -1470,11 +1480,11 @@
       "exportCount": 0
     },
     {
-      "hash": "696480b86090049f908d3a4dda1c919fc3187ef22d917b8bd98da52aaad78a74",
+      "hash": "4b6f8c6c0bbe66c6229eff15fee822921bf93fe16f5b640604dfdbe9679733f8",
       "kind": "Documentation",
-      "lineCount": 78,
+      "lineCount": 164,
       "relativePath": "docs/production-ops.md",
-      "size": 2213,
+      "size": 5466,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -1580,6 +1590,16 @@
       "exportCount": 0
     },
     {
+      "hash": "4d6231d3e21ef7889c53c66b152ab9ca5fbf6cebe7f6932358ec94fd4964e4ad",
+      "kind": "Unit test",
+      "lineCount": 67,
+      "relativePath": "lib/__tests__/admin-data-route.test.ts",
+      "size": 1761,
+      "functionCount": 0,
+      "importCount": 4,
+      "exportCount": 0
+    },
+    {
       "hash": "3de19f6164044ff68c29c73ef6bd544deef7263b9dd870bfc37634d6e50036ed",
       "kind": "Unit test",
       "lineCount": 85,
@@ -1590,13 +1610,23 @@
       "exportCount": 0
     },
     {
-      "hash": "6986e891e625177594b6946bdc9f9eb5706e169961dbe3a7114e4ad7145095d4",
+      "hash": "b109935bda268b1439364c1d785cc30cbe51ffb0ec46cef6bd48e197bd328481",
       "kind": "Unit test",
-      "lineCount": 109,
+      "lineCount": 194,
+      "relativePath": "lib/__tests__/admin-moderation-actions-route.test.ts",
+      "size": 5055,
+      "functionCount": 2,
+      "importCount": 4,
+      "exportCount": 0
+    },
+    {
+      "hash": "6100fa7a9ce8f0c87e3ac53c35a9f6a96edec67a843320dfe779091111c025de",
+      "kind": "Unit test",
+      "lineCount": 162,
       "relativePath": "lib/__tests__/admin-users-route.test.ts",
-      "size": 2561,
+      "size": 3803,
       "functionCount": 1,
-      "importCount": 3,
+      "importCount": 4,
       "exportCount": 0
     },
     {
@@ -1620,6 +1650,16 @@
       "exportCount": 0
     },
     {
+      "hash": "602d9149002e515067436b04e9d9a41516001573f27aba1d01486aca4f8dad33",
+      "kind": "Unit test",
+      "lineCount": 86,
+      "relativePath": "lib/__tests__/api-rate-limit.test.ts",
+      "size": 2329,
+      "functionCount": 1,
+      "importCount": 3,
+      "exportCount": 0
+    },
+    {
       "hash": "cd79c16b963b8f843ea57f6a9417f95030cf03447899ee8e9497d07508a87683",
       "kind": "Unit test",
       "lineCount": 33,
@@ -1627,6 +1667,26 @@
       "size": 902,
       "functionCount": 0,
       "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "008c2d30204a3682aff5752cd5067347e68a6fb63c134f80d49d3d06d5dea199",
+      "kind": "Unit test",
+      "lineCount": 81,
+      "relativePath": "lib/__tests__/avatar-validation.test.ts",
+      "size": 2177,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "36d6f04aff4cbb31b20f97a08d4ae19fbd080a506d247f512448afb33b7f36c4",
+      "kind": "Unit test",
+      "lineCount": 125,
+      "relativePath": "lib/__tests__/comment-media-upload-route.test.ts",
+      "size": 3454,
+      "functionCount": 2,
+      "importCount": 5,
       "exportCount": 0
     },
     {
@@ -1647,6 +1707,16 @@
       "size": 3790,
       "functionCount": 1,
       "importCount": 3,
+      "exportCount": 0
+    },
+    {
+      "hash": "c33a838b98b2c78012abeb23938e4162e6eaee9057a9c217050722435d0f0a0b",
+      "kind": "Unit test",
+      "lineCount": 223,
+      "relativePath": "lib/__tests__/health-route.test.ts",
+      "size": 5936,
+      "functionCount": 2,
+      "importCount": 4,
       "exportCount": 0
     },
     {
@@ -1710,6 +1780,16 @@
       "exportCount": 0
     },
     {
+      "hash": "f946c679c2725353b8273a5ed63d7640b6c1220ee9c681b8e5d4033309b11f93",
+      "kind": "Unit test",
+      "lineCount": 193,
+      "relativePath": "lib/__tests__/profile-avatar-route.test.ts",
+      "size": 5825,
+      "functionCount": 3,
+      "importCount": 5,
+      "exportCount": 0
+    },
+    {
       "hash": "f64ae7107e9240d9dce4f2f90586fa433b2999cbebc1a57f1a79942eecc15aa2",
       "kind": "Unit test",
       "lineCount": 68,
@@ -1717,6 +1797,16 @@
       "size": 1732,
       "functionCount": 0,
       "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "91464668f72169b0cc05fa1f87a0b7918e2a9a15459ac09acad3e9bbd1e38c1a",
+      "kind": "Unit test",
+      "lineCount": 256,
+      "relativePath": "lib/__tests__/push-subscriptions-route.test.ts",
+      "size": 7214,
+      "functionCount": 3,
+      "importCount": 5,
       "exportCount": 0
     },
     {
@@ -1750,6 +1840,16 @@
       "exportCount": 0
     },
     {
+      "hash": "febc19fd6d71ddf9d93d4f4d9d310cfd7ac02afdfd1fdee527d02de39b049285",
+      "kind": "Unit test",
+      "lineCount": 125,
+      "relativePath": "lib/__tests__/resume-submit-route.test.ts",
+      "size": 3281,
+      "functionCount": 2,
+      "importCount": 6,
+      "exportCount": 0
+    },
+    {
       "hash": "484fdbdd496fcd145b379419e095d3372649fd0d921445979c7ea19878d9b341",
       "kind": "Unit test",
       "lineCount": 199,
@@ -1757,6 +1857,16 @@
       "size": 5091,
       "functionCount": 1,
       "importCount": 3,
+      "exportCount": 0
+    },
+    {
+      "hash": "6875d2067941bcf963a8d21bbe524f8edd454a6facc8b628343704602fd1cb69",
+      "kind": "Unit test",
+      "lineCount": 191,
+      "relativePath": "lib/__tests__/reviewer-application-route.test.ts",
+      "size": 4906,
+      "functionCount": 2,
+      "importCount": 4,
       "exportCount": 0
     },
     {
@@ -1780,12 +1890,32 @@
       "exportCount": 0
     },
     {
+      "hash": "77c91c6bb442c11930ac6d7afb98bb90709edb9d9dc8fec4a692233457b0ddc3",
+      "kind": "Unit test",
+      "lineCount": 104,
+      "relativePath": "lib/__tests__/security-headers.test.ts",
+      "size": 3359,
+      "functionCount": 1,
+      "importCount": 4,
+      "exportCount": 0
+    },
+    {
       "hash": "1d1163c69d686febfd594fee05327676144e8571fd8c5a2d3c545f30096cb033",
       "kind": "Unit test",
       "lineCount": 84,
       "relativePath": "lib/__tests__/submit-validation.test.ts",
       "size": 2338,
       "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "2d663c3ad4d8ffa8f6859d39801cb726727066b48baefc86d736e5a35c1c88b2",
+      "kind": "Unit test",
+      "lineCount": 123,
+      "relativePath": "lib/__tests__/upload-security.test.ts",
+      "size": 3350,
+      "functionCount": 2,
       "importCount": 2,
       "exportCount": 0
     },
@@ -1818,6 +1948,16 @@
       "functionCount": 6,
       "importCount": 0,
       "exportCount": 3
+    },
+    {
+      "hash": "6085fb81abf667185b3d73cc3003f24010994dc8c012edf436605cced9544a18",
+      "kind": "Application library module",
+      "lineCount": 22,
+      "relativePath": "lib/api-errors.ts",
+      "size": 398,
+      "functionCount": 1,
+      "importCount": 1,
+      "exportCount": 1
     },
     {
       "hash": "2bd286202484f3fa532b0965ed5414df1308824153041a207d3a72cf8502a744",
@@ -1860,13 +2000,23 @@
       "exportCount": 2
     },
     {
-      "hash": "7a9b7dceecd586c5d3b3c5a15cabebe84aada8626eb5a223a7edd2c8e691a722",
+      "hash": "5c3515e9febbb32d5b5c58425ec6a9a8338b9d08454c8837ac44f70600447727",
       "kind": "Application library module",
-      "lineCount": 165,
+      "lineCount": 46,
+      "relativePath": "lib/avatar-validation.ts",
+      "size": 1341,
+      "functionCount": 1,
+      "importCount": 1,
+      "exportCount": 7
+    },
+    {
+      "hash": "669bce05bcb05b0ade056510c7349a4e82b0607d672ce39023c6318ae4ec70b1",
+      "kind": "Application library module",
+      "lineCount": 134,
       "relativePath": "lib/comment-media-validation.ts",
-      "size": 4522,
-      "functionCount": 9,
-      "importCount": 0,
+      "size": 3960,
+      "functionCount": 6,
+      "importCount": 1,
       "exportCount": 17
     },
     {
@@ -1880,6 +2030,16 @@
       "exportCount": 8
     },
     {
+      "hash": "37fefde0e2458ae70146fbb65c881b44481220ed8e2a0f6e82f6358aef4d1be3",
+      "kind": "Application library module",
+      "lineCount": 45,
+      "relativePath": "lib/image-upload-validation.ts",
+      "size": 952,
+      "functionCount": 3,
+      "importCount": 0,
+      "exportCount": 4
+    },
+    {
       "hash": "1662f7b5989fad6ee25bce96787507623d76f9507c1c7fa37112cf79399de21c",
       "kind": "Application library module",
       "lineCount": 132,
@@ -1888,6 +2048,16 @@
       "functionCount": 5,
       "importCount": 1,
       "exportCount": 14
+    },
+    {
+      "hash": "05755dbef610bc704e41cd6691234b427ab372fb3939b0b97b4e4da59dfcf149",
+      "kind": "Application library module",
+      "lineCount": 41,
+      "relativePath": "lib/monitoring/capture-errors.ts",
+      "size": 1016,
+      "functionCount": 3,
+      "importCount": 2,
+      "exportCount": 2
     },
     {
       "hash": "394267dd79ca06287b693ce9edd44620e52d8424a537339e5d001b8260307e9b",
@@ -2020,6 +2190,26 @@
       "exportCount": 7
     },
     {
+      "hash": "4277834baf3634c1327703e8f7d46e13d75163d2bd60efd7e5040667f7c246af",
+      "kind": "Application library module",
+      "lineCount": 167,
+      "relativePath": "lib/security/headers.ts",
+      "size": 4459,
+      "functionCount": 9,
+      "importCount": 1,
+      "exportCount": 5
+    },
+    {
+      "hash": "8031e69b69aeb1caf770ca9c7f62e8d272349ece23782e715e19e7801ee8968d",
+      "kind": "Application library module",
+      "lineCount": 10,
+      "relativePath": "lib/security/theme-bootstrap.ts",
+      "size": 361,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 2
+    },
+    {
       "hash": "faa5f52b9a8b62d6e87ed5e742bc7e787fecee5a73d4adb656f3b12ebcba75d5",
       "kind": "Application library module",
       "lineCount": 68,
@@ -2038,6 +2228,26 @@
       "functionCount": 7,
       "importCount": 4,
       "exportCount": 3
+    },
+    {
+      "hash": "349ea2f2e748f074eb549b11979c99d33f3ac4d4519e436e8c999cf54419847a",
+      "kind": "Application library module",
+      "lineCount": 116,
+      "relativePath": "lib/server/rate-limit.ts",
+      "size": 3128,
+      "functionCount": 5,
+      "importCount": 2,
+      "exportCount": 3
+    },
+    {
+      "hash": "9175b89d6b020a109be59e4b3934eeba3470e70e1ed5892d2d3a8d689d358c5e",
+      "kind": "Application library module",
+      "lineCount": 330,
+      "relativePath": "lib/server/upload-security.ts",
+      "size": 8375,
+      "functionCount": 13,
+      "importCount": 3,
+      "exportCount": 8
     },
     {
       "hash": "9df6c66f055178158a1e808c04ce627e14eb24110b0f56fb5692eab7c5619b0f",
@@ -2130,31 +2340,31 @@
       "exportCount": 0
     },
     {
-      "hash": "282c00961f322615c9c80a2ecdc8e7b9daf17bd8b6dd5faca2e3bc58ea0b0b84",
+      "hash": "420cf03cd2493221cabdecc60c70a58479a5945b62b25feb129a0e0f772ea4b3",
       "kind": "Project configuration",
-      "lineCount": 46,
+      "lineCount": 55,
       "relativePath": "next.config.ts",
-      "size": 1436,
+      "size": 1616,
       "functionCount": 0,
-      "importCount": 4,
+      "importCount": 5,
       "exportCount": 1
     },
     {
-      "hash": "978041f0903144ec42ed654c3e11f52dd8fcdc3b24aa3511c8001679eeed4931",
+      "hash": "cec3b2403aaf835e93fc44e6d95653325150bbf3952799e0d4cb64e1ce0bcfc3",
       "kind": "Project configuration",
-      "lineCount": 12984,
+      "lineCount": 13201,
       "relativePath": "package-lock.json",
-      "size": 466055,
+      "size": 473556,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "924e6babfc4d077c73acd7455f2a54f14d47389ce1bab57661a6a2e73ca6794b",
+      "hash": "9859f4aa7b5b4e71e90cb23aa0094e6d9ea3e3cb1d1beba60e7b025c259c5420",
       "kind": "Project configuration",
-      "lineCount": 83,
+      "lineCount": 93,
       "relativePath": "package.json",
-      "size": 2547,
+      "size": 3065,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2480,6 +2690,16 @@
       "exportCount": 0
     },
     {
+      "hash": "09f6897937e5b6b36eda1f019378ae30bc289237407ad9c0cefae102f9bfd67b",
+      "kind": "Repository automation",
+      "lineCount": 107,
+      "relativePath": "scripts/performance/check-budgets.mjs",
+      "size": 2722,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
       "hash": "1ecb3bd33b012aa644464462417c8d2bde46bd274bb5bb340dc867480816bce0",
       "kind": "Repository automation",
       "lineCount": 50,
@@ -2510,11 +2730,11 @@
       "exportCount": 0
     },
     {
-      "hash": "24036dc5e15e5cd1677fb269a9fd51f6dfed630b1866d32330e2ad43a82d4167",
+      "hash": "b848a709f7f4a98f2649629ddf32a30671eeec35c1b04c168c503c4ed63da3cc",
       "kind": "Root documentation",
-      "lineCount": 94,
+      "lineCount": 99,
       "relativePath": "supabase/MIGRATIONS.md",
-      "size": 2805,
+      "size": 3012,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2930,6 +3150,56 @@
       "exportCount": 0
     },
     {
+      "hash": "7b6122903316a41c9b3260dfae0d0c4a7bdb0cc2953a7e7fdad50fc458e04739",
+      "kind": "Supabase migration",
+      "lineCount": 579,
+      "relativePath": "supabase/migrations/0042_transactional_admin_moderation_actions.sql",
+      "size": 15604,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "88836256146669397ccb718a6017f2db8641f765572693b882561db7f3a6c364",
+      "kind": "Supabase migration",
+      "lineCount": 200,
+      "relativePath": "supabase/migrations/0043_transactional_reviewer_application_submit.sql",
+      "size": 5240,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "22eb59e12dde6c11926620451ee9b40880ee8b4d3d60742ba08f0ccd77ba2eb8",
+      "kind": "Supabase migration",
+      "lineCount": 114,
+      "relativePath": "supabase/migrations/0044_upload_security_quarantine.sql",
+      "size": 4817,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "b8acaf8e08eccc56be8671541cf73dda2649fa3ad46fc734f310a963e3207c18",
+      "kind": "Supabase migration",
+      "lineCount": 55,
+      "relativePath": "supabase/migrations/0045_authenticated_api_rate_limits.sql",
+      "size": 1723,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "5f39484d435ff633995d750a55f4de714c7fd4c743bea3ce74a5ff3f2863dc70",
+      "kind": "Supabase migration",
+      "lineCount": 123,
+      "relativePath": "supabase/migrations/0046_health_readiness_checks.sql",
+      "size": 4069,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
       "hash": "57c569ae5142c18e31ced5594927dd20532370e793ad8577a9e282110d028f8c",
       "kind": "Project configuration",
       "lineCount": 59,
@@ -2960,11 +3230,11 @@
       "exportCount": 0
     },
     {
-      "hash": "3acfa260c02f247936948892d21944f1839406cf8651a32ee9c81d61b5e45f2b",
+      "hash": "e39d671b4fb4682590692eb14fefd2410f1e13543977b189a12782a7e7be1a41",
       "kind": "Project configuration",
-      "lineCount": 15,
+      "lineCount": 38,
       "relativePath": "vitest.config.ts",
-      "size": 283,
+      "size": 734,
       "functionCount": 0,
       "importCount": 2,
       "exportCount": 1
@@ -2980,5 +3250,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "ba91bd88e1e2c37ade32697edf6f57f9e9e07302a721f3c0849c09c2517ba4f3"
+  "manifestHash": "ad8469032047251f9bc731ae5df36a8c31e9a66e6d6b47ae7f199f73122895ae"
 }

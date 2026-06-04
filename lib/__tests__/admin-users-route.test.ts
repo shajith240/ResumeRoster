@@ -1,5 +1,6 @@
 import { GET } from "@/app/api/admin/users/route";
 import { requireAdmin } from "@/lib/admin";
+import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/admin", () => ({
@@ -9,12 +10,23 @@ vi.mock("@/lib/admin", () => ({
 	requireAdmin: vi.fn(),
 }));
 
-function createReturnsChain(data: unknown[] = []) {
+vi.mock("@/lib/monitoring/capture-errors", () => ({
+	capturePrivateError: vi.fn(),
+}));
+
+function createReturnsChain({
+	data = [],
+	error = null,
+}: {
+	data?: unknown[];
+	error?: { message: string } | null;
+} = {}) {
 	const chain = {
 		gte: vi.fn(() => chain),
 		limit: vi.fn(() => chain),
 		order: vi.fn(() => chain),
-		returns: vi.fn(async () => ({ data, error: null })),
+		range: vi.fn(() => chain),
+		returns: vi.fn(async () => ({ data, error })),
 		select: vi.fn(() => chain),
 	};
 
@@ -104,5 +116,46 @@ describe("admin users route", () => {
 				},
 			],
 		});
+	});
+
+	it("does not expose raw database errors when user listing fails", async () => {
+		const rawMessage = 'relation "public.profiles" does not exist';
+		const admin = {
+			auth: {
+				admin: {
+					getUserById: vi.fn(),
+				},
+			},
+			from: vi.fn(() =>
+				createReturnsChain({
+					error: { message: rawMessage },
+				}),
+			),
+			rpc: vi.fn(),
+		};
+
+		vi.mocked(requireAdmin).mockResolvedValue({
+			admin: admin as never,
+			user: {
+				email: "owner@example.com",
+				id: "22222222-2222-4222-8222-222222222222",
+			} as never,
+		});
+
+		const response = await GET(
+			new Request("https://linted.test/api/admin/users"),
+		);
+
+		expect(response.status).toBe(500);
+		await expect(response.json()).resolves.toEqual({
+			message: "Admin users could not be loaded.",
+		});
+		expect(capturePrivateError).toHaveBeenCalledWith(
+			expect.objectContaining({ message: rawMessage }),
+			expect.objectContaining({
+				operation: "list_users",
+				route: "GET /api/admin/users",
+			}),
+		);
 	});
 });
