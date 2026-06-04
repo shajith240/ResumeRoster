@@ -9,3 +9,4 @@ out
 vercel
 .vercel
 *.tsbuildinfo
+docs/generated/typedoc/

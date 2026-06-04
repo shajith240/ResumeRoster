@@ -10,6 +10,7 @@ import {
 	normalizeAppStatus,
 	type AppPresencePayload,
 } from "@/lib/app-presence";
+import { refreshAuthSessionAfterError } from "@/lib/auth-session";
 import { supabase } from "@/lib/supabase/client";
 import type { AppStatus } from "@/lib/supabase/types";
 
@@ -94,7 +95,7 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 			if (mounted) announcePresenceChange(payload);
 		}
 
-		async function recordPresence(status = statusRef.current) {
+		async function recordPresence(status = statusRef.current, retried = false) {
 			statusRef.current = status;
 			if (!presenceFeatureReadyRef.current) return false;
 
@@ -104,6 +105,10 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 			});
 
 			if (error) {
+				if (!retried && (await refreshAuthSessionAfterError(error))) {
+					return recordPresence(status, true);
+				}
+
 				if (isPresenceFeatureError(error)) {
 					presenceFeatureReadyRef.current = false;
 					if (heartbeatTimerRef.current) {
@@ -158,8 +163,9 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 		}
 
 		function handleProfileChange(event: Event) {
-			const detail = (event as CustomEvent<{ id?: string; app_status?: string }>)
-				.detail;
+			const detail = (
+				event as CustomEvent<{ id?: string; app_status?: string }>
+			).detail;
 			if (!detail?.app_status || (detail.id && detail.id !== userId)) return;
 			const nextStatus = normalizeAppStatus(detail.app_status);
 			void trackRealtimePresence(nextStatus);

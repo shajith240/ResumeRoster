@@ -79,7 +79,10 @@ export async function POST(request: Request) {
 			: "";
 
 	if (!EMAIL_PATTERN.test(email) || email.length > 320) {
-		return NextResponse.json({ message: "Enter a valid email." }, { status: 400 });
+		return NextResponse.json(
+			{ message: "Enter a valid email." },
+			{ status: 400 },
+		);
 	}
 
 	if (isRateLimited(rateLimitKey(request, email))) {

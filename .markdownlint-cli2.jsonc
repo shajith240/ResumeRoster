@@ -1,0 +1,18 @@
+{
+	"config": {
+		"default": true,
+		"MD013": false,
+		"MD024": {
+			"siblings_only": true
+		},
+		"MD010": false,
+		"MD012": false,
+		"MD033": false,
+		"MD041": false
+	},
+	"globs": [
+		"docs/**/*.md",
+		"supabase/MIGRATIONS.md",
+		"#docs/generated/source/**/*.md"
+	]
+}

@@ -1,8 +1,8 @@
 import AuthGate from "@/components/AuthGate";
-import CommunityStats from "@/components/CommunityStats";
 import PersonalizeLintedPrompt from "@/components/PersonalizeLintedPrompt";
 import ResumeFeed, { type FeedSort } from "@/components/ResumeFeed";
 import RouteHeader from "@/components/RouteHeader";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 type FeedPageProps = {
@@ -139,9 +139,38 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 						<div className="rail-meta">Created May 2026</div>
 					</section>
 
-					<section className="feed-stats-panel">
-						<h2>Community stats</h2>
-						<CommunityStats />
+					<section
+						className="feed-start-panel"
+						aria-labelledby="feed-start-title"
+					>
+						<span className="feed-start-eyebrow">Start here</span>
+						<h2 id="feed-start-title">Choose your next pass</h2>
+						<p>
+							Pick one focused action before scrolling the queue.
+						</p>
+						<div className="feed-start-links">
+							<Link href="/feed?sort=needs">
+								<span className="feed-start-link-copy">
+									<span>Review queue</span>
+									<strong>Find resumes that need feedback</strong>
+								</span>
+								<ChevronRight aria-hidden="true" />
+							</Link>
+							<Link href="/submit">
+								<span className="feed-start-link-copy">
+									<span>Post safely</span>
+									<strong>Share a resume with privacy mode</strong>
+								</span>
+								<ChevronRight aria-hidden="true" />
+							</Link>
+							<Link href="/guidelines">
+								<span className="feed-start-link-copy">
+									<span>Feedback standard</span>
+									<strong>Read the community guidelines</strong>
+								</span>
+								<ChevronRight aria-hidden="true" />
+							</Link>
+						</div>
 					</section>
 
 					<section

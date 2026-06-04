@@ -8,6 +8,15 @@ import { BookmarkIcon } from "@/components/ui/bookmark";
 import { EyeIcon } from "@/components/ui/eye";
 import { LinkIcon } from "@/components/ui/link";
 import { getLoginPath } from "@/lib/auth-redirect";
+import {
+	AUTH_SESSION_EXPIRED_MESSAGE,
+	getSafeAuthErrorMessage,
+	isAuthSessionError,
+} from "@/lib/auth-errors";
+import {
+	getFreshAuthSession,
+	refreshAuthSessionAfterError,
+} from "@/lib/auth-session";
 import { MessageCircleIcon } from "@/components/ui/message-circle";
 import {
   getResumeAffiliationLabel,
@@ -395,13 +404,31 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
   useEffect(() => {
     let active = true;
 
-    async function loadResumes() {
+    function finishLoading(started: number) {
+      const elapsed = Date.now() - started;
+      window.setTimeout(() => {
+        if (active) {
+          setLoading(false);
+        }
+      }, Math.max(0, 300 - elapsed));
+    }
+
+    async function loadResumes(retriedAfterAuthRefresh = false) {
       setLoading(true);
       setMessage("");
       const started = Date.now();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { session, error: sessionError } = await getFreshAuthSession();
+
+      if (!active) return;
+
+      if (sessionError || !session?.user) {
+        setResumes([]);
+        setMessage(AUTH_SESSION_EXPIRED_MESSAGE);
+        finishLoading(started);
+        return;
+      }
+
+      const user = session.user;
       const savedResult = await fetchSavedResumeIds(user?.id ?? null);
       let query = supabase
         .from("resumes")
@@ -460,17 +487,35 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
       setSaveFeatureReady(!savedResult.schemaMissing);
 
       if (resumeError) {
-        setMessage(resumeError.message);
+        if (
+          isAuthSessionError(resumeError) &&
+          !retriedAfterAuthRefresh &&
+          (await refreshAuthSessionAfterError(resumeError))
+        ) {
+          if (active) await loadResumes(true);
+          return;
+        }
+
+        setMessage(getSafeAuthErrorMessage(resumeError));
       } else {
         const rowsWithProfiles = await attachPublicAuthorProfiles(resumeRows);
         if (!active) return;
         const rowsWithLiveCounts = await mergeLiveReviewCounts(rowsWithProfiles);
         if (!active) return;
         if (savedResult.error && savedOnly) {
+          if (
+            isAuthSessionError(savedResult.error) &&
+            !retriedAfterAuthRefresh &&
+            (await refreshAuthSessionAfterError(savedResult.error))
+          ) {
+            if (active) await loadResumes(true);
+            return;
+          }
+
           setMessage(
             savedResult.schemaMissing
               ? SAVED_RESUMES_UNAVAILABLE_MESSAGE
-              : savedResult.error.message,
+              : getSafeAuthErrorMessage(savedResult.error),
           );
           setResumes([]);
         } else {
@@ -485,12 +530,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
         }
       }
 
-      const elapsed = Date.now() - started;
-      window.setTimeout(() => {
-        if (active) {
-          setLoading(false);
-        }
-      }, Math.max(0, 300 - elapsed));
+      finishLoading(started);
     }
 
     void loadResumes();
@@ -653,13 +693,15 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
       return;
     }
 
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const { session, error: authError } = await getFreshAuthSession();
+    const user = session?.user ?? null;
 
     if (authError || !user) {
-      toast.error("Sign in to save resumes.");
+      toast.error(
+        isAuthSessionError(authError)
+          ? AUTH_SESSION_EXPIRED_MESSAGE
+          : "Sign in to save resumes.",
+      );
       window.location.assign(
         getLoginPath(`${window.location.pathname}${window.location.search}`),
       );
@@ -705,7 +747,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
         toast.error(SAVED_RESUMES_UNAVAILABLE_MESSAGE);
       } else {
         toast.error("Could not update saved resumes.", {
-          description: result.error.message,
+          description: getSafeAuthErrorMessage(result.error),
         });
       }
 

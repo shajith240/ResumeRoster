@@ -7,6 +7,7 @@ import AppPresence from "@/components/AppPresence";
 import LoadingScreen from "@/components/LoadingScreen";
 import { supabase } from "@/lib/supabase/client";
 import { getCurrentPathForLogin, getLoginPath } from "@/lib/auth-redirect";
+import { getFreshAuthSession } from "@/lib/auth-session";
 import {
 	claimActiveUserSession,
 	endSupersededSession,
@@ -133,8 +134,8 @@ export default function AuthGate({ children, showChrome = true }: AuthGateProps)
 			setChecking(false);
 		}
 
-		supabase.auth.getSession().then(({ data }) => {
-			void finishAuthCheck(data.session?.user, "claim");
+		getFreshAuthSession().then(({ session }) => {
+			void finishAuthCheck(session?.user, "claim");
 		});
 
 		const {
@@ -168,6 +169,16 @@ export default function AuthGate({ children, showChrome = true }: AuthGateProps)
 
 		async function verifyCurrentSession() {
 			if (!active || document.visibilityState === "hidden") return;
+
+			const { session } = await getFreshAuthSession();
+			if (!active) return;
+
+			if (!session?.user) {
+				setUser(null);
+				setChecking(false);
+				router.replace(getLoginPath(getCurrentPathForLogin()));
+				return;
+			}
 
 			const sessionStatus = await verifyActiveUserSession(userId);
 			if (!active) return;

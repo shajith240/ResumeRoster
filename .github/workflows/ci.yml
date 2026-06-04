@@ -43,6 +43,12 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Check generated documentation
+        run: npm run docs:check
+
+      - name: Lint documentation
+        run: npm run docs:lint
+
       - name: Run typecheck
         run: npm run typecheck
 
