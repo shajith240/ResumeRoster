@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/sign-up.tsx`
 - Kind: UI primitive
-- Size: 18472 bytes
-- Lines: 630
-- Source hash: `962b7f1675d9addf62796e234a62e9cadf9d2583352aa781ca419fb2516cbb8b`
+- Size: 14906 bytes
+- Lines: 500
+- Source hash: `c775b75a31d1faaef6ecece181f522fe40ec63620b2945770e909e37bf184392`
 
 ## What This File Does
 
@@ -25,7 +25,6 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `@/components/BrandMark`
-- `@/components/ui/alert-dialog`
 - `@/components/ui/button`
 - `@/components/ui/input`
 - `@/components/ui/label`
@@ -41,28 +40,24 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 44 | `getStoredAppTheme` | Function | top-level | no | none | `AppTheme` | not documented |
-| 51 | `applyAppTheme` | Function | top-level | no | `theme` | `void` | not documented |
-| 58 | `getEmailRedirectUrl` | Function | top-level | no | `nextPath` | `string \| undefined` | not documented |
-| 65 | `authErrorMessage` | Function | top-level | no | `error` | `string` | not documented |
-| 104 | `confirmationNotice` | Function | top-level | no | none | `string` | not documented |
-| 108 | `providerLabel` | Function | top-level | no | `provider` | `string` | not documented |
-| 118 | `existingAccountMessage` | Function | top-level | no | `providers` | `string` | not documented |
-| 139 | `lookupEmailStatus` | Function async | top-level | no | `email` | `Promise<EmailStatusResponse \| null>` | not documented |
-| 160 | `GoogleIcon` | React component | top-level | no | none | `import("react").JSX.Element` | not documented |
-| 183 | `GitHubIcon` | React component | top-level | no | none | `import("react").JSX.Element` | not documented |
-| 196 | `SignUp` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
+| 23 | `getStoredAppTheme` | Function | top-level | no | none | `AppTheme` | not documented |
+| 30 | `applyAppTheme` | Function | top-level | no | `theme` | `void` | not documented |
+| 37 | `getEmailRedirectUrl` | Function | top-level | no | `nextPath` | `string \| undefined` | not documented |
+| 44 | `authErrorMessage` | Function | top-level | no | `error` | `string` | not documented |
+| 83 | `isExistingAccountError` | Function | top-level | no | `error` | `boolean` | not documented |
+| 95 | `confirmationNotice` | Function | top-level | no | none | `string` | not documented |
+| 99 | `GoogleIcon` | React component | top-level | no | none | `import("react").JSX.Element` | not documented |
+| 122 | `GitHubIcon` | React component | top-level | no | none | `import("react").JSX.Element` | not documented |
+| 135 | `SignUp` | React component | top-level | yes | none | `import("react").JSX.Element` | not documented |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 25 | `AuthMode` | type |
-| 26 | `OAuthProvider` | type |
-| 27 | `SubmitState` | type |
-| 28 | `AppTheme` | type |
-| 29 | `EmailStatusResponse` | type |
-| 36 | `ExistingAccountHint` | type |
+| 15 | `AuthMode` | type |
+| 16 | `OAuthProvider` | type |
+| 17 | `SubmitState` | type |
+| 18 | `AppTheme` | type |
 
 ## Related Tests
 

@@ -1431,16 +1431,6 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	transform: none;
 }
 
-.auth-account-dialog-action {
-	border-color: transparent;
-	background: var(--brand);
-	color: #fff;
-}
-
-.auth-account-dialog-action:hover {
-	background: var(--brand-dark);
-}
-
 .auth-submit-button {
 	margin-top: 2px;
 	background: var(--brand);

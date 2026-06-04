@@ -5,16 +5,6 @@ import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Lock, Mail } from "lucide-react";
 import BrandMark from "@/components/BrandMark";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,17 +16,6 @@ type AuthMode = "signin" | "signup";
 type OAuthProvider = "google" | "github";
 type SubmitState = AuthMode | OAuthProvider | "resend-confirmation" | null;
 type AppTheme = "dark" | "light";
-type EmailStatusResponse = {
-	accountExists: boolean;
-	emailConfirmed: boolean;
-	lookupAvailable: boolean;
-	providers: string[];
-	requiresMigration?: boolean;
-};
-type ExistingAccountHint = {
-	message: string;
-	providers: string[];
-};
 
 const APP_THEME_STORAGE_KEY = "linted-theme";
 const APP_THEME_CHANGE_EVENT = "linted-theme-change";
@@ -80,7 +59,7 @@ function authErrorMessage(error: unknown) {
 	}
 
 	if (message.includes("already registered") || message.includes("already exists")) {
-		return "An account already exists for this email. Try signing in.";
+		return "Check your inbox for the confirmation link, then come back to sign in.";
 	}
 
 	if (message.includes("provider") || message.includes("oauth")) {
@@ -101,60 +80,20 @@ function authErrorMessage(error: unknown) {
 	return rawMessage;
 }
 
+function isExistingAccountError(error: unknown) {
+	const rawMessage =
+		error instanceof Error
+			? error.message
+			: typeof error === "string"
+				? error
+				: "";
+	const message = rawMessage.toLowerCase();
+
+	return message.includes("already registered") || message.includes("already exists");
+}
+
 function confirmationNotice() {
 	return "Check your inbox for the confirmation link, then come back to sign in.";
-}
-
-function providerLabel(provider: string) {
-	const labels: Record<string, string> = {
-		email: "email and password",
-		github: "GitHub",
-		google: "Google",
-	};
-
-	return labels[provider] || provider;
-}
-
-function existingAccountMessage(providers: string[]) {
-	const readableProviders = providers.map(providerLabel);
-	const oauthProviders = providers.filter((provider) =>
-		["google", "github"].includes(provider),
-	);
-
-	if (oauthProviders.length && !providers.includes("email")) {
-		return `This email already has a Linted account. Continue with ${oauthProviders
-			.map(providerLabel)
-			.join(" or ")} to sign in.`;
-	}
-
-	if (readableProviders.length) {
-		return `This email already has a Linted account. Sign in with ${readableProviders.join(
-			" or ",
-		)} instead.`;
-	}
-
-	return "This email already has a Linted account. Go to sign in instead.";
-}
-
-async function lookupEmailStatus(email: string) {
-	try {
-		const response = await fetch("/api/auth/email-status", {
-			body: JSON.stringify({ email }),
-			headers: {
-				"Content-Type": "application/json",
-			},
-			method: "POST",
-		});
-
-		if (!response.ok) {
-			return null;
-		}
-
-		const data = (await response.json()) as EmailStatusResponse;
-		return data.lookupAvailable ? data : null;
-	} catch {
-		return null;
-	}
 }
 
 function GoogleIcon() {
@@ -209,12 +148,6 @@ export function SignUp() {
 	const [notice, setNotice] = useState("");
 	const [submitting, setSubmitting] = useState<SubmitState>(null);
 	const [confirmationEmail, setConfirmationEmail] = useState("");
-	const [existingAccount, setExistingAccount] =
-		useState<ExistingAccountHint | null>(null);
-
-	function closeExistingAccountDialog() {
-		setExistingAccount(null);
-	}
 
 	useEffect(() => {
 		document.body.classList.add("main-app");
@@ -266,7 +199,6 @@ export function SignUp() {
 		setMessage("");
 		setNotice("");
 		setConfirmationEmail("");
-		setExistingAccount(null);
 	}
 
 	async function handleProvider(provider: OAuthProvider) {
@@ -274,7 +206,6 @@ export function SignUp() {
 		setMessage("");
 		setNotice("");
 		setConfirmationEmail("");
-		setExistingAccount(null);
 
 		try {
 			await signInWithProvider(provider, nextPath);
@@ -289,7 +220,6 @@ export function SignUp() {
 		setMessage("");
 		setNotice("");
 		setConfirmationEmail("");
-		setExistingAccount(null);
 
 		const trimmedEmail = email.trim().toLowerCase();
 		if (!trimmedEmail) {
@@ -303,20 +233,6 @@ export function SignUp() {
 		}
 
 		setSubmitting(mode);
-
-		if (mode === "signup") {
-			const emailStatus = await lookupEmailStatus(trimmedEmail);
-
-			if (emailStatus?.accountExists) {
-				const providers = emailStatus.providers.filter(Boolean);
-				setExistingAccount({
-					message: existingAccountMessage(providers),
-					providers,
-				});
-				setSubmitting(null);
-				return;
-			}
-		}
 
 		if (typeof window !== "undefined") {
 			window.localStorage.setItem(AUTH_NEXT_STORAGE_KEY, nextPath);
@@ -338,6 +254,13 @@ export function SignUp() {
 
 		if (result.error) {
 			window.localStorage.removeItem(AUTH_NEXT_STORAGE_KEY);
+			if (mode === "signup" && isExistingAccountError(result.error)) {
+				setConfirmationEmail(trimmedEmail);
+				setNotice(confirmationNotice());
+				setSubmitting(null);
+				return;
+			}
+
 			setMessage(authErrorMessage(result.error));
 			setSubmitting(null);
 			return;
@@ -391,10 +314,6 @@ export function SignUp() {
 	const isBusy = submitting !== null;
 	const canShowSignupNoticeActions =
 		mode === "signup" && Boolean(confirmationEmail || notice);
-	const existingOAuthProviders =
-		existingAccount?.providers.filter((provider): provider is OAuthProvider =>
-			["google", "github"].includes(provider),
-		) ?? [];
 	const title =
 		mode === "signin" ? "Welcome back" : "Create your Linted account";
 	const subtitle =
@@ -470,9 +389,6 @@ export function SignUp() {
 									id="auth-email"
 									onChange={(event) => {
 										setEmail(event.target.value);
-										if (existingAccount) {
-											setExistingAccount(null);
-										}
 										if (
 											confirmationEmail &&
 											event.target.value.trim().toLowerCase() !== confirmationEmail
@@ -575,52 +491,6 @@ export function SignUp() {
 					</button>
 				</div>
 			</section>
-
-			<AlertDialog
-				open={Boolean(existingAccount)}
-				onOpenChange={(open) => {
-					if (!open) {
-						closeExistingAccountDialog();
-					}
-				}}
-			>
-				<AlertDialogContent className="auth-account-dialog" size="sm">
-					<AlertDialogHeader>
-						<AlertDialogTitle>Account already exists</AlertDialogTitle>
-						<AlertDialogDescription>
-							{existingAccount?.message ||
-								"This email already has a Linted account."}
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel>Use another email</AlertDialogCancel>
-						{existingOAuthProviders.length ? (
-							existingOAuthProviders.map((provider) => (
-								<AlertDialogAction
-									className="auth-account-dialog-action"
-									key={provider}
-									onClick={(event) => {
-										event.preventDefault();
-										void handleProvider(provider);
-									}}
-								>
-									Continue with {providerLabel(provider)}
-								</AlertDialogAction>
-							))
-						) : (
-							<AlertDialogAction
-								className="auth-account-dialog-action"
-								onClick={(event) => {
-									event.preventDefault();
-									switchMode("signin");
-								}}
-							>
-								Go to sign in
-							</AlertDialogAction>
-						)}
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
 		</main>
 	);
 }

@@ -4,9 +4,9 @@
 
 - Source path: `supabase/schema.sql`
 - Kind: Legacy Supabase SQL reference
-- Size: 17256 bytes
-- Lines: 629
-- Source hash: `115ca4ce91a6ab5fc3957e249db5f5766c0d7654a53fd0b746f3b0a3e9a68912`
+- Size: 15787 bytes
+- Lines: 580
+- Source hash: `1fa60d00a882714509a068389410fcf72acc475aadd3f704d11f3eaecb57fd98`
 
 ## What This File Does
 
@@ -40,7 +40,7 @@ No direct test file detected by naming convention.
 
 - Tables: `app_presence_sessions`, `profiles`, `resumes`, `roasts`, `votes`
 - Policies: `Authenticated users can create roasts`, `Authenticated users can vote once per roast`, `Profiles are readable by authenticated users`, `Roast authors can delete their own roasts`, `Roast authors can update their own roasts`, `Roasts are publicly readable`, `Users can create their own resumes`, `Users can delete their own resumes`, `Users can insert their own profile`, `Users can remove their own votes`, `Users can update their own profile`, `Users can update their own resumes`, `Visible resumes are publicly readable`, `Votes are readable by authenticated users`
-- Functions: `clean_presence_session_id`, `clear_app_presence`, `decrement_resume_roast_count`, `decrement_roast_helpful_votes`, `get_active_roaster_count`, `get_auth_email_state`, `get_public_profile`, `get_public_profile_roasts`, `get_roaster_leaderboard`, `handle_new_user`, `increment_resume_roast_count`, `increment_roast_helpful_votes`, `make_unique_username`, `record_app_presence`
+- Functions: `clean_presence_session_id`, `clear_app_presence`, `decrement_resume_roast_count`, `decrement_roast_helpful_votes`, `get_active_roaster_count`, `get_public_profile`, `get_public_profile_roasts`, `get_roaster_leaderboard`, `handle_new_user`, `increment_resume_roast_count`, `increment_roast_helpful_votes`, `make_unique_username`, `record_app_presence`
 - Triggers: `on_auth_user_created`, `on_roast_created`, `on_roast_deleted`, `on_vote_created`, `on_vote_deleted`
 - Indexes: `app_presence_sessions_last_seen_at_idx`, `app_presence_sessions_user_id_idx`, `resumes_status_created_at_idx`, `resumes_user_id_idx`, `roasts_author_id_idx`, `roasts_resume_id_created_at_idx`, `votes_roast_id_idx`
 - Views: none detected

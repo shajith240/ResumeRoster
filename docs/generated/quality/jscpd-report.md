@@ -193,23 +193,19 @@ Clone found (sql):
    supabase\migrations\0001_core_schema_auth_storage.sql [252:73 - 185:5]
 
 Clone found (sql):
- - supabase\schema.sql [272:58 - 323:7] (51 lines, 444 tokens)
-   supabase\migrations\0005_leaderboard_auth_lookup.sql [42:85 - 93:7]
-
-Clone found (sql):
- - supabase\schema.sql [321:76 - 415:31] (94 lines, 772 tokens)
+ - supabase\schema.sql [272:58 - 366:31] (94 lines, 772 tokens)
    supabase\migrations\0002_resume_context_reads_presence.sql [159:62 - 253:31]
 
 Clone found (sql):
- - supabase\schema.sql [443:3 - 465:64] (22 lines, 228 tokens)
+ - supabase\schema.sql [394:3 - 416:64] (22 lines, 228 tokens)
    supabase\migrations\0003_roast_threads_reactions_deletes.sql [352:3 - 374:60]
 
 Clone found (sql):
- - supabase\schema.sql [521:85 - 555:42] (34 lines, 241 tokens)
+ - supabase\schema.sql [472:85 - 506:42] (34 lines, 241 tokens)
    supabase\migrations\0005_leaderboard_auth_lookup.sql [5:86 - 39:43]
 
 Clone found (sql):
- - supabase\schema.sql [588:81 - 619:16] (31 lines, 227 tokens)
+ - supabase\schema.sql [539:81 - 570:16] (31 lines, 227 tokens)
    supabase\migrations\0003_roast_threads_reactions_deletes.sql [608:72 - 639:15]
 
 Clone found (sql):
@@ -262,7 +258,7 @@ Clone found (sql):
 
 Clone found (sql):
  - supabase\profile.sql [4:1 - 69:94] (65 lines, 458 tokens)
-   supabase\schema.sql [560:1 - 645:94]
+   supabase\schema.sql [511:1 - 645:94]
 
 Clone found (sql):
  - supabase\profile-features.sql [12:101 - 159:14] (147 lines, 1126 tokens)
@@ -278,15 +274,11 @@ Clone found (sql):
 
 Clone found (sql):
  - supabase\leaderboard.sql [4:59 - 43:86] (39 lines, 287 tokens)
-   supabase\schema.sql [519:71 - 558:86]
+   supabase\schema.sql [470:71 - 509:86]
 
 Clone found (sql):
  - supabase\auth-profiles.sql [5:1 - 97:59] (92 lines, 688 tokens)
    supabase\migrations\0004_profiles_avatars_public_profile.sql [91:1 - 183:59]
-
-Clone found (sql):
- - supabase\auth-email-lookup.sql [5:1 - 52:77] (47 lines, 438 tokens)
-   supabase\migrations\0005_leaderboard_auth_lookup.sql [44:1 - 91:77]
 
 Clone found (sql):
  - supabase\app-presence.sql [4:1 - 115:31] (111 lines, 988 tokens)
@@ -313,42 +305,42 @@ Clone found (tsx):
    components\ui\message-circle.tsx [53:51 - 86:18]
 
 Clone found (tsx):
- - components\AuthGate.tsx [24:33 - 43:34] (19 lines, 158 tokens)
-   components\ui\sign-up.tsx [39:2 - 58:29]
+ - components\AuthGate.tsx [22:2 - 43:34] (21 lines, 172 tokens)
+   components\ui\sign-up.tsx [17:75 - 37:29]
 
 Clone found (tsx):
- - components\AuthGate.tsx [72:2 - 93:6] (21 lines, 200 tokens)
-   components\ui\sign-up.tsx [219:2 - 240:8]
+ - components\AuthGate.tsx [70:47 - 93:6] (23 lines, 205 tokens)
+   components\ui\sign-up.tsx [150:63 - 173:8]
 
 Clone found (typescript):
  - app\api\admin\reports\[id]\action\route.ts [54:24 - 69:47] (15 lines, 167 tokens)
-   app\api\admin\users\[id]\action\route.ts [79:25 - 94:45]
+   app\api\admin\users\[id]\action\route.ts [227:25 - 242:45]
 
 Clone found (typescript):
  - app\api\admin\reports\[id]\action\route.ts [225:55 - 261:26] (36 lines, 242 tokens)
-   app\api\admin\users\[id]\action\route.ts [326:72 - 363:5]
+   app\api\admin\users\[id]\action\route.ts [371:72 - 408:5]
 
 ┌────────────┬────────────────┬─────────────┬──────────────┬──────────────┬──────────────────┬───────────────────┐
 │ Format     │ Files analyzed │ Total lines │ Total tokens │ Clones found │ Duplicated lines │ Duplicated tokens │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ sql        │ 54             │ 11029       │ 93639        │ 72           │ 4066 (36.87%)    │ 32458 (34.66%)    │
+│ sql        │ 55             │ 11194       │ 95056        │ 70           │ 3968 (35.45%)    │ 31576 (33.22%)    │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ markdown   │ 1              │ 76          │ 416          │ 0            │ 0 (0%)           │ 0 (0%)            │
+│ markdown   │ 1              │ 78          │ 420          │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
 │ bash       │ 1              │ 19          │ 34           │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
 │ toml       │ 1              │ 410         │ 1286         │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ javascript │ 58             │ 6999        │ 61987        │ 0            │ 0 (0%)           │ 0 (0%)            │
+│ javascript │ 58             │ 6951        │ 61622        │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ typescript │ 71             │ 8138        │ 70322        │ 3            │ 65 (0.8%)        │ 564 (0.8%)        │
+│ typescript │ 70             │ 8055        │ 69727        │ 3            │ 65 (0.81%)       │ 564 (0.81%)       │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ tsx        │ 62             │ 13160       │ 112852       │ 6            │ 217 (1.65%)      │ 1671 (1.48%)      │
+│ tsx        │ 62             │ 13030       │ 111760       │ 6            │ 221 (1.7%)       │ 1690 (1.51%)      │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
 │ css        │ 2              │ 1081        │ 7343         │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ Total:     │ 250            │ 40912       │ 347879       │ 81           │ 4348 (10.63%)    │ 34693 (9.97%)     │
+│ Total:     │ 250            │ 40818       │ 347248       │ 79           │ 4254 (10.42%)    │ 33830 (9.74%)     │
 └────────────┴────────────────┴─────────────┴──────────────┴──────────────┴──────────────────┴───────────────────┘
-Found 81 clones.
-time: 2.364s
+Found 79 clones.
+time: 1.982s
 ```

@@ -42,6 +42,7 @@
 0035_admin_inbox_messages.sql
 0036_refine_linted_usernames.sql
 0037_admin_delete_user_transaction.sql
+0038_remove_auth_email_lookup.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.

@@ -4,9 +4,9 @@
 
 - Source path: `docs/backend/api-routes.md`
 - Kind: Documentation
-- Size: 1239 bytes
-- Lines: 36
-- Source hash: `fa0b2d88e8ce0be3654d437423fd1220fb3f9f0a616a492c264b157395be1875`
+- Size: 1185 bytes
+- Lines: 35
+- Source hash: `9136663bca1f1ae5bcc656778e2fc6dc2ad35d7a24223fe97100fd2fc15258be`
 
 ## What This File Does
 

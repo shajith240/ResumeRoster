@@ -170,16 +170,6 @@
       "exportCount": 3
     },
     {
-      "hash": "90ee7b402cb4b71e37750667187237e074db3f262e9654e19e75a0f218fd80fe",
-      "kind": "Next API route",
-      "lineCount": 130,
-      "relativePath": "app/api/auth/email-status/route.ts",
-      "size": 3186,
-      "functionCount": 4,
-      "importCount": 2,
-      "exportCount": 2
-    },
-    {
       "hash": "5eceec86603c0c4327d43588d15b069c14953b0cc73f84104f92b4cb7d98f36a",
       "kind": "Next API route",
       "lineCount": 95,
@@ -290,11 +280,11 @@
       "exportCount": 2
     },
     {
-      "hash": "e579159e53b0b381fb5b33d88c6121eda5278041130898ee43f24546df9a6515",
+      "hash": "63eca16abf44fcea09221d1a178ca32ba9638a210fab737c7bf7c53bbdf82132",
       "kind": "Project file",
-      "lineCount": 8960,
+      "lineCount": 8950,
       "relativePath": "app/globals.css",
-      "size": 166981,
+      "size": 166795,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -890,13 +880,13 @@
       "exportCount": 1
     },
     {
-      "hash": "962b7f1675d9addf62796e234a62e9cadf9d2583352aa781ca419fb2516cbb8b",
+      "hash": "c775b75a31d1faaef6ecece181f522fe40ec63620b2945770e909e37bf184392",
       "kind": "UI primitive",
-      "lineCount": 630,
+      "lineCount": 500,
       "relativePath": "components/ui/sign-up.tsx",
-      "size": 18472,
-      "functionCount": 11,
-      "importCount": 12,
+      "size": 14906,
+      "functionCount": 9,
+      "importCount": 11,
       "exportCount": 3
     },
     {
@@ -940,11 +930,11 @@
       "exportCount": 0
     },
     {
-      "hash": "fa0b2d88e8ce0be3654d437423fd1220fb3f9f0a616a492c264b157395be1875",
+      "hash": "9136663bca1f1ae5bcc656778e2fc6dc2ad35d7a24223fe97100fd2fc15258be",
       "kind": "Documentation",
-      "lineCount": 36,
+      "lineCount": 35,
       "relativePath": "docs/backend/api-routes.md",
-      "size": 1239,
+      "size": 1185,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2270,16 +2260,6 @@
       "exportCount": 0
     },
     {
-      "hash": "1d4ccb3a6d186a57b89b4076b94d75adc5f101cefb8ec22d1a583c1147381767",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 53,
-      "relativePath": "supabase/auth-email-lookup.sql",
-      "size": 1663,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
       "hash": "1b42a1e70302a33dd788d5d311857d066edecc6b5f0517e0db51bf0b25127bcc",
       "kind": "Legacy Supabase SQL reference",
       "lineCount": 98,
@@ -2310,11 +2290,11 @@
       "exportCount": 0
     },
     {
-      "hash": "bb3562ec1e84f68e75de13eaaef6693b49e70a570ac8be58a280438180de846d",
+      "hash": "d08ec6eacbbcc601797c5ed56f85ec2afceb817a23ab12a7eb8adf341cbc2486",
       "kind": "Root documentation",
-      "lineCount": 79,
+      "lineCount": 80,
       "relativePath": "supabase/MIGRATIONS.md",
-      "size": 2619,
+      "size": 2653,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2690,6 +2670,16 @@
       "exportCount": 0
     },
     {
+      "hash": "0427d5cd4dadeb870fc65e9c7a33884cdea7f4434c32b7da715eb2ab6d6c0702",
+      "kind": "Supabase migration",
+      "lineCount": 8,
+      "relativePath": "supabase/migrations/0038_remove_auth_email_lookup.sql",
+      "size": 284,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
       "hash": "3e33dfc4be18287a1784030e06779265d804a57823c2e1380d3490eb44e728ec",
       "kind": "Legacy Supabase SQL reference",
       "lineCount": 45,
@@ -2790,11 +2780,11 @@
       "exportCount": 0
     },
     {
-      "hash": "115ca4ce91a6ab5fc3957e249db5f5766c0d7654a53fd0b746f3b0a3e9a68912",
+      "hash": "1fa60d00a882714509a068389410fcf72acc475aadd3f704d11f3eaecb57fd98",
       "kind": "Legacy Supabase SQL reference",
-      "lineCount": 629,
+      "lineCount": 580,
       "relativePath": "supabase/schema.sql",
-      "size": 17256,
+      "size": 15787,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2880,5 +2870,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074"
+  "manifestHash": "ff19a2f7a737d254e041866708f7a3b7014bba45a9770b9e9c1886b9cf512cd0"
 }

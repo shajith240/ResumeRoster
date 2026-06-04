@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 287 source-controlled files.
-Manifest hash: `12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074`
+Generated from 286 source-controlled files.
+Manifest hash: `ff19a2f7a737d254e041866708f7a3b7014bba45a9770b9e9c1886b9cf512cd0`
 
 ## Folder Coverage
 
@@ -11,7 +11,7 @@ Manifest hash: `12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074
 | --- | ---: |
 | `.github` | 1 |
 | `(root)` | 19 |
-| `app` | 40 |
+| `app` | 39 |
 | `components` | 48 |
 | `docs` | 35 |
 | `lib` | 52 |
@@ -26,8 +26,8 @@ Manifest hash: `12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074
 | Application library module | 32 |
 | Documentation | 35 |
 | GitHub workflow | 1 |
-| Legacy Supabase SQL reference | 18 |
-| Next API route | 18 |
+| Legacy Supabase SQL reference | 17 |
+| Next API route | 17 |
 | Next page route | 16 |
 | Next root layout | 1 |
 | Project configuration | 17 |
@@ -37,7 +37,7 @@ Manifest hash: `12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074
 | React component | 25 |
 | Repository automation | 4 |
 | Root documentation | 3 |
-| Supabase migration | 37 |
+| Supabase migration | 38 |
 | UI primitive | 23 |
 | Unit test | 20 |
 
@@ -61,7 +61,6 @@ Manifest hash: `12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074
 | `app/api/admin/reviewers/route.ts` | Next API route | [open](source/app_api_admin_reviewers_route_ts.md) |
 | `app/api/admin/users/[id]/action/route.ts` | Next API route | [open](source/app_api_admin_users_id_action_route_ts.md) |
 | `app/api/admin/users/route.ts` | Next API route | [open](source/app_api_admin_users_route_ts.md) |
-| `app/api/auth/email-status/route.ts` | Next API route | [open](source/app_api_auth_email_status_route_ts.md) |
 | `app/api/comment-media/upload/route.ts` | Next API route | [open](source/app_api_comment_media_upload_route_ts.md) |
 | `app/api/health/route.ts` | Next API route | [open](source/app_api_health_route_ts.md) |
 | `app/api/push/dispatch/route.ts` | Next API route | [open](source/app_api_push_dispatch_route_ts.md) |
@@ -271,7 +270,6 @@ Manifest hash: `12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074
 | `scripts/docs/quality.mjs` | Repository automation | [open](source/scripts_docs_quality_mjs.md) |
 | `supabase/.gitignore` | Project file | [open](source/supabase_gitignore.md) |
 | `supabase/app-presence.sql` | Legacy Supabase SQL reference | [open](source/supabase_app_presence_sql.md) |
-| `supabase/auth-email-lookup.sql` | Legacy Supabase SQL reference | [open](source/supabase_auth_email_lookup_sql.md) |
 | `supabase/auth-profiles.sql` | Legacy Supabase SQL reference | [open](source/supabase_auth_profiles_sql.md) |
 | `supabase/config.toml` | Project configuration | [open](source/supabase_config_toml.md) |
 | `supabase/leaderboard.sql` | Legacy Supabase SQL reference | [open](source/supabase_leaderboard_sql.md) |
@@ -313,6 +311,7 @@ Manifest hash: `12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074
 | `supabase/migrations/0035_admin_inbox_messages.sql` | Supabase migration | [open](source/supabase_migrations_0035_admin_inbox_messages_sql.md) |
 | `supabase/migrations/0036_refine_linted_usernames.sql` | Supabase migration | [open](source/supabase_migrations_0036_refine_linted_usernames_sql.md) |
 | `supabase/migrations/0037_admin_delete_user_transaction.sql` | Supabase migration | [open](source/supabase_migrations_0037_admin_delete_user_transaction_sql.md) |
+| `supabase/migrations/0038_remove_auth_email_lookup.sql` | Supabase migration | [open](source/supabase_migrations_0038_remove_auth_email_lookup_sql.md) |
 | `supabase/phase1-hardening.sql` | Legacy Supabase SQL reference | [open](source/supabase_phase1_hardening_sql.md) |
 | `supabase/profile-features.sql` | Legacy Supabase SQL reference | [open](source/supabase_profile_features_sql.md) |
 | `supabase/profile-status.sql` | Legacy Supabase SQL reference | [open](source/supabase_profile_status_sql.md) |

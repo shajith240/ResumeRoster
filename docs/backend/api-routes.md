@@ -23,7 +23,6 @@ API routes live under `app/api/**/route.ts`. They are the bridge between browser
 - `/api/reviewer-application`: reviewer onboarding.
 - `/api/push/subscriptions`: browser push subscription management.
 - `/api/push/dispatch`: push dispatch.
-- `/api/auth/email-status`: auth email status helper.
 - `/api/health`: production health check.
 
 ## API Change Checklist
