@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/users/[id]/action/route.ts`
 - Kind: Next API route
-- Size: 10061 bytes
-- Lines: 393
-- Source hash: `bb28d67fca1efb1ae04b8cfbb8c6ac7ae9e9e126be8d4ec7ae7dd0c8548f5a37`
+- Size: 11284 bytes
+- Lines: 438
+- Source hash: `b7397f1833901977eb237077851b902da75e7ea3b1a31e446ebf3c7ea4c06023`
 
 ## What This File Does
 
@@ -31,13 +31,19 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 24 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
-| 28 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | not documented |
-| 32 | `uniqueStrings` | Function | top-level | no | `values` | `string[]` | not documented |
-| 38 | `removeStorageObjects` | Function async | top-level | no | `admin`, `bucket`, `paths` | `Promise<number>` | not documented |
-| 52 | `deleteRowsByColumn` | Action helper async | top-level | no | `admin`, `table`, `column`, `value` | `Promise<number>` | not documented |
-| 68 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | not documented |
-| 76 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | not documented |
+| 49 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | not documented |
+| 53 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | not documented |
+| 57 | `uniqueStrings` | Function | top-level | no | `values` | `string[]` | not documented |
+| 63 | `removeStorageObjects` | Function async | top-level | no | `admin`, `bucket`, `paths` | `Promise<number>` | not documented |
+| 81 | `listUserStorageFolder` | Function async | top-level | no | `admin`, `bucket`, `userId` | `Promise<string[]>` | not documented |
+| 110 | `removeAccountStorageObjects` | Function async | top-level | no | `admin`, `profileId`, `appData` | `Promise<StorageRemovalCounts>` | not documented |
+| 144 | `firstDeleteResult` | Action helper | top-level | no | `data` | `DeleteUserAppDataResult \| null` | not documented |
+| 151 | `errorMessage` | Function | top-level | no | `error` | `string` | not documented |
+| 155 | `deleteFailureStatus` | Action helper | top-level | no | `stage` | `DeleteFailureStatus` | not documented |
+| 161 | `buildDeleteAuditMetadata` | Action helper | top-level | no | `{ authUserDeleted = false, baseMetadata, error, stage, storageCounts, appData, }` | `Record<string, unknown>` | not documented |
+| 203 | `tryUpdateDeleteAuditMetadata` | Action helper async | top-level | no | `admin`, `auditLogId`, `metadata` | `Promise<void>` | not documented |
+| 216 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | not documented |
+| 224 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | not documented |
 
 ## Types
 
@@ -45,6 +51,11 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 | --- | --- | --- |
 | 7 | `AdminUserAction` | type |
 | 13 | `RouteContext` | type |
+| 17 | `DeleteStage` | type |
+| 22 | `DeleteFailureStatus` | type |
+| 26 | `DeleteAuditStatus` | type |
+| 28 | `DeleteUserAppDataResult` | type |
+| 36 | `StorageRemovalCounts` | type |
 
 ## Related Tests
 

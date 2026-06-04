@@ -4,9 +4,9 @@
 
 - Source path: `supabase/MIGRATIONS.md`
 - Kind: Root documentation
-- Size: 2580 bytes
-- Lines: 78
-- Source hash: `9a06655170f7252bb02ef046ffd6c72aa437ce0790ecc99dabe146ad01688138`
+- Size: 2619 bytes
+- Lines: 79
+- Source hash: `bb3562ec1e84f68e75de13eaaef6693b49e70a570ac8be58a280438180de846d`
 
 ## What This File Does
 

@@ -14,6 +14,31 @@ type RouteContext = {
 	params: Promise<{ id: string }>;
 };
 
+type DeleteStage =
+	| "db_delete"
+	| "storage_cleanup"
+	| "auth_delete"
+	| "completed";
+type DeleteFailureStatus =
+	| "auth_delete_failed"
+	| "db_delete_failed"
+	| "storage_cleanup_failed";
+type DeleteAuditStatus = DeleteStage | DeleteFailureStatus;
+
+type DeleteUserAppDataResult = {
+	audit_log_id: string;
+	avatar_paths: string[] | null;
+	comment_media_paths: string[] | null;
+	deleted_counts: Record<string, unknown> | null;
+	resume_paths: string[] | null;
+};
+
+type StorageRemovalCounts = {
+	avatars: number;
+	commentMedia: number;
+	resumes: number;
+};
+
 const ACTIONS = new Set<AdminUserAction>([
 	"delete_user_account",
 	"reset_reviewer_trust",
@@ -43,26 +68,149 @@ async function removeStorageObjects(
 	const uniquePaths = uniqueStrings(paths);
 	if (!uniquePaths.length) return 0;
 
-	const { error } = await admin.storage.from(bucket).remove(uniquePaths);
-	if (error) throw new Error(error.message);
+	for (let index = 0; index < uniquePaths.length; index += 1000) {
+		const { error } = await admin.storage
+			.from(bucket)
+			.remove(uniquePaths.slice(index, index + 1000));
+		if (error) throw new Error(error.message);
+	}
 
 	return uniquePaths.length;
 }
 
-async function deleteRowsByColumn(
+async function listUserStorageFolder(
 	admin: SupabaseClient,
-	table: string,
-	column: string,
-	value: string,
+	bucket: string,
+	userId: string,
 ) {
-	const { count, error } = await admin
-		.from(table)
-		.delete({ count: "exact" })
-		.eq(column, value);
+	const paths: string[] = [];
+	let offset = 0;
 
-	if (error) throw new Error(`${table}: ${error.message}`);
+	while (true) {
+		const { data, error } = await admin.storage
+			.from(bucket)
+			.list(userId, { limit: 1000, offset });
 
-	return count ?? 0;
+		if (error) throw new Error(`${bucket}: ${error.message}`);
+
+		const batch = data ?? [];
+		paths.push(
+			...batch
+				.filter((item) => item.name && item.id)
+				.map((item) => `${userId}/${item.name}`),
+		);
+
+		if (batch.length < 1000) break;
+		offset += 1000;
+	}
+
+	return paths;
+}
+
+async function removeAccountStorageObjects(
+	admin: SupabaseClient,
+	profileId: string,
+	appData: DeleteUserAppDataResult,
+) {
+	const [resumeFolderPaths, avatarFolderPaths, commentMediaFolderPaths] =
+		await Promise.all([
+			listUserStorageFolder(admin, "resumes", profileId),
+			listUserStorageFolder(admin, "avatars", profileId),
+			listUserStorageFolder(admin, "comment-media", profileId),
+		]);
+
+	const removed: StorageRemovalCounts = {
+		avatars: 0,
+		commentMedia: 0,
+		resumes: 0,
+	};
+
+	removed.resumes = await removeStorageObjects(admin, "resumes", [
+		...(appData.resume_paths ?? []),
+		...resumeFolderPaths,
+	]);
+	removed.avatars = await removeStorageObjects(admin, "avatars", [
+		...(appData.avatar_paths ?? []),
+		...avatarFolderPaths,
+	]);
+	removed.commentMedia = await removeStorageObjects(admin, "comment-media", [
+		...(appData.comment_media_paths ?? []),
+		...commentMediaFolderPaths,
+	]);
+
+	return removed;
+}
+
+function firstDeleteResult(
+	data: DeleteUserAppDataResult[] | DeleteUserAppDataResult | null,
+) {
+	if (Array.isArray(data)) return data[0] ?? null;
+	return data;
+}
+
+function errorMessage(error: unknown) {
+	return error instanceof Error ? error.message : "Unknown deletion failure";
+}
+
+function deleteFailureStatus(stage: DeleteStage): DeleteFailureStatus {
+	if (stage === "storage_cleanup") return "storage_cleanup_failed";
+	if (stage === "auth_delete") return "auth_delete_failed";
+	return "db_delete_failed";
+}
+
+function buildDeleteAuditMetadata({
+	authUserDeleted = false,
+	baseMetadata,
+	error,
+	stage,
+	storageCounts,
+	appData,
+}: {
+	authUserDeleted?: boolean;
+	baseMetadata: Record<string, unknown>;
+	error?: unknown;
+	stage: DeleteAuditStatus;
+	storageCounts: StorageRemovalCounts;
+	appData: DeleteUserAppDataResult | null;
+}) {
+	const metadata: Record<string, unknown> = {
+		...baseMetadata,
+		auth_user_deleted: authUserDeleted,
+		delete_status: stage,
+		removed_storage_objects: storageCounts,
+		removed_table_rows: appData?.deleted_counts ?? {},
+		storage_cleanup: {
+			status:
+				stage === "completed" || stage === "auth_delete_failed"
+					? "completed"
+					: stage === "storage_cleanup_failed"
+						? "failed"
+						: "not_started",
+		},
+	};
+
+	if (stage === "completed") {
+		metadata.deletion_finished_at = new Date().toISOString();
+	} else {
+		metadata.deletion_failed_at = new Date().toISOString();
+	}
+
+	if (error) metadata.delete_error = errorMessage(error);
+
+	return metadata;
+}
+
+async function tryUpdateDeleteAuditMetadata(
+	admin: SupabaseClient,
+	auditLogId: string,
+	metadata: Record<string, unknown>,
+) {
+	try {
+		await admin.from("moderation_actions").update({ metadata }).eq("id", auditLogId);
+	} catch {
+		// The destructive operation already reached its real state. Never make a
+		// retry more dangerous because a best-effort audit metadata update failed.
+	}
 }
 
 async function getPayload(request: Request) {
@@ -112,51 +260,24 @@ export async function POST(request: Request, context: RouteContext) {
 				return badRequest("Confirm the irreversible user deletion first.");
 			}
 
-			const [authUserResult, profileResult, resumesResult, attachmentsResult] =
-				await Promise.all([
-					admin.auth.admin.getUserById(profileId),
-					admin
-						.from("profiles")
-						.select("id,avatar_path")
-						.eq("id", profileId)
-						.maybeSingle(),
-					admin
-						.from("resumes")
-						.select("id,file_path")
-						.eq("user_id", profileId),
-					admin
-						.from("comment_attachments")
-						.select("id,storage_path")
-						.eq("user_id", profileId),
-				]);
-
+			const authUserResult = await admin.auth.admin.getUserById(profileId);
 			if (authUserResult.error) throw new Error(authUserResult.error.message);
-			if (profileResult.error) throw new Error(profileResult.error.message);
-			if (resumesResult.error) throw new Error(resumesResult.error.message);
-			if (attachmentsResult.error) {
-				throw new Error(attachmentsResult.error.message);
-			}
 
 			const targetEmail = authUserResult.data.user?.email ?? null;
 			if (isAdminEmail(targetEmail)) {
 				return badRequest("Admin allowlist accounts cannot be deleted here.", 403);
 			}
 
-			const resumes = resumesResult.data ?? [];
-			const attachments = attachmentsResult.data ?? [];
+			const startedMetadata = {
+				delete_status: "started",
+				storage_cleanup: { status: "not_started" },
+			};
 			const logResult = await admin
 				.from("moderation_actions")
 				.insert({
 					action,
 					admin_user_id: user.id,
-					metadata: {
-						delete_status: "started",
-						profile_existed: Boolean(profileResult.data?.id),
-						user_data_counts: {
-							attachments: attachments.length,
-							resumes: resumes.length,
-						},
-					},
+					metadata: startedMetadata,
 					reason: note,
 					target_id: profileId,
 					target_type: "user",
@@ -166,149 +287,73 @@ export async function POST(request: Request, context: RouteContext) {
 
 			if (logResult.error) throw new Error(logResult.error.message);
 
-			try {
-				const [removedResumeFiles, removedAvatarFiles, removedCommentFiles] =
-					await Promise.all([
-						removeStorageObjects(
-							admin,
-							"resumes",
-							resumes.map((resume) => resume.file_path),
-						),
-						removeStorageObjects(admin, "avatars", [
-							profileResult.data?.avatar_path,
-						]),
-						removeStorageObjects(
-							admin,
-							"comment-media",
-							attachments.map((attachment) => attachment.storage_path),
-						),
-					]);
+			let appDataCleanup: DeleteUserAppDataResult | null = null;
+			let deleteStage: DeleteStage = "db_delete";
+			let removedStorageObjects: StorageRemovalCounts = {
+				avatars: 0,
+				commentMedia: 0,
+				resumes: 0,
+			};
+			const baseMetadata = {
+				...(logResult.data.metadata as Record<string, unknown>),
+			};
 
-				const attachmentIds = attachments.map((attachment) => attachment.id);
-				if (attachmentIds.length) {
-					const deleteAttachments = await admin
-						.from("comment_attachments")
-						.delete()
-						.in("id", attachmentIds);
-					if (deleteAttachments.error) {
-						throw new Error(deleteAttachments.error.message);
-					}
+			try {
+				const appDataResult = await admin.rpc("admin_delete_user_app_data", {
+					deletion_audit_log_id: logResult.data.id,
+					target_user_id: profileId,
+				});
+
+				if (appDataResult.error) throw new Error(appDataResult.error.message);
+
+				appDataCleanup = firstDeleteResult(
+					appDataResult.data as DeleteUserAppDataResult[] | null,
+				);
+
+				if (!appDataCleanup) {
+					throw new Error("Database deletion did not return an audit result.");
 				}
 
-				const cleanupCounts = {
-					activeSessions: await deleteRowsByColumn(
-						admin,
-						"active_user_sessions",
-						"user_id",
-						profileId,
-					),
-					contentReportsFiled: await deleteRowsByColumn(
-						admin,
-						"content_reports",
-						"reporter_id",
-						profileId,
-					),
-					notificationPreferences: await deleteRowsByColumn(
-						admin,
-						"notification_preferences",
-						"user_id",
-						profileId,
-					),
-					onboarding: await deleteRowsByColumn(
-						admin,
-						"profile_onboarding",
-						"user_id",
-						profileId,
-					),
-					presenceSessions: await deleteRowsByColumn(
-						admin,
-						"app_presence_sessions",
-						"user_id",
-						profileId,
-					),
-					pushSubscriptions: await deleteRowsByColumn(
-						admin,
-						"push_subscriptions",
-						"user_id",
-						profileId,
-					),
-					resumeReads: await deleteRowsByColumn(
-						admin,
-						"resume_reads",
-						"reader_id",
-						profileId,
-					),
-					reviewerApplications: await deleteRowsByColumn(
-						admin,
-						"reviewer_applications",
-						"user_id",
-						profileId,
-					),
-					reviews: await deleteRowsByColumn(
-						admin,
-						"roasts",
-						"author_id",
-						profileId,
-					),
-					savedResumes: await deleteRowsByColumn(
-						admin,
-						"saved_resumes",
-						"user_id",
-						profileId,
-					),
-					submittedResumes: await deleteRowsByColumn(
-						admin,
-						"resumes",
-						"user_id",
-						profileId,
-					),
-					votes: await deleteRowsByColumn(
-						admin,
-						"votes",
-						"voter_id",
-						profileId,
-					),
-				};
+				deleteStage = "storage_cleanup";
+				removedStorageObjects = await removeAccountStorageObjects(
+					admin,
+					profileId,
+					appDataCleanup,
+				);
 
+				deleteStage = "auth_delete";
 				const deleteAuthUser = await admin.auth.admin.deleteUser(profileId);
 				if (deleteAuthUser.error) throw new Error(deleteAuthUser.error.message);
 
-				const updateLog = await admin
-					.from("moderation_actions")
-					.update({
-						metadata: {
-							...(logResult.data.metadata as Record<string, unknown>),
-							delete_status: "completed",
-							removed_storage_objects: {
-								avatars: removedAvatarFiles,
-								commentMedia: removedCommentFiles,
-								resumes: removedResumeFiles,
-							},
-							removed_table_rows: cleanupCounts,
-						},
-					})
-					.eq("id", logResult.data.id);
-
-				if (updateLog.error) throw new Error(updateLog.error.message);
+				deleteStage = "completed";
+				await tryUpdateDeleteAuditMetadata(
+					admin,
+					logResult.data.id,
+					buildDeleteAuditMetadata({
+						appData: appDataCleanup,
+						authUserDeleted: true,
+						baseMetadata,
+						stage: deleteStage,
+						storageCounts: removedStorageObjects,
+					}),
+				);
 
 				return Response.json({
 					deletedUserId: profileId,
 					status: "ok",
 				});
 			} catch (deleteError) {
-				await admin
-					.from("moderation_actions")
-					.update({
-						metadata: {
-							...(logResult.data.metadata as Record<string, unknown>),
-							delete_error:
-								deleteError instanceof Error
-									? deleteError.message
-									: "Unknown deletion failure",
-							delete_status: "failed",
-						},
-					})
-					.eq("id", logResult.data.id);
+				await tryUpdateDeleteAuditMetadata(
+					admin,
+					logResult.data.id,
+					buildDeleteAuditMetadata({
+						appData: appDataCleanup,
+						baseMetadata,
+						error: deleteError,
+						stage: deleteFailureStatus(deleteStage),
+						storageCounts: removedStorageObjects,
+					}),
+				);
 
 				throw deleteError;
 			}

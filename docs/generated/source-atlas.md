@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 286 source-controlled files.
-Manifest hash: `034b5f55083ae651742d6d950ddbd9aec85dc573f2c91154d6830c5990a24453`
+Generated from 287 source-controlled files.
+Manifest hash: `12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074`
 
 ## Folder Coverage
 
@@ -17,7 +17,7 @@ Manifest hash: `034b5f55083ae651742d6d950ddbd9aec85dc573f2c91154d6830c5990a24453
 | `lib` | 52 |
 | `public` | 30 |
 | `scripts` | 4 |
-| `supabase` | 57 |
+| `supabase` | 58 |
 
 ## File Kinds
 
@@ -37,7 +37,7 @@ Manifest hash: `034b5f55083ae651742d6d950ddbd9aec85dc573f2c91154d6830c5990a24453
 | React component | 25 |
 | Repository automation | 4 |
 | Root documentation | 3 |
-| Supabase migration | 36 |
+| Supabase migration | 37 |
 | UI primitive | 23 |
 | Unit test | 20 |
 
@@ -312,6 +312,7 @@ Manifest hash: `034b5f55083ae651742d6d950ddbd9aec85dc573f2c91154d6830c5990a24453
 | `supabase/migrations/0034_allow_admin_delete_cascades.sql` | Supabase migration | [open](source/supabase_migrations_0034_allow_admin_delete_cascades_sql.md) |
 | `supabase/migrations/0035_admin_inbox_messages.sql` | Supabase migration | [open](source/supabase_migrations_0035_admin_inbox_messages_sql.md) |
 | `supabase/migrations/0036_refine_linted_usernames.sql` | Supabase migration | [open](source/supabase_migrations_0036_refine_linted_usernames_sql.md) |
+| `supabase/migrations/0037_admin_delete_user_transaction.sql` | Supabase migration | [open](source/supabase_migrations_0037_admin_delete_user_transaction_sql.md) |
 | `supabase/phase1-hardening.sql` | Legacy Supabase SQL reference | [open](source/supabase_phase1_hardening_sql.md) |
 | `supabase/profile-features.sql` | Legacy Supabase SQL reference | [open](source/supabase_profile_features_sql.md) |
 | `supabase/profile-status.sql` | Legacy Supabase SQL reference | [open](source/supabase_profile_status_sql.md) |

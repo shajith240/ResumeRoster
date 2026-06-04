@@ -150,12 +150,12 @@
       "exportCount": 3
     },
     {
-      "hash": "bb28d67fca1efb1ae04b8cfbb8c6ac7ae9e9e126be8d4ec7ae7dd0c8548f5a37",
+      "hash": "b7397f1833901977eb237077851b902da75e7ea3b1a31e446ebf3c7ea4c06023",
       "kind": "Next API route",
-      "lineCount": 393,
+      "lineCount": 438,
       "relativePath": "app/api/admin/users/[id]/action/route.ts",
-      "size": 10061,
-      "functionCount": 7,
+      "size": 11284,
+      "functionCount": 13,
       "importCount": 2,
       "exportCount": 3
     },
@@ -2310,11 +2310,11 @@
       "exportCount": 0
     },
     {
-      "hash": "9a06655170f7252bb02ef046ffd6c72aa437ce0790ecc99dabe146ad01688138",
+      "hash": "bb3562ec1e84f68e75de13eaaef6693b49e70a570ac8be58a280438180de846d",
       "kind": "Root documentation",
-      "lineCount": 78,
+      "lineCount": 79,
       "relativePath": "supabase/MIGRATIONS.md",
-      "size": 2580,
+      "size": 2619,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2680,6 +2680,16 @@
       "exportCount": 0
     },
     {
+      "hash": "265182ec94accca4fca2af6c85b849941c7ccf3ce601a71121f8d277987cefcc",
+      "kind": "Supabase migration",
+      "lineCount": 261,
+      "relativePath": "supabase/migrations/0037_admin_delete_user_transaction.sql",
+      "size": 9042,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
       "hash": "3e33dfc4be18287a1784030e06779265d804a57823c2e1380d3490eb44e728ec",
       "kind": "Legacy Supabase SQL reference",
       "lineCount": 45,
@@ -2870,5 +2880,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "034b5f55083ae651742d6d950ddbd9aec85dc573f2c91154d6830c5990a24453"
+  "manifestHash": "12a28f715045bd7bfb40b1f9a6d78cc48d53fed3b4b0c90b8228f9e4f64b8074"
 }
