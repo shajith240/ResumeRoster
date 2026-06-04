@@ -3,7 +3,9 @@ import { Suspense, type ReactNode } from "react";
 import RouteTransitionLoader from "@/components/RouteTransitionLoader";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
-import "./feed-canvas.css";
+import "./notifications.css";
+import "./feed.css";
+import "./admin.css";
 
 const lintyFaviconPath = "/assets/linty-favicon.png";
 
