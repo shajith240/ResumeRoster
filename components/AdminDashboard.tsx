@@ -4,8 +4,11 @@ import Link from "next/link";
 import type { FormEvent, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+	Activity,
 	BadgeCheck,
 	CheckCircle2,
+	ChevronLeft,
+	ChevronRight,
 	Database,
 	ExternalLink,
 	FileText,
@@ -186,6 +189,33 @@ type AdminUser = {
 	dataFootprint?: AdminUserDataFootprint;
 };
 
+type ActiveAdminUser = {
+	email: string | null;
+	lastSeenAt: string;
+	profile: ProfilePreview | null;
+	status: string;
+	userId: string;
+};
+
+type AdminUsersPagination = {
+	from: number;
+	hasNextPage: boolean;
+	hasPreviousPage: boolean;
+	lastPage: number;
+	page: number;
+	perPage: number;
+	to: number;
+	total: number;
+};
+
+type AdminUsersResponse = {
+	activeUsers: ActiveAdminUser[];
+	latestUsers: AdminUser[];
+	pagination: AdminUsersPagination;
+	query: string;
+	users: AdminUser[];
+};
+
 type AdminMessageDialogTarget =
 	| {
 			mode: "all";
@@ -237,6 +267,7 @@ type AdminDataInventory = {
 
 type AdminSection = {
 	description: string;
+	group: "Governance" | "Operations";
 	href: string;
 	icon: LucideIcon;
 	id: AdminDashboardView;
@@ -247,6 +278,7 @@ type AdminSection = {
 const adminSections: AdminSection[] = [
 	{
 		description: "Health, queues, and shortcuts.",
+		group: "Operations",
 		href: "/admin",
 		icon: LayoutDashboard,
 		id: "overview",
@@ -255,6 +287,7 @@ const adminSections: AdminSection[] = [
 	},
 	{
 		description: "Reports that need moderation decisions.",
+		group: "Governance",
 		href: "/admin/reports",
 		icon: Flag,
 		id: "reports",
@@ -263,6 +296,7 @@ const adminSections: AdminSection[] = [
 	},
 	{
 		description: "Users, profiles, data footprint, and account actions.",
+		group: "Operations",
 		href: "/admin/people",
 		icon: UsersRound,
 		id: "people",
@@ -271,6 +305,7 @@ const adminSections: AdminSection[] = [
 	},
 	{
 		description: "Reviewer trust applications and proof checks.",
+		group: "Governance",
 		href: "/admin/reviewers",
 		icon: BadgeCheck,
 		id: "reviewers",
@@ -279,6 +314,7 @@ const adminSections: AdminSection[] = [
 	},
 	{
 		description: "Newest resumes and feedback activity.",
+		group: "Operations",
 		href: "/admin/content",
 		icon: FileText,
 		id: "content",
@@ -287,6 +323,7 @@ const adminSections: AdminSection[] = [
 	},
 	{
 		description: "Recent admin actions and moderation history.",
+		group: "Governance",
 		href: "/admin/audit",
 		icon: History,
 		id: "audit",
@@ -295,6 +332,7 @@ const adminSections: AdminSection[] = [
 	},
 	{
 		description: "Table counts, storage surface, and deletion model.",
+		group: "Governance",
 		href: "/admin/data",
 		icon: Database,
 		id: "data",
@@ -397,20 +435,6 @@ function getTargetTitle(report: ReportPreview) {
 	return report.resume?.title || "Reported resume";
 }
 
-function getUserSearchText(user: AdminUser) {
-	return [
-		user.email,
-		user.profile?.username,
-		user.profile?.full_name,
-		user.profile?.reviewer_headline,
-		user.profile?.current_position,
-		user.profile?.reviewer_verification_status,
-	]
-		.filter(Boolean)
-		.join(" ")
-		.toLowerCase();
-}
-
 function getFootprintTotal(footprint?: AdminUserDataFootprint) {
 	if (!footprint) return 0;
 	return (
@@ -452,6 +476,19 @@ export default function AdminDashboard({
 		ReviewerApplicationPreview[]
 	>([]);
 	const [users, setUsers] = useState<AdminUser[]>([]);
+	const [latestUsers, setLatestUsers] = useState<AdminUser[]>([]);
+	const [activeUsers, setActiveUsers] = useState<ActiveAdminUser[]>([]);
+	const [peoplePagination, setPeoplePagination] =
+		useState<AdminUsersPagination>({
+			from: 0,
+			hasNextPage: false,
+			hasPreviousPage: false,
+			lastPage: 1,
+			page: 1,
+			perPage: 10,
+			to: 0,
+			total: 0,
+		});
 	const [actions, setActions] = useState<ModerationAction[]>([]);
 	const [dataInventory, setDataInventory] = useState<AdminDataInventory | null>(
 		null,
@@ -461,6 +498,7 @@ export default function AdminDashboard({
 	const [reviewerStatus, setReviewerStatus] =
 		useState<ReviewerApplicationStatus>("pending");
 	const [userQuery, setUserQuery] = useState("");
+	const [peoplePage, setPeoplePage] = useState(1);
 	const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
 	const [busyAction, setBusyAction] = useState("");
 	const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(null);
@@ -541,7 +579,16 @@ export default function AdminDashboard({
 					);
 				}
 				if (view === "people") {
-					return fetchJson<{ users: AdminUser[] }>("/api/admin/users?limit=100");
+					const params = new URLSearchParams({
+						page: String(peoplePage),
+						perPage: "10",
+					});
+					if (userQuery.trim()) {
+						params.set("query", userQuery.trim());
+					}
+					return fetchJson<AdminUsersResponse>(
+						`/api/admin/users?${params.toString()}`,
+					);
 				}
 				if (view === "audit") {
 					return fetchJson<{ actions: ModerationAction[] }>(
@@ -573,7 +620,13 @@ export default function AdminDashboard({
 				);
 			}
 			if (view === "people") {
-				setUsers((sectionData as { users: AdminUser[] } | null)?.users ?? []);
+				const peopleData = sectionData as AdminUsersResponse | null;
+				setUsers(peopleData?.users ?? []);
+				setLatestUsers(peopleData?.latestUsers ?? []);
+				setActiveUsers(peopleData?.activeUsers ?? []);
+				if (peopleData?.pagination) {
+					setPeoplePagination(peopleData.pagination);
+				}
 			}
 			if (view === "audit") {
 				setActions(
@@ -591,8 +644,10 @@ export default function AdminDashboard({
 		accessToken,
 		fetchJson,
 		isAdmin,
+		peoplePage,
 		reportStatus,
 		reviewerStatus,
+		userQuery,
 		view,
 	]);
 
@@ -602,11 +657,17 @@ export default function AdminDashboard({
 		});
 	}, [loadAdminData]);
 
-	const filteredUsers = useMemo(() => {
-		const query = userQuery.trim().toLowerCase();
-		if (!query) return users;
-		return users.filter((user) => getUserSearchText(user).includes(query));
-	}, [userQuery, users]);
+	useEffect(() => {
+		if (view !== "people" || !accessToken || !isAdmin) return;
+
+		const timer = window.setInterval(() => {
+			void loadAdminData().catch((error) => {
+				toast.error(error instanceof Error ? error.message : "Admin refresh failed.");
+			});
+		}, 30_000);
+
+		return () => window.clearInterval(timer);
+	}, [accessToken, isAdmin, loadAdminData, view]);
 
 	async function runReportAction(reportId: string, action: string) {
 		const actionKey = `report:${reportId}:${action}`;
@@ -756,9 +817,6 @@ export default function AdminDashboard({
 					{email ? <small>{email}</small> : null}
 				</div>
 				<div className="admin-header-actions">
-					<Link href="/admin/reports">Reports</Link>
-					<Link href="/admin/people">People</Link>
-					<Link href="/admin/data">Data</Link>
 					<Button
 						className="admin-refresh-button"
 						onClick={() => void loadAdminData()}
@@ -811,7 +869,7 @@ export default function AdminDashboard({
 			</section>
 
 			<div className="admin-console-layout">
-				<AdminSectionNav activeView={view} />
+				<AdminSectionNav activeView={view} stats={stats} />
 				<div className="admin-console-main">
 					{pageLoading ? (
 						<div className="admin-page-loading">Refreshing admin data</div>
@@ -839,14 +897,21 @@ export default function AdminDashboard({
 					) : null}
 					{view === "people" ? (
 						<PeoplePage
+							activeUsers={activeUsers}
 							busyAction={busyAction}
 							currentAdminUserId={currentAdminUserId}
+							latestUsers={latestUsers}
 							onAction={runUserAction}
 							onDeleteRequest={setDeleteTarget}
 							onMessageRequest={setMessageTarget}
-							onQueryChange={setUserQuery}
+							onPageChange={setPeoplePage}
+							onQueryChange={(value) => {
+								setUserQuery(value);
+								setPeoplePage(1);
+							}}
+							pagination={peoplePagination}
 							query={userQuery}
-							users={filteredUsers}
+							users={users}
 						/>
 					) : null}
 					{view === "reviewers" ? (
@@ -895,23 +960,70 @@ export default function AdminDashboard({
 	);
 }
 
-function AdminSectionNav({ activeView }: { activeView: AdminDashboardView }) {
+function getSectionBadge(sectionId: AdminDashboardView, stats?: AdminStats) {
+	if (sectionId === "reports" && stats?.pendingReports) {
+		return stats.pendingReports;
+	}
+	if (sectionId === "reviewers" && stats?.pendingReviewers) {
+		return stats.pendingReviewers;
+	}
+	if (sectionId === "people" && stats?.users) {
+		return stats.users;
+	}
+	if (sectionId === "content" && stats?.openResumes) {
+		return stats.openResumes;
+	}
+	if (sectionId === "overview") {
+		const attention =
+			(stats?.pendingReports ?? 0) + (stats?.pendingReviewers ?? 0);
+		return attention || null;
+	}
+	return null;
+}
+
+function AdminSectionNav({
+	activeView,
+	stats,
+}: {
+	activeView: AdminDashboardView;
+	stats?: AdminStats;
+}) {
+	const groups: Array<AdminSection["group"]> = ["Operations", "Governance"];
+
 	return (
 		<nav className="admin-section-nav" aria-label="Admin sections">
-			{adminSections.map((section) => {
-				const Icon = section.icon;
-				return (
-					<Link
-						aria-current={activeView === section.id ? "page" : undefined}
-						className={activeView === section.id ? "active" : ""}
-						href={section.href}
-						key={section.id}
-					>
-						<Icon aria-hidden="true" />
-						{section.label}
-					</Link>
-				);
-			})}
+			<div className="admin-section-nav-header">
+				<strong>Operations Console</strong>
+				<span>Moderate, message, and inspect.</span>
+			</div>
+			{groups.map((group) => (
+				<div className="admin-section-nav-group" key={group}>
+					<span>{group}</span>
+					{adminSections
+						.filter((section) => section.group === group)
+						.map((section) => {
+							const Icon = section.icon;
+							const badge = getSectionBadge(section.id, stats);
+							return (
+								<Link
+									aria-current={activeView === section.id ? "page" : undefined}
+									className={activeView === section.id ? "active" : ""}
+									href={section.href}
+									key={section.id}
+								>
+									<Icon aria-hidden="true" />
+									<span className="admin-nav-item-copy">
+										<strong>{section.label}</strong>
+										<small>{section.description}</small>
+									</span>
+									{badge ? (
+										<b className="admin-nav-badge">{badge.toLocaleString()}</b>
+									) : null}
+								</Link>
+							);
+						})}
+				</div>
+			))}
 		</nav>
 	);
 }
@@ -1062,81 +1174,270 @@ function ReportsPage({
 }
 
 function PeoplePage({
+	activeUsers,
 	busyAction,
 	currentAdminUserId,
+	latestUsers,
 	onAction,
 	onDeleteRequest,
 	onMessageRequest,
+	onPageChange,
 	onQueryChange,
+	pagination,
 	query,
 	users,
 }: {
+	activeUsers: ActiveAdminUser[];
 	busyAction: string;
 	currentAdminUserId: string;
+	latestUsers: AdminUser[];
 	onAction: (userId: string, action: string) => Promise<void>;
 	onDeleteRequest: (user: AdminUser) => void;
 	onMessageRequest: (target: AdminMessageDialogTarget) => void;
+	onPageChange: (page: number) => void;
 	onQueryChange: (value: string) => void;
+	pagination: AdminUsersPagination;
 	query: string;
 	users: AdminUser[];
 }) {
 	return (
-		<section className="admin-console-section">
-			<PanelHeader
-				description="Search accounts, inspect footprint, and manage profile or deletion actions."
-				title="People Control"
-			>
-				<Button
-					className="admin-panel-button"
-					onClick={() => onMessageRequest({ mode: "all" })}
-					type="button"
+		<div className="admin-people-workspace">
+			<div className="admin-people-overview-grid">
+				<LatestPeoplePanel users={latestUsers} />
+				<ActiveUsersPanel activeUsers={activeUsers} />
+			</div>
+
+			<section className="admin-console-section">
+				<PanelHeader
+					description="Search accounts, inspect footprint, and manage profile or deletion actions."
+					title="People Directory"
 				>
-					<MessageSquare aria-hidden="true" />
-					Message users
-				</Button>
-			</PanelHeader>
-			<label className="admin-search">
-				<Search aria-hidden="true" />
-				<input
-					onChange={(event) => onQueryChange(event.target.value)}
-					placeholder="Search email, username, reviewer claim, trust status"
-					value={query}
-				/>
-			</label>
-			<div className="admin-table-wrap">
-				<table className="admin-table admin-people-table">
-					<thead>
-						<tr>
-							<th>User</th>
-							<th>Public profile</th>
-							<th>Footprint</th>
-							<th>Trust</th>
-							<th>Last sign in</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{users.map((adminUser) => (
-							<UserRow
-								adminUser={adminUser}
-								busyAction={busyAction}
-								currentAdminUserId={currentAdminUserId}
-								key={adminUser.id}
-								onAction={onAction}
-								onDeleteRequest={onDeleteRequest}
-								onMessageRequest={onMessageRequest}
-							/>
-						))}
-					</tbody>
-				</table>
+					<Button
+						className="admin-panel-button"
+						onClick={() => onMessageRequest({ mode: "all" })}
+						type="button"
+					>
+						<MessageSquare aria-hidden="true" />
+						Message users
+					</Button>
+				</PanelHeader>
+				<div className="admin-people-toolbar">
+					<label className="admin-search">
+						<Search aria-hidden="true" />
+						<input
+							onChange={(event) => onQueryChange(event.target.value)}
+							placeholder="Search email, username, reviewer claim, trust status"
+							value={query}
+						/>
+					</label>
+					<PeoplePagination
+						onPageChange={onPageChange}
+						pagination={pagination}
+					/>
+				</div>
+				<div className="admin-table-wrap">
+					<table className="admin-table admin-people-table">
+						<thead>
+							<tr>
+								<th>User</th>
+								<th>Public profile</th>
+								<th>Footprint</th>
+								<th>Trust</th>
+								<th>Last sign in</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{users.map((adminUser) => (
+								<UserRow
+									adminUser={adminUser}
+									busyAction={busyAction}
+									currentAdminUserId={currentAdminUserId}
+									key={adminUser.id}
+									onAction={onAction}
+									onDeleteRequest={onDeleteRequest}
+									onMessageRequest={onMessageRequest}
+								/>
+							))}
+						</tbody>
+					</table>
+					{!users.length ? (
+						<EmptyPanel
+							description="Try a different email, username, or role."
+							title="No matching users"
+						/>
+					) : null}
+				</div>
+				<PeoplePagination onPageChange={onPageChange} pagination={pagination} />
+			</section>
+		</div>
+	);
+}
+
+function formatRelativeAdminTime(value: string | null | undefined) {
+	if (!value) return "Never";
+	const timestamp = new Date(value).getTime();
+	if (Number.isNaN(timestamp)) return "Never";
+
+	const diff = Date.now() - timestamp;
+	const minutes = Math.floor(diff / 60_000);
+	const hours = Math.floor(minutes / 60);
+	const days = Math.floor(hours / 24);
+
+	if (minutes < 1) return "Just now";
+	if (minutes < 60) return `${minutes}m ago`;
+	if (hours < 24) return `${hours}h ago`;
+	if (days < 7) return `${days}d ago`;
+
+	return formatDate(value);
+}
+
+function formatAdminPresenceStatus(value: string) {
+	return value
+		.split(/[_\s-]+/)
+		.filter(Boolean)
+		.map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+		.join(" ");
+}
+
+function LatestPeoplePanel({ users }: { users: AdminUser[] }) {
+	return (
+		<section className="admin-console-section admin-people-summary-panel">
+			<PanelHeader
+				description="The newest profiles created in Linted."
+				title="Latest 10 People"
+			/>
+			<div className="admin-compact-list">
+				{users.map((user) => (
+					<MiniUserRow
+						detail={user.email ?? "No email"}
+						href={`/profile/${user.id}`}
+						key={user.id}
+						meta={formatRelativeAdminTime(user.created_at)}
+						timestamp={user.created_at ?? undefined}
+						title={getProfileLabel(user.profile)}
+					/>
+				))}
 				{!users.length ? (
 					<EmptyPanel
-						description="Try a different email, username, or role."
-						title="No matching users"
+						description="New accounts will appear here."
+						title="No people yet"
 					/>
 				) : null}
 			</div>
 		</section>
+	);
+}
+
+function ActiveUsersPanel({
+	activeUsers,
+}: {
+	activeUsers: ActiveAdminUser[];
+}) {
+	return (
+		<section className="admin-console-section admin-people-summary-panel">
+			<PanelHeader
+				description="Profiles seen in the last two minutes."
+				title="Live Active Users"
+			>
+				<span className="admin-live-count">
+					<Activity aria-hidden="true" />
+					{activeUsers.length}
+				</span>
+			</PanelHeader>
+			<div className="admin-compact-list">
+				{activeUsers.map((user) => (
+					<MiniUserRow
+						detail={user.email ?? "No email"}
+						href={`/profile/${user.userId}`}
+						key={`${user.userId}-${user.lastSeenAt}`}
+						meta={`${formatAdminPresenceStatus(user.status)} - ${formatRelativeAdminTime(user.lastSeenAt)}`}
+						timestamp={user.lastSeenAt}
+						title={getProfileLabel(user.profile)}
+					/>
+				))}
+				{!activeUsers.length ? (
+					<EmptyPanel
+						description="Active sessions refresh automatically."
+						title="No one active now"
+					/>
+				) : null}
+			</div>
+		</section>
+	);
+}
+
+function MiniUserRow({
+	detail,
+	href,
+	meta,
+	timestamp,
+	title,
+}: {
+	detail: string;
+	href: string;
+	meta: string;
+	timestamp?: string;
+	title: string;
+}) {
+	const initials = title
+		.split(/\s+/)
+		.map((part) => part[0])
+		.join("")
+		.slice(0, 2)
+		.toUpperCase();
+
+	return (
+		<Link className="admin-mini-user-row" href={href}>
+			<span className="admin-mini-avatar">{initials || "LI"}</span>
+			<span className="admin-mini-copy">
+				<strong>{title}</strong>
+				<small>{detail}</small>
+			</span>
+			<time dateTime={timestamp}>{meta}</time>
+		</Link>
+	);
+}
+
+function PeoplePagination({
+	onPageChange,
+	pagination,
+}: {
+	onPageChange: (page: number) => void;
+	pagination: AdminUsersPagination;
+}) {
+	const page = pagination.page;
+	const lastPage = Math.max(1, pagination.lastPage);
+
+	return (
+		<div className="admin-pagination" aria-label="People table pagination">
+			<span>
+				{pagination.total
+					? `${pagination.from}-${pagination.to} of ${pagination.total}`
+					: "0 people"}
+			</span>
+			<div>
+				<button
+					disabled={!pagination.hasPreviousPage}
+					onClick={() => onPageChange(Math.max(1, page - 1))}
+					type="button"
+				>
+					<ChevronLeft aria-hidden="true" />
+					Previous
+				</button>
+				<b>
+					Page {page} of {lastPage}
+				</b>
+				<button
+					disabled={!pagination.hasNextPage}
+					onClick={() => onPageChange(Math.min(lastPage, page + 1))}
+					type="button"
+				>
+					Next
+					<ChevronRight aria-hidden="true" />
+				</button>
+			</div>
+		</div>
 	);
 }
 
@@ -1668,7 +1969,7 @@ function UserRow({
 			</td>
 			<td>{formatDate(adminUser.last_sign_in_at)}</td>
 			<td>
-				<div className="admin-action-row admin-action-column">
+				<div className="admin-action-row admin-people-actions">
 					<Link href={`/profile/${adminUser.id}`}>
 						<ExternalLink aria-hidden="true" />
 						Open
