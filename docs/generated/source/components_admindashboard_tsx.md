@@ -4,9 +4,9 @@
 
 - Source path: `components/AdminDashboard.tsx`
 - Kind: React component
-- Size: 58953 bytes
-- Lines: 2377
-- Source hash: `0b07cc77d95fd13c42952b474397025d71705020ccef48dfb27eb7fc0de5f707`
+- Size: 15276 bytes
+- Lines: 547
+- Source hash: `1423b34dd3427242c1c5037b94064ca7873e27f8860adc3044ec0165844a918b`
 
 ## What This File Does
 
@@ -24,10 +24,16 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
-- `@/components/ui/alert-dialog`
+- `./admin-dashboard/constants`
+- `./admin-dashboard/content`
+- `./admin-dashboard/data`
+- `./admin-dashboard/dialogs`
+- `./admin-dashboard/moderation`
+- `./admin-dashboard/navigation`
+- `./admin-dashboard/overview`
+- `./admin-dashboard/people`
+- `./admin-dashboard/types`
 - `@/components/ui/button`
-- `@/components/ui/dialog`
-- `@/components/ui/select`
 - `@/lib/admin-messages`
 - `@/lib/reviewer-validation`
 - `@/lib/supabase/client`
@@ -36,77 +42,17 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `lucide-react`
 - `next/link`
 - `react`
-- `react`
 - `sonner`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 395 | `formatDate` | Function | top-level | no | `value` | `string` | not documented |
-| 403 | `getProfileLabel` | Function | top-level | no | `profile` | `string` | not documented |
-| 408 | `getProfileSecondary` | Function | top-level | no | `profile` | `string` | not documented |
-| 419 | `formatReason` | Function | top-level | no | `value` | `string` | not documented |
-| 423 | `formatTargetType` | Function | top-level | no | `value` | `string` | not documented |
-| 427 | `getTargetTitle` | Function | top-level | no | `report` | `string` | not documented |
-| 439 | `getFootprintTotal` | Function | top-level | no | `footprint` | `number` | not documented |
-| 451 | `getAdminMessageAudienceLabel` | Function | top-level | no | `target` | `string` | not documented |
-| 459 | `getAdminMessageLinkChoice` | Function | top-level | no | `linkHref` | `string` | not documented |
-| 466 | `createAdminMessageRequestId` | Action helper | top-level | no | none | `string` | not documented |
-| 489 | `AdminDashboard` | React component | top-level | yes | `{ view = "overview", }` | `import("react").JSX.Element` | not documented |
-| 988 | `getSectionBadge` | Function | top-level | no | `sectionId`, `stats` | `number \| null` | not documented |
-| 1009 | `AdminSectionNav` | React component | top-level | no | `{ activeView, stats, }` | `import("react").JSX.Element` | not documented |
-| 1056 | `MetricCard` | React component | top-level | no | `{ icon, label, tone = "normal", value, }` | `import("react").JSX.Element` | not documented |
-| 1076 | `OverviewPage` | React component | top-level | no | `{ stats }` | `import("react").JSX.Element` | not documented |
-| 1138 | `ReportsPage` | React component | top-level | no | `{ adminNotes, busyAction, onAction, onNoteChange, onStatusChange, reports, st...` | `import("react").JSX.Element` | not documented |
-| 1201 | `PeoplePage` | React component | top-level | no | `{ activeUsers, busyAction, currentAdminUserId, latestUsers, onAction, onDelet...` | `import("react").JSX.Element` | not documented |
-| 1302 | `formatRelativeAdminTime` | Function | top-level | no | `value` | `string` | not documented |
-| 1320 | `formatAdminPresenceStatus` | Function | top-level | no | `value` | `string` | not documented |
-| 1328 | `LatestPeoplePanel` | React component | top-level | no | `{ users }` | `import("react").JSX.Element` | not documented |
-| 1357 | `ActiveUsersPanel` | React component | top-level | no | `{ activeUsers, }` | `import("react").JSX.Element` | not documented |
-| 1395 | `MiniUserRow` | React component | top-level | no | `{ detail, href, meta, timestamp, title, }` | `import("react").JSX.Element` | not documented |
-| 1427 | `PeoplePagination` | React component | top-level | no | `{ onPageChange, pagination, }` | `import("react").JSX.Element` | not documented |
-| 1469 | `ReviewersPage` | React component | top-level | no | `{ applications, busyAction, onAction, onStatusChange, status, }` | `import("react").JSX.Element` | not documented |
-| 1529 | `ContentPage` | React component | top-level | no | `{ overview }` | `import("react").JSX.Element` | not documented |
-| 1554 | `AuditPage` | React component | top-level | no | `{ actions }` | `import("react").JSX.Element` | not documented |
-| 1589 | `DataPage` | React component | top-level | no | `{ inventory }` | `import("react").JSX.Element` | not documented |
-| 1609 | `MetricList` | React component | top-level | no | `{ metrics, title }` | `import("react").JSX.Element` | not documented |
-| 1627 | `PanelHeader` | React component | top-level | no | `{ children, description, title, }` | `import("react").JSX.Element` | not documented |
-| 1647 | `SegmentedTabs` | React component | top-level | no | `{ active, onChange, values, }` | `import("react").JSX.Element` | not documented |
-| 1673 | `ReportRow` | React component | top-level | no | `{ busyAction, note, onAction, onNoteChange, report, }` | `import("react").JSX.Element` | not documented |
-| 1830 | `ActionButton` | React component | top-level | no | `{ action, busyAction, disabled, icon, label, onClick, scope, targetId, tone =...` | `import("react").JSX.Element` | not documented |
-| 1865 | `ReviewerRow` | React component | top-level | no | `{ application, busyAction, onAction, }` | `import("react").JSX.Element` | not documented |
-| 1945 | `UserRow` | React component | top-level | no | `{ adminUser, busyAction, currentAdminUserId, onAction, onDeleteRequest, onMes...` | `import("react").JSX.Element` | not documented |
-| 2058 | `AdminMessageDialog` | React component | top-level | no | `{ busy, onOpenChange, onSend, target, }` | `import("react").JSX.Element` | not documented |
-| 2268 | `DeleteUserDialog` | React component | top-level | no | `{ busy, onConfirm, onOpenChange, user, }` | `import("react").JSX.Element` | not documented |
-| 2311 | `ActionLogRow` | React component | top-level | no | `{ action }` | `import("react").JSX.Element` | not documented |
-| 2325 | `RecentContentList` | React component | top-level | no | `{ items, kind, }` | `import("react").JSX.Element` | not documented |
-| 2363 | `EmptyPanel` | React component | top-level | no | `{ description, title, }` | `import("react").JSX.Element` | not documented |
+| 49 | `AdminDashboard` | React component | top-level | yes | `{ view = "overview", }` | `import("react").JSX.Element` | not documented |
 
 ## Types
 
-| Line | Name | Kind |
-| --- | --- | --- |
-| 79 | `AdminDashboardView` | type |
-| 88 | `AdminStats` | type |
-| 101 | `AdminResume` | type |
-| 110 | `AdminReview` | type |
-| 118 | `AdminOverview` | type |
-| 127 | `ProfilePreview` | type |
-| 141 | `ReportPreview` | type |
-| 158 | `ReviewerApplicationPreview` | type |
-| 174 | `AdminUserDataFootprint` | type |
-| 183 | `AdminUser` | type |
-| 192 | `ActiveAdminUser` | type |
-| 200 | `AdminUsersPagination` | type |
-| 211 | `AdminUsersResponse` | type |
-| 219 | `AdminMessageDialogTarget` | type |
-| 228 | `AdminMessageForm` | type |
-| 236 | `AdminMessageResponse` | type |
-| 245 | `ModerationAction` | type |
-| 256 | `DataMetric` | type |
-| 263 | `AdminDataInventory` | type |
-| 269 | `AdminSection` | type |
+No top-level interfaces or type aliases detected.
 
 ## Related Tests
 

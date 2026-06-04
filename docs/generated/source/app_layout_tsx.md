@@ -4,9 +4,9 @@
 
 - Source path: `app/layout.tsx`
 - Kind: Next root layout
-- Size: 2279 bytes
-- Lines: 91
-- Source hash: `67c858ec1a7f920234ffd913b33d02f41500d69f02deeb1ea0ae9bc06162fbaf`
+- Size: 2324 bytes
+- Lines: 93
+- Source hash: `fffa328476c10ffc7acd4bbfc14cd86427e0b6b5debc6286c5d897d06ac9c56b`
 
 ## What This File Does
 
@@ -25,8 +25,10 @@ Edit this when the documented behavior or supporting repository file changes.
 
 ## Imports
 
-- `./feed-canvas.css`
+- `./admin.css`
+- `./feed.css`
 - `./globals.css`
+- `./notifications.css`
 - `@/components/RouteTransitionLoader`
 - `@/components/ui/sonner`
 - `next`
@@ -36,7 +38,7 @@ Edit this when the documented behavior or supporting repository file changes.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 73 | `RootLayout` | React component | top-level | yes | `{ children, }` | `import("react").JSX.Element` | not documented |
+| 75 | `RootLayout` | React component | top-level | yes | `{ children, }` | `import("react").JSX.Element` | not documented |
 
 ## Types
 

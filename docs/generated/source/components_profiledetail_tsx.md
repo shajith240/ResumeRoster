@@ -4,9 +4,9 @@
 
 - Source path: `components/ProfileDetail.tsx`
 - Kind: React component
-- Size: 65706 bytes
-- Lines: 2311
-- Source hash: `43db4d15a87828e64077f880c8f5e5b0c5d0466c3ff73ae92040b1efb38db745`
+- Size: 14668 bytes
+- Lines: 493
+- Source hash: `897b0c6216382de23398a5de19ed0f5b553badb7a1b337d4e40bbcb2c7f1e871`
 
 ## What This File Does
 
@@ -23,61 +23,30 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `./profile-detail/constants`
+- `./profile-detail/edit-dialog`
+- `./profile-detail/reviewer-dialogs`
+- `./profile-detail/rows`
+- `./profile-detail/types`
+- `./profile-detail/use-profile-detail-controller`
+- `./profile-detail/utils`
 - `./ProfileDetail.module.css`
 - `@/components/LintPointsFlame`
 - `@/components/ui/button`
 - `@/components/ui/dialog`
-- `@/components/ui/input`
-- `@/components/ui/label`
-- `@/components/ui/select`
-- `@/lib/anonymous-profile`
-- `@/lib/onboarding-validation`
-- `@/lib/profile-validation`
 - `@/lib/report-validation`
-- `@/lib/reviewer-validation`
-- `@/lib/session-lock`
-- `@/lib/supabase/client`
-- `@/lib/supabase/types`
-- `@supabase/supabase-js`
 - `lucide-react`
 - `next/link`
-- `react`
-- `sonner`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 126 | `getShortCommunityRoleLabel` | Function | top-level | no | `role` | `string` | not documented |
-| 130 | `isUuid` | Function | top-level | no | `value` | `boolean` | not documented |
-| 134 | `normalizeProfileToken` | Validation or normalization helper | top-level | no | `value` | `string` | not documented |
-| 138 | `cleanFileName` | Function | top-level | no | `value` | `string` | not documented |
-| 146 | `limitLiveText` | Function | top-level | no | `value`, `limit` | `string` | not documented |
-| 150 | `isUsernameConstraintError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 157 | `getUsernameAvailability` | Function async | top-level | no | `username`, `profileOwnerId` | `Promise<{ taken: boolean; suggestions: string[]; }>` | not documented |
-| 198 | `formatDate` | Function | top-level | no | `value` | `string` | not documented |
-| 205 | `formatActivityDate` | Function | top-level | no | `value` | `string` | not documented |
-| 212 | `getInitials` | Function | top-level | no | `name` | `string` | not documented |
-| 221 | `getActivity` | Function | top-level | no | `reviews`, `resumes`, `profile` | `ActivityItem[]` | not documented |
-| 266 | `isProfileFeatureError` | Function | top-level | no | `message` | `boolean` | not documented |
-| 272 | `isReportFeatureError` | Function | top-level | no | `message` | `boolean` | not documented |
-| 278 | `normalizePublicProfileReview` | Validation or normalization helper | top-level | no | `row` | `PublicProfileReview` | not documented |
-| 294 | `loadPublicProfileReviews` | Action helper async | top-level | no | `profileId` | `Promise<{ data: PublicProfileReview[]; error: import("@supabase/postgrest-js").PostgrestError \| null; }>` | not documented |
-| 326 | `ProfileDetail` | React component | top-level | yes | `{ profileId }` | `import("react").JSX.Element` | not documented |
-| 1427 | `ActivityRow` | React component | top-level | no | `{ item }` | `import("react").JSX.Element` | not documented |
-| 1448 | `ReviewRow` | React component | top-level | no | `{ review }` | `import("react").JSX.Element` | not documented |
-| 1461 | `ReviewerProfileDialog` | React component | top-level | no | `{ buttonLabel, communityRole, onCommunityRoleChange, onOpenChange, onReviewer...` | `import("react").JSX.Element` | not documented |
-| 1639 | `TrustApplicationDialog` | React component | top-level | no | `{ applicationNote, applying, onApply, onNoteChange, onProofUrlChange, proofUr...` | `import("react").JSX.Element` | not documented |
-| 1752 | `FieldHeader` | React component | top-level | no | `{ children, htmlFor, max, value, }` | `import("react").JSX.Element` | not documented |
-| 1775 | `ProfileEditDialog` | React component | top-level | no | `{ about, avatarPreview, college, collegeLocation, currentPosition, displayNam...` | `import("react").JSX.Element` | not documented |
+| 34 | `ProfileDetail` | React component | top-level | yes | `{ profileId }` | `import("react").JSX.Element` | not documented |
 
 ## Types
 
-| Line | Name | Kind |
-| --- | --- | --- |
-| 94 | `ProfileDetailProps` | type |
-| 98 | `ActivityItem` | type |
-| 106 | `UsernameAvailability` | type |
+No top-level interfaces or type aliases detected.
 
 ## Related Tests
 

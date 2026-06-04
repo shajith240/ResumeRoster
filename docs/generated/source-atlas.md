@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 274 source-controlled files.
-Manifest hash: `4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20`
+Generated from 305 source-controlled files.
+Manifest hash: `579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df`
 
 ## Folder Coverage
 
@@ -11,8 +11,8 @@ Manifest hash: `4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20
 | --- | ---: |
 | `.github` | 1 |
 | `(root)` | 19 |
-| `app` | 39 |
-| `components` | 48 |
+| `app` | 41 |
+| `components` | 77 |
 | `docs` | 35 |
 | `lib` | 53 |
 | `public` | 30 |
@@ -30,10 +30,10 @@ Manifest hash: `4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20
 | Next page route | 16 |
 | Next root layout | 1 |
 | Project configuration | 17 |
-| Project file | 7 |
+| Project file | 9 |
 | Public browser asset | 1 |
 | Public visual asset | 29 |
-| React component | 25 |
+| React component | 54 |
 | Repository automation | 5 |
 | Root documentation | 3 |
 | Supabase migration | 41 |
@@ -47,6 +47,7 @@ Manifest hash: `4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20
 | `.env.example` | Project file | [open](source/env_example.md) |
 | `.github/workflows/ci.yml` | GitHub workflow | [open](source/github_workflows_ci_yml.md) |
 | `.gitignore` | Project file | [open](source/gitignore.md) |
+| `app/admin.css` | Project file | [open](source/app_admin_css.md) |
 | `app/admin/[section]/page.tsx` | Next page route | [open](source/app_admin_section_page_tsx.md) |
 | `app/admin/page.tsx` | Next page route | [open](source/app_admin_page_tsx.md) |
 | `app/api/admin/actions/route.ts` | Next API route | [open](source/app_api_admin_actions_route_ts.md) |
@@ -68,7 +69,7 @@ Manifest hash: `4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20
 | `app/api/reviewer-application/route.ts` | Next API route | [open](source/app_api_reviewer_application_route_ts.md) |
 | `app/auth/callback/page.tsx` | Next page route | [open](source/app_auth_callback_page_tsx.md) |
 | `app/copyright/page.tsx` | Next page route | [open](source/app_copyright_page_tsx.md) |
-| `app/feed-canvas.css` | Project file | [open](source/app_feed_canvas_css.md) |
+| `app/feed.css` | Project file | [open](source/app_feed_css.md) |
 | `app/feed/page.tsx` | Next page route | [open](source/app_feed_page_tsx.md) |
 | `app/global-error.tsx` | Project file | [open](source/app_global_error_tsx.md) |
 | `app/globals.css` | Project file | [open](source/app_globals_css.md) |
@@ -78,6 +79,7 @@ Manifest hash: `4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20
 | `app/loading.tsx` | Project file | [open](source/app_loading_tsx.md) |
 | `app/login/page.tsx` | Next page route | [open](source/app_login_page_tsx.md) |
 | `app/manifest.ts` | Project configuration | [open](source/app_manifest_ts.md) |
+| `app/notifications.css` | Project file | [open](source/app_notifications_css.md) |
 | `app/onboarding/page.tsx` | Next page route | [open](source/app_onboarding_page_tsx.md) |
 | `app/page.tsx` | Next page route | [open](source/app_page_tsx.md) |
 | `app/privacy/page.tsx` | Next page route | [open](source/app_privacy_page_tsx.md) |
@@ -87,6 +89,17 @@ Manifest hash: `4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20
 | `app/submit/page.tsx` | Next page route | [open](source/app_submit_page_tsx.md) |
 | `app/terms/page.tsx` | Next page route | [open](source/app_terms_page_tsx.md) |
 | `components.json` | Project configuration | [open](source/components_json.md) |
+| `components/admin-dashboard/constants.ts` | React component | [open](source/components_admin_dashboard_constants_ts.md) |
+| `components/admin-dashboard/content.tsx` | React component | [open](source/components_admin_dashboard_content_tsx.md) |
+| `components/admin-dashboard/data.tsx` | React component | [open](source/components_admin_dashboard_data_tsx.md) |
+| `components/admin-dashboard/dialogs.tsx` | React component | [open](source/components_admin_dashboard_dialogs_tsx.md) |
+| `components/admin-dashboard/moderation.tsx` | React component | [open](source/components_admin_dashboard_moderation_tsx.md) |
+| `components/admin-dashboard/navigation.tsx` | React component | [open](source/components_admin_dashboard_navigation_tsx.md) |
+| `components/admin-dashboard/overview.tsx` | React component | [open](source/components_admin_dashboard_overview_tsx.md) |
+| `components/admin-dashboard/people.tsx` | React component | [open](source/components_admin_dashboard_people_tsx.md) |
+| `components/admin-dashboard/shared.tsx` | React component | [open](source/components_admin_dashboard_shared_tsx.md) |
+| `components/admin-dashboard/types.ts` | React component | [open](source/components_admin_dashboard_types_ts.md) |
+| `components/admin-dashboard/utils.ts` | React component | [open](source/components_admin_dashboard_utils_ts.md) |
 | `components/AdminDashboard.tsx` | React component | [open](source/components_admindashboard_tsx.md) |
 | `components/AppPresence.tsx` | React component | [open](source/components_apppresence_tsx.md) |
 | `components/AuthButton.tsx` | React component | [open](source/components_authbutton_tsx.md) |
@@ -102,9 +115,27 @@ Manifest hash: `4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20
 | `components/NotificationCenter.tsx` | React component | [open](source/components_notificationcenter_tsx.md) |
 | `components/OnboardingFlow.tsx` | React component | [open](source/components_onboardingflow_tsx.md) |
 | `components/PersonalizeLintedPrompt.tsx` | React component | [open](source/components_personalizelintedprompt_tsx.md) |
+| `components/profile-detail/constants.ts` | React component | [open](source/components_profile_detail_constants_ts.md) |
+| `components/profile-detail/data.ts` | React component | [open](source/components_profile_detail_data_ts.md) |
+| `components/profile-detail/edit-dialog.tsx` | React component | [open](source/components_profile_detail_edit_dialog_tsx.md) |
+| `components/profile-detail/reviewer-dialogs.tsx` | React component | [open](source/components_profile_detail_reviewer_dialogs_tsx.md) |
+| `components/profile-detail/rows.tsx` | React component | [open](source/components_profile_detail_rows_tsx.md) |
+| `components/profile-detail/shared.tsx` | React component | [open](source/components_profile_detail_shared_tsx.md) |
+| `components/profile-detail/types.ts` | React component | [open](source/components_profile_detail_types_ts.md) |
+| `components/profile-detail/use-profile-detail-controller.ts` | React component | [open](source/components_profile_detail_use_profile_detail_controller_ts.md) |
+| `components/profile-detail/utils.ts` | React component | [open](source/components_profile_detail_utils_ts.md) |
 | `components/ProfileDetail.module.css` | React component | [open](source/components_profiledetail_module_css.md) |
 | `components/ProfileDetail.tsx` | React component | [open](source/components_profiledetail_tsx.md) |
 | `components/PushNotificationsControl.tsx` | React component | [open](source/components_pushnotificationscontrol_tsx.md) |
+| `components/resume-detail/content.tsx` | React component | [open](source/components_resume_detail_content_tsx.md) |
+| `components/resume-detail/dialogs.tsx` | React component | [open](source/components_resume_detail_dialogs_tsx.md) |
+| `components/resume-detail/discussion-panel.tsx` | React component | [open](source/components_resume_detail_discussion_panel_tsx.md) |
+| `components/resume-detail/resume-preview-pane.tsx` | React component | [open](source/components_resume_detail_resume_preview_pane_tsx.md) |
+| `components/resume-detail/selectors.ts` | React component | [open](source/components_resume_detail_selectors_ts.md) |
+| `components/resume-detail/thread-review-item.tsx` | React component | [open](source/components_resume_detail_thread_review_item_tsx.md) |
+| `components/resume-detail/types.ts` | React component | [open](source/components_resume_detail_types_ts.md) |
+| `components/resume-detail/use-resume-detail-controller.ts` | React component | [open](source/components_resume_detail_use_resume_detail_controller_ts.md) |
+| `components/resume-detail/utils.ts` | React component | [open](source/components_resume_detail_utils_ts.md) |
 | `components/ResumeDetail.tsx` | React component | [open](source/components_resumedetail_tsx.md) |
 | `components/ResumeFeed.tsx` | React component | [open](source/components_resumefeed_tsx.md) |
 | `components/RouteHeader.tsx` | React component | [open](source/components_routeheader_tsx.md) |

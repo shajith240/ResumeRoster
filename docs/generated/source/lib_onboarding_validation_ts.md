@@ -49,7 +49,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | 103 | `isOnboardingPersonaId` | Function | top-level | yes | `value` | `boolean` | not documented |
 | 109 | `getOnboardingGoal` | Function | top-level | yes | `value` | `{ readonly description: "Post a resume and learn which fixes matter before applying."; readonly id: "get_feedback"; readonly label: "Get...` | not documented |
 | 113 | `getOnboardingPersona` | Function | top-level | yes | `value` | `{ readonly description: "Preparing for internships, placements, or early-career roles."; readonly id: "student"; readonly label: "Student...` | not documented |
-| 120 | `getPersonaProfileLabel` | Function | top-level | yes | `value` | `"Student" \| "Job seeker" \| "Recruiter / HR" \| "Engineer" \| "Product manager" \| "Career coach" \| "Other"` | not documented |
+| 120 | `getPersonaProfileLabel` | Function | top-level | yes | `value` | `"Student" \| "Other" \| "Job seeker" \| "Recruiter / HR" \| "Engineer" \| "Product manager" \| "Career coach"` | not documented |
 | 128 | `getCommunityRoleForOnboardingGoal` | Function | top-level | yes | `goalId` | `"reviewer" \| "candidate" \| "both"` | not documented |
 | 134 | `getReviewerTypeForOnboarding` | Function | top-level | yes | `goalId`, `personaId` | `"student" \| "placed_professional" \| "recruiter" \| "hiring_manager" \| "engineer" \| "designer" \| "product_manager" \| "career_coach"...` | not documented |
 | 144 | `normalizeOnboardingTargetRole` | Validation or normalization helper | top-level | yes | `value` | `string` | not documented |

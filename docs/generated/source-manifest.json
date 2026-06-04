@@ -40,6 +40,16 @@
       "exportCount": 0
     },
     {
+      "hash": "8cfe5f0b1965e69c49fc75e53079ecde7603605f2a51fa224d8bfb1cd7e48f3f",
+      "kind": "Project file",
+      "lineCount": 1277,
+      "relativePath": "app/admin.css",
+      "size": 22727,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
       "hash": "34acecb97aa1a302023bd27574e44ff914af993fb860c6fc48e2f49dc552408e",
       "kind": "Next page route",
       "lineCount": 37,
@@ -250,11 +260,11 @@
       "exportCount": 3
     },
     {
-      "hash": "94366e8c182abc8cb8b62be06d42c4e74cb780b02f138b02a8e70dba495a418b",
+      "hash": "127c19aaeec9079b2722ced4e22a437b52e897ba550ae4306b24b3bc77b3de28",
       "kind": "Project file",
-      "lineCount": 886,
-      "relativePath": "app/feed-canvas.css",
-      "size": 19604,
+      "lineCount": 3355,
+      "relativePath": "app/feed.css",
+      "size": 66203,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -280,11 +290,11 @@
       "exportCount": 2
     },
     {
-      "hash": "63eca16abf44fcea09221d1a178ca32ba9638a210fab737c7bf7c53bbdf82132",
+      "hash": "ad0aa5ddd9225c056da905cf0f4d4e03481f3ef0ae978ee01acb41aae12b61f5",
       "kind": "Project file",
-      "lineCount": 8950,
+      "lineCount": 5195,
       "relativePath": "app/globals.css",
-      "size": 166795,
+      "size": 94201,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -300,13 +310,13 @@
       "exportCount": 3
     },
     {
-      "hash": "67c858ec1a7f920234ffd913b33d02f41500d69f02deeb1ea0ae9bc06162fbaf",
+      "hash": "fffa328476c10ffc7acd4bbfc14cd86427e0b6b5debc6286c5d897d06ac9c56b",
       "kind": "Next root layout",
-      "lineCount": 91,
+      "lineCount": 93,
       "relativePath": "app/layout.tsx",
-      "size": 2279,
+      "size": 2324,
       "functionCount": 1,
-      "importCount": 6,
+      "importCount": 8,
       "exportCount": 4
     },
     {
@@ -348,6 +358,16 @@
       "functionCount": 1,
       "importCount": 1,
       "exportCount": 2
+    },
+    {
+      "hash": "b978037af19d7c3d293a45fe4dac25d7752b250a295ab6b354b6a19338073c86",
+      "kind": "Project file",
+      "lineCount": 299,
+      "relativePath": "app/notifications.css",
+      "size": 6482,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
     },
     {
       "hash": "1444850d0c0513ff1ed7d350fbd23e8008e7c77c8f08959b9088f1a9328193b2",
@@ -440,13 +460,123 @@
       "exportCount": 0
     },
     {
-      "hash": "0b07cc77d95fd13c42952b474397025d71705020ccef48dfb27eb7fc0de5f707",
+      "hash": "383a991b42ba3e8b6b4822304271ceb56eb8df0a2fc83573f3f5ddbde680c45d",
       "kind": "React component",
-      "lineCount": 2377,
+      "lineCount": 130,
+      "relativePath": "components/admin-dashboard/constants.ts",
+      "size": 2822,
+      "functionCount": 0,
+      "importCount": 4,
+      "exportCount": 5
+    },
+    {
+      "hash": "ce3b777c19bfe1396ac6838aadc328108b5fbab9a583fb06e312a02a44856cf4",
+      "kind": "React component",
+      "lineCount": 68,
+      "relativePath": "components/admin-dashboard/content.tsx",
+      "size": 1689,
+      "functionCount": 2,
+      "importCount": 4,
+      "exportCount": 2
+    },
+    {
+      "hash": "f9e8309b535713dda3ca84d753de9bf5d1a50bb80dabbdd3c0f32957a7abb6bd",
+      "kind": "React component",
+      "lineCount": 41,
+      "relativePath": "components/admin-dashboard/data.tsx",
+      "size": 1239,
+      "functionCount": 2,
+      "importCount": 2,
+      "exportCount": 2
+    },
+    {
+      "hash": "2b00b9e19a9bddad9147f98b45a79f0ed900b5d316ecceed7742d05cab6927d7",
+      "kind": "React component",
+      "lineCount": 299,
+      "relativePath": "components/admin-dashboard/dialogs.tsx",
+      "size": 7810,
+      "functionCount": 2,
+      "importCount": 10,
+      "exportCount": 2
+    },
+    {
+      "hash": "54bd58e838fe0f1ef11c6f4595779d0148d852bd4e057152120c16ec359cf944",
+      "kind": "React component",
+      "lineCount": 437,
+      "relativePath": "components/admin-dashboard/moderation.tsx",
+      "size": 11304,
+      "functionCount": 6,
+      "importCount": 8,
+      "exportCount": 6
+    },
+    {
+      "hash": "796aa8aac4bc881f65974a0a19915800abc18fbe076cfbbaf9a49cb190560c76",
+      "kind": "React component",
+      "lineCount": 52,
+      "relativePath": "components/admin-dashboard/navigation.tsx",
+      "size": 1513,
+      "functionCount": 1,
+      "importCount": 4,
+      "exportCount": 1
+    },
+    {
+      "hash": "0e563c5fff266a5abaeb9b2ca9aa0f81fbddee92dbd6cd8158e11f98ef944161",
+      "kind": "React component",
+      "lineCount": 88,
+      "relativePath": "components/admin-dashboard/overview.tsx",
+      "size": 1924,
+      "functionCount": 2,
+      "importCount": 5,
+      "exportCount": 2
+    },
+    {
+      "hash": "ed21e3da900846de0d6d399fd2cd43de01445ea3a26a570530a2bde048ef67aa",
+      "kind": "React component",
+      "lineCount": 385,
+      "relativePath": "components/admin-dashboard/people.tsx",
+      "size": 9623,
+      "functionCount": 6,
+      "importCount": 6,
+      "exportCount": 6
+    },
+    {
+      "hash": "4577a56139c2c579e6a9b0eb2cf4225a411cdde817a8e888ed0edba86cf637b2",
+      "kind": "React component",
+      "lineCount": 98,
+      "relativePath": "components/admin-dashboard/shared.tsx",
+      "size": 1695,
+      "functionCount": 4,
+      "importCount": 1,
+      "exportCount": 4
+    },
+    {
+      "hash": "c23cf40fc572ddbf663381cd39515d3a1b8767cf9753855c486bc7c423b83004",
+      "kind": "React component",
+      "lineCount": 207,
+      "relativePath": "components/admin-dashboard/types.ts",
+      "size": 4047,
+      "functionCount": 0,
+      "importCount": 3,
+      "exportCount": 20
+    },
+    {
+      "hash": "bfd5fdfc1e50b6ab15971d877b65ae3833b0733de180e534420ddd39c1a2451d",
+      "kind": "React component",
+      "lineCount": 151,
+      "relativePath": "components/admin-dashboard/utils.ts",
+      "size": 4326,
+      "functionCount": 13,
+      "importCount": 2,
+      "exportCount": 13
+    },
+    {
+      "hash": "1423b34dd3427242c1c5037b94064ca7873e27f8860adc3044ec0165844a918b",
+      "kind": "React component",
+      "lineCount": 547,
       "relativePath": "components/AdminDashboard.tsx",
-      "size": 58953,
-      "functionCount": 39,
-      "importCount": 14,
+      "size": 15276,
+      "functionCount": 1,
+      "importCount": 19,
       "exportCount": 3
     },
     {
@@ -590,6 +720,96 @@
       "exportCount": 2
     },
     {
+      "hash": "8eed15d4dc47c702cd8a0cf60296416ffc5e0164af94f015a4e1f0d26e056b44",
+      "kind": "React component",
+      "lineCount": 22,
+      "relativePath": "components/profile-detail/constants.ts",
+      "size": 655,
+      "functionCount": 0,
+      "importCount": 1,
+      "exportCount": 7
+    },
+    {
+      "hash": "f66f8189955cec9bed5a851c7c59d259d62f0a10f227ebc40a7821e7cde50a15",
+      "kind": "React component",
+      "lineCount": 87,
+      "relativePath": "components/profile-detail/data.ts",
+      "size": 2399,
+      "functionCount": 2,
+      "importCount": 4,
+      "exportCount": 2
+    },
+    {
+      "hash": "c9c2b33cd9f185782c641347847a9d1644d1e5ab40b9575b97e4135609299d58",
+      "kind": "React component",
+      "lineCount": 579,
+      "relativePath": "components/profile-detail/edit-dialog.tsx",
+      "size": 16379,
+      "functionCount": 1,
+      "importCount": 14,
+      "exportCount": 1
+    },
+    {
+      "hash": "20cf77edc8c7e224ca99ec368aa23848cad730c6c7ba80efab1e046ce958179c",
+      "kind": "React component",
+      "lineCount": 326,
+      "relativePath": "components/profile-detail/reviewer-dialogs.tsx",
+      "size": 9513,
+      "functionCount": 2,
+      "importCount": 12,
+      "exportCount": 2
+    },
+    {
+      "hash": "8e7f513ebbeec5f2fbaa9744418bbcd90432201121a940ae11444577b3f35fe3",
+      "kind": "React component",
+      "lineCount": 40,
+      "relativePath": "components/profile-detail/rows.tsx",
+      "size": 930,
+      "functionCount": 2,
+      "importCount": 5,
+      "exportCount": 2
+    },
+    {
+      "hash": "e0344d550e00bf205607ded04c8c6ec1fb889b83e7b6886dd50bfd5008d98362",
+      "kind": "React component",
+      "lineCount": 26,
+      "relativePath": "components/profile-detail/shared.tsx",
+      "size": 488,
+      "functionCount": 1,
+      "importCount": 2,
+      "exportCount": 1
+    },
+    {
+      "hash": "ddce95e768567bdaa6ae5b35218ff9a40010ec1345e4ec9106636bd982fafaa4",
+      "kind": "React component",
+      "lineCount": 20,
+      "relativePath": "components/profile-detail/types.ts",
+      "size": 318,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 3
+    },
+    {
+      "hash": "68cd45a7c80d72463587fb3b2db4849034563c6d33b5f628869bfc012b362837",
+      "kind": "React component",
+      "lineCount": 813,
+      "relativePath": "components/profile-detail/use-profile-detail-controller.ts",
+      "size": 22464,
+      "functionCount": 1,
+      "importCount": 13,
+      "exportCount": 1
+    },
+    {
+      "hash": "b7b705971b550c24b5e22f8cc9581441253b8d7bd8e6d7718ff0cca43d3b6a2f",
+      "kind": "React component",
+      "lineCount": 135,
+      "relativePath": "components/profile-detail/utils.ts",
+      "size": 3687,
+      "functionCount": 13,
+      "importCount": 4,
+      "exportCount": 13
+    },
+    {
       "hash": "4dc24477eed9eb70375ae8ccb7f1cee9cb3c8349402f7e41fcffa327d115cfb2",
       "kind": "React component",
       "lineCount": 1534,
@@ -600,13 +820,13 @@
       "exportCount": 0
     },
     {
-      "hash": "43db4d15a87828e64077f880c8f5e5b0c5d0466c3ff73ae92040b1efb38db745",
+      "hash": "897b0c6216382de23398a5de19ed0f5b553badb7a1b337d4e40bbcb2c7f1e871",
       "kind": "React component",
-      "lineCount": 2311,
+      "lineCount": 493,
       "relativePath": "components/ProfileDetail.tsx",
-      "size": 65706,
-      "functionCount": 22,
-      "importCount": 20,
+      "size": 14668,
+      "functionCount": 1,
+      "importCount": 14,
       "exportCount": 2
     },
     {
@@ -620,13 +840,103 @@
       "exportCount": 2
     },
     {
-      "hash": "a5e4d8f89f98e6533f7305d99e929948fd5181b76a11cc76af37813e6ae7f473",
+      "hash": "ff6165d89bd3ca72e5000ad36c132a98e75e01e05a77f936f0f03f6bd93a3746",
       "kind": "React component",
-      "lineCount": 2254,
+      "lineCount": 188,
+      "relativePath": "components/resume-detail/content.tsx",
+      "size": 4190,
+      "functionCount": 5,
+      "importCount": 6,
+      "exportCount": 5
+    },
+    {
+      "hash": "b7652f413bd8929cdb8e4c2cdf27b2b87412177d0eed885b4f487841248c3d01",
+      "kind": "React component",
+      "lineCount": 204,
+      "relativePath": "components/resume-detail/dialogs.tsx",
+      "size": 5459,
+      "functionCount": 3,
+      "importCount": 7,
+      "exportCount": 3
+    },
+    {
+      "hash": "2da6273ca8990537582a486b168f6ecaeace53a95baf9d9b63211f009e48feb6",
+      "kind": "React component",
+      "lineCount": 187,
+      "relativePath": "components/resume-detail/discussion-panel.tsx",
+      "size": 5781,
+      "functionCount": 1,
+      "importCount": 7,
+      "exportCount": 1
+    },
+    {
+      "hash": "1869754d272b8de864252c4651403186c16c06efd1bcc13070f23db21a813027",
+      "kind": "React component",
+      "lineCount": 139,
+      "relativePath": "components/resume-detail/resume-preview-pane.tsx",
+      "size": 3631,
+      "functionCount": 1,
+      "importCount": 8,
+      "exportCount": 1
+    },
+    {
+      "hash": "192a67a75366606635c1c666eabd9eab96b53de87b72c81e52d03943fefb5286",
+      "kind": "React component",
+      "lineCount": 35,
+      "relativePath": "components/resume-detail/selectors.ts",
+      "size": 1619,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 11
+    },
+    {
+      "hash": "2006e3a6fc2a48b94fc3028fb57dbd3124201cd7bfb79ad8d21b5de518444301",
+      "kind": "React component",
+      "lineCount": 356,
+      "relativePath": "components/resume-detail/thread-review-item.tsx",
+      "size": 9739,
+      "functionCount": 2,
+      "importCount": 10,
+      "exportCount": 2
+    },
+    {
+      "hash": "1ec020578bcc1442d0a71eca7acbbc88d4dd0df91bf1cbf77d2cbe78bfe3f844",
+      "kind": "React component",
+      "lineCount": 80,
+      "relativePath": "components/resume-detail/types.ts",
+      "size": 2396,
+      "functionCount": 0,
+      "importCount": 4,
+      "exportCount": 7
+    },
+    {
+      "hash": "d47d90f98a507a5b264d63a774adaf6c4fb92c79844e45d49ff6d6d9faeb4fe2",
+      "kind": "React component",
+      "lineCount": 1305,
+      "relativePath": "components/resume-detail/use-resume-detail-controller.ts",
+      "size": 33384,
+      "functionCount": 2,
+      "importCount": 17,
+      "exportCount": 1
+    },
+    {
+      "hash": "e6235e87cff3fd2b53d9319f1c2747a9b03f0d80f8c2d8a50d70ec09a54f47c6",
+      "kind": "React component",
+      "lineCount": 84,
+      "relativePath": "components/resume-detail/utils.ts",
+      "size": 2879,
+      "functionCount": 13,
+      "importCount": 4,
+      "exportCount": 13
+    },
+    {
+      "hash": "45e0fdb724d84e073a7ee82ac22e27b688a6342583fcb28c42bb777e0c2d5166",
+      "kind": "React component",
+      "lineCount": 221,
       "relativePath": "components/ResumeDetail.tsx",
-      "size": 61805,
-      "functionCount": 20,
-      "importCount": 21,
+      "size": 8020,
+      "functionCount": 1,
+      "importCount": 9,
       "exportCount": 2
     },
     {
@@ -2750,5 +3060,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20"
+  "manifestHash": "579e3209f6004a6525384b76a46c187a90b3a2ec95b100571f0053d65f4ab7df"
 }

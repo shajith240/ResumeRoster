@@ -4,9 +4,9 @@
 
 - Source path: `app/globals.css`
 - Kind: Project file
-- Size: 166795 bytes
-- Lines: 8950
-- Source hash: `63eca16abf44fcea09221d1a178ca32ba9638a210fab737c7bf7c53bbdf82132`
+- Size: 94201 bytes
+- Lines: 5195
+- Source hash: `ad0aa5ddd9225c056da905cf0f4d4e03481f3ef0ae978ee01acb41aae12b61f5`
 
 ## What This File Does
 
@@ -41,43 +41,43 @@ No direct test file detected by naming convention.
 - `actions`
 - `active`
 - `admin-access-card`
-- `admin-action-column`
-- `admin-action-log`
-- `admin-action-log-row`
-- `admin-action-row`
-- `admin-card-topline`
-- `admin-cell-stack`
-- `admin-chip-stack`
 - `admin-command-strip`
 - `admin-compact-list`
-- `admin-console`
 - `admin-console-header`
 - `admin-console-layout`
-- `admin-console-main`
-- `admin-console-section`
 - `admin-content-grid`
-- `admin-content-list`
-- `admin-critical-section`
-- `admin-danger-action`
 - `admin-data-grid`
-- `admin-data-panel`
-- `admin-data-row`
-- `admin-empty-panel`
-- `admin-eyebrow`
-- `admin-header-actions`
-- `admin-inline-link`
-- `admin-live-count`
-- `admin-message-audience`
-- `admin-message-confirm`
-- `admin-message-dialog`
-- `admin-message-field`
-- `admin-message-form`
-- `admin-message-select`
-- `admin-message-select-content`
-- `admin-message-templates`
-- `admin-metric-card`
-- `admin-metric-danger`
-- `admin-mini-avatar`
+- `admin-mini-user-row`
+- `admin-overview-grid`
+- `admin-page-header`
+- `admin-pagination`
+- `admin-panel`
+- `admin-panel-header`
+- `admin-people-actions`
+- `admin-people-overview-grid`
+- `admin-people-toolbar`
+- `admin-report`
+- `admin-reviewer-grid`
+- `admin-route`
+- `admin-section-nav`
+- `admin-section-nav-group`
+- `admin-workspace`
+- `anonymous-toggle`
+- `app-header`
+- `app-logo`
+- `app-root`
+- `auth-actions`
+- `auth-card`
+- `auth-card-footer`
+- `auth-card-surface`
+- `auth-divider`
+- `auth-field`
+- `auth-form`
+- `auth-form-message`
+- `auth-form-notice`
+- `auth-heading`
+- `auth-inline-error`
+- `auth-input-wrap`
 
 ## Notes
 

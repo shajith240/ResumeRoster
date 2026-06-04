@@ -4,9 +4,9 @@
 
 - Source path: `components/ResumeDetail.tsx`
 - Kind: React component
-- Size: 61805 bytes
-- Lines: 2254
-- Source hash: `a5e4d8f89f98e6533f7305d99e929948fd5181b76a11cc76af37813e6ae7f473`
+- Size: 8020 bytes
+- Lines: 221
+- Source hash: `45e0fdb724d84e073a7ee82ac22e27b688a6342583fcb28c42bb777e0c2d5166`
 
 ## What This File Does
 
@@ -23,63 +23,25 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
-- `@/components/CommentMediaToolbar`
-- `@/components/RouteTransitionLoader`
-- `@/components/SecureResumePreview`
-- `@/components/ui/alert-dialog`
-- `@/components/ui/button`
-- `@/components/ui/dialog`
-- `@/lib/anonymous-profile`
-- `@/lib/auth-redirect`
-- `@/lib/comment-media-validation`
+- `./resume-detail/content`
+- `./resume-detail/dialogs`
+- `./resume-detail/discussion-panel`
+- `./resume-detail/resume-preview-pane`
+- `./resume-detail/types`
+- `./resume-detail/use-resume-detail-controller`
+- `./resume-detail/utils`
 - `@/lib/report-validation`
 - `@/lib/resume-display`
-- `@/lib/resume-thread`
-- `@/lib/reviewer-validation`
-- `@/lib/supabase/client`
-- `@/lib/supabase/types`
-- `@supabase/supabase-js`
-- `lucide-react`
-- `next/link`
-- `next/navigation`
-- `react`
-- `sonner`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 135 | `formatDate` | Function | top-level | no | `value` | `string` | not documented |
-| 142 | `getAuthorHandle` | Function | top-level | no | `authorId`, `profile` | `string` | not documented |
-| 150 | `getAuthorAvatar` | Function | top-level | no | `authorId`, `profile` | `string` | not documented |
-| 155 | `ReviewerTrustChip` | React component | top-level | no | `{ profile }` | `import("react").JSX.Element \| null` | not documented |
-| 175 | `isMissingColumnError` | Function | top-level | no | `error`, `column` | `boolean` | not documented |
-| 179 | `isReadCountFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 185 | `isDeleteFeatureError` | Action helper | top-level | no | `error` | `boolean` | not documented |
-| 191 | `isReportFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 197 | `isCommentMediaFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 203 | `isPermissionPolicyError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 209 | `isResumeContextFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 215 | `isAuthorProfileFeatureError` | Function | top-level | no | `error` | `boolean` | not documented |
-| 221 | `withResumeDefaults` | Function | top-level | no | `resume` | `ResumeSummary` | not documented |
-| 230 | `ResumeContextCard` | React component | top-level | no | `{ eyebrow, title, content, emptyMessage, }` | `import("react").JSX.Element` | not documented |
-| 254 | `renderInlineMarkdown` | Function | top-level | no | `text`, `keyPrefix` | `ReactNode[]` | not documented |
-| 296 | `FormattedReviewContent` | React component | top-level | no | `{ content, format, isDeleted, }` | `import("react").JSX.Element` | not documented |
-| 372 | `getAttachmentUrl` | Function | top-level | no | `attachment` | `string` | not documented |
-| 376 | `ReviewAttachment` | React component | top-level | no | `{ attachment, }` | `import("react").JSX.Element \| null` | not documented |
-| 391 | `ResumeDetail` | React component | top-level | yes | `{ resumeId }` | `import("react").JSX.Element` | not documented |
-| 1201 | `applyLocalReaction` | Function | nested | no | `nextReaction` | `void` | not documented |
+| 13 | `ResumeDetail` | React component | top-level | yes | `{ resumeId }` | `import("react").JSX.Element` | not documented |
 
 ## Types
 
-| Line | Name | Kind |
-| --- | --- | --- |
-| 81 | `ResumeDetailProps` | type |
-| 85 | `Reaction` | type |
-| 86 | `ResumeOwnerAction` | type |
-| 88 | `AuthorProfile` | type |
-| 99 | `ResumeRowWithDefaults` | type |
-| 107 | `ResumeQueryResult` | type |
+No top-level interfaces or type aliases detected.
 
 ## Related Tests
 
