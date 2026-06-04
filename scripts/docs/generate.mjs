@@ -100,8 +100,11 @@ function classifyFile(relativePath) {
 	if (relativePath.startsWith("supabase/migrations/")) {
 		return "Supabase migration";
 	}
+	if (relativePath === "supabase/seed.sql") {
+		return "Supabase seed data";
+	}
 	if (relativePath.startsWith("supabase/") && relativePath.endsWith(".sql")) {
-		return "Legacy Supabase SQL reference";
+		return "Supabase SQL file outside migrations";
 	}
 	if (relativePath.startsWith("docs/")) {
 		return "Documentation";
@@ -160,8 +163,11 @@ function describePurpose(relativePath, kind) {
 	if (kind === "Supabase migration") {
 		return `Applies an ordered database change for ${humanizeName(fileName)}.`;
 	}
-	if (kind === "Legacy Supabase SQL reference") {
-		return "Keeps older Supabase SQL setup notes as reference; ordered migrations remain the source of truth.";
+	if (kind === "Supabase seed data") {
+		return "Seeds local Supabase data after migrations have built the schema.";
+	}
+	if (kind === "Supabase SQL file outside migrations") {
+		return "Documents a Supabase SQL file that should be reviewed against the migration source-of-truth rule.";
 	}
 	if (kind === "Public visual asset") {
 		return `Stores the ${stem} visual asset served from the public folder.`;

@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/users/route.ts`
 - Kind: Next API route
-- Size: 10746 bytes
-- Lines: 380
-- Source hash: `a14f7dcb9d2a756048cf1e38060ee7443bfbafc907def977420bf5a00932df0d`
+- Size: 11153 bytes
+- Lines: 414
+- Source hash: `5e0ba2047d4a08bb29105c530bb4dcaf39d280db9d10ec7d4ea71d57966620c6`
 
 ## What This File Does
 
@@ -31,18 +31,18 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 41 | `countByUserId` | Function | top-level | no | `rows`, `column` | `Map<string, number>` | not documented |
-| 56 | `getPositiveInt` | Function | top-level | no | `value`, `fallback` | `number` | not documented |
-| 61 | `clampPageSize` | Function | top-level | no | `value` | `number` | not documented |
-| 65 | `getUserSearchText` | Function | top-level | no | `authUser`, `profile` | `string` | not documented |
-| 80 | `getProfilesById` | Function async | top-level | no | `admin`, `userIds` | `Promise<Map<string, ProfileRow>>` | not documented |
-| 94 | `getAuthUsersById` | Function async | top-level | no | `admin`, `userIds` | `Promise<User[]>` | not documented |
-| 109 | `buildAdminUsers` | Function async | top-level | no | `admin`, `authUsers`, `knownProfilesById` | `Promise<{ id: string; email: string \| null; created_at: string; last_sign_in_at: string \| null; profile: ProfileRow \| null; dataFootpr...` | not documented |
-| 192 | `getLatestUsers` | Function async | top-level | no | `admin` | `Promise<{ id: string; email: string \| null; created_at: string; last_sign_in_at: string \| null; profile: ProfileRow \| null; dataFootpr...` | not documented |
-| 217 | `getActiveUsers` | Function async | top-level | no | `admin` | `Promise<{ email: string \| null; lastSeenAt: string; profile: ProfileRow \| null; status: string; userId: string; }[]>` | not documented |
-| 253 | `getProfilePage` | Function async | top-level | no | `admin`, `page`, `perPage` | `Promise<{ profiles: ProfileRow[]; total: number; }>` | not documented |
-| 275 | `getSearchableProfiles` | Function async | top-level | no | `admin` | `Promise<ProfileRow[]>` | not documented |
-| 288 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
+| 66 | `countByUserId` | Function | top-level | no | `rows`, `column` | `Map<string, number>` | not documented |
+| 81 | `getPositiveInt` | Function | top-level | no | `value`, `fallback` | `number` | not documented |
+| 86 | `clampPageSize` | Function | top-level | no | `value` | `number` | not documented |
+| 90 | `getProfilesById` | Function async | top-level | no | `admin`, `userIds` | `Promise<Map<string, ProfileRow>>` | not documented |
+| 104 | `getAuthUsersById` | Function async | top-level | no | `admin`, `userIds` | `Promise<User[]>` | not documented |
+| 129 | `buildAdminUsers` | Function async | top-level | no | `admin`, `authUsers`, `knownProfilesById` | `Promise<AdminUserRow[]>` | not documented |
+| 212 | `normalizeSearchPayload` | Validation or normalization helper | top-level | no | `data`, `fallbackPage`, `perPage` | `AdminUserSearchPayload` | not documented |
+| 236 | `searchAdminUsers` | Function async | top-level | no | `admin`, `query`, `page`, `perPage` | `Promise<AdminUserSearchPayload>` | not documented |
+| 255 | `getLatestUsers` | Function async | top-level | no | `admin` | `Promise<AdminUserRow[]>` | not documented |
+| 284 | `getActiveUsers` | Function async | top-level | no | `admin` | `Promise<{ email: string \| null; lastSeenAt: string; profile: ProfileRow \| null; status: string; userId: string; }[]>` | not documented |
+| 320 | `getProfilePage` | Function async | top-level | no | `admin`, `page`, `perPage` | `Promise<{ profiles: ProfileRow[]; total: number; }>` | not documented |
+| 342 | `GET` | API handler async | top-level | yes | `request` | `Promise<Response>` | not documented |
 
 ## Types
 
@@ -50,10 +50,13 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 | --- | --- | --- |
 | 17 | `ProfileRow` | type |
 | 35 | `PresenceRow` | type |
+| 41 | `AdminUserDataFootprint` | type |
+| 50 | `AdminUserRow` | type |
+| 59 | `AdminUserSearchPayload` | type |
 
 ## Related Tests
 
-No direct test file detected by naming convention.
+- `lib/__tests__/admin-users-route.test.ts`
 
 ## Notes
 

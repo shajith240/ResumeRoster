@@ -16,6 +16,7 @@
     "docs:lint": "markdownlint-cli2",
     "docs:typedoc": "typedoc --options typedoc.json",
     "supabase": "supabase",
+    "db:check": "node scripts/supabase/check-sql-source-of-truth.mjs",
     "db:reset": "supabase db reset",
     "db:push:dry": "supabase db push --dry-run",
     "db:push": "supabase db push",

@@ -14,9 +14,9 @@ Migrations are ordered SQL files under `supabase/migrations/`.
 
 The repo has migrations from `0001_core_schema_auth_storage.sql` through the latest migration shown in the generated source atlas. These include core schema, storage hardening, privacy modes, admin controls, notifications, rate limits, push subscriptions, cascade behavior, admin inbox messages, and username refinement.
 
-## Legacy SQL Files
+## SQL Source Of Truth
 
-Loose SQL files under `supabase/` are reference material from earlier setup work. The existing [Supabase migration guide](../../supabase/MIGRATIONS.md) says not to add new feature SQL as loose files.
+Tracked SQL under `supabase/` must live in `supabase/migrations/`, except for `supabase/seed.sql` if seed data is needed. The existing [Supabase migration guide](../../supabase/MIGRATIONS.md) documents this rule, and CI enforces it with `npm run db:check`.
 
 ## Migration Safety
 

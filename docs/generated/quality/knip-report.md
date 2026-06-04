@@ -22,7 +22,7 @@ lib/server/push.ts: sendPushForNotification
 lib/session-lock.ts: SESSION_SUPERSEDED_MESSAGE, isValidClientSessionId, createClientSessionId, getClientSessionId, releaseActiveUserSession
 lib/supabase/client.ts: signInWithGoogle
 Unused exported types (6)
-lib/admin-messages.ts: AdminMessageTarget
+lib/admin-messages.ts: AdminMessageTarget, AdminMessageInput
 lib/leaderboard-ranking.ts: LeaderboardRoastInput, LeaderboardTopRoast
 lib/onboarding-validation.ts: OnboardingStatus
 lib/pdf-privacy.ts: PrivacyFindingType

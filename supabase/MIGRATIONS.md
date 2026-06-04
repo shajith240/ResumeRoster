@@ -1,6 +1,6 @@
 # Linted Supabase Migrations
 
-`supabase/migrations/` is the database source of truth for Linted. The loose SQL files in this folder are legacy one-off scripts kept as reference while the ordered migrations are validated in production and local environments.
+`supabase/migrations/` is the database source of truth for Linted. Database schema changes must be captured as ordered migration files, not loose SQL scripts under `supabase/`.
 
 ## Files
 
@@ -45,6 +45,7 @@
 0038_remove_auth_email_lookup.sql
 0039_transactional_admin_messages.sql
 0040_scheduled_temporary_data_cleanup.sql
+0041_admin_user_search_rpc.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.
@@ -76,6 +77,17 @@ npm run db:reset
 
 That command rebuilds the local Supabase database from the ordered migrations. It is destructive for the local database only.
 
-## Legacy SQL
+## SQL Source Of Truth
 
-Do not add new feature SQL as loose files. Add a new ordered migration instead. The legacy files can be moved into an archive after the migration reset and production dry-run have both been verified.
+Tracked SQL under `supabase/` is limited to:
+
+- `supabase/migrations/*.sql`
+- `supabase/seed.sql` if seed data is needed
+
+Run the guard before opening a PR:
+
+```bash
+npm run db:check
+```
+
+CI also runs this check so legacy one-off SQL cannot drift back into the active Supabase tree.

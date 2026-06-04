@@ -10,7 +10,7 @@ const MAX_PAGE_SIZE = 25;
 const LATEST_USER_LIMIT = 10;
 const ACTIVE_USER_LIMIT = 24;
 const PRESENCE_FETCH_LIMIT = 100;
-const SEARCH_FETCH_LIMIT = 1000;
+const AUTH_USER_FETCH_CONCURRENCY = 5;
 const PROFILE_SELECT =
 	"id,username,full_name,avatar_url,college,target_role,current_position,app_status,community_role,reviewer_type,reviewer_headline,reviewer_verification_status,roast_count,helpful_votes,created_at";
 
@@ -38,6 +38,31 @@ type PresenceRow = {
 	last_seen_at: string;
 };
 
+type AdminUserDataFootprint = {
+	attachments: number;
+	reportsFiled: number;
+	resumes: number;
+	reviewerApplications: number;
+	reviews: number;
+	votes: number;
+};
+
+type AdminUserRow = {
+	id: string;
+	email: string | null;
+	created_at: string | null;
+	last_sign_in_at: string | null;
+	profile: ProfileRow | null;
+	dataFootprint: AdminUserDataFootprint;
+};
+
+type AdminUserSearchPayload = {
+	page: number;
+	perPage: number;
+	total: number;
+	users: AdminUserRow[];
+};
+
 function countByUserId(
 	rows: Array<Record<string, string | null | undefined>>,
 	column: string,
@@ -62,21 +87,6 @@ function clampPageSize(value: string | null) {
 	return Math.min(getPositiveInt(value, DEFAULT_PAGE_SIZE), MAX_PAGE_SIZE);
 }
 
-function getUserSearchText(authUser: User | null | undefined, profile?: ProfileRow) {
-	return [
-		authUser?.email,
-		profile?.username,
-		profile?.full_name,
-		profile?.reviewer_headline,
-		profile?.current_position,
-		profile?.reviewer_verification_status,
-		profile?.community_role,
-	]
-		.filter(Boolean)
-		.join(" ")
-		.toLowerCase();
-}
-
 async function getProfilesById(admin: SupabaseClient, userIds: string[]) {
 	if (!userIds.length) return new Map<string, ProfileRow>();
 
@@ -94,23 +104,33 @@ async function getProfilesById(admin: SupabaseClient, userIds: string[]) {
 async function getAuthUsersById(admin: SupabaseClient, userIds: string[]) {
 	if (!userIds.length) return [];
 
-	const results = await Promise.all(
-		userIds.map((userId) => admin.auth.admin.getUserById(userId)),
-	);
+	const authUsers: User[] = [];
+	for (
+		let index = 0;
+		index < userIds.length;
+		index += AUTH_USER_FETCH_CONCURRENCY
+	) {
+		const batch = userIds.slice(index, index + AUTH_USER_FETCH_CONCURRENCY);
+		const results = await Promise.all(
+			batch.map((userId) => admin.auth.admin.getUserById(userId)),
+		);
 
-	return results
-		.map((result) => {
-			if (result.error) return null;
-			return result.data.user ?? null;
-		})
-		.filter(Boolean) as User[];
+		for (const result of results) {
+			if (result.error) continue;
+			if (result.data.user) {
+				authUsers.push(result.data.user);
+			}
+		}
+	}
+
+	return authUsers;
 }
 
 async function buildAdminUsers(
 	admin: SupabaseClient,
 	authUsers: User[],
 	knownProfilesById?: Map<string, ProfileRow>,
-) {
+): Promise<AdminUserRow[]> {
 	const userIds = authUsers.map((user) => user.id);
 	const profilesById = knownProfilesById ?? (await getProfilesById(admin, userIds));
 
@@ -189,6 +209,49 @@ async function buildAdminUsers(
 	}));
 }
 
+function normalizeSearchPayload(
+	data: unknown,
+	fallbackPage: number,
+	perPage: number,
+): AdminUserSearchPayload {
+	const payload = data as Partial<AdminUserSearchPayload> | null;
+	const total =
+		typeof payload?.total === "number" && Number.isFinite(payload.total)
+			? payload.total
+			: 0;
+	const page =
+		typeof payload?.page === "number" && Number.isFinite(payload.page)
+			? payload.page
+			: fallbackPage;
+	const users = Array.isArray(payload?.users) ? payload.users : [];
+
+	return {
+		page,
+		perPage,
+		total,
+		users,
+	};
+}
+
+async function searchAdminUsers(
+	admin: SupabaseClient,
+	query: string,
+	page: number,
+	perPage: number,
+) {
+	const { data, error } = await admin
+		.rpc("admin_search_users", {
+			page_number: page,
+			page_size: perPage,
+			search_query: query,
+		})
+		.returns<AdminUserSearchPayload>();
+
+	if (error) throw new Error("Unable to search admin users.");
+
+	return normalizeSearchPayload(data, page, perPage);
+}
+
 async function getLatestUsers(admin: SupabaseClient) {
 	const { data: profiles, error } = await admin
 		.from("profiles")
@@ -204,7 +267,11 @@ async function getLatestUsers(admin: SupabaseClient) {
 		admin,
 		profileRows.map((profile) => profile.id),
 	);
-	const rows = await buildAdminUsers(admin, authUsers);
+	const rows = await buildAdminUsers(
+		admin,
+		authUsers,
+		new Map(profileRows.map((profile) => [profile.id, profile])),
+	);
 	const rowsById = new Map(rows.map((row) => [row.id, row]));
 
 	return profileRows
@@ -272,19 +339,6 @@ async function getProfilePage(
 	};
 }
 
-async function getSearchableProfiles(admin: SupabaseClient) {
-	const { data, error } = await admin
-		.from("profiles")
-		.select(PROFILE_SELECT)
-		.order("created_at", { ascending: false })
-		.limit(SEARCH_FETCH_LIMIT)
-		.returns<ProfileRow[]>();
-
-	if (error) throw new Error(error.message);
-
-	return data ?? [];
-}
-
 export async function GET(request: Request) {
 	try {
 		const { admin } = await requireAdmin(request);
@@ -293,38 +347,18 @@ export async function GET(request: Request) {
 		const perPage = clampPageSize(url.searchParams.get("perPage"));
 		const query = (url.searchParams.get("query") ?? "").trim().toLowerCase();
 
-		let authUsers: User[] = [];
+		let users: AdminUserRow[] = [];
 		let currentPage = page;
 		let pageProfilesById = new Map<string, ProfileRow>();
 		let total = 0;
 		let lastPage = 1;
 
 		if (query) {
-			const searchableProfiles = await getSearchableProfiles(admin);
-			const searchableAuthUsers = await getAuthUsersById(
-				admin,
-				searchableProfiles.map((profile) => profile.id),
-			);
-			const authUsersById = new Map(
-				searchableAuthUsers.map((authUser) => [authUser.id, authUser]),
-			);
-			const matchingProfiles = searchableProfiles.filter((profile) =>
-				getUserSearchText(authUsersById.get(profile.id), profile).includes(query),
-			);
-			total = matchingProfiles.length;
+			const searchResult = await searchAdminUsers(admin, query, page, perPage);
+			users = searchResult.users;
+			total = searchResult.total;
 			lastPage = Math.max(1, Math.ceil(total / perPage));
-			currentPage = Math.min(page, lastPage);
-			const pageProfiles = matchingProfiles.slice(
-				(currentPage - 1) * perPage,
-				currentPage * perPage,
-			);
-
-			pageProfilesById = new Map(
-				pageProfiles.map((profile) => [profile.id, profile]),
-			);
-			authUsers = pageProfiles
-				.map((profile) => authUsersById.get(profile.id))
-				.filter((authUser): authUser is User => Boolean(authUser));
+			currentPage = Math.min(searchResult.page, lastPage);
 		} else {
 			let profilePage = await getProfilePage(admin, page, perPage);
 			total = profilePage.total;
@@ -338,14 +372,14 @@ export async function GET(request: Request) {
 			pageProfilesById = new Map(
 				profilePage.profiles.map((profile) => [profile.id, profile]),
 			);
-			authUsers = await getAuthUsersById(
+			const authUsers = await getAuthUsersById(
 				admin,
 				profilePage.profiles.map((profile) => profile.id),
 			);
+			users = await buildAdminUsers(admin, authUsers, pageProfilesById);
 		}
 
-		const [users, latestUsers, activeUsers] = await Promise.all([
-			buildAdminUsers(admin, authUsers, pageProfilesById),
+		const [latestUsers, activeUsers] = await Promise.all([
 			getLatestUsers(admin),
 			getActiveUsers(admin),
 		]);

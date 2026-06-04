@@ -42,7 +42,7 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 ## Related Tests
 
-No direct test file detected by naming convention.
+- `lib/__tests__/admin-users-route.test.ts`
 
 ## Notes
 

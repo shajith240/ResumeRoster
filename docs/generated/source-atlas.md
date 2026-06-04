@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 288 source-controlled files.
-Manifest hash: `8eabf0906afeeac93eca793f3ac9d9c67297befef6898e6d243b213e659ef1e0`
+Generated from 274 source-controlled files.
+Manifest hash: `4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20`
 
 ## Folder Coverage
 
@@ -14,10 +14,10 @@ Manifest hash: `8eabf0906afeeac93eca793f3ac9d9c67297befef6898e6d243b213e659ef1e0
 | `app` | 39 |
 | `components` | 48 |
 | `docs` | 35 |
-| `lib` | 52 |
+| `lib` | 53 |
 | `public` | 30 |
-| `scripts` | 4 |
-| `supabase` | 60 |
+| `scripts` | 5 |
+| `supabase` | 44 |
 
 ## File Kinds
 
@@ -26,7 +26,6 @@ Manifest hash: `8eabf0906afeeac93eca793f3ac9d9c67297befef6898e6d243b213e659ef1e0
 | Application library module | 32 |
 | Documentation | 35 |
 | GitHub workflow | 1 |
-| Legacy Supabase SQL reference | 17 |
 | Next API route | 17 |
 | Next page route | 16 |
 | Next root layout | 1 |
@@ -35,11 +34,11 @@ Manifest hash: `8eabf0906afeeac93eca793f3ac9d9c67297befef6898e6d243b213e659ef1e0
 | Public browser asset | 1 |
 | Public visual asset | 29 |
 | React component | 25 |
-| Repository automation | 4 |
+| Repository automation | 5 |
 | Root documentation | 3 |
-| Supabase migration | 40 |
+| Supabase migration | 41 |
 | UI primitive | 23 |
-| Unit test | 20 |
+| Unit test | 21 |
 
 ## Files
 
@@ -176,6 +175,7 @@ Manifest hash: `8eabf0906afeeac93eca793f3ac9d9c67297befef6898e6d243b213e659ef1e0
 | `instrumentation.ts` | Project configuration | [open](source/instrumentation_ts.md) |
 | `knip.json` | Project configuration | [open](source/knip_json.md) |
 | `lib/__tests__/admin-messages.test.ts` | Unit test | [open](source/lib_tests_admin_messages_test_ts.md) |
+| `lib/__tests__/admin-users-route.test.ts` | Unit test | [open](source/lib_tests_admin_users_route_test_ts.md) |
 | `lib/__tests__/admin.test.ts` | Unit test | [open](source/lib_tests_admin_test_ts.md) |
 | `lib/__tests__/anonymous-profile.test.ts` | Unit test | [open](source/lib_tests_anonymous_profile_test_ts.md) |
 | `lib/__tests__/auth-errors.test.ts` | Unit test | [open](source/lib_tests_auth_errors_test_ts.md) |
@@ -268,11 +268,9 @@ Manifest hash: `8eabf0906afeeac93eca793f3ac9d9c67297befef6898e6d243b213e659ef1e0
 | `scripts/docs/docs-config.mjs` | Repository automation | [open](source/scripts_docs_docs_config_mjs.md) |
 | `scripts/docs/generate.mjs` | Repository automation | [open](source/scripts_docs_generate_mjs.md) |
 | `scripts/docs/quality.mjs` | Repository automation | [open](source/scripts_docs_quality_mjs.md) |
+| `scripts/supabase/check-sql-source-of-truth.mjs` | Repository automation | [open](source/scripts_supabase_check_sql_source_of_truth_mjs.md) |
 | `supabase/.gitignore` | Project file | [open](source/supabase_gitignore.md) |
-| `supabase/app-presence.sql` | Legacy Supabase SQL reference | [open](source/supabase_app_presence_sql.md) |
-| `supabase/auth-profiles.sql` | Legacy Supabase SQL reference | [open](source/supabase_auth_profiles_sql.md) |
 | `supabase/config.toml` | Project configuration | [open](source/supabase_config_toml.md) |
-| `supabase/leaderboard.sql` | Legacy Supabase SQL reference | [open](source/supabase_leaderboard_sql.md) |
 | `supabase/MIGRATIONS.md` | Root documentation | [open](source/supabase_migrations_md.md) |
 | `supabase/migrations/0001_core_schema_auth_storage.sql` | Supabase migration | [open](source/supabase_migrations_0001_core_schema_auth_storage_sql.md) |
 | `supabase/migrations/0002_resume_context_reads_presence.sql` | Supabase migration | [open](source/supabase_migrations_0002_resume_context_reads_presence_sql.md) |
@@ -314,20 +312,7 @@ Manifest hash: `8eabf0906afeeac93eca793f3ac9d9c67297befef6898e6d243b213e659ef1e0
 | `supabase/migrations/0038_remove_auth_email_lookup.sql` | Supabase migration | [open](source/supabase_migrations_0038_remove_auth_email_lookup_sql.md) |
 | `supabase/migrations/0039_transactional_admin_messages.sql` | Supabase migration | [open](source/supabase_migrations_0039_transactional_admin_messages_sql.md) |
 | `supabase/migrations/0040_scheduled_temporary_data_cleanup.sql` | Supabase migration | [open](source/supabase_migrations_0040_scheduled_temporary_data_cleanup_sql.md) |
-| `supabase/phase1-hardening.sql` | Legacy Supabase SQL reference | [open](source/supabase_phase1_hardening_sql.md) |
-| `supabase/profile-features.sql` | Legacy Supabase SQL reference | [open](source/supabase_profile_features_sql.md) |
-| `supabase/profile-status.sql` | Legacy Supabase SQL reference | [open](source/supabase_profile_status_sql.md) |
-| `supabase/profile.sql` | Legacy Supabase SQL reference | [open](source/supabase_profile_sql.md) |
-| `supabase/reactions.sql` | Legacy Supabase SQL reference | [open](source/supabase_reactions_sql.md) |
-| `supabase/read-counts.sql` | Legacy Supabase SQL reference | [open](source/supabase_read_counts_sql.md) |
-| `supabase/replies.sql` | Legacy Supabase SQL reference | [open](source/supabase_replies_sql.md) |
-| `supabase/resume-context.sql` | Legacy Supabase SQL reference | [open](source/supabase_resume_context_sql.md) |
-| `supabase/roast-counts.sql` | Legacy Supabase SQL reference | [open](source/supabase_roast_counts_sql.md) |
-| `supabase/roast-deletes.sql` | Legacy Supabase SQL reference | [open](source/supabase_roast_deletes_sql.md) |
-| `supabase/schema.sql` | Legacy Supabase SQL reference | [open](source/supabase_schema_sql.md) |
-| `supabase/storage-policies.sql` | Legacy Supabase SQL reference | [open](source/supabase_storage_policies_sql.md) |
-| `supabase/storage-read-fix.sql` | Legacy Supabase SQL reference | [open](source/supabase_storage_read_fix_sql.md) |
-| `supabase/submit-flow-fix.sql` | Legacy Supabase SQL reference | [open](source/supabase_submit_flow_fix_sql.md) |
+| `supabase/migrations/0041_admin_user_search_rpc.sql` | Supabase migration | [open](source/supabase_migrations_0041_admin_user_search_rpc_sql.md) |
 | `tailwind.config.ts` | Project configuration | [open](source/tailwind_config_ts.md) |
 | `tsconfig.json` | Project configuration | [open](source/tsconfig_json.md) |
 | `typedoc.json` | Project configuration | [open](source/typedoc_json.md) |

@@ -20,11 +20,11 @@
       "exportCount": 0
     },
     {
-      "hash": "80fda1f52f3fd75bdc09615c3267afa517970fe85ba1d60b5146795d5f7356cc",
+      "hash": "5281906ed7de15b9ba4b6ceed5e380af73ac419c1cab609113a83d4b35a11bae",
       "kind": "GitHub workflow",
-      "lineCount": 60,
+      "lineCount": 63,
       "relativePath": ".github/workflows/ci.yml",
-      "size": 1177,
+      "size": 1257,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -160,11 +160,11 @@
       "exportCount": 3
     },
     {
-      "hash": "a14f7dcb9d2a756048cf1e38060ee7443bfbafc907def977420bf5a00932df0d",
+      "hash": "5e0ba2047d4a08bb29105c530bb4dcaf39d280db9d10ec7d4ea71d57966620c6",
       "kind": "Next API route",
-      "lineCount": 380,
+      "lineCount": 414,
       "relativePath": "app/api/admin/users/route.ts",
-      "size": 10746,
+      "size": 11153,
       "functionCount": 12,
       "importCount": 2,
       "exportCount": 3
@@ -1010,11 +1010,11 @@
       "exportCount": 0
     },
     {
-      "hash": "99b264d8258ea4f05dfb98adaf5ae3518d0d5a48fd5993a2567b3adf64fb5d8b",
+      "hash": "486dd4d4c7ac099fe33d2444060fd20a0a03cb62b1961ce57885fb95e1acebbd",
       "kind": "Documentation",
       "lineCount": 27,
       "relativePath": "docs/database/migrations.md",
-      "size": 1161,
+      "size": 1221,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -1317,6 +1317,16 @@
       "size": 2249,
       "functionCount": 1,
       "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "6986e891e625177594b6946bdc9f9eb5706e169961dbe3a7114e4ad7145095d4",
+      "kind": "Unit test",
+      "lineCount": 109,
+      "relativePath": "lib/__tests__/admin-users-route.test.ts",
+      "size": 2561,
+      "functionCount": 1,
+      "importCount": 3,
       "exportCount": 0
     },
     {
@@ -1870,11 +1880,11 @@
       "exportCount": 0
     },
     {
-      "hash": "7184deef2afe7fb76613a2f69bc7cd919ffd7177fad2399cad1c42d8dcc57948",
+      "hash": "ee4801d448ea84c417fd963bf251e7a70b09615cfc493c6de5a3020217811363",
       "kind": "Project configuration",
-      "lineCount": 81,
+      "lineCount": 82,
       "relativePath": "package.json",
-      "size": 2480,
+      "size": 2551,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2220,11 +2230,11 @@
       "exportCount": 0
     },
     {
-      "hash": "b02edccc69f0ab4e843f49c513a8530ba5c7528ea3403267db34edf16016e49f",
+      "hash": "0077ec69eb085d70b30758058d8dd6185d32c9f4824fc0eb0e29cac60e476bef",
       "kind": "Repository automation",
-      "lineCount": 731,
+      "lineCount": 737,
       "relativePath": "scripts/docs/generate.mjs",
-      "size": 22248,
+      "size": 22460,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2240,31 +2250,21 @@
       "exportCount": 0
     },
     {
+      "hash": "1ecb3bd33b012aa644464462417c8d2bde46bd274bb5bb340dc867480816bce0",
+      "kind": "Repository automation",
+      "lineCount": 50,
+      "relativePath": "scripts/supabase/check-sql-source-of-truth.mjs",
+      "size": 1244,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
       "hash": "507699eb91144818edf61d3a079212cacf31d8db520eae428e3b48fcf0d6919c",
       "kind": "Project file",
       "lineCount": 0,
       "relativePath": "supabase/.gitignore",
       "size": 72,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "f75aa49f923bb0c57e3bc71393d7b51b02b1db26419218cab8cbc8f1afc501d4",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 116,
-      "relativePath": "supabase/app-presence.sql",
-      "size": 3346,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "1b42a1e70302a33dd788d5d311857d066edecc6b5f0517e0db51bf0b25127bcc",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 98,
-      "relativePath": "supabase/auth-profiles.sql",
-      "size": 2302,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2280,21 +2280,11 @@
       "exportCount": 0
     },
     {
-      "hash": "32665cdfcd07e899698966bf492389a81509ca3877169ce0335af2e538770866",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 44,
-      "relativePath": "supabase/leaderboard.sql",
-      "size": 1104,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "41291183998a8f691e509378aa4b022e28faff940f665f327f924f5aadc425af",
+      "hash": "24036dc5e15e5cd1677fb269a9fd51f6dfed630b1866d32330e2ad43a82d4167",
       "kind": "Root documentation",
-      "lineCount": 82,
+      "lineCount": 94,
       "relativePath": "supabase/MIGRATIONS.md",
-      "size": 2733,
+      "size": 2805,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2700,141 +2690,11 @@
       "exportCount": 0
     },
     {
-      "hash": "3e33dfc4be18287a1784030e06779265d804a57823c2e1380d3490eb44e728ec",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 45,
-      "relativePath": "supabase/phase1-hardening.sql",
-      "size": 1477,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "39fb82e7a97ea06cd68cb3fe312aebc05df82d6914f8c046429147efc50758f2",
-      "kind": "Legacy Supabase SQL reference",
+      "hash": "053783c926a6d77f18b7e2009c3e58b0a7de56415230685309d90f877cc7ace3",
+      "kind": "Supabase migration",
       "lineCount": 312,
-      "relativePath": "supabase/profile-features.sql",
-      "size": 8520,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "450314e8e062600e2fa21555dc2fa96936b9cd25914948d1f819d3004ca6dbe7",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 22,
-      "relativePath": "supabase/profile-status.sql",
-      "size": 662,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "e80d263bb325d10c24ce24383a726ba419c7509e0e00415d498a0a95ece32524",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 70,
-      "relativePath": "supabase/profile.sql",
-      "size": 1600,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "2832d3ec1f051adf09198cd9184541a3b28717bf76beed09598e940e59fe3498",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 139,
-      "relativePath": "supabase/reactions.sql",
-      "size": 3940,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "7e152a29524f960c8eab081958ef1308b1db0e30d42e78dff76af150d8d39b31",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 102,
-      "relativePath": "supabase/read-counts.sql",
-      "size": 2834,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "316e9d7eb7545462c7ffbfeba71736dac876fe5cc816f18c3064c165fc79f7dd",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 138,
-      "relativePath": "supabase/replies.sql",
-      "size": 3629,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "ac484336cf0cd322044baa20e9233bab85a9829b97de259ef8da60fa9d93482b",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 27,
-      "relativePath": "supabase/resume-context.sql",
-      "size": 774,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "67ebb3de58459781b8d8cf7466412e4f600ffe71cc31f558488e6c857864507e",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 97,
-      "relativePath": "supabase/roast-counts.sql",
-      "size": 2205,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "6be322e4055e76bc452d1202c5fece4d371a1696e647156e82ad0559fb418cac",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 419,
-      "relativePath": "supabase/roast-deletes.sql",
-      "size": 10212,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "1fa60d00a882714509a068389410fcf72acc475aadd3f704d11f3eaecb57fd98",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 580,
-      "relativePath": "supabase/schema.sql",
-      "size": 15787,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "2e0fb44fa2336d2183ca76cb3272d471c7c6e7f75cbe44d009b79a94b39897a9",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 37,
-      "relativePath": "supabase/storage-policies.sql",
-      "size": 966,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "ac9d57a7886a53e3f3fef6b4942b8e9c4c4414a24d7fcdcf66c566a38cd07fcb",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 13,
-      "relativePath": "supabase/storage-read-fix.sql",
-      "size": 504,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "c148ad031076abfdc7d513ba286b54c3e7bf714a26149d109f36a665064fcf56",
-      "kind": "Legacy Supabase SQL reference",
-      "lineCount": 298,
-      "relativePath": "supabase/submit-flow-fix.sql",
-      "size": 9087,
+      "relativePath": "supabase/migrations/0041_admin_user_search_rpc.sql",
+      "size": 10592,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2890,5 +2750,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "8eabf0906afeeac93eca793f3ac9d9c67297befef6898e6d243b213e659ef1e0"
+  "manifestHash": "4d68f7303ed95a3ecfbbb2ba9cf850c64d803dfb787ee86b5c2fc182dc7daa20"
 }

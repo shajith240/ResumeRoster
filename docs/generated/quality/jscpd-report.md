@@ -65,6 +65,10 @@ Clone found (sql):
    supabase\migrations\0028_authenticated_write_rate_limits.sql [445:3 - 460:61]
 
 Clone found (sql):
+ - supabase\migrations\0019_realtime_notifications.sql [408:3 - 426:20] (18 lines, 170 tokens)
+   supabase\migrations\0039_transactional_admin_messages.sql [248:7 - 267:6]
+
+Clone found (sql):
  - supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [140:1 - 181:40] (41 lines, 259 tokens)
    supabase\migrations\0022_lint_points_helpful_votes.sql [5:1 - 46:9]
 
@@ -172,118 +176,6 @@ Clone found (sql):
  - supabase\migrations\0001_core_schema_auth_storage.sql [256:31 - 352:7] (96 lines, 695 tokens)
    supabase\migrations\0004_profiles_avatars_public_profile.sql [89:3 - 185:5]
 
-Clone found (sql):
- - supabase\submit-flow-fix.sql [86:28 - 107:62] (21 lines, 197 tokens)
-   supabase\migrations\0001_core_schema_auth_storage.sql [148:26 - 169:73]
-
-Clone found (sql):
- - supabase\submit-flow-fix.sql [105:31 - 132:7] (27 lines, 262 tokens)
-   supabase\migrations\0001_core_schema_auth_storage.sql [170:77 - 163:5]
-
-Clone found (sql):
- - supabase\submit-flow-fix.sql [130:30 - 297:5] (167 lines, 1347 tokens)
-   supabase\migrations\0004_profiles_avatars_public_profile.sql [89:3 - 423:5]
-
-Clone found (sql):
- - supabase\schema.sql [31:47 - 51:13] (20 lines, 274 tokens)
-   supabase\migrations\0001_core_schema_auth_storage.sql [111:48 - 130:13]
-
-Clone found (sql):
- - supabase\schema.sql [174:4 - 274:7] (100 lines, 741 tokens)
-   supabase\migrations\0001_core_schema_auth_storage.sql [252:73 - 185:5]
-
-Clone found (sql):
- - supabase\schema.sql [272:58 - 366:31] (94 lines, 772 tokens)
-   supabase\migrations\0002_resume_context_reads_presence.sql [159:62 - 253:31]
-
-Clone found (sql):
- - supabase\schema.sql [394:3 - 416:64] (22 lines, 228 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [352:3 - 374:60]
-
-Clone found (sql):
- - supabase\schema.sql [472:85 - 506:42] (34 lines, 241 tokens)
-   supabase\migrations\0005_leaderboard_auth_lookup.sql [5:86 - 39:43]
-
-Clone found (sql):
- - supabase\schema.sql [539:81 - 570:16] (31 lines, 227 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [608:72 - 639:15]
-
-Clone found (sql):
- - supabase\roast-deletes.sql [8:50 - 123:63] (115 lines, 935 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [70:47 - 185:62]
-
-Clone found (sql):
- - supabase\roast-deletes.sql [121:62 - 169:7] (48 lines, 299 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [316:70 - 364:5]
-
-Clone found (sql):
- - supabase\roast-deletes.sql [167:3 - 383:7] (216 lines, 1601 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [372:71 - 588:7]
-
-Clone found (sql):
- - supabase\roast-deletes.sql [381:24 - 418:94] (37 lines, 277 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [608:72 - 645:94]
-
-Clone found (sql):
- - supabase\roast-counts.sql [4:1 - 60:7] (56 lines, 400 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [318:1 - 374:7]
-
-Clone found (sql):
- - supabase\roast-counts.sql [58:70 - 96:3] (38 lines, 297 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [529:1 - 567:3]
-
-Clone found (sql):
- - supabase\replies.sql [65:51 - 129:7] (64 lines, 458 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [165:59 - 229:7]
-
-Clone found (sql):
- - supabase\read-counts.sql [5:61 - 34:75] (29 lines, 258 tokens)
-   supabase\migrations\0002_resume_context_reads_presence.sql [34:14 - 64:10]
-
-Clone found (sql):
- - supabase\read-counts.sql [49:33 - 101:76] (52 lines, 453 tokens)
-   supabase\migrations\0002_resume_context_reads_presence.sql [88:48 - 140:76]
-
-Clone found (sql):
- - supabase\reactions.sql [44:31 - 104:5] (60 lines, 446 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [258:29 - 318:7]
-
-Clone found (sql):
- - supabase\reactions.sql [102:71 - 122:66] (20 lines, 178 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [120:3 - 140:7]
-
-Clone found (sql):
- - supabase\reactions.sql [124:83 - 138:44] (14 lines, 133 tokens)
-   supabase\migrations\0003_roast_threads_reactions_deletes.sql [567:2 - 582:6]
-
-Clone found (sql):
- - supabase\profile.sql [4:1 - 69:94] (65 lines, 458 tokens)
-   supabase\schema.sql [511:1 - 645:94]
-
-Clone found (sql):
- - supabase\profile-features.sql [12:101 - 159:14] (147 lines, 1126 tokens)
-   supabase\migrations\0004_profiles_avatars_public_profile.sql [33:7 - 180:13]
-
-Clone found (sql):
- - supabase\profile-features.sql [157:3 - 311:95] (154 lines, 1241 tokens)
-   supabase\migrations\0004_profiles_avatars_public_profile.sql [183:58 - 337:95]
-
-Clone found (sql):
- - supabase\phase1-hardening.sql [27:3 - 44:5] (17 lines, 150 tokens)
-   supabase\migrations\0001_core_schema_auth_storage.sql [234:14 - 250:5]
-
-Clone found (sql):
- - supabase\leaderboard.sql [4:59 - 43:86] (39 lines, 287 tokens)
-   supabase\schema.sql [470:71 - 509:86]
-
-Clone found (sql):
- - supabase\auth-profiles.sql [5:1 - 97:59] (92 lines, 688 tokens)
-   supabase\migrations\0004_profiles_avatars_public_profile.sql [91:1 - 183:59]
-
-Clone found (sql):
- - supabase\app-presence.sql [4:1 - 115:31] (111 lines, 988 tokens)
-   supabase\migrations\0002_resume_context_reads_presence.sql [142:1 - 253:31]
-
 Clone found (typescript):
  - lib\supabase\types.ts [164:38 - 178:15] (14 lines, 155 tokens)
    lib\supabase\types.ts [144:34 - 158:14]
@@ -323,24 +215,24 @@ Clone found (typescript):
 ┌────────────┬────────────────┬─────────────┬──────────────┬──────────────┬──────────────────┬───────────────────┐
 │ Format     │ Files analyzed │ Total lines │ Total tokens │ Clones found │ Duplicated lines │ Duplicated tokens │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ sql        │ 55             │ 11194       │ 95056        │ 70           │ 3968 (35.45%)    │ 31576 (33.22%)    │
+│ sql        │ 41             │ 9379        │ 79848        │ 43           │ 2096 (22.35%)    │ 16784 (21.02%)    │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ markdown   │ 1              │ 78          │ 420          │ 0            │ 0 (0%)           │ 0 (0%)            │
+│ markdown   │ 1              │ 92          │ 429          │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ bash       │ 1              │ 19          │ 34           │ 0            │ 0 (0%)           │ 0 (0%)            │
+│ bash       │ 1              │ 34          │ 39           │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
 │ toml       │ 1              │ 410         │ 1286         │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ javascript │ 58             │ 6951        │ 61622        │ 0            │ 0 (0%)           │ 0 (0%)            │
+│ javascript │ 59             │ 7005        │ 62075        │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ typescript │ 70             │ 8055        │ 69727        │ 3            │ 65 (0.81%)       │ 564 (0.81%)       │
+│ typescript │ 71             │ 8056        │ 69383        │ 3            │ 65 (0.81%)       │ 564 (0.81%)       │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
 │ tsx        │ 62             │ 13030       │ 111760       │ 6            │ 221 (1.7%)       │ 1690 (1.51%)      │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
 │ css        │ 2              │ 1081        │ 7343         │ 0            │ 0 (0%)           │ 0 (0%)            │
 ├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ Total:     │ 250            │ 40818       │ 347248       │ 79           │ 4254 (10.42%)    │ 33830 (9.74%)     │
+│ Total:     │ 238            │ 39087       │ 332163       │ 52           │ 2382 (6.09%)     │ 19038 (5.73%)     │
 └────────────┴────────────────┴─────────────┴──────────────┴──────────────┴──────────────────┴───────────────────┘
-Found 79 clones.
-time: 1.982s
+Found 52 clones.
+time: 2.000s
 ```

@@ -40,6 +40,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check Supabase SQL source of truth
+        run: npm run db:check
+
       - name: Run tests
         run: npm run test
 
