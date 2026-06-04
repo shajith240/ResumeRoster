@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	BadgeCheck,
@@ -16,6 +16,7 @@ import {
 	RefreshCcw,
 	RotateCcw,
 	Search,
+	Send,
 	ShieldAlert,
 	ShieldCheck,
 	Trash2,
@@ -37,6 +38,29 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import {
+	ADMIN_MESSAGE_BODY_MAX_LENGTH,
+	ADMIN_MESSAGE_TITLE_MAX_LENGTH,
+	DEFAULT_ADMIN_MESSAGE_LINK,
+	isSafeAdminMessageLink,
+} from "@/lib/admin-messages";
 import { supabase } from "@/lib/supabase/client";
 import { useAdminAccess } from "@/lib/use-admin-access";
 import type {
@@ -162,6 +186,31 @@ type AdminUser = {
 	dataFootprint?: AdminUserDataFootprint;
 };
 
+type AdminMessageDialogTarget =
+	| {
+			mode: "all";
+	  }
+	| {
+			mode: "user";
+			user: AdminUser;
+	  };
+
+type AdminMessageForm = {
+	body: string;
+	customLinkHref: string;
+	linkChoice: string;
+	title: string;
+};
+
+type AdminMessageResponse = {
+	auditLogId: string;
+	delivered: number;
+	failed: number;
+	skipped: number;
+	status: "ok";
+	total: number;
+};
+
 type ModerationAction = {
 	id: string;
 	action: string;
@@ -266,6 +315,44 @@ const reviewerStatuses: ReviewerApplicationStatus[] = [
 	"rejected",
 ];
 
+const adminMessageLinkOptions = [
+	{ label: "Feed", value: "/feed" },
+	{ label: "Submit", value: "/submit" },
+	{ label: "Leaderboard", value: "/leaderboard" },
+	{ label: "My profile", value: "/profile/me" },
+	{ label: "Custom path", value: "custom" },
+];
+
+const adminMessageTemplates: Array<{
+	body: string;
+	id: string;
+	label: string;
+	linkHref: string;
+	title: string;
+}> = [
+	{
+		body: "Upload a resume when you are ready for a fresh lint pass.",
+		id: "upload",
+		label: "Upload nudge",
+		linkHref: "/submit",
+		title: "Add your resume",
+	},
+	{
+		body: "A few resumes are waiting for thoughtful feedback from the community.",
+		id: "review",
+		label: "Review nudge",
+		linkHref: "/feed",
+		title: "Help review a resume",
+	},
+	{
+		body: "A quick note from the Linted team.",
+		id: "general",
+		label: "Announcement",
+		linkHref: "/feed",
+		title: "Linted update",
+	},
+];
+
 function formatDate(value: string | null | undefined) {
 	if (!value) return "Never";
 	return new Intl.DateTimeFormat("en", {
@@ -336,6 +423,21 @@ function getFootprintTotal(footprint?: AdminUserDataFootprint) {
 	);
 }
 
+function getAdminMessageAudienceLabel(target: AdminMessageDialogTarget | null) {
+	if (!target) return "";
+	if (target.mode === "all") return "All users";
+
+	const profileLabel = getProfileLabel(target.user.profile);
+	return target.user.email ? `${profileLabel} (${target.user.email})` : profileLabel;
+}
+
+function getAdminMessageLinkChoice(linkHref: string) {
+	const knownOption = adminMessageLinkOptions.find(
+		(option) => option.value === linkHref,
+	);
+	return knownOption ? knownOption.value : "custom";
+}
+
 export default function AdminDashboard({
 	view = "overview",
 }: {
@@ -362,6 +464,9 @@ export default function AdminDashboard({
 	const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
 	const [busyAction, setBusyAction] = useState("");
 	const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(null);
+	const [messageTarget, setMessageTarget] =
+		useState<AdminMessageDialogTarget | null>(null);
+	const [messageSending, setMessageSending] = useState(false);
 	const [pageLoading, setPageLoading] = useState(false);
 
 	const activeSection =
@@ -559,6 +664,46 @@ export default function AdminDashboard({
 		}
 	}
 
+	async function sendAdminMessage(message: AdminMessageForm) {
+		if (!messageTarget) return;
+
+		const linkHref =
+			message.linkChoice === "custom"
+				? message.customLinkHref
+				: message.linkChoice || DEFAULT_ADMIN_MESSAGE_LINK;
+
+		setMessageSending(true);
+
+		try {
+			const response = await fetchJson<AdminMessageResponse>(
+				"/api/admin/messages",
+				{
+					body: JSON.stringify({
+						body: message.body,
+						linkHref,
+						target:
+							messageTarget.mode === "all"
+								? { mode: "all" }
+								: { mode: "user", userId: messageTarget.user.id },
+						title: message.title,
+					}),
+					headers: { "Content-Type": "application/json" },
+					method: "POST",
+				},
+			);
+
+			const skippedText = response.skipped
+				? ` ${response.skipped} skipped by preferences.`
+				: "";
+			toast.success(`Message sent to ${response.delivered} users.${skippedText}`);
+			setMessageTarget(null);
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "Message failed.");
+		} finally {
+			setMessageSending(false);
+		}
+	}
+
 	async function runReviewerAction(applicationId: string, action: string) {
 		const actionKey = `reviewer:${applicationId}:${action}`;
 		setBusyAction(actionKey);
@@ -698,6 +843,7 @@ export default function AdminDashboard({
 							currentAdminUserId={currentAdminUserId}
 							onAction={runUserAction}
 							onDeleteRequest={setDeleteTarget}
+							onMessageRequest={setMessageTarget}
 							onQueryChange={setUserQuery}
 							query={userQuery}
 							users={filteredUsers}
@@ -736,6 +882,14 @@ export default function AdminDashboard({
 					if (!open) setDeleteTarget(null);
 				}}
 				user={deleteTarget}
+			/>
+			<AdminMessageDialog
+				busy={messageSending}
+				onOpenChange={(open) => {
+					if (!open) setMessageTarget(null);
+				}}
+				onSend={sendAdminMessage}
+				target={messageTarget}
 			/>
 		</main>
 	);
@@ -912,6 +1066,7 @@ function PeoplePage({
 	currentAdminUserId,
 	onAction,
 	onDeleteRequest,
+	onMessageRequest,
 	onQueryChange,
 	query,
 	users,
@@ -920,6 +1075,7 @@ function PeoplePage({
 	currentAdminUserId: string;
 	onAction: (userId: string, action: string) => Promise<void>;
 	onDeleteRequest: (user: AdminUser) => void;
+	onMessageRequest: (target: AdminMessageDialogTarget) => void;
 	onQueryChange: (value: string) => void;
 	query: string;
 	users: AdminUser[];
@@ -929,7 +1085,16 @@ function PeoplePage({
 			<PanelHeader
 				description="Search accounts, inspect footprint, and manage profile or deletion actions."
 				title="People Control"
-			/>
+			>
+				<Button
+					className="admin-panel-button"
+					onClick={() => onMessageRequest({ mode: "all" })}
+					type="button"
+				>
+					<MessageSquare aria-hidden="true" />
+					Message users
+				</Button>
+			</PanelHeader>
 			<label className="admin-search">
 				<Search aria-hidden="true" />
 				<input
@@ -959,6 +1124,7 @@ function PeoplePage({
 								key={adminUser.id}
 								onAction={onAction}
 								onDeleteRequest={onDeleteRequest}
+								onMessageRequest={onMessageRequest}
 							/>
 						))}
 					</tbody>
@@ -1456,12 +1622,14 @@ function UserRow({
 	currentAdminUserId,
 	onAction,
 	onDeleteRequest,
+	onMessageRequest,
 }: {
 	adminUser: AdminUser;
 	busyAction: string;
 	currentAdminUserId: string;
 	onAction: (userId: string, action: string) => Promise<void>;
 	onDeleteRequest: (user: AdminUser) => void;
+	onMessageRequest: (target: AdminMessageDialogTarget) => void;
 }) {
 	const profile = adminUser.profile;
 	const label = profile ? getProfileLabel(profile) : adminUser.email || adminUser.id;
@@ -1505,6 +1673,13 @@ function UserRow({
 						<ExternalLink aria-hidden="true" />
 						Open
 					</Link>
+					<button
+						onClick={() => onMessageRequest({ mode: "user", user: adminUser })}
+						type="button"
+					>
+						<MessageSquare aria-hidden="true" />
+						Message
+					</button>
 					<ActionButton
 						action="reset_reviewer_trust"
 						busyAction={busyAction}
@@ -1551,6 +1726,211 @@ function UserRow({
 				</div>
 			</td>
 		</tr>
+	);
+}
+
+function AdminMessageDialog({
+	busy,
+	onOpenChange,
+	onSend,
+	target,
+}: {
+	busy: boolean;
+	onOpenChange: (open: boolean) => void;
+	onSend: (message: AdminMessageForm) => Promise<void>;
+	target: AdminMessageDialogTarget | null;
+}) {
+	const [form, setForm] = useState<AdminMessageForm>({
+		body: "",
+		customLinkHref: "",
+		linkChoice: DEFAULT_ADMIN_MESSAGE_LINK,
+		title: "",
+	});
+	const [broadcastConfirmed, setBroadcastConfirmed] = useState(false);
+	const audienceLabel = getAdminMessageAudienceLabel(target);
+	const titleLength = form.title.length;
+	const bodyLength = form.body.length;
+	const titleReady =
+		form.title.trim().length > 0 &&
+		form.title.trim().length <= ADMIN_MESSAGE_TITLE_MAX_LENGTH;
+	const bodyReady =
+		form.body.trim().length > 0 &&
+		form.body.trim().length <= ADMIN_MESSAGE_BODY_MAX_LENGTH;
+	const linkReady =
+		form.linkChoice !== "custom" ||
+		isSafeAdminMessageLink(form.customLinkHref);
+	const needsBroadcastConfirmation = target?.mode === "all";
+	const canSend =
+		Boolean(target) &&
+		titleReady &&
+		bodyReady &&
+		linkReady &&
+		(!needsBroadcastConfirmation || broadcastConfirmed) &&
+		!busy;
+
+	useEffect(() => {
+		if (!target) return;
+
+		setForm({
+			body: "",
+			customLinkHref: "",
+			linkChoice: DEFAULT_ADMIN_MESSAGE_LINK,
+			title: "",
+		});
+		setBroadcastConfirmed(false);
+	}, [target]);
+
+	function applyTemplate(template: (typeof adminMessageTemplates)[number]) {
+		const linkChoice = getAdminMessageLinkChoice(template.linkHref);
+
+		setForm({
+			body: template.body,
+			customLinkHref: linkChoice === "custom" ? template.linkHref : "",
+			linkChoice,
+			title: template.title,
+		});
+	}
+
+	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		if (!canSend) return;
+
+		await onSend(form);
+	}
+
+	return (
+		<Dialog open={Boolean(target)} onOpenChange={onOpenChange}>
+			<DialogContent className="admin-message-dialog">
+				<DialogHeader>
+					<DialogTitle>Message users</DialogTitle>
+					<DialogDescription>
+						Send a system notification through the existing inbox.
+					</DialogDescription>
+				</DialogHeader>
+				<form className="admin-message-form" onSubmit={handleSubmit}>
+					<div className="admin-message-audience">
+						<span>Audience</span>
+						<strong title={audienceLabel}>{audienceLabel}</strong>
+					</div>
+
+					<div className="admin-message-templates" aria-label="Message templates">
+						{adminMessageTemplates.map((template) => (
+							<button
+								key={template.id}
+								onClick={() => applyTemplate(template)}
+								type="button"
+							>
+								{template.label}
+							</button>
+						))}
+					</div>
+
+					<label className="admin-message-field">
+						<span>
+							Title <b>{titleLength}/{ADMIN_MESSAGE_TITLE_MAX_LENGTH}</b>
+						</span>
+						<input
+							maxLength={ADMIN_MESSAGE_TITLE_MAX_LENGTH}
+							onChange={(event) =>
+								setForm((current) => ({
+									...current,
+									title: event.target.value,
+								}))
+							}
+							value={form.title}
+						/>
+					</label>
+
+					<label className="admin-message-field">
+						<span>
+							Message <b>{bodyLength}/{ADMIN_MESSAGE_BODY_MAX_LENGTH}</b>
+						</span>
+						<textarea
+							maxLength={ADMIN_MESSAGE_BODY_MAX_LENGTH}
+							onChange={(event) =>
+								setForm((current) => ({
+									...current,
+									body: event.target.value,
+								}))
+							}
+							value={form.body}
+						/>
+					</label>
+
+					<label className="admin-message-field">
+						<span>Link</span>
+						<Select
+							onValueChange={(value) =>
+								setForm((current) => ({
+									...current,
+									linkChoice: value,
+								}))
+							}
+							value={form.linkChoice}
+						>
+							<SelectTrigger className="admin-message-select">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent className="admin-message-select-content">
+								<SelectGroup>
+									{adminMessageLinkOptions.map((option) => (
+										<SelectItem key={option.value} value={option.value}>
+											{option.label}
+										</SelectItem>
+									))}
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+					</label>
+
+					{form.linkChoice === "custom" ? (
+						<label className="admin-message-field">
+							<span>Custom path</span>
+							<input
+								aria-invalid={
+									form.customLinkHref
+										? !isSafeAdminMessageLink(form.customLinkHref)
+										: undefined
+								}
+								onChange={(event) =>
+									setForm((current) => ({
+										...current,
+										customLinkHref: event.target.value,
+									}))
+								}
+								placeholder="/feed"
+								value={form.customLinkHref}
+							/>
+						</label>
+					) : null}
+
+					{target?.mode === "all" ? (
+						<label className="admin-message-confirm">
+							<input
+								checked={broadcastConfirmed}
+								onChange={(event) =>
+									setBroadcastConfirmed(event.target.checked)
+								}
+								type="checkbox"
+							/>
+							<span>Send this to all users</span>
+						</label>
+					) : null}
+
+					<DialogFooter>
+						<DialogClose asChild>
+							<Button disabled={busy} type="button" variant="outline">
+								Cancel
+							</Button>
+						</DialogClose>
+						<Button disabled={!canSend} type="submit">
+							<Send aria-hidden="true" />
+							{busy ? "Sending..." : "Send"}
+						</Button>
+					</DialogFooter>
+				</form>
+			</DialogContent>
+		</Dialog>
 	);
 }
 

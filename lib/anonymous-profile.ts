@@ -1,43 +1,76 @@
 const ANONYMOUS_ADJECTIVES = [
-	"focused",
-	"thoughtful",
-	"sharp",
-	"steady",
-	"curious",
-	"practical",
-	"candid",
-	"helpful",
-	"precise",
-	"patient",
 	"bright",
 	"calm",
 	"clear",
-	"driven",
-	"honest",
+	"steady",
+	"kind",
 	"keen",
+	"wise",
+	"bold",
+	"brave",
+	"fresh",
+	"sharp",
+	"warm",
+	"true",
+	"fair",
+	"neat",
+	"smart",
+	"lucid",
+	"solid",
+	"quick",
+	"mellow",
+	"curious",
+	"patient",
+	"honest",
+	"gentle",
+	"nimble",
+	"crafty",
+	"golden",
+	"sunny",
+	"careful",
+	"focused",
+	"helpful",
+	"tidy",
 ] as const;
 
 const ANONYMOUS_NOUNS = [
-	"reviewer",
-	"editor",
 	"mentor",
-	"analyst",
-	"builder",
-	"coach",
-	"scout",
-	"writer",
-	"helper",
-	"planner",
-	"navigator",
-	"advisor",
-	"strategist",
-	"observer",
+	"editor",
 	"guide",
+	"scout",
+	"builder",
 	"reader",
+	"coach",
+	"scribe",
+	"maker",
+	"finder",
+	"thinker",
+	"helper",
+	"advisor",
+	"analyst",
+	"planner",
+	"pilot",
+	"curator",
+	"reviewer",
+	"spark",
+	"lens",
+	"compass",
+	"beacon",
+	"anchor",
+	"path",
+	"draft",
+	"signal",
+	"proof",
+	"polish",
+	"craft",
+	"notebook",
+	"margin",
+	"brief",
 ] as const;
 
 const FALLBACK_SEED = "linted-profile";
-const USERNAME_MAX_LENGTH = 32;
+const GENERATED_USERNAME_MAX_LENGTH = 18;
+const LEGACY_GENERATED_USERNAME_PATTERN = /^[a-z]+-[a-z]+-[a-f0-9]{10}$/;
 
 function hashString(value: string) {
 	let hash = 0x811c9dc5;
@@ -50,21 +83,39 @@ function hashString(value: string) {
 	return hash >>> 0;
 }
 
-function suffixFromHash(hash: number) {
-	return hash.toString(16).padStart(10, "0").slice(-10);
-}
-
-export function getAnonymousProfileUsername(seed?: string | null) {
+function getAnonymousProfileParts(seed?: string | null) {
 	const cleanSeed = seed?.trim() || FALLBACK_SEED;
 	const firstHash = hashString(`linted:${cleanSeed}`);
 	const secondHash = hashString(`profile:${cleanSeed}`);
 	const adjective = ANONYMOUS_ADJECTIVES[firstHash % ANONYMOUS_ADJECTIVES.length];
 	const noun = ANONYMOUS_NOUNS[secondHash % ANONYMOUS_NOUNS.length];
-	const suffix = suffixFromHash(firstHash ^ secondHash);
 
-	return `${adjective}-${noun}-${suffix}`.slice(0, USERNAME_MAX_LENGTH);
+	return { adjective, noun };
+}
+
+function titleCase(value: string) {
+	return `${value.slice(0, 1).toUpperCase()}${value.slice(1)}`;
+}
+
+export function getAnonymousProfileUsername(seed?: string | null) {
+	const { adjective, noun } = getAnonymousProfileParts(seed);
+	return `${adjective}${noun}`.slice(0, GENERATED_USERNAME_MAX_LENGTH);
 }
 
 export function getAnonymousProfileDisplayName(seed?: string | null) {
-	return getAnonymousProfileUsername(seed);
+	const { adjective, noun } = getAnonymousProfileParts(seed);
+	return `${titleCase(adjective)} ${titleCase(noun)}`;
+}
+
+export function isGeneratedAnonymousUsername(
+	username?: string | null,
+	seed?: string | null,
+) {
+	const normalized = username?.trim().replace(/^@+/, "").toLowerCase();
+	if (!normalized) return false;
+
+	return (
+		normalized === getAnonymousProfileUsername(seed) ||
+		LEGACY_GENERATED_USERNAME_PATTERN.test(normalized)
+	);
 }

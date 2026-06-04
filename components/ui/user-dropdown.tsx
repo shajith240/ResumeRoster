@@ -310,24 +310,30 @@ export function UserDropdown({
 				<div className={mobilePanel === "main" ? "" : "user-menu-main-hidden"}>
 				<section className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-1 shadow backdrop-blur-lg">
 					<div className="flex items-center p-2">
-						<div className="flex flex-1 items-center gap-2">
+						<div className="flex min-w-0 flex-1 items-center gap-2">
 							<Avatar className="size-10 cursor-pointer border border-[var(--border-default)] shadow">
 								<AvatarImage src={user.avatar} alt={user.name} />
 								<AvatarFallback className="bg-[var(--brand)] text-[var(--text-inverse)]">
 									{user.initials}
 								</AvatarFallback>
 							</Avatar>
-							<div className="min-w-0">
-								<h3 className="truncate text-sm font-semibold text-[var(--text-primary)]">
+							<div className="min-w-0 flex-1">
+								<h3
+									className="truncate text-sm font-semibold text-[var(--text-primary)]"
+									title={user.name}
+								>
 									{user.name}
 								</h3>
-								<p className="truncate text-xs text-[var(--text-secondary)]">
+								<p
+									className="truncate text-xs text-[var(--text-secondary)]"
+									title={user.username}
+								>
 									{user.username}
 								</p>
 							</div>
 						</div>
 						<Badge
-							className={`${getStatusColor(user.status)} rounded-sm border-[0.5px] text-[11px] capitalize`}
+							className={`${getStatusColor(user.status)} shrink-0 rounded-sm border-[0.5px] text-[11px] capitalize`}
 						>
 							{user.status === "online" ? "reviewing" : user.status}
 						</Badge>

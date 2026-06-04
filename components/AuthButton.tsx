@@ -8,7 +8,11 @@ import { toast } from "sonner";
 import NotificationCenter from "@/components/NotificationCenter";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { UserDropdown } from "@/components/ui/user-dropdown";
-import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
+import {
+	getAnonymousProfileDisplayName,
+	getAnonymousProfileUsername,
+	isGeneratedAnonymousUsername,
+} from "@/lib/anonymous-profile";
 import { PROFILE_CHANGE_EVENT, normalizeAppStatus } from "@/lib/app-presence";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { NOTIFICATIONS_OPEN_EVENT } from "@/lib/notifications";
@@ -155,13 +159,22 @@ export default function AuthButton() {
 	}
 
 	const anonymousUsername = getAnonymousProfileUsername(user.id);
+	const anonymousDisplayName = getAnonymousProfileDisplayName(user.id);
+	const profileUsername = profile?.username?.trim() ?? "";
+	const hasGeneratedUsername = isGeneratedAnonymousUsername(
+		profileUsername,
+		user.id,
+	);
 	const displayName = String(
-		profile?.full_name || profile?.username || anonymousUsername,
+		profile?.full_name ||
+			(hasGeneratedUsername ? anonymousDisplayName : profileUsername) ||
+			anonymousDisplayName,
 	);
 	const avatarUrl = profile?.avatar_url || undefined;
-	const username = profile?.username
-		? `@${profile.username.replace(/^@+/, "")}`
-		: `@${anonymousUsername}`;
+	const username =
+		profileUsername && !hasGeneratedUsername
+			? `@${profileUsername.replace(/^@+/, "")}`
+			: `@${anonymousUsername}`;
 	const initials = displayName
 		.split(/\s+/)
 		.map((part: string) => part[0])

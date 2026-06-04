@@ -2868,6 +2868,19 @@ body.main-app-dark .feed-thread-preview:hover {
 	height: 16px;
 }
 
+.admin-panel-button {
+	gap: 8px;
+	height: 36px;
+	border-radius: 8px;
+	font-size: 12px;
+	font-weight: 750;
+}
+
+.admin-panel-button svg {
+	width: 14px;
+	height: 14px;
+}
+
 .admin-tabs {
 	display: flex;
 	flex-wrap: wrap;
@@ -3070,6 +3083,159 @@ body.main-app-dark .feed-thread-preview:hover {
 .admin-note-field:focus {
 	border-color: var(--border-default);
 	box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 16%, transparent);
+}
+
+.admin-message-dialog {
+	width: min(540px, calc(100vw - 24px));
+	max-width: min(540px, calc(100vw - 24px));
+	overflow-x: hidden;
+	border-color: var(--border-subtle);
+	border-radius: 10px;
+	background: var(--bg-surface);
+}
+
+.admin-message-form {
+	display: grid;
+	gap: 13px;
+	min-width: 0;
+}
+
+.admin-message-form > * {
+	min-width: 0;
+}
+
+.admin-message-audience {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: center;
+	gap: 12px;
+	border: 1px solid var(--border-subtle);
+	border-radius: 8px;
+	padding: 10px 12px;
+	background: var(--bg-base);
+}
+
+.admin-message-audience span,
+.admin-message-field > span,
+.admin-message-confirm span {
+	color: var(--text-tertiary);
+	font-size: 12px;
+	font-weight: 800;
+	letter-spacing: 0;
+}
+
+.admin-message-audience strong {
+	overflow: hidden;
+	min-width: 0;
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 800;
+	text-align: right;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.admin-message-templates {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.admin-message-templates button {
+	border: 1px solid var(--border-subtle);
+	border-radius: 7px;
+	padding: 7px 9px;
+	background: var(--bg-base);
+	color: var(--text-secondary);
+	font-size: 12px;
+	font-weight: 750;
+}
+
+.admin-message-templates button:hover {
+	border-color: var(--border-default);
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+}
+
+.admin-message-field {
+	display: grid;
+	gap: 6px;
+}
+
+.admin-message-field > span {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.admin-message-field b {
+	color: var(--text-tertiary);
+	font-size: 11px;
+	font-weight: 800;
+}
+
+.admin-message-field input,
+.admin-message-field textarea {
+	width: 100%;
+	min-width: 0;
+	border: 1px solid var(--border-subtle);
+	border-radius: 8px;
+	padding: 10px 11px;
+	background: var(--bg-base);
+	color: var(--text-primary);
+	font: inherit;
+	font-size: 13px;
+	line-height: 1.45;
+	outline: none;
+}
+
+.admin-message-field textarea {
+	min-height: 96px;
+	resize: vertical;
+}
+
+.admin-message-field input:focus,
+.admin-message-field textarea:focus,
+.admin-message-select:focus {
+	border-color: var(--border-default);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 16%, transparent);
+}
+
+.admin-message-field input[aria-invalid="true"] {
+	border-color: rgba(248, 113, 113, 0.55);
+}
+
+.admin-message-select {
+	height: 40px;
+	border-color: var(--border-subtle);
+	border-radius: 8px;
+	background: var(--bg-base);
+	color: var(--text-primary);
+}
+
+.admin-message-select-content {
+	z-index: 230;
+}
+
+.admin-message-confirm {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	border: 1px solid rgba(248, 113, 113, 0.3);
+	border-radius: 8px;
+	padding: 10px 12px;
+	background: rgba(248, 113, 113, 0.08);
+}
+
+.admin-message-confirm input {
+	width: 16px;
+	height: 16px;
+	accent-color: var(--brand);
+}
+
+.admin-message-confirm span {
+	color: var(--text-primary);
 }
 
 .admin-action-row {

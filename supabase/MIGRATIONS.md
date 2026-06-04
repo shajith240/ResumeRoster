@@ -35,6 +35,12 @@
 0028_authenticated_write_rate_limits.sql
 0029_saved_resumes_api_contract.sql
 0030_rate_limit_pgcrypto_schema.sql
+0031_notifications_delete_policy.sql
+0032_web_push_subscriptions.sql
+0033_privacy_first_profile_defaults.sql
+0034_allow_admin_delete_cascades.sql
+0035_admin_inbox_messages.sql
+0036_refine_linted_usernames.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.
