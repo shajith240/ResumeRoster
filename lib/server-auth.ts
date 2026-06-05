@@ -5,7 +5,7 @@ export type SignedInUserResult = {
 	user: User;
 };
 
-export class ServerAuthError extends Error {
+class ServerAuthError extends Error {
 	status: number;
 
 	constructor(message: string, status = 401) {

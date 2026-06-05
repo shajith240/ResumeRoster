@@ -4,9 +4,9 @@
 
 - Source path: `lib/supabase/client.ts`
 - Kind: Application library module
-- Size: 1688 bytes
-- Lines: 64
-- Source hash: `363ee1a40e1f9f5994fb015224a74acddba89acde17389a9f08885be1aed068b`
+- Size: 1576 bytes
+- Lines: 60
+- Source hash: `c2a850a62712837f35bd493b5452742e8c6ff3d998a9eb40c825881b9a1e8634`
 
 ## What This File Does
 
@@ -18,7 +18,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Exports
 
-- `signInWithGoogle`
 - `signInWithProvider`
 - `signOut`
 - `supabase`
@@ -34,8 +33,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 21 | `getAuthCallbackUrl` | Function | top-level | no | `nextPath` | `string \| undefined` | Implements the getauthcallbackurl helper. |
 | 29 | `signInWithProvider` | Function async | top-level | yes | `provider`, `nextPath` | `Promise<{ provider: Provider; url: string; }>` | Implements the signinwithprovider helper. |
-| 57 | `signInWithGoogle` | Function async | top-level | yes | `nextPath` | `Promise<{ provider: Provider; url: string; }>` | Implements the signinwithgoogle helper. |
-| 61 | `signOut` | Function async | top-level | yes | none | `Promise<{ error: import("@supabase/auth-js").AuthError \| null; }>` | Implements the signout helper. |
+| 57 | `signOut` | Function async | top-level | yes | none | `Promise<{ error: import("@supabase/auth-js").AuthError \| null; }>` | Implements the signout helper. |
 
 ## Types
 

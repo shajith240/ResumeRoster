@@ -4,9 +4,9 @@
 
 - Source path: `lib/leaderboard-ranking.ts`
 - Kind: Application library module
-- Size: 3414 bytes
-- Lines: 132
-- Source hash: `1662f7b5989fad6ee25bce96787507623d76f9507c1c7fa37112cf79399de21c`
+- Size: 3125 bytes
+- Lines: 125
+- Source hash: `6341d25c26a8218a9fec2356034658d66c81a5012bf6f34e79760912ddea7bff`
 
 ## What This File Does
 
@@ -19,19 +19,13 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 ## Exports
 
 - `bestReviewMap`
-- `bestRoastMap`
 - `enhanceReviewer`
-- `enhanceRoaster`
 - `LeaderboardReviewInput`
-- `LeaderboardRoastInput`
 - `LeaderboardStatsInput`
 - `LeaderboardTopReview`
-- `LeaderboardTopRoast`
 - `lintPoints`
-- `roastPoints`
 - `roleTag`
 - `sortReviewers`
-- `sortRoasters`
 
 ## Imports
 
@@ -54,8 +48,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | 9 | `LeaderboardStatsInput` | type |
 | 19 | `LeaderboardReviewInput` | type |
 | 25 | `LeaderboardTopReview` | type |
-| 126 | `LeaderboardRoastInput` | type |
-| 127 | `LeaderboardTopRoast` | type |
 
 ## Related Tests
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/server/upload-security.ts`
 - Kind: Application library module
-- Size: 8375 bytes
+- Size: 8361 bytes
 - Lines: 330
-- Source hash: `9175b89d6b020a109be59e4b3934eeba3470e70e1ed5892d2d3a8d689d358c5e`
+- Source hash: `88c1bef8db3cfb6edce4f643f357ed7de01071c8780fba5fed4ea6f680d9cc3a`
 
 ## What This File Does
 
@@ -21,8 +21,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `enforceUploadSecurity`
 - `getUploadSha256`
 - `UPLOAD_QUARANTINE_BUCKET`
-- `UploadKind`
-- `UploadScanVerdict`
 - `UploadSecurityAllowed`
 - `UploadSecurityBlocked`
 - `UploadSecurityInput`

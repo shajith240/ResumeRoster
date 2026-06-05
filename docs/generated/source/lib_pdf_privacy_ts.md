@@ -4,9 +4,9 @@
 
 - Source path: `lib/pdf-privacy.ts`
 - Kind: Application library module
-- Size: 2084 bytes
+- Size: 2077 bytes
 - Lines: 82
-- Source hash: `fc1c7daf4ddf3cbb50d54cef3df10711efa2ebf7362d0d67b6e56e47fc314ae6`
+- Source hash: `452bdfdbd8bbe32081d670ce6a1df6c49c7012f54caba84a34a0e32a9d3e0778`
 
 ## What This File Does
 
@@ -24,7 +24,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `getPrivacyUploadIssue`
 - `MAX_PRIVACY_SCAN_PAGES`
 - `PrivacyFinding`
-- `PrivacyFindingType`
 - `PrivacyTextAssessment`
 
 ## Imports

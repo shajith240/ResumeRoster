@@ -4,9 +4,9 @@
 
 - Source path: `lib/server/push.ts`
 - Kind: Application library module
-- Size: 4872 bytes
+- Size: 4865 bytes
 - Lines: 216
-- Source hash: `c330680b3d26b64a30de85d06c3e1df5867dc6e342ac89be3f7782ff72e0aefc`
+- Source hash: `767aeeb909095fb304ef0b6b6ce62c5979e2820b321c7a039f4881e6ee374f49`
 
 ## What This File Does
 
@@ -19,7 +19,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 ## Exports
 
 - `PushDispatchResult`
-- `sendPushForNotification`
 - `sendPushForNotificationId`
 
 ## Imports
@@ -38,7 +37,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | 48 | `getPushPayload` | Action helper | top-level | no | `notification` | `string` | Runs the getpushpayload workflow for callers. |
 | 61 | `getPushStatusCode` | Function | top-level | no | `error` | `number` | Implements the getpushstatuscode helper. |
 | 67 | `revokeDeadSubscription` | Function async | top-level | no | `admin`, `subscriptionId` | `Promise<void>` | Implements the revokedeadsubscription helper. |
-| 78 | `sendPushForNotification` | Action helper async | top-level | yes | `admin`, `notification` | `Promise<PushDispatchResult>` | Runs the sendpushfornotification workflow for callers. |
+| 78 | `sendPushForNotification` | Action helper async | top-level | no | `admin`, `notification` | `Promise<PushDispatchResult>` | Runs the sendpushfornotification workflow for callers. |
 | 194 | `sendPushForNotificationId` | Action helper async | top-level | yes | `admin`, `notificationId` | `Promise<PushDispatchResult>` | Runs the sendpushfornotificationid workflow for callers. |
 
 ## Types

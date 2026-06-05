@@ -93,5 +93,3 @@ export function mergeReviewCountsFromRows<
 		roast_count: countsByResume.get(resume.id) ?? 0,
 	}));
 }
-
-export const mergeRoastCountsFromRows = mergeReviewCountsFromRows;

@@ -4,9 +4,9 @@
 
 - Source path: `lib/security/headers.ts`
 - Kind: Application library module
-- Size: 4459 bytes
-- Lines: 167
-- Source hash: `4277834baf3634c1327703e8f7d46e13d75163d2bd60efd7e5040667f7c246af`
+- Size: 4550 bytes
+- Lines: 169
+- Source hash: `cd2e7e3c3de04deeef5c186a0dfb328c97a85d891f1c2fe8199296ffefd78970`
 
 ## What This File Does
 
@@ -39,8 +39,8 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | 61 | `serializeDirectives` | Function | top-level | no | `directives` | `string` | Implements the serializedirectives helper. |
 | 72 | `getThemeBootstrapCspHash` | Function | top-level | yes | none | `string` | Implements the getthemebootstrapcsphash helper. |
 | 76 | `buildContentSecurityPolicy` | Function | top-level | yes | `options` | `string` | Implements the buildcontentsecuritypolicy helper. |
-| 137 | `buildStaticSecurityHeaders` | Function | top-level | yes | none | `SecurityHeader[]` | Implements the buildstaticsecurityheaders helper. |
-| 156 | `buildSecurityHeaders` | Function | top-level | yes | `options` | `SecurityHeader[]` | Implements the buildsecurityheaders helper. |
+| 139 | `buildStaticSecurityHeaders` | Function | top-level | yes | none | `SecurityHeader[]` | Implements the buildstaticsecurityheaders helper. |
+| 158 | `buildSecurityHeaders` | Function | top-level | yes | `options` | `SecurityHeader[]` | Implements the buildsecurityheaders helper. |
 
 ## Types
 

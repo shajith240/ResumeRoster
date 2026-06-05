@@ -138,9 +138,3 @@ export function buildThreadReviews(
 	buildThreadReviewTree(reviews, collapsedReviewIds).forEach(visit);
 	return flattened;
 }
-
-export type ThreadRoast = ThreadReview;
-export type ThreadRoastNode = ThreadReviewNode;
-export const normalizeRoast = normalizeReview;
-export const buildThreadRoastTree = buildThreadReviewTree;
-export const buildThreadRoasts = buildThreadReviews;

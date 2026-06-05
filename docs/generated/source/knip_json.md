@@ -4,9 +4,9 @@
 
 - Source path: `knip.json`
 - Kind: Project configuration
-- Size: 584 bytes
-- Lines: 32
-- Source hash: `08636699783c2c4c1a0622a7f30dbcfc3f7cd4872f5e111c2c6228824ea9b273`
+- Size: 702 bytes
+- Lines: 36
+- Source hash: `ca1f3b1ba9a45b227ebe0d82617dc6e0d6f4ede6faea400407e6816a11a8cb50`
 
 ## What This File Does
 

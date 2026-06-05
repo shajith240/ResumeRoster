@@ -6,14 +6,18 @@
 		"instrumentation.ts",
 		"instrumentation-client.ts",
 		"next.config.ts",
+		"playwright.config.ts",
 		"scripts/**/*.mjs",
+		"tests/browser/**/*.{ts,tsx}",
 		"vitest.config.ts"
 	],
 	"project": [
 		"app/**/*.{ts,tsx}",
 		"components/**/*.{ts,tsx}",
 		"lib/**/*.ts",
+		"playwright.config.ts",
 		"scripts/**/*.mjs",
+		"tests/browser/**/*.{ts,tsx}",
 		"*.{ts,mjs}"
 	],
 	"ignore": [

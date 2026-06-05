@@ -1,7 +1,7 @@
 import { getCurrentPathForLogin, getLoginPath } from "@/lib/auth-redirect";
 import { supabase } from "@/lib/supabase/client";
 
-export const SESSION_SUPERSEDED_MESSAGE =
+const SESSION_SUPERSEDED_MESSAGE =
 	"This account is already active in another browser. Sign in again here to continue.";
 
 const ACTIVE_SESSION_STORAGE_PREFIX = "linted.active-session";
@@ -20,11 +20,11 @@ function isActiveSessionFeatureError(error: { message?: string } | null) {
 	);
 }
 
-export function isValidClientSessionId(value: string) {
+function isValidClientSessionId(value: string) {
 	return CLIENT_SESSION_PATTERN.test(value);
 }
 
-export function createClientSessionId() {
+function createClientSessionId() {
 	const randomId =
 		typeof crypto !== "undefined" && "randomUUID" in crypto
 			? crypto.randomUUID()
@@ -33,7 +33,7 @@ export function createClientSessionId() {
 	return `browser-${randomId}`;
 }
 
-export function getClientSessionId(userId: string) {
+function getClientSessionId(userId: string) {
 	if (typeof window === "undefined") return createClientSessionId();
 
 	const storageKey = `${ACTIVE_SESSION_STORAGE_PREFIX}:${userId}`;
@@ -116,18 +116,6 @@ export async function verifyActiveUserSession(userId: string) {
 	}
 
 	return activeStatus(sessionId, data === true);
-}
-
-export async function releaseActiveUserSession(userId: string) {
-	const sessionId = getClientSessionId(userId);
-
-	const { error } = await supabase.rpc("release_active_user_session", {
-		client_session_id: sessionId,
-	});
-
-	if (error && !isActiveSessionFeatureError(error)) {
-		console.warn("Could not release active session", error.message);
-	}
 }
 
 export async function endSupersededSession() {

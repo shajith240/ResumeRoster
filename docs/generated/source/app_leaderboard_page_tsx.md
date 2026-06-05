@@ -4,9 +4,9 @@
 
 - Source path: `app/leaderboard/page.tsx`
 - Kind: Next page route
-- Size: 340 bytes
+- Size: 363 bytes
 - Lines: 15
-- Source hash: `d84d04353c8b9dc7495d77692fb1232c83ca3b2e7d4450fe66801a82a0098562`
+- Source hash: `20ba095b62edd05342598b53e5a2e4df1cf2f977aa5defceeaf2731ddecdc0d1`
 
 ## What This File Does
 
@@ -24,7 +24,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 ## Imports
 
 - `@/components/AuthGate`
-- `@/components/Leaderboard`
+- `@/components/route-lazy/LeaderboardLazy`
 - `@/components/RouteHeader`
 
 ## Functions And Components

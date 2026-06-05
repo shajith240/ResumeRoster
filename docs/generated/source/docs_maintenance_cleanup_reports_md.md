@@ -4,9 +4,9 @@
 
 - Source path: `docs/maintenance/cleanup-reports.md`
 - Kind: Documentation
-- Size: 644 bytes
-- Lines: 27
-- Source hash: `0deb9b91447fe4f2b93bc8c9053d40f9dc30b3b5a005325d487f062b385a96e0`
+- Size: 990 bytes
+- Lines: 33
+- Source hash: `12ed763de7436be63b4af3dfbd82beca78d4bbc655cf47e493f12c9f7da0f0af`
 
 ## What This File Does
 

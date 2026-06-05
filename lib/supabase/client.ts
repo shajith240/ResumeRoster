@@ -54,10 +54,6 @@ export async function signInWithProvider(
   return data;
 }
 
-export async function signInWithGoogle(nextPath = "/feed") {
-	return signInWithProvider("google", nextPath);
-}
-
 export async function signOut() {
   return supabase.auth.signOut();
 }

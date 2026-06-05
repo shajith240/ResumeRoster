@@ -4,9 +4,9 @@
 
 - Source path: `app/profile/[id]/page.tsx`
 - Kind: Next page route
-- Size: 465 bytes
+- Size: 488 bytes
 - Lines: 21
-- Source hash: `4c18a5c301caa50e065367b8fd82da754153bda05b9f78df69c869710aef5ff5`
+- Source hash: `6227945cbc49609ec00eec2e6bc25ec9b288f15e6aeddf04c9f44d0694d9e72d`
 
 ## What This File Does
 
@@ -24,7 +24,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 ## Imports
 
 - `@/components/AuthGate`
-- `@/components/ProfileDetail`
+- `@/components/route-lazy/ProfileDetailLazy`
 - `@/components/RouteHeader`
 
 ## Functions And Components

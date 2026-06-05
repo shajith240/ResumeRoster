@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { CalendarDays } from "lucide-react";
 
-import StackedList, {
+import {
+	StackedList,
 	type LeaderboardReviewPreview,
 	type LeaderboardReviewer,
 } from "@/components/ui/stacked-list";

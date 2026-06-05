@@ -4,9 +4,9 @@
 
 - Source path: `.env.example`
 - Kind: Project file
-- Size: 539 bytes
+- Size: 553 bytes
 - Lines: binary or not line-based
-- Source hash: `c985724063c18c8882908853093ccfa0bb051b2c8e146f1bff24aff408abf8a8`
+- Source hash: `8692792663c1373da60b4134dd780822f32adef909b32e3a7fe894c2fb66f932`
 
 ## What This File Does
 

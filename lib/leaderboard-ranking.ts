@@ -122,10 +122,3 @@ export function enhanceReviewer<
 		top_roast: reviewPreview,
 	};
 }
-
-export type LeaderboardRoastInput = LeaderboardReviewInput;
-export type LeaderboardTopRoast = LeaderboardTopReview;
-export const roastPoints = lintPoints;
-export const sortRoasters = sortReviewers;
-export const bestRoastMap = bestReviewMap;
-export const enhanceRoaster = enhanceReviewer;

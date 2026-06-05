@@ -1,23 +1,15 @@
-export type ResumeStatus = "open" | "roasted" | "closed";
-export type ResumePrivacyMode = "public" | "contact_hidden" | "anonymous";
+type ResumeStatus = "open" | "roasted" | "closed";
+type ResumePrivacyMode = "public" | "contact_hidden" | "anonymous";
 export type AppStatus = "online" | "focus" | "offline";
-export type ContentReportReason =
-  | "personal_info"
-  | "harassment"
-  | "spam"
-  | "unsafe"
-  | "off_topic"
-  | "other";
 export type ContentReportStatus =
   | "pending"
   | "reviewing"
   | "dismissed"
   | "actioned";
 export type ContentReportTargetType = "resume" | "roast" | "profile";
-export type ContentReportInputTargetType = "resume" | "review" | "profile";
 export type CommentContentFormat = "plain" | "markdown";
-export type CommentAttachmentKind = "image";
-export type CommentAttachmentSource = "upload";
+type CommentAttachmentKind = "image";
+type CommentAttachmentSource = "upload";
 export type CommunityRole = "candidate" | "reviewer" | "both";
 export type ReviewerType =
   | "student"
@@ -35,9 +27,8 @@ export type ReviewerVerificationStatus =
   | "pending"
   | "verified"
   | "rejected";
-export type ReviewerApplicationStatus = "pending" | "approved" | "rejected";
-export type OnboardingGoalId = "get_feedback" | "review_resumes" | "both";
-export type OnboardingPersonaId =
+type OnboardingGoalId = "get_feedback" | "review_resumes" | "both";
+type OnboardingPersonaId =
   | "student"
   | "new_grad"
   | "job_seeker"
@@ -50,7 +41,7 @@ export type OnboardingPersonaId =
   | "career_coach"
   | "founder"
   | "other";
-export type OnboardingStatus = "pending" | "completed" | "not_required";
+type OnboardingStatus = "pending" | "completed" | "not_required";
 export type NotificationType =
   | "resume_feedback"
   | "comment_reply"
@@ -109,25 +100,6 @@ export type Review = {
   created_at: string;
 };
 
-export type Roast = Review;
-
-export type ResumeReview = {
-  id: string;
-  resume_id: string;
-  parent_review_id?: string | null;
-  reviewer_id: string;
-  content: string;
-  attachment_id?: string | null;
-  content_format?: CommentContentFormat;
-  sticker_id?: string | null;
-  lint_points: number;
-  dislike_count?: number;
-  reply_count?: number;
-  is_deleted?: boolean;
-  deleted_at?: string | null;
-  created_at: string;
-};
-
 export type CommentAttachment = {
   id: string;
   user_id?: string | null;
@@ -158,8 +130,6 @@ export type ReviewerProfileStats = {
   roast_count: number;
   helpful_votes: number;
 };
-
-export type RoasterLeaderboardEntry = ReviewerProfileStats;
 
 export type ReviewerLeaderboardEntry = {
   id: string;
@@ -205,21 +175,6 @@ export type PublicProfile = ReviewerProfileStats & {
   created_at: string;
 };
 
-export type ReviewerApplication = {
-  id: string;
-  user_id: string;
-  requested_type: ReviewerType;
-  expertise: string[];
-  proof_url: string;
-  note: string;
-  status: ReviewerApplicationStatus;
-  admin_note: string;
-  reviewed_by: string | null;
-  reviewed_at: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
 export type ProfileOnboarding = {
   user_id: string;
   goal_id: OnboardingGoalId | null;
@@ -249,8 +204,6 @@ export type PublicProfileReviewLegacy = {
   helpful_votes: number;
   created_at: string;
 };
-
-export type PublicProfileRoast = PublicProfileReviewLegacy;
 
 export type PublicProfileReview = {
   id: string;

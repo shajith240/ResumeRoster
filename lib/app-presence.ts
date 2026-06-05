@@ -3,7 +3,6 @@ import type { AppStatus } from "@/lib/supabase/types";
 export const PROFILE_CHANGE_EVENT = "linted-profile-change";
 export const APP_PRESENCE_CHANGE_EVENT = "linted-presence-change";
 export const APP_PRESENCE_CHANNEL = "linted:app-presence";
-export const APP_PRESENCE_ACTIVE_WINDOW_SECONDS = 120;
 
 export type AppPresencePayload = {
 	user_id: string;

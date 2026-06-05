@@ -4,7 +4,7 @@ import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 
 export const UPLOAD_QUARANTINE_BUCKET = "upload-quarantine";
 
-export type UploadKind = "avatar" | "comment-media" | "resume";
+type UploadKind = "avatar" | "comment-media" | "resume";
 
 export type UploadSecurityInput = {
 	bytes: Uint8Array;
@@ -28,7 +28,7 @@ export type UploadSecurityBlocked = {
 	verdict: UploadScanVerdict;
 };
 
-export type UploadScanVerdict =
+type UploadScanVerdict =
 	| "clean"
 	| "infected"
 	| "scanner_error"

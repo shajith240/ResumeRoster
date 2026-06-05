@@ -37,9 +37,6 @@ export type LeaderboardReviewer = ReviewerProfileStats & {
 	top_roast?: LeaderboardReviewPreview;
 };
 
-export type LeaderboardRoastPreview = LeaderboardReviewPreview;
-export type LeaderboardRoaster = LeaderboardReviewer;
-
 type StackedListProps = {
 	description?: string;
 	directoryReviewers?: LeaderboardReviewer[];
@@ -676,5 +673,3 @@ export function StackedList({
 		</section>
 	);
 }
-
-export default StackedList;

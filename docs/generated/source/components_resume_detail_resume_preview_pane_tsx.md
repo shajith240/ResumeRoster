@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/resume-preview-pane.tsx`
 - Kind: React component
-- Size: 3631 bytes
-- Lines: 139
-- Source hash: `1869754d272b8de864252c4651403186c16c06efd1bcc13070f23db21a813027`
+- Size: 3839 bytes
+- Lines: 153
+- Source hash: `ca645399dd686f82391e5d29580dd784bf08d6d64b4e6b0e1ec7a682a8f3179c`
 
 ## What This File Does
 
@@ -23,25 +23,25 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `./utils`
-- `@/components/SecureResumePreview`
 - `@/components/ui/button`
 - `@/lib/resume-display`
 - `@/lib/supabase/types`
 - `@supabase/supabase-js`
 - `lucide-react`
+- `next/dynamic`
 - `next/link`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 32 | `ResumePreviewPane` | React component | top-level | yes | `{ isClosed, isOwner, onLogin, onOpenFile, onRequestDelete, onRequestStatusCha...` | `import("react").JSX.Element` | Renders the ResumePreviewPane UI component. |
+| 46 | `ResumePreviewPane` | React component | top-level | yes | `{ isClosed, isOwner, onLogin, onOpenFile, onRequestDelete, onRequestStatusCha...` | `import("react").JSX.Element` | Renders the ResumePreviewPane UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 16 | `ResumePreviewPaneProps` | type |
+| 30 | `ResumePreviewPaneProps` | type |
 
 ## Related Tests
 

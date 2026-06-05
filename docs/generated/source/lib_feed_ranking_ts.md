@@ -4,9 +4,9 @@
 
 - Source path: `lib/feed-ranking.ts`
 - Kind: Application library module
-- Size: 2440 bytes
-- Lines: 98
-- Source hash: `14e2d8715b4aaf18929b92bf988a76712e0898e06358f3d80cb5340f9de216ee`
+- Size: 2372 bytes
+- Lines: 96
+- Source hash: `87d2c45682a06ce3fef771b47baaac24571b81c1040524719e67868c5d026db3`
 
 ## What This File Does
 
@@ -22,7 +22,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `formatCount`
 - `getBestScore`
 - `mergeReviewCountsFromRows`
-- `mergeRoastCountsFromRows`
 - `ResumeRowWithDefaults`
 - `sortResumes`
 - `withResumeDefaults`

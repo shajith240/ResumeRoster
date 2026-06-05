@@ -4,9 +4,9 @@
 
 - Source path: `lib/supabase/types.ts`
 - Kind: Application library module
-- Size: 7342 bytes
-- Lines: 284
-- Source hash: `ab7cc5fa9c2053259cbd950426561012fcf94a2f5acb25ffd3844d995aea5d2d`
+- Size: 6138 bytes
+- Lines: 237
+- Source hash: `9fa1fb222703a610309844f70113d8cb26754375a235d6aae888541939184c02`
 
 ## What This File Does
 
@@ -20,39 +20,24 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 - `AppStatus`
 - `CommentAttachment`
-- `CommentAttachmentKind`
-- `CommentAttachmentSource`
 - `CommentContentFormat`
 - `CommunityRole`
-- `ContentReportInputTargetType`
-- `ContentReportReason`
 - `ContentReportStatus`
 - `ContentReportTargetType`
 - `LintedNotification`
 - `NotificationType`
-- `OnboardingGoalId`
-- `OnboardingPersonaId`
-- `OnboardingStatus`
 - `ProfileOnboarding`
 - `PublicProfile`
 - `PublicProfileResume`
 - `PublicProfileReview`
 - `PublicProfileReviewLegacy`
-- `PublicProfileRoast`
 - `ResumeAuthorProfile`
-- `ResumePrivacyMode`
-- `ResumeReview`
-- `ResumeStatus`
 - `ResumeSummary`
 - `Review`
-- `ReviewerApplication`
-- `ReviewerApplicationStatus`
 - `ReviewerLeaderboardEntry`
 - `ReviewerProfileStats`
 - `ReviewerType`
 - `ReviewerVerificationStatus`
-- `Roast`
-- `RoasterLeaderboardEntry`
 
 ## Imports
 
@@ -69,38 +54,30 @@ No stable named functions or components detected.
 | 1 | `ResumeStatus` | type |
 | 2 | `ResumePrivacyMode` | type |
 | 3 | `AppStatus` | type |
-| 4 | `ContentReportReason` | type |
-| 11 | `ContentReportStatus` | type |
-| 16 | `ContentReportTargetType` | type |
-| 17 | `ContentReportInputTargetType` | type |
-| 18 | `CommentContentFormat` | type |
-| 19 | `CommentAttachmentKind` | type |
-| 20 | `CommentAttachmentSource` | type |
-| 21 | `CommunityRole` | type |
-| 22 | `ReviewerType` | type |
-| 33 | `ReviewerVerificationStatus` | type |
-| 38 | `ReviewerApplicationStatus` | type |
-| 39 | `OnboardingGoalId` | type |
-| 40 | `OnboardingPersonaId` | type |
-| 53 | `OnboardingStatus` | type |
-| 54 | `NotificationType` | type |
-| 63 | `ResumeAuthorProfile` | type |
-| 80 | `ResumeSummary` | type |
-| 96 | `Review` | type |
-| 112 | `Roast` | type |
-| 114 | `ResumeReview` | type |
-| 131 | `CommentAttachment` | type |
-| 144 | `ReviewerProfileStats` | type |
-| 162 | `RoasterLeaderboardEntry` | type |
-| 164 | `ReviewerLeaderboardEntry` | type |
-| 182 | `PublicProfile` | type |
-| 208 | `ReviewerApplication` | type |
-| 223 | `ProfileOnboarding` | type |
-| 234 | `PublicProfileResume` | type |
-| 243 | `PublicProfileReviewLegacy` | type |
-| 253 | `PublicProfileRoast` | type |
-| 255 | `PublicProfileReview` | type |
-| 265 | `LintedNotification` | type |
+| 4 | `ContentReportStatus` | type |
+| 9 | `ContentReportTargetType` | type |
+| 10 | `CommentContentFormat` | type |
+| 11 | `CommentAttachmentKind` | type |
+| 12 | `CommentAttachmentSource` | type |
+| 13 | `CommunityRole` | type |
+| 14 | `ReviewerType` | type |
+| 25 | `ReviewerVerificationStatus` | type |
+| 30 | `OnboardingGoalId` | type |
+| 31 | `OnboardingPersonaId` | type |
+| 44 | `OnboardingStatus` | type |
+| 45 | `NotificationType` | type |
+| 54 | `ResumeAuthorProfile` | type |
+| 71 | `ResumeSummary` | type |
+| 87 | `Review` | type |
+| 103 | `CommentAttachment` | type |
+| 116 | `ReviewerProfileStats` | type |
+| 134 | `ReviewerLeaderboardEntry` | type |
+| 152 | `PublicProfile` | type |
+| 178 | `ProfileOnboarding` | type |
+| 189 | `PublicProfileResume` | type |
+| 198 | `PublicProfileReviewLegacy` | type |
+| 208 | `PublicProfileReview` | type |
+| 218 | `LintedNotification` | type |
 
 ## Related Tests
 

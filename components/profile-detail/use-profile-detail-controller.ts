@@ -2,7 +2,6 @@
 
 import { type ChangeEvent, type FormEvent, useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import {
 	AVATAR_IMAGE_ALLOWED_MIME_TYPES,
 	AVATAR_IMAGE_MAX_FILE_SIZE_BYTES,
@@ -11,7 +10,6 @@ import {
 import { supabase } from "@/lib/supabase/client";
 import {
 	PROFILE_FIELD_LIMITS,
-	fallbackSkills,
 	limitText,
 	normalizeUsername,
 	parseSkills,
@@ -20,10 +18,6 @@ import {
 import { getReportIssue, type ReportReason } from "@/lib/report-validation";
 import {
 	REVIEWER_FIELD_LIMITS,
-	canShowReviewerProfile,
-	getProfileRoleLabel,
-	getReviewerDisplayLabel,
-	getReviewerTypeLabel,
 	getReviewerApplicationIssue,
 	isCommunityRole,
 	isReviewerType,
@@ -39,25 +33,21 @@ import type {
 } from "@/lib/supabase/types";
 import { toast } from "sonner";
 import {
-	fallbackAvatar,
 	PROFILE_CHANGE_EVENT,
 	SUPABASE_MIGRATION_MESSAGE,
 } from "./constants";
-import { getActivity, loadPublicProfileReviews } from "./data";
 import {
-	getInitials,
+	cleanupProfileAvatar,
+	uploadProfileAvatar,
+} from "./avatar-client";
+import { loadProfileDetailData } from "./controller-data";
+import { buildProfileView } from "./profile-view";
+import {
 	getUsernameAvailability,
 	isProfileFeatureError,
 	isReportFeatureError,
 	isUsernameConstraintError,
-	isUuid,
-	normalizeProfileToken,
 } from "./utils";
-
-type AvatarUploadResult = {
-	avatar_path: string;
-	avatar_url: string;
-};
 
 export function useProfileDetailController(profileId: string) {
 	const [user, setUser] = useState<User | null>(null);
@@ -108,103 +98,24 @@ export function useProfileDetailController(profileId: string) {
 	useEffect(() => {
 		async function loadProfile() {
 			const started = Date.now();
-			const profileToken = normalizeProfileToken(profileId);
 
 			setLoading(true);
 			setMessage("");
 
-			const { data: userData } = await supabase.auth.getUser();
-			const activeUser = userData.user;
+			const {
+				activeUser,
+				errorMessage,
+				loadedProfile,
+				loadedResumes,
+				loadedReviews,
+			} = await loadProfileDetailData(profileId);
 			setUser(activeUser);
 
-			let resolvedProfileId = profileToken;
-
-			if (profileToken.toLowerCase() === "me") {
-				if (!activeUser) {
-					setMessage("Sign in to open your profile.");
-					setLoading(false);
-					return;
-				}
-
-				resolvedProfileId = activeUser.id;
-			} else if (!isUuid(profileToken)) {
-				const { data: matchedProfile, error: matchError } = await supabase
-					.from("profiles")
-					.select("id")
-					.ilike("username", profileToken)
-					.maybeSingle();
-
-				if (matchError) {
-					setMessage(matchError.message);
-					setLoading(false);
-					return;
-				}
-
-				if (!matchedProfile?.id) {
-					setMessage(`We could not find a reviewer profile for @${profileToken}.`);
-					setLoading(false);
-					return;
-				}
-
-				resolvedProfileId = matchedProfile.id;
-			}
-
-			if (activeUser?.id === resolvedProfileId) {
-				const seedResult = await supabase.from("profiles").insert({
-					id: activeUser.id,
-					username: getAnonymousProfileUsername(activeUser.id),
-				});
-
-				if (
-					seedResult.error &&
-					seedResult.error.code !== "23505" &&
-					isProfileFeatureError(seedResult.error.message)
-				) {
-					setMessage(SUPABASE_MIGRATION_MESSAGE);
-					setLoading(false);
-					return;
-				}
-			}
-
-			const [profileResult, reviewsResult, resumesResult] = await Promise.all([
-				supabase.rpc("get_public_profile", { profile_id: resolvedProfileId }),
-				loadPublicProfileReviews(resolvedProfileId),
-				supabase.rpc("get_public_profile_resumes", {
-					profile_id: resolvedProfileId,
-					limit_count: 20,
-				}),
-			]);
-
-			if (profileResult.error) {
-				setMessage(
-					isProfileFeatureError(profileResult.error.message)
-						? SUPABASE_MIGRATION_MESSAGE
-						: profileResult.error.message,
-				);
+			if (errorMessage || !loadedProfile) {
+				setMessage(errorMessage);
 				setLoading(false);
 				return;
 			}
-
-			if (resumesResult.error && isProfileFeatureError(resumesResult.error.message)) {
-				setMessage(SUPABASE_MIGRATION_MESSAGE);
-				setLoading(false);
-				return;
-			}
-
-			const loadedProfile = (profileResult.data?.[0] ?? null) as PublicProfile | null;
-
-			if (!loadedProfile) {
-				setMessage(
-					isUuid(profileToken)
-						? "We could not find a profile row for this user yet."
-						: `We could not find a reviewer profile for @${profileToken}.`,
-				);
-				setLoading(false);
-				return;
-			}
-
-			const loadedReviews = (reviewsResult.data ?? []) as PublicProfileReview[];
-			const loadedResumes = (resumesResult.data ?? []) as PublicProfileResume[];
 
 			setProfile(loadedProfile);
 			setReviews(loadedReviews);
@@ -306,77 +217,6 @@ export function useProfileDetailController(profileId: string) {
 		setAvatarPreview(URL.createObjectURL(nextFile));
 	}
 
-	async function getAuthenticatedJsonHeaders(message: string) {
-		const {
-			data: { session },
-		} = await supabase.auth.getSession();
-
-		if (!session?.access_token) {
-			throw new Error(message);
-		}
-
-		return {
-			Authorization: `Bearer ${session.access_token}`,
-			"Content-Type": "application/json",
-		};
-	}
-
-	async function uploadAvatar(activeUser: User): Promise<AvatarUploadResult | null> {
-		if (!avatarFile) return null;
-
-		const {
-			data: { session },
-		} = await supabase.auth.getSession();
-
-		if (!session?.access_token) {
-			throw new Error("Sign in again before uploading a profile image.");
-		}
-
-		const formData = new FormData();
-		formData.set("file", avatarFile);
-
-		const response = await fetch("/api/profile/avatar", {
-			body: formData,
-			headers: {
-				Authorization: `Bearer ${session.access_token}`,
-			},
-			method: "POST",
-		});
-		const payload = (await response.json().catch(() => ({}))) as Partial<
-			AvatarUploadResult & { message: string }
-		>;
-
-		if (!response.ok || !payload.avatar_path || !payload.avatar_url) {
-			throw new Error(
-				payload.message ?? "Profile image upload failed. Please try again.",
-			);
-		}
-
-		if (!payload.avatar_path.startsWith(`${activeUser.id}/`)) {
-			throw new Error("Profile image upload failed. Please try again.");
-		}
-
-		return {
-			avatar_path: payload.avatar_path,
-			avatar_url: payload.avatar_url,
-		};
-	}
-
-	async function cleanupAvatar(avatarPath: string) {
-		const headers = await getAuthenticatedJsonHeaders(
-			"Sign in again before cleaning up a profile image.",
-		);
-		const response = await fetch("/api/profile/avatar", {
-			body: JSON.stringify({ avatarPath }),
-			headers,
-			method: "DELETE",
-		});
-
-		if (!response.ok) {
-			throw new Error("Profile image cleanup failed.");
-		}
-	}
-
 	async function saveProfile(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setSaveMessage("");
@@ -408,7 +248,7 @@ export function useProfileDetailController(profileId: string) {
 				}
 			}
 
-			const avatarUpdate = await uploadAvatar(user);
+			const avatarUpdate = await uploadProfileAvatar(avatarFile, user);
 			const previousAvatarPath =
 				avatarUpdate && profile?.avatar_path?.startsWith(`${user.id}/`)
 					? profile.avatar_path
@@ -466,7 +306,9 @@ export function useProfileDetailController(profileId: string) {
 
 			if (error) {
 				if (avatarUpdate) {
-					await cleanupAvatar(avatarUpdate.avatar_path).catch(() => undefined);
+					await cleanupProfileAvatar(avatarUpdate.avatar_path).catch(
+						() => undefined,
+					);
 				}
 
 				if (isUsernameConstraintError(error)) {
@@ -485,7 +327,7 @@ export function useProfileDetailController(profileId: string) {
 				previousAvatarPath &&
 				previousAvatarPath !== avatarUpdate.avatar_path
 			) {
-				await cleanupAvatar(previousAvatarPath).catch(() => undefined);
+				await cleanupProfileAvatar(previousAvatarPath).catch(() => undefined);
 			}
 
 			setProfile((current) =>
@@ -788,43 +630,8 @@ export function useProfileDetailController(profileId: string) {
 	const profileView = useMemo(() => {
 		if (!profile) return null;
 
-		const displayName =
-			profile.full_name ||
-			profile.username ||
-			getAnonymousProfileUsername(profile.id);
-		const currentRole =
-			profile.current_position ||
-			profile.target_role ||
-			"Community resume reviewer";
-		const skills = profile.skills?.length ? profile.skills : fallbackSkills(profile);
-		const reviewerVisible = canShowReviewerProfile(
-			profile.community_role,
-			profile.reviewer_type,
-		);
-		return {
-			activity: getActivity(reviews, resumes, profile),
-			avatarUrl: profile.avatar_url || fallbackAvatar,
-			collegeLabel: profile.college || "College not set",
-			collegeLocation: profile.college_location || "College location not set",
-			currentRole,
-			displayName,
-			initials: getInitials(displayName) || "R",
-			reviewerBio:
-				profile.reviewer_bio ||
-				"Open to reviewing resumes with practical, role-aware feedback.",
-			reviewerHeadline:
-				profile.reviewer_headline ||
-				`${getReviewerTypeLabel(profile.reviewer_type)} focused on useful resume feedback.`,
-			reviewerLabel: getReviewerDisplayLabel(profile),
-			reviewerStatus: profile.reviewer_verification_status,
-			reviewerVisible,
-			roleTag: getProfileRoleLabel(profile),
-			skills,
-			tagline:
-				profile.tagline ||
-				"Building better resumes, one thoughtful lint pass at a time.",
-		};
-	}, [isOwnProfile, profile, resumes, reviews, user]);
+		return buildProfileView(profile, reviews, resumes);
+	}, [profile, resumes, reviews]);
 
 	return {
 		about,

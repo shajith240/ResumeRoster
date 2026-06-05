@@ -84,6 +84,7 @@ export function buildContentSecurityPolicy(options: SecurityHeaderOptions = {}) 
 	const developmentConnectSources = isDevelopment
 		? ["http:", "ws:", "http://localhost:*", "ws://localhost:*"]
 		: [];
+	const webAssemblyScriptSources = ["'wasm-unsafe-eval'"];
 	const nonceSource = options.nonce ? [`'nonce-${options.nonce}'`] : [];
 	const strictDynamicSource = options.nonce ? ["'strict-dynamic'"] : [];
 	const productionOnlyDirectives = isDevelopment
@@ -99,6 +100,7 @@ export function buildContentSecurityPolicy(options: SecurityHeaderOptions = {}) 
 				...nonceSource,
 				`'${getThemeBootstrapCspHash()}'`,
 				...strictDynamicSource,
+				...webAssemblyScriptSources,
 				...developmentScriptSources,
 			],
 		],

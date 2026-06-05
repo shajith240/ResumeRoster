@@ -11,6 +11,9 @@ Use this page when starting a future Codex session.
 - Run `npm run docs:generate` after source changes.
 - Run `npm run docs:check` and `npm run docs:lint` before finishing documentation work.
 - Treat Knip and jscpd results as review reports, not automatic deletion orders.
+- Treat `docs/generated/quality/migration-history-jscpd-report.md` as
+  informational history; do not rewrite applied Supabase migrations to reduce
+  duplicate-code metrics.
 
 ## Good Prompt To Resume Work
 

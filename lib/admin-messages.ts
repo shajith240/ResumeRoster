@@ -2,7 +2,7 @@ export const ADMIN_MESSAGE_TITLE_MAX_LENGTH = 80;
 export const ADMIN_MESSAGE_BODY_MAX_LENGTH = 220;
 export const DEFAULT_ADMIN_MESSAGE_LINK = "/feed";
 
-export type AdminMessageTarget =
+type AdminMessageTarget =
 	| {
 			mode: "all";
 	  }
@@ -11,7 +11,7 @@ export type AdminMessageTarget =
 			userId: string;
 	  };
 
-export type AdminMessageInput = {
+type AdminMessageInput = {
 	body: string;
 	linkHref: string;
 	requestId: string;

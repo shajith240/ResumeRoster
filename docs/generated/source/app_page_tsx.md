@@ -4,9 +4,9 @@
 
 - Source path: `app/page.tsx`
 - Kind: Next page route
-- Size: 32322 bytes
-- Lines: 893
-- Source hash: `26785f37dcac531149d13e363bc6e86771994d07484a1a5ce2d54210847b4be8`
+- Size: 7258 bytes
+- Lines: 244
+- Source hash: `87bc140c17a52fa0430aaed9f623a7b6851680a0f4f72994ad4375e096032276`
 
 ## What This File Does
 
@@ -23,13 +23,11 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 ## Imports
 
-- `@/components/BrandMark`
-- `@/components/LandingCta`
+- `@/components/landing/content`
+- `@/components/landing/sections`
 - `@/components/LoadingScreen`
 - `@/lib/supabase/client`
 - `@supabase/supabase-js`
-- `lucide-react`
-- `next/link`
 - `next/navigation`
 - `react`
 
@@ -37,20 +35,12 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 20 | `asset` | Function | top-level | no | `path` | `string` | Implements the asset helper. |
-| 243 | `isSmallScreen` | Function | top-level | no | none | `boolean` | Implements the issmallscreen helper. |
-| 249 | `Home` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the Home UI component. |
-| 267 | `setAdjacentFeature` | Function | nested | no | `direction` | `void` | Implements the setadjacentfeature helper. |
-| 817 | `Footer` | React component | top-level | no | none | `import("react").JSX.Element` | Renders the Footer UI component. |
-| 818 | `renderFooterLink` | Function | nested | no | `link` | `import("react").JSX.Element` | Implements the renderfooterlink helper. |
+| 21 | `isSmallScreen` | Function | top-level | no | none | `boolean` | Implements the issmallscreen helper. |
+| 27 | `Home` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the Home UI component. |
 
 ## Types
 
-| Line | Name | Kind |
-| --- | --- | --- |
-| 13 | `FeatureKey` | type |
-| 14 | `BenefitKey` | type |
-| 15 | `FooterLink` | type |
+No top-level interfaces or type aliases detected.
 
 ## Related Tests
 

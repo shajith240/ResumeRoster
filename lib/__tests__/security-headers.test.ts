@@ -45,6 +45,7 @@ describe("security headers", () => {
 		expect(scriptDirective).toContain("'nonce-test-nonce'");
 		expect(scriptDirective).toContain(`'${getThemeBootstrapCspHash()}'`);
 		expect(scriptDirective).toContain("'strict-dynamic'");
+		expect(scriptDirective).toContain("'wasm-unsafe-eval'");
 		expect(scriptDirective).not.toContain("'unsafe-inline'");
 		expect(scriptDirective).not.toContain("'unsafe-eval'");
 		expect(policy).toContain("upgrade-insecure-requests");

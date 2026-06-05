@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/security-headers.test.ts`
 - Kind: Unit test
-- Size: 3359 bytes
-- Lines: 104
-- Source hash: `77c91c6bb442c11930ac6d7afb98bb90709edb9d9dc8fec4a692233457b0ddc3`
+- Size: 3418 bytes
+- Lines: 105
+- Source hash: `95e4dce7f1e492e65b1a48ad7a7eae5460be6bf7e501fae35f6c6cc9fa38bc77`
 
 ## What This File Does
 

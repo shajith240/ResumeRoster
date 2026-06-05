@@ -11,10 +11,13 @@
 			"maxGzipBytes": 430000
 		},
 		"/leaderboard/page": {
-			"maxGzipBytes": 490000
+			"maxGzipBytes": 425000
+		},
+		"/profile/[id]/page": {
+			"maxGzipBytes": 425000
 		},
 		"/resume/[id]/page": {
-			"maxGzipBytes": 580000
+			"maxGzipBytes": 425000
 		},
 		"/submit/page": {
 			"maxGzipBytes": 430000

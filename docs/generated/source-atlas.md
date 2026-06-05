@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 324 source-controlled files.
-Manifest hash: `ad8469032047251f9bc731ae5df36a8c31e9a66e6d6b47ae7f199f73122895ae`
+Generated from 341 source-controlled files.
+Manifest hash: `ef8650eafb6ba8130c50d5e15f7c00614953536e009fdfbee2b2b60c1a472700`
 
 ## Folder Coverage
 
@@ -12,10 +12,10 @@ Manifest hash: `ad8469032047251f9bc731ae5df36a8c31e9a66e6d6b47ae7f199f73122895ae
 | `.github` | 1 |
 | `(root)` | 19 |
 | `app` | 42 |
-| `components` | 72 |
+| `components` | 88 |
 | `docs` | 36 |
 | `lib` | 73 |
-| `public` | 26 |
+| `public` | 27 |
 | `scripts` | 6 |
 | `supabase` | 49 |
 
@@ -32,8 +32,8 @@ Manifest hash: `ad8469032047251f9bc731ae5df36a8c31e9a66e6d6b47ae7f199f73122895ae
 | Project configuration | 17 |
 | Project file | 9 |
 | Public browser asset | 1 |
-| Public visual asset | 25 |
-| React component | 54 |
+| Public visual asset | 26 |
+| React component | 70 |
 | Repository automation | 6 |
 | Root documentation | 3 |
 | Supabase migration | 46 |
@@ -108,6 +108,10 @@ Manifest hash: `ad8469032047251f9bc731ae5df36a8c31e9a66e6d6b47ae7f199f73122895ae
 | `components/BrandMark.tsx` | React component | [open](source/components_brandmark_tsx.md) |
 | `components/CommentMediaToolbar.tsx` | React component | [open](source/components_commentmediatoolbar_tsx.md) |
 | `components/FeedResumePreview.tsx` | React component | [open](source/components_feedresumepreview_tsx.md) |
+| `components/landing/content.ts` | React component | [open](source/components_landing_content_ts.md) |
+| `components/landing/feature-showcase.tsx` | React component | [open](source/components_landing_feature_showcase_tsx.md) |
+| `components/landing/footer.tsx` | React component | [open](source/components_landing_footer_tsx.md) |
+| `components/landing/sections.tsx` | React component | [open](source/components_landing_sections_tsx.md) |
 | `components/LandingCta.tsx` | React component | [open](source/components_landingcta_tsx.md) |
 | `components/Leaderboard.module.css` | React component | [open](source/components_leaderboard_module_css.md) |
 | `components/Leaderboard.tsx` | React component | [open](source/components_leaderboard_tsx.md) |
@@ -116,9 +120,12 @@ Manifest hash: `ad8469032047251f9bc731ae5df36a8c31e9a66e6d6b47ae7f199f73122895ae
 | `components/NotificationCenter.tsx` | React component | [open](source/components_notificationcenter_tsx.md) |
 | `components/OnboardingFlow.tsx` | React component | [open](source/components_onboardingflow_tsx.md) |
 | `components/PersonalizeLintedPrompt.tsx` | React component | [open](source/components_personalizelintedprompt_tsx.md) |
+| `components/profile-detail/avatar-client.ts` | React component | [open](source/components_profile_detail_avatar_client_ts.md) |
 | `components/profile-detail/constants.ts` | React component | [open](source/components_profile_detail_constants_ts.md) |
+| `components/profile-detail/controller-data.ts` | React component | [open](source/components_profile_detail_controller_data_ts.md) |
 | `components/profile-detail/data.ts` | React component | [open](source/components_profile_detail_data_ts.md) |
 | `components/profile-detail/edit-dialog.tsx` | React component | [open](source/components_profile_detail_edit_dialog_tsx.md) |
+| `components/profile-detail/profile-view.ts` | React component | [open](source/components_profile_detail_profile_view_ts.md) |
 | `components/profile-detail/reviewer-dialogs.tsx` | React component | [open](source/components_profile_detail_reviewer_dialogs_tsx.md) |
 | `components/profile-detail/rows.tsx` | React component | [open](source/components_profile_detail_rows_tsx.md) |
 | `components/profile-detail/shared.tsx` | React component | [open](source/components_profile_detail_shared_tsx.md) |
@@ -129,16 +136,25 @@ Manifest hash: `ad8469032047251f9bc731ae5df36a8c31e9a66e6d6b47ae7f199f73122895ae
 | `components/ProfileDetail.tsx` | React component | [open](source/components_profiledetail_tsx.md) |
 | `components/PushNotificationsControl.tsx` | React component | [open](source/components_pushnotificationscontrol_tsx.md) |
 | `components/resume-detail/content.tsx` | React component | [open](source/components_resume_detail_content_tsx.md) |
+| `components/resume-detail/data.ts` | React component | [open](source/components_resume_detail_data_ts.md) |
 | `components/resume-detail/dialogs.tsx` | React component | [open](source/components_resume_detail_dialogs_tsx.md) |
 | `components/resume-detail/discussion-panel.tsx` | React component | [open](source/components_resume_detail_discussion_panel_tsx.md) |
 | `components/resume-detail/resume-preview-pane.tsx` | React component | [open](source/components_resume_detail_resume_preview_pane_tsx.md) |
 | `components/resume-detail/selectors.ts` | React component | [open](source/components_resume_detail_selectors_ts.md) |
 | `components/resume-detail/thread-review-item.tsx` | React component | [open](source/components_resume_detail_thread_review_item_tsx.md) |
 | `components/resume-detail/types.ts` | React component | [open](source/components_resume_detail_types_ts.md) |
+| `components/resume-detail/use-owner-actions.ts` | React component | [open](source/components_resume_detail_use_owner_actions_ts.md) |
 | `components/resume-detail/use-resume-detail-controller.ts` | React component | [open](source/components_resume_detail_use_resume_detail_controller_ts.md) |
+| `components/resume-detail/use-review-reactions.ts` | React component | [open](source/components_resume_detail_use_review_reactions_ts.md) |
+| `components/resume-detail/use-review-report-actions.ts` | React component | [open](source/components_resume_detail_use_review_report_actions_ts.md) |
 | `components/resume-detail/utils.ts` | React component | [open](source/components_resume_detail_utils_ts.md) |
+| `components/resume-feed/data.ts` | React component | [open](source/components_resume_feed_data_ts.md) |
+| `components/resume-feed/presentation.tsx` | React component | [open](source/components_resume_feed_presentation_tsx.md) |
 | `components/ResumeDetail.tsx` | React component | [open](source/components_resumedetail_tsx.md) |
 | `components/ResumeFeed.tsx` | React component | [open](source/components_resumefeed_tsx.md) |
+| `components/route-lazy/LeaderboardLazy.tsx` | React component | [open](source/components_route_lazy_leaderboardlazy_tsx.md) |
+| `components/route-lazy/ProfileDetailLazy.tsx` | React component | [open](source/components_route_lazy_profiledetaillazy_tsx.md) |
+| `components/route-lazy/ResumeDetailLazy.tsx` | React component | [open](source/components_route_lazy_resumedetaillazy_tsx.md) |
 | `components/RouteHeader.tsx` | React component | [open](source/components_routeheader_tsx.md) |
 | `components/RouteTransitionLoader.tsx` | React component | [open](source/components_routetransitionloader_tsx.md) |
 | `components/SecureResumePreview.tsx` | React component | [open](source/components_secureresumepreview_tsx.md) |
@@ -286,6 +302,7 @@ Manifest hash: `ad8469032047251f9bc731ae5df36a8c31e9a66e6d6b47ae7f199f73122895ae
 | `public/assets/Catch bugs before the compiler.png` | Public visual asset | [open](source/public_assets_catch_bugs_before_the_compiler_png.md) |
 | `public/assets/checklist_doodle.png` | Public visual asset | [open](source/public_assets_checklist_doodle_png.md) |
 | `public/assets/clock_doodle.png` | Public visual asset | [open](source/public_assets_clock_doodle_png.md) |
+| `public/assets/dotlottie-player.wasm` | Public visual asset | [open](source/public_assets_dotlottie_player_wasm.md) |
 | `public/assets/fix_plan.png` | Public visual asset | [open](source/public_assets_fix_plan_png.md) |
 | `public/assets/Hero_section_animation.webm` | Public visual asset | [open](source/public_assets_hero_section_animation_webm.md) |
 | `public/assets/JD match.png` | Public visual asset | [open](source/public_assets_jd_match_png.md) |

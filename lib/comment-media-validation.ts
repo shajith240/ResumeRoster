@@ -5,18 +5,16 @@ import {
 	type RasterImageMimeType,
 } from "@/lib/image-upload-validation";
 
-export const COMMENT_IMAGE_MAX_FILE_SIZE_BYTES = 3 * 1024 * 1024;
-export const REVIEW_CONTENT_MIN_LENGTH = 10;
-export const REVIEW_CONTENT_MAX_LENGTH = 4000;
-export const ROAST_CONTENT_MIN_LENGTH = REVIEW_CONTENT_MIN_LENGTH;
-export const ROAST_CONTENT_MAX_LENGTH = REVIEW_CONTENT_MAX_LENGTH;
+const COMMENT_IMAGE_MAX_FILE_SIZE_BYTES = 3 * 1024 * 1024;
+const REVIEW_CONTENT_MIN_LENGTH = 10;
+const REVIEW_CONTENT_MAX_LENGTH = 4000;
 
-export const COMMENT_IMAGE_ALLOWED_MIME_TYPES = RASTER_IMAGE_ALLOWED_MIME_TYPES;
+const COMMENT_IMAGE_ALLOWED_MIME_TYPES = RASTER_IMAGE_ALLOWED_MIME_TYPES;
 
-export const COMMENT_CONTENT_FORMATS = ["plain", "markdown"] as const;
+const COMMENT_CONTENT_FORMATS = ["plain", "markdown"] as const;
 
 export type CommentImageMimeType = RasterImageMimeType;
-export type CommentContentFormat = (typeof COMMENT_CONTENT_FORMATS)[number];
+type CommentContentFormat = (typeof COMMENT_CONTENT_FORMATS)[number];
 
 type SegmenterLike = {
 	segment(value: string): Iterable<{ segment: string }>;
@@ -73,9 +71,7 @@ export function getCommentImageUploadIssue(file: CommentImageFileInput) {
 	return "";
 }
 
-export function isCommentContentFormat(
-	value: unknown,
-): value is CommentContentFormat {
+function isCommentContentFormat(value: unknown): value is CommentContentFormat {
 	return COMMENT_CONTENT_FORMATS.includes(value as CommentContentFormat);
 }
 
@@ -129,5 +125,3 @@ export function getReviewContentIssue({
 
 	return "";
 }
-
-export const getRoastContentIssue = getReviewContentIssue;

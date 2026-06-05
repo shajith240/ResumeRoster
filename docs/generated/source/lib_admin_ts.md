@@ -4,9 +4,9 @@
 
 - Source path: `lib/admin.ts`
 - Kind: Application library module
-- Size: 2258 bytes
+- Size: 2242 bytes
 - Lines: 88
-- Source hash: `59800f262097b0e7bae1bb03344a2505b16fae98cb6ed9b887d34c6d271ab961`
+- Source hash: `db76223279d80ab5774c987933594dd1e526f0d0c96803eef588bc0e2b657cba`
 
 ## What This File Does
 
@@ -18,10 +18,8 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Exports
 
-- `AdminAuthError`
 - `AdminAuthResult`
 - `adminErrorResponse`
-- `createAdminSupabaseClient`
 - `isAdminEmail`
 - `parseAdminEmails`
 - `requireAdmin`
@@ -37,7 +35,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | 18 | `parseAdminEmails` | Validation or normalization helper | top-level | yes | `value` | `Set<string>` | Validates or normalizes parseadminemails values for callers. |
 | 27 | `isAdminEmail` | Function | top-level | yes | `email`, `adminEmails` | `boolean` | Implements the isadminemail helper. |
 | 36 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
-| 42 | `createAdminSupabaseClient` | Action helper | top-level | yes | none | `SupabaseClient<any, "public", "public", any, any>` | Runs the createadminsupabaseclient workflow for callers. |
+| 42 | `createAdminSupabaseClient` | Action helper | top-level | no | none | `SupabaseClient<any, "public", "public", any, any>` | Runs the createadminsupabaseclient workflow for callers. |
 | 58 | `requireAdmin` | Function async | top-level | yes | `request` | `Promise<AdminAuthResult>` | Implements the requireadmin helper. |
 | 81 | `adminErrorResponse` | Function | top-level | yes | `error` | `Response` | Implements the adminerrorresponse helper. |
 

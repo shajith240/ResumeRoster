@@ -4,9 +4,9 @@
 
 - Source path: `components/LintPointsFlame.tsx`
 - Kind: React component
-- Size: 1399 bytes
-- Lines: 64
-- Source hash: `ca6887cf48d0af7a5bc36e0941a5c0f5b106bf0708b41c294ce9eec17bfeee21`
+- Size: 3259 bytes
+- Lines: 117
+- Source hash: `80a7a498742ee803053cc6a242c16c8d5eaa262d24d5222af5e9a8ee6410ac1a`
 
 ## What This File Does
 
@@ -24,23 +24,27 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `@/lib/utils`
+- `@iconify-icons/solar/fire-line-duotone`
+- `@iconify/react/offline`
 - `@lottiefiles/dotlottie-react`
-- `lucide-react`
 - `react`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 16 | `usePrefersReducedMotion` | React hook | top-level | no | none | `boolean` | Provides reusable useprefersreducedmotion state and side effects. |
-| 21 | `update` | Action helper | nested | no | none | `void` | Runs the update workflow for callers. |
-| 31 | `LintPointsFlame` | React component | top-level | yes | `{ animated = true, className, fallbackClassName, }` | `import("react").JSX.Element` | Renders the LintPointsFlame UI component. |
+| 24 | `usePrefersReducedMotion` | React hook | top-level | no | none | `boolean` | Provides reusable useprefersreducedmotion state and side effects. |
+| 29 | `update` | Action helper | nested | no | none | `void` | Runs the update workflow for callers. |
+| 39 | `StaticFlameIcon` | React component | top-level | no | `{ className }` | `import("react").JSX.Element` | Renders the StaticFlameIcon UI component. |
+| 49 | `LintPointsFlame` | React component | top-level | yes | `{ animated = true, className, fallbackClassName, }` | `import("react").JSX.Element` | Renders the LintPointsFlame UI component. |
+| 65 | `markReady` | Function | nested | no | none | `void` | Implements the markready helper. |
+| 66 | `markFailed` | Function | nested | no | none | `void` | Implements the markfailed helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 10 | `LintPointsFlameProps` | type |
+| 18 | `LintPointsFlameProps` | type |
 
 ## Related Tests
 

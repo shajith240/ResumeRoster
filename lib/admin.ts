@@ -5,7 +5,7 @@ export type AdminAuthResult = {
 	user: User;
 };
 
-export class AdminAuthError extends Error {
+class AdminAuthError extends Error {
 	status: number;
 
 	constructor(message: string, status = 403) {
@@ -39,7 +39,7 @@ function getBearerToken(request: Request) {
 	return /^bearer$/i.test(scheme) && token ? token : "";
 }
 
-export function createAdminSupabaseClient() {
+function createAdminSupabaseClient() {
 	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 	const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 

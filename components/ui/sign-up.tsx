@@ -132,7 +132,7 @@ function GitHubIcon() {
 	);
 }
 
-export function SignUp() {
+function SignUp() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const nextPath = useMemo(
@@ -495,5 +495,4 @@ export function SignUp() {
 	);
 }
 
-export const Component = SignUp;
 export default SignUp;

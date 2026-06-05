@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/user-dropdown.tsx`
 - Kind: UI primitive
-- Size: 13300 bytes
-- Lines: 468
-- Source hash: `21f588ea6377676ae3abb692c2230bb23e6d88319707ed44a9b344b96a7101f8`
+- Size: 14960 bytes
+- Lines: 501
+- Source hash: `56ae9f116c3045991d386e8abf68239e0b1af50a5f6eaee308547bd3a4c4eff0`
 
 ## What This File Does
 
@@ -18,7 +18,6 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Exports
 
-- `default`
 - `UserDropdown`
 
 ## Imports
@@ -27,31 +26,49 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/components/ui/badge`
 - `@/components/ui/dropdown-menu`
 - `@/lib/utils`
-- `@iconify/react`
+- `@iconify-icons/solar/alt-arrow-left-line-duotone`
+- `@iconify-icons/solar/alt-arrow-right-line-duotone`
+- `@iconify-icons/solar/bell-line-duotone`
+- `@iconify-icons/solar/bookmark-line-duotone`
+- `@iconify-icons/solar/check-circle-bold`
+- `@iconify-icons/solar/document-add-line-duotone`
+- `@iconify-icons/solar/emoji-funny-circle-line-duotone`
+- `@iconify-icons/solar/fire-line-duotone`
+- `@iconify-icons/solar/letter-unread-line-duotone`
+- `@iconify-icons/solar/logout-2-bold-duotone`
+- `@iconify-icons/solar/moon-line-duotone`
+- `@iconify-icons/solar/moon-sleep-line-duotone`
+- `@iconify-icons/solar/palette-round-line-duotone`
+- `@iconify-icons/solar/question-circle-line-duotone`
+- `@iconify-icons/solar/smile-circle-line-duotone`
+- `@iconify-icons/solar/square-top-down-line-duotone`
+- `@iconify-icons/solar/sun-line-duotone`
+- `@iconify-icons/solar/user-circle-line-duotone`
+- `@iconify/react/offline`
 - `react`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 141 | `UserDropdown` | React component | top-level | yes | `{ user = { name: "Resume reviewer", username: "@linted", avatar: "https://ima...` | `import("react").JSX.Element` | Renders the UserDropdown UI component. |
-| 160 | `renderMenuItem` | Function | nested | no | `item`, `index` | `import("react").JSX.Element` | Implements the rendermenuitem helper. |
-| 190 | `getStatusColor` | Function | nested | no | `status` | `string` | Implements the getstatuscolor helper. |
-| 211 | `renderMobilePanelTrigger` | Function | nested | no | `panel`, `icon`, `label`, `valueLabel` | `import("react").JSX.Element` | Implements the rendermobilepaneltrigger helper. |
-| 234 | `renderMobileDrilldown` | Function | nested | no | none | `import("react").JSX.Element` | Implements the rendermobiledrilldown helper. |
+| 159 | `UserDropdown` | React component | top-level | yes | `{ user = { name: "Resume reviewer", username: "@linted", avatar: "https://ima...` | `import("react").JSX.Element` | Renders the UserDropdown UI component. |
+| 178 | `renderMenuItem` | Function | nested | no | `item`, `index` | `import("react").JSX.Element` | Implements the rendermenuitem helper. |
+| 212 | `getStatusColor` | Function | nested | no | `status` | `string` | Implements the getstatuscolor helper. |
+| 233 | `renderMobilePanelTrigger` | Function | nested | no | `panel`, `icon`, `label`, `valueLabel` | `import("react").JSX.Element` | Implements the rendermobilepaneltrigger helper. |
+| 257 | `renderMobileDrilldown` | Function | nested | no | none | `import("react").JSX.Element` | Implements the rendermobiledrilldown helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 23 | `MenuAction` | type |
-| 32 | `AppTheme` | type |
-| 33 | `MobilePanel` | type |
-| 35 | `MenuItem` | type |
-| 47 | `StatusItem` | type |
-| 53 | `ThemeItem` | type |
-| 59 | `UserDropdownUser` | type |
-| 67 | `UserDropdownProps` | type |
+| 41 | `MenuAction` | type |
+| 50 | `AppTheme` | type |
+| 51 | `MobilePanel` | type |
+| 53 | `MenuItem` | type |
+| 65 | `StatusItem` | type |
+| 71 | `ThemeItem` | type |
+| 77 | `UserDropdownUser` | type |
+| 85 | `UserDropdownProps` | type |
 
 ## Related Tests
 

@@ -1,7 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Trash } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
-import SecureResumePreview from "@/components/SecureResumePreview";
 import { Button } from "@/components/ui/button";
 import {
 	getResumeAffiliationLabel,
@@ -12,6 +14,18 @@ import type {
 	ResumeSummary,
 } from "@/lib/supabase/types";
 import { formatDate } from "./utils";
+
+const SecureResumePreview = dynamic(
+	() => import("@/components/SecureResumePreview"),
+	{
+		loading: () => (
+			<div className="secure-resume-loading">
+				Preparing protected preview...
+			</div>
+		),
+		ssr: false,
+	},
+);
 
 type ResumePreviewPaneProps = {
 	isClosed: boolean;

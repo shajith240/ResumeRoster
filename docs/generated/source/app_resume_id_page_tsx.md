@@ -4,9 +4,9 @@
 
 - Source path: `app/resume/[id]/page.tsx`
 - Kind: Next page route
-- Size: 501 bytes
+- Size: 524 bytes
 - Lines: 21
-- Source hash: `9ae696a767bb64fa2f7efd6504817da942f2cf814b70634e2cc6345346c14c32`
+- Source hash: `32fa26e59e3a22d6b886cc01dcb8a237089ea869e57b0318fac42f404133847e`
 
 ## What This File Does
 
@@ -24,7 +24,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 ## Imports
 
 - `@/components/AuthGate`
-- `@/components/ResumeDetail`
+- `@/components/route-lazy/ResumeDetailLazy`
 - `@/components/RouteHeader`
 
 ## Functions And Components

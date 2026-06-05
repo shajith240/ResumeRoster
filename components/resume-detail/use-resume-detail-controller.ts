@@ -9,11 +9,9 @@ import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { getReviewContentIssue, normalizeCommentContent } from "@/lib/comment-media-validation";
 import { buildThreadReviewTree, normalizeReview } from "@/lib/resume-thread";
-import { getReportIssue, type ReportReason } from "@/lib/report-validation";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { supabase } from "@/lib/supabase/client";
 import type {
-	CommentAttachment,
 	CommentContentFormat,
 	ResumeAuthorProfile,
 	ResumeSummary,
@@ -21,30 +19,27 @@ import type {
 } from "@/lib/supabase/types";
 import { toast } from "sonner";
 import {
-	RESUME_AUTHOR_PROFILE_SELECT_BASE,
-	RESUME_AUTHOR_PROFILE_SELECT_WITH_STATUS,
-	RESUME_SELECT_BASE,
-	RESUME_SELECT_WITH_CONTEXT,
-	RESUME_SELECT_WITH_READS,
-	REVIEW_SELECT_BASE,
 	REVIEW_SELECT_WITH_MEDIA,
-	REVIEW_SELECT_WITH_REACTIONS,
 	REVIEW_SELECT_WITH_THREADS,
-	REVIEW_SELECT_WITH_THREADS_LEGACY,
 	SUPABASE_MIGRATION_MESSAGE,
 } from "./selectors";
-import type { AuthorProfile, Reaction, ResumeOwnerAction, ResumeQueryResult } from "./types";
+import type { AuthorProfile } from "./types";
 import { createThreadRenderIndexMap } from "./thread-review-item";
 import {
-	isAuthorProfileFeatureError,
+	fetchLatestResumeStatus,
+	fetchResumeAuthorProfile,
+	fetchResumeWithFallback,
+	loadResumeThreadData,
+	recordResumeReadCount,
+} from "./data";
+import { useResumeOwnerActions } from "./use-owner-actions";
+import { useReviewReportActions } from "./use-review-report-actions";
+import { useReviewReactions } from "./use-review-reactions";
+import {
 	isCommentMediaFeatureError,
 	isDeleteFeatureError,
 	isMissingColumnError,
 	isPermissionPolicyError,
-	isReadCountFeatureError,
-	isReportFeatureError,
-	isResumeContextFeatureError,
-	withResumeDefaults,
 } from "./utils";
 
 export function useResumeDetailController(resumeId: string) {
@@ -77,14 +72,6 @@ export function useResumeDetailController(resumeId: string) {
 	const [submittingReplyId, setSubmittingReplyId] = useState("");
 	const [deletingReviewId, setDeletingReviewId] = useState("");
 	const [deleteTargetReview, setDeleteTargetReview] = useState<Review | null>(null);
-	const [pendingResumeAction, setPendingResumeAction] =
-		useState<ResumeOwnerAction | null>(null);
-	const [resumeActionBusy, setResumeActionBusy] = useState(false);
-	const [reportTargetReview, setReportTargetReview] = useState<Review | null>(null);
-	const [reportReason, setReportReason] =
-		useState<ReportReason>("personal_info");
-	const [reportDetails, setReportDetails] = useState("");
-	const [submittingReport, setSubmittingReport] = useState(false);
 	const [collapsedReviewIds, setCollapsedReviewIds] = useState<Set<string>>(
 		new Set(),
 	);
@@ -93,7 +80,6 @@ export function useResumeDetailController(resumeId: string) {
 	>({});
 	const [replySchemaReady, setReplySchemaReady] = useState(true);
 	const [deleteSchemaReady, setDeleteSchemaReady] = useState(true);
-	const [reportSchemaReady, setReportSchemaReady] = useState(true);
 	const [mediaSchemaReady, setMediaSchemaReady] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
@@ -164,25 +150,60 @@ export function useResumeDetailController(resumeId: string) {
 		reportError(errorMessage);
 	}
 
-	async function fetchLatestResumeStatus() {
-		const { data, error } = await supabase
-			.from("resumes")
-			.select("status")
-			.eq("id", resumeId)
-			.maybeSingle();
-
-		if (error) {
-			return null;
-		}
-
-		return (data?.status ?? null) as ResumeSummary["status"] | null;
-	}
+	const {
+		confirmResumeOwnerAction,
+		pendingResumeAction,
+		requestDeleteResume,
+		requestResumeStatusAction,
+		resumeActionBusy,
+		setPendingResumeAction,
+	} = useResumeOwnerActions({
+		clearFeedbackDrafts,
+		isClosed,
+		isOwner,
+		reportError,
+		resume,
+		setMessage,
+		setResume,
+	});
+	const {
+		openReportDialog,
+		reportDetails,
+		reportReason,
+		reportSchemaReady,
+		reportTargetReview,
+		setReportDetails,
+		setReportReason,
+		setReportTargetReview,
+		submitReport,
+		submittingReport,
+	} = useReviewReportActions({
+		goToLogin,
+		reportError,
+		reportInternalError,
+		setMessage,
+		user,
+	});
+	const { reactToReview } = useReviewReactions({
+		captureResumeDetailError,
+		dislikedReviewIds,
+		goToLogin,
+		isOwner,
+		likedReviewIds,
+		reportError,
+		reportInternalError,
+		setDislikedReviewIds,
+		setLikedReviewIds,
+		setMessage,
+		setReviews,
+		user,
+	});
 
 	async function reportFriendlyWriteError(
 		error: { message?: string } | null,
 		kind: "feedback" | "reply",
 	) {
-		const latestStatus = await fetchLatestResumeStatus();
+		const latestStatus = await fetchLatestResumeStatus(resumeId);
 
 		if (latestStatus === "closed") {
 			applyClosedResumeState(
@@ -232,13 +253,10 @@ export function useResumeDetailController(resumeId: string) {
 		activeResume: ResumeSummary,
 		activeUser: User | null,
 	) {
-		if (!activeUser || activeResume.user_id === activeUser.id) {
-			return;
-		}
-
-		const { data, error } = await supabase.rpc("record_resume_read", {
-			target_resume_id: activeResume.id,
-		});
+		const { error, readCount } = await recordResumeReadCount(
+			activeResume,
+			activeUser,
+		);
 
 		if (error) {
 			captureResumeDetailError(error, "record_resume_read");
@@ -248,249 +266,30 @@ export function useResumeDetailController(resumeId: string) {
 			return;
 		}
 
-		const nextReadCount =
-			typeof data === "number"
-				? data
-				: typeof data === "string"
-					? Number(data)
-					: Number.NaN;
-
-		if (Number.isFinite(nextReadCount)) {
+		if (readCount !== null) {
 			setResume((current) =>
 				current?.id === activeResume.id
-					? { ...current, read_count: nextReadCount }
+					? { ...current, read_count: readCount }
 					: current,
 			);
 		}
 	}
 
-	async function fetchResumeAuthorProfile(activeResume: ResumeSummary) {
-		if (activeResume.is_anonymous) return null;
+	async function refreshReviewThread(activeUser: User | null) {
+		const threadData = await loadResumeThreadData(resumeId, activeUser);
 
-		const primaryResult = await supabase
-			.from("profiles")
-			.select(RESUME_AUTHOR_PROFILE_SELECT_WITH_STATUS)
-			.eq("id", activeResume.user_id)
-			.maybeSingle();
-
-		if (primaryResult.error && isAuthorProfileFeatureError(primaryResult.error)) {
-			const fallbackResult = await supabase
-				.from("profiles")
-				.select(RESUME_AUTHOR_PROFILE_SELECT_BASE)
-				.eq("id", activeResume.user_id)
-				.maybeSingle();
-
-			if (fallbackResult.error) return null;
-			return (fallbackResult.data ?? null) as ResumeAuthorProfile | null;
-		}
-
-		if (primaryResult.error) return null;
-
-		return (primaryResult.data ?? null) as ResumeAuthorProfile | null;
-	}
-
-	async function loadReviewAttachments(loadedReviews: Review[]) {
-		const attachmentIds = Array.from(
-			new Set(
-				loadedReviews
-					.map((review) => review.attachment_id)
-					.filter((id): id is string => Boolean(id)),
-			),
-		);
-
-		if (!attachmentIds.length) {
-			setAttachmentsById({});
+		if (!threadData) {
 			return;
 		}
 
-		const { data, error } = await supabase
-			.from("comment_attachments")
-			.select("id,user_id,kind,source,storage_path,title,alt_text,mime_type,file_size,created_at")
-			.in("id", attachmentIds);
-
-		if (error) {
-			if (isCommentMediaFeatureError(error)) {
-				setMediaSchemaReady(false);
-			}
-			return;
-		}
-
-		const entries = ((data ?? []) as CommentAttachment[]).map((attachment) => {
-			const publicUrl = attachment.storage_path
-				? supabase.storage.from("comment-media").getPublicUrl(attachment.storage_path)
-						.data.publicUrl
-				: undefined;
-
-			return [
-				attachment.id,
-				{
-					...attachment,
-					publicUrl,
-				},
-			] as const;
-		});
-
-		setMediaSchemaReady(true);
-		setAttachmentsById(Object.fromEntries(entries));
-	}
-
-	async function loadReviewThread(activeUser: User | null) {
-		const reviewResultWithMedia = await supabase
-			.from("roasts")
-			.select(REVIEW_SELECT_WITH_MEDIA)
-			.eq("resume_id", resumeId)
-			.order("created_at", { ascending: false });
-
-		const reviewResultWithThreads =
-			reviewResultWithMedia.error &&
-			isCommentMediaFeatureError(reviewResultWithMedia.error)
-				? await supabase
-						.from("roasts")
-						.select(REVIEW_SELECT_WITH_THREADS)
-						.eq("resume_id", resumeId)
-						.order("created_at", { ascending: false })
-				: reviewResultWithMedia;
-
-		setMediaSchemaReady(
-			!(
-				reviewResultWithMedia.error &&
-				isCommentMediaFeatureError(reviewResultWithMedia.error)
-			),
-		);
-
-		const reviewResultWithDeleteFallback =
-			reviewResultWithThreads.error &&
-			isDeleteFeatureError(reviewResultWithThreads.error)
-				? await supabase
-						.from("roasts")
-						.select(REVIEW_SELECT_WITH_THREADS_LEGACY)
-						.eq("resume_id", resumeId)
-						.order("created_at", { ascending: false })
-				: reviewResultWithThreads;
-
-		setDeleteSchemaReady(
-			!(
-				reviewResultWithThreads.error &&
-				isDeleteFeatureError(reviewResultWithThreads.error)
-			),
-		);
-
-		const reviewResultWithReactions =
-			reviewResultWithDeleteFallback.error &&
-			(isMissingColumnError(reviewResultWithDeleteFallback.error, "parent_id") ||
-				isMissingColumnError(reviewResultWithDeleteFallback.error, "reply_count"))
-				? await supabase
-						.from("roasts")
-						.select(REVIEW_SELECT_WITH_REACTIONS)
-						.eq("resume_id", resumeId)
-						.order("created_at", { ascending: false })
-				: reviewResultWithDeleteFallback;
-
-		setReplySchemaReady(
-			!(
-				reviewResultWithDeleteFallback.error &&
-				(isMissingColumnError(reviewResultWithDeleteFallback.error, "parent_id") ||
-					isMissingColumnError(reviewResultWithDeleteFallback.error, "reply_count"))
-			),
-		);
-
-		const reviewResult =
-			reviewResultWithReactions.error &&
-			isMissingColumnError(reviewResultWithReactions.error, "dislike_count")
-				? await supabase
-						.from("roasts")
-						.select(REVIEW_SELECT_BASE)
-						.eq("resume_id", resumeId)
-						.order("created_at", { ascending: false })
-				: reviewResultWithReactions;
-
-		if (reviewResult.error) {
-			return;
-		}
-
-		const loadedReviews = ((reviewResult.data ?? []) as Review[]).map((review) =>
-			normalizeReview(review),
-		);
-		setReviews(loadedReviews);
-		await loadReviewAttachments(loadedReviews);
-
-		const authorIds = Array.from(
-			new Set(
-				loadedReviews
-					.filter((review) => !review.is_deleted)
-					.map((review) => review.author_id),
-			),
-		);
-
-		if (authorIds.length) {
-			const profileResultWithReviewerFields = await supabase
-				.from("profiles")
-				.select(
-					"id,username,full_name,community_role,reviewer_type,reviewer_headline,reviewer_expertise,reviewer_verification_status",
-				)
-				.in("id", authorIds);
-			const profileResult =
-				profileResultWithReviewerFields.error &&
-				isAuthorProfileFeatureError(profileResultWithReviewerFields.error)
-					? await supabase
-							.from("profiles")
-							.select("id,username,full_name")
-							.in("id", authorIds)
-					: profileResultWithReviewerFields;
-
-			if (!profileResult.error) {
-				setAuthorProfiles(
-					Object.fromEntries(
-						(profileResult.data ?? []).map((profile) => [
-							profile.id,
-							profile,
-						]),
-					),
-				);
-			}
-		}
-
-		const reviewIds = loadedReviews
-			.filter((review) => !review.is_deleted)
-			.map((review) => review.id);
-
-		if (activeUser && reviewIds.length) {
-			const voteResultWithReactions = await supabase
-				.from("votes")
-				.select("roast_id,reaction")
-				.eq("voter_id", activeUser.id)
-				.in("roast_id", reviewIds);
-
-			const voteResult =
-				voteResultWithReactions.error &&
-				voteResultWithReactions.error.message.includes("reaction")
-					? await supabase
-							.from("votes")
-							.select("roast_id")
-							.eq("voter_id", activeUser.id)
-							.in("roast_id", reviewIds)
-					: voteResultWithReactions;
-
-			if (!voteResult.error) {
-				setLikedReviewIds(
-					new Set(
-						voteResult.data
-							.filter((vote) => !("reaction" in vote) || vote.reaction === "like")
-							.map((vote) => vote.roast_id),
-					),
-				);
-				setDislikedReviewIds(
-					new Set(
-						voteResult.data
-							.filter((vote) => "reaction" in vote && vote.reaction === "dislike")
-							.map((vote) => vote.roast_id),
-					),
-				);
-			}
-		} else {
-			setLikedReviewIds(new Set());
-			setDislikedReviewIds(new Set());
-		}
+		setReviews(threadData.reviews);
+		setAttachmentsById(threadData.attachmentsById);
+		setAuthorProfiles(threadData.authorProfiles);
+		setLikedReviewIds(threadData.likedReviewIds);
+		setDislikedReviewIds(threadData.dislikedReviewIds);
+		setReplySchemaReady(threadData.replySchemaReady);
+		setDeleteSchemaReady(threadData.deleteSchemaReady);
+		setMediaSchemaReady(threadData.mediaSchemaReady);
 	}
 
 	useEffect(() => {
@@ -500,37 +299,7 @@ export function useResumeDetailController(resumeId: string) {
 			const activeUser = userData.user;
 			setUser(activeUser);
 
-			const resumeResultWithContext = await supabase
-				.from("resumes")
-				.select(RESUME_SELECT_WITH_CONTEXT)
-				.eq("id", resumeId)
-				.single();
-
-			let resumeResult = resumeResultWithContext as ResumeQueryResult;
-
-			if (
-				resumeResultWithContext.error &&
-				isResumeContextFeatureError(resumeResultWithContext.error)
-			) {
-				const resumeResultWithReads = (await supabase
-					.from("resumes")
-					.select(RESUME_SELECT_WITH_READS)
-					.eq("id", resumeId)
-					.single()) as ResumeQueryResult;
-
-				if (
-					resumeResultWithReads.error &&
-					isReadCountFeatureError(resumeResultWithReads.error)
-				) {
-					resumeResult = (await supabase
-						.from("resumes")
-						.select(RESUME_SELECT_BASE)
-						.eq("id", resumeId)
-						.single()) as ResumeQueryResult;
-				} else {
-					resumeResult = resumeResultWithReads;
-				}
-			}
+			const resumeResult = await fetchResumeWithFallback(resumeId);
 
 			if (resumeResult.error) {
 				captureResumeDetailError(resumeResult.error, "load_resume");
@@ -539,13 +308,13 @@ export function useResumeDetailController(resumeId: string) {
 				return;
 			}
 
-			if (!resumeResult.data) {
+			if (!resumeResult.resume) {
 				setMessage("Resume not found.");
 				setLoading(false);
 				return;
 			}
 
-			const loadedResume = withResumeDefaults(resumeResult.data);
+			const loadedResume = resumeResult.resume;
 			setResume(loadedResume);
 			setResumeAuthorProfile(await fetchResumeAuthorProfile(loadedResume));
 
@@ -554,7 +323,7 @@ export function useResumeDetailController(resumeId: string) {
 				void recordResumeRead(loadedResume, activeUser);
 			}
 
-			await loadReviewThread(activeUser);
+			await refreshReviewThread(activeUser);
 
 			const elapsed = Date.now() - started;
 			window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
@@ -874,256 +643,6 @@ export function useResumeDetailController(resumeId: string) {
 		});
 	}
 
-	async function reactToReview(targetReview: Review, reaction: Reaction) {
-		setMessage("");
-
-		if (!user) {
-			goToLogin();
-			return;
-		}
-
-		if (targetReview.author_id === user.id) {
-			reportError("You cannot react to your own feedback.");
-			return;
-		}
-
-		if (isOwner) {
-			reportError("Resume owners cannot react to feedback for their own resume.");
-			return;
-		}
-
-		const currentReaction = likedReviewIds.has(targetReview.id)
-			? "like"
-			: dislikedReviewIds.has(targetReview.id)
-				? "dislike"
-				: null;
-
-		const applyLocalReaction = (nextReaction: Reaction | null) => {
-			setLikedReviewIds((current) => {
-				const next = new Set(current);
-				if (nextReaction === "like") {
-					next.add(targetReview.id);
-				} else {
-					next.delete(targetReview.id);
-				}
-				return next;
-			});
-			setDislikedReviewIds((current) => {
-				const next = new Set(current);
-				if (nextReaction === "dislike") {
-					next.add(targetReview.id);
-				} else {
-					next.delete(targetReview.id);
-				}
-				return next;
-			});
-			setReviews((current) =>
-				current.map((review) => {
-					if (review.id !== targetReview.id) return review;
-
-					const removeLike = currentReaction === "like" ? -1 : 0;
-					const addLike = nextReaction === "like" ? 1 : 0;
-					const removeDislike = currentReaction === "dislike" ? -1 : 0;
-					const addDislike = nextReaction === "dislike" ? 1 : 0;
-
-					return {
-						...review,
-						helpful_votes: Math.max(
-							0,
-							review.helpful_votes + removeLike + addLike,
-						),
-						dislike_count: Math.max(
-							0,
-							(review.dislike_count ?? 0) + removeDislike + addDislike,
-						),
-					};
-				}),
-			);
-		};
-
-		if (currentReaction === reaction) {
-			const { error } = await supabase
-				.from("votes")
-				.delete()
-				.eq("roast_id", targetReview.id)
-				.eq("voter_id", user.id);
-
-			if (error) {
-				reportInternalError(
-					error,
-					"We could not update your reaction. Please try again.",
-					"delete_review_reaction",
-					{ reviewId: targetReview.id, reaction },
-				);
-				return;
-			}
-
-			applyLocalReaction(null);
-			toast.info(reaction === "like" ? "Like removed." : "Dislike removed.");
-			return;
-		}
-
-		const voteQuery = currentReaction
-			? supabase
-					.from("votes")
-					.update({ reaction })
-					.eq("roast_id", targetReview.id)
-					.eq("voter_id", user.id)
-			: supabase.from("votes").insert({
-					roast_id: targetReview.id,
-					voter_id: user.id,
-					reaction,
-				});
-
-		const { error } = await voteQuery;
-
-		if (error) {
-			if (error.message.includes("reaction")) {
-				captureResumeDetailError(error, "save_review_reaction", {
-					reaction,
-					reviewId: targetReview.id,
-				});
-				reportError(`${SUPABASE_MIGRATION_MESSAGE} Reactions are not ready yet.`);
-			} else {
-				reportInternalError(
-					error,
-					"We could not update your reaction. Please try again.",
-					"save_review_reaction",
-					{ reaction, reviewId: targetReview.id },
-				);
-			}
-			return;
-		}
-
-		applyLocalReaction(reaction);
-		toast.success(reaction === "like" ? "Liked feedback." : "Disliked feedback.");
-	}
-
-	async function updateResumeStatus(
-		nextStatus: Extract<ResumeSummary["status"], "open" | "closed">,
-	) {
-		setMessage("");
-
-		if (!resume || !isOwner) {
-			reportError("Only the resume owner can change this thread status.");
-			return false;
-		}
-
-		setResumeActionBusy(true);
-		const { error } = await supabase
-			.from("resumes")
-			.update({ status: nextStatus })
-			.eq("id", resume.id);
-		setResumeActionBusy(false);
-
-		if (error) {
-			reportError(
-				isPermissionPolicyError(error)
-					? "Only the resume owner can change this thread status."
-					: "We could not update this resume status. Please try again.",
-			);
-			return false;
-		}
-
-		setResume((current) =>
-			current ? { ...current, status: nextStatus } : current,
-		);
-
-		if (nextStatus === "closed") {
-			clearFeedbackDrafts();
-			setMessage("This resume is now closed for new feedback.");
-			toast.success("Feedback closed.");
-		} else {
-			setMessage("This resume is open for feedback again.");
-			toast.success("Feedback reopened.");
-		}
-
-		return true;
-	}
-
-	async function deleteResume() {
-		setMessage("");
-
-		if (!resume || !isOwner) {
-			reportError("Only the resume owner can delete this submission.");
-			return false;
-		}
-
-		setResumeActionBusy(true);
-		const removeFile = await supabase.storage
-			.from("resumes")
-			.remove([resume.file_path]);
-		if (removeFile.error) {
-			setResumeActionBusy(false);
-			reportError("We could not delete the resume file. Please try again.");
-			return false;
-		}
-
-		const { error } = await supabase
-			.from("resumes")
-			.delete()
-			.eq("id", resume.id);
-		setResumeActionBusy(false);
-
-		if (error) {
-			reportError(
-				isPermissionPolicyError(error)
-					? "Only the resume owner can delete this submission."
-					: "We could not delete this submission. Please try again.",
-			);
-			return false;
-		}
-
-		toast.success("Resume deleted.");
-		announceRouteTransition("/feed");
-		router.push("/feed");
-		return true;
-	}
-
-	function requestResumeStatusAction() {
-		setMessage("");
-
-		if (!resume || !isOwner) {
-			reportError("Only the resume owner can change this thread status.");
-			return;
-		}
-
-		setPendingResumeAction(isClosed ? "reopen" : "close");
-	}
-
-	function requestDeleteResume() {
-		setMessage("");
-
-		if (!resume || !isOwner) {
-			reportError("Only the resume owner can delete this submission.");
-			return;
-		}
-
-		setPendingResumeAction("delete");
-	}
-
-	async function confirmResumeOwnerAction() {
-		if (!pendingResumeAction) {
-			return;
-		}
-
-		if (pendingResumeAction === "delete") {
-			const deleted = await deleteResume();
-			if (deleted) {
-				setPendingResumeAction(null);
-			}
-			return;
-		}
-
-		const updated = await updateResumeStatus(
-			pendingResumeAction === "close" ? "closed" : "open",
-		);
-
-		if (updated) {
-			setPendingResumeAction(null);
-		}
-	}
-
 	async function requestDeleteReview(targetReview: Review) {
 		setMessage("");
 
@@ -1192,7 +711,7 @@ export function useResumeDetailController(resumeId: string) {
 		setReplyContent("");
 		setReplyContentFormat("plain");
 		setReplyAttachment(null);
-		await loadReviewThread(user);
+		await refreshReviewThread(user);
 		setResume((current) =>
 			current
 				? {
@@ -1202,95 +721,6 @@ export function useResumeDetailController(resumeId: string) {
 				: current,
 		);
 		toast.success(targetReview.parent_id ? "Reply deleted." : "Comment deleted.");
-	}
-
-	function openReportDialog(targetReview: Review) {
-		setMessage("");
-
-		if (!reportSchemaReady) {
-			reportError(`${SUPABASE_MIGRATION_MESSAGE} Reports are not ready yet.`);
-			return;
-		}
-
-		if (!user) {
-			goToLogin();
-			return;
-		}
-
-		if (targetReview.author_id === user.id) {
-			reportError("You cannot report your own feedback.");
-			return;
-		}
-
-		if (targetReview.is_deleted) {
-			reportError("Deleted feedback cannot be reported.");
-			return;
-		}
-
-		setReportReason("personal_info");
-		setReportDetails("");
-		setReportTargetReview(targetReview);
-	}
-
-	async function submitReport(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-		setMessage("");
-
-		if (!reportTargetReview) {
-			return;
-		}
-
-		if (!user) {
-			goToLogin();
-			return;
-		}
-
-		const issue = getReportIssue({
-			reason: reportReason,
-			details: reportDetails,
-		});
-
-		if (issue) {
-			reportError(issue);
-			return;
-		}
-
-		setSubmittingReport(true);
-
-		const { data, error } = await supabase.rpc("report_content", {
-			report_target_type: "review",
-			target_resume_id: reportTargetReview.resume_id,
-			target_roast_id: reportTargetReview.id,
-			report_reason: reportReason,
-			report_details: reportDetails.trim(),
-		});
-
-		setSubmittingReport(false);
-
-		if (error) {
-			if (isReportFeatureError(error)) {
-				setReportSchemaReady(false);
-				reportError(`${SUPABASE_MIGRATION_MESSAGE} Reports are not ready yet.`);
-				return;
-			}
-
-			reportInternalError(
-				error,
-				"We could not send this report. Please try again.",
-				"report_review",
-				{ reportReason, reviewId: reportTargetReview.id },
-			);
-			return;
-		}
-
-		const reportResult = Array.isArray(data) ? data[0] : null;
-		setReportTargetReview(null);
-		setReportDetails("");
-		toast.success(
-			reportResult?.was_duplicate
-				? "Report updated in the moderation queue."
-				: "Report sent for moderation review.",
-		);
 	}
 
 	return {

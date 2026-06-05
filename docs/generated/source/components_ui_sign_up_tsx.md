@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/sign-up.tsx`
 - Kind: UI primitive
-- Size: 14906 bytes
-- Lines: 500
-- Source hash: `c775b75a31d1faaef6ecece181f522fe40ec63620b2945770e909e37bf184392`
+- Size: 14863 bytes
+- Lines: 499
+- Source hash: `d38c2e8e83f85cd0a0220c6900521a6991ebd433171a64129d7958630493c8aa`
 
 ## What This File Does
 
@@ -18,7 +18,6 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Exports
 
-- `Component`
 - `default`
 - `SignUp`
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/onboarding-validation.ts`
 - Kind: Application library module
-- Size: 4606 bytes
-- Lines: 173
-- Source hash: `622c58d7f84bb0482beed1a01ba003066f8ae7403908de8e6c34bd6e93cb41fb`
+- Size: 4481 bytes
+- Lines: 170
+- Source hash: `f56b725f084c5cb290405d4fe2333840dc58fd2fbeeabaa8c6b0e6c74c4eba58`
 
 ## What This File Does
 
@@ -20,9 +20,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 - `getCommunityRoleForOnboardingGoal`
 - `getOnboardingDestination`
-- `getOnboardingGoal`
 - `getOnboardingIssue`
-- `getOnboardingPersona`
 - `getPersonaProfileLabel`
 - `getReviewerTypeForOnboarding`
 - `isOnboardingGoalId`
@@ -31,10 +29,8 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `ONBOARDING_GOALS`
 - `ONBOARDING_PERSONAS`
 - `ONBOARDING_PROFILE_POSITION_OPTIONS`
-- `ONBOARDING_VERSION`
 - `OnboardingGoalId`
 - `OnboardingPersonaId`
-- `OnboardingStatus`
 - `parseOnboardingExpertise`
 
 ## Imports
@@ -45,25 +41,24 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 99 | `isOnboardingGoalId` | Function | top-level | yes | `value` | `boolean` | Implements the isonboardinggoalid helper. |
-| 103 | `isOnboardingPersonaId` | Function | top-level | yes | `value` | `boolean` | Implements the isonboardingpersonaid helper. |
-| 109 | `getOnboardingGoal` | Function | top-level | yes | `value` | `{ readonly description: "Post a resume and learn which fixes matter before applying."; readonly id: "get_feedback"; readonly label: "Get...` | Implements the getonboardinggoal helper. |
-| 113 | `getOnboardingPersona` | Function | top-level | yes | `value` | `{ readonly description: "Preparing for internships, placements, or early-career roles."; readonly id: "student"; readonly label: "Student...` | Implements the getonboardingpersona helper. |
-| 120 | `getPersonaProfileLabel` | Function | top-level | yes | `value` | `"Student" \| "Other" \| "Job seeker" \| "Recruiter / HR" \| "Engineer" \| "Product manager" \| "Career coach"` | Implements the getpersonaprofilelabel helper. |
-| 128 | `getCommunityRoleForOnboardingGoal` | Function | top-level | yes | `goalId` | `"reviewer" \| "candidate" \| "both"` | Implements the getcommunityroleforonboardinggoal helper. |
-| 134 | `getReviewerTypeForOnboarding` | Function | top-level | yes | `goalId`, `personaId` | `"student" \| "placed_professional" \| "recruiter" \| "hiring_manager" \| "engineer" \| "designer" \| "product_manager" \| "career_coach"...` | Implements the getreviewertypeforonboarding helper. |
-| 144 | `normalizeOnboardingTargetRole` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeonboardingtargetrole values for callers. |
-| 148 | `parseOnboardingExpertise` | Validation or normalization helper | top-level | yes | `value` | `string[]` | Validates or normalizes parseonboardingexpertise values for callers. |
-| 152 | `getOnboardingDestination` | Function | top-level | yes | `goalId` | `"/feed?welcome=candidate" \| "/feed?sort=needs&welcome=reviewer" \| "/feed?sort=needs&welcome=both"` | Implements the getonboardingdestination helper. |
-| 159 | `getOnboardingIssue` | Function | top-level | yes | `input` | `"" \| "Choose what you want to do on Linted." \| "Choose the option that best describes you."` | Implements the getonboardingissue helper. |
+| 96 | `isOnboardingGoalId` | Function | top-level | yes | `value` | `boolean` | Implements the isonboardinggoalid helper. |
+| 100 | `isOnboardingPersonaId` | Function | top-level | yes | `value` | `boolean` | Implements the isonboardingpersonaid helper. |
+| 106 | `getOnboardingGoal` | Function | top-level | no | `value` | `{ readonly description: "Post a resume and learn which fixes matter before applying."; readonly id: "get_feedback"; readonly label: "Get...` | Implements the getonboardinggoal helper. |
+| 110 | `getOnboardingPersona` | Function | top-level | no | `value` | `{ readonly description: "Preparing for internships, placements, or early-career roles."; readonly id: "student"; readonly label: "Student...` | Implements the getonboardingpersona helper. |
+| 117 | `getPersonaProfileLabel` | Function | top-level | yes | `value` | `"Student" \| "Job seeker" \| "Other" \| "Recruiter / HR" \| "Engineer" \| "Product manager" \| "Career coach"` | Implements the getpersonaprofilelabel helper. |
+| 125 | `getCommunityRoleForOnboardingGoal` | Function | top-level | yes | `goalId` | `"reviewer" \| "candidate" \| "both"` | Implements the getcommunityroleforonboardinggoal helper. |
+| 131 | `getReviewerTypeForOnboarding` | Function | top-level | yes | `goalId`, `personaId` | `"student" \| "placed_professional" \| "recruiter" \| "hiring_manager" \| "engineer" \| "designer" \| "product_manager" \| "career_coach"...` | Implements the getreviewertypeforonboarding helper. |
+| 141 | `normalizeOnboardingTargetRole` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeonboardingtargetrole values for callers. |
+| 145 | `parseOnboardingExpertise` | Validation or normalization helper | top-level | yes | `value` | `string[]` | Validates or normalizes parseonboardingexpertise values for callers. |
+| 149 | `getOnboardingDestination` | Function | top-level | yes | `goalId` | `"/feed?welcome=candidate" \| "/feed?sort=needs&welcome=reviewer" \| "/feed?sort=needs&welcome=both"` | Implements the getonboardingdestination helper. |
+| 156 | `getOnboardingIssue` | Function | top-level | yes | `input` | `"" \| "Choose what you want to do on Linted." \| "Choose the option that best describes you."` | Implements the getonboardingissue helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 88 | `OnboardingGoalId` | type |
-| 89 | `OnboardingPersonaId` | type |
-| 90 | `OnboardingStatus` | type |
+| 86 | `OnboardingGoalId` | type |
+| 87 | `OnboardingPersonaId` | type |
 
 ## Related Tests
 

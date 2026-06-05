@@ -4,9 +4,9 @@
 
 - Source path: `lib/admin-messages.ts`
 - Kind: Application library module
-- Size: 3540 bytes
+- Size: 3526 bytes
 - Lines: 155
-- Source hash: `42970eda863a9533861005f446c9db74744a2bde766c19cea9a3d51eb424077f`
+- Source hash: `869b1e6b70bb54aa188f88baf134907b5392181db3b806111526b6f6532f9f14`
 
 ## What This File Does
 
@@ -20,8 +20,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 - `ADMIN_MESSAGE_BODY_MAX_LENGTH`
 - `ADMIN_MESSAGE_TITLE_MAX_LENGTH`
-- `AdminMessageInput`
-- `AdminMessageTarget`
 - `AdminMessageValidationResult`
 - `DEFAULT_ADMIN_MESSAGE_LINK`
 - `isSafeAdminMessageLink`

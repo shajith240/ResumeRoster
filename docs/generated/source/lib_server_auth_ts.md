@@ -4,9 +4,9 @@
 
 - Source path: `lib/server-auth.ts`
 - Kind: Application library module
-- Size: 1780 bytes
+- Size: 1772 bytes
 - Lines: 68
-- Source hash: `faa5f52b9a8b62d6e87ed5e742bc7e787fecee5a73d4adb656f3b12ebcba75d5`
+- Source hash: `d1e04ff9efba03145918315d544aea0dde20265a50d99ccce5203dcd94a0de92`
 
 ## What This File Does
 
@@ -20,7 +20,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 - `createServiceSupabaseClient`
 - `requireSignedInUser`
-- `ServerAuthError`
 - `serverAuthErrorResponse`
 - `SignedInUserResult`
 

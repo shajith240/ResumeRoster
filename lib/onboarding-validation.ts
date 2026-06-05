@@ -4,8 +4,6 @@ import {
 	parseReviewerExpertise,
 } from "@/lib/reviewer-validation";
 
-export const ONBOARDING_VERSION = 1;
-
 export const ONBOARDING_GOALS = [
 	{
 		description:
@@ -87,7 +85,6 @@ export const ONBOARDING_PERSONAS = [
 
 export type OnboardingGoalId = (typeof ONBOARDING_GOALS)[number]["id"];
 export type OnboardingPersonaId = (typeof ONBOARDING_PERSONAS)[number]["id"];
-export type OnboardingStatus = "pending" | "completed" | "not_required";
 
 const onboardingGoalIds = new Set<string>(
 	ONBOARDING_GOALS.map((goal) => goal.id),
@@ -106,11 +103,11 @@ export function isOnboardingPersonaId(
 	return typeof value === "string" && onboardingPersonaIds.has(value);
 }
 
-export function getOnboardingGoal(value: OnboardingGoalId) {
+function getOnboardingGoal(value: OnboardingGoalId) {
 	return ONBOARDING_GOALS.find((goal) => goal.id === value) ?? ONBOARDING_GOALS[0];
 }
 
-export function getOnboardingPersona(value: OnboardingPersonaId) {
+function getOnboardingPersona(value: OnboardingPersonaId) {
 	return (
 		ONBOARDING_PERSONAS.find((persona) => persona.id === value) ??
 		ONBOARDING_PERSONAS[ONBOARDING_PERSONAS.length - 1]

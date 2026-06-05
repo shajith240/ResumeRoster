@@ -47,6 +47,11 @@ npm run docs:quality
 It writes enforced reports under `docs/generated/quality/`; CI verifies them
 with `npm run docs:quality:check`.
 
+The active jscpd report excludes applied Supabase migrations because those
+files are append-only production history. Historical SQL duplication is tracked
+separately in `docs/generated/quality/migration-history-jscpd-report.md` for
+audit and planned squash decisions.
+
 ## Browser Gates
 
 Install Chromium once before running browser checks locally:

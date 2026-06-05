@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/use-resume-detail-controller.ts`
 - Kind: React component
-- Size: 34912 bytes
-- Lines: 1362
-- Source hash: `55f9a88a48c0edeadaf1c03c2f9b6edbe3faf948d8cf87df1ec12d20f81ea7af`
+- Size: 19888 bytes
+- Lines: 792
+- Source hash: `9636d7a8aa49d9ece28f47b265418fdf41b18101b7c651cccd1e50ced6237fe1`
 
 ## What This File Does
 
@@ -22,9 +22,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `./data`
 - `./selectors`
 - `./thread-review-item`
 - `./types`
+- `./use-owner-actions`
+- `./use-review-reactions`
+- `./use-review-report-actions`
 - `./utils`
 - `@/components/CommentMediaToolbar`
 - `@/components/RouteTransitionLoader`
@@ -32,7 +36,6 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/lib/auth-redirect`
 - `@/lib/comment-media-validation`
 - `@/lib/monitoring/capture-errors`
-- `@/lib/report-validation`
 - `@/lib/resume-thread`
 - `@/lib/supabase/client`
 - `@/lib/supabase/types`
@@ -45,8 +48,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 50 | `useResumeDetailController` | React hook | top-level | yes | `resumeId` | `{ attachmentsById: Record<string, CommentAttachmentOption>; authorProfiles: Record<string, AuthorProfile>; collapsedReviewIds: Set<string...` | Provides reusable useresumedetailcontroller state and side effects. |
-| 901 | `applyLocalReaction` | Function | nested | no | `nextReaction` | `void` | Implements the applylocalreaction helper. |
+| 45 | `useResumeDetailController` | React hook | top-level | yes | `resumeId` | `{ attachmentsById: Record<string, CommentAttachmentOption>; authorProfiles: Record<string, AuthorProfile>; collapsedReviewIds: Set<string...` | Provides reusable useresumedetailcontroller state and side effects. |
 
 ## Types
 

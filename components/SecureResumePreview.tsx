@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Maximize2, Minus, Plus, X } from "lucide-react";
-import * as pdfjs from "pdfjs-dist";
 import type {
+	PDFDocumentLoadingTask,
 	PDFDocumentProxy,
 	PDFPageProxy,
+	RenderTask,
 } from "pdfjs-dist/types/src/display/api";
 import {
 	allowsResumePreviewInteractions,
@@ -16,9 +17,12 @@ import {
 
 const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
 
-pdfjs.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
-
 type ReaderMode = "fit" | "read";
+type PdfJsModule = typeof import("pdfjs-dist");
+type TextLayerHandle = {
+	cancel: () => void;
+	render: () => Promise<void>;
+};
 
 type SecureResumePreviewProps = {
 	fileUrl: string;
@@ -41,6 +45,19 @@ type LinkAnnotation = {
 	unsafeUrl?: string;
 	url?: string;
 };
+
+let pdfJsModulePromise: Promise<PdfJsModule> | null = null;
+
+async function loadPdfJs() {
+	if (!pdfJsModulePromise) {
+		pdfJsModulePromise = import("pdfjs-dist").then((pdfjs) => {
+			pdfjs.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
+			return pdfjs;
+		});
+	}
+
+	return pdfJsModulePromise;
+}
 
 function normalizeExternalUrl(value: unknown) {
 	if (typeof value !== "string") return "";
@@ -138,14 +155,17 @@ function SecureResumePage({
 
 	useEffect(() => {
 		let cancelled = false;
-		let renderTask: pdfjs.RenderTask | null = null;
-		let textLayer: InstanceType<typeof pdfjs.TextLayer> | null = null;
+		let renderTask: RenderTask | null = null;
+		let textLayer: TextLayerHandle | null = null;
 
 		async function renderPage() {
 			const canvas = canvasRef.current;
 			if (!canvas || containerWidth <= 0) return;
 
 			if (!hasRenderedRef.current) setLoading(true);
+
+			const pdfjs = await loadPdfJs();
+			if (cancelled) return;
 
 			const page = await pdf.getPage(pageNumber);
 			if (cancelled) return;
@@ -553,12 +573,16 @@ export default function SecureResumePreview({
 
 	useEffect(() => {
 		let cancelled = false;
-		let documentTask: pdfjs.PDFDocumentLoadingTask | null = null;
+		let documentTask: PDFDocumentLoadingTask | null = null;
+		let loadedPdf: PDFDocumentProxy | null = null;
 
 		async function loadPdf() {
 			setError("");
 			setPdf(null);
 			setPageCount(0);
+
+			const pdfjs = await loadPdfJs();
+			if (cancelled) return;
 
 			documentTask = pdfjs.getDocument({
 				url: fileUrl,
@@ -566,7 +590,7 @@ export default function SecureResumePreview({
 				disableStream: false,
 			});
 
-			const loadedPdf = await documentTask.promise;
+			loadedPdf = await documentTask.promise;
 			if (cancelled) {
 				await loadedPdf.destroy();
 				return;
@@ -588,7 +612,7 @@ export default function SecureResumePreview({
 		return () => {
 			cancelled = true;
 			documentTask?.destroy();
-			void pdf?.destroy();
+			void loadedPdf?.destroy();
 		};
 	}, [fileUrl]);
 

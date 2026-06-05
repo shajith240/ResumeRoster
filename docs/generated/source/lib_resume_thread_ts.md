@@ -4,9 +4,9 @@
 
 - Source path: `lib/resume-thread.ts`
 - Kind: Application library module
-- Size: 3812 bytes
-- Lines: 147
-- Source hash: `fc8a46b7bd66a868efa8ad40a960b909c9bdab529d196ec293821b5b3fdb1bcc`
+- Size: 3564 bytes
+- Lines: 141
+- Source hash: `d45c9f4f0f1ef69e25eeeed7479ecb958447a5a34545dd5cd156779278735e61`
 
 ## What This File Does
 
@@ -20,16 +20,11 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 - `buildThreadReviews`
 - `buildThreadReviewTree`
-- `buildThreadRoasts`
-- `buildThreadRoastTree`
 - `getReactionBlockReason`
 - `getReplyBlockReason`
 - `normalizeReview`
-- `normalizeRoast`
 - `ThreadReview`
 - `ThreadReviewNode`
-- `ThreadRoast`
-- `ThreadRoastNode`
 
 ## Imports
 
@@ -55,8 +50,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | 3 | `ActiveUserLike` | type |
 | 7 | `ThreadReview` | type |
 | 12 | `ThreadReviewNode` | type |
-| 142 | `ThreadRoast` | type |
-| 143 | `ThreadRoastNode` | type |
 
 ## Related Tests
 

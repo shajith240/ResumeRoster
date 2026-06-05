@@ -4,9 +4,9 @@
 
 - Source path: `lib/reviewer-validation.ts`
 - Kind: Application library module
-- Size: 5761 bytes
-- Lines: 226
-- Source hash: `1ff4bcda0a8bf4855d7be62c7b68b3be8433c36a9c56ac42752dc8f9d33cc38e`
+- Size: 5122 bytes
+- Lines: 205
+- Source hash: `22b38162117c88b7202b672e136b8db7f94bd52649713d63ac15962098b60d7b`
 
 ## What This File Does
 
@@ -21,7 +21,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `canShowReviewerProfile`
 - `COMMUNITY_ROLES`
 - `CommunityRole`
-- `getCommunityRoleLabel`
 - `getProfileRoleLabel`
 - `getProofUrlIssue`
 - `getReviewerApplicationIssue`
@@ -30,15 +29,12 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `isCommunityRole`
 - `isReviewerApplicationStatus`
 - `isReviewerType`
-- `isReviewerVerificationStatus`
 - `isTrustedReviewer`
 - `limitReviewerText`
 - `normalizeProofUrl`
 - `parseReviewerExpertise`
-- `REVIEWER_APPLICATION_STATUSES`
 - `REVIEWER_FIELD_LIMITS`
 - `REVIEWER_TYPES`
-- `REVIEWER_VERIFICATION_STATUSES`
 - `ReviewerApplicationStatus`
 - `ReviewerType`
 - `ReviewerVerificationStatus`
@@ -51,30 +47,28 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 62 | `isCommunityRole` | Function | top-level | yes | `value` | `boolean` | Implements the iscommunityrole helper. |
-| 66 | `isReviewerType` | Function | top-level | yes | `value` | `boolean` | Implements the isreviewertype helper. |
-| 70 | `isReviewerVerificationStatus` | Function | top-level | yes | `value` | `boolean` | Implements the isreviewerverificationstatus helper. |
-| 78 | `isReviewerApplicationStatus` | Function | top-level | yes | `value` | `boolean` | Implements the isreviewerapplicationstatus helper. |
-| 86 | `limitReviewerText` | Function | top-level | yes | `value`, `limit` | `string` | Implements the limitreviewertext helper. |
-| 90 | `parseReviewerExpertise` | Validation or normalization helper | top-level | yes | `value` | `string[]` | Validates or normalizes parsereviewerexpertise values for callers. |
-| 110 | `getCommunityRoleLabel` | Function | top-level | yes | `role` | `string` | Implements the getcommunityrolelabel helper. |
-| 114 | `getReviewerTypeLabel` | Function | top-level | yes | `type` | `string` | Implements the getreviewertypelabel helper. |
-| 118 | `canShowReviewerProfile` | Function | top-level | yes | `role`, `type` | `boolean` | Implements the canshowreviewerprofile helper. |
-| 128 | `isTrustedReviewer` | Function | top-level | yes | `status` | `boolean` | Implements the istrustedreviewer helper. |
-| 134 | `getReviewerDisplayLabel` | Function | top-level | yes | `profile` | `string` | Implements the getreviewerdisplaylabel helper. |
-| 145 | `getProfileRoleLabel` | Function | top-level | yes | `profile` | `string` | Implements the getprofilerolelabel helper. |
-| 182 | `normalizeProofUrl` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeproofurl values for callers. |
-| 186 | `getProofUrlIssue` | Function | top-level | yes | `value` | `"" \| "Add a public proof link before applying." \| "Use a public http or https proof link." \| "Enter a valid public proof link."` | Implements the getproofurlissue helper. |
-| 203 | `getReviewerApplicationIssue` | Function | top-level | yes | `input` | `string` | Implements the getreviewerapplicationissue helper. |
+| 53 | `isCommunityRole` | Function | top-level | yes | `value` | `boolean` | Implements the iscommunityrole helper. |
+| 57 | `isReviewerType` | Function | top-level | yes | `value` | `boolean` | Implements the isreviewertype helper. |
+| 61 | `isReviewerApplicationStatus` | Function | top-level | yes | `value` | `boolean` | Implements the isreviewerapplicationstatus helper. |
+| 69 | `limitReviewerText` | Function | top-level | yes | `value`, `limit` | `string` | Implements the limitreviewertext helper. |
+| 73 | `parseReviewerExpertise` | Validation or normalization helper | top-level | yes | `value` | `string[]` | Validates or normalizes parsereviewerexpertise values for callers. |
+| 93 | `getReviewerTypeLabel` | Function | top-level | yes | `type` | `string` | Implements the getreviewertypelabel helper. |
+| 97 | `canShowReviewerProfile` | Function | top-level | yes | `role`, `type` | `boolean` | Implements the canshowreviewerprofile helper. |
+| 107 | `isTrustedReviewer` | Function | top-level | yes | `status` | `boolean` | Implements the istrustedreviewer helper. |
+| 113 | `getReviewerDisplayLabel` | Function | top-level | yes | `profile` | `string` | Implements the getreviewerdisplaylabel helper. |
+| 124 | `getProfileRoleLabel` | Function | top-level | yes | `profile` | `string` | Implements the getprofilerolelabel helper. |
+| 161 | `normalizeProofUrl` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeproofurl values for callers. |
+| 165 | `getProofUrlIssue` | Function | top-level | yes | `value` | `"" \| "Add a public proof link before applying." \| "Use a public http or https proof link." \| "Enter a valid public proof link."` | Implements the getproofurlissue helper. |
+| 182 | `getReviewerApplicationIssue` | Function | top-level | yes | `input` | `string` | Implements the getreviewerapplicationissue helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 26 | `CommunityRole` | type |
-| 27 | `ReviewerType` | type |
-| 28 | `ReviewerVerificationStatus` | type |
-| 30 | `ReviewerApplicationStatus` | type |
+| 20 | `CommunityRole` | type |
+| 21 | `ReviewerType` | type |
+| 22 | `ReviewerVerificationStatus` | type |
+| 27 | `ReviewerApplicationStatus` | type |
 
 ## Related Tests
 

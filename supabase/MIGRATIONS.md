@@ -96,3 +96,18 @@ npm run db:check
 ```
 
 CI also runs this check so legacy one-off SQL cannot drift back into the active Supabase tree.
+
+## Duplicate SQL History
+
+Applied migrations are append-only production history. Do not edit, reorder, or
+deduplicate old migration files only to reduce jscpd percentages.
+
+The active duplicate-code report excludes `supabase/migrations/**` so SQL clone
+cleanup does not encourage unsafe history rewrites. Historical duplication is
+still generated in `docs/generated/quality/migration-history-jscpd-report.md`
+as an audit aid.
+
+If the migration chain becomes too long to operate comfortably, plan a migration
+squash or bootstrap migration as a coordinated database operation. Validate it
+against a fresh local database and a linked staging project before changing the
+production workflow.

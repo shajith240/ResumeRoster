@@ -29,10 +29,11 @@ function normalizeToolOutput(value) {
 	return value.replace(/^time: .+$/gm, "time: deterministic");
 }
 
-function makeReport(title, command, result) {
+function makeReport(title, command, result, notes = []) {
 	return [
 		`# ${title}`,
 		"",
+		...notes.flatMap((note) => [note, ""]),
 		`Command: \`${command}\``,
 		`Exit code: \`${result.code}\``,
 		"",
@@ -48,11 +49,11 @@ function buildReports() {
 	const toolFailures = [];
 	const knipCommand = "npx knip --no-exit-code --no-progress --reporter compact";
 	const knip = run(process.execPath, [
-	path.join(repoRoot, "node_modules/knip/bin/knip.js"),
-	"--no-exit-code",
-	"--no-progress",
-	"--reporter",
-	"compact",
+		path.join(repoRoot, "node_modules/knip/bin/knip.js"),
+		"--no-exit-code",
+		"--no-progress",
+		"--reporter",
+		"compact",
 	]);
 	reports.set(
 		path.join(generatedQualityDir, "knip-report.md"),
@@ -63,31 +64,68 @@ function buildReports() {
 	}
 
 	const jscpdCommand =
-	"npx jscpd app components lib scripts supabase --gitignore --min-lines 8 --min-tokens 80 --reporters console --exitCode 0 --noTips";
+		'npx jscpd app components lib scripts supabase --gitignore --ignore "supabase/migrations/**" --min-lines 8 --min-tokens 80 --reporters console --exitCode 0 --noTips';
 	const jscpd = run(process.execPath, [
-	path.join(repoRoot, "node_modules/jscpd/bin/jscpd"),
-	"app",
-	"components",
-	"lib",
-	"scripts",
-	"supabase",
-	"--gitignore",
-	"--min-lines",
-	"8",
-	"--min-tokens",
-	"80",
-	"--reporters",
-	"console",
-	"--exitCode",
-	"0",
-	"--noTips",
+		path.join(repoRoot, "node_modules/jscpd/bin/jscpd"),
+		"app",
+		"components",
+		"lib",
+		"scripts",
+		"supabase",
+		"--gitignore",
+		"--ignore",
+		"supabase/migrations/**",
+		"--min-lines",
+		"8",
+		"--min-tokens",
+		"80",
+		"--reporters",
+		"console",
+		"--exitCode",
+		"0",
+		"--noTips",
 	]);
 	reports.set(
 		path.join(generatedQualityDir, "jscpd-report.md"),
-		makeReport("jscpd Duplicate-Code Report", jscpdCommand, jscpd),
+		makeReport("jscpd Duplicate-Code Report", jscpdCommand, jscpd, [
+			"This actionable duplicate-code report excludes `supabase/migrations/**` because applied migrations are append-only production history.",
+			"Historical migration duplication is still captured in `migration-history-jscpd-report.md` for audit and planned squash decisions.",
+		]),
 	);
 	if (jscpd.code !== 0) {
 		toolFailures.push(`jscpd exited with code ${jscpd.code}`);
+	}
+
+	const migrationJscpdCommand =
+		"npx jscpd supabase/migrations --gitignore --min-lines 8 --min-tokens 80 --reporters console --exitCode 0 --noTips";
+	const migrationJscpd = run(process.execPath, [
+		path.join(repoRoot, "node_modules/jscpd/bin/jscpd"),
+		"supabase/migrations",
+		"--gitignore",
+		"--min-lines",
+		"8",
+		"--min-tokens",
+		"80",
+		"--reporters",
+		"console",
+		"--exitCode",
+		"0",
+		"--noTips",
+	]);
+	reports.set(
+		path.join(generatedQualityDir, "migration-history-jscpd-report.md"),
+		makeReport(
+			"jscpd Migration-History Duplicate-Code Report",
+			migrationJscpdCommand,
+			migrationJscpd,
+			[
+				"This informational report tracks duplication inside applied Supabase migrations.",
+				"Do not rewrite historical migrations to reduce this metric; use a planned migration squash or bootstrap workflow only after environment coordination.",
+			],
+		),
+	);
+	if (migrationJscpd.code !== 0) {
+		toolFailures.push(`migration-history jscpd exited with code ${migrationJscpd.code}`);
 	}
 
 	const summary = [
@@ -96,11 +134,12 @@ function buildReports() {
 	"These reports are generated artifacts. CI checks that they are fresh so dead-code and duplicate-code findings cannot drift silently.",
 	"",
 	"- [Knip dead-code report](knip-report.md)",
-	"- [jscpd duplicate-code report](jscpd-report.md)",
+	"- [jscpd duplicate-code report](jscpd-report.md) for active app/source drift",
+	"- [jscpd migration-history duplicate-code report](migration-history-jscpd-report.md) for informational Supabase migration audits",
 	"",
-	"Use these reports to decide what to clean in a separate maintenance pass.",
+	"Use these reports to decide what to clean in a separate maintenance pass. Do not rewrite applied migrations only to reduce duplicate-code percentages.",
 	"",
-].join("\n");
+	].join("\n");
 	reports.set(path.join(generatedQualityDir, "README.md"), summary);
 	return { reports, toolFailures };
 }

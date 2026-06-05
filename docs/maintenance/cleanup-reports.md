@@ -12,10 +12,16 @@ npm run docs:quality
 
 - `docs/generated/quality/knip-report.md`
 - `docs/generated/quality/jscpd-report.md`
+- `docs/generated/quality/migration-history-jscpd-report.md`
 
 ## Policy
 
-Reports are review-only in V1. They do not delete files and they do not block CI.
+Reports are review-only in V1. They do not delete files automatically.
+
+The active jscpd report excludes `supabase/migrations/**` so duplicate-code
+cleanup stays focused on live app and automation source. Historical Supabase
+migration duplication remains visible in the migration-history report, but
+applied migrations must not be rewritten just to improve a metric.
 
 ## How To Use Findings
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/session-lock.ts`
 - Kind: Application library module
-- Size: 4187 bytes
-- Lines: 152
-- Source hash: `9df6c66f055178158a1e808c04ce627e14eb24110b0f56fb5692eab7c5619b0f`
+- Size: 3811 bytes
+- Lines: 140
+- Source hash: `a8f42befddc90865f86c50b0d2f89a4b62a84fd0bb23dc0e9960207620cacc3e`
 
 ## What This File Does
 
@@ -20,13 +20,8 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 - `claimActiveUserSession`
 - `consumeSessionSupersededNotice`
-- `createClientSessionId`
 - `endSupersededSession`
 - `ensureActiveUserSession`
-- `getClientSessionId`
-- `isValidClientSessionId`
-- `releaseActiveUserSession`
-- `SESSION_SUPERSEDED_MESSAGE`
 - `verifyActiveUserSession`
 
 ## Imports
@@ -39,18 +34,17 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 17 | `isActiveSessionFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isactivesessionfeatureerror helper. |
-| 23 | `isValidClientSessionId` | Function | top-level | yes | `value` | `boolean` | Implements the isvalidclientsessionid helper. |
-| 27 | `createClientSessionId` | Action helper | top-level | yes | none | `string` | Runs the createclientsessionid workflow for callers. |
-| 36 | `getClientSessionId` | Function | top-level | yes | `userId` | `string` | Implements the getclientsessionid helper. |
+| 23 | `isValidClientSessionId` | Function | top-level | no | `value` | `boolean` | Implements the isvalidclientsessionid helper. |
+| 27 | `createClientSessionId` | Action helper | top-level | no | none | `string` | Runs the createclientsessionid workflow for callers. |
+| 36 | `getClientSessionId` | Function | top-level | no | `userId` | `string` | Implements the getclientsessionid helper. |
 | 51 | `consumeSessionSupersededNotice` | Function | top-level | yes | none | `string` | Implements the consumesessionsupersedednotice helper. |
 | 59 | `persistSessionSupersededNotice` | Function | top-level | no | none | `void` | Implements the persistsessionsupersedednotice helper. |
 | 67 | `activeStatus` | Function | top-level | no | `sessionId`, `active` | `ActiveSessionStatus` | Implements the activestatus helper. |
 | 75 | `featureNotReadyStatus` | Function | top-level | no | `sessionId` | `ActiveSessionStatus` | Implements the featurenotreadystatus helper. |
 | 83 | `claimActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<ActiveSessionStatus>` | Implements the claimactiveusersession helper. |
 | 102 | `verifyActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<ActiveSessionStatus>` | Implements the verifyactiveusersession helper. |
-| 121 | `releaseActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<void>` | Implements the releaseactiveusersession helper. |
-| 133 | `endSupersededSession` | Function async | top-level | yes | none | `Promise<void>` | Implements the endsupersededsession helper. |
-| 142 | `ensureActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<boolean>` | Implements the ensureactiveusersession helper. |
+| 121 | `endSupersededSession` | Function async | top-level | yes | none | `Promise<void>` | Implements the endsupersededsession helper. |
+| 130 | `ensureActiveUserSession` | Function async | top-level | yes | `userId` | `Promise<boolean>` | Implements the ensureactiveusersession helper. |
 
 ## Types
 
