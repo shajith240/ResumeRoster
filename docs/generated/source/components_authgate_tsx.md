@@ -4,9 +4,9 @@
 
 - Source path: `components/AuthGate.tsx`
 - Kind: React component
-- Size: 5920 bytes
+- Size: 5934 bytes
 - Lines: 232
-- Source hash: `1f335c1c865d830ca9a53792022a20e0c3b565eccd8bd60bb03aa4449831e4da`
+- Source hash: `95c5db8b49caa73033631daea100beb1504e7333b63c639e8c15ff5744e04f10`
 
 ## What This File Does
 
@@ -25,7 +25,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 - `@/components/AppPresence`
 - `@/components/LoadingScreen`
-- `@/components/ui/sidebar`
+- `@/components/navigation/SessionNavBar`
 - `@/lib/auth-redirect`
 - `@/lib/auth-session`
 - `@/lib/session-lock`

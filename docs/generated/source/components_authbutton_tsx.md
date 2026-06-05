@@ -4,9 +4,9 @@
 
 - Source path: `components/AuthButton.tsx`
 - Kind: React component
-- Size: 7600 bytes
+- Size: 7604 bytes
 - Lines: 274
-- Source hash: `4e01d275fb30c232c1f95356e80c062d71594f0afe6db4cc6f8d78b17fbb6fd9`
+- Source hash: `46fb6d07ff6d5e10be9bbb1d248d11a61f80c2f76ea70428617698b3cda344f4`
 
 ## What This File Does
 
@@ -23,9 +23,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `@/components/account/UserDropdown`
 - `@/components/NotificationCenter`
 - `@/components/RouteTransitionLoader`
-- `@/components/ui/user-dropdown`
 - `@/lib/anonymous-profile`
 - `@/lib/app-presence`
 - `@/lib/auth-redirect`

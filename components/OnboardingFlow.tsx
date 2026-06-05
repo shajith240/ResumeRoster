@@ -20,7 +20,7 @@ import {
 	UsersIcon,
 	type SidebarAnimatedIconComponent,
 	type SidebarAnimatedIconHandle,
-} from "@/components/ui/sidebar-icons";
+} from "@/components/navigation/sidebar-icons";
 import {
 	ONBOARDING_GOALS,
 	ONBOARDING_PERSONAS,

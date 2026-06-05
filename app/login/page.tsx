@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import LoadingScreen from "@/components/LoadingScreen";
-import SignUp from "@/components/ui/sign-up";
+import SignUp from "@/components/auth/SignUp";
 
 export default function LoginPage() {
 	return (

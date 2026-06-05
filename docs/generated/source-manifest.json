@@ -350,11 +350,11 @@
       "exportCount": 2
     },
     {
-      "hash": "de64f1e1805687130077c5a522832f63528f8ddc048d0a71e463e54466a9af68",
+      "hash": "ebee086b5ec4bbf89db504e0a3b4dac664965c15aeaff48ccece36446ca57547",
       "kind": "Next page route",
       "lineCount": 18,
       "relativePath": "app/login/page.tsx",
-      "size": 345,
+      "size": 346,
       "functionCount": 1,
       "importCount": 3,
       "exportCount": 2
@@ -468,6 +468,16 @@
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
+    },
+    {
+      "hash": "56ae9f116c3045991d386e8abf68239e0b1af50a5f6eaee308547bd3a4c4eff0",
+      "kind": "React component",
+      "lineCount": 501,
+      "relativePath": "components/account/UserDropdown.tsx",
+      "size": 14960,
+      "functionCount": 5,
+      "importCount": 24,
+      "exportCount": 1
     },
     {
       "hash": "383a991b42ba3e8b6b4822304271ceb56eb8df0a2fc83573f3f5ddbde680c45d",
@@ -600,21 +610,31 @@
       "exportCount": 2
     },
     {
-      "hash": "4e01d275fb30c232c1f95356e80c062d71594f0afe6db4cc6f8d78b17fbb6fd9",
+      "hash": "d38c2e8e83f85cd0a0220c6900521a6991ebd433171a64129d7958630493c8aa",
+      "kind": "React component",
+      "lineCount": 499,
+      "relativePath": "components/auth/SignUp.tsx",
+      "size": 14863,
+      "functionCount": 9,
+      "importCount": 11,
+      "exportCount": 2
+    },
+    {
+      "hash": "46fb6d07ff6d5e10be9bbb1d248d11a61f80c2f76ea70428617698b3cda344f4",
       "kind": "React component",
       "lineCount": 274,
       "relativePath": "components/AuthButton.tsx",
-      "size": 7600,
+      "size": 7604,
       "functionCount": 2,
       "importCount": 14,
       "exportCount": 2
     },
     {
-      "hash": "1f335c1c865d830ca9a53792022a20e0c3b565eccd8bd60bb03aa4449831e4da",
+      "hash": "95c5db8b49caa73033631daea100beb1504e7333b63c639e8c15ff5744e04f10",
       "kind": "React component",
       "lineCount": 232,
       "relativePath": "components/AuthGate.tsx",
-      "size": 5920,
+      "size": 5934,
       "functionCount": 5,
       "importCount": 11,
       "exportCount": 2
@@ -710,14 +730,24 @@
       "exportCount": 0
     },
     {
-      "hash": "dab7a8a24f1e6677f3db2c551195d5414c28cd8f5c18b5b151ef2e3c92b16c29",
+      "hash": "e11ba72690d5fc20936f27f2fa78e325d803f011298ccfe1fa55323dff965b17",
       "kind": "React component",
       "lineCount": 463,
       "relativePath": "components/Leaderboard.tsx",
-      "size": 12388,
+      "size": 12396,
       "functionCount": 12,
       "importCount": 8,
       "exportCount": 2
+    },
+    {
+      "hash": "b1cdd98e0734479c995f63fd71a0d516300bb9fd25e4b27fa6808f5acf1ea14d",
+      "kind": "React component",
+      "lineCount": 676,
+      "relativePath": "components/leaderboard/StackedList.tsx",
+      "size": 22237,
+      "functionCount": 16,
+      "importCount": 10,
+      "exportCount": 3
     },
     {
       "hash": "80a7a498742ee803053cc6a242c16c8d5eaa262d24d5222af5e9a8ee6410ac1a",
@@ -740,6 +770,26 @@
       "exportCount": 2
     },
     {
+      "hash": "da117413f95fa855d32089ce42080434059c982d98d753642a933f653b180c1e",
+      "kind": "React component",
+      "lineCount": 153,
+      "relativePath": "components/navigation/SessionNavBar.tsx",
+      "size": 3556,
+      "functionCount": 2,
+      "importCount": 6,
+      "exportCount": 1
+    },
+    {
+      "hash": "7607a9821bd7051d9670d82a1da38dd41c68ddb1d57730de8a6282c24944f452",
+      "kind": "React component",
+      "lineCount": 559,
+      "relativePath": "components/navigation/sidebar-icons.tsx",
+      "size": 11817,
+      "functionCount": 1,
+      "importCount": 5,
+      "exportCount": 15
+    },
+    {
       "hash": "247ee250a262af849de48ae856ad1a352f7dd91d4a0a83792e5d4b0e72547c26",
       "kind": "React component",
       "lineCount": 393,
@@ -750,11 +800,11 @@
       "exportCount": 2
     },
     {
-      "hash": "a3530e6f6874025feeb3bfca150ae4c12ab5853c8d0b6dea230591fe24ad6441",
+      "hash": "f200601f0b0d072c7d045f934de2c459f6317da9b9754e971ca5e7b2b5ad4bcd",
       "kind": "React component",
       "lineCount": 326,
       "relativePath": "components/OnboardingFlow.tsx",
-      "size": 8266,
+      "size": 8274,
       "functionCount": 3,
       "importCount": 10,
       "exportCount": 2
@@ -1290,36 +1340,6 @@
       "exportCount": 1
     },
     {
-      "hash": "7607a9821bd7051d9670d82a1da38dd41c68ddb1d57730de8a6282c24944f452",
-      "kind": "UI primitive",
-      "lineCount": 559,
-      "relativePath": "components/ui/sidebar-icons.tsx",
-      "size": 11817,
-      "functionCount": 1,
-      "importCount": 5,
-      "exportCount": 15
-    },
-    {
-      "hash": "ede937c64a6ebf08e61fca6f644fb46bde6b14be55fd0218a07ee1f9b535b62f",
-      "kind": "UI primitive",
-      "lineCount": 153,
-      "relativePath": "components/ui/sidebar.tsx",
-      "size": 3548,
-      "functionCount": 2,
-      "importCount": 6,
-      "exportCount": 1
-    },
-    {
-      "hash": "d38c2e8e83f85cd0a0220c6900521a6991ebd433171a64129d7958630493c8aa",
-      "kind": "UI primitive",
-      "lineCount": 499,
-      "relativePath": "components/ui/sign-up.tsx",
-      "size": 14863,
-      "functionCount": 9,
-      "importCount": 11,
-      "exportCount": 2
-    },
-    {
       "hash": "d1eca70d4cc4070b50a76bce8ab4ab522cd43355be3d14372f05f1feb6578f7c",
       "kind": "UI primitive",
       "lineCount": 51,
@@ -1327,26 +1347,6 @@
       "size": 1366,
       "functionCount": 3,
       "importCount": 2,
-      "exportCount": 1
-    },
-    {
-      "hash": "b1cdd98e0734479c995f63fd71a0d516300bb9fd25e4b27fa6808f5acf1ea14d",
-      "kind": "UI primitive",
-      "lineCount": 676,
-      "relativePath": "components/ui/stacked-list.tsx",
-      "size": 22237,
-      "functionCount": 16,
-      "importCount": 10,
-      "exportCount": 3
-    },
-    {
-      "hash": "56ae9f116c3045991d386e8abf68239e0b1af50a5f6eaee308547bd3a4c4eff0",
-      "kind": "UI primitive",
-      "lineCount": 501,
-      "relativePath": "components/ui/user-dropdown.tsx",
-      "size": 14960,
-      "functionCount": 5,
-      "importCount": 24,
       "exportCount": 1
     },
     {
@@ -3420,5 +3420,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "ef8650eafb6ba8130c50d5e15f7c00614953536e009fdfbee2b2b60c1a472700"
+  "manifestHash": "56b8ae83855337bf02451acd2326f98c5f5fcea82437d00ae2e9c720655c133d"
 }

@@ -13,7 +13,7 @@ import {
 	TrophyIcon,
 	type SidebarAnimatedIconComponent,
 	type SidebarAnimatedIconHandle,
-} from "@/components/ui/sidebar-icons";
+} from "@/components/navigation/sidebar-icons";
 
 import { useAdminAccess } from "@/lib/use-admin-access";
 import { cn } from "@/lib/utils";

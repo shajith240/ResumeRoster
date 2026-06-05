@@ -13,7 +13,7 @@ import {
 	endSupersededSession,
 	verifyActiveUserSession,
 } from "@/lib/session-lock";
-import { SessionNavBar } from "@/components/ui/sidebar";
+import { SessionNavBar } from "@/components/navigation/SessionNavBar";
 import type { ProfileOnboarding } from "@/lib/supabase/types";
 
 type AuthGateProps = {

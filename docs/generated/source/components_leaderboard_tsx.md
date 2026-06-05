@@ -4,9 +4,9 @@
 
 - Source path: `components/Leaderboard.tsx`
 - Kind: React component
-- Size: 12388 bytes
+- Size: 12396 bytes
 - Lines: 463
-- Source hash: `dab7a8a24f1e6677f3db2c551195d5414c28cd8f5c18b5b151ef2e3c92b16c29`
+- Source hash: `e11ba72690d5fc20936f27f2fa78e325d803f011298ccfe1fa55323dff965b17`
 
 ## What This File Does
 
@@ -24,8 +24,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `./Leaderboard.module.css`
+- `@/components/leaderboard/StackedList`
 - `@/components/ui/select`
-- `@/components/ui/stacked-list`
 - `@/lib/leaderboard-ranking`
 - `@/lib/supabase/client`
 - `@/lib/supabase/types`

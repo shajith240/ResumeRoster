@@ -4,9 +4,9 @@
 
 - Source path: `app/login/page.tsx`
 - Kind: Next page route
-- Size: 345 bytes
+- Size: 346 bytes
 - Lines: 18
-- Source hash: `de64f1e1805687130077c5a522832f63528f8ddc048d0a71e463e54466a9af68`
+- Source hash: `ebee086b5ec4bbf89db504e0a3b4dac664965c15aeaff48ccece36446ca57547`
 
 ## What This File Does
 
@@ -23,8 +23,8 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 ## Imports
 
+- `@/components/auth/SignUp`
 - `@/components/LoadingScreen`
-- `@/components/ui/sign-up`
 - `react`
 
 ## Functions And Components

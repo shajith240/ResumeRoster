@@ -30,11 +30,11 @@ Clone found (typescript):
 
 Clone found (tsx):
  - components\AuthGate.tsx [22:2 - 43:34] (21 lines, 172 tokens)
-   components\ui\sign-up.tsx [17:75 - 37:29]
+   components\auth\SignUp.tsx [17:75 - 37:29]
 
 Clone found (tsx):
  - components\AuthGate.tsx [70:47 - 93:6] (23 lines, 205 tokens)
-   components\ui\sign-up.tsx [150:63 - 173:8]
+   components\auth\SignUp.tsx [150:63 - 173:8]
 
 Clone found (typescript):
  - app\api\admin\reports\[id]\action\route.ts [143:24 - 158:47] (15 lines, 167 tokens)

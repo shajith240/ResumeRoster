@@ -7,7 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import NotificationCenter from "@/components/NotificationCenter";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
-import { UserDropdown } from "@/components/ui/user-dropdown";
+import { UserDropdown } from "@/components/account/UserDropdown";
 import {
 	getAnonymousProfileDisplayName,
 	getAnonymousProfileUsername,

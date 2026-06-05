@@ -3,7 +3,7 @@
 # Generated Source Atlas
 
 Generated from 341 source-controlled files.
-Manifest hash: `ef8650eafb6ba8130c50d5e15f7c00614953536e009fdfbee2b2b60c1a472700`
+Manifest hash: `56b8ae83855337bf02451acd2326f98c5f5fcea82437d00ae2e9c720655c133d`
 
 ## Folder Coverage
 
@@ -33,11 +33,11 @@ Manifest hash: `ef8650eafb6ba8130c50d5e15f7c00614953536e009fdfbee2b2b60c1a472700
 | Project file | 9 |
 | Public browser asset | 1 |
 | Public visual asset | 26 |
-| React component | 70 |
+| React component | 75 |
 | Repository automation | 6 |
 | Root documentation | 3 |
 | Supabase migration | 46 |
-| UI primitive | 18 |
+| UI primitive | 13 |
 | Unit test | 33 |
 
 ## Files
@@ -90,6 +90,7 @@ Manifest hash: `ef8650eafb6ba8130c50d5e15f7c00614953536e009fdfbee2b2b60c1a472700
 | `app/submit/page.tsx` | Next page route | [open](source/app_submit_page_tsx.md) |
 | `app/terms/page.tsx` | Next page route | [open](source/app_terms_page_tsx.md) |
 | `components.json` | Project configuration | [open](source/components_json.md) |
+| `components/account/UserDropdown.tsx` | React component | [open](source/components_account_userdropdown_tsx.md) |
 | `components/admin-dashboard/constants.ts` | React component | [open](source/components_admin_dashboard_constants_ts.md) |
 | `components/admin-dashboard/content.tsx` | React component | [open](source/components_admin_dashboard_content_tsx.md) |
 | `components/admin-dashboard/data.tsx` | React component | [open](source/components_admin_dashboard_data_tsx.md) |
@@ -103,6 +104,7 @@ Manifest hash: `ef8650eafb6ba8130c50d5e15f7c00614953536e009fdfbee2b2b60c1a472700
 | `components/admin-dashboard/utils.ts` | React component | [open](source/components_admin_dashboard_utils_ts.md) |
 | `components/AdminDashboard.tsx` | React component | [open](source/components_admindashboard_tsx.md) |
 | `components/AppPresence.tsx` | React component | [open](source/components_apppresence_tsx.md) |
+| `components/auth/SignUp.tsx` | React component | [open](source/components_auth_signup_tsx.md) |
 | `components/AuthButton.tsx` | React component | [open](source/components_authbutton_tsx.md) |
 | `components/AuthGate.tsx` | React component | [open](source/components_authgate_tsx.md) |
 | `components/BrandMark.tsx` | React component | [open](source/components_brandmark_tsx.md) |
@@ -115,8 +117,11 @@ Manifest hash: `ef8650eafb6ba8130c50d5e15f7c00614953536e009fdfbee2b2b60c1a472700
 | `components/LandingCta.tsx` | React component | [open](source/components_landingcta_tsx.md) |
 | `components/Leaderboard.module.css` | React component | [open](source/components_leaderboard_module_css.md) |
 | `components/Leaderboard.tsx` | React component | [open](source/components_leaderboard_tsx.md) |
+| `components/leaderboard/StackedList.tsx` | React component | [open](source/components_leaderboard_stackedlist_tsx.md) |
 | `components/LintPointsFlame.tsx` | React component | [open](source/components_lintpointsflame_tsx.md) |
 | `components/LoadingScreen.tsx` | React component | [open](source/components_loadingscreen_tsx.md) |
+| `components/navigation/SessionNavBar.tsx` | React component | [open](source/components_navigation_sessionnavbar_tsx.md) |
+| `components/navigation/sidebar-icons.tsx` | React component | [open](source/components_navigation_sidebar_icons_tsx.md) |
 | `components/NotificationCenter.tsx` | React component | [open](source/components_notificationcenter_tsx.md) |
 | `components/OnboardingFlow.tsx` | React component | [open](source/components_onboardingflow_tsx.md) |
 | `components/PersonalizeLintedPrompt.tsx` | React component | [open](source/components_personalizelintedprompt_tsx.md) |
@@ -172,12 +177,7 @@ Manifest hash: `ef8650eafb6ba8130c50d5e15f7c00614953536e009fdfbee2b2b60c1a472700
 | `components/ui/scroll-area.tsx` | UI primitive | [open](source/components_ui_scroll_area_tsx.md) |
 | `components/ui/select.tsx` | UI primitive | [open](source/components_ui_select_tsx.md) |
 | `components/ui/separator.tsx` | UI primitive | [open](source/components_ui_separator_tsx.md) |
-| `components/ui/sidebar-icons.tsx` | UI primitive | [open](source/components_ui_sidebar_icons_tsx.md) |
-| `components/ui/sidebar.tsx` | UI primitive | [open](source/components_ui_sidebar_tsx.md) |
-| `components/ui/sign-up.tsx` | UI primitive | [open](source/components_ui_sign_up_tsx.md) |
 | `components/ui/sonner.tsx` | UI primitive | [open](source/components_ui_sonner_tsx.md) |
-| `components/ui/stacked-list.tsx` | UI primitive | [open](source/components_ui_stacked_list_tsx.md) |
-| `components/ui/user-dropdown.tsx` | UI primitive | [open](source/components_ui_user_dropdown_tsx.md) |
 | `docs/assets/readme_hero image.png` | Documentation | [open](source/docs_assets_readme_hero_image_png.md) |
 | `docs/backend/admin.md` | Documentation | [open](source/docs_backend_admin_md.md) |
 | `docs/backend/api-routes.md` | Documentation | [open](source/docs_backend_api_routes_md.md) |

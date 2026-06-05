@@ -7,7 +7,7 @@ import {
 	StackedList,
 	type LeaderboardReviewPreview,
 	type LeaderboardReviewer,
-} from "@/components/ui/stacked-list";
+} from "@/components/leaderboard/StackedList";
 import {
 	Select,
 	SelectContent,

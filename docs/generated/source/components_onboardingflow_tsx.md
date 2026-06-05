@@ -4,9 +4,9 @@
 
 - Source path: `components/OnboardingFlow.tsx`
 - Kind: React component
-- Size: 8266 bytes
+- Size: 8274 bytes
 - Lines: 326
-- Source hash: `a3530e6f6874025feeb3bfca150ae4c12ab5853c8d0b6dea230591fe24ad6441`
+- Source hash: `f200601f0b0d072c7d045f934de2c459f6317da9b9754e971ca5e7b2b5ad4bcd`
 
 ## What This File Does
 
@@ -24,8 +24,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `@/components/BrandMark`
+- `@/components/navigation/sidebar-icons`
 - `@/components/ui/button`
-- `@/components/ui/sidebar-icons`
 - `@/lib/onboarding-validation`
 - `@/lib/session-lock`
 - `@/lib/supabase/client`
