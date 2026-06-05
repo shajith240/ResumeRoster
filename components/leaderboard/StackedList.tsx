@@ -38,9 +38,7 @@ export type LeaderboardReviewer = ReviewerProfileStats & {
 };
 
 type StackedListProps = {
-	description?: string;
 	directoryReviewers?: LeaderboardReviewer[];
-	heading?: string;
 	message?: string;
 	onSearchQueryChange?: (value: string) => void;
 	reviewers: LeaderboardReviewer[];
@@ -343,10 +341,8 @@ function AvatarStack({ reviewers }: { reviewers: RankedReviewer[] }) {
 
 function DirectoryRow({
 	item,
-	reducedMotion,
 }: {
 	item: RankedReviewer;
-	reducedMotion: boolean;
 }) {
 	const { rank, reviewer } = item;
 	const name = reviewerName(reviewer);
@@ -354,14 +350,7 @@ function DirectoryRow({
 	const points = reviewerLintPoints(reviewer);
 
 	return (
-		<motion.div
-			variants={{
-				hidden: { opacity: 0, x: 8, y: 10 },
-				visible: { opacity: 1, x: 0, y: 0 },
-			}}
-			transition={reducedMotion ? { duration: 0 } : rowSpring}
-			className="flex items-center gap-3 border-b border-[var(--border-subtle)] py-3 last:border-b-0"
-		>
+		<div className="flex items-center gap-3 border-b border-[var(--border-subtle)] py-3 last:border-b-0">
 			<LeaderboardAvatar name={name} reviewer={reviewer} />
 			<Link href={`/profile/${reviewer.id}`} className="min-w-0 flex-1">
 				<strong className="block truncate text-sm font-medium text-[var(--text-primary)]">
@@ -384,14 +373,12 @@ function DirectoryRow({
 			>
 				{tag}
 			</span>
-		</motion.div>
+		</div>
 	);
 }
 
 export function StackedList({
-	description = "Reviewer directory ranked by useful resume feedback.",
 	directoryReviewers,
-	heading = "Top 100",
 	message = "",
 	onSearchQueryChange,
 	reviewers,
@@ -431,7 +418,7 @@ export function StackedList({
 	);
 	const directoryRankedReviewers = useMemo<RankedReviewer[]>(
 		() =>
-			(directoryReviewers ?? reviewers).slice(0, 100).map((reviewer, index) => {
+			(directoryReviewers ?? reviewers).map((reviewer, index) => {
 				const rank = index + 1;
 
 				return {
@@ -466,18 +453,7 @@ export function StackedList({
 
 	return (
 		<section className="relative min-h-[560px] w-full overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] pb-24 font-[var(--font-app-body)] shadow-none">
-			<div className="border-b border-[var(--border-subtle)] p-5 pb-4">
-				<div className="mb-4 flex items-center justify-between gap-4">
-					<div className="min-w-0">
-						<h2 className="m-0 flex items-center gap-2 font-[var(--font-display)] text-[34px] font-normal leading-none tracking-normal text-[var(--text-primary)]">
-							{heading}
-						</h2>
-						<p className="mt-2 text-sm font-normal text-[var(--text-secondary)]">
-							{description}
-						</p>
-					</div>
-				</div>
-
+			<div className="border-b border-[var(--border-subtle)] px-5 py-4 max-[760px]:px-4">
 				<label className="relative block max-w-[560px]">
 					<Search
 						aria-hidden="true"
@@ -544,79 +520,71 @@ export function StackedList({
 				</div>
 			) : null}
 
-			<motion.div
-				animate={{
-					bottom: directoryOpen ? 10 : 16,
-					height: directoryOpen ? "calc(100% - 20px)" : 76,
-					left: directoryOpen ? 10 : 16,
-					right: directoryOpen ? 10 : 16,
-					borderRadius: directoryOpen ? 16 : 18,
-				}}
-				className="absolute z-30 flex flex-col overflow-hidden border border-[var(--border-default)] bg-[var(--bg-elevated)] shadow-[0_18px_48px_rgba(0,0,0,0.22)]"
-				initial={false}
-				onClick={() => {
-					if (!directoryOpen) setDirectoryOpen(true);
-				}}
-				style={{ cursor: directoryOpen ? "default" : "pointer" }}
-				transition={
-					reducedMotion
-						? { duration: 0 }
-						: {
-								type: "spring",
-								stiffness: 240,
-								damping: 30,
-								mass: 0.8,
-							}
-				}
-			>
-				<div
-					className={cn(
-						"flex h-[76px] shrink-0 items-center justify-between gap-4 px-4 transition-colors",
-						directoryOpen ? "border-b border-[var(--border-subtle)]" : "hover:bg-[var(--bg-surface)]",
-					)}
-				>
-					<div className="flex min-w-0 items-center gap-3">
-						<div className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)]">
-							<ListOrdered className="h-5 w-5" aria-hidden="true" />
+			<AnimatePresence initial={false}>
+				{!directoryOpen ? (
+					<motion.button
+						animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+						aria-label="Open reviewer directory"
+						className="absolute bottom-4 left-4 right-4 z-30 flex h-[76px] items-center justify-between gap-4 overflow-hidden rounded-[18px] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 text-left shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors hover:bg-[var(--bg-surface)] will-change-transform max-[760px]:bottom-3 max-[760px]:left-3 max-[760px]:right-3"
+						exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.992 }}
+						initial={reducedMotion ? false : { opacity: 0, y: 8, scale: 0.992 }}
+						key="directory-closed"
+						onClick={() => setDirectoryOpen(true)}
+						transition={reducedMotion ? { duration: 0 } : { duration: 0.16, ease: [0.2, 0, 0, 1] }}
+						type="button"
+					>
+						<div className="flex min-w-0 items-center gap-3">
+							<div className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)]">
+								<ListOrdered className="h-5 w-5" aria-hidden="true" />
+							</div>
+							<div className="min-w-0">
+								<h3 className="m-0 truncate text-base font-medium leading-none text-[var(--text-primary)]">
+									Reviewer Directory
+								</h3>
+								<p className="mt-1 truncate text-xs font-normal text-[var(--text-secondary)]">
+									{directoryRankedReviewers.length} community members
+								</p>
+							</div>
 						</div>
-						<div className="min-w-0">
-							<h3 className="m-0 truncate text-base font-medium leading-none text-[var(--text-primary)]">
-								Reviewer Directory
-							</h3>
-							<p className="mt-1 truncate text-xs font-normal text-[var(--text-secondary)]">
-								{directoryRankedReviewers.length} reviewers ranked
-							</p>
-						</div>
-					</div>
 
-					<div className="flex shrink-0 items-center gap-3">
-						{directoryOpen ? (
+						<AvatarStack reviewers={directoryRankedReviewers} />
+					</motion.button>
+				) : (
+					<motion.section
+						animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+						aria-label="Reviewer directory"
+						className="absolute inset-[10px] z-30 flex flex-col overflow-hidden rounded-[16px] border border-[var(--border-default)] bg-[var(--bg-elevated)] shadow-[0_18px_48px_rgba(0,0,0,0.22)] will-change-transform"
+						exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.99 }}
+						initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.985 }}
+						key="directory-open"
+						transition={reducedMotion ? { duration: 0 } : { duration: 0.18, ease: [0.2, 0, 0, 1] }}
+					>
+						<div className="flex h-[76px] shrink-0 items-center justify-between gap-4 border-b border-[var(--border-subtle)] px-4">
+							<div className="flex min-w-0 items-center gap-3">
+								<div className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)]">
+									<ListOrdered className="h-5 w-5" aria-hidden="true" />
+								</div>
+								<div className="min-w-0">
+									<h3 className="m-0 truncate text-base font-medium leading-none text-[var(--text-primary)]">
+										Reviewer Directory
+									</h3>
+									<p className="mt-1 truncate text-xs font-normal text-[var(--text-secondary)]">
+										{directoryRankedReviewers.length} community members
+									</p>
+								</div>
+							</div>
+
 							<button
 								aria-label="Close reviewer directory"
-								className="grid h-11 w-11 place-items-center rounded-[12px] bg-[var(--bg-surface)] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-								onClick={(event) => {
-									event.stopPropagation();
-									setDirectoryOpen(false);
-								}}
+								className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] bg-[var(--bg-surface)] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+								onClick={() => setDirectoryOpen(false)}
 								type="button"
 							>
 								<X className="h-4 w-4" aria-hidden="true" />
 							</button>
-						) : (
-							<AvatarStack reviewers={directoryRankedReviewers} />
-						)}
-					</div>
-				</div>
+						</div>
 
-				<AnimatePresence initial={false}>
-					{directoryOpen ? (
-						<motion.div
-							animate={{ opacity: 1, y: 0 }}
-							className="grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] gap-3 p-4 pt-3"
-							exit={{ opacity: 0, y: -8 }}
-							initial={{ opacity: 0, y: -8 }}
-							transition={reducedMotion ? { duration: 0 } : { duration: 0.18 }}
-						>
+						<div className="grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] gap-3 p-4 pt-3">
 							<label className="relative block">
 								<Search
 									aria-hidden="true"
@@ -627,7 +595,7 @@ export function StackedList({
 									autoComplete="off"
 									className="h-11 rounded-[12px] border-[var(--border-default)] bg-[var(--bg-elevated)] pl-10 pr-4 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
 									onChange={(event) => setDirectoryQuery(event.target.value)}
-									placeholder="Search reviewers..."
+									placeholder="Search community members..."
 									spellCheck={false}
 									type="search"
 									value={directoryQuery}
@@ -635,29 +603,18 @@ export function StackedList({
 							</label>
 
 							<div className="min-h-0 overflow-y-auto pr-1">
-								<motion.div
-									animate="visible"
-									initial="hidden"
-									variants={{
-										visible: {
-											transition: { staggerChildren: reducedMotion ? 0 : 0.025 },
-										},
-									}}
-								>
-									{directoryResults.map((item) => (
-										<DirectoryRow
-											item={item}
-											key={`directory-${item.reviewer.id}`}
-											reducedMotion={reducedMotion}
-										/>
-									))}
-								</motion.div>
+								{directoryResults.map((item) => (
+									<DirectoryRow
+										item={item}
+										key={`directory-${item.reviewer.id}`}
+									/>
+								))}
 
 								{!directoryResults.length ? (
 									<div className="grid min-h-40 place-items-center text-center">
 										<div>
 											<strong className="block text-sm font-medium text-[var(--text-primary)]">
-												No reviewers found
+												No community members found
 											</strong>
 											<p className="mt-1 text-xs text-[var(--text-secondary)]">
 												Try a different name, role, or feedback keyword.
@@ -666,10 +623,10 @@ export function StackedList({
 									</div>
 								) : null}
 							</div>
-						</motion.div>
-					) : null}
-				</AnimatePresence>
-			</motion.div>
+						</div>
+					</motion.section>
+				)}
+			</AnimatePresence>
 		</section>
 	);
 }

@@ -730,21 +730,21 @@
       "exportCount": 0
     },
     {
-      "hash": "e11ba72690d5fc20936f27f2fa78e325d803f011298ccfe1fa55323dff965b17",
+      "hash": "4ae210b3500166314508a0d65c98ca22d700562adee1b8ae887b06e9772d5653",
       "kind": "React component",
-      "lineCount": 463,
+      "lineCount": 492,
       "relativePath": "components/Leaderboard.tsx",
-      "size": 12396,
-      "functionCount": 12,
+      "size": 13038,
+      "functionCount": 13,
       "importCount": 8,
       "exportCount": 2
     },
     {
-      "hash": "b1cdd98e0734479c995f63fd71a0d516300bb9fd25e4b27fa6808f5acf1ea14d",
+      "hash": "ec5294a462f093d491b9cdbf9eb79cda036eefbd76b00217f36fd63b71618793",
       "kind": "React component",
-      "lineCount": 676,
+      "lineCount": 633,
       "relativePath": "components/leaderboard/StackedList.tsx",
-      "size": 22237,
+      "size": 22049,
       "functionCount": 16,
       "importCount": 10,
       "exportCount": 3
@@ -3460,5 +3460,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "7fe7d5f325d6d33978b0f31c275269a0fe22066a328dab9f0eaa54c8149339ed"
+  "manifestHash": "55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c"
 }

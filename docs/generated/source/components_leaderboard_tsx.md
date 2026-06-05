@@ -4,9 +4,9 @@
 
 - Source path: `components/Leaderboard.tsx`
 - Kind: React component
-- Size: 12396 bytes
-- Lines: 463
-- Source hash: `e11ba72690d5fc20936f27f2fa78e325d803f011298ccfe1fa55323dff965b17`
+- Size: 13038 bytes
+- Lines: 492
+- Source hash: `4ae210b3500166314508a0d65c98ca22d700562adee1b8ae887b06e9772d5653`
 
 ## What This File Does
 
@@ -36,18 +36,19 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 52 | `getRangeStart` | Function | top-level | no | `range` | `string \| null` | Implements the getrangestart helper. |
-| 60 | `isMissingSoftDeleteColumn` | Action helper | top-level | no | `message` | `boolean` | Runs the ismissingsoftdeletecolumn workflow for callers. |
-| 64 | `isMissingProfileMetadataColumn` | Function | top-level | no | `message` | `boolean` | Implements the ismissingprofilemetadatacolumn helper. |
-| 68 | `isMissingReviewerLeaderboardRpc` | Function | top-level | no | `message` | `boolean` | Implements the ismissingreviewerleaderboardrpc helper. |
-| 72 | `normalizeLeaderboardEntry` | Validation or normalization helper | top-level | no | `row` | `ReviewerProfileStats` | Validates or normalizes normalizeleaderboardentry values for callers. |
-| 84 | `fetchReviewRows` | Action helper async | top-level | no | `{ authorIds, since, }` | `Promise<import("@supabase/postgrest-js").PostgrestSingleResponse<{ id: any; resume_id: any; author_id: any; content: any; helpful_votes:...` | Runs the fetchreviewrows workflow for callers. |
-| 124 | `fetchProfilesById` | Action helper async | top-level | no | `authorIds` | `Promise<{ profiles: ReviewerProfileStats[]; errorMessage: string; }>` | Runs the fetchprofilesbyid workflow for callers. |
-| 159 | `mergeProfileMetadata` | Function | top-level | no | `reviewer`, `profile` | `ReviewerProfileStats` | Implements the mergeprofilemetadata helper. |
-| 186 | `fetchReviewerDirectory` | Action helper async | top-level | no | none | `Promise<{ message: string; reviewers: (ReviewerProfileStats & { helpful_votes: number; lint_points: number; roast_count: number; roast_po...` | Runs the fetchreviewerdirectory workflow for callers. |
-| 228 | `fetchLeaderboardData` | Action helper async | top-level | no | `range` | `Promise<{ message: string; reviewers: (ReviewerProfileStats & { helpful_votes: number; lint_points: number; roast_count: number; roast_po...` | Runs the fetchleaderboarddata workflow for callers. |
-| 322 | `Leaderboard` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the Leaderboard UI component. |
-| 354 | `finish` | Function | nested | no | none | `void` | Implements the finish helper. |
+| 53 | `getRangeStart` | Function | top-level | no | `range` | `string \| null` | Implements the getrangestart helper. |
+| 61 | `isMissingSoftDeleteColumn` | Action helper | top-level | no | `message` | `boolean` | Runs the ismissingsoftdeletecolumn workflow for callers. |
+| 65 | `isMissingProfileMetadataColumn` | Function | top-level | no | `message` | `boolean` | Implements the ismissingprofilemetadatacolumn helper. |
+| 69 | `isMissingReviewerLeaderboardRpc` | Function | top-level | no | `message` | `boolean` | Implements the ismissingreviewerleaderboardrpc helper. |
+| 73 | `normalizeLeaderboardEntry` | Validation or normalization helper | top-level | no | `row` | `ReviewerProfileStats` | Validates or normalizes normalizeleaderboardentry values for callers. |
+| 85 | `fetchReviewRows` | Action helper async | top-level | no | `{ authorIds, since, }` | `Promise<import("@supabase/postgrest-js").PostgrestSingleResponse<{ id: any; resume_id: any; author_id: any; content: any; helpful_votes:...` | Runs the fetchreviewrows workflow for callers. |
+| 125 | `fetchProfilesById` | Action helper async | top-level | no | `authorIds` | `Promise<{ profiles: ReviewerProfileStats[]; errorMessage: string; }>` | Runs the fetchprofilesbyid workflow for callers. |
+| 160 | `mergeProfileMetadata` | Function | top-level | no | `reviewer`, `profile` | `ReviewerProfileStats` | Implements the mergeprofilemetadata helper. |
+| 187 | `normalizeProfileStats` | Validation or normalization helper | top-level | no | `profile` | `ReviewerProfileStats` | Validates or normalizes normalizeprofilestats values for callers. |
+| 195 | `fetchReviewerDirectory` | Action helper async | top-level | no | none | `Promise<{ message: string; reviewers: (ReviewerProfileStats & { helpful_votes: number; lint_points: number; roast_count: number; roast_po...` | Runs the fetchreviewerdirectory workflow for callers. |
+| 259 | `fetchLeaderboardData` | Action helper async | top-level | no | `range` | `Promise<{ message: string; reviewers: (ReviewerProfileStats & { helpful_votes: number; lint_points: number; roast_count: number; roast_po...` | Runs the fetchleaderboarddata workflow for callers. |
+| 353 | `Leaderboard` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the Leaderboard UI component. |
+| 385 | `finish` | Function | nested | no | none | `void` | Implements the finish helper. |
 
 ## Types
 

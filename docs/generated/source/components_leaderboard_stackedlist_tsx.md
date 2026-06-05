@@ -4,9 +4,9 @@
 
 - Source path: `components/leaderboard/StackedList.tsx`
 - Kind: React component
-- Size: 22237 bytes
-- Lines: 676
-- Source hash: `b1cdd98e0734479c995f63fd71a0d516300bb9fd25e4b27fa6808f5acf1ea14d`
+- Size: 22049 bytes
+- Lines: 633
+- Source hash: `ec5294a462f093d491b9cdbf9eb79cda036eefbd76b00217f36fd63b71618793`
 
 ## What This File Does
 
@@ -39,22 +39,22 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 65 | `initials` | Function | top-level | no | `name` | `string` | Implements the initials helper. |
-| 77 | `reviewerName` | Function | top-level | no | `reviewer` | `string` | Implements the reviewername helper. |
-| 81 | `roleTag` | Function | top-level | no | `reviewer` | `string` | Implements the roletag helper. |
-| 105 | `tagClass` | Function | top-level | no | `label` | `"border-[rgba(255,184,95,0.34)] bg-[var(--brand-muted)] text-[var(--brand)]" \| "border-[#D9D0FF] bg-[#F1EDFF] text-[#5137B8] dark:border...` | Implements the tagclass helper. |
-| 125 | `reviewerLintPoints` | Function | top-level | no | `reviewer` | `number` | Implements the reviewerlintpoints helper. |
-| 129 | `tableQuote` | Function | top-level | no | `reviewer` | `string` | Implements the tablequote helper. |
-| 133 | `normalizeSearchValue` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizesearchvalue values for callers. |
-| 143 | `buildSearchText` | Function | top-level | no | `reviewer`, `rank` | `string` | Implements the buildsearchtext helper. |
-| 172 | `queryTerms` | Function | top-level | no | `query` | `string[]` | Implements the queryterms helper. |
-| 176 | `matchesQuery` | Function | top-level | no | `searchText`, `terms` | `boolean` | Implements the matchesquery helper. |
-| 182 | `LeaderboardAvatar` | React component | top-level | no | `{ name, reviewer, }` | `import("react").JSX.Element` | Renders the LeaderboardAvatar UI component. |
-| 208 | `RankCell` | React component | top-level | no | `{ rank }` | `import("react").JSX.Element` | Renders the RankCell UI component. |
-| 226 | `LeaderboardRow` | React component | top-level | no | `{ rank, reducedMotion, reviewer, }` | `import("react").JSX.Element` | Renders the LeaderboardRow UI component. |
-| 309 | `AvatarStack` | React component | top-level | no | `{ reviewers }` | `import("react").JSX.Element` | Renders the AvatarStack UI component. |
-| 344 | `DirectoryRow` | React component | top-level | no | `{ item, reducedMotion, }` | `import("react").JSX.Element` | Renders the DirectoryRow UI component. |
-| 391 | `StackedList` | React component | top-level | yes | `{ description = "Reviewer directory ranked by useful resume feedback.", direc...` | `import("react").JSX.Element` | Renders the StackedList UI component. |
+| 63 | `initials` | Function | top-level | no | `name` | `string` | Implements the initials helper. |
+| 75 | `reviewerName` | Function | top-level | no | `reviewer` | `string` | Implements the reviewername helper. |
+| 79 | `roleTag` | Function | top-level | no | `reviewer` | `string` | Implements the roletag helper. |
+| 103 | `tagClass` | Function | top-level | no | `label` | `"border-[rgba(255,184,95,0.34)] bg-[var(--brand-muted)] text-[var(--brand)]" \| "border-[#D9D0FF] bg-[#F1EDFF] text-[#5137B8] dark:border...` | Implements the tagclass helper. |
+| 123 | `reviewerLintPoints` | Function | top-level | no | `reviewer` | `number` | Implements the reviewerlintpoints helper. |
+| 127 | `tableQuote` | Function | top-level | no | `reviewer` | `string` | Implements the tablequote helper. |
+| 131 | `normalizeSearchValue` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizesearchvalue values for callers. |
+| 141 | `buildSearchText` | Function | top-level | no | `reviewer`, `rank` | `string` | Implements the buildsearchtext helper. |
+| 170 | `queryTerms` | Function | top-level | no | `query` | `string[]` | Implements the queryterms helper. |
+| 174 | `matchesQuery` | Function | top-level | no | `searchText`, `terms` | `boolean` | Implements the matchesquery helper. |
+| 180 | `LeaderboardAvatar` | React component | top-level | no | `{ name, reviewer, }` | `import("react").JSX.Element` | Renders the LeaderboardAvatar UI component. |
+| 206 | `RankCell` | React component | top-level | no | `{ rank }` | `import("react").JSX.Element` | Renders the RankCell UI component. |
+| 224 | `LeaderboardRow` | React component | top-level | no | `{ rank, reducedMotion, reviewer, }` | `import("react").JSX.Element` | Renders the LeaderboardRow UI component. |
+| 307 | `AvatarStack` | React component | top-level | no | `{ reviewers }` | `import("react").JSX.Element` | Renders the AvatarStack UI component. |
+| 342 | `DirectoryRow` | React component | top-level | no | `{ item, }` | `import("react").JSX.Element` | Renders the DirectoryRow UI component. |
+| 380 | `StackedList` | React component | top-level | yes | `{ directoryReviewers, message = "", onSearchQueryChange, reviewers, searchQue...` | `import("react").JSX.Element` | Renders the StackedList UI component. |
 
 ## Types
 
@@ -63,7 +63,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 | 24 | `LeaderboardReviewPreview` | type |
 | 32 | `LeaderboardReviewer` | type |
 | 40 | `StackedListProps` | type |
-| 52 | `RankedReviewer` | type |
+| 50 | `RankedReviewer` | type |
 
 ## Related Tests
 

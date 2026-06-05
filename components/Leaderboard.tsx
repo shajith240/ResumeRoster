@@ -40,6 +40,7 @@ const PROFILE_SELECT =
 const PROFILE_FALLBACK_SELECT =
 	"id,username,college,target_role,roast_count,helpful_votes";
 const LEADERBOARD_LIMIT = 100;
+const DIRECTORY_LIMIT = 500;
 const SUPABASE_MIGRATION_MESSAGE =
 	"Leaderboard data is temporarily unavailable. Please refresh and try again.";
 
@@ -183,24 +184,54 @@ function mergeProfileMetadata(
 	};
 }
 
+function normalizeProfileStats(profile: ReviewerProfileStats): ReviewerProfileStats {
+	return {
+		...profile,
+		helpful_votes: profile.helpful_votes ?? 0,
+		roast_count: profile.roast_count ?? 0,
+	};
+}
+
 async function fetchReviewerDirectory() {
 	const profileResult = await supabase
 		.from("profiles")
 		.select(PROFILE_SELECT)
-		.in("community_role", ["reviewer", "both"])
 		.order("helpful_votes", { ascending: false })
 		.order("roast_count", { ascending: false })
-		.limit(100);
+		.order("username", { ascending: true })
+		.limit(DIRECTORY_LIMIT);
+
+	let profiles: ReviewerProfileStats[] = [];
 
 	if (profileResult.error) {
 		if (isMissingProfileMetadataColumn(profileResult.error.message)) {
-			return { message: SUPABASE_MIGRATION_MESSAGE, reviewers: [] };
-		}
+			const fallbackResult = await supabase
+				.from("profiles")
+				.select(PROFILE_FALLBACK_SELECT)
+				.order("helpful_votes", { ascending: false })
+				.order("roast_count", { ascending: false })
+				.order("username", { ascending: true })
+				.limit(DIRECTORY_LIMIT);
 
-		return { message: profileResult.error.message, reviewers: [] };
+			if (fallbackResult.error) {
+				return {
+					message: SUPABASE_MIGRATION_MESSAGE,
+					reviewers: [],
+				};
+			}
+
+			profiles = ((fallbackResult.data ?? []) as ReviewerProfileStats[]).map(
+				normalizeProfileStats,
+			);
+		} else {
+			return { message: profileResult.error.message, reviewers: [] };
+		}
+	} else {
+		profiles = ((profileResult.data ?? []) as ReviewerProfileStats[]).map(
+			normalizeProfileStats,
+		);
 	}
 
-	const profiles = (profileResult.data ?? []) as ReviewerProfileStats[];
 	const authorIds = profiles.map((profile) => profile.id);
 	let topReviews: Record<string, ReviewRow> = {};
 
@@ -221,7 +252,7 @@ async function fetchReviewerDirectory() {
 
 	return {
 		message: "",
-		reviewers: ranked.slice(0, LEADERBOARD_LIMIT),
+		reviewers: ranked,
 	};
 }
 
@@ -447,9 +478,7 @@ export default function Leaderboard() {
 			</header>
 
 			<StackedList
-				description="Reviewer directory ranked by useful resume feedback."
 				directoryReviewers={directoryReviewers}
-				heading="Top 100"
 				message={message}
 				onSearchQueryChange={setSearchQuery}
 				reviewers={reviewers}
