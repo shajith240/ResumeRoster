@@ -300,11 +300,11 @@
       "exportCount": 2
     },
     {
-      "hash": "7279e21aa48ec97207c96cc57b7b32b8c7fe6a0af80b7964cf457b749e9c8eb9",
+      "hash": "097a4aac6cc045e1a94f24e45706304d27b80e0659616d4300081044c31b6e3e",
       "kind": "Project file",
-      "lineCount": 5166,
+      "lineCount": 5278,
       "relativePath": "app/globals.css",
-      "size": 93520,
+      "size": 95603,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -470,11 +470,11 @@
       "exportCount": 0
     },
     {
-      "hash": "56ae9f116c3045991d386e8abf68239e0b1af50a5f6eaee308547bd3a4c4eff0",
+      "hash": "3a79f1d34550a6b334fa38a71ea7bc3075ad8aee6200d2de06b06d327955589f",
       "kind": "React component",
       "lineCount": 501,
       "relativePath": "components/account/UserDropdown.tsx",
-      "size": 14960,
+      "size": 14971,
       "functionCount": 5,
       "importCount": 24,
       "exportCount": 1
@@ -620,13 +620,13 @@
       "exportCount": 2
     },
     {
-      "hash": "46fb6d07ff6d5e10be9bbb1d248d11a61f80c2f76ea70428617698b3cda344f4",
+      "hash": "f84bd5bee608b275856f2c6da4847e7f665211f58a7962902e7602d90d821591",
       "kind": "React component",
-      "lineCount": 274,
+      "lineCount": 276,
       "relativePath": "components/AuthButton.tsx",
-      "size": 7604,
+      "size": 7678,
       "functionCount": 2,
-      "importCount": 14,
+      "importCount": 15,
       "exportCount": 2
     },
     {
@@ -967,6 +967,16 @@
       "size": 2405,
       "functionCount": 1,
       "importCount": 5,
+      "exportCount": 2
+    },
+    {
+      "hash": "3f5211a64f28d21c690a665c39cec36cb44ec6b48a07547a86eeef3a45ea036e",
+      "kind": "React component",
+      "lineCount": 210,
+      "relativePath": "components/PwaInstallPrompt.tsx",
+      "size": 5717,
+      "functionCount": 3,
+      "importCount": 6,
       "exportCount": 2
     },
     {
@@ -1980,6 +1990,16 @@
       "exportCount": 0
     },
     {
+      "hash": "54aa925dd2f9fb994be5a154ed0692487f9c7bc02c43cef391704b3f486d1aa7",
+      "kind": "Unit test",
+      "lineCount": 47,
+      "relativePath": "lib/__tests__/pwa-install.test.ts",
+      "size": 1292,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
       "hash": "f1af9aa205dfe2c60bf668d7b342966831600424874180c71439366efd998c28",
       "kind": "Unit test",
       "lineCount": 47,
@@ -2298,6 +2318,16 @@
       "functionCount": 13,
       "importCount": 1,
       "exportCount": 6
+    },
+    {
+      "hash": "ac18b681233397ed8eab7eaf6c393b5bf59905c2ada8de7b91af65c224e90ef7",
+      "kind": "Application library module",
+      "lineCount": 40,
+      "relativePath": "lib/pwa-install.ts",
+      "size": 1014,
+      "functionCount": 2,
+      "importCount": 0,
+      "exportCount": 4
     },
     {
       "hash": "44b7271300dfd688d4a0c0df86135da5908ba787d7ed5d409b4a22034580b2c7",
@@ -2870,11 +2900,11 @@
       "exportCount": 0
     },
     {
-      "hash": "8788218ab278c19e66018b97e6b3978c6e06b217e2fd81fb4ff9916ba224aa17",
+      "hash": "6643ab2ce55e82fe17ec5cc04a5eea6176cabab5c3f6b2a7d1e5e07aa42c3552",
       "kind": "Repository automation",
-      "lineCount": 178,
+      "lineCount": 196,
       "relativePath": "scripts/performance/check-budgets.mjs",
-      "size": 4457,
+      "size": 4761,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -3430,5 +3460,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "9f470c6a2065c1399ab1809b7472609c5f6587a1504950ae0fad058d479d30d0"
+  "manifestHash": "7fe7d5f325d6d33978b0f31c275269a0fe22066a328dab9f0eaa54c8149339ed"
 }

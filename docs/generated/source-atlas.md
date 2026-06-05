@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 342 source-controlled files.
-Manifest hash: `9f470c6a2065c1399ab1809b7472609c5f6587a1504950ae0fad058d479d30d0`
+Generated from 345 source-controlled files.
+Manifest hash: `7fe7d5f325d6d33978b0f31c275269a0fe22066a328dab9f0eaa54c8149339ed`
 
 ## Folder Coverage
 
@@ -12,9 +12,9 @@ Manifest hash: `9f470c6a2065c1399ab1809b7472609c5f6587a1504950ae0fad058d479d30d0
 | `.github` | 1 |
 | `(root)` | 19 |
 | `app` | 42 |
-| `components` | 89 |
+| `components` | 90 |
 | `docs` | 36 |
-| `lib` | 73 |
+| `lib` | 75 |
 | `public` | 27 |
 | `scripts` | 6 |
 | `supabase` | 49 |
@@ -23,7 +23,7 @@ Manifest hash: `9f470c6a2065c1399ab1809b7472609c5f6587a1504950ae0fad058d479d30d0
 
 | Kind | Files |
 | --- | ---: |
-| Application library module | 40 |
+| Application library module | 41 |
 | Documentation | 36 |
 | GitHub workflow | 1 |
 | Next API route | 18 |
@@ -33,12 +33,12 @@ Manifest hash: `9f470c6a2065c1399ab1809b7472609c5f6587a1504950ae0fad058d479d30d0
 | Project file | 9 |
 | Public browser asset | 1 |
 | Public visual asset | 26 |
-| React component | 76 |
+| React component | 77 |
 | Repository automation | 6 |
 | Root documentation | 3 |
 | Supabase migration | 46 |
 | UI primitive | 13 |
-| Unit test | 33 |
+| Unit test | 34 |
 
 ## Files
 
@@ -140,6 +140,7 @@ Manifest hash: `9f470c6a2065c1399ab1809b7472609c5f6587a1504950ae0fad058d479d30d0
 | `components/ProfileDetail.module.css` | React component | [open](source/components_profiledetail_module_css.md) |
 | `components/ProfileDetail.tsx` | React component | [open](source/components_profiledetail_tsx.md) |
 | `components/PushNotificationsControl.tsx` | React component | [open](source/components_pushnotificationscontrol_tsx.md) |
+| `components/PwaInstallPrompt.tsx` | React component | [open](source/components_pwainstallprompt_tsx.md) |
 | `components/resume-detail/comment-composer.tsx` | React component | [open](source/components_resume_detail_comment_composer_tsx.md) |
 | `components/resume-detail/content.tsx` | React component | [open](source/components_resume_detail_content_tsx.md) |
 | `components/resume-detail/data.ts` | React component | [open](source/components_resume_detail_data_ts.md) |
@@ -241,6 +242,7 @@ Manifest hash: `9f470c6a2065c1399ab1809b7472609c5f6587a1504950ae0fad058d479d30d0
 | `lib/__tests__/profile-avatar-route.test.ts` | Unit test | [open](source/lib_tests_profile_avatar_route_test_ts.md) |
 | `lib/__tests__/profile-validation.test.ts` | Unit test | [open](source/lib_tests_profile_validation_test_ts.md) |
 | `lib/__tests__/push-subscriptions-route.test.ts` | Unit test | [open](source/lib_tests_push_subscriptions_route_test_ts.md) |
+| `lib/__tests__/pwa-install.test.ts` | Unit test | [open](source/lib_tests_pwa_install_test_ts.md) |
 | `lib/__tests__/report-validation.test.ts` | Unit test | [open](source/lib_tests_report_validation_test_ts.md) |
 | `lib/__tests__/resume-display.test.ts` | Unit test | [open](source/lib_tests_resume_display_test_ts.md) |
 | `lib/__tests__/resume-privacy.test.ts` | Unit test | [open](source/lib_tests_resume_privacy_test_ts.md) |
@@ -273,6 +275,7 @@ Manifest hash: `9f470c6a2065c1399ab1809b7472609c5f6587a1504950ae0fad058d479d30d0
 | `lib/pdf-redaction.ts` | Application library module | [open](source/lib_pdf_redaction_ts.md) |
 | `lib/profile-validation.ts` | Application library module | [open](source/lib_profile_validation_ts.md) |
 | `lib/push-notifications.ts` | Application library module | [open](source/lib_push_notifications_ts.md) |
+| `lib/pwa-install.ts` | Application library module | [open](source/lib_pwa_install_ts.md) |
 | `lib/report-validation.ts` | Application library module | [open](source/lib_report_validation_ts.md) |
 | `lib/resume-display.ts` | Application library module | [open](source/lib_resume_display_ts.md) |
 | `lib/resume-privacy.ts` | Application library module | [open](source/lib_resume_privacy_ts.md) |

@@ -4,9 +4,9 @@
 
 - Source path: `components/account/UserDropdown.tsx`
 - Kind: React component
-- Size: 14960 bytes
+- Size: 14971 bytes
 - Lines: 501
-- Source hash: `56ae9f116c3045991d386e8abf68239e0b1af50a5f6eaee308547bd3a4c4eff0`
+- Source hash: `3a79f1d34550a6b334fa38a71ea7bc3075ad8aee6200d2de06b06d327955589f`
 
 ## What This File Does
 
@@ -28,7 +28,6 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/lib/utils`
 - `@iconify-icons/solar/alt-arrow-left-line-duotone`
 - `@iconify-icons/solar/alt-arrow-right-line-duotone`
-- `@iconify-icons/solar/bell-line-duotone`
 - `@iconify-icons/solar/bookmark-line-duotone`
 - `@iconify-icons/solar/check-circle-bold`
 - `@iconify-icons/solar/document-add-line-duotone`
@@ -40,6 +39,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@iconify-icons/solar/moon-sleep-line-duotone`
 - `@iconify-icons/solar/palette-round-line-duotone`
 - `@iconify-icons/solar/question-circle-line-duotone`
+- `@iconify-icons/solar/smartphone-2-line-duotone`
 - `@iconify-icons/solar/smile-circle-line-duotone`
 - `@iconify-icons/solar/square-top-down-line-duotone`
 - `@iconify-icons/solar/sun-line-duotone`

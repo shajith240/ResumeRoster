@@ -528,6 +528,118 @@ body.main-app-dark .app-header {
 	display: none;
 }
 
+.pwa-install-dialog {
+	width: min(calc(100vw - 28px), 420px);
+	max-height: calc(100dvh - 32px);
+	border: 1px solid var(--border-default);
+	border-radius: 22px;
+	padding: 18px;
+	background: var(--bg-surface);
+	color: var(--text-primary);
+	box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+}
+
+.pwa-install-header {
+	align-items: flex-start;
+	gap: 8px;
+	text-align: left;
+}
+
+.pwa-install-header h2 {
+	margin: 0;
+	color: var(--text-primary);
+	font-family: var(--font-body);
+	font-size: 20px;
+	font-weight: 760;
+	letter-spacing: 0;
+	line-height: 1.15;
+}
+
+.pwa-install-header p {
+	max-width: 34ch;
+	color: var(--text-secondary);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.pwa-install-icon {
+	display: grid;
+	width: 40px;
+	height: 40px;
+	place-items: center;
+	border: 1px solid color-mix(in srgb, var(--brand) 30%, var(--border-default));
+	border-radius: 14px;
+	background: color-mix(in srgb, var(--brand) 12%, transparent);
+	color: var(--brand);
+}
+
+.pwa-install-icon svg {
+	width: 20px;
+	height: 20px;
+}
+
+.pwa-install-steps {
+	display: grid;
+	gap: 8px;
+	margin: 2px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.pwa-install-steps li {
+	display: grid;
+	grid-template-columns: 30px minmax(0, 1fr);
+	align-items: center;
+	gap: 10px;
+	min-height: 38px;
+	border: 1px solid var(--border-subtle);
+	border-radius: 14px;
+	padding: 7px 10px 7px 7px;
+	background: color-mix(in srgb, var(--bg-elevated) 52%, transparent);
+}
+
+.pwa-install-steps span {
+	display: grid;
+	width: 30px;
+	height: 30px;
+	place-items: center;
+	border-radius: 10px;
+	background: color-mix(in srgb, var(--bg-base) 72%, transparent);
+	color: var(--text-secondary);
+}
+
+.pwa-install-steps svg {
+	width: 15px;
+	height: 15px;
+}
+
+.pwa-install-steps p {
+	margin: 0;
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 650;
+	line-height: 1.35;
+}
+
+.pwa-install-actions {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+.pwa-install-primary,
+.pwa-install-secondary {
+	min-height: 38px;
+	border-radius: var(--radius-pill);
+	padding: 0 16px;
+	font-weight: 750;
+}
+
+.pwa-install-secondary {
+	color: var(--text-secondary);
+}
+
 .nav-login {
 	border-color: var(--border-default);
 	background: color-mix(in srgb, var(--bg-elevated) 62%, transparent);

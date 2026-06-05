@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import NotificationCenter from "@/components/NotificationCenter";
+import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { UserDropdown } from "@/components/account/UserDropdown";
 import {
@@ -15,7 +16,7 @@ import {
 } from "@/lib/anonymous-profile";
 import { PROFILE_CHANGE_EVENT, normalizeAppStatus } from "@/lib/app-presence";
 import { getLoginPath } from "@/lib/auth-redirect";
-import { NOTIFICATIONS_OPEN_EVENT } from "@/lib/notifications";
+import { PWA_INSTALL_OPEN_EVENT } from "@/lib/pwa-install";
 import { signOut, supabase } from "@/lib/supabase/client";
 import type { AppStatus } from "@/lib/supabase/types";
 
@@ -189,8 +190,8 @@ export default function AuthButton() {
 			return;
 		}
 
-		if (action === "notifications") {
-			window.dispatchEvent(new CustomEvent(NOTIFICATIONS_OPEN_EVENT));
+		if (action === "install") {
+			window.dispatchEvent(new CustomEvent(PWA_INSTALL_OPEN_EVENT));
 			return;
 		}
 
@@ -254,6 +255,7 @@ export default function AuthButton() {
 	return (
 		<div className="profile-menu">
 			<NotificationCenter userId={user.id} />
+			<PwaInstallPrompt />
 			<UserDropdown
 				selectedStatus={status}
 				user={{

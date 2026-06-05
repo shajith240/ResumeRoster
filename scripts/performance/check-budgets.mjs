@@ -73,6 +73,20 @@ async function tryResolveBuiltFile(file) {
 	}
 }
 
+async function resolveManifestFile(file) {
+	const resolved = await tryResolveBuiltFile(file);
+
+	if (resolved) {
+		return resolved;
+	}
+
+	if (/\.css$/.test(file)) {
+		return null;
+	}
+
+	throw new Error(`Built asset "${file}" was not found in .next output.`);
+}
+
 async function inferRouteFiles(route) {
 	const routePath = route.replace(/^\/+/, "");
 	const routeAsset = `static/chunks/app/${routePath}.js`;
@@ -96,10 +110,14 @@ async function inferRouteFiles(route) {
 async function getRouteFiles(manifest, route) {
 	const manifestFiles = manifest.pages?.[route];
 	const files = Array.isArray(manifestFiles)
-		? await Promise.all(manifestFiles.map(resolveBuiltFile))
+		? await Promise.all(manifestFiles.map(resolveManifestFile))
 		: await inferRouteFiles(route);
 
-	return [...new Set(files.filter((file) => /\.(css|js)$/.test(file)))];
+	return [
+		...new Set(
+			files.filter((file) => typeof file === "string" && /\.(css|js)$/.test(file)),
+		),
+	];
 }
 
 async function measureRoute(route, files) {

@@ -3,7 +3,6 @@
 import { Fragment, useState } from "react";
 import altArrowLeftLineDuotone from "@iconify-icons/solar/alt-arrow-left-line-duotone";
 import altArrowRightLineDuotone from "@iconify-icons/solar/alt-arrow-right-line-duotone";
-import bellLineDuotone from "@iconify-icons/solar/bell-line-duotone";
 import bookmarkLineDuotone from "@iconify-icons/solar/bookmark-line-duotone";
 import checkCircleBold from "@iconify-icons/solar/check-circle-bold";
 import documentAddLineDuotone from "@iconify-icons/solar/document-add-line-duotone";
@@ -16,6 +15,7 @@ import moonSleepLineDuotone from "@iconify-icons/solar/moon-sleep-line-duotone";
 import paletteRoundLineDuotone from "@iconify-icons/solar/palette-round-line-duotone";
 import questionCircleLineDuotone from "@iconify-icons/solar/question-circle-line-duotone";
 import smileCircleLineDuotone from "@iconify-icons/solar/smile-circle-line-duotone";
+import smartphone2LineDuotone from "@iconify-icons/solar/smartphone-2-line-duotone";
 import squareTopDownLineDuotone from "@iconify-icons/solar/square-top-down-line-duotone";
 import sunLineDuotone from "@iconify-icons/solar/sun-line-duotone";
 import userCircleLineDuotone from "@iconify-icons/solar/user-circle-line-duotone";
@@ -41,7 +41,7 @@ import { cn } from "@/lib/utils";
 type MenuAction =
 	| "profile"
 	| "submit"
-	| "notifications"
+	| "install"
 	| "saved"
 	| "help"
 	| "feedback"
@@ -128,9 +128,9 @@ const MENU_ITEMS: {
 			action: "submit",
 		},
 		{
-			icon: bellLineDuotone,
-			label: "Notifications",
-			action: "notifications",
+			icon: smartphone2LineDuotone,
+			label: "Install Linted",
+			action: "install",
 		},
 	],
 	activity: [

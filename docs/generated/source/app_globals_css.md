@@ -4,9 +4,9 @@
 
 - Source path: `app/globals.css`
 - Kind: Project file
-- Size: 93520 bytes
-- Lines: 5166
-- Source hash: `7279e21aa48ec97207c96cc57b7b32b8c7fe6a0af80b7964cf457b749e9c8eb9`
+- Size: 95603 bytes
+- Lines: 5278
+- Source hash: `097a4aac6cc045e1a94f24e45706304d27b80e0659616d4300081044c31b6e3e`
 
 ## What This File Does
 
