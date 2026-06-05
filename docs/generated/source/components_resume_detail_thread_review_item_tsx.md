@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/thread-review-item.tsx`
 - Kind: React component
-- Size: 10432 bytes
-- Lines: 370
-- Source hash: `cc215e43c0ff2db31598306d7829d7f379b2aaf094422a1431ea6b460a0fb201`
+- Size: 12997 bytes
+- Lines: 460
+- Source hash: `2fd5429a408212d1f6a06e50948db09298c9072607e8754d060afdc538677589`
 
 ## What This File Does
 
@@ -18,7 +18,6 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Exports
 
-- `createThreadRenderIndexMap`
 - `ThreadReviewItem`
 
 ## Imports
@@ -32,20 +31,20 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/lib/resume-thread`
 - `lucide-react`
 - `next/link`
-- `react`
+- `sonner`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 20 | `createThreadRenderIndexMap` | Action helper | top-level | yes | `reviews` | `Map<string, number>` | Runs the createthreadrenderindexmap workflow for callers. |
-| 38 | `ThreadReviewItem` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, deleteSchemaReady, del...` | `import("react").JSX.Element` | Renders the ThreadReviewItem UI component. |
+| 32 | `FilledThumbIcon` | React component | top-level | no | `{ className, direction, }` | `import("react").JSX.Element` | Renders the FilledThumbIcon UI component. |
+| 56 | `ThreadReviewItem` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, deleteSchemaReady, del...` | `import("react").JSX.Element` | Renders the ThreadReviewItem UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 34 | `ThreadReviewItemProps` | type |
+| 28 | `ThreadReviewItemProps` | type |
 
 ## Related Tests
 

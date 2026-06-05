@@ -1,6 +1,14 @@
-import type { CSSProperties } from "react";
 import Link from "next/link";
-import { ThumbsDown, ThumbsUp } from "lucide-react";
+import {
+	Loader2,
+	MessageCircle,
+	MoreHorizontal,
+	Share2,
+	ThumbsDown,
+	ThumbsUp,
+	Trash2,
+} from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
 	getReactionBlockReason,
@@ -17,23 +25,33 @@ import { SUPABASE_MIGRATION_MESSAGE } from "./selectors";
 import type { ThreadReviewControls } from "./types";
 import { formatDate, getAuthorAvatar, getAuthorHandle } from "./utils";
 
-export function createThreadRenderIndexMap(reviews: ThreadReviewNode[]) {
-	const indexById = new Map<string, number>();
-	let index = 0;
-
-	function visit(review: ThreadReviewNode) {
-		indexById.set(review.id, index);
-		index += 1;
-		review.children.forEach(visit);
-	}
-
-	reviews.forEach(visit);
-	return indexById;
-}
-
 type ThreadReviewItemProps = ThreadReviewControls & {
 	review: ThreadReviewNode;
 };
+
+function FilledThumbIcon({
+	className,
+	direction,
+}: {
+	className: string;
+	direction: "up" | "down";
+}) {
+	const path =
+		direction === "up"
+			? "M1 21h4V9H1v12Zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2Z"
+			: "M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2Zm4 0v12h4V3h-4Z";
+
+	return (
+		<svg
+			aria-hidden="true"
+			className={className}
+			focusable="false"
+			viewBox="0 0 24 24"
+		>
+			<path d={path} />
+		</svg>
+	);
+}
 
 export function ThreadReviewItem({
 	attachmentsById,
@@ -56,7 +74,6 @@ export function ThreadReviewItem({
 	onReplyToggle,
 	onRequireLogin,
 	onToggleReplies,
-	renderIndexById,
 	replyAttachment,
 	replyContent,
 	replyContentFormat,
@@ -95,9 +112,12 @@ export function ThreadReviewItem({
 	const threadToggleLabel = isCollapsed
 		? `Show ${replyCount} ${replyNoun}`
 		: `Hide ${replyCount} ${replyNoun}`;
-	const reviewStyle = {
-		animationDelay: `${(renderIndexById.get(review.id) ?? 0) * 32}ms`,
-	} as CSSProperties;
+	const likeButtonClass = `comment-action-button reaction-button is-like${
+		voted ? " is-active" : ""
+	}`;
+	const dislikeButtonClass = `comment-action-button reaction-button is-dislike${
+		disliked ? " is-active" : ""
+	}`;
 	const childReviewProps: ThreadReviewControls = {
 		attachmentsById,
 		authorProfiles,
@@ -119,7 +139,6 @@ export function ThreadReviewItem({
 		onReplyToggle,
 		onRequireLogin,
 		onToggleReplies,
-		renderIndexById,
 		replyAttachment,
 		replyContent,
 		replyContentFormat,
@@ -130,6 +149,37 @@ export function ThreadReviewItem({
 		submittingReplyId,
 		user,
 	};
+
+	async function shareReviewLink() {
+		const anchor = `comment-${review.id}`;
+		const shareUrl =
+			typeof window === "undefined"
+				? `#${anchor}`
+				: `${window.location.origin}${window.location.pathname}#${anchor}`;
+
+		try {
+			if (typeof navigator !== "undefined" && navigator.share) {
+				await navigator.share({
+					title: "Linted feedback",
+					url: shareUrl,
+				});
+				toast.success("Share sheet opened.");
+				return;
+			}
+
+			if (typeof navigator !== "undefined" && navigator.clipboard) {
+				await navigator.clipboard.writeText(shareUrl);
+				toast.success("Comment link copied.");
+				return;
+			}
+		} catch (error) {
+			if (error instanceof DOMException && error.name === "AbortError") {
+				return;
+			}
+		}
+
+		toast.error("Could not share this comment.");
+	}
 
 	return (
 		<div
@@ -173,7 +223,6 @@ export function ThreadReviewItem({
 				className={`thread-roast ${review.depth ? "is-reply" : ""}${
 					isDeleted ? " is-deleted" : ""
 				}`}
-				style={reviewStyle}
 			>
 				<div className="thread-roast-avatar-cell" aria-hidden="true">
 					{isDeleted ? (
@@ -191,22 +240,32 @@ export function ThreadReviewItem({
 				</div>
 				<div className="thread-roast-body">
 					<header>
-						{isDeleted ? (
-							<span className="deleted-author-chip">Deleted reviewer</span>
-						) : (
-							<Button asChild className="comment-author-chip" size="sm">
-								<Link href={`/profile/${review.author_id}`}>
-									{authorHandle}
-								</Link>
-							</Button>
-						)}
-						{isDeleted ? null : <ReviewerTrustChip profile={authorProfile} />}
-						<time dateTime={review.created_at}>
-							&middot; {formatDate(review.created_at)}
-						</time>
-						{!isDeleted && review.helpful_votes > 5 ? (
-							<span className="badge badge-open">Verified helpful</span>
-						) : null}
+						<div className="comment-author-stack">
+							<div className="comment-author-primary-row">
+								{isDeleted ? (
+									<span className="deleted-author-chip">Deleted reviewer</span>
+								) : (
+									<Button asChild className="comment-author-chip" size="sm">
+										<Link href={`/profile/${review.author_id}`}>
+											{authorHandle}
+										</Link>
+									</Button>
+								)}
+								<time dateTime={review.created_at}>
+									&middot; {formatDate(review.created_at)}
+								</time>
+							</div>
+							{isDeleted ? null : (
+								<div className="comment-author-badge-row">
+									<ReviewerTrustChip profile={authorProfile} />
+									{review.helpful_votes > 5 ? (
+										<span className="badge badge-open reviewer-meta-chip">
+											Verified helpful
+										</span>
+									) : null}
+								</div>
+							)}
+						</div>
 					</header>
 					<FormattedReviewContent
 						content={review.content}
@@ -217,56 +276,66 @@ export function ThreadReviewItem({
 					<footer>
 						{isDeleted ? null : (
 							<div className="comment-reactions">
-								<Button
-									className="reaction-button py-0 pe-0"
-									variant={voted ? "secondary" : "outline"}
-									disabled={reactionDisabled}
-									onClick={() => onReactToReview(review, "like")}
-									type="button"
+								<button
 									aria-label={
 										voted
 											? "Remove like from this review"
 											: "Like this review"
 									}
+									aria-pressed={voted}
+									className={likeButtonClass}
+									disabled={reactionDisabled}
+									onClick={() => onReactToReview(review, "like")}
+									type="button"
 									title={reactionBlockReason ?? undefined}
 								>
-									<ThumbsUp
-										className="me-2 opacity-60"
-										size={16}
-										strokeWidth={2}
-										aria-hidden="true"
-									/>
-									Like
+									{voted ? (
+										<FilledThumbIcon
+											className="reaction-icon reaction-icon-filled"
+											direction="up"
+										/>
+									) : (
+										<ThumbsUp
+											className="reaction-icon reaction-icon-outline"
+											aria-hidden="true"
+										/>
+									)}
 									<span className="reaction-count">{review.helpful_votes}</span>
-								</Button>
-								<Button
-									className="reaction-button py-0 pe-0"
-									variant={disliked ? "secondary" : "outline"}
-									disabled={reactionDisabled}
-									onClick={() => onReactToReview(review, "dislike")}
-									type="button"
+								</button>
+								<button
 									aria-label={
 										disliked
 											? "Remove dislike from this review"
 											: "Dislike this review"
 									}
+									aria-pressed={disliked}
+									className={dislikeButtonClass}
+									disabled={reactionDisabled}
+									onClick={() => onReactToReview(review, "dislike")}
+									type="button"
 									title={reactionBlockReason ?? undefined}
 								>
-									<ThumbsDown
-										className="me-2 opacity-60"
-										size={16}
-										strokeWidth={2}
-										aria-hidden="true"
-									/>
-									Dislike
+									{disliked ? (
+										<FilledThumbIcon
+											className="reaction-icon reaction-icon-filled"
+											direction="down"
+										/>
+									) : (
+										<ThumbsDown
+											className="reaction-icon reaction-icon-outline"
+											aria-hidden="true"
+										/>
+									)}
 									<span className="reaction-count">
 										{review.dislike_count ?? 0}
 									</span>
-								</Button>
+								</button>
 							</div>
 						)}
 						{isDeleted ? null : (
 							<button
+								aria-label={`Reply to ${authorHandle}`}
+								className="comment-action-button"
 								disabled={!canReply}
 								title={replyBlockReason ?? undefined}
 								onClick={() => {
@@ -275,7 +344,21 @@ export function ThreadReviewItem({
 								}}
 								type="button"
 							>
-								Reply
+								<MessageCircle aria-hidden="true" />
+								<span className="comment-action-label">Reply</span>
+							</button>
+						)}
+						{isDeleted ? null : (
+							<button
+								aria-label="Share this comment"
+								className="comment-action-button"
+								onClick={() => {
+									void shareReviewLink();
+								}}
+								title="Share"
+								type="button"
+							>
+								<Share2 aria-hidden="true" />
 							</button>
 						)}
 						{hasReplies ? (
@@ -293,7 +376,8 @@ export function ThreadReviewItem({
 						) : null}
 						{!isDeleted && isOwnReview ? (
 							<button
-								className="comment-delete-button"
+								aria-label={review.parent_id ? "Delete reply" : "Delete comment"}
+								className="comment-action-button comment-delete-button"
 								disabled={!deleteSchemaReady || deletingReviewId === review.id}
 								onClick={() => onDeleteReviewRequest(review)}
 								title={
@@ -303,12 +387,17 @@ export function ThreadReviewItem({
 								}
 								type="button"
 							>
-								{deletingReviewId === review.id ? "Deleting..." : "Delete"}
+								{deletingReviewId === review.id ? (
+									<Loader2 className="spin-icon" aria-hidden="true" />
+								) : (
+									<Trash2 aria-hidden="true" />
+								)}
 							</button>
 						) : null}
 						{!isDeleted && !isOwnReview ? (
 							<button
-								className="comment-report-button"
+								aria-label="More comment actions"
+								className="comment-action-button comment-more-button"
 								disabled={!reportSchemaReady}
 								onClick={() => onOpenReportDialog(review)}
 								title={
@@ -318,7 +407,7 @@ export function ThreadReviewItem({
 								}
 								type="button"
 							>
-								Report
+								<MoreHorizontal aria-hidden="true" />
 							</button>
 						) : null}
 					</footer>
@@ -336,7 +425,7 @@ export function ThreadReviewItem({
 									!mediaSchemaReady || submittingReplyId === review.id
 								}
 								maxHeight={220}
-								minHeight={66}
+								minHeight={56}
 								onAttachmentChange={onReplyAttachmentChange}
 								onCancel={onCancelReply}
 								onChange={onReplyContentChange}
@@ -357,6 +446,7 @@ export function ThreadReviewItem({
 				<div
 					aria-label={`Replies to ${authorHandle}`}
 					className="thread-children"
+					hidden={isCollapsed}
 					role="list"
 				>
 					{review.children.map((child) => (

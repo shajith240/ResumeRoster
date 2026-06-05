@@ -2871,8 +2871,6 @@ body.main-app-dark .bottom-nav {
 
 	.post-action-button,
 	.role-picker button,
-	.thread-roast-body footer button,
-	.comment-media-actions button,
 	.owner-actions button {
 		min-height: 44px;
 	}
@@ -2885,11 +2883,6 @@ body.main-app-dark .bottom-nav {
 		gap: 8px;
 	}
 
-	.thread-roast-body footer button {
-		border-radius: var(--button-radius-sm);
-		padding: 0 10px;
-	}
-
 	.report-dialog-content {
 		width: calc(100vw - 24px);
 		max-height: calc(100dvh - 32px);
@@ -2900,7 +2893,6 @@ body.main-app-dark .bottom-nav {
 		min-height: 72px;
 	}
 
-	.comment-composer-submit,
 	.submit-button {
 		min-height: 46px;
 	}

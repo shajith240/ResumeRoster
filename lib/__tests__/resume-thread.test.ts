@@ -153,7 +153,7 @@ describe("resume thread rules", () => {
 			}),
 		];
 
-		const flattened = buildThreadReviews(reviews, new Set());
+		const flattened = buildThreadReviews(reviews);
 
 		expect(flattened.map((item) => item.id)).toEqual([
 			"top-score",
@@ -165,16 +165,13 @@ describe("resume thread rules", () => {
 		expect(flattened.find((item) => item.id === "reply-old")?.depth).toBe(1);
 	});
 
-	it("hides collapsed replies while preserving parent child counts", () => {
-		const flattened = buildThreadReviews(
-			[
-				review({ id: "parent", helpful_votes: 1 }),
-				review({ id: "child", parent_id: "parent" }),
-			],
-			new Set(["parent"]),
-		);
+	it("keeps reply data expanded for local-only collapse state", () => {
+		const flattened = buildThreadReviews([
+			review({ id: "parent", helpful_votes: 1 }),
+			review({ id: "child", parent_id: "parent" }),
+		]);
 
-		expect(flattened.map((item) => item.id)).toEqual(["parent"]);
+		expect(flattened.map((item) => item.id)).toEqual(["parent", "child"]);
 		expect(flattened[0].childCount).toBe(1);
 	});
 
@@ -185,7 +182,6 @@ describe("resume thread rules", () => {
 				review({ id: "child", parent_id: "parent" }),
 				review({ id: "grandchild", parent_id: "child" }),
 			],
-			new Set(),
 		);
 
 		expect(tree).toHaveLength(1);

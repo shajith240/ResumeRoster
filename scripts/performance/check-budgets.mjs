@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { gzipSync } from "node:zlib";
 
@@ -19,16 +19,87 @@ async function gzipFileSize(filePath) {
 	return gzipSync(contents).byteLength;
 }
 
-function getRouteFiles(manifest, route) {
-	const files = manifest.pages?.[route];
+async function fileExists(filePath) {
+	try {
+		await access(filePath);
+		return true;
+	} catch {
+		return false;
+	}
+}
 
-	if (!Array.isArray(files)) {
-		throw new Error(
-			`No built assets found for route "${route}". Run npm run build and check the route key.`,
-		);
+function toManifestPath(filePath) {
+	return filePath.split(path.sep).join("/");
+}
+
+async function resolveBuiltFile(file) {
+	const absoluteFile = path.join(rootDir, ".next", file);
+	const directory = path.dirname(file);
+	const absoluteDirectory = path.join(rootDir, ".next", directory);
+	const extension = path.extname(file);
+	const basename = path.basename(file, extension);
+	const entries = await readdir(absoluteDirectory).catch(() => []);
+	const hashedMatch = entries
+		.filter(
+			(entry) =>
+				entry.startsWith(`${basename}-`) && entry.endsWith(extension),
+		)
+		.sort()[0];
+
+	if (hashedMatch) {
+		return toManifestPath(path.join(directory, hashedMatch));
 	}
 
-	return files.filter((file) => /\.(css|js)$/.test(file));
+	if (await fileExists(absoluteFile)) {
+		return toManifestPath(file);
+	}
+
+	const match = entries
+		.filter((entry) => entry === `${basename}${extension}`)
+		.sort()[0];
+
+	if (!match) {
+		throw new Error(`Built asset "${file}" was not found in .next output.`);
+	}
+
+	return toManifestPath(path.join(directory, match));
+}
+
+async function tryResolveBuiltFile(file) {
+	try {
+		return await resolveBuiltFile(file);
+	} catch {
+		return null;
+	}
+}
+
+async function inferRouteFiles(route) {
+	const routePath = route.replace(/^\/+/, "");
+	const routeAsset = `static/chunks/app/${routePath}.js`;
+	const routeCssAsset = `static/css/app/${routePath}.css`;
+	const files = await Promise.all(
+		[
+			"static/chunks/webpack.js",
+			"static/chunks/main-app.js",
+			routeAsset,
+		].map(resolveBuiltFile),
+	);
+	const routeCss = await tryResolveBuiltFile(routeCssAsset);
+
+	if (routeCss) {
+		files.push(routeCss);
+	}
+
+	return files;
+}
+
+async function getRouteFiles(manifest, route) {
+	const manifestFiles = manifest.pages?.[route];
+	const files = Array.isArray(manifestFiles)
+		? await Promise.all(manifestFiles.map(resolveBuiltFile))
+		: await inferRouteFiles(route);
+
+	return [...new Set(files.filter((file) => /\.(css|js)$/.test(file)))];
 }
 
 async function measureRoute(route, files) {
@@ -66,7 +137,7 @@ async function main() {
 	const results = [];
 
 	for (const [route, budget] of routeEntries) {
-		const files = getRouteFiles(manifest, route);
+		const files = await getRouteFiles(manifest, route);
 		const measured = await measureRoute(route, files);
 		results.push({
 			...measured,

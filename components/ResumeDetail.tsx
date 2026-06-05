@@ -154,7 +154,6 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						onReviewSubmit={controller.handleReviewSubmit}
 						onSelectedAttachmentChange={controller.setSelectedAttachment}
 						onToggleReplies={controller.toggleReviewReplies}
-						renderIndexById={controller.threadRenderIndexById}
 						replyAttachment={controller.replyAttachment}
 						replyContent={controller.replyContent}
 						replyContentFormat={controller.replyContentFormat}

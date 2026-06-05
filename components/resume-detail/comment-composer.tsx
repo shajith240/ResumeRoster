@@ -39,7 +39,7 @@ export function CommentComposer({
 	contentFormat,
 	disabledTools = false,
 	maxHeight = 260,
-	minHeight = 72,
+	minHeight = 64,
 	onAttachmentChange,
 	onCancel,
 	onChange,

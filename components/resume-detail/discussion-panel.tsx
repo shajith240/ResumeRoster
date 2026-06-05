@@ -51,7 +51,6 @@ export function DiscussionPanel({
 	onReviewSubmit,
 	onSelectedAttachmentChange,
 	onToggleReplies,
-	renderIndexById,
 	replyAttachment,
 	replyContent,
 	replyContentFormat,
@@ -96,8 +95,8 @@ export function DiscussionPanel({
 							submitting
 								? "Posting..."
 								: user
-									? "Submit feedback"
-									: "Sign in to review"
+									? "Submit"
+									: "Sign in"
 						}
 						value={content}
 					/>
@@ -154,7 +153,6 @@ export function DiscussionPanel({
 						onReplyToggle={onReplyToggle}
 						onRequireLogin={onRequireLogin}
 						onToggleReplies={onToggleReplies}
-						renderIndexById={renderIndexById}
 						replyAttachment={replyAttachment}
 						replyContent={replyContent}
 						replyContentFormat={replyContentFormat}

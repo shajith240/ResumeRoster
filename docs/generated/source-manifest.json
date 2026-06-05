@@ -270,11 +270,11 @@
       "exportCount": 3
     },
     {
-      "hash": "329b0d04120164624e4108afa0e58de0ddf9d36b60c37d82c41f361719e3f4d0",
+      "hash": "44cb38a140ebf62aa33f0eaa054ae954ed38cdbcb64e38c74cb06e2eb453e756",
       "kind": "Project file",
-      "lineCount": 3637,
+      "lineCount": 3827,
       "relativePath": "app/feed.css",
-      "size": 72809,
+      "size": 76550,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -300,11 +300,11 @@
       "exportCount": 2
     },
     {
-      "hash": "5cc7daf2ba989a9b07d4ec4d9fee84ec7b3eef56ebe4b63fe7ccc38bb4f73325",
+      "hash": "7279e21aa48ec97207c96cc57b7b32b8c7fe6a0af80b7964cf457b749e9c8eb9",
       "kind": "Project file",
-      "lineCount": 5174,
+      "lineCount": 5166,
       "relativePath": "app/globals.css",
-      "size": 93722,
+      "size": 93520,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -970,7 +970,7 @@
       "exportCount": 2
     },
     {
-      "hash": "abbb6ca306ea98efa1ab0484087032380f82e2308e4afa200c02423853feeb42",
+      "hash": "099e19a6b91d04a3fa2d40eb290ec6cfe00834e11d9d7e2d72be664c8b6998df",
       "kind": "React component",
       "lineCount": 121,
       "relativePath": "components/resume-detail/comment-composer.tsx",
@@ -1010,11 +1010,11 @@
       "exportCount": 3
     },
     {
-      "hash": "08dba1bb21f263519c27397f7a8f99aeff149b5014ef901f7c0f59ce6996722c",
+      "hash": "b17802512d9cab7559394057653fc59b44e0be8fb59787d54c498acb0ce9a8be",
       "kind": "React component",
-      "lineCount": 179,
+      "lineCount": 177,
       "relativePath": "components/resume-detail/discussion-panel.tsx",
-      "size": 5532,
+      "size": 5455,
       "functionCount": 1,
       "importCount": 8,
       "exportCount": 1
@@ -1040,21 +1040,21 @@
       "exportCount": 11
     },
     {
-      "hash": "cc215e43c0ff2db31598306d7829d7f379b2aaf094422a1431ea6b460a0fb201",
+      "hash": "2fd5429a408212d1f6a06e50948db09298c9072607e8754d060afdc538677589",
       "kind": "React component",
-      "lineCount": 370,
+      "lineCount": 460,
       "relativePath": "components/resume-detail/thread-review-item.tsx",
-      "size": 10432,
+      "size": 12997,
       "functionCount": 2,
       "importCount": 10,
-      "exportCount": 2
+      "exportCount": 1
     },
     {
-      "hash": "1ec020578bcc1442d0a71eca7acbbc88d4dd0df91bf1cbf77d2cbe78bfe3f844",
+      "hash": "850ab9433445ad9c781efeaf27254731f3f7f053c46616f29220d3473641e9c6",
       "kind": "React component",
-      "lineCount": 80,
+      "lineCount": 79,
       "relativePath": "components/resume-detail/types.ts",
-      "size": 2396,
+      "size": 2357,
       "functionCount": 0,
       "importCount": 4,
       "exportCount": 7
@@ -1070,13 +1070,13 @@
       "exportCount": 1
     },
     {
-      "hash": "9636d7a8aa49d9ece28f47b265418fdf41b18101b7c651cccd1e50ced6237fe1",
+      "hash": "c95afb8aed4f611de471a61fcfbbc6034eac1d426e9f4396c557ef3006102e73",
       "kind": "React component",
-      "lineCount": 792,
+      "lineCount": 786,
       "relativePath": "components/resume-detail/use-resume-detail-controller.ts",
-      "size": 19888,
+      "size": 19639,
       "functionCount": 1,
-      "importCount": 21,
+      "importCount": 20,
       "exportCount": 1
     },
     {
@@ -1130,11 +1130,11 @@
       "exportCount": 4
     },
     {
-      "hash": "45e0fdb724d84e073a7ee82ac22e27b688a6342583fcb28c42bb777e0c2d5166",
+      "hash": "4bc0d50bd0cdcf3e6c059c4729e749657d4805188de51db889805ba46d5d48c4",
       "kind": "React component",
-      "lineCount": 221,
+      "lineCount": 220,
       "relativePath": "components/ResumeDetail.tsx",
-      "size": 8020,
+      "size": 7963,
       "functionCount": 1,
       "importCount": 9,
       "exportCount": 2
@@ -2020,11 +2020,11 @@
       "exportCount": 0
     },
     {
-      "hash": "484fdbdd496fcd145b379419e095d3372649fd0d921445979c7ea19878d9b341",
+      "hash": "6802936de89404e96ae3dd1d6d58f37548defaa55d37c7c7c13353f4fb20d2d8",
       "kind": "Unit test",
-      "lineCount": 199,
+      "lineCount": 195,
       "relativePath": "lib/__tests__/resume-thread.test.ts",
-      "size": 5091,
+      "size": 5035,
       "functionCount": 1,
       "importCount": 3,
       "exportCount": 0
@@ -2330,11 +2330,11 @@
       "exportCount": 9
     },
     {
-      "hash": "d45c9f4f0f1ef69e25eeeed7479ecb958447a5a34545dd5cd156779278735e61",
+      "hash": "695c61c84adea24a52769cd8e8aa15ff2bcfe6b0217462a0af0e36a0be75bbdb",
       "kind": "Application library module",
-      "lineCount": 141,
+      "lineCount": 132,
       "relativePath": "lib/resume-thread.ts",
-      "size": 3564,
+      "size": 3378,
       "functionCount": 8,
       "importCount": 1,
       "exportCount": 7
@@ -2870,11 +2870,11 @@
       "exportCount": 0
     },
     {
-      "hash": "09f6897937e5b6b36eda1f019378ae30bc289237407ad9c0cefae102f9bfd67b",
+      "hash": "8788218ab278c19e66018b97e6b3978c6e06b217e2fd81fb4ff9916ba224aa17",
       "kind": "Repository automation",
-      "lineCount": 107,
+      "lineCount": 178,
       "relativePath": "scripts/performance/check-budgets.mjs",
-      "size": 2722,
+      "size": 4457,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -3430,5 +3430,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "6fe2139bfb7b3bd5a7c08752befafed747f0551b705f6afed855d94d174083c0"
+  "manifestHash": "9f470c6a2065c1399ab1809b7472609c5f6587a1504950ae0fad058d479d30d0"
 }

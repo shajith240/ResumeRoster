@@ -4,9 +4,9 @@
 
 - Source path: `app/feed.css`
 - Kind: Project file
-- Size: 72809 bytes
-- Lines: 3637
-- Source hash: `329b0d04120164624e4108afa0e58de0ddf9d36b60c37d82c41f361719e3f4d0`
+- Size: 76550 bytes
+- Lines: 3827
+- Source hash: `44cb38a140ebf62aa33f0eaa054ae954ed38cdbcb64e38c74cb06e2eb453e756`
 
 ## What This File Does
 
@@ -46,11 +46,17 @@ No direct test file detected by naming convention.
 - `bump`
 - `closed`
 - `closed-note`
+- `comment-action-button`
+- `comment-action-label`
+- `comment-author-badge-row`
 - `comment-author-chip`
+- `comment-author-primary-row`
+- `comment-author-stack`
 - `comment-composer`
 - `comment-composer-cancel`
 - `comment-composer-footer`
 - `comment-composer-input`
+- `comment-composer-reply`
 - `comment-composer-submit`
 - `comment-composer-submit-row`
 - `comment-composer-tools`
@@ -59,8 +65,8 @@ No direct test file detected by naming convention.
 - `comment-media-actions`
 - `comment-media-preview`
 - `comment-media-toolbar`
+- `comment-more-button`
 - `comment-reactions`
-- `comment-report-button`
 - `community-feed`
 - `copy-button`
 - `deleted-author-chip`
@@ -72,12 +78,6 @@ No direct test file detected by naming convention.
 - `feed-community-header`
 - `feed-empty-state`
 - `feed-personalize-card`
-- `feed-personalize-dismiss`
-- `feed-preview-link`
-- `feed-resume-preview`
-- `feed-resume-preview-placeholder`
-- `feed-review-summary`
-- `feed-right-rail`
 
 ## Notes
 

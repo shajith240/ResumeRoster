@@ -4,9 +4,9 @@
 
 - Source path: `lib/resume-thread.ts`
 - Kind: Application library module
-- Size: 3564 bytes
-- Lines: 141
-- Source hash: `d45c9f4f0f1ef69e25eeeed7479ecb958447a5a34545dd5cd156779278735e61`
+- Size: 3378 bytes
+- Lines: 132
+- Source hash: `695c61c84adea24a52769cd8e8aa15ff2bcfe6b0217462a0af0e36a0be75bbdb`
 
 ## What This File Does
 
@@ -40,8 +40,8 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | 69 | `sortTopLevelReviews` | Function | top-level | no | `a`, `b` | `number` | Implements the sorttoplevelreviews helper. |
 | 76 | `sortReplyReviews` | Function | top-level | no | `a`, `b` | `number` | Implements the sortreplyreviews helper. |
 | 83 | `buildChildrenByParent` | Function | top-level | no | `reviews` | `Map<string \| null, Review[]>` | Implements the buildchildrenbyparent helper. |
-| 103 | `buildThreadReviewTree` | Function | top-level | yes | `reviews`, `collapsedReviewIds` | `ThreadReviewNode[]` | Implements the buildthreadreviewtree helper. |
-| 126 | `buildThreadReviews` | Function | top-level | yes | `reviews`, `collapsedReviewIds` | `ThreadReview[]` | Implements the buildthreadreviews helper. |
+| 103 | `buildThreadReviewTree` | Function | top-level | yes | `reviews` | `ThreadReviewNode[]` | Implements the buildthreadreviewtree helper. |
+| 120 | `buildThreadReviews` | Function | top-level | yes | `reviews` | `ThreadReview[]` | Implements the buildthreadreviews helper. |
 
 ## Types
 

@@ -24,7 +24,6 @@ import {
 	SUPABASE_MIGRATION_MESSAGE,
 } from "./selectors";
 import type { AuthorProfile } from "./types";
-import { createThreadRenderIndexMap } from "./thread-review-item";
 import {
 	fetchLatestResumeStatus,
 	fetchResumeAuthorProfile,
@@ -86,12 +85,8 @@ export function useResumeDetailController(resumeId: string) {
 	const [message, setMessage] = useState("");
 
 	const threadReviews = useMemo(
-		() => buildThreadReviewTree(reviews, collapsedReviewIds),
-		[collapsedReviewIds, reviews],
-	);
-	const threadRenderIndexById = useMemo(
-		() => createThreadRenderIndexMap(threadReviews),
-		[threadReviews],
+		() => buildThreadReviewTree(reviews),
+		[reviews],
 	);
 	const isOwner = Boolean(user && resume?.user_id === user.id);
 	const isClosed = resume?.status === "closed";
@@ -783,7 +778,6 @@ export function useResumeDetailController(resumeId: string) {
 		submitting,
 		submittingReport,
 		submittingReplyId,
-		threadRenderIndexById,
 		threadReviews,
 		toggleReviewReplies,
 		user,

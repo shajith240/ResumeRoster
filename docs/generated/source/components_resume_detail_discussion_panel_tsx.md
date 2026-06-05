@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/discussion-panel.tsx`
 - Kind: React component
-- Size: 5532 bytes
-- Lines: 179
-- Source hash: `08dba1bb21f263519c27397f7a8f99aeff149b5014ef901f7c0f59ce6996722c`
+- Size: 5455 bytes
+- Lines: 177
+- Source hash: `b17802512d9cab7559394057653fc59b44e0be8fb59787d54c498acb0ce9a8be`
 
 ## What This File Does
 

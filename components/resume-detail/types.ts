@@ -53,7 +53,6 @@ export type ThreadReviewControls = {
 	onReplyToggle: (reviewId: string) => void;
 	onRequireLogin: () => void;
 	onToggleReplies: (reviewId: string) => void;
-	renderIndexById: Map<string, number>;
 	replyAttachment: CommentAttachmentOption | null;
 	replyContent: string;
 	replyContentFormat: CommentContentFormat;
