@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 341 source-controlled files.
-Manifest hash: `56b8ae83855337bf02451acd2326f98c5f5fcea82437d00ae2e9c720655c133d`
+Generated from 342 source-controlled files.
+Manifest hash: `6fe2139bfb7b3bd5a7c08752befafed747f0551b705f6afed855d94d174083c0`
 
 ## Folder Coverage
 
@@ -12,7 +12,7 @@ Manifest hash: `56b8ae83855337bf02451acd2326f98c5f5fcea82437d00ae2e9c720655c133d
 | `.github` | 1 |
 | `(root)` | 19 |
 | `app` | 42 |
-| `components` | 88 |
+| `components` | 89 |
 | `docs` | 36 |
 | `lib` | 73 |
 | `public` | 27 |
@@ -33,7 +33,7 @@ Manifest hash: `56b8ae83855337bf02451acd2326f98c5f5fcea82437d00ae2e9c720655c133d
 | Project file | 9 |
 | Public browser asset | 1 |
 | Public visual asset | 26 |
-| React component | 75 |
+| React component | 76 |
 | Repository automation | 6 |
 | Root documentation | 3 |
 | Supabase migration | 46 |
@@ -140,6 +140,7 @@ Manifest hash: `56b8ae83855337bf02451acd2326f98c5f5fcea82437d00ae2e9c720655c133d
 | `components/ProfileDetail.module.css` | React component | [open](source/components_profiledetail_module_css.md) |
 | `components/ProfileDetail.tsx` | React component | [open](source/components_profiledetail_tsx.md) |
 | `components/PushNotificationsControl.tsx` | React component | [open](source/components_pushnotificationscontrol_tsx.md) |
+| `components/resume-detail/comment-composer.tsx` | React component | [open](source/components_resume_detail_comment_composer_tsx.md) |
 | `components/resume-detail/content.tsx` | React component | [open](source/components_resume_detail_content_tsx.md) |
 | `components/resume-detail/data.ts` | React component | [open](source/components_resume_detail_data_ts.md) |
 | `components/resume-detail/dialogs.tsx` | React component | [open](source/components_resume_detail_dialogs_tsx.md) |

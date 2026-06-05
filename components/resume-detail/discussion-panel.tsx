@@ -1,9 +1,8 @@
 import type { FormEvent } from "react";
-import CommentMediaToolbar, {
-	type CommentAttachmentOption,
-} from "@/components/CommentMediaToolbar";
+import type { CommentAttachmentOption } from "@/components/CommentMediaToolbar";
 import type { CommentContentFormat } from "@/lib/supabase/types";
 import type { ThreadReviewNode } from "@/lib/resume-thread";
+import { CommentComposer } from "./comment-composer";
 import { SUPABASE_MIGRATION_MESSAGE } from "./selectors";
 import { ThreadReviewItem } from "./thread-review-item";
 import type { ThreadReviewControls } from "./types";
@@ -83,32 +82,25 @@ export function DiscussionPanel({
 				</div>
 			) : (
 				<form className="roast-form thread-roast-form" onSubmit={onReviewSubmit}>
-					<textarea
-						value={content}
-						onChange={(event) => onContentChange(event.target.value)}
+					<CommentComposer
+						attachment={selectedAttachment}
+						contentFormat={contentFormat}
+						disabledTools={!mediaSchemaReady || submitting}
+						onAttachmentChange={onSelectedAttachmentChange}
+						onChange={onContentChange}
+						onFormatChange={onContentFormatChange}
+						onRequireLogin={onRequireLogin}
 						placeholder="Be specific. What should they rewrite, reorder, quantify, or remove?"
-						rows={4}
+						submitDisabled={submitting}
+						submitLabel={
+							submitting
+								? "Posting..."
+								: user
+									? "Submit feedback"
+									: "Sign in to review"
+						}
+						value={content}
 					/>
-					<div className="roast-form-footer">
-						<span>Review the resume, not the person</span>
-						<div className="roast-form-actions">
-							<CommentMediaToolbar
-								attachment={selectedAttachment}
-								contentFormat={contentFormat}
-								disabled={!mediaSchemaReady || submitting}
-								onAttachmentChange={onSelectedAttachmentChange}
-								onFormatChange={onContentFormatChange}
-								onRequireLogin={onRequireLogin}
-							/>
-							<button className="btn-primary btn-brand" disabled={submitting}>
-								{submitting
-									? "Posting..."
-									: user
-										? "Submit feedback"
-										: "Sign in to review"}
-							</button>
-						</div>
-					</div>
 					{message ? <p className="form-message">{message}</p> : null}
 				</form>
 			)}

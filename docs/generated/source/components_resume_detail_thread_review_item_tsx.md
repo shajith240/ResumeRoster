@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/thread-review-item.tsx`
 - Kind: React component
-- Size: 9739 bytes
-- Lines: 356
-- Source hash: `2006e3a6fc2a48b94fc3028fb57dbd3124201cd7bfb79ad8d21b5de518444301`
+- Size: 10432 bytes
+- Lines: 370
+- Source hash: `cc215e43c0ff2db31598306d7829d7f379b2aaf094422a1431ea6b460a0fb201`
 
 ## What This File Does
 
@@ -23,11 +23,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `./comment-composer`
 - `./content`
 - `./selectors`
 - `./types`
 - `./utils`
-- `@/components/CommentMediaToolbar`
 - `@/components/ui/button`
 - `@/lib/resume-thread`
 - `lucide-react`

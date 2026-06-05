@@ -1636,7 +1636,6 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 .admin-access-card,
 .thread-viewer-card,
 .resume-context-card,
-.thread-roast-form,
 .closed-note,
 .empty-state {
 	border: 1px solid var(--border-subtle);
@@ -2490,7 +2489,6 @@ body.main-app-dark .bottom-nav {
 	}
 
 	.thread-viewer-card,
-	.thread-roast-form,
 	.leaderboard-panel {
 		padding: 18px;
 	}
@@ -2552,26 +2550,9 @@ body.main-app-dark .bottom-nav {
 	}
 
 	.thread-header,
-	.thread-list-header,
-	.roast-form-footer {
+	.thread-list-header {
 		align-items: flex-start;
 		flex-direction: column;
-	}
-
-	.roast-form-actions {
-		width: 100%;
-		justify-content: stretch;
-	}
-
-	.roast-form-actions .btn-primary,
-	.roast-form-actions .comment-media-toolbar {
-		width: 100%;
-	}
-
-	.comment-media-actions,
-	.comment-media-preview {
-		width: 100%;
-		justify-content: center;
 	}
 
 	.thread-context-grid {
@@ -2891,7 +2872,6 @@ body.main-app-dark .bottom-nav {
 	.post-action-button,
 	.role-picker button,
 	.thread-roast-body footer button,
-	.inline-reply-form .inline-reply-actions button,
 	.comment-media-actions button,
 	.owner-actions button {
 		min-height: 44px;
@@ -2920,8 +2900,7 @@ body.main-app-dark .bottom-nav {
 		min-height: 72px;
 	}
 
-	.roast-form-footer .btn-primary,
-	.inline-reply-form .reply-submit-button,
+	.comment-composer-submit,
 	.submit-button {
 		min-height: 46px;
 	}

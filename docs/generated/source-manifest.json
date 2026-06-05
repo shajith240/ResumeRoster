@@ -270,11 +270,11 @@
       "exportCount": 3
     },
     {
-      "hash": "127c19aaeec9079b2722ced4e22a437b52e897ba550ae4306b24b3bc77b3de28",
+      "hash": "329b0d04120164624e4108afa0e58de0ddf9d36b60c37d82c41f361719e3f4d0",
       "kind": "Project file",
-      "lineCount": 3355,
+      "lineCount": 3637,
       "relativePath": "app/feed.css",
-      "size": 66203,
+      "size": 72809,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -300,11 +300,11 @@
       "exportCount": 2
     },
     {
-      "hash": "ad0aa5ddd9225c056da905cf0f4d4e03481f3ef0ae978ee01acb41aae12b61f5",
+      "hash": "5cc7daf2ba989a9b07d4ec4d9fee84ec7b3eef56ebe4b63fe7ccc38bb4f73325",
       "kind": "Project file",
-      "lineCount": 5195,
+      "lineCount": 5174,
       "relativePath": "app/globals.css",
-      "size": 94201,
+      "size": 93722,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -970,6 +970,16 @@
       "exportCount": 2
     },
     {
+      "hash": "abbb6ca306ea98efa1ab0484087032380f82e2308e4afa200c02423853feeb42",
+      "kind": "React component",
+      "lineCount": 121,
+      "relativePath": "components/resume-detail/comment-composer.tsx",
+      "size": 2938,
+      "functionCount": 1,
+      "importCount": 3,
+      "exportCount": 1
+    },
+    {
       "hash": "ff6165d89bd3ca72e5000ad36c132a98e75e01e05a77f936f0f03f6bd93a3746",
       "kind": "React component",
       "lineCount": 188,
@@ -1000,13 +1010,13 @@
       "exportCount": 3
     },
     {
-      "hash": "2da6273ca8990537582a486b168f6ecaeace53a95baf9d9b63211f009e48feb6",
+      "hash": "08dba1bb21f263519c27397f7a8f99aeff149b5014ef901f7c0f59ce6996722c",
       "kind": "React component",
-      "lineCount": 187,
+      "lineCount": 179,
       "relativePath": "components/resume-detail/discussion-panel.tsx",
-      "size": 5781,
+      "size": 5532,
       "functionCount": 1,
-      "importCount": 7,
+      "importCount": 8,
       "exportCount": 1
     },
     {
@@ -1030,11 +1040,11 @@
       "exportCount": 11
     },
     {
-      "hash": "2006e3a6fc2a48b94fc3028fb57dbd3124201cd7bfb79ad8d21b5de518444301",
+      "hash": "cc215e43c0ff2db31598306d7829d7f379b2aaf094422a1431ea6b460a0fb201",
       "kind": "React component",
-      "lineCount": 356,
+      "lineCount": 370,
       "relativePath": "components/resume-detail/thread-review-item.tsx",
-      "size": 9739,
+      "size": 10432,
       "functionCount": 2,
       "importCount": 10,
       "exportCount": 2
@@ -3420,5 +3430,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "56b8ae83855337bf02451acd2326f98c5f5fcea82437d00ae2e9c720655c133d"
+  "manifestHash": "6fe2139bfb7b3bd5a7c08752befafed747f0551b705f6afed855d94d174083c0"
 }

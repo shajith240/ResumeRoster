@@ -4,9 +4,9 @@
 
 - Source path: `app/feed.css`
 - Kind: Project file
-- Size: 66203 bytes
-- Lines: 3355
-- Source hash: `127c19aaeec9079b2722ced4e22a437b52e897ba550ae4306b24b3bc77b3de28`
+- Size: 72809 bytes
+- Lines: 3637
+- Source hash: `329b0d04120164624e4108afa0e58de0ddf9d36b60c37d82c41f361719e3f4d0`
 
 ## What This File Does
 
@@ -47,6 +47,13 @@ No direct test file detected by naming convention.
 - `closed`
 - `closed-note`
 - `comment-author-chip`
+- `comment-composer`
+- `comment-composer-cancel`
+- `comment-composer-footer`
+- `comment-composer-input`
+- `comment-composer-submit`
+- `comment-composer-submit-row`
+- `comment-composer-tools`
 - `comment-delete-button`
 - `comment-markdown`
 - `comment-media-actions`
@@ -71,13 +78,6 @@ No direct test file detected by naming convention.
 - `feed-resume-preview-placeholder`
 - `feed-review-summary`
 - `feed-right-rail`
-- `feed-rules-copy`
-- `feed-rules-eyebrow`
-- `feed-rules-guide`
-- `feed-rules-list`
-- `feed-rules-panel`
-- `feed-rules-visual`
-- `feed-section-label`
 
 ## Notes
 

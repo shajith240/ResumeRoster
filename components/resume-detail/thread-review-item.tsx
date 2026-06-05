@@ -1,13 +1,13 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
-import CommentMediaToolbar from "@/components/CommentMediaToolbar";
 import { Button } from "@/components/ui/button";
 import {
 	getReactionBlockReason,
 	getReplyBlockReason,
 	type ThreadReviewNode,
 } from "@/lib/resume-thread";
+import { CommentComposer } from "./comment-composer";
 import {
 	FormattedReviewContent,
 	ReviewAttachment,
@@ -75,6 +75,7 @@ export function ThreadReviewItem({
 	const reactionBlockReason = getReactionBlockReason(user, resume, review);
 	const reactionDisabled = Boolean(reactionBlockReason);
 	const replyCount = Math.max(review.reply_count ?? 0, review.childCount);
+	const hasReplies = replyCount > 0;
 	const isCollapsed = collapsedReviewIds.has(review.id);
 	const isDeleted = Boolean(review.is_deleted);
 	const reviewAttachment =
@@ -90,6 +91,10 @@ export function ThreadReviewItem({
 		replySchemaReady,
 	});
 	const canReply = !replyBlockReason;
+	const replyNoun = replyCount === 1 ? "reply" : "replies";
+	const threadToggleLabel = isCollapsed
+		? `Show ${replyCount} ${replyNoun}`
+		: `Hide ${replyCount} ${replyNoun}`;
 	const reviewStyle = {
 		animationDelay: `${(renderIndexById.get(review.id) ?? 0) * 32}ms`,
 	} as CSSProperties;
@@ -128,23 +133,41 @@ export function ThreadReviewItem({
 
 	return (
 		<div
-			className="thread-roast-node"
+			className={`thread-roast-node${review.depth > 0 ? " is-nested" : ""}${
+				hasReplies ? " has-replies" : ""
+			}${isCollapsed ? " is-collapsed" : ""}`}
+			data-thread-collapsed={hasReplies ? String(isCollapsed) : undefined}
+			data-thread-depth={review.depth}
+			data-thread-has-replies={hasReplies ? "true" : undefined}
 			data-thread-parent-id={review.parent_id ?? undefined}
 			data-thread-roast-id={review.id}
 			id={`comment-${review.id}`}
 			key={review.id}
 			role="listitem"
 		>
+			<span aria-hidden="true" className="thread-rail-end-mask" />
 			{review.depth > 0 ? (
 				<svg
 					aria-hidden="true"
 					className="thread-branch-curve"
 					focusable="false"
 					preserveAspectRatio="none"
-					viewBox="0 0 48 32"
+					viewBox="0 0 44 12"
 				>
-					<path d="M0.5 0 V16 C0.5 24.5 7 31.5 15.5 31.5 H31" />
+					<path d="M0 0 C0 6.63 5.37 12 12 12 H44" />
 				</svg>
+			) : null}
+			{hasReplies ? (
+				<button
+					aria-expanded={!isCollapsed}
+					aria-label={threadToggleLabel}
+					className="thread-rail-button"
+					onClick={() => onToggleReplies(review.id)}
+					title={threadToggleLabel}
+					type="button"
+				>
+					<span className="thread-rail-stem" />
+				</button>
 			) : null}
 			<article
 				className={`thread-roast ${review.depth ? "is-reply" : ""}${
@@ -255,17 +278,17 @@ export function ThreadReviewItem({
 								Reply
 							</button>
 						)}
-						{replyCount > 0 ? (
+						{hasReplies ? (
 							<button
-								className="reply-collapse-button"
+								aria-expanded={!isCollapsed}
+								aria-label={threadToggleLabel}
+								className="thread-rail-toggle"
 								onClick={() => onToggleReplies(review.id)}
+								title={threadToggleLabel}
 								type="button"
 							>
-								{isCollapsed
-									? `Show ${replyCount} ${
-											replyCount === 1 ? "reply" : "replies"
-										}`
-									: "Hide replies"}
+								<span aria-hidden="true">{isCollapsed ? "+" : "-"}</span>
+								<span className="sr-only">{threadToggleLabel}</span>
 							</button>
 						) : null}
 						{!isDeleted && isOwnReview ? (
@@ -304,37 +327,28 @@ export function ThreadReviewItem({
 							className="inline-reply-form"
 							onSubmit={(event) => onReplySubmit(event, review)}
 						>
-							<textarea
-								autoFocus
-								onChange={(event) => onReplyContentChange(event.target.value)}
-								placeholder={`Reply to ${authorHandle}`}
-								rows={3}
-								value={replyContent}
-							/>
-							<CommentMediaToolbar
+							<CommentComposer
 								attachment={replyAttachment}
+								autoFocus
+								className="comment-composer-reply"
 								contentFormat={replyContentFormat}
-								disabled={!mediaSchemaReady || submittingReplyId === review.id}
+								disabledTools={
+									!mediaSchemaReady || submittingReplyId === review.id
+								}
+								maxHeight={220}
+								minHeight={66}
 								onAttachmentChange={onReplyAttachmentChange}
+								onCancel={onCancelReply}
+								onChange={onReplyContentChange}
 								onFormatChange={onReplyFormatChange}
 								onRequireLogin={onRequireLogin}
+								placeholder={`Reply to ${authorHandle}`}
+								submitDisabled={submittingReplyId === review.id}
+								submitLabel={
+									submittingReplyId === review.id ? "Posting..." : "Post reply"
+								}
+								value={replyContent}
 							/>
-							<div className="inline-reply-actions">
-								<button
-									className="reply-cancel-button"
-									onClick={onCancelReply}
-									type="button"
-								>
-									Cancel
-								</button>
-								<button
-									className="btn-primary btn-brand reply-submit-button"
-									disabled={submittingReplyId === review.id}
-									type="submit"
-								>
-									{submittingReplyId === review.id ? "Posting..." : "Post reply"}
-								</button>
-							</div>
 						</form>
 					) : null}
 				</div>
