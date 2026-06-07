@@ -9,7 +9,10 @@ import "./notifications.css";
 import "./feed.css";
 import "./admin.css";
 
-const lintyFaviconPath = "/assets/linty-favicon.png";
+const lintlyAppIcon180Path = "/assets/lintly/app-icon-180.png";
+const lintlyFavicon16Path = "/assets/lintly/favicon-16.png";
+const lintlyFavicon32Path = "/assets/lintly/favicon-32.png";
+const lintlyFavicon48Path = "/assets/lintly/favicon-48.png";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://linted.space"),
@@ -23,22 +26,32 @@ export const metadata: Metadata = {
   icons: {
     apple: [
       {
-        url: lintyFaviconPath,
-        sizes: "750x750",
+        url: lintlyAppIcon180Path,
+        sizes: "180x180",
         type: "image/png",
       },
     ],
     icon: [
       {
-        url: lintyFaviconPath,
-        sizes: "750x750",
+        url: lintlyFavicon16Path,
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: lintlyFavicon32Path,
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: lintlyFavicon48Path,
+        sizes: "48x48",
         type: "image/png",
       },
     ],
     shortcut: [
       {
-        url: lintyFaviconPath,
-        sizes: "750x750",
+        url: lintlyFavicon32Path,
+        sizes: "32x32",
         type: "image/png",
       },
     ],

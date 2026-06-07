@@ -320,11 +320,11 @@
       "exportCount": 3
     },
     {
-      "hash": "b26df477fb566a1a91766713671c87ff7c9dee40633a3286705193e5419133b7",
+      "hash": "9ace49e4f05d48b0dff20736447be74c995f115dc9ea3872cb50b9388b2672e3",
       "kind": "Next root layout",
-      "lineCount": 92,
+      "lineCount": 105,
       "relativePath": "app/layout.tsx",
-      "size": 2380,
+      "size": 2783,
       "functionCount": 1,
       "importCount": 10,
       "exportCount": 4
@@ -360,11 +360,11 @@
       "exportCount": 2
     },
     {
-      "hash": "6b263328733b8d0ef0deb546d9f19306f32fc21458f43e6fa46829be8d5415dc",
+      "hash": "1aa9e191ad34274594d7b6b3f0d6afe1220455e31df8ef08889e9ea15df80936",
       "kind": "Project configuration",
-      "lineCount": 22,
+      "lineCount": 29,
       "relativePath": "app/manifest.ts",
-      "size": 469,
+      "size": 615,
       "functionCount": 1,
       "importCount": 1,
       "exportCount": 2
@@ -640,11 +640,11 @@
       "exportCount": 2
     },
     {
-      "hash": "f4019e3e554bad4f46ade090f3ecd8ce281379b5c676076df5511a2467590dee",
+      "hash": "bdbbed730856232a10023177c84352a97e75ceedfa051072fbeffe6e93b74f3c",
       "kind": "React component",
       "lineCount": 21,
       "relativePath": "components/BrandMark.tsx",
-      "size": 374,
+      "size": 410,
       "functionCount": 1,
       "importCount": 0,
       "exportCount": 2
@@ -1080,11 +1080,11 @@
       "exportCount": 1
     },
     {
-      "hash": "be1890a31771345d33f9bab456cff0e38176bc19389f827e29b53176ced65622",
+      "hash": "ad9699379238969d228391c3ce21010154e82ee82577fbf8effe091b287b744e",
       "kind": "React component",
-      "lineCount": 942,
+      "lineCount": 943,
       "relativePath": "components/resume-detail/use-resume-detail-controller.ts",
-      "size": 23970,
+      "size": 24001,
       "functionCount": 1,
       "importCount": 21,
       "exportCount": 1
@@ -2610,6 +2610,16 @@
       "exportCount": 0
     },
     {
+      "hash": "3e18e195daa569f1caba92293f644ae5d72d70efdc676fcdb734cbbc79802646",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/app_icon_lintly.png",
+      "size": 784253,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
       "hash": "2dab700fdd09d0db5e74bd24baff3de72d1d4cefb1c456ba78c33100410b5a0d",
       "kind": "Public visual asset",
       "lineCount": 0,
@@ -2645,6 +2655,16 @@
       "lineCount": 0,
       "relativePath": "public/assets/clock_doodle.png",
       "size": 294793,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "746f9d6b2e2e8c8e4b327c991fbf13fde37ceaa9b1dc81d4a2b120f9d88685f3",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/cropped_favicon.png",
+      "size": 969611,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2700,11 +2720,91 @@
       "exportCount": 0
     },
     {
-      "hash": "0cfaa68a800402d27d9922bf24493753fdf55dba470123d3a0a14ee212c30ab3",
+      "hash": "79006253df6268f2275d354e183f8c62ecb992d8455d3fbad35c64aa5b5586d0",
       "kind": "Public visual asset",
       "lineCount": 0,
-      "relativePath": "public/assets/Linted-favicon.png",
-      "size": 24738,
+      "relativePath": "public/assets/lintly_celebration_new.png",
+      "size": 951318,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "740348fb3a6e72668d0c613548c1511a1f4a8ec8d00e146524ff56301c9defbd",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/lintly/app-icon-180.png",
+      "size": 59778,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "eb91de498ced78e1b762f9cee5c32f745f1cd1d3b6a7fc65d798d6a1bb786020",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/lintly/app-icon-192.png",
+      "size": 68662,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "7713b88edec015e384fff4fcf2499baac470b2a11edddba12d60b225088b06d8",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/lintly/app-icon-512.png",
+      "size": 510341,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "921f7f6baa598ef558f5039b0c87ea215c36bf0fd6947f1d01685657cb19d818",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/lintly/celebration-512.png",
+      "size": 356151,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "99f50332745c65ad87066d6d868cffe09dd5ce4f0ac55251ddffb8d17fca55e8",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/lintly/favicon-16.png",
+      "size": 987,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "b6e6058397d107453f2849148fd9ddf06f31b9afb40b8287801fa0b7de5c6c6c",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/lintly/favicon-32.png",
+      "size": 3043,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "742cf53871ebd253505376e0b6d90b1538315bef79c486d58ad42bf2c3e74e1e",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/lintly/favicon-48.png",
+      "size": 5962,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "a97b5d79081164dff7c08804302fa307b2a143d7c9f07a5d04137e4f3568b792",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/lintly/wordmark-symbol-96.png",
+      "size": 16083,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2815,6 +2915,16 @@
       "lineCount": 0,
       "relativePath": "public/assets/students.png",
       "size": 3386916,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "c5cbc086fe18c3c3a3c401eb9e01e19d7a0f766c4741f70b963957dd25ce31f2",
+      "kind": "Public visual asset",
+      "lineCount": 0,
+      "relativePath": "public/assets/symbol_logo_for_text_logo.png",
+      "size": 286967,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -3460,6 +3570,16 @@
       "exportCount": 0
     },
     {
+      "hash": "16a4642cc1872d5292b15aea22f5c1a4da868035f31c9b26d822b4015b9452d5",
+      "kind": "Supabase migration",
+      "lineCount": 292,
+      "relativePath": "supabase/migrations/0049_recalculate_guided_review_queue.sql",
+      "size": 7631,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
       "hash": "57c569ae5142c18e31ced5594927dd20532370e793ad8577a9e282110d028f8c",
       "kind": "Project configuration",
       "lineCount": 59,
@@ -3510,5 +3630,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "066b79c72a4a65fa89680242fbefeebdfb618feeca86dbe3d431101d728897d2"
+  "manifestHash": "3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd"
 }

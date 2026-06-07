@@ -1,4 +1,4 @@
-const LINTY_ICON_SRC = "/assets/linty-favicon.png";
+const LINTLY_WORDMARK_SYMBOL_SRC = "/assets/lintly/wordmark-symbol-96.png";
 
 type BrandMarkProps = {
 	text?: string;
@@ -12,7 +12,7 @@ export default function BrandMark({ text = "Linted" }: BrandMarkProps) {
 				aria-hidden="true"
 				className="brand-mark-icon"
 				decoding="async"
-				src={LINTY_ICON_SRC}
+				src={LINTLY_WORDMARK_SYMBOL_SRC}
 			/>
 			<span className="brand-mark-text">{text}</span>
 		</>

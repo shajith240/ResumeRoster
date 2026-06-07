@@ -4,9 +4,9 @@
 
 - Source path: `app/manifest.ts`
 - Kind: Project configuration
-- Size: 469 bytes
-- Lines: 22
-- Source hash: `6b263328733b8d0ef0deb546d9f19306f32fc21458f43e6fa46829be8d5415dc`
+- Size: 615 bytes
+- Lines: 29
+- Source hash: `1aa9e191ad34274594d7b6b3f0d6afe1220455e31df8ef08889e9ea15df80936`
 
 ## What This File Does
 

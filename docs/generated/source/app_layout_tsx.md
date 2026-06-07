@@ -4,9 +4,9 @@
 
 - Source path: `app/layout.tsx`
 - Kind: Next root layout
-- Size: 2380 bytes
-- Lines: 92
-- Source hash: `b26df477fb566a1a91766713671c87ff7c9dee40633a3286705193e5419133b7`
+- Size: 2783 bytes
+- Lines: 105
+- Source hash: `9ace49e4f05d48b0dff20736447be74c995f115dc9ea3872cb50b9388b2672e3`
 
 ## What This File Does
 
@@ -40,7 +40,7 @@ Edit this when the documented behavior or supporting repository file changes.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 68 | `RootLayout` | React component async | top-level | yes | `{ children, }` | `Promise<import("react").JSX.Element>` | Renders the RootLayout UI component. |
+| 81 | `RootLayout` | React component async | top-level | yes | `{ children, }` | `Promise<import("react").JSX.Element>` | Renders the RootLayout UI component. |
 
 ## Types
 

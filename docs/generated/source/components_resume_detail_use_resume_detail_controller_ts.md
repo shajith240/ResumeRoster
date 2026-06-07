@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/use-resume-detail-controller.ts`
 - Kind: React component
-- Size: 23970 bytes
-- Lines: 942
-- Source hash: `be1890a31771345d33f9bab456cff0e38176bc19389f827e29b53176ced65622`
+- Size: 24001 bytes
+- Lines: 943
+- Source hash: `ad9699379238969d228391c3ce21010154e82ee82577fbf8effe091b287b744e`
 
 ## What This File Does
 

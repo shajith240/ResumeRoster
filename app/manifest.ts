@@ -8,9 +8,16 @@ export default function manifest(): MetadataRoute.Manifest {
 		display: "standalone",
 		icons: [
 			{
-				src: "/assets/linty-favicon.png",
-				sizes: "750x750",
+				src: "/assets/lintly/app-icon-192.png",
+				sizes: "192x192",
 				type: "image/png",
+				purpose: "any",
+			},
+			{
+				src: "/assets/lintly/app-icon-512.png",
+				sizes: "512x512",
+				type: "image/png",
+				purpose: "any",
 			},
 		],
 		name: "Linted",

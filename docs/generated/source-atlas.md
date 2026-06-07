@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 350 source-controlled files.
-Manifest hash: `066b79c72a4a65fa89680242fbefeebdfb618feeca86dbe3d431101d728897d2`
+Generated from 362 source-controlled files.
+Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd`
 
 ## Folder Coverage
 
@@ -15,9 +15,9 @@ Manifest hash: `066b79c72a4a65fa89680242fbefeebdfb618feeca86dbe3d431101d728897d2
 | `components` | 90 |
 | `docs` | 36 |
 | `lib` | 77 |
-| `public` | 27 |
+| `public` | 38 |
 | `scripts` | 7 |
-| `supabase` | 51 |
+| `supabase` | 52 |
 
 ## File Kinds
 
@@ -32,11 +32,11 @@ Manifest hash: `066b79c72a4a65fa89680242fbefeebdfb618feeca86dbe3d431101d728897d2
 | Project configuration | 17 |
 | Project file | 9 |
 | Public browser asset | 1 |
-| Public visual asset | 26 |
+| Public visual asset | 37 |
 | React component | 77 |
 | Repository automation | 7 |
 | Root documentation | 3 |
-| Supabase migration | 48 |
+| Supabase migration | 49 |
 | UI primitive | 13 |
 | Unit test | 35 |
 
@@ -304,16 +304,26 @@ Manifest hash: `066b79c72a4a65fa89680242fbefeebdfb618feeca86dbe3d431101d728897d2
 | `package.json` | Project configuration | [open](source/package_json.md) |
 | `postcss.config.mjs` | Project configuration | [open](source/postcss_config_mjs.md) |
 | `public/assets/890cb942-1177-11ee-847c-73f9b2630e61.lottie` | Public visual asset | [open](source/public_assets_890cb942_1177_11ee_847c_73f9b2630e61_lottie.md) |
+| `public/assets/app_icon_lintly.png` | Public visual asset | [open](source/public_assets_app_icon_lintly_png.md) |
 | `public/assets/ats.png` | Public visual asset | [open](source/public_assets_ats_png.md) |
 | `public/assets/Catch bugs before the compiler.png` | Public visual asset | [open](source/public_assets_catch_bugs_before_the_compiler_png.md) |
 | `public/assets/checklist_doodle.png` | Public visual asset | [open](source/public_assets_checklist_doodle_png.md) |
 | `public/assets/clock_doodle.png` | Public visual asset | [open](source/public_assets_clock_doodle_png.md) |
+| `public/assets/cropped_favicon.png` | Public visual asset | [open](source/public_assets_cropped_favicon_png.md) |
 | `public/assets/dotlottie-player.wasm` | Public visual asset | [open](source/public_assets_dotlottie_player_wasm.md) |
 | `public/assets/fix_plan.png` | Public visual asset | [open](source/public_assets_fix_plan_png.md) |
 | `public/assets/Hero_section_animation.webm` | Public visual asset | [open](source/public_assets_hero_section_animation_webm.md) |
 | `public/assets/JD match.png` | Public visual asset | [open](source/public_assets_jd_match_png.md) |
 | `public/assets/job_seekers.png` | Public visual asset | [open](source/public_assets_job_seekers_png.md) |
-| `public/assets/Linted-favicon.png` | Public visual asset | [open](source/public_assets_linted_favicon_png.md) |
+| `public/assets/lintly_celebration_new.png` | Public visual asset | [open](source/public_assets_lintly_celebration_new_png.md) |
+| `public/assets/lintly/app-icon-180.png` | Public visual asset | [open](source/public_assets_lintly_app_icon_180_png.md) |
+| `public/assets/lintly/app-icon-192.png` | Public visual asset | [open](source/public_assets_lintly_app_icon_192_png.md) |
+| `public/assets/lintly/app-icon-512.png` | Public visual asset | [open](source/public_assets_lintly_app_icon_512_png.md) |
+| `public/assets/lintly/celebration-512.png` | Public visual asset | [open](source/public_assets_lintly_celebration_512_png.md) |
+| `public/assets/lintly/favicon-16.png` | Public visual asset | [open](source/public_assets_lintly_favicon_16_png.md) |
+| `public/assets/lintly/favicon-32.png` | Public visual asset | [open](source/public_assets_lintly_favicon_32_png.md) |
+| `public/assets/lintly/favicon-48.png` | Public visual asset | [open](source/public_assets_lintly_favicon_48_png.md) |
+| `public/assets/lintly/wordmark-symbol-96.png` | Public visual asset | [open](source/public_assets_lintly_wordmark_symbol_96_png.md) |
 | `public/assets/linty-favicon.png` | Public visual asset | [open](source/public_assets_linty_favicon_png.md) |
 | `public/assets/lodingscreen animation.webm` | Public visual asset | [open](source/public_assets_lodingscreen_animation_webm.md) |
 | `public/assets/logo.png` | Public visual asset | [open](source/public_assets_logo_png.md) |
@@ -325,6 +335,7 @@ Manifest hash: `066b79c72a4a65fa89680242fbefeebdfb618feeca86dbe3d431101d728897d2
 | `public/assets/Resume_upload.png` | Public visual asset | [open](source/public_assets_resume_upload_png.md) |
 | `public/assets/riphope_doodle.png` | Public visual asset | [open](source/public_assets_riphope_doodle_png.md) |
 | `public/assets/students.png` | Public visual asset | [open](source/public_assets_students_png.md) |
+| `public/assets/symbol_logo_for_text_logo.png` | Public visual asset | [open](source/public_assets_symbol_logo_for_text_logo_png.md) |
 | `public/assets/trashcan_doodle.png` | Public visual asset | [open](source/public_assets_trashcan_doodle_png.md) |
 | `public/assets/tryharder_doodle.png` | Public visual asset | [open](source/public_assets_tryharder_doodle_png.md) |
 | `public/assets/verified_tick.png` | Public visual asset | [open](source/public_assets_verified_tick_png.md) |
@@ -389,6 +400,7 @@ Manifest hash: `066b79c72a4a65fa89680242fbefeebdfb618feeca86dbe3d431101d728897d2
 | `supabase/migrations/0046_health_readiness_checks.sql` | Supabase migration | [open](source/supabase_migrations_0046_health_readiness_checks_sql.md) |
 | `supabase/migrations/0047_guided_review_queue.sql` | Supabase migration | [open](source/supabase_migrations_0047_guided_review_queue_sql.md) |
 | `supabase/migrations/0048_hide_waiting_resumes_from_public_feed.sql` | Supabase migration | [open](source/supabase_migrations_0048_hide_waiting_resumes_from_public_feed_sql.md) |
+| `supabase/migrations/0049_recalculate_guided_review_queue.sql` | Supabase migration | [open](source/supabase_migrations_0049_recalculate_guided_review_queue_sql.md) |
 | `tailwind.config.ts` | Project configuration | [open](source/tailwind_config_ts.md) |
 | `tsconfig.json` | Project configuration | [open](source/tsconfig_json.md) |
 | `typedoc.json` | Project configuration | [open](source/typedoc_json.md) |

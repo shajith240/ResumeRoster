@@ -863,6 +863,7 @@ export function useResumeDetailController(resumeId: string) {
 					}
 				: current,
 		);
+		await refreshGuidedReviewNeed(user);
 		toast.success(targetReview.parent_id ? "Reply deleted." : "Comment deleted.");
 	}
 
