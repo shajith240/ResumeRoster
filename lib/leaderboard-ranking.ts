@@ -31,7 +31,13 @@ export type LeaderboardTopReview = {
 };
 
 export function roleTag(reviewer: LeaderboardStatsInput) {
-	if (canShowReviewerProfile(reviewer.community_role, reviewer.reviewer_type)) {
+	if (
+		canShowReviewerProfile(
+			reviewer.community_role,
+			reviewer.reviewer_type,
+			reviewer.reviewer_verification_status,
+		)
+	) {
 		return getReviewerDisplayLabel(reviewer);
 	}
 

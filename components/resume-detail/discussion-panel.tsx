@@ -1,8 +1,10 @@
 import type { FormEvent } from "react";
 import type { CommentAttachmentOption } from "@/components/CommentMediaToolbar";
-import type { CommentContentFormat } from "@/lib/supabase/types";
+import type { GuidedReviewIssueType } from "@/lib/guided-review";
 import type { ThreadReviewNode } from "@/lib/resume-thread";
+import type { CommentContentFormat } from "@/lib/supabase/types";
 import { CommentComposer } from "./comment-composer";
+import { GuidedReviewComposer } from "./guided-review-composer";
 import { SUPABASE_MIGRATION_MESSAGE } from "./selectors";
 import { ThreadReviewItem } from "./thread-review-item";
 import type { ThreadReviewControls } from "./types";
@@ -10,10 +12,18 @@ import type { ThreadReviewControls } from "./types";
 type DiscussionPanelProps = ThreadReviewControls & {
 	content: string;
 	contentFormat: CommentContentFormat;
+	guidedIssue: string;
+	guidedIssueType: GuidedReviewIssueType | "";
+	guidedSuggestion: string;
 	isOwner: boolean;
+	isWaiting: boolean;
 	message: string;
+	needsGuidedReviewCredit: boolean;
 	onContentChange: (value: string) => void;
 	onContentFormatChange: (format: CommentContentFormat) => void;
+	onGuidedIssueChange: (value: string) => void;
+	onGuidedIssueTypeChange: (value: GuidedReviewIssueType) => void;
+	onGuidedSuggestionChange: (value: string) => void;
 	onReviewSubmit: (event: FormEvent<HTMLFormElement>) => void;
 	onSelectedAttachmentChange: (attachment: CommentAttachmentOption | null) => void;
 	selectedAttachment: CommentAttachmentOption | null;
@@ -28,17 +38,25 @@ export function DiscussionPanel({
 	collapsedReviewIds,
 	content,
 	contentFormat,
+	guidedIssue,
+	guidedIssueType,
+	guidedSuggestion,
 	deleteSchemaReady,
 	deletingReviewId,
 	dislikedReviewIds,
 	isClosed,
 	isOwner,
+	isWaiting,
 	likedReviewIds,
 	mediaSchemaReady,
 	message,
+	needsGuidedReviewCredit,
 	onCancelReply,
 	onContentChange,
 	onContentFormatChange,
+	onGuidedIssueChange,
+	onGuidedIssueTypeChange,
+	onGuidedSuggestionChange,
 	onDeleteReviewRequest,
 	onOpenReportDialog,
 	onReactToReview,
@@ -65,41 +83,66 @@ export function DiscussionPanel({
 	user,
 	visibleReviewCount,
 }: DiscussionPanelProps) {
+	const feedbackLocked = isClosed || isWaiting;
+
 	return (
 		<section className="thread-discussion-panel" aria-label="Feedback discussion">
-			{isClosed || isOwner ? (
+			{feedbackLocked || isOwner ? (
 				<div className="closed-note">
-					<h2>{isOwner ? "Owner view" : "Feedback closed"}</h2>
+					<h2>
+						{isWaiting
+							? "Waiting for activation"
+							: isOwner
+								? "Owner view"
+								: "Feedback closed"}
+					</h2>
 					<p>
-						{isOwner
-							? isClosed
-								? "You own this resume. Reopen feedback when you want reviewers to add new comments again."
-								: "You own this resume. You can reply for clarification, but you cannot mark feedback helpful."
-							: "This thread is visible for learning, but no new feedback can be added."}
+						{isWaiting
+							? isOwner
+								? "This resume is uploaded, but it will not appear in the public feed until you complete the required guided reviews."
+								: "This resume is not open for public feedback yet."
+							: isOwner
+								? isClosed
+									? "You own this resume. Reopen feedback when you want reviewers to add new comments again."
+									: "You own this resume. You can reply for clarification, but you cannot mark feedback helpful."
+								: "This thread is visible for learning, but no new feedback can be added."}
 					</p>
 					{message ? <p className="form-message">{message}</p> : null}
 				</div>
 			) : (
 				<form className="roast-form thread-roast-form" onSubmit={onReviewSubmit}>
-					<CommentComposer
-						attachment={selectedAttachment}
-						contentFormat={contentFormat}
-						disabledTools={!mediaSchemaReady || submitting}
-						onAttachmentChange={onSelectedAttachmentChange}
-						onChange={onContentChange}
-						onFormatChange={onContentFormatChange}
-						onRequireLogin={onRequireLogin}
-						placeholder="Be specific. What should they rewrite, reorder, quantify, or remove?"
-						submitDisabled={submitting}
-						submitLabel={
-							submitting
-								? "Posting..."
-								: user
-									? "Submit"
-									: "Sign in"
-						}
-						value={content}
-					/>
+					{needsGuidedReviewCredit ? (
+						<GuidedReviewComposer
+							attachment={selectedAttachment}
+							disabledTools={!mediaSchemaReady || submitting}
+							issue={guidedIssue}
+							issueType={guidedIssueType}
+							onAttachmentChange={onSelectedAttachmentChange}
+							onIssueChange={onGuidedIssueChange}
+							onIssueTypeChange={onGuidedIssueTypeChange}
+							onRequireLogin={onRequireLogin}
+							onSuggestionChange={onGuidedSuggestionChange}
+							submitDisabled={submitting}
+							submitLabel={submitting ? "Posting..." : user ? "Submit" : "Sign in"}
+							suggestion={guidedSuggestion}
+						/>
+					) : (
+						<CommentComposer
+							attachment={selectedAttachment}
+							contentFormat={contentFormat}
+							disabledTools={!mediaSchemaReady || submitting}
+							maxHeight={240}
+							minHeight={76}
+							onAttachmentChange={onSelectedAttachmentChange}
+							onChange={onContentChange}
+							onFormatChange={onContentFormatChange}
+							onRequireLogin={onRequireLogin}
+							placeholder="Be specific. What should they rewrite, reorder, quantify, or remove?"
+							submitDisabled={submitting}
+							submitLabel={submitting ? "Posting..." : user ? "Submit" : "Sign in"}
+							value={content}
+						/>
+					)}
 					{message ? <p className="form-message">{message}</p> : null}
 				</form>
 			)}
@@ -138,7 +181,7 @@ export function DiscussionPanel({
 						deleteSchemaReady={deleteSchemaReady}
 						deletingReviewId={deletingReviewId}
 						dislikedReviewIds={dislikedReviewIds}
-						isClosed={isClosed}
+						isClosed={feedbackLocked}
 						key={review.id}
 						likedReviewIds={likedReviewIds}
 						mediaSchemaReady={mediaSchemaReady}

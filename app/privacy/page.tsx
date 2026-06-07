@@ -63,7 +63,7 @@ export default function PrivacyPolicyPage() {
 						<li>
 							<strong>Profile information:</strong> avatar, tagline, college or
 							organization, location, target role, current position, skills,
-							reviewer profile details, trust application information, and other
+							trust application information, contribution history, and other
 							profile fields you choose to provide.
 						</li>
 						<li>
@@ -122,8 +122,8 @@ export default function PrivacyPolicyPage() {
 					</p>
 					<ul>
 						<li>
-							your public profile, username, avatar, role, skills, reviewer
-							profile, and trust status;
+							your public profile, username, avatar, role, skills, contribution
+							history, and trust status;
 						</li>
 						<li>
 							public resumes or resume metadata when you choose a public

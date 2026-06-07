@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-feed/data.ts`
 - Kind: React component
-- Size: 9674 bytes
-- Lines: 353
-- Source hash: `647bb2a992d61587acb43c29c299571b6730c86a25b34a2facf4f28af4bae561`
+- Size: 10278 bytes
+- Lines: 368
+- Source hash: `bb94684cfba72147a5c96690d3857d8b112bc58090edafef8d81b10242c2e363`
 
 ## What This File Does
 
@@ -57,22 +57,22 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 81 | `formatDate` | Function | top-level | yes | `value` | `string` | Implements the formatdate helper. |
 | 88 | `getReviewSignal` | Function | top-level | yes | `resume` | `ReviewSignal` | Implements the getreviewsignal helper. |
-| 104 | `getThreadPrompt` | Function | top-level | yes | `resume` | `string` | Implements the getthreadprompt helper. |
-| 121 | `getThreadActionLabel` | Function | top-level | yes | `resume` | `"Thread" \| "Review" \| "Fixes" \| "Comment" \| "Comments"` | Implements the getthreadactionlabel helper. |
-| 133 | `getThreadActionAria` | Function | top-level | yes | `resume` | `string` | Implements the getthreadactionaria helper. |
-| 143 | `cleanReviewExcerpt` | Function | top-level | no | `content` | `string` | Implements the cleanreviewexcerpt helper. |
-| 155 | `isFeatureWorthyReview` | Function | top-level | no | `excerpt` | `boolean` | Implements the isfeatureworthyreview helper. |
-| 173 | `getReviewPreview` | Function | top-level | no | `row` | `ReviewPreview \| null` | Implements the getreviewpreview helper. |
-| 200 | `getReviewPreviewsByResumeId` | Function | top-level | yes | `rows` | `{ [k: string]: ReviewPreview; }` | Implements the getreviewpreviewsbyresumeid helper. |
-| 221 | `isReadCountFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isreadcountfeatureerror helper. |
-| 225 | `isResumeContextFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isresumecontextfeatureerror helper. |
-| 233 | `isAuthorProfileFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isauthorprofilefeatureerror helper. |
-| 239 | `isReviewPreviewFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isreviewpreviewfeatureerror helper. |
-| 247 | `isDuplicateSavedResumeError` | Function | top-level | yes | `error` | `boolean` | Implements the isduplicatesavedresumeerror helper. |
-| 253 | `mergeLiveReviewCounts` | Function async | top-level | yes | `resumeRows` | `Promise<ResumeSummary[]>` | Implements the mergelivereviewcounts helper. |
-| 276 | `fetchPublicAuthorProfiles` | Action helper async | top-level | no | `resumeRows` | `Promise<Map<string, ResumeAuthorProfile>>` | Runs the fetchpublicauthorprofiles workflow for callers. |
-| 310 | `attachPublicAuthorProfiles` | Function async | top-level | yes | `resumeRows` | `Promise<ResumeSummary[]>` | Implements the attachpublicauthorprofiles helper. |
-| 323 | `fetchSavedResumeIds` | Action helper async | top-level | yes | `userId` | `Promise<{ error: null; savedResumeIds: Set<string>; schemaMissing: boolean; } \| { error: import("@supabase/postgrest-js").PostgrestError...` | Runs the fetchsavedresumeids workflow for callers. |
+| 108 | `getThreadPrompt` | Function | top-level | yes | `resume` | `string` | Implements the getthreadprompt helper. |
+| 136 | `getThreadActionLabel` | Function | top-level | yes | `resume` | `"Thread" \| "Review" \| "Fixes" \| "Comment" \| "Comments"` | Implements the getthreadactionlabel helper. |
+| 148 | `getThreadActionAria` | Function | top-level | yes | `resume` | `string` | Implements the getthreadactionaria helper. |
+| 158 | `cleanReviewExcerpt` | Function | top-level | no | `content` | `string` | Implements the cleanreviewexcerpt helper. |
+| 170 | `isFeatureWorthyReview` | Function | top-level | no | `excerpt` | `boolean` | Implements the isfeatureworthyreview helper. |
+| 188 | `getReviewPreview` | Function | top-level | no | `row` | `ReviewPreview \| null` | Implements the getreviewpreview helper. |
+| 215 | `getReviewPreviewsByResumeId` | Function | top-level | yes | `rows` | `{ [k: string]: ReviewPreview; }` | Implements the getreviewpreviewsbyresumeid helper. |
+| 236 | `isReadCountFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isreadcountfeatureerror helper. |
+| 240 | `isResumeContextFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isresumecontextfeatureerror helper. |
+| 248 | `isAuthorProfileFeatureError` | Function | top-level | no | `error` | `boolean` | Implements the isauthorprofilefeatureerror helper. |
+| 254 | `isReviewPreviewFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isreviewpreviewfeatureerror helper. |
+| 262 | `isDuplicateSavedResumeError` | Function | top-level | yes | `error` | `boolean` | Implements the isduplicatesavedresumeerror helper. |
+| 268 | `mergeLiveReviewCounts` | Function async | top-level | yes | `resumeRows` | `Promise<ResumeSummary[]>` | Implements the mergelivereviewcounts helper. |
+| 291 | `fetchPublicAuthorProfiles` | Action helper async | top-level | no | `resumeRows` | `Promise<Map<string, ResumeAuthorProfile>>` | Runs the fetchpublicauthorprofiles workflow for callers. |
+| 325 | `attachPublicAuthorProfiles` | Function async | top-level | yes | `resumeRows` | `Promise<ResumeSummary[]>` | Implements the attachpublicauthorprofiles helper. |
+| 338 | `fetchSavedResumeIds` | Action helper async | top-level | yes | `userId` | `Promise<{ error: null; savedResumeIds: Set<string>; schemaMissing: boolean; } \| { error: import("@supabase/postgrest-js").PostgrestError...` | Runs the fetchsavedresumeids workflow for callers. |
 
 ## Types
 

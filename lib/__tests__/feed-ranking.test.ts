@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	formatCount,
 	getBestScore,
+	isPublicFeedResume,
 	mergeReviewCountsFromRows,
 	sortResumes,
 	withResumeDefaults,
@@ -18,6 +19,9 @@ function resume(overrides: Partial<ResumeSummary>): ResumeSummary {
 		status: "open",
 		roast_count: 0,
 		read_count: 0,
+		review_queue_status: "active",
+		activation_reviews_required: 0,
+		activation_reviews_completed: 0,
 		job_description: null,
 		post_description: null,
 		created_at: "2026-05-23T00:00:00.000Z",
@@ -47,9 +51,21 @@ describe("feed ranking", () => {
 			}),
 		).toMatchObject({
 			read_count: 0,
+			review_queue_status: "active",
+			activation_reviews_required: 0,
+			activation_reviews_completed: 0,
 			job_description: null,
 			post_description: null,
 		});
+	});
+
+	it("keeps waiting resumes out of public feed visibility", () => {
+		expect(isPublicFeedResume(resume({ review_queue_status: "active" }))).toBe(
+			true,
+		);
+		expect(isPublicFeedResume(resume({ review_queue_status: "waiting" }))).toBe(
+			false,
+		);
 	});
 
 	it("orders New by latest creation date", () => {
@@ -89,6 +105,14 @@ describe("feed ranking", () => {
 	it("orders Needs review by open status, low roast count, and recency", () => {
 		const rows = [
 			resume({
+				id: "waiting-zero",
+				review_queue_status: "waiting",
+				activation_reviews_required: 2,
+				activation_reviews_completed: 0,
+				roast_count: 0,
+				created_at: "2026-05-25T00:00:00.000Z",
+			}),
+			resume({
 				id: "closed-zero",
 				roast_count: 0,
 				status: "closed",
@@ -115,6 +139,7 @@ describe("feed ranking", () => {
 			"open-zero-new",
 			"open-zero-old",
 			"open-two",
+			"waiting-zero",
 			"closed-zero",
 		]);
 	});
@@ -138,6 +163,31 @@ describe("feed ranking", () => {
 		expect(sortResumes([freshQuiet, activeOlder], "best", now)[0].id).toBe(
 			"active-older",
 		);
+	});
+
+	it("keeps active resumes ahead of waiting resumes in Best", () => {
+		const active = resume({
+			id: "active",
+			created_at: "2026-05-22T12:00:00.000Z",
+			review_queue_status: "active",
+			roast_count: 0,
+		});
+		const waiting = resume({
+			id: "waiting",
+			created_at: "2026-05-23T12:00:00.000Z",
+			review_queue_status: "waiting",
+			activation_reviews_required: 2,
+			activation_reviews_completed: 1,
+			roast_count: 10,
+		});
+
+		expect(
+			sortResumes(
+				[waiting, active],
+				"best",
+				new Date("2026-05-24T00:00:00.000Z").getTime(),
+			).map((item) => item.id),
+		).toEqual(["active", "waiting"]);
 	});
 
 	it("merges live roast counts without trusting stale resume counters", () => {

@@ -1,5 +1,5 @@
-export const COMMUNITY_ROLES = ["candidate", "reviewer", "both"] as const;
-export const REVIEWER_TYPES = [
+const COMMUNITY_ROLES = ["candidate", "reviewer", "both"] as const;
+const REVIEWER_TYPES = [
 	"student",
 	"placed_professional",
 	"recruiter",
@@ -97,8 +97,10 @@ export function getReviewerTypeLabel(type: ReviewerType | null | undefined) {
 export function canShowReviewerProfile(
 	role: CommunityRole | null | undefined,
 	type?: ReviewerType | null,
+	status?: ReviewerVerificationStatus | null,
 ) {
 	return (
+		isTrustedReviewer(status) &&
 		(role === "reviewer" || role === "both") &&
 		Boolean(type && isReviewerType(type))
 	);
@@ -131,14 +133,6 @@ export function getProfileRoleLabel(profile: {
 	const currentPosition = profile.current_position?.trim().replace(/\s+/g, " ");
 	if (currentPosition) return currentPosition;
 
-	if (profile.community_role === "reviewer") {
-		return "Reviewer";
-	}
-
-	if (profile.community_role === "both") {
-		return "Reviewer + candidate";
-	}
-
 	const role = `${profile.current_position ?? profile.target_role ?? ""} ${
 		profile.college ?? ""
 	}`.toLowerCase();
@@ -158,7 +152,7 @@ export function getProfileRoleLabel(profile: {
 	return "Job seeker";
 }
 
-export function normalizeProofUrl(value: string) {
+function normalizeProofUrl(value: string) {
 	return limitReviewerText(value, REVIEWER_FIELD_LIMITS.proofUrl);
 }
 

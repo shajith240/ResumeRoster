@@ -12,7 +12,11 @@ import {
 	getFreshAuthSession,
 	refreshAuthSessionAfterError,
 } from "@/lib/auth-session";
-import { sortResumes, type FeedSort } from "@/lib/feed-ranking";
+import {
+	isPublicFeedResume,
+	sortResumes,
+	type FeedSort,
+} from "@/lib/feed-ranking";
 import {
   isSavedResumeSchemaMissingError,
   mergeSavedResumeState,
@@ -96,7 +100,8 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
       const savedResult = await fetchSavedResumeIds(user?.id ?? null);
       let query = supabase
         .from("resumes")
-        .select(RESUME_SELECT_WITH_CONTEXT);
+        .select(RESUME_SELECT_WITH_CONTEXT)
+        .eq("review_queue_status", "active");
 
       if (activeSort === "top") {
         query = query
@@ -187,9 +192,9 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
             rowsWithLiveCounts,
             savedResult.savedResumeIds,
           );
-          const visibleRows = savedOnly
-            ? rowsWithSavedState.filter((resume) => resume.is_saved)
-            : rowsWithSavedState;
+          const visibleRows = rowsWithSavedState.filter(
+            (resume) => isPublicFeedResume(resume) && (!savedOnly || resume.is_saved),
+          );
           setResumes(sortResumes(visibleRows, activeSort));
         }
       }

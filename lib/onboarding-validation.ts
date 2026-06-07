@@ -17,14 +17,14 @@ export const ONBOARDING_GOALS = [
 			"Help others catch weak bullets, unclear proof, and recruiter red flags.",
 		id: "review_resumes",
 		label: "Review resumes",
-		mappedCommunityRole: "reviewer",
+		mappedCommunityRole: "candidate",
 	},
 	{
 		description:
 			"Get feedback on your own resume and review resumes from the community.",
 		id: "both",
 		label: "Do both",
-		mappedCommunityRole: "both",
+		mappedCommunityRole: "candidate",
 	},
 ] as const satisfies Array<{
 	description: string;

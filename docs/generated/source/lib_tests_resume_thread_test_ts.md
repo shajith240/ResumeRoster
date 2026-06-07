@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/resume-thread.test.ts`
 - Kind: Unit test
-- Size: 5035 bytes
-- Lines: 195
-- Source hash: `6802936de89404e96ae3dd1d6d58f37548defaa55d37c7c7c13353f4fb20d2d8`
+- Size: 5134 bytes
+- Lines: 198
+- Source hash: `a6aafa561d25fb36fff1de34084dcd1b2ee2e53cbbb01e6fc82fe1dd421b8efc`
 
 ## What This File Does
 
@@ -30,7 +30,7 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 25 | `review` | Function | top-level | no | `overrides` | `Review` | Implements the review helper. |
+| 28 | `review` | Function | top-level | no | `overrides` | `Review` | Implements the review helper. |
 
 ## Types
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/feed-ranking.ts`
 - Kind: Application library module
-- Size: 2372 bytes
-- Lines: 96
-- Source hash: `87d2c45682a06ce3fef771b47baaac24571b81c1040524719e67868c5d026db3`
+- Size: 3146 bytes
+- Lines: 121
+- Source hash: `4c44170632e7ce960c0bde5cf5a404cb42ef971be88e9bcf33baf59b80b51e49`
 
 ## What This File Does
 
@@ -21,6 +21,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `FeedSort`
 - `formatCount`
 - `getBestScore`
+- `isPublicFeedResume`
 - `mergeReviewCountsFromRows`
 - `ResumeRowWithDefaults`
 - `sortResumes`
@@ -34,12 +35,14 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 13 | `formatCount` | Function | top-level | yes | `value` | `string` | Implements the formatcount helper. |
-| 25 | `withResumeDefaults` | Function | top-level | yes | `resume` | `ResumeSummary` | Implements the withresumedefaults helper. |
-| 34 | `getBestScore` | Function | top-level | yes | `resume`, `now` | `number` | Implements the getbestscore helper. |
-| 43 | `sortResumes` | Function | top-level | yes | `resumes`, `sort`, `now` | `T[]` | Implements the sortresumes helper. |
-| 61 | `statusScore` | Function | nested | no | `resume` | `0 \| 1` | Implements the statusscore helper. |
-| 78 | `mergeReviewCountsFromRows` | Function | top-level | yes | `resumes`, `reviews` | `(T & { roast_count: number; })[]` | Implements the mergereviewcountsfromrows helper. |
+| 26 | `formatCount` | Function | top-level | yes | `value` | `string` | Implements the formatcount helper. |
+| 38 | `withResumeDefaults` | Function | top-level | yes | `resume` | `ResumeSummary` | Implements the withresumedefaults helper. |
+| 50 | `isPublicFeedResume` | Function | top-level | yes | `resume` | `boolean` | Implements the ispublicfeedresume helper. |
+| 54 | `getBestScore` | Function | top-level | yes | `resume`, `now` | `number` | Implements the getbestscore helper. |
+| 63 | `sortResumes` | Function | top-level | yes | `resumes`, `sort`, `now` | `T[]` | Implements the sortresumes helper. |
+| 81 | `statusScore` | Function | nested | no | `resume` | `0 \| 1` | Implements the statusscore helper. |
+| 83 | `queueScore` | Function | nested | no | `resume` | `0 \| 1` | Implements the queuescore helper. |
+| 103 | `mergeReviewCountsFromRows` | Function | top-level | yes | `resumes`, `reviews` | `(T & { roast_count: number; })[]` | Implements the mergereviewcountsfromrows helper. |
 
 ## Types
 

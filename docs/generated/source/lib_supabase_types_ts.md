@@ -4,9 +4,9 @@
 
 - Source path: `lib/supabase/types.ts`
 - Kind: Application library module
-- Size: 6138 bytes
-- Lines: 237
-- Source hash: `9fa1fb222703a610309844f70113d8cb26754375a235d6aae888541939184c02`
+- Size: 6407 bytes
+- Lines: 244
+- Source hash: `974cb92210428e89fb8e0ef33302ad211ae1f53dd37bb8941bae706e80c260ea`
 
 ## What This File Does
 
@@ -53,31 +53,32 @@ No stable named functions or components detected.
 | --- | --- | --- |
 | 1 | `ResumeStatus` | type |
 | 2 | `ResumePrivacyMode` | type |
-| 3 | `AppStatus` | type |
-| 4 | `ContentReportStatus` | type |
-| 9 | `ContentReportTargetType` | type |
-| 10 | `CommentContentFormat` | type |
-| 11 | `CommentAttachmentKind` | type |
-| 12 | `CommentAttachmentSource` | type |
-| 13 | `CommunityRole` | type |
-| 14 | `ReviewerType` | type |
-| 25 | `ReviewerVerificationStatus` | type |
-| 30 | `OnboardingGoalId` | type |
-| 31 | `OnboardingPersonaId` | type |
-| 44 | `OnboardingStatus` | type |
-| 45 | `NotificationType` | type |
-| 54 | `ResumeAuthorProfile` | type |
-| 71 | `ResumeSummary` | type |
-| 87 | `Review` | type |
-| 103 | `CommentAttachment` | type |
-| 116 | `ReviewerProfileStats` | type |
-| 134 | `ReviewerLeaderboardEntry` | type |
-| 152 | `PublicProfile` | type |
-| 178 | `ProfileOnboarding` | type |
-| 189 | `PublicProfileResume` | type |
-| 198 | `PublicProfileReviewLegacy` | type |
-| 208 | `PublicProfileReview` | type |
-| 218 | `LintedNotification` | type |
+| 3 | `ResumeQueueStatus` | type |
+| 4 | `AppStatus` | type |
+| 5 | `ContentReportStatus` | type |
+| 10 | `ContentReportTargetType` | type |
+| 11 | `CommentContentFormat` | type |
+| 12 | `CommentAttachmentKind` | type |
+| 13 | `CommentAttachmentSource` | type |
+| 14 | `CommunityRole` | type |
+| 15 | `ReviewerType` | type |
+| 26 | `ReviewerVerificationStatus` | type |
+| 31 | `OnboardingGoalId` | type |
+| 32 | `OnboardingPersonaId` | type |
+| 45 | `OnboardingStatus` | type |
+| 46 | `NotificationType` | type |
+| 55 | `ResumeAuthorProfile` | type |
+| 72 | `ResumeSummary` | type |
+| 91 | `Review` | type |
+| 109 | `CommentAttachment` | type |
+| 122 | `ReviewerProfileStats` | type |
+| 141 | `ReviewerLeaderboardEntry` | type |
+| 159 | `PublicProfile` | type |
+| 185 | `ProfileOnboarding` | type |
+| 196 | `PublicProfileResume` | type |
+| 205 | `PublicProfileReviewLegacy` | type |
+| 215 | `PublicProfileReview` | type |
+| 225 | `LintedNotification` | type |
 
 ## Related Tests
 

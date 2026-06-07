@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/discussion-panel.tsx`
 - Kind: React component
-- Size: 5455 bytes
-- Lines: 177
-- Source hash: `b17802512d9cab7559394057653fc59b44e0be8fb59787d54c498acb0ce9a8be`
+- Size: 7081 bytes
+- Lines: 220
+- Source hash: `4bffa30779084fd32a49135f33aa5f76f94ede87f19fcaf2d8d96d4d5d4f1ee2`
 
 ## What This File Does
 
@@ -23,10 +23,12 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `./comment-composer`
+- `./guided-review-composer`
 - `./selectors`
 - `./thread-review-item`
 - `./types`
 - `@/components/CommentMediaToolbar`
+- `@/lib/guided-review`
 - `@/lib/resume-thread`
 - `@/lib/supabase/types`
 - `react`
@@ -35,13 +37,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 25 | `DiscussionPanel` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, content, contentFormat...` | `import("react").JSX.Element` | Renders the DiscussionPanel UI component. |
+| 35 | `DiscussionPanel` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, content, contentFormat...` | `import("react").JSX.Element` | Renders the DiscussionPanel UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 10 | `DiscussionPanelProps` | type |
+| 12 | `DiscussionPanelProps` | type |
 
 ## Related Tests
 

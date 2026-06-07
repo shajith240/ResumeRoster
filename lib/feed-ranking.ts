@@ -4,10 +4,23 @@ export type FeedSort = "best" | "new" | "top" | "needs";
 
 export type ResumeRowWithDefaults = Omit<
 	ResumeSummary,
-	"read_count" | "job_description" | "post_description"
+	| "activation_reviews_completed"
+	| "activation_reviews_required"
+	| "job_description"
+	| "post_description"
+	| "read_count"
+	| "review_queue_status"
 > &
 	Partial<
-		Pick<ResumeSummary, "read_count" | "job_description" | "post_description">
+		Pick<
+			ResumeSummary,
+			| "activation_reviews_completed"
+			| "activation_reviews_required"
+			| "job_description"
+			| "post_description"
+			| "read_count"
+			| "review_queue_status"
+		>
 	>;
 
 export function formatCount(value: number) {
@@ -25,10 +38,17 @@ export function formatCount(value: number) {
 export function withResumeDefaults(resume: ResumeRowWithDefaults): ResumeSummary {
 	return {
 		...resume,
+		activation_reviews_completed: resume.activation_reviews_completed ?? 0,
+		activation_reviews_required: resume.activation_reviews_required ?? 0,
 		read_count: resume.read_count ?? 0,
 		job_description: resume.job_description ?? null,
 		post_description: resume.post_description ?? null,
+		review_queue_status: resume.review_queue_status ?? "active",
 	};
+}
+
+export function isPublicFeedResume(resume: ResumeSummary) {
+	return resume.review_queue_status === "active";
 }
 
 export function getBestScore(resume: ResumeSummary, now = Date.now()) {
@@ -60,15 +80,20 @@ export function sortResumes<T extends ResumeSummary>(
 		if (sort === "needs") {
 			const statusScore = (resume: ResumeSummary) =>
 				resume.status === "open" ? 0 : 1;
+			const queueScore = (resume: ResumeSummary) =>
+				resume.review_queue_status === "active" ? 0 : 1;
 
 			return (
 				statusScore(a) - statusScore(b) ||
+				queueScore(a) - queueScore(b) ||
 				a.roast_count - b.roast_count ||
 				new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 			);
 		}
 
 		return (
+			(a.review_queue_status === "active" ? 0 : 1) -
+				(b.review_queue_status === "active" ? 0 : 1) ||
 			getBestScore(b, now) - getBestScore(a, now) ||
 			new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 		);

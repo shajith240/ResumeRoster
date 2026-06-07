@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/profile-view.ts`
 - Kind: React component
-- Size: 1880 bytes
-- Lines: 59
-- Source hash: `bac2925dfd35cf33f7e15260a3e759b1b189c3051d6ae92a89f094c52bbbc890`
+- Size: 1375 bytes
+- Lines: 42
+- Source hash: `f8d13b4a9380c06f0eff7dc8ab739a0e4b0c840e112b77431630f057152e8f26`
 
 ## What This File Does
 
@@ -34,7 +34,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 18 | `buildProfileView` | Function | top-level | yes | `profile`, `reviews`, `resumes` | `{ activity: import("./types").ActivityItem[]; avatarUrl: string; collegeLabel: string; collegeLocation: string; currentRole: string; disp...` | Implements the buildprofileview helper. |
+| 13 | `buildProfileView` | Function | top-level | yes | `profile`, `reviews`, `resumes` | `{ activity: import("./types").ActivityItem[]; avatarUrl: string; collegeLabel: string; collegeLocation: string; currentRole: string; disp...` | Implements the buildprofileview helper. |
 
 ## Types
 

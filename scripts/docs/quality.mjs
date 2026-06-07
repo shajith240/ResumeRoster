@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { pathToFileURL } from "node:url";
 import { generatedQualityDir, repoRoot } from "./docs-config.mjs";
 
 const checkMode = process.argv.includes("--check");
@@ -49,6 +50,11 @@ function buildReports() {
 	const toolFailures = [];
 	const knipCommand = "npx knip --no-exit-code --no-progress --reporter compact";
 	const knip = run(process.execPath, [
+		"--no-warnings",
+		"--loader",
+		pathToFileURL(
+			path.join(repoRoot, "scripts/docs/knip-disable-raw-transfer-loader.mjs"),
+		).href,
 		path.join(repoRoot, "node_modules/knip/bin/knip.js"),
 		"--no-exit-code",
 		"--no-progress",

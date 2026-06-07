@@ -30,12 +30,25 @@ type SubmitProfile = {
 	username: string | null;
 };
 
+type QueuedResumeInsertResult = {
+	activation_reviews_completed?: number;
+	activation_reviews_required?: number;
+	id: string;
+	review_queue_status?: string;
+};
+
 function badRequest(message: string, status = 400) {
 	return NextResponse.json({ message }, { status });
 }
 
 function serverFailure(message = RESUME_SUBMIT_FAILED_MESSAGE) {
 	return badRequest(message, 500);
+}
+
+function isMissingQueueRpc(message: string) {
+	return /create_resume_with_review_queue|review_queue_status|activation_reviews_|schema cache|function|column/i.test(
+		message,
+	);
 }
 
 function getRequiredString(formData: FormData, key: string) {
@@ -98,6 +111,78 @@ async function removeUploadedFile(
 	} catch {
 		// The client still gets the original upload failure response.
 	}
+}
+
+async function insertResumeWithQueue({
+	admin,
+	filePath,
+	jobDescription,
+	privacyMode,
+	title,
+	userId,
+	postDescription,
+}: {
+	admin: SupabaseClient;
+	filePath: string;
+	jobDescription: string;
+	privacyMode: string;
+	title: string;
+	userId: string;
+	postDescription: string;
+}) {
+	const queuedInsert = await admin.rpc("create_resume_with_review_queue", {
+		resume_file_path: filePath,
+		resume_is_anonymous: privacyMode !== "public",
+		resume_job_description: jobDescription,
+		resume_post_description: postDescription,
+		resume_privacy_mode: privacyMode,
+		resume_title: title,
+		target_user_id: userId,
+	});
+
+	if (!queuedInsert.error) {
+		const row = Array.isArray(queuedInsert.data)
+			? queuedInsert.data[0]
+			: queuedInsert.data;
+
+		return {
+			data: row as QueuedResumeInsertResult | null,
+			error: null,
+		};
+	}
+
+	if (!isMissingQueueRpc(queuedInsert.error.message)) {
+		return {
+			data: null,
+			error: queuedInsert.error,
+		};
+	}
+
+	const fallbackInsert = await admin
+		.from("resumes")
+		.insert({
+			file_path: filePath,
+			is_anonymous: privacyMode !== "public",
+			job_description: jobDescription,
+			post_description: postDescription,
+			privacy_mode: privacyMode,
+			title,
+			user_id: userId,
+		})
+		.select("id")
+		.single();
+
+	return {
+		data: fallbackInsert.data
+			? ({
+					id: fallbackInsert.data.id,
+					review_queue_status: "active",
+					activation_reviews_completed: 0,
+					activation_reviews_required: 0,
+				} satisfies QueuedResumeInsertResult)
+			: null,
+		error: fallbackInsert.error,
+	};
 }
 
 export async function POST(request: Request) {
@@ -247,28 +332,27 @@ export async function POST(request: Request) {
 		return serverFailure();
 	}
 
-	const insert = await admin
-		.from("resumes")
-		.insert({
-			file_path: filePath,
-			is_anonymous: privacyMode !== "public",
-			job_description: jobDescription,
-			post_description: postDescription,
-			privacy_mode: privacyMode,
-			title,
-			user_id: user.id,
-		})
-		.select("id")
-		.single();
+	const insert = await insertResumeWithQueue({
+		admin,
+		filePath,
+		jobDescription,
+		postDescription,
+		privacyMode,
+		title,
+		userId: user.id,
+	});
 
-	if (insert.error) {
+	if (insert.error || !insert.data?.id) {
 		await removeUploadedFile(admin, "resumes", filePath);
 		return serverFailure();
 	}
 
 	return NextResponse.json({
-		id: insert.data.id,
+		activationReviewsCompleted: insert.data?.activation_reviews_completed ?? 0,
+		activationReviewsRequired: insert.data?.activation_reviews_required ?? 0,
+		id: insert.data?.id,
 		privacyMode,
+		reviewQueueStatus: insert.data?.review_queue_status ?? "active",
 		redactionCounts: processedPdf.redactionCounts,
 	});
 }

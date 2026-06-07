@@ -1685,6 +1685,138 @@ body.secure-resume-reader-active {
 	border-color: color-mix(in srgb, var(--text-secondary) 62%, var(--border-default));
 }
 
+.guided-review-composer {
+	position: relative;
+	display: grid;
+	gap: 12px;
+	width: 100%;
+	border: 1px solid var(--border-default);
+	border-radius: 18px;
+	padding: 12px;
+	background: var(--bg-surface);
+	transition: border-color 160ms ease;
+}
+
+.guided-review-composer:focus-within {
+	border-color: var(--border-default);
+}
+
+.guided-review-type-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 7px;
+	min-width: 0;
+}
+
+.guided-review-type-grid button {
+	min-height: 30px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-pill);
+	padding: 0 10px;
+	background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
+	color: var(--text-secondary);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1;
+	transition:
+		background-color 160ms ease,
+		border-color 160ms ease,
+		color 160ms ease;
+}
+
+.guided-review-type-grid button:hover,
+.guided-review-type-grid button.is-selected {
+	border-color: color-mix(in srgb, var(--brand) 48%, var(--border-default));
+	background: color-mix(in srgb, var(--brand) 15%, var(--bg-elevated));
+	color: var(--text-primary);
+}
+
+.guided-review-type-select,
+.roast-form .guided-review-type-select,
+.thread-roast-form .guided-review-type-select {
+	display: none;
+}
+
+.guided-review-type-content {
+	z-index: 120;
+	max-width: calc(100vw - 24px);
+	border-color: var(--border-default);
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+}
+
+.guided-review-type-item {
+	border-radius: var(--button-radius-sm);
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.guided-review-field {
+	display: grid;
+	gap: 6px;
+	min-width: 0;
+	color: var(--text-secondary);
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.guided-review-label-mobile {
+	display: none;
+}
+
+.guided-review-label-desktop {
+	display: inline;
+}
+
+.guided-review-input,
+.thread-roast-form .guided-review-input,
+body.main-app-dark .guided-review-input,
+body.main-app-dark .thread-roast-form .guided-review-input {
+	width: 100%;
+	min-height: var(--guided-issue-min-height, 52px);
+	border: 0;
+	border-radius: 12px;
+	padding: 10px 12px;
+	background: color-mix(in srgb, var(--bg-elevated) 74%, transparent);
+	box-shadow: none;
+	color: var(--text-primary);
+	font: inherit;
+	font-family: var(--font-comment);
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 1.58;
+	outline: 0;
+	resize: none;
+	scrollbar-width: thin;
+	transition: background-color 160ms ease;
+}
+
+.guided-review-field + .guided-review-field .guided-review-input {
+	min-height: var(--guided-suggestion-min-height, 62px);
+}
+
+.guided-review-input:focus,
+.thread-roast-form .guided-review-input:focus,
+body.main-app-dark .guided-review-input:focus,
+body.main-app-dark .thread-roast-form .guided-review-input:focus {
+	border: 0;
+	background: color-mix(in srgb, var(--bg-elevated) 86%, transparent);
+	box-shadow: none;
+	outline: 0;
+}
+
+.guided-review-input::placeholder {
+	color: var(--text-tertiary);
+	font-weight: 500;
+	opacity: 1;
+}
+
+.guided-review-footer {
+	padding-top: 2px;
+}
+
 .comment-composer .comment-composer-input,
 body.main-app-dark .comment-composer .comment-composer-input {
 	width: 100%;
@@ -3722,6 +3854,133 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	.comment-composer {
 		gap: 8px;
 		border-radius: 16px;
+		padding: 10px 12px;
+	}
+
+	.guided-review-composer {
+		gap: 0;
+		border-radius: 16px;
+		padding: 0;
+		overflow: hidden;
+	}
+
+	.guided-review-type-grid {
+		display: none;
+	}
+
+	.thread-roast-form .guided-review-type-select {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		align-items: center;
+		gap: 12px;
+		min-width: 0;
+		border-bottom: 1px solid var(--border-subtle);
+		padding: 11px 14px;
+		color: var(--text-secondary);
+		font-size: 12px;
+		font-weight: 700;
+		line-height: 1.2;
+	}
+
+	.thread-roast-form .guided-review-type-trigger {
+		justify-self: end;
+		width: fit-content;
+		max-width: 100%;
+		min-width: 132px;
+		min-height: 34px;
+		height: 34px;
+		border: 1px solid var(--border-default);
+		border-radius: var(--button-radius);
+		padding: 0 8px 0 10px;
+		background: var(--bg-surface);
+		box-shadow: none;
+		color: var(--text-primary);
+		font: inherit;
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1.2;
+		outline: 0;
+		transition:
+			background-color 0.18s var(--button-ease),
+			border-color 0.18s var(--button-ease);
+	}
+
+	.thread-roast-form .guided-review-type-trigger:hover {
+		border-color: var(--border-strong);
+		background: var(--bg-elevated);
+	}
+
+	.thread-roast-form .guided-review-type-trigger:focus,
+	.thread-roast-form .guided-review-type-trigger:focus-visible,
+	.thread-roast-form .guided-review-type-trigger[data-state="open"] {
+		border-color: var(--border-strong);
+		background: var(--bg-elevated);
+		box-shadow: none;
+		outline: 0;
+	}
+
+	.thread-roast-form .guided-review-type-trigger > span {
+		min-width: 0;
+		max-width: 142px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.thread-roast-form .guided-review-type-trigger > svg:last-child {
+		width: 14px;
+		height: 14px;
+		margin-left: 6px;
+		opacity: 0.62;
+	}
+
+	.guided-review-field {
+		gap: 5px;
+		border-bottom: 1px solid var(--border-subtle);
+		padding: 10px 14px 11px;
+		font-size: 12px;
+	}
+
+	.guided-review-label-desktop {
+		display: none;
+	}
+
+	.guided-review-label-mobile {
+		display: inline;
+	}
+
+	.guided-review-input,
+	.thread-roast-form .guided-review-input,
+	body.main-app-dark .guided-review-input,
+	body.main-app-dark .thread-roast-form .guided-review-input {
+		min-height: var(--guided-issue-min-height, 42px);
+		border-radius: 0;
+		padding: 0;
+		background: transparent;
+		font-size: 16px;
+		line-height: 1.45;
+	}
+
+	.guided-review-field + .guided-review-field .guided-review-input {
+		min-height: var(--guided-suggestion-min-height, 46px);
+	}
+
+	.guided-review-input:focus,
+	.thread-roast-form .guided-review-input:focus,
+	body.main-app-dark .guided-review-input:focus,
+	body.main-app-dark .thread-roast-form .guided-review-input:focus {
+		background: transparent;
+		box-shadow: none;
+		outline: 0;
+	}
+
+	.guided-review-input::placeholder {
+		color: var(--text-tertiary);
+		font-size: 15px;
+		line-height: 1.45;
+	}
+
+	.guided-review-footer {
 		padding: 10px 12px;
 	}
 

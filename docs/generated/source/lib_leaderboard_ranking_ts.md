@@ -4,9 +4,9 @@
 
 - Source path: `lib/leaderboard-ranking.ts`
 - Kind: Application library module
-- Size: 3125 bytes
-- Lines: 125
-- Source hash: `6341d25c26a8218a9fec2356034658d66c81a5012bf6f34e79760912ddea7bff`
+- Size: 3183 bytes
+- Lines: 131
+- Source hash: `be2b4554f320c95c250a6e47ab5e4304839b38eb43b173626f525c2915e83e5e`
 
 ## What This File Does
 
@@ -36,10 +36,10 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 33 | `roleTag` | Function | top-level | yes | `reviewer` | `string` | Implements the roletag helper. |
-| 56 | `lintPoints` | Function | top-level | yes | `helpfulVotes` | `number` | Implements the lintpoints helper. |
-| 60 | `sortReviewers` | Function | top-level | yes | `reviewers` | `T[]` | Implements the sortreviewers helper. |
-| 77 | `bestReviewMap` | Function | top-level | yes | `reviews` | `Record<string, T>` | Implements the bestreviewmap helper. |
-| 93 | `enhanceReviewer` | Function | top-level | yes | `reviewer`, `topReview`, `stats` | `T & { helpful_votes: number; lint_points: number; roast_count: number; roast_points: number; role_tag: string; top_review: { id: string;...` | Implements the enhancereviewer helper. |
+| 62 | `lintPoints` | Function | top-level | yes | `helpfulVotes` | `number` | Implements the lintpoints helper. |
+| 66 | `sortReviewers` | Function | top-level | yes | `reviewers` | `T[]` | Implements the sortreviewers helper. |
+| 83 | `bestReviewMap` | Function | top-level | yes | `reviews` | `Record<string, T>` | Implements the bestreviewmap helper. |
+| 99 | `enhanceReviewer` | Function | top-level | yes | `reviewer`, `topReview`, `stats` | `T & { helpful_votes: number; lint_points: number; roast_count: number; roast_points: number; role_tag: string; top_review: { id: string;...` | Implements the enhancereviewer helper. |
 
 ## Types
 

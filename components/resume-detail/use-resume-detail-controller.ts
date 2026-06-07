@@ -8,6 +8,11 @@ import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { getReviewContentIssue, normalizeCommentContent } from "@/lib/comment-media-validation";
+import {
+	buildGuidedReviewContent,
+	getGuidedReviewIssue,
+	type GuidedReviewIssueType,
+} from "@/lib/guided-review";
 import { buildThreadReviewTree, normalizeReview } from "@/lib/resume-thread";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { supabase } from "@/lib/supabase/client";
@@ -37,6 +42,7 @@ import { useReviewReactions } from "./use-review-reactions";
 import {
 	isCommentMediaFeatureError,
 	isDeleteFeatureError,
+	isGuidedReviewFeatureError,
 	isMissingColumnError,
 	isPermissionPolicyError,
 } from "./utils";
@@ -58,11 +64,15 @@ export function useResumeDetailController(resumeId: string) {
 	const [signedUrl, setSignedUrl] = useState("");
 	const [signedUrlError, setSignedUrlError] = useState("");
 	const [content, setContent] = useState("");
-	const [replyContent, setReplyContent] = useState("");
 	const [contentFormat, setContentFormat] =
 		useState<CommentContentFormat>("plain");
+	const [replyContent, setReplyContent] = useState("");
 	const [replyContentFormat, setReplyContentFormat] =
 		useState<CommentContentFormat>("plain");
+	const [guidedIssueType, setGuidedIssueType] =
+		useState<GuidedReviewIssueType | "">("");
+	const [guidedIssue, setGuidedIssue] = useState("");
+	const [guidedSuggestion, setGuidedSuggestion] = useState("");
 	const [selectedAttachment, setSelectedAttachment] =
 		useState<CommentAttachmentOption | null>(null);
 	const [replyAttachment, setReplyAttachment] =
@@ -80,6 +90,9 @@ export function useResumeDetailController(resumeId: string) {
 	const [replySchemaReady, setReplySchemaReady] = useState(true);
 	const [deleteSchemaReady, setDeleteSchemaReady] = useState(true);
 	const [mediaSchemaReady, setMediaSchemaReady] = useState(true);
+	const [guidedReviewSchemaReady, setGuidedReviewSchemaReady] = useState(true);
+	const [needsGuidedReviewCredit, setNeedsGuidedReviewCredit] =
+		useState(false);
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
 	const [message, setMessage] = useState("");
@@ -90,6 +103,8 @@ export function useResumeDetailController(resumeId: string) {
 	);
 	const isOwner = Boolean(user && resume?.user_id === user.id);
 	const isClosed = resume?.status === "closed";
+	const isWaiting = resume?.review_queue_status === "waiting";
+	const shouldUseGuidedReview = needsGuidedReviewCredit && !isOwner;
 
 	function goToLogin() {
 		const loginRoute = getLoginPath(`/resume/${resumeId}`);
@@ -128,9 +143,12 @@ export function useResumeDetailController(resumeId: string) {
 	}
 
 	function clearFeedbackDrafts() {
+		setSelectedAttachment(null);
 		setContent("");
 		setContentFormat("plain");
-		setSelectedAttachment(null);
+		setGuidedIssueType("");
+		setGuidedIssue("");
+		setGuidedSuggestion("");
 		setReplyingToId(null);
 		setReplyContent("");
 		setReplyContentFormat("plain");
@@ -287,6 +305,41 @@ export function useResumeDetailController(resumeId: string) {
 		setMediaSchemaReady(threadData.mediaSchemaReady);
 	}
 
+	async function refreshGuidedReviewNeed(activeUser: User | null) {
+		if (!activeUser) {
+			setNeedsGuidedReviewCredit(false);
+			return;
+		}
+
+		const { data, error } = await supabase
+			.from("resumes")
+			.select(
+				"id,status,review_queue_status,activation_reviews_required,activation_reviews_completed",
+			)
+			.eq("user_id", activeUser.id)
+			.eq("status", "open")
+			.eq("review_queue_status", "waiting")
+			.limit(5);
+
+		if (error) {
+			if (!isGuidedReviewFeatureError(error)) {
+				captureResumeDetailError(error, "load_guided_review_need", {
+					activeUserId: activeUser.id,
+				});
+			}
+			setNeedsGuidedReviewCredit(false);
+			return;
+		}
+
+		setNeedsGuidedReviewCredit(
+			(data ?? []).some(
+				(row) =>
+					(row.activation_reviews_required ?? 0) >
+					(row.activation_reviews_completed ?? 0),
+			),
+		);
+	}
+
 	useEffect(() => {
 		async function load() {
 			const started = Date.now();
@@ -319,6 +372,7 @@ export function useResumeDetailController(resumeId: string) {
 			}
 
 			await refreshReviewThread(activeUser);
+			await refreshGuidedReviewNeed(activeUser);
 
 			const elapsed = Date.now() - started;
 			window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
@@ -342,18 +396,39 @@ export function useResumeDetailController(resumeId: string) {
 					const nextStatus = payload.new?.status as
 						| ResumeSummary["status"]
 						| undefined;
+					const nextQueueStatus = payload.new?.review_queue_status as
+						| ResumeSummary["review_queue_status"]
+						| undefined;
+					const nextActivationCompleted =
+						typeof payload.new?.activation_reviews_completed === "number"
+							? payload.new.activation_reviews_completed
+							: undefined;
 
-					if (!nextStatus) {
+					if (!nextStatus && !nextQueueStatus) {
 						return;
 					}
 
 					setResume((current) =>
-						current ? { ...current, status: nextStatus } : current,
+						current
+							? {
+									...current,
+									activation_reviews_completed:
+										nextActivationCompleted ??
+										current.activation_reviews_completed,
+									review_queue_status:
+										nextQueueStatus ?? current.review_queue_status,
+									status: nextStatus ?? current.status,
+								}
+							: current,
 					);
 
 					if (nextStatus === "closed") {
 						clearFeedbackDrafts();
 						setMessage("This resume is closed for new feedback.");
+					}
+
+					if (nextQueueStatus === "active") {
+						setMessage("");
 					}
 				},
 			)
@@ -397,11 +472,47 @@ export function useResumeDetailController(resumeId: string) {
 			return;
 		}
 
-		const reviewContent = normalizeCommentContent(content);
+		if (isWaiting) {
+			reportError("This resume is still waiting for activation.");
+			return;
+		}
+
+		let reviewContent = "";
+		let reviewContentFormat: CommentContentFormat = contentFormat;
+		let reviewGuidedIssueType: GuidedReviewIssueType | null = null;
+
+		if (shouldUseGuidedReview) {
+			const guidedIssueMessage = getGuidedReviewIssue({
+				issue: guidedIssue,
+				issueType: guidedIssueType,
+				suggestion: guidedSuggestion,
+			});
+
+			if (guidedIssueMessage) {
+				reportError(guidedIssueMessage);
+				return;
+			}
+
+			if (!guidedIssueType) {
+				reportError("Choose the resume issue you are reviewing.");
+				return;
+			}
+
+			reviewGuidedIssueType = guidedIssueType;
+			reviewContent = buildGuidedReviewContent({
+				issue: guidedIssue,
+				issueType: reviewGuidedIssueType,
+				suggestion: guidedSuggestion,
+			});
+			reviewContentFormat = mediaSchemaReady ? "markdown" : "plain";
+		} else {
+			reviewContent = normalizeCommentContent(content);
+		}
+
 		const payloadIssue = getReviewContentIssue({
 			attachmentId: selectedAttachment?.id,
 			content: reviewContent,
-			contentFormat,
+			contentFormat: reviewContentFormat,
 		});
 
 		if (payloadIssue) {
@@ -409,7 +520,7 @@ export function useResumeDetailController(resumeId: string) {
 			return;
 		}
 
-		if ((selectedAttachment || contentFormat === "markdown") && !mediaSchemaReady) {
+		if ((selectedAttachment || reviewContentFormat === "markdown") && !mediaSchemaReady) {
 			reportError(`${SUPABASE_MIGRATION_MESSAGE} Comment media is not ready yet.`);
 			return;
 		}
@@ -420,6 +531,8 @@ export function useResumeDetailController(resumeId: string) {
 			attachment_id?: string | null;
 			content: string;
 			content_format?: CommentContentFormat;
+			guided_issue_type?: GuidedReviewIssueType;
+			is_guided_review?: boolean;
 			resume_id: string;
 		} = {
 			resume_id: resumeId,
@@ -429,10 +542,15 @@ export function useResumeDetailController(resumeId: string) {
 
 		if (mediaSchemaReady) {
 			reviewPayload.attachment_id = selectedAttachment?.id ?? null;
-			reviewPayload.content_format = contentFormat;
+			reviewPayload.content_format = reviewContentFormat;
 		}
 
-		const { data, error } = await supabase
+		if (reviewGuidedIssueType && guidedReviewSchemaReady) {
+			reviewPayload.guided_issue_type = reviewGuidedIssueType;
+			reviewPayload.is_guided_review = true;
+		}
+
+		let insertResult = await supabase
 			.from("roasts")
 			.insert(reviewPayload)
 			.select(
@@ -440,7 +558,28 @@ export function useResumeDetailController(resumeId: string) {
 			)
 			.single();
 
+		if (
+			insertResult.error &&
+			isGuidedReviewFeatureError(insertResult.error) &&
+			Boolean(reviewGuidedIssueType) &&
+			guidedReviewSchemaReady
+		) {
+			setGuidedReviewSchemaReady(false);
+			const legacyPayload = { ...reviewPayload };
+			delete legacyPayload.guided_issue_type;
+			delete legacyPayload.is_guided_review;
+			insertResult = await supabase
+				.from("roasts")
+				.insert(legacyPayload)
+				.select(
+					mediaSchemaReady ? REVIEW_SELECT_WITH_MEDIA : REVIEW_SELECT_WITH_THREADS,
+				)
+				.single();
+		}
+
 		setSubmitting(false);
+
+		const { data, error } = insertResult;
 
 		if (error) {
 			if (isCommentMediaFeatureError(error)) {
@@ -481,7 +620,11 @@ export function useResumeDetailController(resumeId: string) {
 		);
 		setContent("");
 		setContentFormat("plain");
+		setGuidedIssueType("");
+		setGuidedIssue("");
+		setGuidedSuggestion("");
 		setSelectedAttachment(null);
+		await refreshGuidedReviewNeed(user);
 		toast.success("Feedback submitted.");
 	}
 
@@ -509,6 +652,11 @@ export function useResumeDetailController(resumeId: string) {
 
 		if (isClosed) {
 			reportError("This resume is closed for new replies.");
+			return;
+		}
+
+		if (isWaiting) {
+			reportError("This resume is still waiting for activation.");
 			return;
 		}
 
@@ -723,22 +871,27 @@ export function useResumeDetailController(resumeId: string) {
 		authorProfiles,
 		collapsedReviewIds,
 		confirmResumeOwnerAction,
-		content,
-		contentFormat,
 		deleteReview,
 		deleteSchemaReady,
 		deleteTargetReview,
 		deletingReviewId,
 		dislikedReviewIds,
 		goToLogin,
+		content,
+		contentFormat,
+		guidedIssue,
+		guidedIssueType,
+		guidedSuggestion,
 		handleReplySubmit,
 		handleReviewSubmit,
 		isClosed,
 		isOwner,
+		isWaiting,
 		likedReviewIds,
 		loading,
 		mediaSchemaReady,
 		message,
+		needsGuidedReviewCredit: shouldUseGuidedReview,
 		openReportDialog,
 		openResumeFile,
 		pendingResumeAction,
@@ -760,9 +913,12 @@ export function useResumeDetailController(resumeId: string) {
 		resumeAuthorProfile,
 		reviews,
 		selectedAttachment,
+		setDeleteTargetReview,
 		setContent,
 		setContentFormat,
-		setDeleteTargetReview,
+		setGuidedIssue,
+		setGuidedIssueType,
+		setGuidedSuggestion,
 		setPendingResumeAction,
 		setReportDetails,
 		setReportReason,

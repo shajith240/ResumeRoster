@@ -4,9 +4,9 @@
 
 - Source path: `components/ProfileDetail.tsx`
 - Kind: React component
-- Size: 14668 bytes
-- Lines: 493
-- Source hash: `897b0c6216382de23398a5de19ed0f5b553badb7a1b337d4e40bbcb2c7f1e871`
+- Size: 10784 bytes
+- Lines: 379
+- Source hash: `141e6bcb6d7b4fb1b57f1f67424c06044f480d4c59c7629ae6dbbd2ff1fa1390`
 
 ## What This File Does
 
@@ -25,7 +25,6 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 - `./profile-detail/constants`
 - `./profile-detail/edit-dialog`
-- `./profile-detail/reviewer-dialogs`
 - `./profile-detail/rows`
 - `./profile-detail/types`
 - `./profile-detail/use-profile-detail-controller`
@@ -42,7 +41,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 34 | `ProfileDetail` | React component | top-level | yes | `{ profileId }` | `import("react").JSX.Element` | Renders the ProfileDetail UI component. |
+| 32 | `ProfileDetail` | React component | top-level | yes | `{ profileId }` | `import("react").JSX.Element` | Renders the ProfileDetail UI component. |
 
 ## Types
 

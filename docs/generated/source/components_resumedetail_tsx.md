@@ -4,9 +4,9 @@
 
 - Source path: `components/ResumeDetail.tsx`
 - Kind: React component
-- Size: 7963 bytes
-- Lines: 220
-- Source hash: `4bc0d50bd0cdcf3e6c059c4729e749657d4805188de51db889805ba46d5d48c4`
+- Size: 8396 bytes
+- Lines: 228
+- Source hash: `8bf53f1e71222c45bce44c1b01873027097188acfd8f41f193f4ab3e1dc67df3`
 
 ## What This File Does
 

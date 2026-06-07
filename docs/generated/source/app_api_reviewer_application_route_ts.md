@@ -4,9 +4,9 @@
 
 - Source path: `app/api/reviewer-application/route.ts`
 - Kind: Next API route
-- Size: 5303 bytes
-- Lines: 203
-- Source hash: `d6b010fc893ab01fcfbfec66b908cfce30b85f78ceb38a50bce95089580074f2`
+- Size: 375 bytes
+- Lines: 13
+- Source hash: `0f52a10e68072475f73080b6c0882669502edff36b700f80c295d352efe684f5`
 
 ## What This File Does
 
@@ -24,29 +24,17 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 ## Imports
 
-- `@/lib/api-errors`
-- `@/lib/reviewer-validation`
-- `@/lib/server-auth`
-- `@/lib/server/rate-limit`
-- `@/lib/supabase/types`
+None detected.
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 50 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
-| 54 | `applicationFailure` | Function | top-level | no | `error`, `status` | `Response` | Implements the applicationfailure helper. |
-| 72 | `firstRpcResult` | Function | top-level | no | `data` | `ReviewerApplicationRpcResult \| null` | Implements the firstrpcresult helper. |
-| 82 | `rpcFailureResponse` | Function | top-level | no | `code` | `Response` | Implements the rpcfailureresponse helper. |
-| 93 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
-| 101 | `getString` | Function | top-level | no | `payload`, `key` | `string` | Implements the getstring helper. |
-| 106 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
+| 7 | `POST` | API handler async | top-level | yes | none | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
-| Line | Name | Kind |
-| --- | --- | --- |
-| 17 | `ReviewerApplicationRpcResult` | type |
+No top-level interfaces or type aliases detected.
 
 ## Related Tests
 

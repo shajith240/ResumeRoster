@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 345 source-controlled files.
-Manifest hash: `55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c`
+Generated from 350 source-controlled files.
+Manifest hash: `066b79c72a4a65fa89680242fbefeebdfb618feeca86dbe3d431101d728897d2`
 
 ## Folder Coverage
 
@@ -14,16 +14,16 @@ Manifest hash: `55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c
 | `app` | 42 |
 | `components` | 90 |
 | `docs` | 36 |
-| `lib` | 75 |
+| `lib` | 77 |
 | `public` | 27 |
-| `scripts` | 6 |
-| `supabase` | 49 |
+| `scripts` | 7 |
+| `supabase` | 51 |
 
 ## File Kinds
 
 | Kind | Files |
 | --- | ---: |
-| Application library module | 41 |
+| Application library module | 42 |
 | Documentation | 36 |
 | GitHub workflow | 1 |
 | Next API route | 18 |
@@ -34,11 +34,11 @@ Manifest hash: `55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c
 | Public browser asset | 1 |
 | Public visual asset | 26 |
 | React component | 77 |
-| Repository automation | 6 |
+| Repository automation | 7 |
 | Root documentation | 3 |
-| Supabase migration | 46 |
+| Supabase migration | 48 |
 | UI primitive | 13 |
-| Unit test | 34 |
+| Unit test | 35 |
 
 ## Files
 
@@ -131,7 +131,6 @@ Manifest hash: `55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c
 | `components/profile-detail/data.ts` | React component | [open](source/components_profile_detail_data_ts.md) |
 | `components/profile-detail/edit-dialog.tsx` | React component | [open](source/components_profile_detail_edit_dialog_tsx.md) |
 | `components/profile-detail/profile-view.ts` | React component | [open](source/components_profile_detail_profile_view_ts.md) |
-| `components/profile-detail/reviewer-dialogs.tsx` | React component | [open](source/components_profile_detail_reviewer_dialogs_tsx.md) |
 | `components/profile-detail/rows.tsx` | React component | [open](source/components_profile_detail_rows_tsx.md) |
 | `components/profile-detail/shared.tsx` | React component | [open](source/components_profile_detail_shared_tsx.md) |
 | `components/profile-detail/types.ts` | React component | [open](source/components_profile_detail_types_ts.md) |
@@ -146,6 +145,7 @@ Manifest hash: `55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c
 | `components/resume-detail/data.ts` | React component | [open](source/components_resume_detail_data_ts.md) |
 | `components/resume-detail/dialogs.tsx` | React component | [open](source/components_resume_detail_dialogs_tsx.md) |
 | `components/resume-detail/discussion-panel.tsx` | React component | [open](source/components_resume_detail_discussion_panel_tsx.md) |
+| `components/resume-detail/guided-review-composer.tsx` | React component | [open](source/components_resume_detail_guided_review_composer_tsx.md) |
 | `components/resume-detail/resume-preview-pane.tsx` | React component | [open](source/components_resume_detail_resume_preview_pane_tsx.md) |
 | `components/resume-detail/selectors.ts` | React component | [open](source/components_resume_detail_selectors_ts.md) |
 | `components/resume-detail/thread-review-item.tsx` | React component | [open](source/components_resume_detail_thread_review_item_tsx.md) |
@@ -232,6 +232,7 @@ Manifest hash: `55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c
 | `lib/__tests__/comment-media-upload-route.test.ts` | Unit test | [open](source/lib_tests_comment_media_upload_route_test_ts.md) |
 | `lib/__tests__/comment-media-validation.test.ts` | Unit test | [open](source/lib_tests_comment_media_validation_test_ts.md) |
 | `lib/__tests__/feed-ranking.test.ts` | Unit test | [open](source/lib_tests_feed_ranking_test_ts.md) |
+| `lib/__tests__/guided-review.test.ts` | Unit test | [open](source/lib_tests_guided_review_test_ts.md) |
 | `lib/__tests__/health-route.test.ts` | Unit test | [open](source/lib_tests_health_route_test_ts.md) |
 | `lib/__tests__/leaderboard-ranking.test.ts` | Unit test | [open](source/lib_tests_leaderboard_ranking_test_ts.md) |
 | `lib/__tests__/monitoring-sentry.test.ts` | Unit test | [open](source/lib_tests_monitoring_sentry_test_ts.md) |
@@ -265,6 +266,7 @@ Manifest hash: `55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c
 | `lib/avatar-validation.ts` | Application library module | [open](source/lib_avatar_validation_ts.md) |
 | `lib/comment-media-validation.ts` | Application library module | [open](source/lib_comment_media_validation_ts.md) |
 | `lib/feed-ranking.ts` | Application library module | [open](source/lib_feed_ranking_ts.md) |
+| `lib/guided-review.ts` | Application library module | [open](source/lib_guided_review_ts.md) |
 | `lib/image-upload-validation.ts` | Application library module | [open](source/lib_image_upload_validation_ts.md) |
 | `lib/leaderboard-ranking.ts` | Application library module | [open](source/lib_leaderboard_ranking_ts.md) |
 | `lib/monitoring/capture-errors.ts` | Application library module | [open](source/lib_monitoring_capture_errors_ts.md) |
@@ -332,6 +334,7 @@ Manifest hash: `55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c
 | `scripts/docs/check.mjs` | Repository automation | [open](source/scripts_docs_check_mjs.md) |
 | `scripts/docs/docs-config.mjs` | Repository automation | [open](source/scripts_docs_docs_config_mjs.md) |
 | `scripts/docs/generate.mjs` | Repository automation | [open](source/scripts_docs_generate_mjs.md) |
+| `scripts/docs/knip-disable-raw-transfer-loader.mjs` | Repository automation | [open](source/scripts_docs_knip_disable_raw_transfer_loader_mjs.md) |
 | `scripts/docs/quality.mjs` | Repository automation | [open](source/scripts_docs_quality_mjs.md) |
 | `scripts/performance/check-budgets.mjs` | Repository automation | [open](source/scripts_performance_check_budgets_mjs.md) |
 | `scripts/supabase/check-sql-source-of-truth.mjs` | Repository automation | [open](source/scripts_supabase_check_sql_source_of_truth_mjs.md) |
@@ -384,6 +387,8 @@ Manifest hash: `55cd747ef255433a5ee262aff289437cffcaa6f834d3a5e2b37e71c4c1b1b58c
 | `supabase/migrations/0044_upload_security_quarantine.sql` | Supabase migration | [open](source/supabase_migrations_0044_upload_security_quarantine_sql.md) |
 | `supabase/migrations/0045_authenticated_api_rate_limits.sql` | Supabase migration | [open](source/supabase_migrations_0045_authenticated_api_rate_limits_sql.md) |
 | `supabase/migrations/0046_health_readiness_checks.sql` | Supabase migration | [open](source/supabase_migrations_0046_health_readiness_checks_sql.md) |
+| `supabase/migrations/0047_guided_review_queue.sql` | Supabase migration | [open](source/supabase_migrations_0047_guided_review_queue_sql.md) |
+| `supabase/migrations/0048_hide_waiting_resumes_from_public_feed.sql` | Supabase migration | [open](source/supabase_migrations_0048_hide_waiting_resumes_from_public_feed_sql.md) |
 | `tailwind.config.ts` | Project configuration | [open](source/tailwind_config_ts.md) |
 | `tsconfig.json` | Project configuration | [open](source/tsconfig_json.md) |
 | `typedoc.json` | Project configuration | [open](source/typedoc_json.md) |

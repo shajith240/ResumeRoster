@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/controller-data.ts`
 - Kind: React component
-- Size: 3725 bytes
+- Size: 3707 bytes
 - Lines: 149
-- Source hash: `8f348ab9f1a544ec0b1bee618dda77a95977344fddd4f922e1eff5bc1719d286`
+- Source hash: `3082bbdfed8efbe476e5d229494d080861be16afd5aa85c2da2038c03b6f3113`
 
 ## What This File Does
 

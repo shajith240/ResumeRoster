@@ -109,20 +109,20 @@ export const featureContent: Record<
 	},
 	skills: {
 		copy:
-			"People who consistently give useful lint passes build visible reputation and become trusted resume reviewers.",
+			"People who consistently give useful lint passes build visible contribution history and trust.",
 		good: "Hired-at proof visible",
 		insight: "Placement mentor earned 31 helpful votes this week",
 		listTitle: "Reputation signals",
-		panelTitle: "Reviewer Profile",
+		panelTitle: "Contributor History",
 		points: [
 			"Reward people whose feedback gets marked helpful.",
-			"Show reviewer roles and strong feedback history.",
-			"Turn good reviewers into the reason people return.",
+			"Show strong feedback history without forcing a second profile.",
+			"Turn useful contributors into the reason people return.",
 		],
 		score: "#12",
-		scoreLabel: "reviewer rank",
+		scoreLabel: "contributor rank",
 		theme: "skills",
-		title: "Reviewer Reputation",
+		title: "Contributor Reputation",
 		warn: "Unhelpful comments lose reach",
 	},
 	optimize: {
@@ -151,9 +151,9 @@ export const featureTabs: Array<{
 	mobileLabel: string;
 }> = [
 	{ key: "ats", label: "Resume Lint", mobileLabel: "Post" },
-	{ key: "jd", label: "Reviewer Checks", mobileLabel: "Check" },
+	{ key: "jd", label: "Guided Checks", mobileLabel: "Check" },
 	{ key: "roast", label: "Useful Fixes", mobileLabel: "Vote" },
-	{ key: "skills", label: "Reviewer Trust", mobileLabel: "Trust" },
+	{ key: "skills", label: "Contributor Trust", mobileLabel: "Trust" },
 	{ key: "optimize", label: "Improvement", mobileLabel: "Improve" },
 ];
 
@@ -215,7 +215,7 @@ export const stackCards = [
 	},
 	{
 		className: "recorder-card",
-		copy: "Reviewers call out weak, generic, or confusing parts before they reach the first screen.",
+		copy: "Guided contributors call out weak, generic, or confusing parts before they reach the first screen.",
 		image: "Recruter_roast.png",
 		title: "Catch Recruiter Errors",
 	},
@@ -227,8 +227,8 @@ export const stackCards = [
 	},
 	{
 		className: "tools-card",
-		copy: "Improved resumes and trusted reviewers get featured every week.",
+		copy: "Improved resumes and useful contributors get featured every week.",
 		image: "ats.png",
-		title: "Build Reviewer Trust",
+		title: "Build Contributor Trust",
 	},
 ];

@@ -4,9 +4,9 @@
 
 - Source path: `app/feed.css`
 - Kind: Project file
-- Size: 76550 bytes
-- Lines: 3827
-- Source hash: `44cb38a140ebf62aa33f0eaa054ae954ed38cdbcb64e38c74cb06e2eb453e756`
+- Size: 82402 bytes
+- Lines: 4086
+- Source hash: `9a04dc7e2baca32b9595fa6416935459b3d3309cccbb9e60aeb172b85eeb19f9`
 
 ## What This File Does
 

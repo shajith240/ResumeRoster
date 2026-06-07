@@ -16,20 +16,11 @@ import {
 	usernameTakenMessage,
 } from "@/lib/profile-validation";
 import { getReportIssue, type ReportReason } from "@/lib/report-validation";
-import {
-	REVIEWER_FIELD_LIMITS,
-	getReviewerApplicationIssue,
-	isCommunityRole,
-	isReviewerType,
-	limitReviewerText,
-} from "@/lib/reviewer-validation";
 import { ensureActiveUserSession } from "@/lib/session-lock";
 import type {
-	CommunityRole,
 	PublicProfile,
 	PublicProfileReview,
 	PublicProfileResume,
-	ReviewerType,
 } from "@/lib/supabase/types";
 import { toast } from "sonner";
 import {
@@ -62,20 +53,11 @@ export function useProfileDetailController(profileId: string) {
 	const [collegeLocation, setCollegeLocation] = useState("");
 	const [about, setAbout] = useState("");
 	const [skillsInput, setSkillsInput] = useState("");
-	const [communityRole, setCommunityRole] =
-		useState<CommunityRole>("candidate");
-	const [reviewerType, setReviewerType] = useState<ReviewerType | "">("");
-	const [reviewerHeadline, setReviewerHeadline] = useState("");
-	const [reviewerBio, setReviewerBio] = useState("");
-	const [reviewerProofUrl, setReviewerProofUrl] = useState("");
-	const [reviewerApplicationNote, setReviewerApplicationNote] = useState("");
-	const [reviewerApplying, setReviewerApplying] = useState(false);
 	const [avatarFile, setAvatarFile] = useState<File | null>(null);
 	const [avatarPreview, setAvatarPreview] = useState("");
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
 	const [editOpen, setEditOpen] = useState(false);
-	const [reviewerEditOpen, setReviewerEditOpen] = useState(false);
 	const [message, setMessage] = useState("");
 	const [saveMessage, setSaveMessage] = useState("");
 	const [profileReportOpen, setProfileReportOpen] = useState(false);
@@ -149,30 +131,6 @@ export function useProfileDetailController(profileId: string) {
 			);
 			setAbout(limitText(loadedProfile.about ?? "", PROFILE_FIELD_LIMITS.about));
 			setSkillsInput((loadedProfile.skills ?? []).join(", "));
-			setCommunityRole(
-				isCommunityRole(loadedProfile.community_role)
-					? loadedProfile.community_role
-					: "candidate",
-			);
-			setReviewerType(
-				loadedProfile.reviewer_type && isReviewerType(loadedProfile.reviewer_type)
-					? loadedProfile.reviewer_type
-					: "",
-			);
-			setReviewerHeadline(
-				limitReviewerText(
-					loadedProfile.reviewer_headline ?? "",
-					REVIEWER_FIELD_LIMITS.headline,
-				),
-			);
-			setReviewerBio(
-				limitReviewerText(
-					loadedProfile.reviewer_bio ?? "",
-					REVIEWER_FIELD_LIMITS.bio,
-				),
-			);
-			setReviewerProofUrl("");
-			setReviewerApplicationNote("");
 
 			const elapsed = Date.now() - started;
 			window.setTimeout(() => setLoading(false), Math.max(0, 300 - elapsed));
@@ -256,15 +214,6 @@ export function useProfileDetailController(profileId: string) {
 			const nextPosition =
 				limitText(currentPosition, PROFILE_FIELD_LIMITS.currentPosition).trim() ||
 				null;
-			const nextCommunityRole = isCommunityRole(communityRole)
-				? communityRole
-				: "candidate";
-			const nextReviewerType =
-				nextCommunityRole === "candidate"
-					? null
-					: isReviewerType(reviewerType)
-						? reviewerType
-						: "other";
 
 			const nextProfile = {
 				full_name:
@@ -279,23 +228,6 @@ export function useProfileDetailController(profileId: string) {
 					null,
 				about: limitText(about, PROFILE_FIELD_LIMITS.about).trim() || null,
 				skills: nextSkills,
-				community_role: nextCommunityRole,
-				reviewer_bio:
-					nextCommunityRole === "candidate"
-						? null
-						: limitReviewerText(
-								reviewerBio,
-								REVIEWER_FIELD_LIMITS.bio,
-							) || null,
-				reviewer_expertise: [],
-				reviewer_headline:
-					nextCommunityRole === "candidate"
-						? null
-						: limitReviewerText(
-								reviewerHeadline,
-								REVIEWER_FIELD_LIMITS.headline,
-							) || null,
-				reviewer_type: nextReviewerType,
 				...(avatarUpdate ?? {}),
 			};
 
@@ -361,186 +293,6 @@ export function useProfileDetailController(profileId: string) {
 			toast.error(errorMessage);
 		} finally {
 			setSaving(false);
-		}
-	}
-
-	async function saveReviewerProfile(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-		setSaveMessage("");
-
-		if (!user || !isOwnProfile) {
-			const errorMessage = "You can only edit your own reviewer profile.";
-			setSaveMessage(errorMessage);
-			toast.error(errorMessage);
-			return;
-		}
-
-		setSaving(true);
-
-		try {
-			const sessionActive = await ensureActiveUserSession(user.id);
-			if (!sessionActive) return;
-
-			const nextCommunityRole = isCommunityRole(communityRole)
-				? communityRole
-				: "candidate";
-			const nextReviewerType =
-				nextCommunityRole === "candidate"
-					? null
-					: isReviewerType(reviewerType)
-						? reviewerType
-						: "other";
-			const nextReviewerProfile = {
-				community_role: nextCommunityRole,
-				reviewer_bio:
-					nextCommunityRole === "candidate"
-						? null
-						: limitReviewerText(reviewerBio, REVIEWER_FIELD_LIMITS.bio) ||
-							null,
-				reviewer_expertise: [],
-				reviewer_headline:
-					nextCommunityRole === "candidate"
-						? null
-						: limitReviewerText(
-								reviewerHeadline,
-								REVIEWER_FIELD_LIMITS.headline,
-							) || null,
-				reviewer_type: nextReviewerType,
-			};
-
-			const { error } = await supabase
-				.from("profiles")
-				.update(nextReviewerProfile)
-				.eq("id", user.id);
-
-			if (error) {
-				throw new Error(
-					isProfileFeatureError(error.message)
-						? SUPABASE_MIGRATION_MESSAGE
-						: error.message,
-				);
-			}
-
-			setProfile((current) =>
-				current
-					? {
-							...current,
-							...nextReviewerProfile,
-							reviewer_expertise: [],
-						}
-					: current,
-			);
-			setReviewerEditOpen(false);
-			setSaveMessage("Reviewer profile saved");
-			toast.success("Reviewer profile saved.");
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error ? error.message : "Reviewer profile save failed.";
-			setSaveMessage(errorMessage);
-			toast.error(errorMessage);
-		} finally {
-			setSaving(false);
-		}
-	}
-
-	async function applyForTrustedReviewer() {
-		setSaveMessage("");
-
-		if (!user || !isOwnProfile) {
-			const errorMessage = "Sign in with your own profile to apply.";
-			setSaveMessage(errorMessage);
-			toast.error(errorMessage);
-			return;
-		}
-
-		const nextCommunityRole = isCommunityRole(communityRole)
-			? communityRole
-			: "candidate";
-		const nextReviewerType = isReviewerType(reviewerType) ? reviewerType : null;
-		const issue = getReviewerApplicationIssue({
-			communityRole: nextCommunityRole,
-			note: reviewerApplicationNote,
-			proofUrl: reviewerProofUrl,
-			reviewerType: nextReviewerType,
-		});
-
-		if (issue) {
-			setSaveMessage(issue);
-			toast.error(issue);
-			return;
-		}
-
-		setReviewerApplying(true);
-
-		try {
-			const sessionActive = await ensureActiveUserSession(user.id);
-			if (!sessionActive) return;
-
-			const {
-				data: { session },
-			} = await supabase.auth.getSession();
-
-			if (!session?.access_token) {
-				throw new Error("Sign in again before applying.");
-			}
-
-			const response = await fetch("/api/reviewer-application", {
-				body: JSON.stringify({
-					communityRole: nextCommunityRole,
-					note: reviewerApplicationNote,
-					proofUrl: reviewerProofUrl,
-					reviewerBio,
-					reviewerExpertise: [],
-					reviewerHeadline,
-					reviewerType: nextReviewerType,
-				}),
-				headers: {
-					Authorization: `Bearer ${session.access_token}`,
-					"Content-Type": "application/json",
-				},
-				method: "POST",
-			});
-			const data = await response.json().catch(() => ({}));
-
-			if (!response.ok) {
-				throw new Error(
-					(data as { message?: string }).message ??
-						"Reviewer application failed.",
-				);
-			}
-
-			setProfile((current) =>
-				current
-					? {
-							...current,
-							community_role: nextCommunityRole,
-							reviewer_bio: limitReviewerText(
-								reviewerBio,
-								REVIEWER_FIELD_LIMITS.bio,
-							),
-							reviewer_expertise: [],
-							reviewer_headline: limitReviewerText(
-								reviewerHeadline,
-								REVIEWER_FIELD_LIMITS.headline,
-							),
-							reviewer_type: nextReviewerType,
-							reviewer_verification_status: "pending",
-							reviewer_verified_at: null,
-							reviewer_verified_by: null,
-						}
-					: current,
-			);
-			setReviewerProofUrl("");
-			setReviewerApplicationNote("");
-			setSaveMessage("Reviewer application sent");
-			toast.success("Reviewer application sent.");
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error ? error.message : "Reviewer application failed.";
-			setSaveMessage(errorMessage);
-			toast.error(errorMessage);
-		} finally {
-			setReviewerApplying(false);
 		}
 	}
 
@@ -635,11 +387,9 @@ export function useProfileDetailController(profileId: string) {
 
 	return {
 		about,
-		applyForTrustedReviewer,
 		avatarPreview,
 		college,
 		collegeLocation,
-		communityRole,
 		currentPosition,
 		editOpen,
 		fullName,
@@ -655,34 +405,19 @@ export function useProfileDetailController(profileId: string) {
 		profileReportSchemaReady,
 		profileReportSubmitting,
 		profileView,
-		reviewerApplicationNote,
-		reviewerApplying,
-		reviewerBio,
-		reviewerEditOpen,
-		reviewerHeadline,
-		reviewerProofUrl,
-		reviewerType,
 		reviews,
 		saveMessage,
 		saveProfile,
-		saveReviewerProfile,
 		saving,
 		setAbout,
 		setCollege,
 		setCollegeLocation,
-		setCommunityRole,
 		setCurrentPosition,
 		setEditOpen,
 		setFullName,
 		setProfileReportDetails,
 		setProfileReportOpen,
 		setProfileReportReason,
-		setReviewerApplicationNote,
-		setReviewerBio,
-		setReviewerEditOpen,
-		setReviewerHeadline,
-		setReviewerProofUrl,
-		setReviewerType,
 		setSkillsInput,
 		setTagline,
 		setUsername,

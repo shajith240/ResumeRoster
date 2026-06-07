@@ -483,7 +483,7 @@ export default function Leaderboard() {
 				onSearchQueryChange={setSearchQuery}
 				reviewers={reviewers}
 				searchQuery={searchQuery}
-				searchPlaceholder="Search reviewers, roles, top feedback..."
+				searchPlaceholder="Search contributors, roles, top feedback..."
 				startRank={1}
 			/>
 		</section>

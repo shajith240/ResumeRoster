@@ -105,7 +105,7 @@ export default function CommunityGuidelinesPage() {
 						placements, or hiring authority.
 					</p>
 					<p>
-						Reviewer profiles and trust labels are meant to help users understand
+						Public profiles and trust labels are meant to help users understand
 						context. They are not a license to mislead people or overstate your
 						authority.
 					</p>

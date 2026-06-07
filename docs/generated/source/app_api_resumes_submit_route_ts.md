@@ -4,9 +4,9 @@
 
 - Source path: `app/api/resumes/submit/route.ts`
 - Kind: Next API route
-- Size: 7158 bytes
-- Lines: 275
-- Source hash: `250315ee10d5d1de56d60901ef2b461f7f7db825fb00b27f672f28f1281646ad`
+- Size: 9108 bytes
+- Lines: 359
+- Source hash: `0ce867cfa6340135a4763be4e940d6d9541dfae4e3a723c27177e26394ce9a26`
 
 ## What This File Does
 
@@ -36,20 +36,23 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 33 | `badRequest` | Function | top-level | no | `message`, `status` | `NextResponse<{ message: string; }>` | Implements the badrequest helper. |
-| 37 | `serverFailure` | Function | top-level | no | `message` | `NextResponse<{ message: string; }>` | Implements the serverfailure helper. |
-| 41 | `getRequiredString` | Function | top-level | no | `formData`, `key` | `string` | Implements the getrequiredstring helper. |
-| 46 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
-| 52 | `ensureSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<import("@supabase/postgrest-js").PostgrestError \| null>` | Runs the ensuresubmitprofile workflow for callers. |
-| 77 | `getSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<SubmitProfile \| null>` | Runs the getsubmitprofile workflow for callers. |
-| 91 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `filePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
-| 103 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
+| 40 | `badRequest` | Function | top-level | no | `message`, `status` | `NextResponse<{ message: string; }>` | Implements the badrequest helper. |
+| 44 | `serverFailure` | Function | top-level | no | `message` | `NextResponse<{ message: string; }>` | Implements the serverfailure helper. |
+| 48 | `isMissingQueueRpc` | Function | top-level | no | `message` | `boolean` | Implements the ismissingqueuerpc helper. |
+| 54 | `getRequiredString` | Function | top-level | no | `formData`, `key` | `string` | Implements the getrequiredstring helper. |
+| 59 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
+| 65 | `ensureSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<import("@supabase/postgrest-js").PostgrestError \| null>` | Runs the ensuresubmitprofile workflow for callers. |
+| 90 | `getSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<SubmitProfile \| null>` | Runs the getsubmitprofile workflow for callers. |
+| 104 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `filePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
+| 116 | `insertResumeWithQueue` | Function async | top-level | no | `{ admin, filePath, jobDescription, privacyMode, title, userId, postDescriptio...` | `Promise<{ data: QueuedResumeInsertResult \| null; error: null; } \| { data: { id: any; review_queue_status: string; activation_reviews_co...` | Implements the insertresumewithqueue helper. |
+| 188 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
 | 28 | `SubmitProfile` | type |
+| 33 | `QueuedResumeInsertResult` | type |
 
 ## Related Tests
 

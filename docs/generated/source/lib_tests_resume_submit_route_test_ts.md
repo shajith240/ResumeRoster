@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/resume-submit-route.test.ts`
 - Kind: Unit test
-- Size: 3281 bytes
-- Lines: 125
-- Source hash: `febc19fd6d71ddf9d93d4f4d9d310cfd7ac02afdfd1fdee527d02de39b049285`
+- Size: 7040 bytes
+- Lines: 276
+- Source hash: `df9c51f3a197f03cf8660cd6d5a449f6cd65482b3dd988252d60cbf8cdde3dfc`
 
 ## What This File Does
 
@@ -35,6 +35,7 @@ None detected.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 27 | `submitRequest` | Action helper | top-level | no | none | `Request` | Runs the submitrequest workflow for callers. |
 | 50 | `mockAdmin` | Function | top-level | no | none | `{ admin: { auth: { getUser: import("vitest").Mock<() => Promise<{ data: { user: { email: string; id: string; }; }; error: null; }>>; }; f...` | Implements the mockadmin helper. |
+| 78 | `mockSuccessfulSubmitAdmin` | Action helper | top-level | no | `{ rpcResult = { data: [ { activation_reviews_completed: 0, activation_reviews...` | `{ admin: { auth: { getUser: import("vitest").Mock<() => Promise<{ data: { user: { email: string; id: string; }; }; error: null; }>>; }; f...` | Runs the mocksuccessfulsubmitadmin workflow for callers. |
 
 ## Types
 

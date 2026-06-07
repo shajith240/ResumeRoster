@@ -70,13 +70,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  // Keep the layout dynamic so middleware-generated CSP nonces are available
+  // to Next-managed scripts. The manual theme bootstrap is allowed by hash.
+  await headers();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <script
-          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
         />
         <div className="app-root">{children}</div>

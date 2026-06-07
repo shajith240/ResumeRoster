@@ -19,26 +19,26 @@ describe("onboarding validation", () => {
 		expect(isOnboardingPersonaId("hr")).toBe(false);
 	});
 
-	it("maps goals to existing community roles", () => {
+	it("keeps onboarding goals on a single community member role", () => {
 		expect(getCommunityRoleForOnboardingGoal("get_feedback")).toBe("candidate");
 		expect(getCommunityRoleForOnboardingGoal("review_resumes")).toBe(
-			"reviewer",
+			"candidate",
 		);
-		expect(getCommunityRoleForOnboardingGoal("both")).toBe("both");
+		expect(getCommunityRoleForOnboardingGoal("both")).toBe("candidate");
 	});
 
-	it("maps personas to reviewer types only when reviewing is part of the goal", () => {
+	it("does not create reviewer identity from onboarding personas", () => {
 		expect(getReviewerTypeForOnboarding("get_feedback", "recruiter_hr")).toBe(
 			null,
 		);
 		expect(getReviewerTypeForOnboarding("review_resumes", "recruiter_hr")).toBe(
-			"recruiter",
+			null,
 		);
 		expect(getReviewerTypeForOnboarding("both", "product_manager")).toBe(
-			"product_manager",
+			null,
 		);
 		expect(getReviewerTypeForOnboarding("review_resumes", "job_seeker")).toBe(
-			"other",
+			null,
 		);
 	});
 

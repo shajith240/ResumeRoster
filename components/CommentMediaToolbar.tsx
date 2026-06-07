@@ -20,6 +20,7 @@ type CommentMediaToolbarProps = {
 	onAttachmentChange: (attachment: CommentAttachmentOption | null) => void;
 	onFormatChange: (format: CommentContentFormat) => void;
 	onRequireLogin: () => void;
+	showFormat?: boolean;
 };
 
 async function getAccessToken() {
@@ -41,6 +42,7 @@ export default function CommentMediaToolbar({
 	onAttachmentChange,
 	onFormatChange,
 	onRequireLogin,
+	showFormat = true,
 }: CommentMediaToolbarProps) {
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const [uploadingImage, setUploadingImage] = useState(false);
@@ -116,20 +118,22 @@ export default function CommentMediaToolbar({
 					tabIndex={-1}
 					type="file"
 				/>
-				<button
-					aria-pressed={contentFormat === "markdown"}
-					className={contentFormat === "markdown" ? "is-active" : ""}
-					disabled={disabled}
-					onClick={() =>
-						onFormatChange(contentFormat === "markdown" ? "plain" : "markdown")
-					}
-					title={
-						contentFormat === "markdown" ? "Markdown on" : "Markdown off"
-					}
-					type="button"
-				>
-					<Type size={16} strokeWidth={2} aria-hidden="true" />
-				</button>
+				{showFormat ? (
+					<button
+						aria-pressed={contentFormat === "markdown"}
+						className={contentFormat === "markdown" ? "is-active" : ""}
+						disabled={disabled}
+						onClick={() =>
+							onFormatChange(contentFormat === "markdown" ? "plain" : "markdown")
+						}
+						title={
+							contentFormat === "markdown" ? "Markdown on" : "Markdown off"
+						}
+						type="button"
+					>
+						<Type size={16} strokeWidth={2} aria-hidden="true" />
+					</button>
+				) : null}
 			</div>
 
 			{attachment ? (

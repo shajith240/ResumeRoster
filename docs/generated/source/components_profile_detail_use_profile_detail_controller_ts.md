@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/use-profile-detail-controller.ts`
 - Kind: React component
-- Size: 18601 bytes
-- Lines: 695
-- Source hash: `d1685d4e8fb400386afecceccd60d0e2f588bbc94024d51aba1aad42f4cf6056`
+- Size: 11451 bytes
+- Lines: 430
+- Source hash: `0e54fd2c76761d19f98a21d27c4c027333b491774a2df04ecc741c8f2e62e7dd`
 
 ## What This File Does
 
@@ -30,7 +30,6 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/lib/avatar-validation`
 - `@/lib/profile-validation`
 - `@/lib/report-validation`
-- `@/lib/reviewer-validation`
 - `@/lib/session-lock`
 - `@/lib/supabase/client`
 - `@/lib/supabase/types`
@@ -42,7 +41,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 52 | `useProfileDetailController` | React hook | top-level | yes | `profileId` | `{ about: string; applyForTrustedReviewer: () => Promise<void>; avatarPreview: string; college: string; collegeLocation: string; community...` | Provides reusable useprofiledetailcontroller state and side effects. |
+| 43 | `useProfileDetailController` | React hook | top-level | yes | `profileId` | `{ about: string; avatarPreview: string; college: string; collegeLocation: string; currentPosition: string; editOpen: boolean; fullName: s...` | Provides reusable useprofiledetailcontroller state and side effects. |
 
 ## Types
 

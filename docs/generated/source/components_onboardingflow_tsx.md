@@ -4,9 +4,9 @@
 
 - Source path: `components/OnboardingFlow.tsx`
 - Kind: React component
-- Size: 8274 bytes
-- Lines: 326
-- Source hash: `f200601f0b0d072c7d045f934de2c459f6317da9b9754e971ca5e7b2b5ad4bcd`
+- Size: 8042 bytes
+- Lines: 322
+- Source hash: `119cf0af563eb689bdb291482b084772be4fc9c2f681fc39bc7d2c77a372ce65`
 
 ## What This File Does
 
@@ -38,9 +38,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 55 | `isOnboardingMigrationError` | Function | top-level | no | `error` | `boolean` | Implements the isonboardingmigrationerror helper. |
-| 61 | `OnboardingChoiceCard` | React component | top-level | no | `{ children, description, icon: Icon, isSelected, label, onSelect, }` | `import("react").JSX.Element` | Renders the OnboardingChoiceCard UI component. |
-| 109 | `OnboardingFlow` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the OnboardingFlow UI component. |
+| 54 | `isOnboardingMigrationError` | Function | top-level | no | `error` | `boolean` | Implements the isonboardingmigrationerror helper. |
+| 60 | `OnboardingChoiceCard` | React component | top-level | no | `{ children, description, icon: Icon, isSelected, label, onSelect, }` | `import("react").JSX.Element` | Renders the OnboardingChoiceCard UI component. |
+| 108 | `OnboardingFlow` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the OnboardingFlow UI component. |
 
 ## Types
 

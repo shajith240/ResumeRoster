@@ -118,22 +118,30 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						deleteSchemaReady={controller.deleteSchemaReady}
 						deletingReviewId={controller.deletingReviewId}
 						dislikedReviewIds={controller.dislikedReviewIds}
+						guidedIssue={controller.guidedIssue}
+						guidedIssueType={controller.guidedIssueType}
+						guidedSuggestion={controller.guidedSuggestion}
 						isClosed={controller.isClosed}
 						isOwner={controller.isOwner}
+						isWaiting={controller.isWaiting}
 						likedReviewIds={controller.likedReviewIds}
 						mediaSchemaReady={controller.mediaSchemaReady}
 						message={controller.message}
+						needsGuidedReviewCredit={controller.needsGuidedReviewCredit}
 						onCancelReply={() => {
 							controller.setReplyingToId(null);
 							controller.setReplyContent("");
 							controller.setReplyContentFormat("plain");
 							controller.setReplyAttachment(null);
 						}}
-						onContentChange={controller.setContent}
-						onContentFormatChange={controller.setContentFormat}
 						onDeleteReviewRequest={(targetReview) => {
 							void controller.requestDeleteReview(targetReview);
 						}}
+						onContentChange={controller.setContent}
+						onContentFormatChange={controller.setContentFormat}
+						onGuidedIssueChange={controller.setGuidedIssue}
+						onGuidedIssueTypeChange={controller.setGuidedIssueType}
+						onGuidedSuggestionChange={controller.setGuidedSuggestion}
 						onOpenReportDialog={controller.openReportDialog}
 						onReactToReview={(targetReview, reaction) => {
 							void controller.reactToReview(targetReview, reaction);

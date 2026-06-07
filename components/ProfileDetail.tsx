@@ -8,7 +8,6 @@ import {
 	GraduationCap,
 	MapPin,
 	Pencil,
-	ShieldCheck,
 } from "lucide-react";
 import LintPointsFlame from "@/components/LintPointsFlame";
 import { Button } from "@/components/ui/button";
@@ -25,7 +24,6 @@ import { REPORT_DETAILS_MAX_LENGTH, REPORT_REASON_OPTIONS } from "@/lib/report-v
 import styles from "./ProfileDetail.module.css";
 import { SUPABASE_MIGRATION_MESSAGE, VERIFIED_TICK_SRC } from "./profile-detail/constants";
 import { ProfileEditDialog } from "./profile-detail/edit-dialog";
-import { ReviewerProfileDialog, TrustApplicationDialog } from "./profile-detail/reviewer-dialogs";
 import { ActivityRow, ReviewRow } from "./profile-detail/rows";
 import type { ProfileDetailProps } from "./profile-detail/types";
 import { useProfileDetailController } from "./profile-detail/use-profile-detail-controller";
@@ -34,11 +32,9 @@ import { formatDate } from "./profile-detail/utils";
 export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	const {
 		about,
-		applyForTrustedReviewer,
 		avatarPreview,
 		college,
 		collegeLocation,
-		communityRole,
 		currentPosition,
 		editOpen,
 		fullName,
@@ -54,34 +50,19 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		profileReportSchemaReady,
 		profileReportSubmitting,
 		profileView,
-		reviewerApplicationNote,
-		reviewerApplying,
-		reviewerBio,
-		reviewerEditOpen,
-		reviewerHeadline,
-		reviewerProofUrl,
-		reviewerType,
 		reviews,
 		saveMessage,
 		saveProfile,
-		saveReviewerProfile,
 		saving,
 		setAbout,
 		setCollege,
 		setCollegeLocation,
-		setCommunityRole,
 		setCurrentPosition,
 		setEditOpen,
 		setFullName,
 		setProfileReportDetails,
 		setProfileReportOpen,
 		setProfileReportReason,
-		setReviewerApplicationNote,
-		setReviewerBio,
-		setReviewerEditOpen,
-		setReviewerHeadline,
-		setReviewerProofUrl,
-		setReviewerType,
 		setSkillsInput,
 		setTagline,
 		setUsername,
@@ -129,7 +110,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 			<section className={styles.shell}>
 				<div className={styles.emptyState}>
 					<h1>Profile not found</h1>
-					<p>This reviewer does not have public reputation yet.</p>
+					<p>This community member does not have public activity yet.</p>
 					<Link className="btn-primary" href="/leaderboard">
 						View leaderboard
 					</Link>
@@ -265,106 +246,11 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 				</header>
 
 				<div className={styles.profileGrid}>
-					{profileView.reviewerVisible ? (
-						<section className={styles.reviewerPanel}>
-							<div className={styles.panelHeader}>
-								<div>
-									<h2>Reviewer Profile</h2>
-									<p>{profileView.reviewerHeadline}</p>
-								</div>
-								<div className={styles.reviewerPanelActions}>
-									<span
-										className={
-											profileView.reviewerStatus === "verified"
-												? styles.trustedReviewerBadge
-												: styles.selfDeclaredBadge
-										}
-									>
-										{profileView.reviewerStatus !== "verified" ? (
-											<ShieldCheck aria-hidden="true" />
-										) : null}
-										<span>{profileView.reviewerLabel}</span>
-									</span>
-									{isOwnProfile ? (
-										<ReviewerProfileDialog
-											buttonLabel="Edit reviewer profile"
-											communityRole={communityRole}
-											onCommunityRoleChange={setCommunityRole}
-											onOpenChange={setReviewerEditOpen}
-											onReviewerBioChange={setReviewerBio}
-											onReviewerHeadlineChange={setReviewerHeadline}
-											onReviewerTypeChange={setReviewerType}
-											onSave={saveReviewerProfile}
-											open={reviewerEditOpen}
-											reviewerBio={reviewerBio}
-											reviewerHeadline={reviewerHeadline}
-											reviewerType={reviewerType}
-											saving={saving}
-										/>
-									) : null}
-									{isOwnProfile && profileView.reviewerStatus !== "verified" ? (
-										<TrustApplicationDialog
-											onApply={applyForTrustedReviewer}
-											onNoteChange={setReviewerApplicationNote}
-											onProofUrlChange={setReviewerProofUrl}
-											proofUrl={reviewerProofUrl}
-											applicationNote={reviewerApplicationNote}
-											applying={reviewerApplying}
-											reviewerVerificationStatus={
-												profile.reviewer_verification_status
-											}
-										/>
-									) : null}
-								</div>
-							</div>
-							<p>{profileView.reviewerBio}</p>
-						</section>
-					) : null}
-
-					{!profileView.reviewerVisible && isOwnProfile ? (
-						<section className={styles.reviewerPanel}>
-							<div className={styles.panelHeader}>
-								<div>
-									<h2>Reviewer Profile</h2>
-									<p>
-										Add reviewer identity when you want to review resumes as a
-										recruiter, hiring manager, engineer, coach, or other reviewer.
-									</p>
-								</div>
-								<div className={styles.reviewerPanelActions}>
-									<span className={styles.selfDeclaredBadge}>
-										<ShieldCheck aria-hidden="true" />
-										Not set
-									</span>
-									<ReviewerProfileDialog
-										buttonLabel="Set reviewer profile"
-										communityRole={communityRole}
-										onCommunityRoleChange={setCommunityRole}
-										onOpenChange={setReviewerEditOpen}
-										onReviewerBioChange={setReviewerBio}
-										onReviewerHeadlineChange={setReviewerHeadline}
-										onReviewerTypeChange={setReviewerType}
-										onSave={saveReviewerProfile}
-										open={reviewerEditOpen}
-										reviewerBio={reviewerBio}
-										reviewerHeadline={reviewerHeadline}
-										reviewerType={reviewerType}
-										saving={saving}
-									/>
-								</div>
-							</div>
-							<p>
-								This only changes how your profile introduces you. Review access
-								remains open to every signed-in user.
-							</p>
-						</section>
-					) : null}
-
 					<section className={styles.aboutPanel}>
 						<h2>About Me</h2>
 						<p>
 							{profile.about ||
-								"Resume reviewer focused on practical feedback, sharper proof, and cleaner first impressions."}
+								"Community member focused on practical feedback, sharper proof, and cleaner first impressions."}
 						</p>
 					</section>
 
@@ -424,7 +310,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 						<DialogTitle>Report profile</DialogTitle>
 						<DialogDescription>
 							Send this profile to the moderation queue. Reports are private and
-							help keep reviewer identities trustworthy.
+							help keep community profiles trustworthy.
 						</DialogDescription>
 					</DialogHeader>
 					<form className="report-form" onSubmit={submitProfileReport}>

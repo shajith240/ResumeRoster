@@ -4,9 +4,9 @@
 
 - Source path: `components/landing/content.ts`
 - Kind: React component
-- Size: 6958 bytes
+- Size: 6986 bytes
 - Lines: 235
-- Source hash: `8e97c68e2462a06308074ed820486e52ebb428568cd25f86e7e02b12c447358f`
+- Source hash: `fbe0e3acd573180cbdb339cce7768e5be0231935fa4d07fa359f39257ae6b50a`
 
 ## What This File Does
 

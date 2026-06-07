@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/resume-display.test.ts`
 - Kind: Unit test
-- Size: 2143 bytes
-- Lines: 71
-- Source hash: `3901a7d909aeaf58e88f01cb89a39ba146355519483de916150243b8151da682`
+- Size: 2242 bytes
+- Lines: 74
+- Source hash: `5478ee39a280a4e5fe62c7dcb06c138c75aedf4f42dfc6a5a87fa4f8be98e042`
 
 ## What This File Does
 

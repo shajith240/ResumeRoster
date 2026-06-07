@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/reviewer-application-route.test.ts`
 - Kind: Unit test
-- Size: 4906 bytes
-- Lines: 191
-- Source hash: `6875d2067941bcf963a8d21bbe524f8edd454a6facc8b628343704602fd1cb69`
+- Size: 520 bytes
+- Lines: 15
+- Source hash: `d8f50097ba73fbb5822385e8841e7ce9fd54c14e5b56dedf08ecd4c343e2ddfc`
 
 ## What This File Does
 
@@ -23,16 +23,11 @@ None detected.
 ## Imports
 
 - `@/app/api/reviewer-application/route`
-- `@/lib/server-auth`
-- `@/lib/server/rate-limit`
 - `vitest`
 
 ## Functions And Components
 
-| Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 20 | `jsonPost` | Function | top-level | no | `body` | `Request` | Implements the jsonpost helper. |
-| 28 | `mockSignedInUser` | Function | top-level | no | `rpc` | `void` | Implements the mocksignedinuser helper. |
+No stable named functions or components detected.
 
 ## Types
 

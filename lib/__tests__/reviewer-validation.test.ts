@@ -85,7 +85,7 @@ describe("reviewer validation", () => {
 				reviewer_type: "engineer",
 				target_role: null,
 			}),
-		).toBe("Reviewer");
+		).toBe("Job seeker");
 	});
 
 	it("validates proof links for reviewer applications", () => {
@@ -121,6 +121,9 @@ describe("reviewer validation", () => {
 				reviewerType: "career_coach",
 			}),
 		).toBe("");
-		expect(canShowReviewerProfile("reviewer", "engineer")).toBe(true);
+		expect(canShowReviewerProfile("reviewer", "engineer")).toBe(false);
+		expect(canShowReviewerProfile("reviewer", "engineer", "verified")).toBe(
+			true,
+		);
 	});
 });

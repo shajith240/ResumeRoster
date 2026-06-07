@@ -10,7 +10,13 @@ import type { AuthorProfile } from "./types";
 import { getAttachmentUrl } from "./utils";
 
 export function ReviewerTrustChip({ profile }: { profile?: AuthorProfile }) {
-	if (!canShowReviewerProfile(profile?.community_role, profile?.reviewer_type)) {
+	if (
+		!canShowReviewerProfile(
+			profile?.community_role,
+			profile?.reviewer_type,
+			profile?.reviewer_verification_status,
+		)
+	) {
 		return null;
 	}
 

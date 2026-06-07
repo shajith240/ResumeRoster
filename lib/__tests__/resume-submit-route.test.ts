@@ -49,6 +49,7 @@ function submitRequest() {
 
 function mockAdmin() {
 	const from = vi.fn();
+	const rpc = vi.fn();
 	const upload = vi.fn();
 	const admin = {
 		auth: {
@@ -63,6 +64,7 @@ function mockAdmin() {
 			})),
 		},
 		from,
+		rpc,
 		storage: {
 			from: vi.fn(() => ({ upload })),
 		},
@@ -70,7 +72,87 @@ function mockAdmin() {
 
 	vi.mocked(createClient).mockReturnValue(admin as never);
 
-	return { admin, from, upload };
+	return { admin, from, rpc, upload };
+}
+
+function mockSuccessfulSubmitAdmin({
+	rpcResult = {
+		data: [
+			{
+				activation_reviews_completed: 0,
+				activation_reviews_required: 2,
+				id: "resume-queued",
+				review_queue_status: "waiting",
+			},
+		],
+		error: null,
+	},
+}: {
+	rpcResult?: unknown;
+} = {}) {
+	const profileSelectResults = [
+		{ data: { id: USER_ID }, error: null },
+		{
+			data: {
+				full_name: "Candidate User",
+				username: "candidate-user",
+			},
+			error: null,
+		},
+	];
+	const profileUpdateEq = vi.fn(async () => ({ error: null }));
+	const resumeSingle = vi.fn(async () => ({
+		data: { id: "resume-fallback" },
+		error: null,
+	}));
+	const resumeInsert = vi.fn(() => ({
+		select: vi.fn(() => ({
+			single: resumeSingle,
+		})),
+	}));
+	const from = vi.fn((table: string) => {
+		if (table === "profiles") {
+			return {
+				insert: vi.fn(async () => ({ error: null })),
+				select: vi.fn(() => ({
+					eq: vi.fn(() => ({
+						maybeSingle: vi.fn(async () => profileSelectResults.shift()),
+					})),
+				})),
+				update: vi.fn(() => ({
+					eq: profileUpdateEq,
+				})),
+			};
+		}
+
+		return {
+			insert: resumeInsert,
+		};
+	});
+	const rpc = vi.fn(async () => rpcResult);
+	const upload = vi.fn(async () => ({ error: null }));
+	const admin = {
+		auth: {
+			getUser: vi.fn(async () => ({
+				data: {
+					user: {
+						email: "candidate@example.com",
+						id: USER_ID,
+					},
+				},
+				error: null,
+			})),
+		},
+		from,
+		rpc,
+		storage: {
+			from: vi.fn(() => ({ upload })),
+		},
+	};
+
+	vi.mocked(createClient).mockReturnValue(admin as never);
+
+	return { admin, from, profileUpdateEq, resumeInsert, rpc, upload };
 }
 
 describe("resume submit route rate limits", () => {
@@ -97,7 +179,7 @@ describe("resume submit route rate limits", () => {
 	});
 
 	it("stops over-quota resume submits before profile writes, scanning, or redaction", async () => {
-		const { admin, from, upload } = mockAdmin();
+		const { admin, from, rpc, upload } = mockAdmin();
 		vi.mocked(enforceApiRateLimit).mockResolvedValue(
 			Response.json(
 				{ message: "Too many resume uploads. Try again later." },
@@ -114,11 +196,80 @@ describe("resume submit route rate limits", () => {
 			"resumeSubmit",
 		);
 		expect(from).not.toHaveBeenCalled();
+		expect(rpc).not.toHaveBeenCalled();
 		expect(enforceUploadSecurity).not.toHaveBeenCalled();
 		expect(redactResumePdf).not.toHaveBeenCalled();
 		expect(upload).not.toHaveBeenCalled();
 		await expect(response.json()).resolves.toEqual({
 			message: "Too many resume uploads. Try again later.",
+		});
+	});
+
+	it("creates new resumes through the queue RPC and returns activation progress", async () => {
+		const { rpc, upload } = mockSuccessfulSubmitAdmin();
+
+		const response = await POST(submitRequest());
+
+		expect(response.status).toBe(200);
+		expect(upload).toHaveBeenCalledWith(
+			expect.stringMatching(new RegExp(`^${USER_ID}/\\d+-resume\\.pdf$`)),
+			expect.any(Uint8Array),
+			expect.objectContaining({
+				contentType: "application/pdf",
+				upsert: false,
+			}),
+		);
+		expect(rpc).toHaveBeenCalledWith("create_resume_with_review_queue", {
+			resume_file_path: expect.stringMatching(
+				new RegExp(`^${USER_ID}/\\d+-resume\\.pdf$`),
+			),
+			resume_is_anonymous: true,
+			resume_job_description:
+				"We need a data analyst with SQL and dashboard experience.",
+			resume_post_description: "Please review the analytics story.",
+			resume_privacy_mode: "anonymous",
+			resume_title: "Data resume",
+			target_user_id: USER_ID,
+		});
+		await expect(response.json()).resolves.toMatchObject({
+			activationReviewsCompleted: 0,
+			activationReviewsRequired: 2,
+			id: "resume-queued",
+			reviewQueueStatus: "waiting",
+		});
+	});
+
+	it("falls back to a legacy active insert before the queue migration exists", async () => {
+		const { resumeInsert, rpc } = mockSuccessfulSubmitAdmin({
+			rpcResult: {
+				data: null,
+				error: {
+					message:
+						"Could not find the function public.create_resume_with_review_queue",
+				},
+			},
+		});
+
+		const response = await POST(submitRequest());
+
+		expect(response.status).toBe(200);
+		expect(rpc).toHaveBeenCalledOnce();
+		expect(resumeInsert).toHaveBeenCalledWith(
+			expect.objectContaining({
+				is_anonymous: true,
+				job_description:
+					"We need a data analyst with SQL and dashboard experience.",
+				post_description: "Please review the analytics story.",
+				privacy_mode: "anonymous",
+				title: "Data resume",
+				user_id: USER_ID,
+			}),
+		);
+		await expect(response.json()).resolves.toMatchObject({
+			activationReviewsCompleted: 0,
+			activationReviewsRequired: 0,
+			id: "resume-fallback",
+			reviewQueueStatus: "active",
 		});
 	});
 });

@@ -62,7 +62,7 @@ export async function loadProfileDetailData(
 		if (!matchedProfile?.id) {
 			return {
 				activeUser,
-				errorMessage: `We could not find a reviewer profile for @${profileToken}.`,
+				errorMessage: `We could not find a profile for @${profileToken}.`,
 				loadedProfile: null,
 				loadedResumes: [],
 				loadedReviews: [],
@@ -131,7 +131,7 @@ export async function loadProfileDetailData(
 			activeUser,
 			errorMessage: isUuid(profileToken)
 				? "We could not find a profile row for this user yet."
-				: `We could not find a reviewer profile for @${profileToken}.`,
+				: `We could not find a profile for @${profileToken}.`,
 			loadedProfile: null,
 			loadedResumes: [],
 			loadedReviews: [],

@@ -98,8 +98,8 @@ export default function TermsOfServicePage() {
 				<Section title="4. What Linted Provides">
 					<p>
 						Linted lets users upload resumes, choose privacy modes, request or
-						provide feedback, post reviews and replies, build public reviewer
-						profiles, earn helpful votes called lint points, and appear on
+						provide feedback, post reviews and replies, build public profile
+						activity, earn helpful votes called lint points, and appear on
 						leaderboards or directories based on community activity.
 					</p>
 					<p>
@@ -157,7 +157,7 @@ export default function TermsOfServicePage() {
 				<Section title="7. Reviews, Lint Points, and Leaderboards">
 					<p>
 						Linted uses community feedback signals, including helpful votes, lint
-						points, public review activity, reviewer profiles, and leaderboards.
+						points, public review activity, contribution history, and leaderboards.
 						Lint points represent helpful votes from other users; they are not
 						money, property, rewards, or transferable value.
 					</p>
@@ -177,7 +177,7 @@ export default function TermsOfServicePage() {
 						<li>post hateful, sexual, exploitative, violent, or illegal content;</li>
 						<li>upload malware, phishing content, spam, or deceptive material;</li>
 						<li>impersonate another person, company, school, or recruiter;</li>
-						<li>post fake reviews, fake credentials, or misleading reviewer claims;</li>
+						<li>post fake reviews, fake credentials, or misleading professional claims;</li>
 						<li>copy, scrape, or harvest user data without permission;</li>
 						<li>try to bypass security, rate limits, access controls, or moderation;</li>
 						<li>
@@ -203,11 +203,11 @@ export default function TermsOfServicePage() {
 					</p>
 				</Section>
 
-				<Section title="10. Reviewer Profiles and Trust Labels">
+				<Section title="10. Trust Labels">
 					<p>
-						Users may create reviewer profiles and describe their experience.
-						You must not make false claims about employment, recruiting status,
-						education, credentials, or professional qualifications.
+						Linted may show trust labels for limited legacy or admin-reviewed
+						signals. You must not make false claims about employment, recruiting
+						status, education, credentials, or professional qualifications.
 					</p>
 					<p>
 						A trust label or reviewer status means only that Linted has reviewed

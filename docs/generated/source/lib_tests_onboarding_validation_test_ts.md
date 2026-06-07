@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/onboarding-validation.test.ts`
 - Kind: Unit test
-- Size: 2725 bytes
+- Size: 2713 bytes
 - Lines: 84
-- Source hash: `aa861801ad697510430c38a8bed0bcfe2723072de676ab43769b1d8082b03e31`
+- Source hash: `6e4139241edacde6471fdc5ce178e3dbb6324f4afccbda15e26d57569b57e145`
 
 ## What This File Does
 

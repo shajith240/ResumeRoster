@@ -1,5 +1,6 @@
 type ResumeStatus = "open" | "roasted" | "closed";
 type ResumePrivacyMode = "public" | "contact_hidden" | "anonymous";
+type ResumeQueueStatus = "waiting" | "active";
 export type AppStatus = "online" | "focus" | "offline";
 export type ContentReportStatus =
   | "pending"
@@ -76,6 +77,9 @@ export type ResumeSummary = {
   is_anonymous: boolean;
   privacy_mode?: ResumePrivacyMode;
   status: ResumeStatus;
+  review_queue_status: ResumeQueueStatus;
+  activation_reviews_required: number;
+  activation_reviews_completed: number;
   roast_count: number;
   read_count: number;
   job_description: string | null;
@@ -92,8 +96,10 @@ export type Review = {
   content: string;
   attachment_id?: string | null;
   content_format?: CommentContentFormat;
+  guided_issue_type?: string | null;
   helpful_votes: number;
   dislike_count?: number;
+  is_guided_review?: boolean;
   reply_count?: number;
   is_deleted?: boolean;
   deleted_at?: string | null;
@@ -127,6 +133,7 @@ export type ReviewerProfileStats = {
   reviewer_headline?: string | null;
   reviewer_expertise?: string[] | null;
   reviewer_verification_status?: ReviewerVerificationStatus | null;
+  review_credit_balance?: number;
   roast_count: number;
   helpful_votes: number;
 };

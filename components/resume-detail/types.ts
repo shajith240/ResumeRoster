@@ -66,10 +66,23 @@ export type ThreadReviewControls = {
 
 export type ResumeRowWithDefaults = Omit<
 	ResumeSummary,
-	"read_count" | "job_description" | "post_description"
+	| "activation_reviews_completed"
+	| "activation_reviews_required"
+	| "job_description"
+	| "post_description"
+	| "read_count"
+	| "review_queue_status"
 > &
 	Partial<
-		Pick<ResumeSummary, "read_count" | "job_description" | "post_description">
+		Pick<
+			ResumeSummary,
+			| "activation_reviews_completed"
+			| "activation_reviews_required"
+			| "job_description"
+			| "post_description"
+			| "read_count"
+			| "review_queue_status"
+		>
 	>;
 
 export type ResumeQueryResult = {

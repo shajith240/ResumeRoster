@@ -42,7 +42,7 @@ export type ReviewPreview = {
 
 export const FEED_PREVIEW_SIGNED_URL_TTL_SECONDS = 60 * 20;
 export const RESUME_SELECT_WITH_CONTEXT =
-	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,job_description,post_description,created_at";
+	"id,user_id,title,file_path,is_anonymous,status,review_queue_status,activation_reviews_required,activation_reviews_completed,roast_count,read_count,job_description,post_description,created_at";
 export const RESUME_SELECT_WITH_READS =
 	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
 export const RESUME_SELECT_BASE =
@@ -90,6 +90,10 @@ export function getReviewSignal(resume: ResumeSummary): ReviewSignal {
 		return { className: "closed", label: "Closed" };
 	}
 
+	if (resume.review_queue_status === "waiting") {
+		return { className: "needs", label: "Waiting for reviews" };
+	}
+
 	if (resume.roast_count === 0) {
 		return { className: "needs", label: "Needs first review" };
 	}
@@ -102,6 +106,17 @@ export function getReviewSignal(resume: ResumeSummary): ReviewSignal {
 }
 
 export function getThreadPrompt(resume: ResumeSummary) {
+	if (resume.review_queue_status === "waiting") {
+		const remaining = Math.max(
+			resume.activation_reviews_required - resume.activation_reviews_completed,
+			0,
+		);
+
+		return remaining > 0
+			? `${remaining} guided ${remaining === 1 ? "review" : "reviews"} will activate this resume in the queue.`
+			: "This resume is ready to move into the active review queue.";
+	}
+
 	if (resume.roast_count > 0) {
 		const commentLabel =
 			resume.roast_count === 1
@@ -225,7 +240,7 @@ export function isReadCountFeatureError(error: { message?: string } | null) {
 export function isResumeContextFeatureError(
 	error: { message?: string } | null,
 ) {
-	return /job_description|post_description|read_count|schema cache|column/i.test(
+	return /activation_reviews_|job_description|post_description|read_count|review_queue_status|schema cache|column/i.test(
 		error?.message ?? "",
 	);
 }

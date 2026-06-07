@@ -79,7 +79,13 @@ function reviewerName(reviewer: LeaderboardReviewer) {
 function roleTag(reviewer: LeaderboardReviewer) {
 	if (reviewer.role_tag) return reviewer.role_tag;
 
-	if (canShowReviewerProfile(reviewer.community_role, reviewer.reviewer_type)) {
+	if (
+		canShowReviewerProfile(
+			reviewer.community_role,
+			reviewer.reviewer_type,
+			reviewer.reviewer_verification_status,
+		)
+	) {
 		return getReviewerDisplayLabel(reviewer);
 	}
 
@@ -383,7 +389,7 @@ export function StackedList({
 	onSearchQueryChange,
 	reviewers,
 	searchQuery = "",
-	searchPlaceholder = "Search reviewers, roles, top feedback...",
+	searchPlaceholder = "Search contributors, roles, top feedback...",
 	startRank = 1,
 }: StackedListProps) {
 	const [localQuery, setLocalQuery] = useState(searchQuery);
@@ -459,7 +465,7 @@ export function StackedList({
 						aria-hidden="true"
 						className="absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-[var(--text-tertiary)]"
 					/>
-					<span className="sr-only">Search reviewers</span>
+					<span className="sr-only">Search contributors</span>
 					<Input
 						autoComplete="off"
 						className="h-11 rounded-[var(--button-radius)] border-[var(--border-default)] bg-[var(--bg-elevated)] pl-10 pr-10 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"
@@ -484,7 +490,7 @@ export function StackedList({
 
 			<div className="hidden grid-cols-[64px_minmax(230px,1.15fr)_minmax(116px,0.45fr)_140px_minmax(180px,1fr)_120px] gap-4 border-b border-[var(--border-subtle)] px-5 py-3 text-xs font-medium uppercase tracking-[0.06em] text-[var(--text-tertiary)] max-[1320px]:grid-cols-[58px_minmax(220px,1.1fr)_136px_minmax(180px,1fr)_112px] max-[1320px]:[&_.role-head]:hidden max-[1080px]:grid-cols-[54px_minmax(220px,1fr)_132px_112px] max-[1080px]:[&_.top-review-head]:hidden md:grid">
 				<span>Rank</span>
-				<span>Reviewer</span>
+					<span>Contributor</span>
 				<span className="role-head">Role</span>
 				<span>Lint Points</span>
 				<span className="top-review-head">Top feedback</span>
@@ -524,7 +530,7 @@ export function StackedList({
 				{!directoryOpen ? (
 					<motion.button
 						animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-						aria-label="Open reviewer directory"
+						aria-label="Open community directory"
 						className="absolute bottom-4 left-4 right-4 z-30 flex h-[76px] items-center justify-between gap-4 overflow-hidden rounded-[18px] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 text-left shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors hover:bg-[var(--bg-surface)] will-change-transform max-[760px]:bottom-3 max-[760px]:left-3 max-[760px]:right-3"
 						exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.992 }}
 						initial={reducedMotion ? false : { opacity: 0, y: 8, scale: 0.992 }}
@@ -539,7 +545,7 @@ export function StackedList({
 							</div>
 							<div className="min-w-0">
 								<h3 className="m-0 truncate text-base font-medium leading-none text-[var(--text-primary)]">
-									Reviewer Directory
+									Community Directory
 								</h3>
 								<p className="mt-1 truncate text-xs font-normal text-[var(--text-secondary)]">
 									{directoryRankedReviewers.length} community members
@@ -552,7 +558,7 @@ export function StackedList({
 				) : (
 					<motion.section
 						animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-						aria-label="Reviewer directory"
+						aria-label="Community directory"
 						className="absolute inset-[10px] z-30 flex flex-col overflow-hidden rounded-[16px] border border-[var(--border-default)] bg-[var(--bg-elevated)] shadow-[0_18px_48px_rgba(0,0,0,0.22)] will-change-transform"
 						exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.99 }}
 						initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.985 }}
@@ -566,7 +572,7 @@ export function StackedList({
 								</div>
 								<div className="min-w-0">
 									<h3 className="m-0 truncate text-base font-medium leading-none text-[var(--text-primary)]">
-										Reviewer Directory
+									Community Directory
 									</h3>
 									<p className="mt-1 truncate text-xs font-normal text-[var(--text-secondary)]">
 										{directoryRankedReviewers.length} community members
@@ -575,7 +581,7 @@ export function StackedList({
 							</div>
 
 							<button
-								aria-label="Close reviewer directory"
+								aria-label="Close community directory"
 								className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] bg-[var(--bg-surface)] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
 								onClick={() => setDirectoryOpen(false)}
 								type="button"
@@ -590,7 +596,7 @@ export function StackedList({
 									aria-hidden="true"
 									className="absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-[var(--text-tertiary)]"
 								/>
-								<span className="sr-only">Search reviewer directory</span>
+								<span className="sr-only">Search community directory</span>
 								<Input
 									autoComplete="off"
 									className="h-11 rounded-[12px] border-[var(--border-default)] bg-[var(--bg-elevated)] pl-10 pr-4 text-sm font-normal text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus-visible:ring-[var(--ring)]"

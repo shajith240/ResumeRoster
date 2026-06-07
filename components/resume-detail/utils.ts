@@ -51,6 +51,12 @@ export function isCommentMediaFeatureError(error: { message?: string } | null) {
 	);
 }
 
+export function isGuidedReviewFeatureError(error: { message?: string } | null) {
+	return /guided_issue_type|is_guided_review|review_queue_status|activation_reviews_|review_credit_balance|schema cache|column/i.test(
+		error?.message ?? "",
+	);
+}
+
 export function isPermissionPolicyError(error: { message?: string } | null) {
 	return /row-level security|violates row-level|permission denied|policy|not authorized|not allowed/i.test(
 		error?.message ?? "",
@@ -58,7 +64,7 @@ export function isPermissionPolicyError(error: { message?: string } | null) {
 }
 
 export function isResumeContextFeatureError(error: { message?: string } | null) {
-	return /job_description|post_description|read_count|schema cache|column/i.test(
+	return /activation_reviews_|job_description|post_description|read_count|review_queue_status|schema cache|column/i.test(
 		error?.message ?? "",
 	);
 }
@@ -72,9 +78,12 @@ export function isAuthorProfileFeatureError(error: { message?: string } | null) 
 export function withResumeDefaults(resume: ResumeRowWithDefaults): ResumeSummary {
 	return {
 		...resume,
+		activation_reviews_completed: resume.activation_reviews_completed ?? 0,
+		activation_reviews_required: resume.activation_reviews_required ?? 0,
 		read_count: resume.read_count ?? 0,
 		job_description: resume.job_description ?? null,
 		post_description: resume.post_description ?? null,
+		review_queue_status: resume.review_queue_status ?? "active",
 	};
 }
 

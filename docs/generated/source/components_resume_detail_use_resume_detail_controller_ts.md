@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/use-resume-detail-controller.ts`
 - Kind: React component
-- Size: 19639 bytes
-- Lines: 786
-- Source hash: `c95afb8aed4f611de471a61fcfbbc6034eac1d426e9f4396c557ef3006102e73`
+- Size: 23970 bytes
+- Lines: 942
+- Source hash: `be1890a31771345d33f9bab456cff0e38176bc19389f827e29b53176ced65622`
 
 ## What This File Does
 
@@ -34,6 +34,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/lib/anonymous-profile`
 - `@/lib/auth-redirect`
 - `@/lib/comment-media-validation`
+- `@/lib/guided-review`
 - `@/lib/monitoring/capture-errors`
 - `@/lib/resume-thread`
 - `@/lib/supabase/client`
@@ -47,7 +48,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 44 | `useResumeDetailController` | React hook | top-level | yes | `resumeId` | `{ attachmentsById: Record<string, CommentAttachmentOption>; authorProfiles: Record<string, AuthorProfile>; collapsedReviewIds: Set<string...` | Provides reusable useresumedetailcontroller state and side effects. |
+| 50 | `useResumeDetailController` | React hook | top-level | yes | `resumeId` | `{ attachmentsById: Record<string, CommentAttachmentOption>; authorProfiles: Record<string, AuthorProfile>; collapsedReviewIds: Set<string...` | Provides reusable useresumedetailcontroller state and side effects. |
 
 ## Types
 

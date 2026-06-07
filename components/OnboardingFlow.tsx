@@ -27,7 +27,6 @@ import {
 	getCommunityRoleForOnboardingGoal,
 	getOnboardingDestination,
 	getOnboardingIssue,
-	getReviewerTypeForOnboarding,
 	isOnboardingGoalId,
 	isOnboardingPersonaId,
 	type OnboardingGoalId,
@@ -189,16 +188,13 @@ export default function OnboardingFlow() {
 			return;
 		}
 
-		const reviewerType = getReviewerTypeForOnboarding(selectedGoal, selectedPersona);
 		const communityRole = getCommunityRoleForOnboardingGoal(selectedGoal);
 
 		toast.success("Linted is personalized.", {
 			description:
 				communityRole === "candidate"
 					? "You can still review any open resume whenever you want."
-					: reviewerType
-						? "You can review any open resume and update your profile later."
-						: "You can review any open resume and update your profile later.",
+					: "You can review any open resume whenever you want.",
 		});
 		router.replace(getOnboardingDestination(selectedGoal));
 	}

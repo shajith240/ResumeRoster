@@ -395,8 +395,11 @@ export default function SubmitResumeForm() {
 		});
 
 		const result = (await response.json().catch(() => null)) as {
+			activationReviewsCompleted?: number;
+			activationReviewsRequired?: number;
 			id?: string;
 			message?: string;
+			reviewQueueStatus?: "active" | "waiting";
 		} | null;
 
 		setSubmitting(false);
@@ -413,7 +416,21 @@ export default function SubmitResumeForm() {
 		}
 
 		setSuccess(true);
-		toast.success("Resume posted.");
+		if (result.reviewQueueStatus === "waiting") {
+			const remaining = Math.max(
+				(result.activationReviewsRequired ?? 2) -
+					(result.activationReviewsCompleted ?? 0),
+				0,
+			);
+			toast.success("Resume posted to the queue.", {
+				description:
+					remaining > 0
+						? `Complete ${remaining} guided ${remaining === 1 ? "review" : "reviews"} to activate it faster.`
+						: "Your resume is ready for community review.",
+			});
+		} else {
+			toast.success("Resume posted.");
+		}
 		window.setTimeout(() => {
 			const resumeRoute = `/resume/${result.id}`;
 			announceRouteTransition(resumeRoute);

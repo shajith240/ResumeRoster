@@ -4,9 +4,9 @@
 
 - Source path: `components/CommentMediaToolbar.tsx`
 - Kind: React component
-- Size: 4097 bytes
-- Lines: 154
-- Source hash: `f61e48fb99b1d231508ad0b2a28eb30eb3394df132e472272e1fa0c023c3c930`
+- Size: 4188 bytes
+- Lines: 158
+- Source hash: `f1a3bb93e339a16cacc6ce45248f26ecc08255f793483919e54f9ca4bcdb763b`
 
 ## What This File Does
 
@@ -34,9 +34,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 25 | `getAccessToken` | Function async | top-level | no | none | `Promise<string>` | Implements the getaccesstoken helper. |
-| 32 | `readErrorMessage` | Function async | top-level | no | `response`, `fallback` | `Promise<string>` | Implements the readerrormessage helper. |
-| 37 | `CommentMediaToolbar` | React component | top-level | yes | `{ attachment, contentFormat, disabled = false, onAttachmentChange, onFormatCh...` | `import("react").JSX.Element` | Renders the CommentMediaToolbar UI component. |
+| 26 | `getAccessToken` | Function async | top-level | no | none | `Promise<string>` | Implements the getaccesstoken helper. |
+| 33 | `readErrorMessage` | Function async | top-level | no | `response`, `fallback` | `Promise<string>` | Implements the readerrormessage helper. |
+| 38 | `CommentMediaToolbar` | React component | top-level | yes | `{ attachment, contentFormat, disabled = false, onAttachmentChange, onFormatCh...` | `import("react").JSX.Element` | Renders the CommentMediaToolbar UI component. |
 
 ## Types
 

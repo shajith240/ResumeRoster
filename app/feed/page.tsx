@@ -46,11 +46,11 @@ const welcomeContent: Record<
 	},
 	reviewer: {
 		body:
-			"Start with resumes that have the fewest reviews, then finish your reviewer profile when you are ready.",
+			"Start with resumes that have the fewest reviews. Guided prompts will help you leave useful feedback.",
 		primaryHref: "/feed?sort=needs",
 		primaryLabel: "Find resumes to review",
-		secondaryHref: "/profile/me",
-		secondaryLabel: "Update profile",
+		secondaryHref: "/submit",
+		secondaryLabel: "Post your resume",
 		title: "Help the queue move",
 	},
 };

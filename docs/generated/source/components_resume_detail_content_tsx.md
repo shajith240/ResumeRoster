@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/content.tsx`
 - Kind: React component
-- Size: 4190 bytes
-- Lines: 188
-- Source hash: `ff6165d89bd3ca72e5000ad36c132a98e75e01e05a77f936f0f03f6bd93a3746`
+- Size: 4245 bytes
+- Lines: 194
+- Source hash: `53a7948fd7da9476b521d0c0a1266821ebbc04c24cf091388a8bbe32123f9da7`
 
 ## What This File Does
 
@@ -38,10 +38,10 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 12 | `ReviewerTrustChip` | React component | top-level | yes | `{ profile }` | `import("react").JSX.Element \| null` | Renders the ReviewerTrustChip UI component. |
-| 32 | `ResumeContextCard` | React component | top-level | yes | `{ eyebrow, title, content, emptyMessage, }` | `import("react").JSX.Element` | Renders the ResumeContextCard UI component. |
-| 56 | `renderInlineMarkdown` | Function | top-level | yes | `text`, `keyPrefix` | `ReactNode[]` | Implements the renderinlinemarkdown helper. |
-| 98 | `FormattedReviewContent` | React component | top-level | yes | `{ content, format, isDeleted, }` | `import("react").JSX.Element` | Renders the FormattedReviewContent UI component. |
-| 174 | `ReviewAttachment` | React component | top-level | yes | `{ attachment, }` | `import("react").JSX.Element \| null` | Renders the ReviewAttachment UI component. |
+| 38 | `ResumeContextCard` | React component | top-level | yes | `{ eyebrow, title, content, emptyMessage, }` | `import("react").JSX.Element` | Renders the ResumeContextCard UI component. |
+| 62 | `renderInlineMarkdown` | Function | top-level | yes | `text`, `keyPrefix` | `ReactNode[]` | Implements the renderinlinemarkdown helper. |
+| 104 | `FormattedReviewContent` | React component | top-level | yes | `{ content, format, isDeleted, }` | `import("react").JSX.Element` | Renders the FormattedReviewContent UI component. |
+| 180 | `ReviewAttachment` | React component | top-level | yes | `{ attachment, }` | `import("react").JSX.Element \| null` | Renders the ReviewAttachment UI component. |
 
 ## Types
 

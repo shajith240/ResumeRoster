@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/types.ts`
 - Kind: React component
-- Size: 2357 bytes
-- Lines: 79
-- Source hash: `850ab9433445ad9c781efeaf27254731f3f7f053c46616f29220d3473641e9c6`
+- Size: 2566 bytes
+- Lines: 92
+- Source hash: `f0fcf0a70eb3d77fddcea4ad6b1ffe49bde3e4ed31bfdcbb0d433604433efedf`
 
 ## What This File Does
 
@@ -47,7 +47,7 @@ No stable named functions or components detected.
 | 21 | `AuthorProfile` | type |
 | 32 | `ThreadReviewControls` | type |
 | 67 | `ResumeRowWithDefaults` | type |
-| 75 | `ResumeQueryResult` | type |
+| 88 | `ResumeQueryResult` | type |
 
 ## Related Tests
 

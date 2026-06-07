@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/utils.ts`
 - Kind: React component
-- Size: 2879 bytes
-- Lines: 84
-- Source hash: `e6235e87cff3fd2b53d9319f1c2747a9b03f0d80f8c2d8a50d70ec09a54f47c6`
+- Size: 3360 bytes
+- Lines: 93
+- Source hash: `52191a00f2e57d2df954cc72f67a931a9a62e1b0711d9b47c227e2067a17df2f`
 
 ## What This File Does
 
@@ -25,6 +25,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `isAuthorProfileFeatureError`
 - `isCommentMediaFeatureError`
 - `isDeleteFeatureError`
+- `isGuidedReviewFeatureError`
 - `isMissingColumnError`
 - `isPermissionPolicyError`
 - `isReadCountFeatureError`
@@ -51,11 +52,12 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 | 36 | `isDeleteFeatureError` | Action helper | top-level | yes | `error` | `boolean` | Runs the isdeletefeatureerror workflow for callers. |
 | 42 | `isReportFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isreportfeatureerror helper. |
 | 48 | `isCommentMediaFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the iscommentmediafeatureerror helper. |
-| 54 | `isPermissionPolicyError` | Function | top-level | yes | `error` | `boolean` | Implements the ispermissionpolicyerror helper. |
-| 60 | `isResumeContextFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isresumecontextfeatureerror helper. |
-| 66 | `isAuthorProfileFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isauthorprofilefeatureerror helper. |
-| 72 | `withResumeDefaults` | Function | top-level | yes | `resume` | `ResumeSummary` | Implements the withresumedefaults helper. |
-| 81 | `getAttachmentUrl` | Function | top-level | yes | `attachment` | `string` | Implements the getattachmenturl helper. |
+| 54 | `isGuidedReviewFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isguidedreviewfeatureerror helper. |
+| 60 | `isPermissionPolicyError` | Function | top-level | yes | `error` | `boolean` | Implements the ispermissionpolicyerror helper. |
+| 66 | `isResumeContextFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isresumecontextfeatureerror helper. |
+| 72 | `isAuthorProfileFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isauthorprofilefeatureerror helper. |
+| 78 | `withResumeDefaults` | Function | top-level | yes | `resume` | `ResumeSummary` | Implements the withresumedefaults helper. |
+| 90 | `getAttachmentUrl` | Function | top-level | yes | `attachment` | `string` | Implements the getattachmenturl helper. |
 
 ## Types
 

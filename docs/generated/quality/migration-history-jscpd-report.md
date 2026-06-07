@@ -73,6 +73,18 @@ Clone found (sql):
    supabase\migrations\0039_transactional_admin_messages.sql [248:7 - 267:6]
 
 Clone found (sql):
+ - supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [3:1 - 25:21] (22 lines, 153 tokens)
+   supabase\migrations\0047_guided_review_queue.sql [318:1 - 340:22]
+
+Clone found (sql):
+ - supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [27:27 - 55:9] (28 lines, 216 tokens)
+   supabase\migrations\0047_guided_review_queue.sql [340:27 - 368:9]
+
+Clone found (sql):
+ - supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [77:9 - 105:35] (28 lines, 161 tokens)
+   supabase\migrations\0047_guided_review_queue.sql [366:66 - 394:33]
+
+Clone found (sql):
  - supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [140:1 - 181:40] (41 lines, 259 tokens)
    supabase\migrations\0022_lint_points_helpful_votes.sql [5:1 - 46:9]
 
@@ -82,19 +94,19 @@ Clone found (sql):
 
 Clone found (sql):
  - supabase\migrations\0016_fix_onboarding_rpc_ambiguity.sql [3:1 - 28:6] (25 lines, 172 tokens)
-   supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [3:1 - 28:24]
+   supabase\migrations\0047_guided_review_queue.sql [318:1 - 28:24]
 
 Clone found (sql):
  - supabase\migrations\0016_fix_onboarding_rpc_ambiguity.sql [27:27 - 53:9] (26 lines, 190 tokens)
-   supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [28:29 - 53:24]
+   supabase\migrations\0047_guided_review_queue.sql [341:29 - 366:24]
 
 Clone found (sql):
  - supabase\migrations\0016_fix_onboarding_rpc_ambiguity.sql [51:83 - 104:18] (53 lines, 410 tokens)
    supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [53:65 - 106:21]
 
 Clone found (sql):
- - supabase\migrations\0015_role_onboarding.sql [226:1 - 316:16] (90 lines, 680 tokens)
-   supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [3:1 - 95:17]
+ - supabase\migrations\0015_role_onboarding.sql [224:76 - 316:16] (92 lines, 683 tokens)
+   supabase\migrations\0047_guided_review_queue.sql [316:129 - 95:17]
 
 Clone found (sql):
  - supabase\migrations\0013_reviewer_community_layer.sql [230:56 - 314:13] (84 lines, 603 tokens)
@@ -183,10 +195,10 @@ Clone found (sql):
 ┌────────┬────────────────┬─────────────┬──────────────┬──────────────┬──────────────────┬───────────────────┐
 │ Format │ Files analyzed │ Total lines │ Total tokens │ Clones found │ Duplicated lines │ Duplicated tokens │
 ├────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ sql    │ 46             │ 10440       │ 87800        │ 43           │ 2096 (20.08%)    │ 16784 (19.12%)    │
+│ sql    │ 48             │ 10938       │ 91353        │ 46           │ 2176 (19.89%)    │ 17317 (18.96%)    │
 ├────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ Total: │ 46             │ 10440       │ 87800        │ 43           │ 2096 (20.08%)    │ 16784 (19.12%)    │
+│ Total: │ 48             │ 10938       │ 91353        │ 46           │ 2176 (19.89%)    │ 17317 (18.96%)    │
 └────────┴────────────────┴─────────────┴──────────────┴──────────────┴──────────────────┴───────────────────┘
-Found 43 clones.
+Found 46 clones.
 time: deterministic
 ```
