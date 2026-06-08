@@ -14,6 +14,30 @@ export const API_RATE_LIMIT_POLICIES = {
 		publicMessage: "Too many image uploads. Try again soon.",
 		windowSeconds: 600,
 	},
+	communityCommentSubmit: {
+		action: "community_comment_submit",
+		maxRequests: 30,
+		publicMessage: "Too many community comments. Try again soon.",
+		windowSeconds: 600,
+	},
+	communityPostMediaUpload: {
+		action: "community_post_media_upload",
+		maxRequests: 20,
+		publicMessage: "Too many post image uploads. Try again soon.",
+		windowSeconds: 600,
+	},
+	communityPostSubmit: {
+		action: "community_post_submit",
+		maxRequests: 12,
+		publicMessage: "Too many community posts. Try again soon.",
+		windowSeconds: 600,
+	},
+	communityVoteWrite: {
+		action: "community_vote_write",
+		maxRequests: 160,
+		publicMessage: "Too many community votes. Try again soon.",
+		windowSeconds: 300,
+	},
 	pushSubscriptionWrite: {
 		action: "push_subscription_write",
 		maxRequests: 60,

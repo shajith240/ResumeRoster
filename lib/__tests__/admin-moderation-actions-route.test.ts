@@ -169,7 +169,40 @@ describe("admin moderation action routes", () => {
 
 		expect(response.status).toBe(400);
 		await expect(response.json()).resolves.toEqual({
-			message: "This review cannot be restored from admin history.",
+			message: "This item cannot be restored from admin history.",
+		});
+	});
+
+	it("allows community report moderation actions through the report RPC", async () => {
+		const rpc = vi.fn(async () => ({
+			data: [
+				{
+					error_code: null,
+					ok: true,
+					report: {
+						id: REPORT_ID,
+						status: "actioned",
+					},
+				},
+			],
+			error: null,
+		}));
+		mockAdmin(rpc);
+
+		const response = await postReportAction(
+			jsonPost({
+				action: "remove_community_post",
+				note: "  Spam post.  ",
+			}),
+			{ params: Promise.resolve({ id: REPORT_ID }) },
+		);
+
+		expect(response.status).toBe(200);
+		expect(rpc).toHaveBeenCalledWith("admin_apply_report_action", {
+			moderation_note: "Spam post.",
+			report_action: "remove_community_post",
+			reviewing_admin_user_id: ADMIN_USER_ID,
+			target_report_id: REPORT_ID,
 		});
 	});
 

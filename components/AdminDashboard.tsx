@@ -401,8 +401,8 @@ export default function AdminDashboard({
 					<ShieldCheck size={28} strokeWidth={2} aria-hidden="true" />
 					<h1>Admin access required</h1>
 					<p>This area is limited to emails listed in ADMIN_EMAILS.</p>
-					<Link className="btn-primary" href="/feed">
-						Return to feed
+					<Link className="btn-primary" href={DEFAULT_ADMIN_MESSAGE_LINK}>
+						Return to app
 					</Link>
 				</section>
 			</main>

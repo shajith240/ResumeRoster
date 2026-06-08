@@ -84,22 +84,13 @@ export function useResumeOwnerActions({
 		}
 
 		setResumeActionBusy(true);
-		const removeFile = await supabase.storage
-			.from("resumes")
-			.remove([resume.file_path]);
-		if (removeFile.error) {
-			setResumeActionBusy(false);
-			reportError("We could not delete the resume file. Please try again.");
-			return false;
-		}
-
 		const { error } = await supabase
 			.from("resumes")
 			.delete()
 			.eq("id", resume.id);
-		setResumeActionBusy(false);
 
 		if (error) {
+			setResumeActionBusy(false);
 			reportError(
 				isPermissionPolicyError(error)
 					? "Only the resume owner can delete this submission."
@@ -108,7 +99,19 @@ export function useResumeOwnerActions({
 			return false;
 		}
 
-		toast.success("Resume deleted.");
+		const removeFile = await supabase.storage
+			.from("resumes")
+			.remove([resume.file_path]);
+		setResumeActionBusy(false);
+
+		if (removeFile.error) {
+			toast.warning(
+				"Resume deleted, but the file cleanup needs another attempt.",
+			);
+		} else {
+			toast.success("Resume deleted.");
+		}
+
 		announceRouteTransition("/feed");
 		router.push("/feed");
 		return true;

@@ -4,6 +4,7 @@ import {
 	getNotificationTone,
 	unreadNotificationCount,
 } from "@/lib/notifications";
+import { getAppHomeRoute } from "@/lib/app-routes";
 
 describe("notifications", () => {
 	it("keeps notification links inside the app", () => {
@@ -11,9 +12,11 @@ describe("notifications", () => {
 			"/resume/123#comment-456",
 		);
 		expect(getNotificationHref({ link_href: "https://example.com" })).toBe(
-			"/feed",
+			getAppHomeRoute(),
 		);
-		expect(getNotificationHref({ link_href: "//example.com" })).toBe("/feed");
+		expect(getNotificationHref({ link_href: "//example.com" })).toBe(
+			getAppHomeRoute(),
+		);
 	});
 
 	it("maps notification types to stable UI tones", () => {

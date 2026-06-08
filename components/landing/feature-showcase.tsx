@@ -119,7 +119,7 @@ export function FeatureShowcase({
 						<h3>{feature.title}</h3>
 						<p>{feature.copy}</p>
 						<Link className="showcase-link" href="/feed">
-							Open the lint feed
+							Open Resume Feed
 						</Link>
 					</div>
 

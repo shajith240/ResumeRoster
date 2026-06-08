@@ -2,10 +2,12 @@ import Link from "next/link";
 import {
 	CheckCircle2,
 	ExternalLink,
+	Lock,
 	RotateCcw,
 	ShieldAlert,
 	ShieldCheck,
 	Trash2,
+	Unlock,
 	UserRound,
 	XCircle,
 } from "lucide-react";
@@ -164,6 +166,11 @@ export function ReportRow({
 }) {
 	const reportProfile = report.profile ?? report.reportedUser;
 	const reportReview = report.review ?? report.roast;
+	const reportCommunityPost = report.communityPost;
+	const reportCommunityComment = report.communityComment;
+	const isCommunityReport =
+		report.target_type === "community_post" ||
+		report.target_type === "community_comment";
 	const profileActionDisabled = !reportProfile;
 
 	return (
@@ -205,6 +212,18 @@ export function ReportRow({
 						<Link href={`/resume/${report.resume.id}`}>
 							<ExternalLink aria-hidden="true" />
 							Context
+						</Link>
+					) : null}
+					{reportCommunityPost ? (
+						<Link href={`/community/${reportCommunityPost.id}`}>
+							<ExternalLink aria-hidden="true" />
+							Post
+						</Link>
+					) : null}
+					{reportCommunityComment ? (
+						<Link href={`/community/${reportCommunityComment.post_id}#comments`}>
+							<ExternalLink aria-hidden="true" />
+							Thread
 						</Link>
 					) : null}
 					{reportProfile ? (
@@ -263,6 +282,111 @@ export function ReportRow({
 								tone="danger"
 							/>
 						)
+					) : null}
+					{reportCommunityPost ? (
+						<>
+							{reportCommunityPost.status === "held" ? (
+								<ActionButton
+									action="restore_community_post"
+									busyAction={busyAction}
+									icon={<ShieldCheck aria-hidden="true" />}
+									label="Approve post"
+									onClick={() => onAction(report.id, "restore_community_post")}
+									scope="report"
+									targetId={report.id}
+								/>
+							) : reportCommunityPost.status === "removed" ? (
+								<ActionButton
+									action="restore_community_post"
+									busyAction={busyAction}
+									icon={<RotateCcw aria-hidden="true" />}
+									label="Restore post"
+									onClick={() => onAction(report.id, "restore_community_post")}
+									scope="report"
+									targetId={report.id}
+								/>
+							) : (
+								<ActionButton
+									action="remove_community_post"
+									busyAction={busyAction}
+									icon={<Trash2 aria-hidden="true" />}
+									label="Hide post"
+									onClick={() => onAction(report.id, "remove_community_post")}
+									scope="report"
+									targetId={report.id}
+									tone="danger"
+								/>
+							)}
+							{reportCommunityPost.status === "locked" ? (
+								<ActionButton
+									action="unlock_community_post"
+									busyAction={busyAction}
+									icon={<Unlock aria-hidden="true" />}
+									label="Unlock"
+									onClick={() => onAction(report.id, "unlock_community_post")}
+									scope="report"
+									targetId={report.id}
+								/>
+							) : (
+								<ActionButton
+									action="lock_community_post"
+									busyAction={busyAction}
+									disabled={reportCommunityPost.status !== "active"}
+									icon={<Lock aria-hidden="true" />}
+									label="Lock"
+									onClick={() => onAction(report.id, "lock_community_post")}
+									scope="report"
+									targetId={report.id}
+								/>
+							)}
+						</>
+					) : null}
+					{reportCommunityComment ? (
+						reportCommunityComment.status === "held" ? (
+							<ActionButton
+								action="restore_community_comment"
+								busyAction={busyAction}
+								icon={<ShieldCheck aria-hidden="true" />}
+								label="Approve comment"
+								onClick={() => onAction(report.id, "restore_community_comment")}
+								scope="report"
+								targetId={report.id}
+							/>
+						) : reportCommunityComment.status === "removed" ? (
+							<ActionButton
+								action="restore_community_comment"
+								busyAction={busyAction}
+								icon={<RotateCcw aria-hidden="true" />}
+								label="Restore comment"
+								onClick={() => onAction(report.id, "restore_community_comment")}
+								scope="report"
+								targetId={report.id}
+							/>
+						) : (
+							<ActionButton
+								action="remove_community_comment"
+								busyAction={busyAction}
+								icon={<Trash2 aria-hidden="true" />}
+								label="Remove comment"
+								onClick={() => onAction(report.id, "remove_community_comment")}
+								scope="report"
+								targetId={report.id}
+								tone="danger"
+							/>
+						)
+					) : null}
+					{isCommunityReport ? (
+						<ActionButton
+							action="clear_public_profile_text"
+							busyAction={busyAction}
+							disabled={profileActionDisabled}
+							icon={<Trash2 aria-hidden="true" />}
+							label="Clear text"
+							onClick={() => onAction(report.id, "clear_public_profile_text")}
+							scope="report"
+							targetId={report.id}
+							tone="danger"
+						/>
 					) : null}
 					{report.target_type === "profile" ? (
 						<>

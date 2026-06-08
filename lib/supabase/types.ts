@@ -7,7 +7,21 @@ export type ContentReportStatus =
   | "reviewing"
   | "dismissed"
   | "actioned";
-export type ContentReportTargetType = "resume" | "roast" | "profile";
+export type ContentReportTargetType =
+  | "resume"
+  | "roast"
+  | "profile"
+  | "community_post"
+  | "community_comment";
+export type CommunityPostType = "question" | "discussion" | "resource" | "announcement";
+export type CommunityPostStatus =
+  | "active"
+  | "locked"
+  | "held"
+  | "deleted"
+  | "removed";
+export type CommunityCommentStatus = "active" | "held" | "deleted" | "removed";
+export type CommunityVoteReaction = "upvote" | "downvote";
 export type CommentContentFormat = "plain" | "markdown";
 type CommentAttachmentKind = "image";
 type CommentAttachmentSource = "upload";
@@ -189,6 +203,104 @@ export type ProfileOnboarding = {
   status: OnboardingStatus;
   version: number;
   completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityTopic = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  display_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityTag = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  status: "active" | "hidden";
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPost = {
+  id: string;
+  author_id: string;
+  topic_id: string;
+  post_type: CommunityPostType;
+  title: string;
+  body: string;
+  status: CommunityPostStatus;
+  comment_count: number;
+  upvote_count: number;
+  downvote_count: number;
+  save_count: number;
+  last_activity_at: string;
+  deleted_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPostComment = {
+  id: string;
+  post_id: string;
+  parent_id: string | null;
+  author_id: string;
+  body: string;
+  status: CommunityCommentStatus;
+  reply_count: number;
+  upvote_count: number;
+  downvote_count: number;
+  deleted_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPostAttachment = {
+  id: string;
+  post_id: string;
+  user_id: string;
+  kind: "image";
+  source: "upload";
+  storage_path: string;
+  title: string;
+  alt_text: string;
+  mime_type: "image/png" | "image/jpeg" | "image/webp";
+  file_size: number;
+  display_order: number;
+  created_at: string;
+};
+
+export type CommunityPostPoll = {
+  id: string;
+  post_id: string;
+  question: string;
+  duration_days: number;
+  closes_at: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPostPollOption = {
+  id: string;
+  poll_id: string;
+  option_text: string;
+  display_order: number;
+  vote_count: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPostPollVote = {
+  id: string;
+  poll_id: string;
+  option_id: string;
+  voter_id: string;
   created_at: string;
   updated_at: string;
 };

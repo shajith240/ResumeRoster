@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { areCommunityPostsEnabled } from "@/lib/community";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { createServiceSupabaseClient } from "@/lib/server-auth";
 
@@ -32,12 +33,18 @@ type CleanupHealth = {
 	schedule?: string | null;
 };
 
-const REQUIRED_STORAGE_BUCKETS = [
+const BASE_REQUIRED_STORAGE_BUCKETS = [
 	"avatars",
 	"comment-media",
 	"resumes",
 	"upload-quarantine",
 ] as const;
+
+function getRequiredStorageBuckets() {
+	return areCommunityPostsEnabled()
+		? [...BASE_REQUIRED_STORAGE_BUCKETS, "community-post-media"]
+		: [...BASE_REQUIRED_STORAGE_BUCKETS];
+}
 
 const REQUIRED_PUSH_ENV = [
 	"NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY",
@@ -134,8 +141,9 @@ async function checkDatabase(admin: SupabaseClient): Promise<HealthCheck> {
 
 async function checkStorage(admin: SupabaseClient): Promise<HealthCheck> {
 	return timedCheck(async () => {
+		const requiredStorageBuckets = getRequiredStorageBuckets();
 		const results = await Promise.all(
-			REQUIRED_STORAGE_BUCKETS.map(async (bucket) => {
+			requiredStorageBuckets.map(async (bucket) => {
 				const { error } = await admin.storage.getBucket(bucket);
 				return { bucket, error };
 			}),
@@ -156,7 +164,7 @@ async function checkStorage(admin: SupabaseClient): Promise<HealthCheck> {
 			}
 
 			return {
-				bucket_count: REQUIRED_STORAGE_BUCKETS.length,
+				bucket_count: requiredStorageBuckets.length,
 				message: "One or more required Supabase Storage buckets are unavailable.",
 				missing_bucket_count: missingBuckets.length,
 				status: "fail",
@@ -164,7 +172,7 @@ async function checkStorage(admin: SupabaseClient): Promise<HealthCheck> {
 		}
 
 		return {
-			bucket_count: REQUIRED_STORAGE_BUCKETS.length,
+			bucket_count: requiredStorageBuckets.length,
 			message: "Required Supabase Storage buckets are reachable.",
 			status: "ok",
 		};

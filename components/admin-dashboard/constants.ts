@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { ContentReportStatus } from "@/lib/supabase/types";
 import type { ReviewerApplicationStatus } from "@/lib/reviewer-validation";
+import { getAppHomeRoute } from "@/lib/app-routes";
 import type { AdminSection } from "./types";
 
 export const adminSections: AdminSection[] = [
@@ -91,7 +92,8 @@ export const reviewerStatuses: ReviewerApplicationStatus[] = [
 ];
 
 export const adminMessageLinkOptions = [
-	{ label: "Feed", value: "/feed" },
+	{ label: "Community", value: getAppHomeRoute() },
+	{ label: "Resume Feed", value: "/feed" },
 	{ label: "Submit", value: "/submit" },
 	{ label: "Leaderboard", value: "/leaderboard" },
 	{ label: "My profile", value: "/profile/me" },
@@ -123,7 +125,7 @@ export const adminMessageTemplates: Array<{
 		body: "A quick note from the Linted team.",
 		id: "general",
 		label: "Announcement",
-		linkHref: "/feed",
+		linkHref: getAppHomeRoute(),
 		title: "Linted update",
 	},
 ];

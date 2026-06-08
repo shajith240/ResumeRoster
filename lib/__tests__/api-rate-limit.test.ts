@@ -57,6 +57,83 @@ describe("API rate limit guard", () => {
 		});
 	});
 
+	it("uses the community post submit policy for text posts", async () => {
+		const rpc = vi.fn(async () => ({
+			data: [{ allowed: true, remaining: 11, retry_after_seconds: 0 }],
+			error: null,
+		}));
+
+		const response = await enforceApiRateLimit(
+			adminWithRpc(rpc),
+			USER_ID,
+			"communityPostSubmit",
+		);
+
+		expect(response).toBeNull();
+		expect(rpc).toHaveBeenCalledWith("check_authenticated_action_rate_limit", {
+			max_requests: 12,
+			target_action: "community_post_submit",
+			target_user_id: USER_ID,
+			window_seconds: 600,
+		});
+	});
+
+	it("uses separate policies for community images and comments", async () => {
+		const rpc = vi.fn(async () => ({
+			data: [{ allowed: true, remaining: 19, retry_after_seconds: 0 }],
+			error: null,
+		}));
+
+		await expect(
+			enforceApiRateLimit(
+				adminWithRpc(rpc),
+				USER_ID,
+				"communityPostMediaUpload",
+			),
+		).resolves.toBeNull();
+		await expect(
+			enforceApiRateLimit(
+				adminWithRpc(rpc),
+				USER_ID,
+				"communityCommentSubmit",
+			),
+		).resolves.toBeNull();
+
+		expect(rpc).toHaveBeenCalledWith("check_authenticated_action_rate_limit", {
+			max_requests: 20,
+			target_action: "community_post_media_upload",
+			target_user_id: USER_ID,
+			window_seconds: 600,
+		});
+		expect(rpc).toHaveBeenCalledWith("check_authenticated_action_rate_limit", {
+			max_requests: 30,
+			target_action: "community_comment_submit",
+			target_user_id: USER_ID,
+			window_seconds: 600,
+		});
+	});
+
+	it("uses the community vote write policy for post and comment votes", async () => {
+		const rpc = vi.fn(async () => ({
+			data: [{ allowed: true, remaining: 159, retry_after_seconds: 0 }],
+			error: null,
+		}));
+
+		const response = await enforceApiRateLimit(
+			adminWithRpc(rpc),
+			USER_ID,
+			"communityVoteWrite",
+		);
+
+		expect(response).toBeNull();
+		expect(rpc).toHaveBeenCalledWith("check_authenticated_action_rate_limit", {
+			max_requests: 160,
+			target_action: "community_vote_write",
+			target_user_id: USER_ID,
+			window_seconds: 300,
+		});
+	});
+
 	it("fails closed with a stable message when the limiter RPC fails", async () => {
 		const rpc = vi.fn(async () => ({
 			data: null,

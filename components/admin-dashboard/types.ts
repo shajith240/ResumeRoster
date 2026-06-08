@@ -44,6 +44,26 @@ export type AdminReview = {
 	created_at: string;
 };
 
+export type AdminCommunityPost = {
+	id: string;
+	author_id: string;
+	body: string;
+	created_at: string;
+	post_type: string;
+	status: string;
+	title: string;
+};
+
+export type AdminCommunityComment = {
+	id: string;
+	author_id: string;
+	body: string;
+	created_at: string;
+	parent_id: string | null;
+	post_id: string;
+	status: string;
+};
+
 export type AdminOverview = {
 	activity: {
 		recentResumes: AdminResume[];
@@ -68,6 +88,10 @@ export type ProfilePreview = {
 };
 
 export type ReportPreview = {
+	community_comment_id?: string | null;
+	community_post_id?: string | null;
+	communityComment?: AdminCommunityComment | null;
+	communityPost?: AdminCommunityPost | null;
 	id: string;
 	details: string;
 	reason: string;

@@ -4,7 +4,7 @@ import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 
 export const UPLOAD_QUARANTINE_BUCKET = "upload-quarantine";
 
-type UploadKind = "avatar" | "comment-media" | "resume";
+type UploadKind = "avatar" | "comment-media" | "community-post-media" | "resume";
 
 export type UploadSecurityInput = {
 	bytes: Uint8Array;

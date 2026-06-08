@@ -1,10 +1,17 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import {
 	canShowReviewerProfile,
 	getReviewerDisplayLabel,
 	isTrustedReviewer,
 } from "@/lib/reviewer-validation";
 import type { CommentAttachmentOption } from "@/components/CommentMediaToolbar";
+import {
+	buildMentionTargetMap,
+	getMentionHandleKey,
+	MENTION_TEXT_PATTERN,
+	type MentionSuggestion,
+} from "@/lib/comment-mentions";
 import type { CommentContentFormat } from "@/lib/supabase/types";
 import type { AuthorProfile } from "./types";
 import { getAttachmentUrl } from "./utils";
@@ -59,7 +66,53 @@ export function ResumeContextCard({
 	);
 }
 
-export function renderInlineMarkdown(text: string, keyPrefix: string) {
+function renderTextWithMentions(
+	text: string,
+	keyPrefix: string,
+	mentionTargets: Record<string, MentionSuggestion>,
+) {
+	const nodes: ReactNode[] = [];
+	let lastIndex = 0;
+	let match: RegExpExecArray | null;
+	MENTION_TEXT_PATTERN.lastIndex = 0;
+
+	while ((match = MENTION_TEXT_PATTERN.exec(text))) {
+		if (match.index > lastIndex) {
+			nodes.push(text.slice(lastIndex, match.index));
+		}
+
+		const rawHandle = match[1] ?? "";
+		const target = mentionTargets[getMentionHandleKey(rawHandle)];
+
+		if (target) {
+			nodes.push(
+				<Link
+					className="comment-inline-mention"
+					href={`/profile/${target.id}`}
+					key={`${keyPrefix}-mention-${match.index}`}
+				>
+					@{target.handle}
+				</Link>,
+			);
+		} else {
+			nodes.push(match[0]);
+		}
+
+		lastIndex = MENTION_TEXT_PATTERN.lastIndex;
+	}
+
+	if (lastIndex < text.length) {
+		nodes.push(text.slice(lastIndex));
+	}
+
+	return nodes;
+}
+
+export function renderInlineMarkdown(
+	text: string,
+	keyPrefix: string,
+	mentionTargets: Record<string, MentionSuggestion> = {},
+) {
 	const parts: ReactNode[] = [];
 	const pattern =
 		/(\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)|`([^`]+)`|\*\*([^*]+)\*\*|\*([^*]+)\*)/g;
@@ -68,7 +121,13 @@ export function renderInlineMarkdown(text: string, keyPrefix: string) {
 
 	while ((match = pattern.exec(text))) {
 		if (match.index > lastIndex) {
-			parts.push(text.slice(lastIndex, match.index));
+			parts.push(
+				...renderTextWithMentions(
+					text.slice(lastIndex, match.index),
+					`${keyPrefix}-${lastIndex}`,
+					mentionTargets,
+				),
+			);
 		}
 
 		const key = `${keyPrefix}-${match.index}`;
@@ -95,7 +154,13 @@ export function renderInlineMarkdown(text: string, keyPrefix: string) {
 	}
 
 	if (lastIndex < text.length) {
-		parts.push(text.slice(lastIndex));
+		parts.push(
+			...renderTextWithMentions(
+				text.slice(lastIndex),
+				`${keyPrefix}-${lastIndex}`,
+				mentionTargets,
+			),
+		);
 	}
 
 	return parts;
@@ -105,10 +170,12 @@ export function FormattedReviewContent({
 	content,
 	format,
 	isDeleted,
+	mentionSuggestions = [],
 }: {
 	content: string;
 	format?: CommentContentFormat;
 	isDeleted: boolean;
+	mentionSuggestions?: MentionSuggestion[];
 }) {
 	if (isDeleted) {
 		return (
@@ -118,8 +185,12 @@ export function FormattedReviewContent({
 		);
 	}
 
+	const mentionTargets = buildMentionTargetMap(mentionSuggestions);
+
 	if (format !== "markdown") {
-		return <p>{content}</p>;
+		return (
+			<p>{renderTextWithMentions(content, "plain-review", mentionTargets)}</p>
+		);
 	}
 
 	const lines = content.split(/\r?\n/);
@@ -133,7 +204,11 @@ export function FormattedReviewContent({
 			<ul key={`ul-${index}`}>
 				{bulletItems.map((item, itemIndex) => (
 					<li key={`${index}-${itemIndex}`}>
-						{renderInlineMarkdown(item, `${index}-${itemIndex}`)}
+						{renderInlineMarkdown(
+							item,
+							`${index}-${itemIndex}`,
+							mentionTargets,
+						)}
 					</li>
 				))}
 			</ul>,
@@ -159,7 +234,11 @@ export function FormattedReviewContent({
 		if (trimmed.startsWith("> ")) {
 			nodes.push(
 				<blockquote key={`quote-${index}`}>
-					{renderInlineMarkdown(trimmed.slice(2).trim(), `quote-${index}`)}
+					{renderInlineMarkdown(
+						trimmed.slice(2).trim(),
+						`quote-${index}`,
+						mentionTargets,
+					)}
 				</blockquote>,
 			);
 			return;
@@ -167,7 +246,7 @@ export function FormattedReviewContent({
 
 		nodes.push(
 			<p key={`p-${index}`}>
-				{renderInlineMarkdown(trimmed, `p-${index}`)}
+				{renderInlineMarkdown(trimmed, `p-${index}`, mentionTargets)}
 			</p>,
 		);
 	});

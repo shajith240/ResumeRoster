@@ -1,35 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useMemo, useRef, type MouseEvent } from "react";
 import {
-	FlameIcon,
-	HomeIcon,
-	ListFilterIcon,
-	PlusIcon,
-	ReviewQueueIcon,
-	ShieldIcon,
-	TrophyIcon,
-	type SidebarAnimatedIconComponent,
-	type SidebarAnimatedIconHandle,
-} from "@/components/navigation/sidebar-icons";
-
+	getPrimaryNavigationItems,
+	type PrimaryNavigationItem,
+} from "@/components/navigation/primary-nav";
+import { type SidebarAnimatedIconHandle } from "@/components/navigation/sidebar-icons";
 import { useAdminAccess } from "@/lib/use-admin-access";
 import { cn } from "@/lib/utils";
 
-type NavItem = {
-	href: string;
-	label: string;
-	icon: SidebarAnimatedIconComponent;
-	active: boolean;
-	tone?: "primary";
-};
-
-function SidebarNavItem({ item }: { item: NavItem }) {
+function SidebarNavItem({ item }: { item: PrimaryNavigationItem }) {
 	const iconRef = useRef<SidebarAnimatedIconHandle>(null);
-	const Icon = item.icon;
-	const isPrimaryInactive = item.tone === "primary" && !item.active;
+	const Icon = item.sidebarIcon;
 
 	function startIconAnimation() {
 		iconRef.current?.startAnimation();
@@ -55,11 +39,7 @@ function SidebarNavItem({ item }: { item: NavItem }) {
 			onFocus={startIconAnimation}
 			onMouseEnter={startIconAnimation}
 			onMouseLeave={stopIconAnimation}
-			className={cn(
-				"session-sidebar-link",
-				item.active && "is-active",
-				isPrimaryInactive && "is-primary",
-			)}
+			className={cn("session-sidebar-link", item.active && "is-active")}
 		>
 			<span className="session-sidebar-icon-slot">
 				<Icon
@@ -76,75 +56,25 @@ function SidebarNavItem({ item }: { item: NavItem }) {
 
 export function SessionNavBar() {
 	const pathname = usePathname();
-	const searchParams = useSearchParams();
-	const sort = searchParams.get("sort");
-	const saved = searchParams.get("saved");
 	const { isAdmin } = useAdminAccess();
 
-	const items = useMemo<NavItem[]>(
-		() => {
-			const baseItems: NavItem[] = [
-			{
-				href: "/feed",
-				label: "Home",
-				icon: HomeIcon,
-				active: pathname === "/feed" && !sort && !saved,
-			},
-			{
-				href: "/feed?sort=new",
-				label: "New",
-				icon: ListFilterIcon,
-				active: pathname === "/feed" && sort === "new" && !saved,
-			},
-			{
-				href: "/feed?sort=top",
-				label: "Top rated",
-				icon: FlameIcon,
-				active: pathname === "/feed" && sort === "top" && !saved,
-			},
-			{
-				href: "/feed?sort=needs",
-				label: "Needs review",
-				icon: ReviewQueueIcon,
-				active: pathname === "/feed" && sort === "needs" && !saved,
-			},
-			{
-				href: "/submit",
-				label: "Post resume",
-				icon: PlusIcon,
-				active: pathname === "/submit",
-				tone: "primary",
-			},
-			{
-				href: "/leaderboard",
-				label: "Leaderboard",
-				icon: TrophyIcon,
-				active: pathname === "/leaderboard",
-			},
-		];
-
-			if (isAdmin) {
-				baseItems.push({
-					href: "/admin",
-					label: "Admin",
-					icon: ShieldIcon,
-					active: pathname.startsWith("/admin"),
-				});
-			}
-
-			return baseItems;
-		},
-		[isAdmin, pathname, saved, sort],
+	const items = useMemo(
+		() =>
+			getPrimaryNavigationItems({
+				includeAdmin: true,
+				isAdmin,
+				pathname,
+			}),
+		[isAdmin, pathname],
 	);
 
 	return (
 		<aside
-			aria-label="Primary navigation"
 			className="session-sidebar fixed left-0 top-[var(--app-header-height)] z-40 h-[calc(100vh_-_var(--app-header-height))] shrink-0 overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-tertiary)]"
 		>
-			<nav className="session-sidebar-nav">
+			<nav aria-label="Primary navigation" className="session-sidebar-nav">
 				{items.map((item) => (
-					<SidebarNavItem item={item} key={item.label} />
+					<SidebarNavItem item={item} key={item.id} />
 				))}
 			</nav>
 		</aside>

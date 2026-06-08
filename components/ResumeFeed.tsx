@@ -441,7 +441,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
   }
 
   return (
-    <section className="community-feed stagger-children" aria-label={savedOnly ? "Saved resumes" : "Open resumes"}>
+    <section className="resume-feed-list stagger-children" aria-label={savedOnly ? "Saved resumes" : "Open resumes"}>
       <FeedSortBar activeSort={activeSort} savedOnly={savedOnly} />
       {sortedResumes.map((resume, index) => (
         <ResumeFeedCard

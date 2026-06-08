@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import type { MentionSuggestion } from "@/lib/comment-mentions";
 import {
 	getReactionBlockReason,
 	getReplyBlockReason,
@@ -26,6 +27,7 @@ import type { ThreadReviewControls } from "./types";
 import { formatDate, getAuthorAvatar, getAuthorHandle } from "./utils";
 
 type ThreadReviewItemProps = ThreadReviewControls & {
+	mentionSuggestions: MentionSuggestion[];
 	review: ThreadReviewNode;
 };
 
@@ -63,6 +65,7 @@ export function ThreadReviewItem({
 	isClosed,
 	likedReviewIds,
 	mediaSchemaReady,
+	mentionSuggestions,
 	onCancelReply,
 	onDeleteReviewRequest,
 	onOpenReportDialog,
@@ -118,7 +121,7 @@ export function ThreadReviewItem({
 	const dislikeButtonClass = `comment-action-button reaction-button is-dislike${
 		disliked ? " is-active" : ""
 	}`;
-	const childReviewProps: ThreadReviewControls = {
+	const childReviewProps: Omit<ThreadReviewItemProps, "review"> = {
 		attachmentsById,
 		authorProfiles,
 		collapsedReviewIds,
@@ -128,6 +131,7 @@ export function ThreadReviewItem({
 		isClosed,
 		likedReviewIds,
 		mediaSchemaReady,
+		mentionSuggestions,
 		onCancelReply,
 		onDeleteReviewRequest,
 		onOpenReportDialog,
@@ -271,6 +275,7 @@ export function ThreadReviewItem({
 						content={review.content}
 						format={review.content_format}
 						isDeleted={isDeleted}
+						mentionSuggestions={mentionSuggestions}
 					/>
 					<ReviewAttachment attachment={reviewAttachment} />
 					<footer>
@@ -426,6 +431,7 @@ export function ThreadReviewItem({
 								}
 								maxHeight={220}
 								minHeight={56}
+								mentionSuggestions={mentionSuggestions}
 								onAttachmentChange={onReplyAttachmentChange}
 								onCancel={onCancelReply}
 								onChange={onReplyContentChange}

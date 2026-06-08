@@ -15,10 +15,12 @@ import {
 	isGeneratedAnonymousUsername,
 } from "@/lib/anonymous-profile";
 import { PROFILE_CHANGE_EVENT, normalizeAppStatus } from "@/lib/app-presence";
+import { getAppHomeRoute } from "@/lib/app-routes";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { PWA_INSTALL_OPEN_EVENT } from "@/lib/pwa-install";
 import { signOut, supabase } from "@/lib/supabase/client";
 import type { AppStatus } from "@/lib/supabase/types";
+import { useAdminAccess } from "@/lib/use-admin-access";
 
 type AppTheme = "dark" | "light";
 
@@ -71,11 +73,13 @@ async function getNavProfile(activeUser: User | null): Promise<NavProfile | null
 
 export default function AuthButton() {
 	const router = useRouter();
+	const { isAdmin } = useAdminAccess();
 	const [user, setUser] = useState<User | null>(null);
 	const [profile, setProfile] = useState<NavProfile | null>(null);
 	const [status, setStatus] = useState<AppStatus>("online");
 	const [theme, setTheme] = useState<AppTheme>("dark");
 	const [loading, setLoading] = useState(true);
+	const appHomeRoute = getAppHomeRoute();
 
 	useEffect(() => {
 		let active = true;
@@ -148,7 +152,7 @@ export default function AuthButton() {
 			<div className="auth-actions">
 				<Link
 					className="btn-primary btn-ghost nav-login"
-					href={getLoginPath("/feed")}
+					href={getLoginPath(appHomeRoute)}
 				>
 					Log in
 				</Link>
@@ -196,14 +200,15 @@ export default function AuthButton() {
 		}
 
 		const routes: Record<string, string> = {
+			admin: "/admin",
 			profile: "/profile/me",
 			submit: "/submit",
 			saved: "/feed?saved=1",
-			help: "/feed",
-			feedback: "/feed",
+			help: appHomeRoute,
+			feedback: appHomeRoute,
 		};
 
-		const nextRoute = routes[action] || "/feed";
+		const nextRoute = routes[action] || appHomeRoute;
 		announceRouteTransition(nextRoute);
 		router.push(nextRoute);
 	}
@@ -257,6 +262,7 @@ export default function AuthButton() {
 			<NotificationCenter userId={user.id} />
 			<PwaInstallPrompt />
 			<UserDropdown
+				isAdmin={isAdmin}
 				selectedStatus={status}
 				user={{
 					name: displayName,

@@ -141,6 +141,15 @@ const REVIEW_QUEUE_LINE_VARIANTS: Variants = {
 	},
 };
 
+const RESUME_PAGE_VARIANTS: Variants = {
+	normal: { scale: 1, y: 0 },
+	animate: {
+		scale: [1, 1.03, 1],
+		y: [0, -0.8, 0],
+		transition: { duration: 0.46, ease: "easeInOut" },
+	},
+};
+
 const FLAME_VARIANTS: Variants = {
 	normal: { scale: 1, rotate: 0 },
 	animate: {
@@ -309,6 +318,38 @@ export const HomeIcon = createSidebarIcon("HomeIcon", (controls) => (
 	</>
 ));
 
+export const ResumeIcon = createSidebarIcon("ResumeIcon", (controls) => (
+	<>
+		<motion.path
+			animate={controls}
+			d="M6 3h8l4 4v17H6V3Z"
+			variants={RESUME_PAGE_VARIANTS}
+		/>
+		<motion.path
+			animate={controls}
+			d="M14 3v5h5"
+			variants={REVIEW_QUEUE_LINE_VARIANTS}
+		/>
+		<motion.path
+			animate={controls}
+			d="M9 12h6"
+			variants={REVIEW_QUEUE_LINE_VARIANTS}
+		/>
+		<motion.path
+			animate={controls}
+			d="M9 16h6"
+			transition={{ delay: 0.05 }}
+			variants={REVIEW_QUEUE_LINE_VARIANTS}
+		/>
+		<motion.path
+			animate={controls}
+			d="M9 20h4"
+			transition={{ delay: 0.1 }}
+			variants={REVIEW_QUEUE_LINE_VARIANTS}
+		/>
+	</>
+));
+
 export const ListFilterIcon = createSidebarIcon(
 	"ListFilterIcon",
 	(controls) => (
@@ -349,6 +390,29 @@ export const ReviewQueueIcon = createSidebarIcon(
 				d="M8 12h5"
 				transition={{ delay: 0.06 }}
 				variants={REVIEW_QUEUE_LINE_VARIANTS}
+			/>
+		</>
+	),
+);
+
+export const WritePostIcon = createSidebarIcon(
+	"WritePostIcon",
+	(controls) => (
+		<>
+			<motion.path
+				animate={controls}
+				d="M4 20h4l11-11a2.8 2.8 0 0 0-4-4L4 16v4Z"
+				variants={REVIEW_QUEUE_LINE_VARIANTS}
+			/>
+			<motion.path
+				animate={controls}
+				d="m13.5 6.5 4 4"
+				variants={REVIEW_QUEUE_LINE_VARIANTS}
+			/>
+			<motion.path
+				animate={controls}
+				d="M4 12V5a2 2 0 0 1 2-2h7"
+				variants={REVIEW_QUEUE_BUBBLE_VARIANTS}
 			/>
 		</>
 	),
@@ -495,32 +559,44 @@ export const BriefcaseIcon = createSidebarIcon(
 	),
 );
 
-export const UsersIcon = createSidebarIcon("UsersIcon", (controls) => (
+export const CommunityIcon = createSidebarIcon("CommunityIcon", (controls) => (
 	<>
-		<motion.path
+		<motion.rect
 			animate={controls}
-			d="M16 21v-2a4 4 0 0 0-8 0v2"
-			variants={USERS_BODY_VARIANTS}
-		/>
-		<motion.circle
-			animate={controls}
-			cx="12"
-			cy="8"
-			r="4"
+			height="5"
+			rx="1.4"
 			variants={USERS_HEAD_VARIANTS}
+			width="5"
+			x="9.5"
+			y="3"
 		/>
-		<motion.path
+		<motion.rect
 			animate={controls}
-			d="M22 21v-2a4 4 0 0 0-3-3.87"
-			variants={USERS_BODY_VARIANTS}
-		/>
-		<motion.path
-			animate={controls}
-			d="M16 4.13a4 4 0 0 1 0 7.75"
+			height="5"
+			rx="1.4"
 			variants={USERS_HEAD_VARIANTS}
+			width="5"
+			x="3"
+			y="16"
+		/>
+		<motion.rect
+			animate={controls}
+			height="5"
+			rx="1.4"
+			variants={USERS_HEAD_VARIANTS}
+			width="5"
+			x="16"
+			y="16"
+		/>
+		<motion.path
+			animate={controls}
+			d="M12 8v5M5.5 16v-3H18.5v3"
+			variants={USERS_BODY_VARIANTS}
 		/>
 	</>
 ));
+
+export const UsersIcon = CommunityIcon;
 
 export const SparklesIcon = createSidebarIcon("SparklesIcon", (controls) => (
 	<>

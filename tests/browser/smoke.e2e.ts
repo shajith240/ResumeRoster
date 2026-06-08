@@ -12,21 +12,31 @@ test("public login renders without layout overflow", async ({ page }) => {
 	await expectNoHorizontalOverflow(page);
 });
 
-test("unauthenticated feed request redirects to login", async ({ page }) => {
-	await page.goto("/feed");
+test("unauthenticated community home request redirects to login", async ({ page }) => {
+	await page.goto("/community");
 
-	await expect(page).toHaveURL(/\/login\?next=%2Ffeed$/);
+	await expect(page).toHaveURL(/\/login\?next=%2Fcommunity$/);
 	await expect(page.getByRole("heading", { name: "Welcome back" })).toBeVisible();
 });
 
-test("authenticated user can load the community feed", async ({ page }) => {
+test("authenticated user can load the community home", async ({ page }) => {
+	await prepareAuthenticatedPage(page);
+
+	await page.goto("/community");
+
+	await expect(page.getByRole("heading", { name: "Community" })).toHaveCount(1);
+	await expect(
+		page.getByRole("link", { exact: true, name: "ygjfjyfjhfgjhflkhjghmhn" }),
+	).toBeVisible();
+	await expectNoHorizontalOverflow(page);
+});
+
+test("authenticated user can load the resume feed", async ({ page }) => {
 	await prepareAuthenticatedPage(page);
 
 	await page.goto("/feed");
 
-	await expect(
-		page.getByRole("heading", { name: "Community Lint Feed" }),
-	).toBeVisible();
+	await expect(page.getByRole("heading", { name: "Resume Feed" })).toBeVisible();
 	await expect(
 		page.getByRole("heading", { name: "Data Scientist or Analyst" }),
 	).toBeVisible();

@@ -64,7 +64,7 @@ describe("admin message validation", () => {
 		).toBe(false);
 	});
 
-	it("defaults missing or unsafe links to feed for safe notification rendering", () => {
+	it("defaults missing or unsafe links to app home for safe notification rendering", () => {
 		const missingLink = validateAdminMessagePayload(
 			getPayload({ linkHref: undefined }),
 		);

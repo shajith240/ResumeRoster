@@ -25,15 +25,13 @@ test("login has no critical automated WCAG violations", async ({ page }) => {
 	await expectNoCriticalA11yViolations("login", page);
 });
 
-test("authenticated feed has no critical automated WCAG violations", async ({
+test("authenticated resume feed has no critical automated WCAG violations", async ({
 	page,
 }) => {
 	await prepareAuthenticatedPage(page);
 
 	await page.goto("/feed");
 
-	await expect(
-		page.getByRole("heading", { name: "Community Lint Feed" }),
-	).toBeVisible();
+	await expect(page.getByRole("heading", { name: "Resume Feed" })).toBeVisible();
 	await expectNoCriticalA11yViolations("feed", page);
 });

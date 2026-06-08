@@ -1,4 +1,5 @@
 import type { LintedNotification, NotificationType } from "@/lib/supabase/types";
+import { getAppHomeRoute } from "@/lib/app-routes";
 
 export const NOTIFICATIONS_OPEN_EVENT = "linted-notifications-open";
 
@@ -17,7 +18,7 @@ export function getNotificationHref(
 	const href = notification.link_href?.trim();
 
 	if (!href || !href.startsWith("/") || href.startsWith("//")) {
-		return "/feed";
+		return getAppHomeRoute();
 	}
 
 	return href;

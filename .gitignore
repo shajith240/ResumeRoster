@@ -13,3 +13,4 @@ docs/generated/typedoc/
 coverage/
 playwright-report/
 test-results/
+dev-server*.log

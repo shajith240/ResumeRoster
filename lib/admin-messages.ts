@@ -1,6 +1,8 @@
+import { getAppHomeRoute } from "@/lib/app-routes";
+
 export const ADMIN_MESSAGE_TITLE_MAX_LENGTH = 80;
 export const ADMIN_MESSAGE_BODY_MAX_LENGTH = 220;
-export const DEFAULT_ADMIN_MESSAGE_LINK = "/feed";
+export const DEFAULT_ADMIN_MESSAGE_LINK = getAppHomeRoute();
 
 type AdminMessageTarget =
 	| {

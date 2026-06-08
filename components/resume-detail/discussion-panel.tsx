@@ -1,6 +1,9 @@
-import type { FormEvent } from "react";
+"use client";
+
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { CommentAttachmentOption } from "@/components/CommentMediaToolbar";
 import type { GuidedReviewIssueType } from "@/lib/guided-review";
+import { buildMentionSuggestions } from "@/lib/comment-mentions";
 import type { ThreadReviewNode } from "@/lib/resume-thread";
 import type { CommentContentFormat } from "@/lib/supabase/types";
 import { CommentComposer } from "./comment-composer";
@@ -84,9 +87,44 @@ export function DiscussionPanel({
 	visibleReviewCount,
 }: DiscussionPanelProps) {
 	const feedbackLocked = isClosed || isWaiting;
+	const [rootComposerOpen, setRootComposerOpen] = useState(false);
+	const wasSubmittingRef = useRef(false);
+	const hasDraftContent = Boolean(content.trim()) || Boolean(selectedAttachment);
+	const showRootComposer = rootComposerOpen || hasDraftContent;
+	const mentionSuggestions = useMemo(
+		() =>
+			buildMentionSuggestions(Object.keys(authorProfiles), authorProfiles, {
+				excludeUserId: user?.id,
+			}),
+		[authorProfiles, user?.id],
+	);
+
+	useEffect(() => {
+		if (
+			wasSubmittingRef.current &&
+			!submitting &&
+			!content.trim() &&
+			!selectedAttachment &&
+			!message
+		) {
+			setRootComposerOpen(false);
+		}
+
+		wasSubmittingRef.current = submitting;
+	}, [content, message, selectedAttachment, submitting]);
+
+	function handleRootComposerCancel() {
+		onContentChange("");
+		onContentFormatChange("plain");
+		onSelectedAttachmentChange(null);
+		setRootComposerOpen(false);
+	}
 
 	return (
-		<section className="thread-discussion-panel" aria-label="Feedback discussion">
+		<section
+			className="thread-discussion-panel resume-comments-panel mobile-thread-comments"
+			aria-label="Feedback discussion"
+		>
 			{feedbackLocked || isOwner ? (
 				<div className="closed-note">
 					<h2>
@@ -109,42 +147,64 @@ export function DiscussionPanel({
 					</p>
 					{message ? <p className="form-message">{message}</p> : null}
 				</div>
-			) : (
+			) : needsGuidedReviewCredit ? (
 				<form className="roast-form thread-roast-form" onSubmit={onReviewSubmit}>
-					{needsGuidedReviewCredit ? (
-						<GuidedReviewComposer
-							attachment={selectedAttachment}
-							disabledTools={!mediaSchemaReady || submitting}
-							issue={guidedIssue}
-							issueType={guidedIssueType}
-							onAttachmentChange={onSelectedAttachmentChange}
-							onIssueChange={onGuidedIssueChange}
-							onIssueTypeChange={onGuidedIssueTypeChange}
-							onRequireLogin={onRequireLogin}
-							onSuggestionChange={onGuidedSuggestionChange}
-							submitDisabled={submitting}
-							submitLabel={submitting ? "Posting..." : user ? "Submit" : "Sign in"}
-							suggestion={guidedSuggestion}
-						/>
-					) : (
-						<CommentComposer
-							attachment={selectedAttachment}
-							contentFormat={contentFormat}
-							disabledTools={!mediaSchemaReady || submitting}
-							maxHeight={240}
-							minHeight={76}
-							onAttachmentChange={onSelectedAttachmentChange}
-							onChange={onContentChange}
-							onFormatChange={onContentFormatChange}
-							onRequireLogin={onRequireLogin}
-							placeholder="Be specific. What should they rewrite, reorder, quantify, or remove?"
-							submitDisabled={submitting}
-							submitLabel={submitting ? "Posting..." : user ? "Submit" : "Sign in"}
-							value={content}
-						/>
-					)}
+					<GuidedReviewComposer
+						attachment={selectedAttachment}
+						disabledTools={!mediaSchemaReady || submitting}
+						issue={guidedIssue}
+						issueType={guidedIssueType}
+						onAttachmentChange={onSelectedAttachmentChange}
+						onIssueChange={onGuidedIssueChange}
+						onIssueTypeChange={onGuidedIssueTypeChange}
+						onRequireLogin={onRequireLogin}
+						onSuggestionChange={onGuidedSuggestionChange}
+						submitDisabled={submitting}
+						submitLabel={submitting ? "Posting..." : user ? "Submit" : "Sign in"}
+						suggestion={guidedSuggestion}
+					/>
 					{message ? <p className="form-message">{message}</p> : null}
 				</form>
+			) : showRootComposer ? (
+				<form
+					className="roast-form thread-roast-form resume-root-comment-form resume-root-comment-form-desktop"
+					onSubmit={onReviewSubmit}
+				>
+					<CommentComposer
+						attachment={selectedAttachment}
+						autoFocus
+						cancelLabel="Cancel"
+						className="resume-root-comment-composer"
+						contentFormat={contentFormat}
+						disabledTools={!mediaSchemaReady || submitting}
+						maxHeight={160}
+						minHeight={44}
+						mentionSuggestions={mentionSuggestions}
+						onAttachmentChange={onSelectedAttachmentChange}
+						onCancel={handleRootComposerCancel}
+						onChange={onContentChange}
+						onFormatChange={onContentFormatChange}
+						onRequireLogin={onRequireLogin}
+						placeholder="Join the conversation"
+						submitDisabled={
+							submitting || (!selectedAttachment && content.trim().length < 2)
+						}
+						submitLabel={submitting ? "Posting..." : user ? "Comment" : "Sign in"}
+						value={content}
+					/>
+					{message ? <p className="form-message">{message}</p> : null}
+				</form>
+			) : (
+				<>
+					<button
+						className="resume-comment-join-pill"
+						onClick={() => setRootComposerOpen(true)}
+						type="button"
+					>
+						Join the conversation
+					</button>
+					{message ? <p className="form-message">{message}</p> : null}
+				</>
 			)}
 
 			<div className="thread-list-header">
@@ -185,6 +245,7 @@ export function DiscussionPanel({
 						key={review.id}
 						likedReviewIds={likedReviewIds}
 						mediaSchemaReady={mediaSchemaReady}
+						mentionSuggestions={mentionSuggestions}
 						onCancelReply={onCancelReply}
 						onDeleteReviewRequest={onDeleteReviewRequest}
 						onOpenReportDialog={onOpenReportDialog}

@@ -218,7 +218,7 @@ export function AdminMessageDialog({
 										customLinkHref: event.target.value,
 									}))
 								}
-								placeholder="/feed"
+								placeholder="/community"
 								value={form.customLinkHref}
 							/>
 						</label>

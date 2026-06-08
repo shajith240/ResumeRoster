@@ -2,6 +2,7 @@ import AuthGate from "@/components/AuthGate";
 import PersonalizeLintedPrompt from "@/components/PersonalizeLintedPrompt";
 import ResumeFeed, { type FeedSort } from "@/components/ResumeFeed";
 import RouteHeader from "@/components/RouteHeader";
+import ResumeFeedHeader from "@/components/resume-feed/ResumeFeedHeader";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
@@ -86,22 +87,19 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 
 	return (
 		<AuthGate>
-			<RouteHeader />
-			<main className="feed-app-shell page-enter">
+			<RouteHeader hideAppHeaderOnMobile />
+			<main className="feed-app-shell resume-feed-route page-enter">
 				<section className="feed-center">
-					<div className="feed-community-header">
-						<div>
-							<h1>{savedOnly ? "Saved Resumes" : "Community Lint Feed"}</h1>
-							<p>
-								{savedOnly
-									? "Return to the resumes you saved for another read."
-									: "Anonymous resumes. Public checks. Sharpest fixes voted to the top."}
-							</p>
-						</div>
-						<Link className="btn-primary" href="/submit">
-							Post resume
-						</Link>
-					</div>
+					<ResumeFeedHeader
+						actionHref="/submit"
+						actionLabel="Post resume"
+						description={
+							savedOnly
+								? "Return to the resumes you saved for another read."
+								: "Anonymous resumes. Public checks. Sharpest fixes voted to the top."
+						}
+						title={savedOnly ? "Saved Resumes" : "Resume Feed"}
+					/>
 					{welcomeState ? (
 						<section
 							className="feed-welcome-card"
@@ -131,7 +129,7 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 
 				<div className="feed-right-rail" aria-label="Community context">
 					<section>
-						<h2>About the feed</h2>
+						<h2>About resume reviews</h2>
 						<p>
 							Post a resume, get specific feedback, and vote for the check
 							that actually helps someone improve.

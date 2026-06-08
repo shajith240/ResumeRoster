@@ -212,7 +212,7 @@ async function loadAuthorProfiles(loadedReviews: Review[]) {
 	const profileResultWithReviewerFields = await supabase
 		.from("profiles")
 		.select(
-			"id,username,full_name,community_role,reviewer_type,reviewer_headline,reviewer_expertise,reviewer_verification_status",
+			"id,username,full_name,avatar_url,community_role,reviewer_type,reviewer_headline,reviewer_expertise,reviewer_verification_status",
 		)
 		.in("id", authorIds);
 	const profileResult =
@@ -220,7 +220,7 @@ async function loadAuthorProfiles(loadedReviews: Review[]) {
 		isAuthorProfileFeatureError(profileResultWithReviewerFields.error)
 			? await supabase
 					.from("profiles")
-					.select("id,username,full_name")
+					.select("id,username,full_name,avatar_url")
 					.in("id", authorIds)
 			: profileResultWithReviewerFields;
 

@@ -37,6 +37,7 @@ type DeleteUserAppDataResult = {
 type StorageRemovalCounts = {
 	avatars: number;
 	commentMedia: number;
+	communityPostMedia: number;
 	resumes: number;
 };
 
@@ -108,21 +109,41 @@ async function listUserStorageFolder(
 	return paths;
 }
 
+async function listOptionalUserStorageFolder(
+	admin: SupabaseClient,
+	bucket: string,
+	userId: string,
+) {
+	try {
+		return await listUserStorageFolder(admin, bucket, userId);
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "";
+		if (/not found|does not exist|not exist/i.test(message)) return [];
+		throw error;
+	}
+}
+
 async function removeAccountStorageObjects(
 	admin: SupabaseClient,
 	profileId: string,
 	appData: DeleteUserAppDataResult,
 ) {
-	const [resumeFolderPaths, avatarFolderPaths, commentMediaFolderPaths] =
-		await Promise.all([
-			listUserStorageFolder(admin, "resumes", profileId),
-			listUserStorageFolder(admin, "avatars", profileId),
-			listUserStorageFolder(admin, "comment-media", profileId),
-		]);
+	const [
+		resumeFolderPaths,
+		avatarFolderPaths,
+		commentMediaFolderPaths,
+		communityPostMediaFolderPaths,
+	] = await Promise.all([
+		listUserStorageFolder(admin, "resumes", profileId),
+		listUserStorageFolder(admin, "avatars", profileId),
+		listUserStorageFolder(admin, "comment-media", profileId),
+		listOptionalUserStorageFolder(admin, "community-post-media", profileId),
+	]);
 
 	const removed: StorageRemovalCounts = {
 		avatars: 0,
 		commentMedia: 0,
+		communityPostMedia: 0,
 		resumes: 0,
 	};
 
@@ -138,6 +159,11 @@ async function removeAccountStorageObjects(
 		...(appData.comment_media_paths ?? []),
 		...commentMediaFolderPaths,
 	]);
+	removed.communityPostMedia = await removeStorageObjects(
+		admin,
+		"community-post-media",
+		communityPostMediaFolderPaths,
+	);
 
 	return removed;
 }
@@ -293,6 +319,7 @@ export async function POST(request: Request, context: RouteContext) {
 			let removedStorageObjects: StorageRemovalCounts = {
 				avatars: 0,
 				commentMedia: 0,
+				communityPostMedia: 0,
 				resumes: 0,
 			};
 			const baseMetadata = {

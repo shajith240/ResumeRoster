@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getAppHomeRoute } from "@/lib/app-routes";
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
@@ -22,7 +23,7 @@ export default function manifest(): MetadataRoute.Manifest {
 		],
 		name: "Linted",
 		short_name: "Linted",
-		start_url: "/feed",
+		start_url: getAppHomeRoute(),
 		theme_color: "#111113",
 	};
 }

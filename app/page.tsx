@@ -16,6 +16,7 @@ import {
 	QuoteSection,
 	StickyFeatureSection,
 } from "@/components/landing/sections";
+import { getAppHomeRoute } from "@/lib/app-routes";
 import { supabase } from "@/lib/supabase/client";
 
 function isSmallScreen() {
@@ -37,6 +38,7 @@ export default function Home() {
 	const cardsStackRef = useRef<HTMLElement | null>(null);
 	const lastScrollY = useRef(0);
 	const isSignedIn = Boolean(user);
+	const appHomeRoute = getAppHomeRoute();
 
 	useEffect(() => {
 		let active = true;
@@ -46,7 +48,7 @@ export default function Home() {
 			setUser(data.user);
 			setAuthReady(true);
 			if (data.user) {
-				router.replace("/feed");
+				router.replace(appHomeRoute);
 			}
 		});
 
@@ -56,7 +58,7 @@ export default function Home() {
 			setUser(session?.user ?? null);
 			setAuthReady(true);
 			if (session?.user) {
-				router.replace("/feed");
+				router.replace(appHomeRoute);
 			}
 		});
 
@@ -64,7 +66,7 @@ export default function Home() {
 			active = false;
 			subscription.unsubscribe();
 		};
-	}, [router]);
+	}, [appHomeRoute, router]);
 
 	useEffect(() => {
 		function updateNavbarVisibility() {

@@ -14,6 +14,7 @@ import moonLineDuotone from "@iconify-icons/solar/moon-line-duotone";
 import moonSleepLineDuotone from "@iconify-icons/solar/moon-sleep-line-duotone";
 import paletteRoundLineDuotone from "@iconify-icons/solar/palette-round-line-duotone";
 import questionCircleLineDuotone from "@iconify-icons/solar/question-circle-line-duotone";
+import shieldCheckLineDuotone from "@iconify-icons/solar/shield-check-line-duotone";
 import smileCircleLineDuotone from "@iconify-icons/solar/smile-circle-line-duotone";
 import smartphone2LineDuotone from "@iconify-icons/solar/smartphone-2-line-duotone";
 import squareTopDownLineDuotone from "@iconify-icons/solar/square-top-down-line-duotone";
@@ -39,6 +40,7 @@ import {
 import { cn } from "@/lib/utils";
 
 type MenuAction =
+	| "admin"
 	| "profile"
 	| "submit"
 	| "install"
@@ -83,6 +85,7 @@ type UserDropdownUser = {
 };
 
 type UserDropdownProps = {
+	isAdmin?: boolean;
 	user?: UserDropdownUser;
 	onAction?: (action: MenuAction) => void;
 	onStatusChange?: (status: string) => void;
@@ -96,6 +99,7 @@ const MENU_ITEMS: {
 	status: StatusItem[];
 	appearance: ThemeItem[];
 	profile: MenuItem[];
+	admin: MenuItem[];
 	activity: MenuItem[];
 	account: MenuItem[];
 } = {
@@ -133,6 +137,13 @@ const MENU_ITEMS: {
 			action: "install",
 		},
 	],
+	admin: [
+		{
+			icon: shieldCheckLineDuotone,
+			label: "Admin console",
+			action: "admin",
+		},
+	],
 	activity: [
 		{
 			icon: bookmarkLineDuotone,
@@ -157,6 +168,7 @@ const MENU_ITEMS: {
 };
 
 export function UserDropdown({
+	isAdmin = false,
 	user = {
 		name: "Resume reviewer",
 		username: "@linted",
@@ -481,6 +493,15 @@ export function UserDropdown({
 							</Fragment>
 						))}
 					</DropdownMenuGroup>
+
+					{isAdmin ? (
+						<>
+							<DropdownMenuSeparator />
+							<DropdownMenuGroup>
+								{MENU_ITEMS.admin.map(renderMenuItem)}
+							</DropdownMenuGroup>
+						</>
+					) : null}
 
 					<DropdownMenuSeparator />
 					<DropdownMenuGroup>

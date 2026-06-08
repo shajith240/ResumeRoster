@@ -522,7 +522,7 @@ export function StackedList({
 					</span>
 					<strong>No matching reviewers</strong>
 					<p>Try another search or help someone lint a resume.</p>
-					<Link href="/feed">Open the feed -&gt;</Link>
+					<Link href="/feed">Open Resume Feed -&gt;</Link>
 				</div>
 			) : null}
 

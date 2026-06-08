@@ -1,6 +1,22 @@
+"use client";
+
 import Link from "next/link";
-import { Bookmark, Eye, Link2, MessageCircle } from "lucide-react";
+import {
+	Bookmark,
+	Check,
+	ChevronDown,
+	Eye,
+	LayoutList,
+	Link2,
+	MessageCircle,
+} from "lucide-react";
 import FeedResumePreview from "@/components/FeedResumePreview";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { formatCount, type FeedSort } from "@/lib/feed-ranking";
 import {
 	getResumeAffiliationLabel,
@@ -65,9 +81,12 @@ export function FeedEmptyState({ savedOnly }: FeedEmptyStateProps) {
 		return (
 			<div className="empty-state feed-empty-state">
 				<h2>No saved resumes yet</h2>
-				<p>Save resumes from the feed when you want to revisit their fixes later.</p>
+				<p>
+					Save resumes from the Resume Feed when you want to revisit their fixes
+					later.
+				</p>
 				<Link className="btn-primary" href="/feed">
-					Browse feed
+					Browse Resume Feed
 				</Link>
 			</div>
 		);
@@ -88,31 +107,74 @@ export function FeedEmptyState({ savedOnly }: FeedEmptyStateProps) {
 }
 
 export function FeedSortBar({ activeSort, savedOnly }: FeedSortBarProps) {
+	const activeOption = savedOnly
+		? { label: "Saved", shortLabel: "Saved", value: "saved" }
+		: sortOptions.find((option) => option.value === activeSort) ?? sortOptions[0];
+
 	return (
-		<nav className="feed-sortbar pill-tabs" aria-label="Feed sort">
-			{sortOptions.map((option) => (
-				<Link
-					aria-current={!savedOnly && activeSort === option.value ? "page" : undefined}
-					className={!savedOnly && activeSort === option.value ? "active" : ""}
-					href={option.href}
-					key={option.value}
+		<nav className="feed-sortbar feed-toolbar" aria-label="Feed sort">
+			<DropdownMenu>
+				<DropdownMenuTrigger
+					aria-label={`Sort resumes by ${activeOption.label}`}
+					className="feed-sort-trigger"
 				>
-					<span className="sort-label-full">{option.label}</span>
-					<span className="sort-label-short">
-						{option.shortLabel ?? option.label}
-					</span>
-				</Link>
-			))}
-			<Link
-				aria-current={savedOnly ? "page" : undefined}
-				className={savedOnly ? "active" : ""}
-				href="/feed?saved=1"
-			>
-				<span className="sort-label-full">Saved</span>
-				<span className="sort-label-short">Saved</span>
-			</Link>
+					<span>{activeOption.shortLabel ?? activeOption.label}</span>
+					<ChevronDown aria-hidden="true" />
+				</DropdownMenuTrigger>
+				<DropdownMenuContent
+					align="start"
+					className="feed-sort-menu reddit-select-content"
+					sideOffset={8}
+				>
+					{sortOptions.map((option) => {
+						const isActive = !savedOnly && activeSort === option.value;
+
+						return (
+							<DropdownMenuItem asChild className="feed-sort-menu-item" key={option.value}>
+								<Link
+									aria-current={isActive ? "page" : undefined}
+									className={isActive ? "is-active" : ""}
+									href={option.href}
+								>
+									<span>{option.label}</span>
+									{isActive ? <Check aria-hidden="true" /> : null}
+								</Link>
+							</DropdownMenuItem>
+						);
+					})}
+					<DropdownMenuItem asChild className="feed-sort-menu-item">
+						<Link
+							aria-current={savedOnly ? "page" : undefined}
+							className={savedOnly ? "is-active" : ""}
+							href="/feed?saved=1"
+						>
+							<span>Saved</span>
+							{savedOnly ? <Check aria-hidden="true" /> : null}
+						</Link>
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+			<span className="feed-view-indicator" aria-hidden="true">
+				<LayoutList />
+			</span>
 		</nav>
 	);
+}
+
+function getResumeAuthorAvatar(
+	resume: SavedResumeSummary,
+	profile: SavedResumeSummary["author_profile"],
+) {
+	if (!resume.is_anonymous && profile?.avatar_url?.trim()) {
+		return profile.avatar_url.trim();
+	}
+
+	const seed =
+		(!resume.is_anonymous &&
+			(profile?.full_name?.trim() || profile?.username?.trim())) ||
+		resume.id;
+
+	return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}`;
 }
 
 export function ResumeFeedCard({
@@ -128,6 +190,7 @@ export function ResumeFeedCard({
 }: ResumeFeedCardProps) {
 	const authorProfile = resume.author_profile ?? null;
 	const posterLabel = getResumePosterLabel(resume, authorProfile);
+	const authorAvatar = getResumeAuthorAvatar(resume, authorProfile);
 	const saveButtonState = getSaveButtonState(resume.is_saved, isSaving);
 	const reviewSignal = getReviewSignal(resume);
 	const threadActionLabel = getThreadActionLabel(resume);
@@ -144,17 +207,30 @@ export function ResumeFeedCard({
 			<div className="post-content">
 				<div className="post-meta">
 					<div className="post-meta-main">
-						{resume.is_anonymous ? (
-							<span>{posterLabel}</span>
-						) : (
-							<Link className="post-author-link" href={`/profile/${resume.user_id}`}>
-								{posterLabel}
-							</Link>
-						)}
+						<span className="post-author-cluster">
+							<img
+								alt=""
+								aria-hidden="true"
+								className="post-author-avatar"
+								height={24}
+								src={authorAvatar}
+								width={24}
+							/>
+							{resume.is_anonymous ? (
+								<span className="post-author-name">{posterLabel}</span>
+							) : (
+								<Link className="post-author-link" href={`/profile/${resume.user_id}`}>
+									{posterLabel}
+								</Link>
+							)}
+						</span>
 						<time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
-						<span className="post-read-count">
+						<span
+							aria-label={`${formatCount(resume.read_count)} reads`}
+							className="post-read-count"
+						>
 							<Eye className="post-meta-icon" size={15} aria-hidden="true" />
-							{formatCount(resume.read_count)} reads
+							{formatCount(resume.read_count)}
 						</span>
 					</div>
 					<span className={`feed-status-pill ${reviewSignal.className}`}>

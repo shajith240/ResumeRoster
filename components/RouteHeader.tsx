@@ -1,88 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import {
-	Bookmark,
-	Home,
-	ShieldCheck,
-	Plus,
-	Trophy,
-	UserRound,
-	type LucideIcon,
-} from "lucide-react";
+import { usePathname } from "next/navigation";
 import AuthButton from "./AuthButton";
 import BrandMark from "./BrandMark";
-import { useAdminAccess } from "@/lib/use-admin-access";
+import { getPrimaryNavigationItems } from "@/components/navigation/primary-nav";
+import { useMobileScrollChrome } from "@/components/navigation/useMobileScrollChrome";
+import { getAppHomeRoute } from "@/lib/app-routes";
 
-type DockLink = {
-	href: string;
-	label: string;
-	icon: LucideIcon;
-	match: (context: {
-		pathname: string;
-		saved: string | null;
-	}) => boolean;
-	tone?: "primary";
+type RouteHeaderProps = {
+	hideAppHeaderOnMobile?: boolean;
 };
 
-const dockLinks: DockLink[] = [
-	{
-		href: "/feed",
-		label: "Feed",
-		icon: Home,
-		match: ({ pathname, saved }) => pathname === "/feed" && !saved,
-	},
-	{
-		href: "/feed?saved=1",
-		label: "Saved",
-		icon: Bookmark,
-		match: ({ pathname, saved }) =>
-			pathname === "/feed" && (saved === "1" || saved === "true"),
-	},
-	{
-		href: "/submit",
-		label: "Post",
-		icon: Plus,
-		match: ({ pathname }) => pathname === "/submit",
-		tone: "primary",
-	},
-	{
-		href: "/leaderboard",
-		label: "Leaders",
-		icon: Trophy,
-		match: ({ pathname }) => pathname === "/leaderboard",
-	},
-	{
-		href: "/profile/me",
-		label: "Profile",
-		icon: UserRound,
-		match: ({ pathname }) => pathname.startsWith("/profile"),
-	},
-];
-
-export default function RouteHeader() {
+export default function RouteHeader({
+	hideAppHeaderOnMobile = false,
+}: RouteHeaderProps) {
 	const pathname = usePathname();
-	const searchParams = useSearchParams();
-	const saved = searchParams.get("saved");
-	const { isAdmin } = useAdminAccess();
-	const visibleDockLinks = isAdmin
-		? [
-				...dockLinks,
-				{
-					href: "/admin",
-					label: "Admin",
-					icon: ShieldCheck,
-					match: ({ pathname }: { pathname: string; saved: string | null }) =>
-						pathname.startsWith("/admin"),
-				},
-			]
-		: dockLinks;
+	const dockLinks = getPrimaryNavigationItems({ pathname });
+	const { isHidden: isChromeHidden, isScrolled: isChromeScrolled } =
+		useMobileScrollChrome({ mediaQuery: "(max-width: 900px)" });
+	const appHomeRoute = getAppHomeRoute();
 
 	return (
 		<>
-			<header className="app-header">
-				<Link href="/feed" className="app-logo" aria-label="Linted home">
+			<header
+				className={[
+					"app-header",
+					hideAppHeaderOnMobile ? "app-header-mobile-hidden" : "",
+					isChromeScrolled ? "is-mobile-scrolled" : "",
+					isChromeHidden ? "is-mobile-hidden" : "",
+				]
+					.filter(Boolean)
+					.join(" ")}
+			>
+				<Link href={appHomeRoute} className="app-logo" aria-label="Linted home">
 					<BrandMark />
 				</Link>
 
@@ -90,33 +41,39 @@ export default function RouteHeader() {
 			</header>
 
 			<nav
-				className="bottom-nav"
+				className={[
+					"bottom-nav",
+					isChromeScrolled ? "is-mobile-scrolled" : "",
+					isChromeHidden ? "is-mobile-hidden" : "",
+				]
+					.filter(Boolean)
+					.join(" ")}
 				aria-label="Mobile navigation"
 				style={{
-					gridTemplateColumns: `repeat(${visibleDockLinks.length}, minmax(0, 1fr))`,
+					gridTemplateColumns: `repeat(${dockLinks.length}, minmax(0, 1fr))`,
 				}}
 			>
-				{visibleDockLinks.map((link) => {
-					const Icon = link.icon;
-					const isRouteMatch = link.match({ pathname, saved });
+				{dockLinks.map((link) => {
+					const Icon = link.dockIcon;
 
 					return (
 						<Link
-							aria-current={isRouteMatch ? "page" : undefined}
+							aria-current={link.active ? "page" : undefined}
+							aria-label={link.label}
 							className={[
 								"dock-link",
 								link.tone === "primary" ? "dock-link-primary" : "",
-								isRouteMatch ? "active" : "",
+								link.active ? "active" : "",
 							]
 								.filter(Boolean)
 								.join(" ")}
 							href={link.href}
-							key={link.label}
+							key={link.id}
 						>
 							<span className="dock-icon-wrap">
 								<Icon aria-hidden="true" size={20} strokeWidth={2.1} />
 							</span>
-							<span className="dock-label">{link.label}</span>
+							<span className="dock-label">{link.mobileLabel}</span>
 						</Link>
 					);
 				})}

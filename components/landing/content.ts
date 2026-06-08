@@ -13,7 +13,8 @@ export const footerGroups: Array<{ title: string; links: FooterLink[] }> = [
 		title: "Product",
 		links: [
 			{ label: "Our Mission", href: "/" },
-			{ label: "Lint Feed", href: "/feed" },
+			{ label: "Community", href: "/community" },
+			{ label: "Resume Feed", href: "/feed" },
 			{ label: "Leaderboard", href: "/leaderboard" },
 		],
 	},

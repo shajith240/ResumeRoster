@@ -14,7 +14,13 @@ type AdminReportAction =
 	| "reopen_resume"
 	| "reset_reviewer_trust"
 	| "clear_public_profile_text"
-	| "clear_reviewer_profile";
+	| "clear_reviewer_profile"
+	| "remove_community_post"
+	| "restore_community_post"
+	| "lock_community_post"
+	| "unlock_community_post"
+	| "remove_community_comment"
+	| "restore_community_comment";
 
 type AdminReportRpcResult = {
 	error_code: string | null;
@@ -40,6 +46,12 @@ const ACTIONS = new Set<AdminReportAction>([
 	"reset_reviewer_trust",
 	"clear_public_profile_text",
 	"clear_reviewer_profile",
+	"remove_community_post",
+	"restore_community_post",
+	"lock_community_post",
+	"unlock_community_post",
+	"remove_community_comment",
+	"restore_community_comment",
 ]);
 
 const RPC_FAILURES: Record<string, { message: string; status: number }> = {
@@ -49,6 +61,22 @@ const RPC_FAILURES: Record<string, { message: string; status: number }> = {
 	},
 	invalid_action: {
 		message: "Choose a valid admin action.",
+		status: 400,
+	},
+	community_comment_not_found: {
+		message: "Community comment not found.",
+		status: 404,
+	},
+	community_comment_target_missing: {
+		message: "This report has no community comment target.",
+		status: 400,
+	},
+	community_post_not_found: {
+		message: "Community post not found.",
+		status: 404,
+	},
+	community_post_target_missing: {
+		message: "This report has no community post target.",
 		status: 400,
 	},
 	profile_not_found: {
@@ -64,7 +92,7 @@ const RPC_FAILURES: Record<string, { message: string; status: number }> = {
 		status: 404,
 	},
 	restore_history_missing: {
-		message: "This review cannot be restored from admin history.",
+		message: "This item cannot be restored from admin history.",
 		status: 400,
 	},
 	resume_not_found: {

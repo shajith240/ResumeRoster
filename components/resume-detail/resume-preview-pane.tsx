@@ -43,6 +43,22 @@ type ResumePreviewPaneProps = {
 	user: User | null;
 };
 
+function getResumeDetailAuthorAvatar(
+	resume: ResumeSummary,
+	profile: ResumeAuthorProfile | null,
+) {
+	if (!resume.is_anonymous && profile?.avatar_url?.trim()) {
+		return profile.avatar_url.trim();
+	}
+
+	const seed =
+		(!resume.is_anonymous &&
+			(profile?.full_name?.trim() || profile?.username?.trim())) ||
+		resume.id;
+
+	return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}`;
+}
+
 export function ResumePreviewPane({
 	isClosed,
 	isOwner,
@@ -58,20 +74,32 @@ export function ResumePreviewPane({
 	signedUrlError,
 	user,
 }: ResumePreviewPaneProps) {
+	const authorAvatar = getResumeDetailAuthorAvatar(resume, resumeAuthorProfile);
+
 	return (
 		<article className="thread-viewer-card resume-preview-pane">
 			<header className="thread-header">
-				<div className="post-meta">
-					{resume.is_anonymous ? (
-						<span>{posterLabel}</span>
-					) : (
-						<Link className="post-author-link" href={`/profile/${resume.user_id}`}>
-							{posterLabel}
-						</Link>
-					)}
-					<time dateTime={resume.created_at}>
-						{formatDate(resume.created_at)}
-					</time>
+				<div className="post-meta resume-detail-meta">
+					<div className="post-meta-main">
+						<span className="post-author-cluster">
+							<img
+								alt=""
+								aria-hidden="true"
+								className="post-author-avatar"
+								height={24}
+								src={authorAvatar}
+								width={24}
+							/>
+							{resume.is_anonymous ? (
+								<span className="post-author-name">{posterLabel}</span>
+							) : (
+								<Link className="post-author-link" href={`/profile/${resume.user_id}`}>
+									{posterLabel}
+								</Link>
+							)}
+						</span>
+						<time dateTime={resume.created_at}>{formatDate(resume.created_at)}</time>
+					</div>
 				</div>
 				<div className="thread-header-actions">
 					<span className={`badge ${isClosed ? "badge-closed" : "badge-open"}`}>
@@ -107,7 +135,7 @@ export function ResumePreviewPane({
 				</div>
 			</header>
 
-			<h1>{resume.title}</h1>
+			<h1 className="resume-detail-title">{resume.title}</h1>
 			<div className="post-tags">
 				<span className="badge role-badge">
 					{getResumeRoleLabel(resume, resumeAuthorProfile)}

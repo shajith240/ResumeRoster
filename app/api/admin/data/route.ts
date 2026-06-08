@@ -15,6 +15,21 @@ async function getCount(query: CountQuery) {
 	return count ?? 0;
 }
 
+async function getOptionalCommunityPostAttachmentCount(query: CountQuery) {
+	const { count, error } = await query;
+	if (!error) return count ?? 0;
+
+	if (
+		/community_post_attachments|schema cache|relation .* does not exist/i.test(
+			error.message ?? "",
+		)
+	) {
+		return 0;
+	}
+
+	throw new Error(error.message ?? "Count query failed.");
+}
+
 export async function GET(request: Request) {
 	try {
 		const { admin } = await requireAdmin(request);
@@ -32,6 +47,7 @@ export async function GET(request: Request) {
 			resumeFiles,
 			avatarFiles,
 			commentMediaFiles,
+			communityPostMediaFiles,
 		] = await Promise.all([
 			getCount(admin.from("profiles").select("id", { count: "exact", head: true })),
 			getCount(admin.from("resumes").select("id", { count: "exact", head: true })),
@@ -84,6 +100,12 @@ export async function GET(request: Request) {
 					.select("storage_path", { count: "exact", head: true })
 					.not("storage_path", "is", null),
 			),
+			getOptionalCommunityPostAttachmentCount(
+				admin
+					.from("community_post_attachments")
+					.select("storage_path", { count: "exact", head: true })
+					.not("storage_path", "is", null),
+			),
 		]);
 
 		return Response.json({
@@ -101,7 +123,7 @@ export async function GET(request: Request) {
 					value: "cascade",
 				},
 				{
-					detail: "Resume, avatar, and comment upload objects are removed first.",
+					detail: "Resume, avatar, comment, and community post upload objects are removed first.",
 					key: "storage",
 					label: "Storage",
 					value: "cleanup",
@@ -131,6 +153,13 @@ export async function GET(request: Request) {
 					key: "comment-media",
 					label: "Comment media",
 					value: commentMediaFiles,
+				},
+				{
+					detail:
+						"Public images linked from community_post_attachments.storage_path.",
+					key: "community-post-media",
+					label: "Community post media",
+					value: communityPostMediaFiles,
 				},
 			],
 			tables: [

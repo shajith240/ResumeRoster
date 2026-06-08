@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Star } from "lucide-react";
 import BrandMark from "@/components/BrandMark";
 import LandingCta from "@/components/LandingCta";
+import { getAppHomeRoute } from "@/lib/app-routes";
 import {
 	asset,
 	benefitImages,
@@ -50,6 +51,8 @@ export function LandingNavbar({
 	isSignedIn,
 	navHidden,
 }: LandingNavbarProps) {
+	const appHomeRoute = getAppHomeRoute();
+
 	return (
 		<nav className={`navbar${navHidden ? " nav-hidden" : ""}`}>
 			<div className="container nav-content">
@@ -60,10 +63,10 @@ export function LandingNavbar({
 				<div className="nav-links">
 					{isSignedIn ? (
 						<>
-							<Link href="/feed">Feed</Link>
+							<Link href={appHomeRoute}>Community</Link>
+							<Link href="/feed">Resume Feed</Link>
 							<Link href="/submit">Post resume</Link>
 							<Link href="/leaderboard">Leaderboard</Link>
-							<Link href="/profile/me">My profile</Link>
 						</>
 					) : (
 						<>
@@ -77,7 +80,7 @@ export function LandingNavbar({
 
 				<LandingCta
 					className="nav-button"
-					href={isSignedIn ? "/feed" : "/submit"}
+					href={isSignedIn ? appHomeRoute : "/submit"}
 					isSignedIn={isSignedIn}
 				>
 					{authReady && isSignedIn ? "Enter app" : "Sign up now"}
@@ -88,6 +91,8 @@ export function LandingNavbar({
 }
 
 export function HeroTrustSection({ authReady, isSignedIn }: AuthLandingProps) {
+	const appHomeRoute = getAppHomeRoute();
+
 	return (
 		<div className="landing-first-screen">
 			<section className="hero">
@@ -113,10 +118,10 @@ export function HeroTrustSection({ authReady, isSignedIn }: AuthLandingProps) {
 
 					<LandingCta
 						className="hero-btn"
-						href={isSignedIn ? "/feed" : "/submit"}
+						href={isSignedIn ? appHomeRoute : "/submit"}
 						isSignedIn={isSignedIn}
 					>
-						{authReady && isSignedIn ? "Go to lint feed" : "Lint my resume"}
+						{authReady && isSignedIn ? "Enter community" : "Lint my resume"}
 					</LandingCta>
 				</div>
 			</section>

@@ -51,6 +51,20 @@
 0044_upload_security_quarantine.sql
 0045_authenticated_api_rate_limits.sql
 0046_health_readiness_checks.sql
+0047_guided_review_queue.sql
+0048_hide_waiting_resumes_from_public_feed.sql
+0049_recalculate_guided_review_queue.sql
+0050_validate_integrity_and_restore_review_votes.sql
+0051_db_lint_warning_cleanup.sql
+0052_community_database_foundation.sql
+0053_submit_community_post_rpc.sql
+0054_community_post_media_and_comments.sql
+0055_community_discussion_actions.sql
+0056_community_moderation_controls.sql
+0057_fix_community_post_submit_profile_conflict.sql
+0058_allow_title_only_community_posts.sql
+0059_allow_reddit_length_community_titles.sql
+0060_community_polls_and_drafts_support.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.

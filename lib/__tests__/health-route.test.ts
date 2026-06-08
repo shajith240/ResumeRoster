@@ -105,6 +105,22 @@ describe("health route", () => {
 		});
 	});
 
+	it("requires community post media storage only when the community flag is enabled", async () => {
+		vi.stubEnv("NEXT_PUBLIC_COMMUNITY_POSTS_ENABLED", "true");
+		const { getBucket } = createAdminMock();
+
+		const response = await GET();
+
+		expect(response.status).toBe(200);
+		expect(getBucket).toHaveBeenCalledTimes(5);
+		expect(getBucket).toHaveBeenCalledWith("community-post-media");
+		await expect(response.json()).resolves.toMatchObject({
+			checks: {
+				storage: { status: "ok", bucket_count: 5 },
+			},
+		});
+	});
+
 	it("fails readiness with a stable database message when Supabase query fails", async () => {
 		createAdminMock({
 			databaseError: { message: "permission denied for table profiles" },

@@ -49,6 +49,14 @@ export function getTargetTitle(report: ReportPreview) {
 		return report.review?.content || report.roast?.content || "Reported feedback";
 	}
 
+	if (report.target_type === "community_post") {
+		return report.communityPost?.title || "Reported community post";
+	}
+
+	if (report.target_type === "community_comment") {
+		return report.communityComment?.body || "Reported community comment";
+	}
+
 	return report.resume?.title || "Reported resume";
 }
 
