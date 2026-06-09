@@ -44,6 +44,8 @@ import {
 } from "@/lib/community-feed";
 import { formatCount } from "@/lib/feed-ranking";
 import { getFreshAuthSession } from "@/lib/auth-session";
+import { getOptimisticCommunityVoteCounts } from "@/lib/community-optimistic";
+import { resolveProfileAvatarUrl } from "@/lib/supabase/avatars";
 import { supabase } from "@/lib/supabase/client";
 import { useAdminAccess } from "@/lib/use-admin-access";
 import type {
@@ -159,12 +161,12 @@ function getAuthorName(
 
 function getCommunityAuthorAvatar(
 	authorId: string,
-	profile: Pick<ResumeAuthorProfile, "avatar_url" | "full_name" | "username"> | null,
+	profile: Pick<
+		ResumeAuthorProfile,
+		"avatar_path" | "avatar_url" | "full_name" | "id" | "username"
+	> | null,
 ) {
-	if (profile?.avatar_url?.trim()) return profile.avatar_url.trim();
-
-	const seed = profile?.full_name?.trim() || profile?.username?.trim() || authorId;
-	return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}`;
+	return resolveProfileAvatarUrl(profile, authorId);
 }
 
 function byId<T extends { id: string }>(rows: T[]) {
@@ -187,6 +189,40 @@ function getFeedTextPreview(post: CommunityPostFeedItem) {
 
 function getPollTotalVotes(poll: CommunityPostFeedPoll) {
 	return poll.options.reduce((total, option) => total + option.vote_count, 0);
+}
+
+function applyCommunityPollSelection(
+	post: CommunityPostFeedItem,
+	nextOptionId: string,
+) {
+	if (!post.poll) return post;
+
+	const previousOptionId = post.poll.selectedOptionId;
+
+	return {
+		...post,
+		poll: {
+			...post.poll,
+			options: post.poll.options.map((option) => {
+				if (option.id === previousOptionId && previousOptionId !== nextOptionId) {
+					return {
+						...option,
+						vote_count: Math.max(0, option.vote_count - 1),
+					};
+				}
+
+				if (option.id === nextOptionId && previousOptionId !== nextOptionId) {
+					return {
+						...option,
+						vote_count: option.vote_count + 1,
+					};
+				}
+
+				return option;
+			}),
+			selectedOptionId: nextOptionId,
+		},
+	};
 }
 
 function isPollClosed(poll: CommunityPostFeedPoll) {
@@ -333,7 +369,7 @@ export default function CommunityPostFeed() {
 					.order("display_order", { ascending: true }),
 				supabase
 					.from("profiles")
-					.select("id,username,full_name,avatar_url")
+					.select("id,username,full_name,avatar_url,avatar_path")
 					.in("id", authorIds),
 				supabase
 					.from("community_post_polls")
@@ -401,7 +437,7 @@ export default function CommunityPostFeed() {
 			const profilesById = byId(
 				(profileResult.data ?? []) as Pick<
 					ResumeAuthorProfile,
-					"avatar_url" | "full_name" | "id" | "username"
+					"avatar_path" | "avatar_url" | "full_name" | "id" | "username"
 				>[],
 			);
 			const topicsById = byId((topicResult.data ?? []) as CommunityTopicRow[]);
@@ -514,6 +550,9 @@ export default function CommunityPostFeed() {
 			}
 
 			return result;
+		} catch {
+			toast.error(fallbackMessage);
+			return null;
 		} finally {
 			setRowActionBusy(busyKey, false);
 		}
@@ -542,6 +581,13 @@ export default function CommunityPostFeed() {
 		}
 
 		const previousOptionId = post.poll.selectedOptionId;
+		if (previousOptionId === optionId) return;
+
+		setPosts((current) =>
+			current.map((row) =>
+				row.id === post.id ? applyCommunityPollSelection(row, optionId) : row,
+			),
+		);
 		setPollVoting(post.poll.id, true);
 
 		try {
@@ -559,46 +605,25 @@ export default function CommunityPostFeed() {
 
 			if (!response.ok || !result?.optionId) {
 				toast.error(result?.message ?? "Could not update your poll vote.");
+				setPosts((current) =>
+					current.map((row) => (row.id === post.id ? post : row)),
+				);
 				return;
 			}
 
 			const nextOptionId = result.optionId;
-			setPosts((current) =>
-				current.map((row) => {
-					if (row.id !== post.id || !row.poll) return row;
-
-					return {
-						...row,
-						poll: {
-							...row.poll,
-							options: row.poll.options.map((option) => {
-								if (
-									option.id === previousOptionId &&
-									previousOptionId !== nextOptionId
-								) {
-									return {
-										...option,
-										vote_count: Math.max(0, option.vote_count - 1),
-									};
-								}
-
-								if (
-									option.id === nextOptionId &&
-									previousOptionId !== nextOptionId
-								) {
-									return {
-										...option,
-										vote_count: option.vote_count + 1,
-									};
-								}
-
-								return option;
-							}),
-							selectedOptionId: nextOptionId,
-						},
-					};
-				}),
-			);
+			if (nextOptionId !== optionId) {
+				setPosts((current) =>
+					current.map((row) =>
+						row.id === post.id
+							? applyCommunityPollSelection(post, nextOptionId)
+							: row,
+					),
+				);
+			}
+		} catch {
+			setPosts((current) => current.map((row) => (row.id === post.id ? post : row)));
+			toast.error("Could not update your poll vote.");
 		} finally {
 			setPollVoting(post.poll.id, false);
 		}
@@ -629,6 +654,23 @@ export default function CommunityPostFeed() {
 		}
 
 		const nextReaction = post.userReaction === reaction ? null : reaction;
+		const optimisticCounts = getOptimisticCommunityVoteCounts(
+			post,
+			post.userReaction,
+			nextReaction,
+		);
+		setPosts((current) =>
+			current.map((row) =>
+				row.id === post.id
+					? {
+							...row,
+							downvote_count: optimisticCounts.downvote_count,
+							upvote_count: optimisticCounts.upvote_count,
+							userReaction: nextReaction,
+						}
+					: row,
+			),
+		);
 		setVoting(post.id, true);
 
 		try {
@@ -646,6 +688,7 @@ export default function CommunityPostFeed() {
 
 			if (!response.ok || !result) {
 				toast.error(result?.message ?? "Could not update your vote.");
+				setPosts((current) => current.map((row) => (row.id === post.id ? post : row)));
 				return;
 			}
 
@@ -661,6 +704,9 @@ export default function CommunityPostFeed() {
 						: row,
 				),
 			);
+		} catch {
+			setPosts((current) => current.map((row) => (row.id === post.id ? post : row)));
+			toast.error("Could not update your vote.");
 		} finally {
 			setVoting(post.id, false);
 		}
@@ -699,6 +745,12 @@ export default function CommunityPostFeed() {
 			return;
 		}
 
+		let previousRows: CommunityPostFeedItem[] = [];
+		setPosts((current) => {
+			previousRows = current;
+			return current.filter((row) => row.id !== post.id);
+		});
+
 		const result = await runPostRowAction<PostDeleteActionResponse>({
 			busyKey: `post-delete-${post.id}`,
 			fallbackMessage: "Post was not deleted.",
@@ -706,9 +758,11 @@ export default function CommunityPostFeed() {
 			path: `/api/community/posts/${post.id}`,
 		});
 
-		if (!result?.post) return;
+		if (!result?.post) {
+			setPosts(previousRows);
+			return;
+		}
 
-		setPosts((current) => current.filter((row) => row.id !== post.id));
 		toast.success("Post deleted.");
 	}
 
@@ -903,11 +957,11 @@ export default function CommunityPostFeed() {
 
 													return (
 														<button
-															aria-disabled={
-																pollVoteBlockReason ? "true" : undefined
-															}
 															aria-pressed={isSelected}
 															className={isSelected ? "is-selected" : ""}
+															data-blocked={
+																pollVoteBlockReason ? "true" : undefined
+															}
 															disabled={isPollVoteBusy}
 															key={option.id}
 															onClick={() => {

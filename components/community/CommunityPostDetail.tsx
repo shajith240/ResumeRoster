@@ -60,11 +60,13 @@ import {
 	type CommunityCommentNode,
 } from "@/lib/community-threading";
 import { formatCount } from "@/lib/feed-ranking";
+import { getOptimisticCommunityVoteCounts } from "@/lib/community-optimistic";
 import {
 	getReportIssue,
 	REPORT_REASON_OPTIONS,
 	type ReportReason,
 } from "@/lib/report-validation";
+import { resolveProfileAvatarUrl } from "@/lib/supabase/avatars";
 import { supabase } from "@/lib/supabase/client";
 import type {
 	CommunityPostAttachment,
@@ -109,7 +111,7 @@ type PublicAttachment = CommunityPostAttachment & {
 
 type ProfilePreview = Pick<
 	ResumeAuthorProfile,
-	"avatar_url" | "full_name" | "id" | "username"
+	"avatar_path" | "avatar_url" | "full_name" | "id" | "username"
 >;
 
 type SubmitCommentResponse = {
@@ -195,6 +197,18 @@ function formatDate(value: string) {
 	}).format(new Date(value));
 }
 
+function formatFeedDate(value: string) {
+	const date = new Date(value);
+	const currentYear = new Date().getFullYear();
+	const showYear = date.getFullYear() !== currentYear;
+
+	return new Intl.DateTimeFormat(undefined, {
+		day: "numeric",
+		month: "short",
+		year: showYear ? "numeric" : undefined,
+	}).format(date);
+}
+
 function getAuthorName(profile: ProfilePreview | null) {
 	return profile?.full_name?.trim() || profile?.username?.trim() || "Community member";
 }
@@ -208,8 +222,36 @@ function getCommunityAuthorHandle(authorId: string, profile: ProfilePreview | nu
 }
 
 function getCommunityAuthorAvatar(authorId: string, profile: ProfilePreview | null) {
-	const seed = profile?.full_name?.trim() || profile?.username?.trim() || authorId;
-	return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}`;
+	return resolveProfileAvatarUrl(profile, authorId);
+}
+
+function applyCommunityPollSelection(
+	poll: CommunityPollView,
+	nextOptionId: string,
+) {
+	const previousOptionId = poll.selectedOptionId;
+
+	return {
+		...poll,
+		options: poll.options.map((option) => {
+			if (option.id === previousOptionId && previousOptionId !== nextOptionId) {
+				return {
+					...option,
+					vote_count: Math.max(0, option.vote_count - 1),
+				};
+			}
+
+			if (option.id === nextOptionId && previousOptionId !== nextOptionId) {
+				return {
+					...option,
+					vote_count: option.vote_count + 1,
+				};
+			}
+
+			return option;
+		}),
+		selectedOptionId: nextOptionId,
+	};
 }
 
 async function getAccessToken() {
@@ -403,7 +445,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		const profileResult = authorIds.length
 			? await supabase
 					.from("profiles")
-					.select("id,username,full_name,avatar_url")
+					.select("id,username,full_name,avatar_url,avatar_path")
 					.in("id", authorIds)
 			: { data: [], error: null };
 
@@ -638,6 +680,9 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			}
 
 			return result;
+		} catch {
+			toast.error(options.fallbackMessage);
+			return null;
 		} finally {
 			setActionBusy("");
 		}
@@ -728,6 +773,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 	async function handlePostVote(reaction: CommunityVoteReaction) {
 		if (!post) return;
+		if (actionBusy) return;
 
 		const blockReason = getCommunityPostReactionBlockReason(
 			currentUserId ? { id: currentUserId } : null,
@@ -738,7 +784,25 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			return;
 		}
 
+		const previousPost = post;
+		const previousReaction = postReaction;
 		const nextReaction = postReaction === reaction ? null : reaction;
+		const optimisticCounts = getOptimisticCommunityVoteCounts(
+			post,
+			postReaction,
+			nextReaction,
+		);
+		setPost((current) =>
+			current
+				? {
+						...current,
+						downvote_count: optimisticCounts.downvote_count,
+						upvote_count: optimisticCounts.upvote_count,
+					}
+				: current,
+		);
+		setPostReaction(nextReaction);
+
 		const result = await runCommunityAction<VoteActionResponse>(
 			`/api/community/posts/${post.id}/vote`,
 			{
@@ -749,6 +813,8 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		);
 
 		if (result?.upvoteCount === undefined || result.downvoteCount === undefined) {
+			setPost(previousPost);
+			setPostReaction(previousReaction);
 			return;
 		}
 
@@ -1039,6 +1105,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 	async function handlePollVote(optionId: string) {
 		if (!poll || !post) return;
+		if (actionBusy) return;
 
 		const blockReason = getCommunityPollVoteBlockReason({
 			activeUser: currentUserId ? { id: currentUserId } : null,
@@ -1052,6 +1119,12 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		}
 
 		const previousOptionId = poll.selectedOptionId;
+		if (previousOptionId === optionId) return;
+
+		const previousPoll = poll;
+		setPoll((current) =>
+			current ? applyCommunityPollSelection(current, optionId) : current,
+		);
 		const result = await runCommunityAction<PollVoteActionResponse>(
 			`/api/community/polls/${poll.id}/vote`,
 			{
@@ -1062,39 +1135,22 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		);
 
 		const nextOptionId = result?.optionId;
-		if (!nextOptionId) return;
+		if (!nextOptionId) {
+			setPoll(previousPoll);
+			return;
+		}
 
-		setPoll((current) => {
-			if (!current) return current;
-
-			return {
-				...current,
-				options: current.options.map((option) => {
-					if (option.id === previousOptionId && previousOptionId !== nextOptionId) {
-						return {
-							...option,
-							vote_count: Math.max(0, option.vote_count - 1),
-						};
-					}
-
-					if (option.id === nextOptionId && previousOptionId !== nextOptionId) {
-						return {
-							...option,
-							vote_count: option.vote_count + 1,
-						};
-					}
-
-					return option;
-				}),
-				selectedOptionId: nextOptionId,
-			};
-		});
+		if (nextOptionId !== optionId) {
+			setPoll(applyCommunityPollSelection(previousPoll, nextOptionId));
+		}
 	}
 
 	async function handleCommentVote(
 		comment: CommunityPostComment,
 		reaction: CommunityVoteReaction,
 	) {
+		if (actionBusy) return;
+
 		const blockReason = getCommunityCommentReactionBlockReason(
 			currentUserId ? { id: currentUserId } : null,
 			comment,
@@ -1106,6 +1162,27 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 		const currentReaction = commentReactions[comment.id] ?? null;
 		const nextReaction = currentReaction === reaction ? null : reaction;
+		const optimisticCounts = getOptimisticCommunityVoteCounts(
+			comment,
+			currentReaction,
+			nextReaction,
+		);
+		setComments((current) =>
+			current.map((row) =>
+				row.id === comment.id
+					? {
+							...row,
+							downvote_count: optimisticCounts.downvote_count,
+							upvote_count: optimisticCounts.upvote_count,
+						}
+					: row,
+			),
+		);
+		setCommentReactions((current) => ({
+			...current,
+			[comment.id]: nextReaction,
+		}));
+
 		const result = await runCommunityAction<VoteActionResponse>(
 			`/api/community/comments/${comment.id}/vote`,
 			{
@@ -1116,6 +1193,13 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		);
 
 		if (result?.upvoteCount === undefined || result.downvoteCount === undefined) {
+			setComments((current) =>
+				current.map((row) => (row.id === comment.id ? comment : row)),
+			);
+			setCommentReactions((current) => ({
+				...current,
+				[comment.id]: currentReaction,
+			}));
 			return;
 		}
 
@@ -1180,19 +1264,33 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			return;
 		}
 
-		const result = await runCommunityAction<CommentDeleteResponse>(
-			`/api/community/posts/${post.id}`,
-			{
-				busyKey: "post-delete",
-				fallbackMessage: "Post was not deleted.",
-				method: "DELETE",
-			},
-		);
+		const postId = post.id;
+		setActionBusy("post-delete");
+		router.replace("/community");
 
-		if (!result) return;
+		void (async () => {
+			try {
+				const token = await getAccessToken();
+				const response = await fetch(`/api/community/posts/${postId}`, {
+					headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+					method: "DELETE",
+				});
+				const result = (await response
+					.json()
+					.catch(() => null)) as CommentDeleteResponse | null;
 
-		toast.success("Post deleted.");
-		router.push("/community");
+				if (!response.ok) {
+					toast.error(result?.message ?? "Post was not deleted.");
+					return;
+				}
+
+				toast.success("Post deleted.");
+				router.refresh();
+			} catch (error) {
+				console.error(error);
+				toast.error("Post was not deleted.");
+			}
+		})();
 	}
 
 	async function handleCommentEditSubmit(
@@ -1991,15 +2089,25 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			>
 				<header className="community-post-detail-header">
 					<div className="community-post-meta-row community-meta-tags">
-						<span className="badge neutral-badge">
-							{getAuthorName(authorProfile)}
-						</span>
+						<Link
+							className="community-author-badge"
+							href={`/profile/${post.author_id}`}
+						>
+							<img
+								alt=""
+								aria-hidden="true"
+								height={24}
+								src={getCommunityAuthorAvatar(post.author_id, authorProfile)}
+								width={24}
+							/>
+							<span>{getAuthorName(authorProfile)}</span>
+						</Link>
 						<span className="badge role-badge">{topic?.name ?? "Community"}</span>
 						<span className="badge neutral-badge">
 							{COMMUNITY_POST_TYPE_LABELS[post.post_type]}
 						</span>
-						<time className="badge neutral-badge" dateTime={post.created_at}>
-							{formatDate(post.created_at)}
+						<time className="community-feed-date" dateTime={post.created_at}>
+							{formatFeedDate(post.created_at)}
 						</time>
 					</div>
 					{editingPost ? (
@@ -2110,9 +2218,9 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 								return (
 									<button
-										aria-disabled={pollVoteBlockReason ? "true" : undefined}
 										aria-pressed={isSelected}
 										className={isSelected ? "is-selected" : ""}
+										data-blocked={pollVoteBlockReason ? "true" : undefined}
 										disabled={isPollVoteBusy}
 										key={option.id}
 										onClick={() => {

@@ -1767,18 +1767,20 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 
 .submit-route {
 	display: grid;
-	justify-items: center;
-	width: min(1280px, calc(100% - 48px));
+	gap: clamp(22px, 3.2vh, 34px);
+	justify-items: stretch;
+	width: min(1220px, calc(100% - 56px));
 	margin: 0 auto;
-	padding: clamp(24px, 4.8vh, 42px) 0 clamp(34px, 6vh, 72px);
+	padding: clamp(26px, 4.6vh, 44px) 0 clamp(34px, 6vh, 72px);
 }
 
 .submit-header {
 	display: grid;
-	justify-items: center;
+	justify-items: start;
 	width: 100%;
-	margin-bottom: clamp(18px, 3vh, 28px);
-	text-align: center;
+	max-width: 1240px;
+	margin: 0;
+	text-align: left;
 }
 
 .submit-icon {
@@ -1786,20 +1788,21 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 }
 
 .submit-header h1 {
-	font-size: clamp(38px, 4.2vw, 54px);
-	line-height: 1;
+	margin: 0;
+	font-size: clamp(36px, 4.1vw, 54px);
+	line-height: 0.98;
 }
 
 .submit-form {
 	display: grid;
-	gap: clamp(16px, 2vh, 22px);
+	gap: clamp(24px, 3vh, 34px);
 	width: 100%;
-	border: 1px solid var(--border-subtle);
-	border-radius: var(--radius-xl);
-	padding: clamp(20px, 2.6vw, 32px);
-	background: var(--bg-surface);
-	box-shadow: var(--shadow-md);
-	animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+	border: 0;
+	border-radius: 0;
+	padding: 0;
+	background: transparent;
+	box-shadow: none;
+	animation: fadeSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .submit-form-wide {
@@ -1808,25 +1811,43 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 
 .submit-form-grid {
 	display: grid;
-	grid-template-columns: minmax(330px, 0.85fr) minmax(460px, 1.15fr);
-	align-items: stretch;
-	gap: clamp(18px, 2.4vw, 30px);
+	grid-template-columns: minmax(310px, 0.86fr) minmax(440px, 1.14fr);
+	align-items: start;
+	column-gap: clamp(28px, 4vw, 56px);
+	row-gap: clamp(22px, 3vh, 30px);
 	min-width: 0;
 }
 
 .submit-form-column {
 	display: grid;
 	align-content: start;
-	gap: clamp(13px, 1.7vh, 18px);
+	gap: clamp(16px, 2vh, 22px);
 	min-width: 0;
+	border-top: 1px solid var(--border-subtle);
+	padding-top: clamp(18px, 2.4vh, 24px);
 }
 
 .field-block {
 	display: grid;
-	gap: 6px;
+	gap: 8px;
 	color: var(--text-primary);
 	font-size: 13px;
 	font-weight: 500;
+}
+
+.submit-form input,
+.submit-form textarea {
+	border-width: 1px;
+	border-radius: var(--button-radius);
+	background: color-mix(in srgb, var(--bg-elevated) 88%, var(--bg-base));
+	font-family: var(--font-app-body);
+	font-weight: 500;
+}
+
+.submit-form input::placeholder,
+.submit-form textarea::placeholder {
+	color: var(--text-tertiary);
+	opacity: 1;
 }
 
 .field-block small {
@@ -1864,10 +1885,14 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	border: 1px solid var(--border-default);
 	border-radius: var(--button-radius);
 	padding: 7px 11px;
-	background: var(--bg-elevated);
+	background: color-mix(in srgb, var(--bg-elevated) 88%, var(--bg-base));
 	color: var(--text-secondary);
 	font-size: 13px;
 	font-weight: 600;
+	transition:
+		border-color 160ms var(--button-ease),
+		background-color 160ms var(--button-ease),
+		color 160ms var(--button-ease);
 }
 
 .role-picker button.selected {
@@ -2017,9 +2042,12 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 
 .submit-form-actions {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto;
-	align-items: center;
-	gap: clamp(12px, 1.8vw, 16px);
+	grid-template-columns: minmax(0, 1fr) minmax(180px, 220px);
+	align-items: start;
+	column-gap: clamp(20px, 3vw, 32px);
+	row-gap: 10px;
+	border-top: 1px solid var(--border-subtle);
+	padding-top: clamp(18px, 2.4vh, 24px);
 }
 
 .community-compose-route,
@@ -3070,6 +3098,41 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	gap: 7px;
 }
 
+.community-author-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	max-width: min(240px, 52vw);
+	color: var(--text-primary);
+	font-family: var(--font-app-body);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.community-author-badge:hover span {
+	color: var(--brand);
+}
+
+.community-author-badge img {
+	width: 24px;
+	height: 24px;
+	flex: 0 0 auto;
+	border: 1px solid color-mix(in srgb, var(--border-default) 76%, transparent);
+	border-radius: 50%;
+	background: var(--bg-elevated);
+	object-fit: cover;
+}
+
+.community-author-badge span {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	transition: color 160ms var(--button-ease);
+}
+
 .community-meta-tags .badge {
 	display: inline-flex;
 	align-items: center;
@@ -3101,6 +3164,17 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	background: var(--brand-muted);
 	color: var(--brand);
 	font-weight: 650;
+}
+
+.community-feed-date {
+	display: inline-flex;
+	align-items: center;
+	color: var(--text-tertiary);
+	font-family: var(--font-app-body);
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.2;
+	white-space: nowrap;
 }
 
 body.main-app-dark .community-meta-tags .badge {
@@ -4449,16 +4523,16 @@ body.main-app-dark .toggle-ui::after {
 
 .privacy-picker {
 	display: grid;
-	gap: 10px;
+	gap: 9px;
 	min-width: 0;
-	border: 1px solid var(--border-subtle);
-	border-radius: var(--radius-md);
-	padding: 12px;
-	background: var(--bg-base);
+	border: 0;
+	border-radius: 0;
+	padding: 0;
+	background: transparent;
 }
 
 .privacy-picker legend {
-	padding: 0 4px;
+	padding: 0;
 	color: var(--text-secondary);
 	font-size: 12px;
 	font-weight: 700;
@@ -4469,32 +4543,74 @@ body.main-app-dark .toggle-ui::after {
 .privacy-options {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 8px;
+	gap: 0;
+	overflow: hidden;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--button-radius);
+	background: color-mix(in srgb, var(--bg-elevated) 72%, var(--bg-base));
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .privacy-options label {
 	position: relative;
 	display: grid;
-	min-height: 92px;
-	border: 1px solid var(--border-subtle);
-	border-radius: var(--button-radius);
-	padding: 10px;
-	background: var(--bg-elevated);
+	grid-template-columns: 16px minmax(0, 1fr);
+	align-items: start;
+	column-gap: 10px;
+	min-height: 86px;
+	border: 0;
+	border-right: 1px solid var(--border-subtle);
+	border-radius: 0;
+	padding: 13px 13px 12px;
+	background: transparent;
 	cursor: pointer;
 	transition:
-		border-color 180ms var(--button-ease),
 		background-color 180ms var(--button-ease),
-		transform 180ms var(--button-ease);
+		box-shadow 180ms var(--button-ease),
+		color 180ms var(--button-ease);
+}
+
+.privacy-options label::before {
+	content: "";
+	width: 14px;
+	height: 14px;
+	margin-top: 1px;
+	border: 1.5px solid var(--border-strong);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--bg-base) 76%, transparent);
+	box-shadow: inset 0 0 0 4px transparent;
+	transition:
+		background-color 180ms var(--button-ease),
+		border-color 180ms var(--button-ease),
+		box-shadow 180ms var(--button-ease);
+}
+
+.privacy-options label:last-child {
+	border-right: 0;
 }
 
 .privacy-options label:hover {
-	border-color: var(--border-default);
-	background: var(--bg-surface);
+	background: color-mix(in srgb, var(--bg-surface) 78%, transparent);
+}
+
+.privacy-options label:hover::before {
+	border-color: color-mix(in srgb, var(--text-primary) 54%, var(--border-strong));
 }
 
 .privacy-options label.selected {
-	border-color: color-mix(in srgb, var(--brand) 46%, transparent);
-	background: var(--brand-muted);
+	background: color-mix(in srgb, var(--brand) 13%, var(--bg-elevated));
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 46%, transparent);
+}
+
+.privacy-options label.selected::before {
+	border-color: var(--brand);
+	background: var(--brand);
+	box-shadow: inset 0 0 0 3.5px color-mix(in srgb, var(--bg-base) 94%, transparent);
+}
+
+.privacy-options label:has(input:focus-visible) {
+	outline: 2px solid color-mix(in srgb, var(--brand) 72%, transparent);
+	outline-offset: -2px;
 }
 
 .privacy-options input {
@@ -4522,23 +4638,28 @@ body.main-app-dark .toggle-ui::after {
 	line-height: 1.35;
 }
 
+.submit-action-panel {
+	grid-column: 2;
+	display: grid;
+	align-self: start;
+	justify-self: stretch;
+	gap: 9px;
+	margin-top: 18px;
+}
+
 .submit-button {
 	min-height: 44px;
-	width: min(100%, 250px);
-	justify-self: end;
+	width: 100%;
 	padding-inline: 22px;
 	font-size: 15px;
 }
 
 .submit-action-hint {
-	grid-column: 2;
-	max-width: 250px;
-	justify-self: end;
-	margin: -4px 0 0;
+	margin: 0;
 	color: var(--text-tertiary);
 	font-size: 12px;
 	line-height: 1.4;
-	text-align: right;
+	text-align: center;
 }
 
 .button-spinner {
@@ -4752,13 +4873,27 @@ body.main-app-dark .bottom-nav {
 		grid-template-columns: 1fr;
 	}
 
+	.privacy-options label {
+		min-height: 74px;
+		border-right: 0;
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	.privacy-options label:last-child {
+		border-bottom: 0;
+	}
+
+	.submit-action-panel {
+		grid-column: 1;
+		margin-top: 0;
+	}
+
 	.submit-button {
 		width: 100%;
 		justify-self: stretch;
 	}
 
 	.submit-action-hint {
-		grid-column: 1;
 		max-width: none;
 		justify-self: stretch;
 		text-align: left;
@@ -4772,7 +4907,7 @@ body.main-app-dark .bottom-nav {
 	}
 
 	.submit-header {
-		margin-bottom: 18px;
+		margin-bottom: 0;
 	}
 
 	.submit-form {
@@ -5054,8 +5189,17 @@ body.main-app-dark .bottom-nav {
 		padding-bottom: var(--mobile-dock-space);
 	}
 
+	.submit-header h1 {
+		font-size: clamp(32px, 10vw, 42px);
+	}
+
 	.submit-form {
-		padding: 18px;
+		padding: 0;
+		gap: 22px;
+	}
+
+	.submit-form-grid {
+		row-gap: 22px;
 	}
 
 	.submit-jd-textarea {

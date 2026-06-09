@@ -8,7 +8,6 @@ import {
 	readCommunityJsonBody,
 	type CommunityRouteContext,
 } from "@/lib/server/community-actions";
-import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 import type { CommunityVoteReaction } from "@/lib/supabase/types";
 
@@ -43,13 +42,6 @@ export async function POST(request: Request, context: CommunityRouteContext) {
 		}
 
 		const { admin, user } = await requireSignedInUser(request);
-		const rateLimitResponse = await enforceApiRateLimit(
-			admin,
-			user.id,
-			"communityVoteWrite",
-		);
-		if (rateLimitResponse) return rateLimitResponse;
-
 		const rpcResult = await admin.rpc("set_community_post_vote", {
 			next_reaction: reaction,
 			target_post_id: postId,

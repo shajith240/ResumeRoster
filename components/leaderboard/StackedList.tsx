@@ -14,7 +14,10 @@ import {
 import LintPointsFlame from "@/components/LintPointsFlame";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { resolveAvatarUrl } from "@/lib/supabase/avatars";
+import {
+	getGeneratedAvatarUrl,
+	resolveProfileAvatarUrl,
+} from "@/lib/supabase/avatars";
 import type { ReviewerProfileStats } from "@/lib/supabase/types";
 import {
 	canShowReviewerProfile,
@@ -60,18 +63,6 @@ const rowSpring = {
 	mass: 0.55,
 };
 
-function initials(name: string) {
-	const letters = name
-		.split(/\s+/)
-		.filter(Boolean)
-		.map((part) => part[0])
-		.join("")
-		.slice(0, 2)
-		.toUpperCase();
-
-	return letters || "#";
-}
-
 function reviewerName(reviewer: LeaderboardReviewer) {
 	return reviewer.full_name || reviewer.username || "Anonymous reviewer";
 }
@@ -89,18 +80,14 @@ function roleTag(reviewer: LeaderboardReviewer) {
 		return getReviewerDisplayLabel(reviewer);
 	}
 
-	const role = `${reviewer.target_role ?? ""} ${reviewer.college ?? ""}`.toLowerCase();
+	const label = `${reviewer.current_position ?? ""} ${reviewer.target_role ?? ""} ${
+		reviewer.college ?? ""
+	}`.toLowerCase();
 
-	if (role.includes("student") || role.includes("college") || role.includes("iit")) {
+	if (label.includes("switch")) return "Career Switcher";
+	if (label.includes("intern")) return "Intern";
+	if (label.includes("student") || label.includes("college") || label.includes("iit")) {
 		return "Student";
-	}
-
-	if (role.includes("switch")) {
-		return "Career Switcher";
-	}
-
-	if (role.includes("intern")) {
-		return "Intern";
 	}
 
 	return "Job Seeker";
@@ -157,6 +144,7 @@ function buildSearchText(reviewer: LeaderboardReviewer, rank: number) {
 			`${points} points`,
 			reviewerName(reviewer),
 			reviewer.username,
+			reviewer.current_position,
 			reviewer.target_role,
 			reviewer.college,
 			reviewer.reviewer_headline,
@@ -190,21 +178,21 @@ function LeaderboardAvatar({
 	name: string;
 	reviewer: LeaderboardReviewer;
 }) {
-	const avatarUrl = resolveAvatarUrl(reviewer.avatar_url, reviewer.avatar_path);
+	const fallbackUrl = getGeneratedAvatarUrl(reviewer.id || name);
+	const avatarUrl = resolveProfileAvatarUrl(reviewer, reviewer.id || name);
 
 	return (
 		<div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full border border-[rgba(214,179,100,0.52)] bg-[var(--bg-elevated)]">
-			{avatarUrl ? (
-				<img
-					src={avatarUrl}
-					alt={`${name} profile photo`}
-					className="h-full w-full object-cover"
-				/>
-			) : (
-				<span className="font-[var(--font-app-body)] text-sm font-medium text-[var(--text-primary)]">
-					{initials(name)}
-				</span>
-			)}
+			<img
+				src={avatarUrl}
+				alt={`${name} profile photo`}
+				className="h-full w-full object-cover"
+				onError={(event) => {
+					if (event.currentTarget.src !== fallbackUrl) {
+						event.currentTarget.src = fallbackUrl;
+					}
+				}}
+			/>
 		</div>
 	);
 }
@@ -266,6 +254,7 @@ function LeaderboardRow({
 					</strong>
 					<span className="mt-1 block truncate text-xs font-normal text-[var(--text-secondary)]">
 						{reviewer.reviewer_headline ||
+							reviewer.current_position ||
 							reviewer.target_role ||
 							reviewer.college ||
 							"Community reviewer"}
@@ -318,22 +307,21 @@ function AvatarStack({ reviewers }: { reviewers: RankedReviewer[] }) {
 		<div className="flex -space-x-3">
 			{visible.map(({ reviewer }) => {
 				const name = reviewerName(reviewer);
-				const avatarUrl = resolveAvatarUrl(reviewer.avatar_url, reviewer.avatar_path);
+				const fallbackUrl = getGeneratedAvatarUrl(reviewer.id || name);
+				const avatarUrl = resolveProfileAvatarUrl(reviewer, reviewer.id || name);
 
-				return avatarUrl ? (
+				return (
 					<img
 						alt={`${name} profile photo`}
 						className="h-10 w-10 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elevated)] object-cover ring-2 ring-[var(--bg-surface)]"
 						key={reviewer.id}
+						onError={(event) => {
+							if (event.currentTarget.src !== fallbackUrl) {
+								event.currentTarget.src = fallbackUrl;
+							}
+						}}
 						src={avatarUrl}
 					/>
-				) : (
-					<div
-						className="grid h-10 w-10 place-items-center rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs font-medium text-[var(--text-primary)] ring-2 ring-[var(--bg-surface)]"
-						key={reviewer.id}
-					>
-						{initials(name)}
-					</div>
 				);
 			})}
 			{remaining ? (

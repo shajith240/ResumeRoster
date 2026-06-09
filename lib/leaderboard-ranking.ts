@@ -6,9 +6,13 @@ import {
 	type ReviewerVerificationStatus,
 } from "@/lib/reviewer-validation";
 
+const HELPFUL_VOTE_WEIGHT = 5;
+const REVIEW_CONSISTENCY_CAP = 50;
+
 export type LeaderboardStatsInput = {
 	college?: string | null;
 	community_role?: CommunityRole | null;
+	current_position?: string | null;
 	helpful_votes: number;
 	reviewer_type?: ReviewerType | null;
 	reviewer_verification_status?: ReviewerVerificationStatus | null;
@@ -30,6 +34,27 @@ export type LeaderboardTopReview = {
 	created_at: string;
 };
 
+function getLeaderboardProfileRoleLabel(reviewer: LeaderboardStatsInput) {
+	const role =
+		`${reviewer.current_position ?? ""} ${reviewer.target_role ?? ""} ${
+			reviewer.college ?? ""
+		}`.toLowerCase();
+
+	if (role.includes("switch")) {
+		return "Career Switcher";
+	}
+
+	if (role.includes("intern")) {
+		return "Intern";
+	}
+
+	if (role.includes("student") || role.includes("college") || role.includes("iit")) {
+		return "Student";
+	}
+
+	return "Job Seeker";
+}
+
 export function roleTag(reviewer: LeaderboardStatsInput) {
 	if (
 		canShowReviewerProfile(
@@ -41,26 +66,17 @@ export function roleTag(reviewer: LeaderboardStatsInput) {
 		return getReviewerDisplayLabel(reviewer);
 	}
 
-	const role =
-		`${reviewer.target_role ?? ""} ${reviewer.college ?? ""}`.toLowerCase();
-
-	if (role.includes("student") || role.includes("college") || role.includes("iit")) {
-		return "Student";
-	}
-
-	if (role.includes("switch")) {
-		return "Career Switcher";
-	}
-
-	if (role.includes("intern")) {
-		return "Intern";
-	}
-
-	return "Job Seeker";
+	return getLeaderboardProfileRoleLabel(reviewer);
 }
 
-export function lintPoints(helpfulVotes: number) {
-	return helpfulVotes;
+export function lintPoints(helpfulVotes: number, reviewCount = 0) {
+	const qualityScore = Math.max(0, helpfulVotes) * HELPFUL_VOTE_WEIGHT;
+	const consistencyBonus = Math.min(
+		Math.max(0, reviewCount),
+		REVIEW_CONSISTENCY_CAP,
+	);
+
+	return qualityScore + consistencyBonus;
 }
 
 export function sortReviewers<
@@ -107,6 +123,7 @@ export function enhanceReviewer<
 	const helpfulVotes = stats?.helpfulVotes ?? reviewer.helpful_votes;
 	const reviewCount =
 		stats?.reviewCount ?? stats?.roastCount ?? reviewer.roast_count;
+	const lintScore = lintPoints(helpfulVotes, reviewCount);
 	const reviewPreview = topReview
 		? {
 				id: topReview.id,
@@ -120,9 +137,9 @@ export function enhanceReviewer<
 	return {
 		...reviewer,
 		helpful_votes: helpfulVotes,
-		lint_points: lintPoints(helpfulVotes),
+		lint_points: lintScore,
 		roast_count: reviewCount,
-		roast_points: lintPoints(helpfulVotes),
+		roast_points: lintScore,
 		role_tag: roleTag({ ...reviewer, helpful_votes: helpfulVotes, roast_count: reviewCount }),
 		top_review: reviewPreview,
 		top_roast: reviewPreview,

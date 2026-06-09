@@ -141,6 +141,7 @@ export type ReviewerProfileStats = {
   avatar_path?: string | null;
   college: string | null;
   target_role: string | null;
+  current_position?: string | null;
   app_status?: AppStatus | null;
   community_role?: CommunityRole | null;
   reviewer_type?: ReviewerType | null;
@@ -160,6 +161,7 @@ export type ReviewerLeaderboardEntry = {
   avatar_path?: string | null;
   college: string | null;
   target_role: string | null;
+  current_position?: string | null;
   app_status?: AppStatus | null;
   community_role?: CommunityRole | null;
   reviewer_type?: ReviewerType | null;
@@ -167,6 +169,7 @@ export type ReviewerLeaderboardEntry = {
   reviewer_expertise?: string[] | null;
   reviewer_verification_status?: ReviewerVerificationStatus | null;
   review_count: number;
+  helpful_votes?: number | null;
   lint_points: number;
 };
 

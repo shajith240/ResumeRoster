@@ -614,27 +614,29 @@ export default function SubmitResumeForm() {
 					<p>{getPrivacyModeHelpText(privacyMode)}</p>
 				</fieldset>
 
-				<button
-					className="btn-primary submit-button"
-					disabled={submitting || success || Boolean(submitIssue)}
-					title={submitIssue || undefined}
-				>
-					{success ? (
-						"Posted. Redirecting..."
-					) : submitting ? (
-						<>
-							<span className="button-spinner" />
-							Processing PDF...
-						</>
-					) : (
-						"Submit for review"
-					)}
-				</button>
-				{submitIssue && !submitting && !success ? (
-					<p className="submit-action-hint" aria-live="polite">
-						{submitIssue}
-					</p>
-				) : null}
+				<div className="submit-action-panel">
+					<button
+						className="btn-primary submit-button"
+						disabled={submitting || success || Boolean(submitIssue)}
+						title={submitIssue || undefined}
+					>
+						{success ? (
+							"Posted. Redirecting..."
+						) : submitting ? (
+							<>
+								<span className="button-spinner" />
+								Processing PDF...
+							</>
+						) : (
+							"Submit for review"
+						)}
+					</button>
+					{submitIssue && !submitting && !success ? (
+						<p className="submit-action-hint" aria-live="polite">
+							{submitIssue}
+						</p>
+					) : null}
+				</div>
 			</div>
 
 			{message ? <p className="form-message">{message}</p> : null}

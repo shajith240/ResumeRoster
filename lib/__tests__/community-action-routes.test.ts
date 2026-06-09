@@ -185,11 +185,7 @@ describe("community action routes", () => {
 		);
 
 		expect(response.status).toBe(200);
-		expect(enforceApiRateLimit).toHaveBeenCalledWith(
-			expect.objectContaining({ rpc }),
-			USER_ID,
-			"communityVoteWrite",
-		);
+		expect(enforceApiRateLimit).not.toHaveBeenCalled();
 		expect(rpc).toHaveBeenCalledWith("set_community_post_vote", {
 			next_reaction: "upvote",
 			target_post_id: POST_ID,
@@ -233,6 +229,11 @@ describe("community action routes", () => {
 		);
 
 		expect(response.status).toBe(200);
+		expect(enforceApiRateLimit).toHaveBeenCalledWith(
+			expect.objectContaining({ rpc }),
+			USER_ID,
+			"communityVoteWrite",
+		);
 		expect(rpc).toHaveBeenCalledWith("vote_community_post_poll", {
 			selected_option_id: OPTION_ID,
 			target_poll_id: POLL_ID,
