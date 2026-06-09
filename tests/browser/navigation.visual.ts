@@ -181,26 +181,31 @@ test("community loading states use branded feed surfaces", async ({
 	await prepareAuthenticatedPage(page, { delayCommunityPostsMs: 900 });
 	await page.goto("/community", { waitUntil: "domcontentloaded" });
 
-	const skeletonRows = page.locator(".community-feed-skeleton-row");
+	const skeletonRows = page.locator(".community-feed-loading .skeleton-card");
 	await expect(skeletonRows.first()).toBeVisible();
 	const skeletonMetrics = await skeletonRows.first().evaluate((element) => {
 		const style = window.getComputedStyle(element);
 		const separatorStyle = window.getComputedStyle(element, "::after");
+		const preview = element.querySelector(".skeleton-line.preview");
+		const previewRect = preview?.getBoundingClientRect();
 
 		return {
-			actionCount: element.querySelectorAll(".community-skeleton-actions i").length,
+			actionCount: element.querySelectorAll(".skeleton-line.actions").length,
 			background: style.backgroundColor,
 			borderTopWidth: Number.parseFloat(style.borderTopWidth),
-			metaCount: element.querySelectorAll(".community-feed-skeleton-meta i").length,
+			lineCount: element.querySelectorAll(".skeleton-line").length,
+			previewHeight: previewRect?.height ?? 0,
 			separatorHeight: Number.parseFloat(separatorStyle.height),
 		};
 	});
 
 	expect(skeletonMetrics.background).toBe("rgba(0, 0, 0, 0)");
 	expect(skeletonMetrics.borderTopWidth).toBe(0);
-	expect(skeletonMetrics.metaCount).toBeGreaterThanOrEqual(5);
-	expect(skeletonMetrics.actionCount).toBe(3);
+	expect(skeletonMetrics.lineCount).toBe(6);
+	expect(skeletonMetrics.actionCount).toBe(1);
+	expect(skeletonMetrics.previewHeight).toBeGreaterThan(180);
 	expect(skeletonMetrics.separatorHeight).toBe(1);
+	await expect(page.locator(".community-feed-skeleton-row")).toHaveCount(0);
 
 	await page.goto("/community/99999999-9999-4999-8999-000000000001", {
 		waitUntil: "domcontentloaded",
@@ -739,6 +744,7 @@ test("primary navigation exposes app sections without account utilities", async 
 	const desktopPollOption = desktopPollRow
 		.locator(".community-poll-options button")
 		.last();
+	await expect(desktopPollOption).not.toBeDisabled();
 	const desktopPollOptionBackgroundBefore = await desktopPollOption.evaluate(
 		(element) => window.getComputedStyle(element).backgroundColor,
 	);
@@ -749,6 +755,10 @@ test("primary navigation exposes app sections without account utilities", async 
 	expect(desktopPollOptionBackgroundAfter).not.toBe(
 		desktopPollOptionBackgroundBefore,
 	);
+	if ((await desktopPollOption.getAttribute("aria-disabled")) === "true") {
+		await desktopPollOption.click();
+		await expect(page.getByText("This poll is closed.")).toBeVisible();
+	}
 	await expect(page.locator(".community-media-gallery-count")).toHaveCount(0);
 	await expect(page.locator(".community-media-gallery-dots")).toBeVisible();
 	await expect(page.locator(".community-media-gallery-dot")).toHaveCount(3);

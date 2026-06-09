@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import FilledThumbIcon from "@/components/community/FilledThumbIcon";
 import CommunityMediaGallery from "@/components/community/CommunityMediaGallery";
+import FeedSkeleton from "@/components/feed/FeedSkeleton";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -190,7 +191,6 @@ const COMMUNITY_FEED_SORT_OPTIONS: Array<{
 	{ label: COMMUNITY_FEED_SORT_LABELS.questions, value: "questions" },
 	{ label: COMMUNITY_FEED_SORT_LABELS.unanswered, value: "unanswered" },
 ];
-const COMMUNITY_FEED_SKELETON_ROWS = ["media", "text", "poll", "text"] as const;
 
 async function loadPostVoteReactions(userId: string, postIds: string[]) {
 	if (!postIds.length) return new Map<string, CommunityVoteReaction>();
@@ -640,36 +640,7 @@ export default function CommunityPostFeed() {
 			</div>
 			{loading ? (
 				<div className="community-feed-loading" aria-label="Loading community posts">
-					{COMMUNITY_FEED_SKELETON_ROWS.map((kind, item) => (
-						<div
-							className="community-feed-skeleton-row"
-							data-skeleton-kind={kind}
-							key={`${kind}-${item}`}
-						>
-							<div className="community-feed-skeleton-meta">
-								<i className="community-skeleton-avatar" />
-								<i className="community-skeleton-author" />
-								<i className="community-skeleton-chip" />
-								<i className="community-skeleton-chip is-short" />
-								<i className="community-skeleton-date" />
-							</div>
-							<i className="community-skeleton-title" />
-							<div className="community-skeleton-body">
-								<i />
-								<i />
-							</div>
-							<div className="community-skeleton-media" />
-							<div className="community-skeleton-poll">
-								<i />
-								<i />
-							</div>
-							<div className="community-skeleton-actions">
-								<i />
-								<i />
-								<i />
-							</div>
-						</div>
-					))}
+					<FeedSkeleton ariaLabel="Loading community feed" rowCount={3} />
 				</div>
 			) : errorMessage ? (
 				<div className="community-feed-empty">
@@ -775,23 +746,28 @@ export default function CommunityPostFeed() {
 														? Math.round((option.vote_count / pollTotalVotes) * 100)
 														: 0;
 													const isSelected = poll.selectedOptionId === option.id;
-													const canVote =
-														!getCommunityPollVoteBlockReason({
+													const pollVoteBlockReason =
+														getCommunityPollVoteBlockReason({
 															activeUser,
 															isClosed: pollClosed,
-															isVoting: pollVotingIds.has(poll.id),
+															isVoting: false,
 															postStatus: post.status,
 														});
+													const isPollVoteBusy = pollVotingIds.has(poll.id);
 
 													return (
 														<button
+															aria-disabled={
+																pollVoteBlockReason ? "true" : undefined
+															}
 															aria-pressed={isSelected}
 															className={isSelected ? "is-selected" : ""}
-															disabled={!canVote}
+															disabled={isPollVoteBusy}
 															key={option.id}
 															onClick={() => {
 																void handlePollVote(post, option.id);
 															}}
+															title={pollVoteBlockReason ?? undefined}
 															type="button"
 														>
 															<span style={{ width: `${percentage}%` }} />

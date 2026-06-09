@@ -11,6 +11,7 @@ import {
 	MessageCircle,
 } from "lucide-react";
 import FeedResumePreview from "@/components/FeedResumePreview";
+import FeedSkeleton from "@/components/feed/FeedSkeleton";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -57,24 +58,7 @@ type ResumeFeedCardProps = {
 	reviewPreview?: ReviewPreview;
 };
 
-export function FeedSkeleton() {
-	return (
-		<div className="feed-skeleton-list" aria-label="Loading feed">
-			{[0, 1, 2].map((item) => (
-				<article className="resume-card skeleton-card" key={item}>
-					<div className="post-content">
-						<span className="skeleton skeleton-line meta" />
-						<span className="skeleton skeleton-line title" />
-						<span className="skeleton skeleton-line tags" />
-						<span className="skeleton skeleton-line preview" />
-						<span className="skeleton skeleton-line copy" />
-						<span className="skeleton skeleton-line actions" />
-					</div>
-				</article>
-			))}
-		</div>
-	);
-}
+export { FeedSkeleton };
 
 export function FeedEmptyState({ savedOnly }: FeedEmptyStateProps) {
 	if (savedOnly) {

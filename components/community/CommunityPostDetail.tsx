@@ -2128,23 +2128,26 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 									? Math.round((option.vote_count / pollTotalVotes) * 100)
 									: 0;
 								const isSelected = poll.selectedOptionId === option.id;
-								const canVote =
-									!getCommunityPollVoteBlockReason({
+								const pollVoteBlockReason =
+									getCommunityPollVoteBlockReason({
 										activeUser,
 										isClosed: pollClosed,
-										isVoting: actionBusy.startsWith("poll-vote-"),
+										isVoting: false,
 										postStatus: post.status,
 									});
+								const isPollVoteBusy = actionBusy.startsWith("poll-vote-");
 
 								return (
 									<button
+										aria-disabled={pollVoteBlockReason ? "true" : undefined}
 										aria-pressed={isSelected}
 										className={isSelected ? "is-selected" : ""}
-										disabled={!canVote}
+										disabled={isPollVoteBusy}
 										key={option.id}
 										onClick={() => {
 											void handlePollVote(option.id);
 										}}
+										title={pollVoteBlockReason ?? undefined}
 										type="button"
 									>
 										<span style={{ width: `${percentage}%` }} />
