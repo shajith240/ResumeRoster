@@ -38,6 +38,12 @@ export const API_RATE_LIMIT_POLICIES = {
 		publicMessage: "Too many community votes. Try again soon.",
 		windowSeconds: 300,
 	},
+	feedbackSubmit: {
+		action: "feedback_submit",
+		maxRequests: 10,
+		publicMessage: "Too many feedback messages. Try again later.",
+		windowSeconds: 3600,
+	},
 	pushSubscriptionWrite: {
 		action: "push_subscription_write",
 		maxRequests: 60,

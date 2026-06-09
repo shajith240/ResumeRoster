@@ -1,9 +1,9 @@
 import AuthGate from "@/components/AuthGate";
 import PersonalizeLintedPrompt from "@/components/PersonalizeLintedPrompt";
+import RecentPostsPanel from "@/components/RecentPostsPanel";
 import ResumeFeed, { type FeedSort } from "@/components/ResumeFeed";
 import RouteHeader from "@/components/RouteHeader";
 import ResumeFeedHeader from "@/components/resume-feed/ResumeFeedHeader";
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 type FeedPageProps = {
@@ -127,93 +127,7 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 					<ResumeFeed activeSort={activeSort} savedOnly={savedOnly} />
 				</section>
 
-				<div className="feed-right-rail" aria-label="Community context">
-					<section>
-						<h2>About resume reviews</h2>
-						<p>
-							Post a resume, get specific feedback, and vote for the check
-							that actually helps someone improve.
-						</p>
-						<div className="rail-meta">Created May 2026</div>
-					</section>
-
-					<section
-						className="feed-start-panel"
-						aria-labelledby="feed-start-title"
-					>
-						<span className="feed-start-eyebrow">Start here</span>
-						<h2 id="feed-start-title">Choose your next pass</h2>
-						<p>
-							Pick one focused action before scrolling the queue.
-						</p>
-						<div className="feed-start-links">
-							<Link href="/feed?sort=needs">
-								<span className="feed-start-link-copy">
-									<span>Review queue</span>
-									<strong>Find resumes that need feedback</strong>
-								</span>
-								<ChevronRight aria-hidden="true" />
-							</Link>
-							<Link href="/submit">
-								<span className="feed-start-link-copy">
-									<span>Post safely</span>
-									<strong>Share a resume with privacy mode</strong>
-								</span>
-								<ChevronRight aria-hidden="true" />
-							</Link>
-							<Link href="/guidelines">
-								<span className="feed-start-link-copy">
-									<span>Feedback standard</span>
-									<strong>Read the community guidelines</strong>
-								</span>
-								<ChevronRight aria-hidden="true" />
-							</Link>
-						</div>
-					</section>
-
-					<section
-						className="feed-rules-panel"
-						aria-labelledby="feed-rules-title"
-					>
-						<div className="feed-rules-copy">
-							<span className="feed-rules-eyebrow">Lint coach says</span>
-							<h2 id="feed-rules-title">Community rules</h2>
-							<ol className="feed-rules-list">
-								<li>
-									<strong>Protect privacy.</strong>
-									<span>
-										Use the privacy mode that fits what you want reviewed.
-									</span>
-								</li>
-								<li>
-									<strong>Lint the resume.</strong>
-									<span>
-										Attack weak bullets, unclear impact, and messy structure.
-									</span>
-								</li>
-								<li>
-									<strong>Give a fix.</strong>
-									<span>
-										Point out what to rewrite, reorder, quantify, or remove.
-									</span>
-								</li>
-								<li>
-									<strong>Keep it useful.</strong>
-									<span>
-										No personal shots, spam, or private details in comments.
-									</span>
-								</li>
-							</ol>
-						</div>
-						<div className="feed-rules-visual" aria-hidden="true">
-							<img
-								className="feed-rules-guide"
-								src="/assets/rules%20explaining%20image.png"
-								alt=""
-							/>
-						</div>
-					</section>
-				</div>
+				<RecentPostsPanel kind="resume" surface="rail" />
 			</main>
 		</AuthGate>
 	);

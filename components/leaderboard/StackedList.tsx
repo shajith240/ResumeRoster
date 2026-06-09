@@ -203,7 +203,7 @@ function RankCell({ rank }: { rank: number }) {
 	return (
 		<div
 			className={cn(
-				"flex h-10 w-10 items-center justify-start rounded-none border-0 bg-transparent font-[var(--font-app-body)] text-sm font-semibold tabular-nums",
+				"flex h-10 w-10 items-center justify-start rounded-none border-0 bg-transparent font-[var(--font-post-title)] text-sm font-semibold tabular-nums",
 				isTopThree
 					? "text-[var(--brand)]"
 					: "text-[var(--text-secondary)]",
@@ -249,7 +249,7 @@ function LeaderboardRow({
 			>
 				<LeaderboardAvatar name={name} reviewer={reviewer} />
 				<div className="min-w-0">
-					<strong className="block truncate font-[var(--font-app-body)] text-[15px] font-medium leading-tight">
+					<strong className="block truncate font-[var(--font-post-title)] text-[15px] font-medium leading-tight">
 						{name}
 					</strong>
 					<span className="mt-1 block truncate text-xs font-normal text-[var(--text-secondary)]">
@@ -273,7 +273,7 @@ function LeaderboardRow({
 				</span>
 			</div>
 
-			<div className="flex items-center gap-1.5 font-[var(--font-app-body)] text-base font-medium tabular-nums text-[var(--text-primary)] max-[760px]:col-start-3 max-[760px]:row-start-1 max-[760px]:justify-self-end max-[760px]:text-sm max-[760px]:leading-none">
+			<div className="flex items-center gap-1.5 font-[var(--font-post-title)] text-base font-medium tabular-nums text-[var(--text-primary)] max-[760px]:col-start-3 max-[760px]:row-start-1 max-[760px]:justify-self-end max-[760px]:text-sm max-[760px]:leading-none">
 				<LintPointsFlame
 					className="h-[18px] w-[18px]"
 					fallbackClassName="h-4 w-4"

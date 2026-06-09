@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import NotificationCenter from "@/components/NotificationCenter";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
+import { FeedbackDialog } from "@/components/account/FeedbackDialog";
 import { UserDropdown } from "@/components/account/UserDropdown";
 import {
 	getAnonymousProfileDisplayName,
@@ -78,6 +79,7 @@ export default function AuthButton() {
 	const [profile, setProfile] = useState<NavProfile | null>(null);
 	const [status, setStatus] = useState<AppStatus>("online");
 	const [theme, setTheme] = useState<AppTheme>("dark");
+	const [feedbackOpen, setFeedbackOpen] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const appHomeRoute = getAppHomeRoute();
 
@@ -199,13 +201,17 @@ export default function AuthButton() {
 			return;
 		}
 
+		if (action === "feedback") {
+			setFeedbackOpen(true);
+			return;
+		}
+
 		const routes: Record<string, string> = {
 			admin: "/admin",
 			profile: "/profile/me",
 			submit: "/submit",
 			saved: "/feed?saved=1",
 			help: appHomeRoute,
-			feedback: appHomeRoute,
 		};
 
 		const nextRoute = routes[action] || appHomeRoute;
@@ -261,6 +267,7 @@ export default function AuthButton() {
 		<div className="profile-menu">
 			<NotificationCenter userId={user.id} />
 			<PwaInstallPrompt />
+			<FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
 			<UserDropdown
 				isAdmin={isAdmin}
 				selectedStatus={status}

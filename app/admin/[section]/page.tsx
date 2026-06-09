@@ -9,6 +9,7 @@ const adminViews = new Set<AdminDashboardView>([
 	"audit",
 	"content",
 	"data",
+	"feedback",
 	"people",
 	"reports",
 	"reviewers",

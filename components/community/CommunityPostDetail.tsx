@@ -66,6 +66,7 @@ import {
 	REPORT_REASON_OPTIONS,
 	type ReportReason,
 } from "@/lib/report-validation";
+import { writeRecentPost } from "@/lib/recent-posts";
 import { resolveProfileAvatarUrl } from "@/lib/supabase/avatars";
 import { supabase } from "@/lib/supabase/client";
 import type {
@@ -284,6 +285,14 @@ function getScore(row: { downvote_count: number; upvote_count: number }) {
 	return row.upvote_count - row.downvote_count;
 }
 
+function getRecentCommunityPostImage(attachments: PublicAttachment[]) {
+	const imageAttachment = attachments.find((attachment) =>
+		attachment.mime_type?.startsWith("image/"),
+	);
+
+	return imageAttachment?.publicUrl ?? null;
+}
+
 function findCommunityCommentNode(
 	nodes: CommunityCommentNode[],
 	commentId: string,
@@ -466,17 +475,18 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			return reactionMap;
 		}, {});
 
-		setTopic((topicResult.data as CommunityTopic | null) ?? null);
-		setAttachments(
-			((attachmentResult.data ?? []) as CommunityPostAttachment[]).map(
-				(attachment) => ({
-					...attachment,
-					publicUrl: supabase.storage
-						.from("community-post-media")
-						.getPublicUrl(attachment.storage_path).data.publicUrl,
-				}),
-			),
-		);
+		const nextTopic = (topicResult.data as CommunityTopic | null) ?? null;
+		const nextAttachments = (
+			(attachmentResult.data ?? []) as CommunityPostAttachment[]
+		).map((attachment) => ({
+			...attachment,
+			publicUrl: supabase.storage
+				.from("community-post-media")
+				.getPublicUrl(attachment.storage_path).data.publicUrl,
+		}));
+
+		setTopic(nextTopic);
+		setAttachments(nextAttachments);
 
 		const pollResult = await supabase
 			.from("community_post_polls")
@@ -532,6 +542,19 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 				?.reaction as CommunityVoteReaction | undefined) ?? null,
 		);
 		setProfiles(nextProfiles);
+		writeRecentPost({
+			author: getAuthorName(nextProfiles[nextPost.author_id] ?? null),
+			comments: nextPost.comment_count,
+			createdAt: nextPost.created_at,
+			href: `/community/${nextPost.id}`,
+			id: nextPost.id,
+			imageUrl: getRecentCommunityPostImage(nextAttachments),
+			kind: "community",
+			meta: nextTopic?.name ?? COMMUNITY_POST_TYPE_LABELS[nextPost.post_type],
+			title: nextPost.title,
+			visitedAt: new Date().toISOString(),
+			votes: getScore(nextPost),
+		});
 		setLoading(false);
 	}, [postId]);
 

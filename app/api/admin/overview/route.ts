@@ -27,8 +27,11 @@ export async function GET(request: Request) {
 			replyCount,
 			pendingReportCount,
 			pendingReviewerCount,
+			openFeedbackCount,
+			totalFeedbackCount,
 			recentResumes,
 			recentReviews,
+			recentFeedback,
 			activePresence,
 		] = await Promise.all([
 			getCount(admin.from("profiles").select("id", { count: "exact", head: true })),
@@ -64,6 +67,17 @@ export async function GET(request: Request) {
 					.select("id", { count: "exact", head: true })
 					.eq("status", "pending"),
 			),
+			getCount(
+				admin
+					.from("user_feedback")
+					.select("id", { count: "exact", head: true })
+					.in("status", ["new", "reviewing", "needs_user_reply", "planned"]),
+			),
+			getCount(
+				admin
+					.from("user_feedback")
+					.select("id", { count: "exact", head: true }),
+			),
 			admin
 				.from("resumes")
 				.select(
@@ -79,6 +93,13 @@ export async function GET(request: Request) {
 				.order("created_at", { ascending: false })
 				.limit(8),
 			admin
+				.from("user_feedback")
+				.select(
+					"id,user_id,category,priority,status,title,body,source_path,created_at,updated_at",
+				)
+				.order("created_at", { ascending: false })
+				.limit(6),
+			admin
 				.from("app_presence_sessions")
 				.select("user_id,last_seen_at,status")
 				.gte("last_seen_at", activeSince),
@@ -86,6 +107,7 @@ export async function GET(request: Request) {
 
 		if (recentResumes.error) throw new Error(recentResumes.error.message);
 		if (recentReviews.error) throw new Error(recentReviews.error.message);
+		if (recentFeedback.error) throw new Error(recentFeedback.error.message);
 		if (activePresence.error) throw new Error(activePresence.error.message);
 
 		const activeReviewerCount = new Set(
@@ -94,11 +116,14 @@ export async function GET(request: Request) {
 
 		return Response.json({
 			activity: {
+				recentFeedback: recentFeedback.data ?? [],
 				recentResumes: recentResumes.data ?? [],
 				recentReviews: recentReviews.data ?? [],
 			},
 			stats: {
 				activeReviewers: activeReviewerCount,
+				feedbackOpen: openFeedbackCount,
+				feedbackTotal: totalFeedbackCount,
 				openResumes: openResumeCount,
 				pendingReports: pendingReportCount,
 				pendingReviewers: pendingReviewerCount,

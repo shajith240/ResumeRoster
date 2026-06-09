@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import FeedResumePreview from "@/components/FeedResumePreview";
 import FeedSkeleton from "@/components/feed/FeedSkeleton";
+import RecentPostsPanel from "@/components/RecentPostsPanel";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -98,6 +99,7 @@ export function FeedSortBar({ activeSort, savedOnly }: FeedSortBarProps) {
 
 	return (
 		<nav className="feed-sortbar feed-toolbar" aria-label="Feed sort">
+			<RecentPostsPanel kind="resume" surface="mobile-trigger" />
 			<DropdownMenu>
 				<DropdownMenuTrigger
 					aria-label={`Sort resumes by ${activeOption.label}`}

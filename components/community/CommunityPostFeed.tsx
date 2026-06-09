@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import FilledThumbIcon from "@/components/community/FilledThumbIcon";
 import CommunityMediaGallery from "@/components/community/CommunityMediaGallery";
 import FeedSkeleton from "@/components/feed/FeedSkeleton";
+import RecentPostsPanel from "@/components/RecentPostsPanel";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -795,6 +796,7 @@ export default function CommunityPostFeed() {
 	return (
 		<section className="community-feed-panel" aria-label="Community posts">
 			<div className="community-feed-toolbar" aria-label="Feed view controls">
+				<RecentPostsPanel kind="community" surface="mobile-trigger" />
 				<DropdownMenu>
 					<DropdownMenuTrigger
 						aria-label={`Sort community posts by ${COMMUNITY_FEED_SORT_LABELS[activeTab]}`}

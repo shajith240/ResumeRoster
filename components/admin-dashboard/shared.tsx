@@ -39,7 +39,7 @@ export function SegmentedTabs({
 					onClick={() => onChange(value)}
 					type="button"
 				>
-					{value}
+					{value.replaceAll("_", " ")}
 				</button>
 			))}
 		</div>
@@ -63,7 +63,7 @@ export function ActionButton({
 	icon?: ReactNode;
 	label: string;
 	onClick: () => Promise<void>;
-	scope: "report" | "reviewer" | "user";
+	scope: "feedback" | "report" | "reviewer" | "user";
 	targetId: string;
 	tone?: "danger" | "normal";
 }) {

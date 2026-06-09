@@ -65,6 +65,22 @@ export type NotificationType =
   | "reviewer_status"
   | "moderation"
   | "system";
+export type UserFeedbackCategory =
+  | "bug"
+  | "ui_ux"
+  | "performance"
+  | "feature_request"
+  | "account"
+  | "content_safety"
+  | "other";
+export type UserFeedbackPriority = "low" | "normal" | "high" | "urgent";
+export type UserFeedbackStatus =
+  | "new"
+  | "reviewing"
+  | "needs_user_reply"
+  | "planned"
+  | "resolved"
+  | "closed";
 
 export type ResumeAuthorProfile = {
   id: string;

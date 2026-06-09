@@ -4,6 +4,7 @@ import {
 	FileText,
 	Flag,
 	History,
+	Inbox,
 	LayoutDashboard,
 	UsersRound,
 } from "lucide-react";
@@ -20,7 +21,16 @@ export const adminSections: AdminSection[] = [
 		icon: LayoutDashboard,
 		id: "overview",
 		label: "Overview",
-		title: "Admin Overview",
+		title: "Control Room",
+	},
+	{
+		description: "User bug reports, ideas, and product feedback.",
+		group: "Operations",
+		href: "/admin/feedback",
+		icon: Inbox,
+		id: "feedback",
+		label: "Feedback",
+		title: "Feedback Inbox",
 	},
 	{
 		description: "Reports that need moderation decisions.",

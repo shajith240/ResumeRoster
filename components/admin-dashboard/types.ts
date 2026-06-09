@@ -9,6 +9,7 @@ export type AdminDashboardView =
 	| "audit"
 	| "content"
 	| "data"
+	| "feedback"
 	| "overview"
 	| "people"
 	| "reports"
@@ -17,6 +18,8 @@ export type AdminDashboardView =
 export type AdminStats = {
 	activeReviewers: number;
 	activeRoasters?: number;
+	feedbackOpen?: number;
+	feedbackTotal?: number;
 	openResumes: number;
 	pendingReports: number;
 	pendingReviewers: number;
@@ -66,6 +69,7 @@ export type AdminCommunityComment = {
 
 export type AdminOverview = {
 	activity: {
+		recentFeedback?: UserFeedbackPreview[];
 		recentResumes: AdminResume[];
 		recentReviews: AdminReview[];
 		recentRoasts?: AdminReview[];
@@ -193,6 +197,37 @@ export type AdminMessageResponse = {
 	skipped: number;
 	status: "ok";
 	total: number;
+};
+
+export type UserFeedbackPreview = {
+	admin_note: string | null;
+	admin_reply: string | null;
+	assignedAdmin?: ProfilePreview | null;
+	assigned_admin_id: string | null;
+	body: string;
+	category: string;
+	created_at: string;
+	id: string;
+	metadata?: Record<string, string> | null;
+	priority: string;
+	resolved_at: string | null;
+	reviewed_at: string | null;
+	reviewedBy?: ProfilePreview | null;
+	reviewed_by: string | null;
+	source_path: string | null;
+	status: string;
+	title: string;
+	updated_at: string;
+	userAgent?: string | null;
+	userProfile?: ProfilePreview | null;
+	user_agent?: string | null;
+	user_id: string | null;
+	viewport: string | null;
+};
+
+export type AdminFeedbackResponse = {
+	feedback: UserFeedbackPreview[];
+	statusCounts: Record<string, number>;
 };
 
 export type ModerationAction = {

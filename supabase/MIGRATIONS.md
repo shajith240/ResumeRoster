@@ -65,6 +65,13 @@
 0058_allow_title_only_community_posts.sql
 0059_allow_reddit_length_community_titles.sql
 0060_community_polls_and_drafts_support.sql
+0061_fix_community_poll_vote_rpc_conflict.sql
+0062_fix_community_vote_rpc_conflicts.sql
+0063_remove_community_post_saves.sql
+0064_hard_delete_community_posts.sql
+0065_optimize_community_reaction_lookups.sql
+0066_refine_reviewer_leaderboard_ranking.sql
+0067_admin_feedback_inbox.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.

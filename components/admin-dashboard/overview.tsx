@@ -1,6 +1,14 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { BadgeCheck, Database, FileText, Flag, History, UsersRound } from "lucide-react";
+import {
+	BadgeCheck,
+	Database,
+	FileText,
+	Flag,
+	History,
+	Inbox,
+	UsersRound,
+} from "lucide-react";
 import { PanelHeader } from "./shared";
 import type { AdminStats } from "./types";
 
@@ -26,6 +34,12 @@ export function MetricCard({
 
 export function OverviewPage({ stats }: { stats?: AdminStats }) {
 	const cards = [
+		{
+			detail: `${stats?.feedbackOpen ?? 0} open`,
+			href: "/admin/feedback",
+			icon: Inbox,
+			label: "Feedback Inbox",
+		},
 		{
 			detail: `${stats?.pendingReports ?? 0} pending`,
 			href: "/admin/reports",

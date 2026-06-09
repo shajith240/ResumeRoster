@@ -39,7 +39,7 @@
 		"Segoe UI Symbol", "Android Emoji", emoji;
 	--font-comment: var(--font-app-body), var(--font-emoji);
 	--app-header-height: 60px;
-	--session-sidebar-width: 5.5rem;
+	--session-sidebar-width: 2.5rem;
 	--session-sidebar-expanded-width: 15rem;
 	--bg-base: #f2efe9;
 	--bg-surface: #fafaf8;
@@ -271,11 +271,33 @@ button {
 }
 
 h1,
-h2,
+h2 {
+	font-family: var(--font-post-title);
+	font-weight: 600;
+	letter-spacing: 0;
+}
+
 .big-number,
 .app-logo {
 	font-family: var(--font-display);
 	font-weight: 400;
+}
+
+body.main-app
+	:where(
+		strong,
+		b,
+		th,
+		summary,
+		button,
+		[role="button"],
+		.font-medium,
+		.font-semibold,
+		.font-bold,
+		.font-extrabold
+	) {
+	font-family: var(--font-post-title);
+	letter-spacing: 0;
 }
 
 .sr-only {
@@ -317,7 +339,7 @@ h2,
 	padding: 10px 20px;
 	background: var(--text-primary);
 	color: var(--text-inverse);
-	font-family: var(--font-body);
+	font-family: var(--font-post-title);
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 1;
@@ -405,7 +427,7 @@ textarea:focus {
 	gap: 4px;
 	border-radius: var(--radius-pill);
 	padding: 3px 10px;
-	font-family: var(--font-body);
+	font-family: var(--font-post-title);
 	font-size: 12px;
 	font-weight: 500;
 	letter-spacing: 0.01em;
@@ -557,7 +579,7 @@ body.main-app-dark .app-header {
 .pwa-install-header h2 {
 	margin: 0;
 	color: var(--text-primary);
-	font-family: var(--font-body);
+	font-family: var(--font-post-title);
 	font-size: 20px;
 	font-weight: 760;
 	letter-spacing: 0;
@@ -904,7 +926,7 @@ html[data-app-theme="dark"] .full-page-loader {
 	padding: 8px 12px;
 	background: transparent;
 	color: var(--text-secondary);
-	font-family: var(--font-app-body);
+	font-family: var(--font-post-title);
 	font-size: 13px;
 	font-weight: 500;
 	line-height: 1;
@@ -931,7 +953,7 @@ html[data-app-theme="dark"] .full-page-loader {
 	border-radius: var(--button-radius);
 	background: var(--bg-elevated);
 	color: var(--text-primary);
-	font-family: var(--font-app-body);
+	font-family: var(--font-post-title);
 	font-weight: 500;
 }
 
@@ -984,7 +1006,7 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 
 .auth-field label {
 	color: var(--text-primary);
-	font-family: var(--font-app-body);
+	font-family: var(--font-post-title);
 	font-size: 13px;
 	font-weight: 500;
 }
@@ -1064,7 +1086,7 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	padding: 7px 10px;
 	background: rgba(45, 122, 79, 0.1);
 	color: var(--success);
-	font-family: var(--font-app-body);
+	font-family: var(--font-post-title);
 	font-size: 12px;
 	font-weight: 500;
 	line-height: 1;
@@ -1093,7 +1115,7 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	margin-top: 2px;
 	background: var(--brand);
 	color: #fff;
-	font-family: var(--font-app-body);
+	font-family: var(--font-post-title);
 	font-weight: 500;
 }
 
@@ -1501,12 +1523,14 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 .onboarding-field label,
 .onboarding-field-row label {
 	color: var(--text-primary);
+	font-family: var(--font-post-title);
 	font-size: 13px;
 	font-weight: 700;
 }
 
 .onboarding-field-row span {
 	color: var(--text-tertiary);
+	font-family: var(--font-post-title);
 	font-size: 12px;
 	font-weight: 700;
 }
@@ -1652,7 +1676,7 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 .onboarding-actions button {
 	min-height: 44px;
 	border-radius: var(--button-radius);
-	font-family: var(--font-app-body);
+	font-family: var(--font-post-title);
 	font-weight: 700;
 }
 
@@ -1751,7 +1775,6 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	color: var(--text-inverse);
 }
 
-.feed-right-rail section,
 .leaderboard-panel,
 .admin-panel,
 .admin-access-card,
@@ -1833,6 +1856,11 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	color: var(--text-primary);
 	font-size: 13px;
 	font-weight: 500;
+}
+
+.field-block > span,
+.field-block > legend {
+	font-family: var(--font-post-title);
 }
 
 .submit-form input,
@@ -3104,7 +3132,7 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	gap: 7px;
 	max-width: min(240px, 52vw);
 	color: var(--text-primary);
-	font-family: var(--font-app-body);
+	font-family: var(--font-post-title);
 	font-size: 12px;
 	font-weight: 500;
 	line-height: 1;
@@ -3140,7 +3168,7 @@ body:not(.main-app-dark) .auth-provider-button:hover {
 	padding: 4px 10px;
 	background: #eceae5;
 	color: var(--text-secondary);
-	font-family: var(--font-body);
+	font-family: var(--font-post-title);
 	font-size: 12px;
 	font-weight: 500;
 	line-height: 1.15;
@@ -4144,7 +4172,7 @@ body.main-app-dark .community-meta-tags a.badge:hover {
 	padding: 5px 7px 5px 4px;
 	background: transparent;
 	color: var(--text-secondary);
-	font-family: var(--font-body);
+	font-family: var(--font-post-title);
 	font-size: 13px;
 	font-weight: 650;
 	line-height: 1;
@@ -4534,6 +4562,7 @@ body.main-app-dark .toggle-ui::after {
 .privacy-picker legend {
 	padding: 0;
 	color: var(--text-secondary);
+	font-family: var(--font-post-title);
 	font-size: 12px;
 	font-weight: 700;
 	letter-spacing: 0.04em;
@@ -5000,7 +5029,7 @@ body.main-app-dark .bottom-nav {
 		border-radius: 12px;
 		padding: 6px 3px 5px;
 		color: var(--text-secondary);
-		font-family: var(--font-app-body);
+		font-family: var(--font-post-title);
 		font-size: 10.5px;
 		font-weight: 650;
 		line-height: 1;
@@ -5744,7 +5773,7 @@ body.main-app-dark .bottom-nav {
 		border-radius: 14px;
 		padding: 6px 3px 5px;
 		color: var(--text-secondary);
-		font-family: var(--font-app-body);
+		font-family: var(--font-post-title);
 		font-size: 10.5px;
 		font-weight: 650;
 		line-height: 1;
@@ -5901,9 +5930,9 @@ body.main-app-dark .dock-link.active .dock-label {
 
 .route-shell h1 {
 	margin-bottom: 18px;
-	font-family: "Instrument Serif", serif;
+	font-family: var(--font-post-title);
 	font-size: clamp(42px, 6vw, 70px);
-	font-weight: 400;
+	font-weight: 600;
 	line-height: 1;
 }
 
@@ -5928,6 +5957,7 @@ body.main-app-dark .dock-link.active .dock-label {
 	display: grid;
 	gap: 8px;
 	color: #2d2924;
+	font-family: var(--font-post-title);
 	font-size: 14px;
 	font-weight: 600;
 }
@@ -7471,32 +7501,6 @@ body.main-app-dark .form-message {
 	.feed-app-shell {
 		grid-template-columns: minmax(0, 1fr);
 		width: min(92%, 820px);
-	}
-
-	.feed-right-rail {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
-
-	.feed-right-rail .feed-rules-panel {
-		min-height: 330px;
-		grid-template-columns: minmax(0, 1fr);
-	}
-
-	.feed-rules-copy {
-		max-width: 100%;
-	}
-
-	.feed-rules-visual {
-		position: absolute;
-		inset: 0;
-		z-index: 0;
-	}
-
-	.feed-rules-guide {
-		right: -66px;
-		bottom: -16px;
-		height: min(96%, 280px);
-		opacity: 0.22;
 	}
 
 	.detail-layout {

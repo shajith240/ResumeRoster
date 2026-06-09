@@ -8,6 +8,7 @@ import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { getReviewContentIssue, normalizeCommentContent } from "@/lib/comment-media-validation";
+import { formatCount } from "@/lib/feed-ranking";
 import {
 	buildGuidedReviewContent,
 	getGuidedReviewIssue,
@@ -15,6 +16,8 @@ import {
 } from "@/lib/guided-review";
 import { buildThreadReviewTree, normalizeReview } from "@/lib/resume-thread";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
+import { getResumeRoleLabel } from "@/lib/resume-display";
+import { writeRecentPost } from "@/lib/recent-posts";
 import { supabase } from "@/lib/supabase/client";
 import type {
 	CommentContentFormat,
@@ -363,8 +366,25 @@ export function useResumeDetailController(resumeId: string) {
 			}
 
 			const loadedResume = resumeResult.resume;
+			const loadedAuthorProfile = await fetchResumeAuthorProfile(loadedResume);
 			setResume(loadedResume);
-			setResumeAuthorProfile(await fetchResumeAuthorProfile(loadedResume));
+			setResumeAuthorProfile(loadedAuthorProfile);
+			writeRecentPost({
+				author:
+					loadedResume.is_anonymous
+						? "Anonymous reviewer"
+						: loadedAuthorProfile?.full_name?.trim() ||
+							loadedAuthorProfile?.username?.trim() ||
+							"Community reviewer",
+				comments: loadedResume.roast_count,
+				createdAt: loadedResume.created_at,
+				href: `/resume/${loadedResume.id}`,
+				id: loadedResume.id,
+				kind: "resume",
+				meta: `${getResumeRoleLabel(loadedResume, loadedAuthorProfile)} - ${formatCount(loadedResume.read_count)} reads`,
+				title: loadedResume.title,
+				visitedAt: new Date().toISOString(),
+			});
 
 			if (activeUser) {
 				await openResumeFile(loadedResume);

@@ -27,6 +27,7 @@ import {
 	AdminMessageDialog,
 	DeleteUserDialog,
 } from "./admin-dashboard/dialogs";
+import { FeedbackPage } from "./admin-dashboard/feedback";
 import {
 	AuditPage,
 	ReportsPage,
@@ -42,6 +43,7 @@ import type {
 	AdminMessageDialogTarget,
 	AdminMessageForm,
 	AdminMessageResponse,
+	AdminFeedbackResponse,
 	AdminOverview,
 	AdminUser,
 	AdminUsersPagination,
@@ -49,6 +51,7 @@ import type {
 	ModerationAction,
 	ReportPreview,
 	ReviewerApplicationPreview,
+	UserFeedbackPreview,
 } from "./admin-dashboard/types";
 
 export type { AdminDashboardView } from "./admin-dashboard/types";
@@ -63,6 +66,10 @@ export default function AdminDashboard({
 	const [currentAdminUserId, setCurrentAdminUserId] = useState("");
 	const [overview, setOverview] = useState<AdminOverview | null>(null);
 	const [reports, setReports] = useState<ReportPreview[]>([]);
+	const [feedback, setFeedback] = useState<UserFeedbackPreview[]>([]);
+	const [feedbackStatusCounts, setFeedbackStatusCounts] = useState<
+		Record<string, number>
+	>({});
 	const [reviewerApplications, setReviewerApplications] = useState<
 		ReviewerApplicationPreview[]
 	>([]);
@@ -86,11 +93,21 @@ export default function AdminDashboard({
 	);
 	const [reportStatus, setReportStatus] =
 		useState<ContentReportStatus>("pending");
+	const [feedbackStatus, setFeedbackStatus] = useState("open");
+	const [feedbackCategory, setFeedbackCategory] = useState("all");
+	const [feedbackPriority, setFeedbackPriority] = useState("all");
 	const [reviewerStatus, setReviewerStatus] =
 		useState<ReviewerApplicationStatus>("pending");
 	const [userQuery, setUserQuery] = useState("");
 	const [peoplePage, setPeoplePage] = useState(1);
 	const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
+	const [feedbackNotes, setFeedbackNotes] = useState<Record<string, string>>({});
+	const [feedbackReplies, setFeedbackReplies] = useState<Record<string, string>>(
+		{},
+	);
+	const [feedbackPriorities, setFeedbackPriorities] = useState<
+		Record<string, string>
+	>({});
 	const [busyAction, setBusyAction] = useState("");
 	const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(null);
 	const [messageTarget, setMessageTarget] =
@@ -165,6 +182,17 @@ export default function AdminDashboard({
 							`/api/admin/reports?status=${reportStatus}&limit=100`,
 						);
 					}
+					if (view === "feedback") {
+						const params = new URLSearchParams({
+							category: feedbackCategory,
+							limit: "100",
+							priority: feedbackPriority,
+							status: feedbackStatus,
+						});
+						return fetchJson<AdminFeedbackResponse>(
+							`/api/admin/feedback?${params.toString()}`,
+						);
+					}
 					if (view === "reviewers") {
 						return fetchJson<{ applications: ReviewerApplicationPreview[] }>(
 							`/api/admin/reviewers?status=${reviewerStatus}&limit=100`,
@@ -205,6 +233,11 @@ export default function AdminDashboard({
 						(sectionData as { reports: ReportPreview[] } | null)?.reports ?? [],
 					);
 				}
+				if (view === "feedback") {
+					const feedbackData = sectionData as AdminFeedbackResponse | null;
+					setFeedback(feedbackData?.feedback ?? []);
+					setFeedbackStatusCounts(feedbackData?.statusCounts ?? {});
+				}
 				if (view === "reviewers") {
 					setReviewerApplications(
 						(
@@ -239,6 +272,9 @@ export default function AdminDashboard({
 		[
 			accessToken,
 			fetchJson,
+			feedbackCategory,
+			feedbackPriority,
+			feedbackStatus,
 			isAdmin,
 			peoplePage,
 			reportStatus,
@@ -285,6 +321,39 @@ export default function AdminDashboard({
 			});
 			toast.success("Moderation action saved.");
 			setAdminNotes((current) => ({ ...current, [reportId]: "" }));
+			await loadAdminData();
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "Action failed.");
+		} finally {
+			setBusyAction("");
+		}
+	}
+
+	async function runFeedbackAction(
+		ticket: UserFeedbackPreview,
+		action: string,
+		payload: Record<string, string> = {},
+	) {
+		const actionKey = `feedback:${ticket.id}:${action}`;
+		setBusyAction(actionKey);
+
+		try {
+			await fetchJson(`/api/admin/feedback/${ticket.id}/action`, {
+				body: JSON.stringify({
+					action,
+					...payload,
+				}),
+				headers: { "Content-Type": "application/json" },
+				method: "POST",
+			});
+			toast.success(
+				action === "reply_feedback_ticket"
+					? "Reply sent to user."
+					: "Feedback action saved.",
+			);
+			if (action === "reply_feedback_ticket") {
+				setFeedbackReplies((current) => ({ ...current, [ticket.id]: "" }));
+			}
 			await loadAdminData();
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Action failed.");
@@ -411,7 +480,9 @@ export default function AdminDashboard({
 
 	const stats = overview?.stats;
 	const attentionCount =
-		(stats?.pendingReports ?? 0) + (stats?.pendingReviewers ?? 0);
+		(stats?.pendingReports ?? 0) +
+		(stats?.pendingReviewers ?? 0) +
+		(stats?.feedbackOpen ?? 0);
 
 	return (
 		<main className="admin-route admin-console page-enter">
@@ -440,6 +511,12 @@ export default function AdminDashboard({
 					label="Needs attention"
 					tone={attentionCount ? "danger" : "normal"}
 					value={attentionCount}
+				/>
+				<MetricCard
+					icon={<MessageSquare aria-hidden="true" />}
+					label="Open feedback"
+					tone={stats?.feedbackOpen ? "danger" : "normal"}
+					value={stats?.feedbackOpen ?? 0}
 				/>
 				<MetricCard
 					icon={<Flag aria-hidden="true" />}
@@ -497,6 +574,41 @@ export default function AdminDashboard({
 							}
 							reports={reports}
 							status={reportStatus}
+						/>
+					) : null}
+					{view === "feedback" ? (
+						<FeedbackPage
+							busyAction={busyAction}
+							category={feedbackCategory}
+							feedback={feedback}
+							notes={feedbackNotes}
+							onAction={runFeedbackAction}
+							onCategoryChange={setFeedbackCategory}
+							onNoteChange={(ticketId, value) =>
+								setFeedbackNotes((current) => ({
+									...current,
+									[ticketId]: value,
+								}))
+							}
+							onPriorityChange={(ticketId, value) =>
+								setFeedbackPriorities((current) => ({
+									...current,
+									[ticketId]: value,
+								}))
+							}
+							onPriorityFilterChange={setFeedbackPriority}
+							onReplyChange={(ticketId, value) =>
+								setFeedbackReplies((current) => ({
+									...current,
+									[ticketId]: value,
+								}))
+							}
+							onStatusChange={setFeedbackStatus}
+							priority={feedbackPriority}
+							priorityDrafts={feedbackPriorities}
+							replies={feedbackReplies}
+							status={feedbackStatus}
+							statusCounts={feedbackStatusCounts}
 						/>
 					) : null}
 					{view === "people" ? (

@@ -42,6 +42,7 @@ export async function GET(request: Request) {
 			commentAttachments,
 			reports,
 			reviewerApplications,
+			feedbackTickets,
 			notifications,
 			moderationActions,
 			resumeFiles,
@@ -66,6 +67,12 @@ export async function GET(request: Request) {
 			),
 			getCount(
 				admin.from("reviewer_applications").select("id", {
+					count: "exact",
+					head: true,
+				}),
+			),
+			getCount(
+				admin.from("user_feedback").select("id", {
 					count: "exact",
 					head: true,
 				}),
@@ -177,6 +184,11 @@ export async function GET(request: Request) {
 					key: "reviewer_applications",
 					label: "Reviewer applications",
 					value: reviewerApplications,
+				},
+				{
+					key: "user_feedback",
+					label: "Feedback tickets",
+					value: feedbackTickets,
 				},
 				{ key: "notifications", label: "Notifications", value: notifications },
 				{

@@ -117,6 +117,9 @@ export function getSectionBadge(sectionId: AdminDashboardView, stats?: AdminStat
 	if (sectionId === "reviewers" && stats?.pendingReviewers) {
 		return stats.pendingReviewers;
 	}
+	if (sectionId === "feedback" && stats?.feedbackOpen) {
+		return stats.feedbackOpen;
+	}
 	if (sectionId === "people" && stats?.users) {
 		return stats.users;
 	}
@@ -125,7 +128,9 @@ export function getSectionBadge(sectionId: AdminDashboardView, stats?: AdminStat
 	}
 	if (sectionId === "overview") {
 		const attention =
-			(stats?.pendingReports ?? 0) + (stats?.pendingReviewers ?? 0);
+			(stats?.pendingReports ?? 0) +
+			(stats?.pendingReviewers ?? 0) +
+			(stats?.feedbackOpen ?? 0);
 		return attention || null;
 	}
 	return null;
