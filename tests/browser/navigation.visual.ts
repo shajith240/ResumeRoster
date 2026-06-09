@@ -340,7 +340,7 @@ test("primary navigation exposes app sections without account utilities", async 
 		await page
 			.getByRole("button", { name: "Sort community posts by Best" })
 			.click();
-		await page.getByRole("menuitemradio", { name: "New" }).click();
+		await page.getByRole("menuitem", { name: "New" }).click();
 		await expect(
 			page.getByRole("button", { name: "Sort community posts by New" }),
 		).toBeVisible();
@@ -662,7 +662,7 @@ test("primary navigation exposes app sections without account utilities", async 
 	await page
 		.getByRole("button", { name: "Sort community posts by Best" })
 		.click();
-	await page.getByRole("menuitemradio", { name: "New" }).click();
+	await page.getByRole("menuitem", { name: "New" }).click();
 	await expect(
 		page.getByRole("button", { name: "Sort community posts by New" }),
 	).toBeVisible();

@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
+	Check,
 	ChevronDown,
 	Edit3,
 	Forward,
-	LayoutList,
 	Lock,
 	MessageCircle,
 	MoreHorizontal,
@@ -24,8 +24,6 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuRadioGroup,
-	DropdownMenuRadioItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -33,10 +31,13 @@ import {
 	type CommunityPostType,
 } from "@/lib/community";
 import {
+	canDeleteCommunityPost,
+	canEditCommunityPost,
 	getCommunityPollVoteBlockReason,
 	getCommunityPostReactionBlockReason,
 } from "@/lib/community-guardrails";
 import {
+	filterCommunityPostsForTabInCurrentOrder,
 	getCommunityPostScore,
 	sortCommunityPosts,
 	type CommunityFeedTab,
@@ -433,7 +434,7 @@ export default function CommunityPostFeed() {
 	}, [activeTab]);
 
 	const visiblePosts = useMemo(
-		() => sortCommunityPosts(posts, activeTab),
+		() => filterCommunityPostsForTabInCurrentOrder(posts, activeTab),
 		[activeTab, posts],
 	);
 
@@ -685,12 +686,16 @@ export default function CommunityPostFeed() {
 	}
 
 	async function deletePostFromFeed(post: CommunityPostFeedItem) {
-		if (currentUserId !== post.author_id) {
-			toast.error("Only the post author can delete this post.");
+		if (currentUserId !== post.author_id && !isAdmin) {
+			toast.error("Only the post author or an admin can delete this post.");
 			return;
 		}
 
-		if (!window.confirm("Delete this post? It will be removed from the community feed.")) {
+		if (
+			!window.confirm(
+				"Delete this post permanently? This removes the post, comments, votes, poll data, and uploaded media.",
+			)
+		) {
 			return;
 		}
 
@@ -744,32 +749,30 @@ export default function CommunityPostFeed() {
 						<span>{COMMUNITY_FEED_SORT_LABELS[activeTab]}</span>
 						<ChevronDown aria-hidden="true" />
 					</DropdownMenuTrigger>
-					<DropdownMenuContent
-						align="start"
-						className="feed-sort-menu reddit-select-content"
-						sideOffset={8}
-					>
-						<DropdownMenuRadioGroup
-							onValueChange={(value) => {
-								setActiveTab(value as CommunityFeedTab);
-							}}
-							value={activeTab}
-						>
-							{COMMUNITY_FEED_SORT_OPTIONS.map((option) => (
-								<DropdownMenuRadioItem
-									className="feed-sort-menu-item"
-									key={option.value}
-									value={option.value}
-								>
-									<span>{option.label}</span>
-								</DropdownMenuRadioItem>
-							))}
-						</DropdownMenuRadioGroup>
-					</DropdownMenuContent>
-				</DropdownMenu>
-				<div className="community-feed-view-indicator" aria-hidden="true">
-					<LayoutList />
-				</div>
+				<DropdownMenuContent
+					align="start"
+					className="feed-sort-menu reddit-select-content"
+					sideOffset={8}
+				>
+					{COMMUNITY_FEED_SORT_OPTIONS.map((option) => {
+						const isActive = activeTab === option.value;
+
+						return (
+							<DropdownMenuItem
+								aria-current={isActive ? "page" : undefined}
+								className={`feed-sort-menu-item${isActive ? " is-active" : ""}`}
+								key={option.value}
+								onSelect={() => {
+									setActiveTab(option.value);
+								}}
+							>
+								<span>{option.label}</span>
+								{isActive ? <Check aria-hidden="true" /> : null}
+							</DropdownMenuItem>
+						);
+					})}
+				</DropdownMenuContent>
+			</DropdownMenu>
 			</div>
 			{loading ? (
 				<div className="community-feed-loading" aria-label="Loading community posts">
@@ -801,9 +804,12 @@ export default function CommunityPostFeed() {
 						);
 						const postScore = getCommunityPostScore(post);
 						const textPreview = getFeedTextPreview(post);
-						const isOwnPost = currentUserId === post.author_id;
-						const canManagePost =
-							isOwnPost && (post.status === "active" || post.status === "locked");
+						const canEditPost = canEditCommunityPost(activeUser, post);
+						const canDeletePost = canDeleteCommunityPost({
+							activeUser,
+							isAdmin,
+							post,
+						});
 						const canModeratePost =
 							isAdmin && (post.status === "active" || post.status === "locked");
 						const deleteBusy = rowActionIds.has(`post-delete-${post.id}`);
@@ -1017,7 +1023,7 @@ export default function CommunityPostFeed() {
 												<span className="post-action-label">Locked</span>
 											</span>
 										) : null}
-										{canManagePost || canModeratePost ? (
+										{canEditPost || canDeletePost || canModeratePost ? (
 											<DropdownMenu>
 												<DropdownMenuTrigger
 													aria-label={`More actions for ${post.title}`}
@@ -1034,28 +1040,28 @@ export default function CommunityPostFeed() {
 													className="reddit-select-content community-row-action-menu"
 													sideOffset={8}
 												>
-													{canManagePost ? (
-														<>
-															<DropdownMenuItem
-																asChild
-																className="community-row-action-item"
-															>
-																<Link href={`/community/${post.id}?edit=1`}>
-																	<Edit3 aria-hidden="true" />
-																	<span>Edit</span>
-																</Link>
-															</DropdownMenuItem>
-															<DropdownMenuItem
-																className="community-row-action-item is-danger"
-																disabled={deleteBusy}
-																onSelect={() => {
-																	void deletePostFromFeed(post);
-																}}
-															>
-																<Trash2 aria-hidden="true" />
-																<span>{deleteBusy ? "Deleting..." : "Delete"}</span>
-															</DropdownMenuItem>
-														</>
+													{canEditPost ? (
+														<DropdownMenuItem
+															asChild
+															className="community-row-action-item"
+														>
+															<Link href={`/community/${post.id}?edit=1`}>
+																<Edit3 aria-hidden="true" />
+																<span>Edit</span>
+															</Link>
+														</DropdownMenuItem>
+													) : null}
+													{canDeletePost ? (
+														<DropdownMenuItem
+															className="community-row-action-item is-danger"
+															disabled={deleteBusy}
+															onSelect={() => {
+																void deletePostFromFeed(post);
+															}}
+														>
+															<Trash2 aria-hidden="true" />
+															<span>{deleteBusy ? "Deleting..." : "Delete"}</span>
+														</DropdownMenuItem>
 													) : null}
 													{canModeratePost ? (
 														<DropdownMenuItem

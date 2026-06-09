@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import AuthGate from "@/components/AuthGate";
-import CommunityAiNewsRail from "@/components/community/CommunityAiNewsRail";
 import CommunityPostFeed from "@/components/community/CommunityPostFeed";
 import RouteHeader from "@/components/RouteHeader";
 import { areCommunityPostsEnabled } from "@/lib/community";
@@ -26,7 +25,6 @@ export default async function CommunityPage() {
 					</header>
 					<CommunityPostFeed />
 				</section>
-				<CommunityAiNewsRail />
 			</main>
 		</AuthGate>
 	);

@@ -566,7 +566,7 @@ async function fulfillRestTable(
 		return;
 	}
 
-	if (table === "community_comment_votes" || table === "community_post_saves") {
+	if (table === "community_comment_votes") {
 		await fulfillJson(route, []);
 		return;
 	}

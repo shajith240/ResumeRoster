@@ -239,7 +239,6 @@ export type CommunityPost = {
   comment_count: number;
   upvote_count: number;
   downvote_count: number;
-  save_count: number;
   last_activity_at: string;
   deleted_at: string | null;
   created_at: string;

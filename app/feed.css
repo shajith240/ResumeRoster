@@ -206,9 +206,7 @@
 	color: var(--text-primary);
 }
 
-.feed-sort-trigger svg,
-.feed-view-indicator svg,
-.community-feed-view-indicator svg {
+.feed-sort-trigger svg {
 	width: 16px;
 	height: 16px;
 	stroke-width: 2;
@@ -221,17 +219,6 @@
 
 .feed-sort-trigger[data-state="open"] > svg {
 	transform: rotate(180deg);
-}
-
-.feed-view-indicator,
-.community-feed-view-indicator {
-	display: inline-flex;
-	min-height: 32px;
-	align-items: center;
-	justify-content: center;
-	width: 32px;
-	border-radius: var(--button-radius-sm);
-	color: var(--text-secondary);
 }
 
 .feed-sort-menu {
@@ -256,16 +243,10 @@
 	cursor: pointer;
 }
 
-.feed-sort-menu-item[data-state="checked"] {
-	justify-content: flex-start;
-	padding-left: 30px;
-}
-
 .feed-sort-menu-item:hover,
 .feed-sort-menu-item:focus-visible,
 .feed-sort-menu-item.is-active,
-.feed-sort-menu-item[aria-current="page"],
-.feed-sort-menu-item[data-state="checked"] {
+.feed-sort-menu-item[aria-current="page"] {
 	background: color-mix(in srgb, var(--bg-surface) 74%, var(--brand) 8%);
 	color: var(--text-primary);
 	outline: none;
@@ -5154,130 +5135,13 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 	background: color-mix(in srgb, var(--text-primary) 14%, transparent);
 }
 
-.community-news-rail {
-	display: none;
-}
-
-.community-news-card {
-	display: grid;
-	gap: 12px;
-}
-
-.community-news-header {
-	display: flex;
-	align-items: flex-start;
-	justify-content: space-between;
-	gap: 12px;
-	border-bottom: 1px solid var(--border-subtle);
-	padding-bottom: 12px;
-}
-
-.community-news-header span {
-	display: inline-flex;
-	margin-bottom: 4px;
-	color: var(--brand);
-	font-size: 11px;
-	font-weight: 800;
-	line-height: 1;
-	text-transform: uppercase;
-}
-
-.community-news-header h2 {
-	margin: 0;
-	color: var(--text-primary);
-}
-
-.community-news-header a {
-	display: inline-grid;
-	width: 30px;
-	height: 30px;
-	flex: 0 0 auto;
-	place-items: center;
-	border: 1px solid var(--border-subtle);
-	border-radius: var(--button-radius-sm);
-	background: color-mix(in srgb, var(--bg-base) 70%, transparent);
-	color: var(--text-secondary);
-	text-decoration: none;
-	transition:
-		background-color 160ms var(--button-ease),
-		color 160ms var(--button-ease),
-		border-color 160ms var(--button-ease);
-}
-
-.community-news-header a:hover {
-	border-color: color-mix(in srgb, var(--brand) 30%, var(--border-subtle));
-	background: color-mix(in srgb, var(--brand) 10%, var(--bg-base));
-	color: var(--brand);
-}
-
-.community-news-header svg {
-	width: 15px;
-	height: 15px;
-}
-
-.community-news-list {
-	display: grid;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.community-news-list li + li {
-	border-top: 1px solid var(--border-subtle);
-}
-
-.community-news-list a {
-	display: grid;
-	gap: 7px;
-	padding: 12px 0;
-	color: var(--text-primary);
-	text-decoration: none;
-}
-
-.community-news-list a:hover strong {
-	color: var(--brand);
-}
-
-.community-news-list strong {
-	font-size: 13px;
-	font-weight: 650;
-	line-height: 1.35;
-	transition: color 160ms var(--button-ease);
-}
-
-.community-news-meta,
-.community-news-stats {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-	color: var(--text-tertiary);
-	font-size: 11px;
-	font-weight: 600;
-	line-height: 1.25;
-}
-
-.community-news-empty {
-	margin: 0;
-}
-
 @media (min-width: 1181px) {
 	.community-feed-route.feed-app-shell {
-		grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+		grid-template-columns: minmax(0, 1fr);
 		justify-content: stretch;
-		gap: clamp(24px, 2.3vw, 36px);
-		width: min(
-			1380px,
-			calc(
-				100vw - var(--session-sidebar-width) - var(--feed-shell-gutter) -
-					var(--feed-shell-edge)
-			)
-		);
+		width: min(980px, calc(100vw - var(--session-sidebar-width) - 96px));
 		margin-right: var(--feed-shell-edge);
 		margin-left: var(--feed-shell-gutter);
-	}
-
-	.community-news-rail {
-		display: grid;
 	}
 }
 
@@ -5293,9 +5157,6 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		width: 100%;
 	}
 
-	.community-news-rail {
-		display: none;
-	}
 }
 
 @media (max-width: 760px) {

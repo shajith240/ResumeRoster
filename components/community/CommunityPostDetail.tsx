@@ -16,7 +16,6 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-	Bookmark,
 	ChevronLeft,
 	Check,
 	Download,
@@ -48,6 +47,8 @@ import {
 } from "@/lib/comment-mentions";
 import { COMMUNITY_POST_TYPE_LABELS, type CommunityPostType } from "@/lib/community";
 import {
+	canDeleteCommunityPost,
+	canEditCommunityPost,
 	getCommunityCommentReactionBlockReason,
 	getCommunityCommentReplyBlockReason,
 	getCommunityPollVoteBlockReason,
@@ -128,12 +129,6 @@ type PollVoteActionResponse = {
 	message?: string;
 	optionId?: string;
 	pollId?: string;
-};
-
-type SaveActionResponse = {
-	message?: string;
-	saveCount?: number;
-	saved?: boolean;
 };
 
 type PostEditResponse = {
@@ -300,7 +295,6 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	const [postReaction, setPostReaction] = useState<CommunityVoteReaction | null>(
 		null,
 	);
-	const [postSaved, setPostSaved] = useState(false);
 	const [profiles, setProfiles] = useState<Record<string, ProfilePreview>>({});
 	const [replyBodies, setReplyBodies] = useState<Record<string, string>>({});
 	const [replyContentFormat, setReplyContentFormat] =
@@ -354,7 +348,6 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			attachmentResult,
 			commentResult,
 			postVoteResult,
-			postSaveResult,
 		] =
 			await Promise.all([
 				supabase
@@ -382,14 +375,6 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 							.select("reaction")
 							.eq("post_id", postId)
 							.eq("voter_id", userId)
-							.maybeSingle()
-					: Promise.resolve({ data: null, error: null }),
-				userId
-					? supabase
-							.from("community_post_saves")
-							.select("post_id")
-							.eq("post_id", postId)
-							.eq("user_id", userId)
 							.maybeSingle()
 					: Promise.resolve({ data: null, error: null }),
 			]);
@@ -504,7 +489,6 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			((postVoteResult.data as { reaction?: CommunityVoteReaction } | null)
 				?.reaction as CommunityVoteReaction | undefined) ?? null,
 		);
-		setPostSaved(Boolean(postSaveResult.data));
 		setProfiles(nextProfiles);
 		setLoading(false);
 	}, [postId]);
@@ -799,39 +783,6 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			}
 			toast.error("Could not share this post.");
 		}
-	}
-
-	async function toggleSavedPost() {
-		if (!post) return;
-
-		if (currentUserId && post.author_id === currentUserId) {
-			toast.error("You cannot save your own post.");
-			return;
-		}
-
-		if (post.status !== "active") {
-			toast.error("This post is not available to save.");
-			return;
-		}
-
-		const nextSaved = !postSaved;
-		setPostSaved(nextSaved);
-		const result = await runCommunityAction<SaveActionResponse>(
-			`/api/community/posts/${post.id}/save`,
-			{
-				body: { saved: nextSaved },
-				busyKey: "post-save",
-				fallbackMessage: "Could not update saved posts.",
-			},
-		);
-
-		if (result?.saved === undefined) {
-			setPostSaved(!nextSaved);
-			return;
-		}
-
-		setPostSaved(Boolean(result.saved));
-		toast.success(result.saved ? "Post saved." : "Removed from saved posts.");
 	}
 
 	function openCommentsShelf(
@@ -1221,7 +1172,11 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 	async function handlePostDelete() {
 		if (!post) return;
-		if (!window.confirm("Delete this post? This hides it from the community.")) {
+		if (
+			!window.confirm(
+				"Delete this post permanently? This removes the post, comments, votes, poll data, and uploaded media.",
+			)
+		) {
 			return;
 		}
 
@@ -1806,9 +1761,12 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		activeUser,
 		post,
 	);
-	const canEditPost = isOwnPost && (post.status === "active" || post.status === "locked");
-	const canSavePost =
-		Boolean(activeUser) && !isOwnPost && post.status === "active";
+	const canEditPost = canEditCommunityPost(activeUser, post);
+	const canDeletePost = canDeleteCommunityPost({
+		activeUser,
+		isAdmin,
+		post,
+	});
 	const canReportPost =
 		Boolean(currentUserId) &&
 		!isOwnPost &&
@@ -1942,19 +1900,6 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 						<Share2 aria-hidden="true" />
 						<span>Share</span>
 					</button>
-					{canSavePost ? (
-						<button
-							disabled={actionBusy === "post-save"}
-							onClick={() => {
-								setMobileActionSheetOpen(false);
-								void toggleSavedPost();
-							}}
-							type="button"
-						>
-							<Bookmark aria-hidden="true" />
-							<span>{postSaved ? "Saved" : "Save"}</span>
-						</button>
-					) : null}
 					{attachments.length ? (
 						<button
 							onClick={() => {
@@ -1978,6 +1923,20 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 						>
 							<Flag aria-hidden="true" />
 							<span>Report</span>
+						</button>
+					) : null}
+					{canDeletePost ? (
+						<button
+							className="is-danger"
+							disabled={actionBusy === "post-delete"}
+							onClick={() => {
+								setMobileActionSheetOpen(false);
+								void handlePostDelete();
+							}}
+							type="button"
+						>
+							<Trash2 aria-hidden="true" />
+							<span>{actionBusy === "post-delete" ? "Deleting..." : "Delete"}</span>
 						</button>
 					) : null}
 				</div>
@@ -2081,7 +2040,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 									type="submit"
 								>
 									<Check aria-hidden="true" />
-									Save post
+									Update post
 								</button>
 							</div>
 						</form>
@@ -2289,30 +2248,30 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 							<span className="post-action-label">Report</span>
 						</button>
 					) : null}
-					{canEditPost || isAdmin ? (
+					{canEditPost || canDeletePost || isAdmin ? (
 						<div className="community-owner-actions">
 							{canEditPost ? (
-								<>
-									<button
-										className="community-action-button"
-										onClick={() => setEditingPost(true)}
-										type="button"
-									>
-										<Edit3 aria-hidden="true" />
-										Edit
-									</button>
-									<button
-										className="community-action-button is-danger"
-										disabled={actionBusy === "post-delete"}
-										onClick={() => {
-											void handlePostDelete();
-										}}
-										type="button"
-									>
-										<Trash2 aria-hidden="true" />
-										Delete
-									</button>
-								</>
+								<button
+									className="community-action-button"
+									onClick={() => setEditingPost(true)}
+									type="button"
+								>
+									<Edit3 aria-hidden="true" />
+									Edit
+								</button>
+							) : null}
+							{canDeletePost ? (
+								<button
+									className="community-action-button is-danger"
+									disabled={actionBusy === "post-delete"}
+									onClick={() => {
+										void handlePostDelete();
+									}}
+									type="button"
+								>
+									<Trash2 aria-hidden="true" />
+									Delete
+								</button>
 							) : null}
 							{isAdmin ? (
 								<button

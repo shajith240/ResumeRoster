@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
 	Bookmark,
 	Check,
 	ChevronDown,
 	Eye,
-	LayoutList,
 	Link2,
 	MessageCircle,
 } from "lucide-react";
@@ -91,6 +91,7 @@ export function FeedEmptyState({ savedOnly }: FeedEmptyStateProps) {
 }
 
 export function FeedSortBar({ activeSort, savedOnly }: FeedSortBarProps) {
+	const router = useRouter();
 	const activeOption = savedOnly
 		? { label: "Saved", shortLabel: "Saved", value: "saved" }
 		: sortOptions.find((option) => option.value === activeSort) ?? sortOptions[0];
@@ -114,33 +115,31 @@ export function FeedSortBar({ activeSort, savedOnly }: FeedSortBarProps) {
 						const isActive = !savedOnly && activeSort === option.value;
 
 						return (
-							<DropdownMenuItem asChild className="feed-sort-menu-item" key={option.value}>
-								<Link
-									aria-current={isActive ? "page" : undefined}
-									className={isActive ? "is-active" : ""}
-									href={option.href}
-								>
-									<span>{option.label}</span>
-									{isActive ? <Check aria-hidden="true" /> : null}
-								</Link>
+							<DropdownMenuItem
+								aria-current={isActive ? "page" : undefined}
+								className={`feed-sort-menu-item${isActive ? " is-active" : ""}`}
+								key={option.value}
+								onSelect={() => {
+									router.push(option.href);
+								}}
+							>
+								<span>{option.label}</span>
+								{isActive ? <Check aria-hidden="true" /> : null}
 							</DropdownMenuItem>
 						);
 					})}
-					<DropdownMenuItem asChild className="feed-sort-menu-item">
-						<Link
-							aria-current={savedOnly ? "page" : undefined}
-							className={savedOnly ? "is-active" : ""}
-							href="/feed?saved=1"
-						>
-							<span>Saved</span>
-							{savedOnly ? <Check aria-hidden="true" /> : null}
-						</Link>
+					<DropdownMenuItem
+						aria-current={savedOnly ? "page" : undefined}
+						className={`feed-sort-menu-item${savedOnly ? " is-active" : ""}`}
+						onSelect={() => {
+							router.push("/feed?saved=1");
+						}}
+					>
+						<span>Saved</span>
+						{savedOnly ? <Check aria-hidden="true" /> : null}
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-			<span className="feed-view-indicator" aria-hidden="true">
-				<LayoutList />
-			</span>
 		</nav>
 	);
 }

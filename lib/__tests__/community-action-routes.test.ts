@@ -1,14 +1,13 @@
 import { POST as voteOnPost } from "@/app/api/community/posts/[id]/vote/route";
 import { POST as voteOnComment } from "@/app/api/community/comments/[id]/vote/route";
 import { POST as voteOnPoll } from "@/app/api/community/polls/[id]/vote/route";
-import { POST as savePost } from "@/app/api/community/posts/[id]/save/route";
 import {
 	DELETE as deletePost,
 	PATCH as editPost,
 } from "@/app/api/community/posts/[id]/route";
 import { DELETE as deleteComment } from "@/app/api/community/comments/[id]/route";
 import { POST as lockPost } from "@/app/api/community/posts/[id]/lock/route";
-import { requireAdmin } from "@/lib/admin";
+import { isAdminEmail, requireAdmin } from "@/lib/admin";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { requireSignedInUser } from "@/lib/server-auth";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -30,6 +29,7 @@ vi.mock("@/lib/admin", () => ({
 			{ status: 403 },
 		),
 	),
+	isAdminEmail: vi.fn(),
 	requireAdmin: vi.fn(),
 }));
 
@@ -43,6 +43,7 @@ const OPTION_ID = "44444444-4444-4444-8444-444444444444";
 const POLL_ID = "55555555-5555-4555-8555-555555555555";
 const POST_ID = "22222222-2222-4222-8222-222222222222";
 const USER_ID = "11111111-1111-4111-8111-111111111111";
+const OTHER_USER_ID = "66666666-6666-4666-8666-666666666666";
 
 function routeContext(id = POST_ID) {
 	return {
@@ -81,6 +82,69 @@ function mockSignedInRpc(rpcResult: unknown) {
 	return rpc;
 }
 
+function mockPostDeleteAdmin({
+	attachmentPaths = [`${USER_ID}/post-image.png`],
+	authorId = USER_ID,
+	isAdmin = false,
+	rpcResult = {
+		data: [
+			{
+				deleted_at: "2026-01-01T00:00:00.000Z",
+				id: POST_ID,
+			},
+		],
+		error: null,
+	},
+}: {
+	attachmentPaths?: string[];
+	authorId?: string;
+	isAdmin?: boolean;
+	rpcResult?: unknown;
+} = {}) {
+	const rpc = vi.fn(async () => rpcResult);
+	const remove = vi.fn(async () => ({ error: null }));
+	const maybeSingle = vi.fn(async () => ({
+		data: {
+			author_id: authorId,
+			id: POST_ID,
+			status: "active",
+		},
+		error: null,
+	}));
+	const attachmentsEq = vi.fn(async () => ({
+		data: attachmentPaths.map((storage_path) => ({ storage_path })),
+		error: null,
+	}));
+	const postsEq = vi.fn(() => ({ maybeSingle }));
+	const from = vi.fn((table: string) => {
+		if (table === "community_posts") {
+			return {
+				select: vi.fn(() => ({ eq: postsEq })),
+			};
+		}
+
+		if (table === "community_post_attachments") {
+			return {
+				select: vi.fn(() => ({ eq: attachmentsEq })),
+			};
+		}
+
+		throw new Error(`Unexpected table ${table}`);
+	});
+	const storageFrom = vi.fn(() => ({ remove }));
+
+	vi.mocked(requireSignedInUser).mockResolvedValue({
+		admin: {
+			from,
+			rpc,
+			storage: { from: storageFrom },
+		},
+		user: { email: isAdmin ? "admin@linted.test" : "member@linted.test", id: USER_ID },
+	} as never);
+
+	return { attachmentsEq, from, maybeSingle, remove, rpc, storageFrom };
+}
+
 function mockAdminRpc(rpcResult: unknown) {
 	const rpc = vi.fn(async () => rpcResult);
 
@@ -96,6 +160,7 @@ describe("community action routes", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		process.env.NEXT_PUBLIC_COMMUNITY_POSTS_ENABLED = "true";
+		vi.mocked(isAdminEmail).mockReturnValue(false);
 		vi.mocked(enforceApiRateLimit).mockResolvedValue(null);
 	});
 
@@ -179,73 +244,6 @@ describe("community action routes", () => {
 		});
 	});
 
-	it("saves community posts through the server route", async () => {
-		const profileUpsert = vi.fn(async () => ({ error: null }));
-		const upsert = vi.fn(async () => ({ error: null }));
-		const postCountMaybeSingle = vi.fn(async () => ({
-			data: { save_count: 8 },
-			error: null,
-		}));
-		const postMaybeSingle = vi.fn(async () => ({
-			data: { id: POST_ID, status: "active" },
-			error: null,
-		}));
-		let postSelectCallCount = 0;
-		const from = vi.fn((table: string) => {
-			if (table === "profiles") {
-				return { upsert: profileUpsert };
-			}
-
-			if (table === "community_posts") {
-				const select = vi.fn(() => {
-					postSelectCallCount += 1;
-					return postSelectCallCount === 1
-						? {
-						eq: vi.fn(() => ({
-							maybeSingle: postMaybeSingle,
-						})),
-					}
-						: {
-						eq: vi.fn(() => ({
-							maybeSingle: postCountMaybeSingle,
-						})),
-					};
-				});
-
-				return { select };
-			}
-
-			if (table === "community_post_saves") {
-				return { upsert };
-			}
-
-			throw new Error(`Unexpected table ${table}`);
-		});
-
-		vi.mocked(requireSignedInUser).mockResolvedValue({
-			admin: { from, rpc: vi.fn() },
-			user: { id: USER_ID },
-		} as never);
-
-		const response = await savePost(
-			jsonRequest(`/api/community/posts/${POST_ID}/save`, {
-				saved: true,
-			}),
-			routeContext(),
-		);
-
-		expect(response.status).toBe(200);
-		expect(from).toHaveBeenCalledWith("community_post_saves");
-		expect(upsert).toHaveBeenCalledWith(
-			{ post_id: POST_ID, user_id: USER_ID },
-			{ onConflict: "post_id,user_id" },
-		);
-		await expect(response.json()).resolves.toEqual({
-			saveCount: 8,
-			saved: true,
-		});
-	});
-
 	it("edits a community post through the author RPC", async () => {
 		const rpc = mockSignedInRpc({
 			data: [
@@ -276,6 +274,53 @@ describe("community action routes", () => {
 		expect(rpc).toHaveBeenCalledWith("update_community_post_content", {
 			next_body: "Here is the updated placement preparation context.",
 			next_title: "Updated placement doubt",
+			target_post_id: POST_ID,
+			target_user_id: USER_ID,
+		});
+	});
+
+	it("hard deletes an owned community post and removes uploaded media first", async () => {
+		const { remove, rpc, storageFrom } = mockPostDeleteAdmin();
+
+		const response = await deletePost(
+			request(`/api/community/posts/${POST_ID}`, "DELETE"),
+			routeContext(),
+		);
+
+		expect(response.status).toBe(200);
+		expect(storageFrom).toHaveBeenCalledWith("community-post-media");
+		expect(remove).toHaveBeenCalledWith([`${USER_ID}/post-image.png`]);
+		expect(rpc).toHaveBeenCalledWith("hard_delete_community_post", {
+			requesting_user_is_admin: false,
+			target_post_id: POST_ID,
+			target_user_id: USER_ID,
+		});
+		await expect(response.json()).resolves.toEqual({
+			post: {
+				deletedAt: "2026-01-01T00:00:00.000Z",
+				id: POST_ID,
+				status: "deleted",
+			},
+		});
+	});
+
+	it("allows admins to hard delete another user's community post", async () => {
+		vi.mocked(isAdminEmail).mockReturnValue(true);
+		const { remove, rpc } = mockPostDeleteAdmin({
+			attachmentPaths: [],
+			authorId: OTHER_USER_ID,
+			isAdmin: true,
+		});
+
+		const response = await deletePost(
+			request(`/api/community/posts/${POST_ID}`, "DELETE"),
+			routeContext(),
+		);
+
+		expect(response.status).toBe(200);
+		expect(remove).not.toHaveBeenCalled();
+		expect(rpc).toHaveBeenCalledWith("hard_delete_community_post", {
+			requesting_user_is_admin: true,
 			target_post_id: POST_ID,
 			target_user_id: USER_ID,
 		});

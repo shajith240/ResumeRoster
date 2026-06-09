@@ -37,6 +37,32 @@ export function getCommunityPostReactionBlockReason(
 	return null;
 }
 
+export function canEditCommunityPost(
+	activeUser: ActiveUserLike,
+	post: CommunityPostLike,
+) {
+	return Boolean(
+		activeUser &&
+			post.author_id === activeUser.id &&
+			(post.status === "active" || post.status === "locked"),
+	);
+}
+
+export function canDeleteCommunityPost({
+	activeUser,
+	isAdmin,
+	post,
+}: {
+	activeUser: ActiveUserLike;
+	isAdmin: boolean;
+	post: CommunityPostLike;
+}) {
+	return Boolean(
+		(isAdmin || (activeUser && post.author_id === activeUser.id)) &&
+			(post.status === "active" || post.status === "locked" || post.status === "held"),
+	);
+}
+
 export function getCommunityCommentReactionBlockReason(
 	activeUser: ActiveUserLike,
 	comment: CommunityCommentLike,

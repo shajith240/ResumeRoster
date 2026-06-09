@@ -4,6 +4,7 @@ import {
 	COMMUNITY_POST_TITLE_MIN_LENGTH,
 	cleanCommunityText,
 } from "@/lib/community-validation";
+import { isAdminEmail } from "@/lib/admin";
 import {
 	communityFeatureResponse,
 	communityRpcErrorResponse,
@@ -29,6 +30,11 @@ type PostEditResult = {
 
 type PostDeleteResult = {
 	deleted_at: string | null;
+	id: string;
+};
+
+type DeleteTargetPost = {
+	author_id: string;
 	id: string;
 	status: CommunityPostStatus;
 };
@@ -110,7 +116,62 @@ export async function DELETE(request: Request, context: CommunityRouteContext) {
 		}
 
 		const { admin, user } = await requireSignedInUser(request);
-		const rpcResult = await admin.rpc("soft_delete_community_post", {
+		const requestingUserIsAdmin = isAdminEmail(user.email);
+
+		const { data: targetPost, error: targetPostError } = await admin
+			.from("community_posts")
+			.select("id,author_id,status")
+			.eq("id", postId)
+			.maybeSingle();
+
+		if (targetPostError) {
+			return Response.json({ message: "Post was not deleted." }, { status: 500 });
+		}
+
+		const post = targetPost as DeleteTargetPost | null;
+		if (!post?.id) {
+			return Response.json({ message: "Post not found." }, { status: 404 });
+		}
+
+		if (post.author_id !== user.id && !requestingUserIsAdmin) {
+			return Response.json(
+				{ message: "Only the post author or an admin can delete this post." },
+				{ status: 403 },
+			);
+		}
+
+		const { data: attachmentRows, error: attachmentError } = await admin
+			.from("community_post_attachments")
+			.select("storage_path")
+			.eq("post_id", postId);
+
+		if (attachmentError) {
+			return Response.json({ message: "Post media could not be prepared for deletion." }, { status: 500 });
+		}
+
+		const storagePaths = Array.from(
+			new Set(
+				((attachmentRows as Array<{ storage_path?: string | null }> | null) ?? [])
+					.map((row) => row.storage_path?.trim())
+					.filter((path): path is string => Boolean(path)),
+			),
+		);
+
+		if (storagePaths.length) {
+			const { error: storageError } = await admin.storage
+				.from("community-post-media")
+				.remove(storagePaths);
+
+			if (storageError) {
+				return Response.json(
+					{ message: "Post media was not deleted. Try again." },
+					{ status: 500 },
+				);
+			}
+		}
+
+		const rpcResult = await admin.rpc("hard_delete_community_post", {
+			requesting_user_is_admin: requestingUserIsAdmin,
 			target_post_id: postId,
 			target_user_id: user.id,
 		});
@@ -129,7 +190,7 @@ export async function DELETE(request: Request, context: CommunityRouteContext) {
 			post: {
 				deletedAt: result.deleted_at,
 				id: result.id,
-				status: result.status,
+				status: "deleted",
 			},
 		});
 	} catch (error) {

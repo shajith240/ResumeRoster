@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+	canDeleteCommunityPost,
+	canEditCommunityPost,
 	getCommunityCommentReactionBlockReason,
 	getCommunityCommentReplyBlockReason,
 	getCommunityPollVoteBlockReason,
@@ -35,6 +37,71 @@ describe("community guardrails", () => {
 				status: "active",
 			}),
 		).toBeNull();
+	});
+
+	it("allows authors to edit active or locked posts only", () => {
+		expect(
+			canEditCommunityPost(activeUser, {
+				author_id: "user-1",
+				status: "active",
+			}),
+		).toBe(true);
+		expect(
+			canEditCommunityPost(activeUser, {
+				author_id: "user-1",
+				status: "locked",
+			}),
+		).toBe(true);
+		expect(
+			canEditCommunityPost(activeUser, {
+				author_id: "user-1",
+				status: "held",
+			}),
+		).toBe(false);
+		expect(
+			canEditCommunityPost(activeUser, {
+				author_id: "user-2",
+				status: "active",
+			}),
+		).toBe(false);
+	});
+
+	it("allows authors and admins to permanently delete manageable posts", () => {
+		expect(
+			canDeleteCommunityPost({
+				activeUser,
+				isAdmin: false,
+				post: { author_id: "user-1", status: "active" },
+			}),
+		).toBe(true);
+		expect(
+			canDeleteCommunityPost({
+				activeUser,
+				isAdmin: false,
+				post: { author_id: "user-1", status: "held" },
+			}),
+		).toBe(true);
+		expect(
+			canDeleteCommunityPost({
+				activeUser,
+				isAdmin: true,
+				post: { author_id: "user-2", status: "active" },
+			}),
+		).toBe(true);
+		expect(
+			canDeleteCommunityPost({
+				activeUser,
+				isAdmin: true,
+				post: { author_id: "user-2", status: "removed" },
+			}),
+		).toBe(false);
+		expect(
+			canDeleteCommunityPost({
+				activeUser: null,
+				isAdmin: false,
+				post: { author_id: "user-1", status: "active" },
+			}),
+		).toBe(false);
 	});
 
 	it("blocks users from voting on their own comments", () => {

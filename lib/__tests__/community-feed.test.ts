@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+	filterCommunityPostsForTabInCurrentOrder,
 	getCommunityHotScore,
 	getCommunityPostScore,
 	normalizeCommunityFeedTab,
@@ -78,6 +79,38 @@ describe("community feed ranking", () => {
 		expect(sortCommunityPosts(rows, "questions")).toHaveLength(2);
 		expect(sortCommunityPosts(rows, "unanswered")).toEqual([
 			expect.objectContaining({ comment_count: 0, post_type: "question" }),
+		]);
+	});
+
+	it("filters active tabs without reordering already rendered feed rows", () => {
+		const rows = [
+			post({
+				comment_count: 4,
+				created_at: "2026-06-05T00:00:00.000Z",
+				post_type: "discussion",
+				upvote_count: 1,
+			}),
+			post({
+				comment_count: 0,
+				created_at: "2026-06-07T00:00:00.000Z",
+				post_type: "question",
+				upvote_count: 30,
+			}),
+			post({
+				comment_count: 2,
+				created_at: "2026-06-06T00:00:00.000Z",
+				post_type: "question",
+				upvote_count: 100,
+			}),
+		];
+
+		expect(filterCommunityPostsForTabInCurrentOrder(rows, "hot")).toEqual(rows);
+		expect(filterCommunityPostsForTabInCurrentOrder(rows, "questions")).toEqual([
+			rows[1],
+			rows[2],
+		]);
+		expect(filterCommunityPostsForTabInCurrentOrder(rows, "unanswered")).toEqual([
+			rows[1],
 		]);
 	});
 });

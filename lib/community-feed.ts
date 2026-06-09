@@ -89,6 +89,22 @@ export function sortCommunityPosts<T extends CommunityFeedPostRankInput>(
 			);
 		}
 
-		return getCommunityHotScore(b, now) - getCommunityHotScore(a, now) || newestFirst(a, b);
+	return getCommunityHotScore(b, now) - getCommunityHotScore(a, now) || newestFirst(a, b);
 	});
+}
+
+export function filterCommunityPostsForTabInCurrentOrder<
+	T extends CommunityFeedPostRankInput,
+>(posts: T[], tab: CommunityFeedTab) {
+	if (tab === "unanswered") {
+		return posts.filter(
+			(post) => post.post_type === "question" && post.comment_count === 0,
+		);
+	}
+
+	if (tab === "questions") {
+		return posts.filter((post) => post.post_type === "question");
+	}
+
+	return posts;
 }
