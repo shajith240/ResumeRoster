@@ -3457,51 +3457,6 @@ body.main-app-dark .community-meta-tags a.badge:hover {
 	height: 15px;
 }
 
-.community-feed-skeleton-row {
-	display: grid;
-	grid-template-columns: 72px minmax(0, 1fr);
-	gap: 12px;
-	border: 1px solid var(--border-subtle);
-	border-radius: var(--radius-lg);
-	padding: 12px;
-	background: var(--bg-surface);
-}
-
-.community-feed-skeleton-row > span,
-.community-feed-skeleton-row div span {
-	display: block;
-	border-radius: var(--radius-pill);
-	background: linear-gradient(
-		90deg,
-		color-mix(in srgb, var(--border-subtle) 68%, transparent),
-		color-mix(in srgb, var(--bg-elevated) 92%, transparent),
-		color-mix(in srgb, var(--border-subtle) 68%, transparent)
-	);
-	background-size: 220% 100%;
-	animation: shimmer 1.2s linear infinite;
-}
-
-.community-feed-skeleton-row > span {
-	height: 76px;
-	border-radius: calc(var(--radius-lg) - 5px);
-}
-
-.community-feed-skeleton-row div {
-	display: grid;
-	align-content: center;
-	gap: 10px;
-}
-
-.community-feed-skeleton-row div span:first-child {
-	width: 60%;
-	height: 18px;
-}
-
-.community-feed-skeleton-row div span:last-child {
-	width: 92%;
-	height: 13px;
-}
-
 .community-post-feed {
 	display: grid;
 	gap: 12px;

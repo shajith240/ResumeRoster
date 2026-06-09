@@ -31,6 +31,10 @@ const TEST_SESSION = {
 	user: TEST_USER,
 };
 
+type SupabaseMockOptions = {
+	delayCommunityPostsMs?: number;
+};
+
 function readLocalSupabaseUrl() {
 	const envPath = resolve(process.cwd(), ".env.local");
 	if (!existsSync(envPath)) return null;
@@ -232,10 +236,11 @@ const COMMUNITY_TOPIC_ROWS = [
 const COMMUNITY_POST_ROWS = Array.from({ length: 14 }, (_, index) => {
 	const isQuestion = index % 3 === 1;
 	const author = COMMUNITY_AUTHOR_ROWS[index % COMMUNITY_AUTHOR_ROWS.length];
+	const isOwnPost = index === 2;
 	const topic = COMMUNITY_TOPIC_ROWS[index % COMMUNITY_TOPIC_ROWS.length];
 
 	return {
-		author_id: author.id,
+		author_id: isOwnPost ? TEST_USER_ID : author.id,
 		body: "A focused community post body for visual navigation coverage.",
 		comment_count: index === 0 ? 5 : index + 1,
 		created_at: `2026-06-${String(8 - Math.min(index, 6)).padStart(2, "0")}T09:00:00.000Z`,
@@ -247,6 +252,8 @@ const COMMUNITY_POST_ROWS = Array.from({ length: 14 }, (_, index) => {
 		title:
 			index === 0
 				? "ygjfjyfjhfgjhflkhjghmhn"
+				: isOwnPost
+					? "My community guardrail post"
 				: isQuestion
 					? "This is a test poll"
 					: `Community discussion ${index + 1}`,
@@ -330,6 +337,61 @@ const COMMUNITY_COMMENT_ROWS = [
 		upvote_count: 6,
 		updated_at: "2026-06-08T09:18:00.000Z",
 	},
+	{
+		author_id: TEST_USER_ID,
+		body:
+			"I posted this follow-up myself, so voting and replying to it should stay hidden.",
+		created_at: "2026-06-08T09:20:00.000Z",
+		deleted_at: null,
+		downvote_count: 0,
+		id: "bbbbbbbb-bbbb-4bbb-8bbb-000000000006",
+		parent_id: null,
+		post_id: COMMUNITY_POST_ROWS[0].id,
+		reply_count: 0,
+		status: "active",
+		upvote_count: 1,
+		updated_at: "2026-06-08T09:20:00.000Z",
+	},
+];
+
+const COMMUNITY_POST_POLL_ROWS = [
+	{
+		closes_at: "2026-06-09T09:00:00.000Z",
+		created_at: "2026-06-08T09:00:00.000Z",
+		duration_days: 7,
+		id: "cccccccc-cccc-4ccc-8ccc-000000000001",
+		post_id: COMMUNITY_POST_ROWS[1].id,
+		question: "Which career step are you taking?",
+		updated_at: "2026-06-08T09:00:00.000Z",
+	},
+];
+
+const COMMUNITY_POST_POLL_OPTION_ROWS = [
+	{
+		created_at: "2026-06-08T09:00:00.000Z",
+		display_order: 0,
+		id: "dddddddd-dddd-4ddd-8ddd-000000000001",
+		option_text: "Preparing for interviews",
+		poll_id: COMMUNITY_POST_POLL_ROWS[0].id,
+		updated_at: "2026-06-08T09:00:00.000Z",
+		vote_count: 3,
+	},
+	{
+		created_at: "2026-06-08T09:00:00.000Z",
+		display_order: 1,
+		id: "dddddddd-dddd-4ddd-8ddd-000000000002",
+		option_text: "Fixing my resume",
+		poll_id: COMMUNITY_POST_POLL_ROWS[0].id,
+		updated_at: "2026-06-08T09:00:00.000Z",
+		vote_count: 2,
+	},
+];
+
+const COMMUNITY_POST_POLL_VOTE_ROWS = [
+	{
+		option_id: COMMUNITY_POST_POLL_OPTION_ROWS[0].id,
+		poll_id: COMMUNITY_POST_POLL_ROWS[0].id,
+	},
 ];
 
 const COMMUNITY_POST_ATTACHMENT_ROWS = Array.from({ length: 3 }, (_, index) => ({
@@ -370,7 +432,20 @@ function tableNameFromPath(pathname: string) {
 	return match?.[1] ?? "";
 }
 
-async function fulfillRestTable(route: Route, table: string) {
+function valuesFromInFilter(value: string | null) {
+	return value?.startsWith("in.")
+		? value
+				.replace(/^in\.\(/, "")
+				.replace(/\)$/, "")
+				.split(",")
+		: [];
+}
+
+async function fulfillRestTable(
+	route: Route,
+	table: string,
+	options: SupabaseMockOptions = {},
+) {
 	const method = route.request().method();
 	const url = new URL(route.request().url());
 
@@ -434,6 +509,12 @@ async function fulfillRestTable(route: Route, table: string) {
 	}
 
 	if (table === "community_posts") {
+		if (options.delayCommunityPostsMs) {
+			await new Promise((resolve) =>
+				setTimeout(resolve, options.delayCommunityPostsMs),
+			);
+		}
+
 		const postId = url.searchParams.get("id")?.replace(/^eq\./, "");
 
 		if (postId) {
@@ -455,12 +536,7 @@ async function fulfillRestTable(route: Route, table: string) {
 
 	if (table === "community_post_attachments") {
 		const postIdFilter = url.searchParams.get("post_id");
-		const postIds = postIdFilter?.startsWith("in.")
-			? postIdFilter
-					.replace(/^in\.\(/, "")
-					.replace(/\)$/, "")
-					.split(",")
-			: [];
+		const postIds = valuesFromInFilter(postIdFilter);
 		const postId = postIdFilter?.startsWith("eq.")
 			? postIdFilter.replace(/^eq\./, "")
 			: "";
@@ -495,13 +571,69 @@ async function fulfillRestTable(route: Route, table: string) {
 		return;
 	}
 
-	if (
-		table === "community_post_votes" ||
-		table === "community_post_polls" ||
-		table === "community_post_poll_options" ||
-		table === "community_post_poll_votes"
-	) {
+	if (table === "community_post_votes") {
 		await fulfillJson(route, []);
+		return;
+	}
+
+	if (table === "community_post_polls") {
+		const postIdFilter = url.searchParams.get("post_id");
+		const postIds = valuesFromInFilter(postIdFilter);
+		const postId = postIdFilter?.startsWith("eq.")
+			? postIdFilter.replace(/^eq\./, "")
+			: "";
+		await fulfillJson(
+			route,
+			postId
+				? (COMMUNITY_POST_POLL_ROWS.find((poll) => poll.post_id === postId) ??
+						null)
+				: postIds.length
+					? COMMUNITY_POST_POLL_ROWS.filter((poll) =>
+							postIds.includes(poll.post_id),
+						)
+					: COMMUNITY_POST_POLL_ROWS,
+		);
+		return;
+	}
+
+	if (table === "community_post_poll_options") {
+		const pollIdFilter = url.searchParams.get("poll_id");
+		const pollIds = valuesFromInFilter(pollIdFilter);
+		const pollId = pollIdFilter?.startsWith("eq.")
+			? pollIdFilter.replace(/^eq\./, "")
+			: "";
+		await fulfillJson(
+			route,
+			pollId
+				? COMMUNITY_POST_POLL_OPTION_ROWS.filter(
+						(option) => option.poll_id === pollId,
+					)
+				: pollIds.length
+					? COMMUNITY_POST_POLL_OPTION_ROWS.filter((option) =>
+							pollIds.includes(option.poll_id),
+						)
+					: COMMUNITY_POST_POLL_OPTION_ROWS,
+		);
+		return;
+	}
+
+	if (table === "community_post_poll_votes") {
+		const pollIdFilter = url.searchParams.get("poll_id");
+		const pollIds = valuesFromInFilter(pollIdFilter);
+		const pollId = pollIdFilter?.startsWith("eq.")
+			? pollIdFilter.replace(/^eq\./, "")
+			: "";
+		await fulfillJson(
+			route,
+			pollId
+				? (COMMUNITY_POST_POLL_VOTE_ROWS.find((vote) => vote.poll_id === pollId) ??
+						null)
+				: pollIds.length
+					? COMMUNITY_POST_POLL_VOTE_ROWS.filter((vote) =>
+							pollIds.includes(vote.poll_id),
+						)
+					: COMMUNITY_POST_POLL_VOTE_ROWS,
+		);
 		return;
 	}
 
@@ -518,7 +650,10 @@ async function fulfillRestTable(route: Route, table: string) {
 	await fulfillJson(route, []);
 }
 
-async function fulfillSupabase(route: Route) {
+async function fulfillSupabase(
+	route: Route,
+	options: SupabaseMockOptions = {},
+) {
 	const request = route.request();
 	const url = new URL(request.url());
 
@@ -553,7 +688,7 @@ async function fulfillSupabase(route: Route) {
 	}
 
 	if (url.pathname.startsWith("/rest/v1/")) {
-		await fulfillRestTable(route, tableNameFromPath(url.pathname));
+		await fulfillRestTable(route, tableNameFromPath(url.pathname), options);
 		return;
 	}
 
@@ -565,10 +700,13 @@ async function fulfillSupabase(route: Route) {
 	await fulfillJson(route, {});
 }
 
-export async function mockSupabaseForAuthenticatedPages(page: Page) {
-	await page.route("**/auth/v1/**", fulfillSupabase);
-	await page.route("**/rest/v1/**", fulfillSupabase);
-	await page.route("**/storage/v1/**", fulfillSupabase);
+export async function mockSupabaseForAuthenticatedPages(
+	page: Page,
+	options: SupabaseMockOptions = {},
+) {
+	await page.route("**/auth/v1/**", (route) => fulfillSupabase(route, options));
+	await page.route("**/rest/v1/**", (route) => fulfillSupabase(route, options));
+	await page.route("**/storage/v1/**", (route) => fulfillSupabase(route, options));
 	await page.route("**/api/admin/me", (route) =>
 		fulfillJson(route, { email: TEST_USER_EMAIL, isAdmin: false }),
 	);
@@ -586,9 +724,12 @@ export async function seedAuthenticatedSession(page: Page) {
 	);
 }
 
-export async function prepareAuthenticatedPage(page: Page) {
+export async function prepareAuthenticatedPage(
+	page: Page,
+	options: SupabaseMockOptions = {},
+) {
 	await seedAuthenticatedSession(page);
-	await mockSupabaseForAuthenticatedPages(page);
+	await mockSupabaseForAuthenticatedPages(page, options);
 }
 
 export async function expectNoHorizontalOverflow(page: Page) {

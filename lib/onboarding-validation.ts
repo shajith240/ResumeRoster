@@ -147,10 +147,13 @@ export function parseOnboardingExpertise(value: string | string[]) {
 }
 
 export function getOnboardingDestination(goalId: OnboardingGoalId) {
-	if (goalId === "get_feedback") return "/feed?welcome=candidate";
-	if (goalId === "review_resumes") return "/feed?sort=needs&welcome=reviewer";
+	const destinations = {
+		both: "/community",
+		get_feedback: "/community",
+		review_resumes: "/community",
+	} satisfies Record<OnboardingGoalId, string>;
 
-	return "/feed?sort=needs&welcome=both";
+	return destinations[goalId];
 }
 
 export function getOnboardingIssue(input: {

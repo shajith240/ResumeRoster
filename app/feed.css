@@ -4639,6 +4639,152 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 		background: color-mix(in srgb, var(--bg-elevated) 42%, transparent);
 		outline: none;
 	}
+
+	.community-feed-route .community-feed-row[data-post-kind="poll"]:hover,
+	.community-feed-route .community-feed-row[data-post-kind="poll"]:focus-within {
+		border-radius: 0;
+		background: transparent;
+	}
+}
+
+.community-feed-route .community-feed-skeleton-row {
+	position: relative;
+	display: grid;
+	gap: 10px;
+	border: 0;
+	border-radius: 0;
+	padding: 16px 14px;
+	background: transparent;
+}
+
+.community-feed-route .community-feed-skeleton-row::after {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 1px;
+	background: var(--border-subtle);
+	content: "";
+}
+
+.community-feed-route .community-feed-skeleton-row:last-child::after {
+	display: none;
+}
+
+.community-feed-route .community-feed-skeleton-row i {
+	display: block;
+	border-radius: var(--radius-pill);
+	background: linear-gradient(
+		90deg,
+		color-mix(in srgb, var(--border-subtle) 58%, transparent),
+		color-mix(in srgb, var(--bg-elevated) 92%, transparent),
+		color-mix(in srgb, var(--border-subtle) 58%, transparent)
+	);
+	background-size: 220% 100%;
+	animation: shimmer 1.2s linear infinite;
+}
+
+.community-feed-route .community-feed-skeleton-meta {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	min-width: 0;
+}
+
+.community-feed-route .community-skeleton-avatar {
+	width: 24px;
+	height: 24px;
+	flex: 0 0 auto;
+	border-radius: 50%;
+}
+
+.community-feed-route .community-skeleton-author {
+	width: min(34%, 132px);
+	height: 12px;
+}
+
+.community-feed-route .community-skeleton-chip {
+	width: 78px;
+	height: 18px;
+}
+
+.community-feed-route .community-skeleton-chip.is-short {
+	width: 64px;
+}
+
+.community-feed-route .community-skeleton-date {
+	width: 42px;
+	height: 11px;
+}
+
+.community-feed-route .community-skeleton-title {
+	width: min(76%, 620px);
+	height: 22px;
+}
+
+.community-feed-route .community-skeleton-body {
+	display: grid;
+	gap: 7px;
+	max-width: 680px;
+}
+
+.community-feed-route .community-skeleton-body i {
+	height: 12px;
+}
+
+.community-feed-route .community-skeleton-body i:last-child {
+	width: 68%;
+}
+
+.community-feed-route .community-skeleton-media {
+	display: none;
+	height: clamp(220px, 42vw, 410px);
+	max-height: 410px;
+	border-radius: var(--radius-md);
+}
+
+.community-feed-route .community-skeleton-poll {
+	display: none;
+	gap: 7px;
+	max-width: 580px;
+	border: 1px solid color-mix(in srgb, var(--border-subtle) 86%, transparent);
+	border-radius: var(--radius-md);
+	padding: 12px;
+}
+
+.community-feed-route .community-skeleton-poll i {
+	height: 40px;
+	border-radius: var(--button-radius-sm);
+}
+
+.community-feed-route
+	.community-feed-skeleton-row[data-skeleton-kind="media"]
+	.community-skeleton-media,
+.community-feed-route
+	.community-feed-skeleton-row[data-skeleton-kind="poll"]
+	.community-skeleton-poll {
+	display: grid;
+}
+
+.community-feed-route
+	.community-feed-skeleton-row[data-skeleton-kind="poll"]
+	.community-skeleton-body,
+.community-feed-route
+	.community-feed-skeleton-row[data-skeleton-kind="media"]
+	.community-skeleton-body {
+	display: none;
+}
+
+.community-feed-route .community-skeleton-actions {
+	display: flex;
+	gap: 8px;
+	padding-top: 3px;
+}
+
+.community-feed-route .community-skeleton-actions i {
+	width: 74px;
+	height: 32px;
+	border-radius: var(--radius-pill);
 }
 
 .community-feed-route .community-feed-row-main {
@@ -4883,6 +5029,18 @@ body.main-app-dark .community-post-actions.post-actions {
 	--community-action-border: rgb(255 255 255 / 0.05);
 }
 
+.community-post-route .community-post-detail.is-loading {
+	display: grid;
+	min-height: min(62vh, 560px);
+	place-items: center;
+	justify-items: center;
+	background: transparent;
+}
+
+.community-post-route .community-post-detail.is-loading .loading-screen {
+	width: min(280px, 100%);
+}
+
 .community-feed-route .community-meta-tags {
 	align-items: center;
 	column-gap: 7px;
@@ -5041,6 +5199,19 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 	border-color: color-mix(in srgb, var(--border-subtle) 82%, transparent);
 	border-radius: var(--button-radius-sm);
 	background: color-mix(in srgb, var(--bg-surface) 42%, transparent);
+}
+
+.community-feed-route
+	.community-feed-poll-card
+	.community-poll-options
+	button:hover:not(:disabled),
+.community-feed-route
+	.community-feed-poll-card
+	.community-poll-options
+	button:focus-visible:not(:disabled) {
+	border-color: color-mix(in srgb, var(--border-default) 86%, transparent);
+	background: color-mix(in srgb, var(--bg-elevated) 76%, var(--text-primary) 4%);
+	outline: none;
 }
 
 .community-feed-route .community-feed-poll-card .community-poll-options button > span {

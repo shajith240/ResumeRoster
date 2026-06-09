@@ -26,6 +26,10 @@ import {
 	type CommunityPostType,
 } from "@/lib/community";
 import {
+	getCommunityPollVoteBlockReason,
+	getCommunityPostReactionBlockReason,
+} from "@/lib/community-guardrails";
+import {
 	getCommunityPostScore,
 	sortCommunityPosts,
 	type CommunityFeedTab,
@@ -186,6 +190,7 @@ const COMMUNITY_FEED_SORT_OPTIONS: Array<{
 	{ label: COMMUNITY_FEED_SORT_LABELS.questions, value: "questions" },
 	{ label: COMMUNITY_FEED_SORT_LABELS.unanswered, value: "unanswered" },
 ];
+const COMMUNITY_FEED_SKELETON_ROWS = ["media", "text", "poll", "text"] as const;
 
 async function loadPostVoteReactions(userId: string, postIds: string[]) {
 	if (!postIds.length) return new Map<string, CommunityVoteReaction>();
@@ -430,14 +435,24 @@ export default function CommunityPostFeed() {
 	}
 
 	async function handlePollVote(post: CommunityPostFeedItem, optionId: string) {
-		if (!post.poll || pollVotingIds.has(post.poll.id) || isPollClosed(post.poll)) {
-			return;
-		}
+		if (!post.poll) return;
 
 		const { session } = await getFreshAuthSession();
 		const accessToken = session?.access_token;
-		if (!accessToken) {
+		const userId = session?.user?.id;
+		if (!accessToken || !userId) {
 			toast.error("Sign in to vote in polls.");
+			return;
+		}
+
+		const blockReason = getCommunityPollVoteBlockReason({
+			activeUser: { id: userId },
+			isClosed: isPollClosed(post.poll),
+			isVoting: pollVotingIds.has(post.poll.id),
+			postStatus: post.status,
+		});
+		if (blockReason) {
+			toast.error(blockReason);
 			return;
 		}
 
@@ -508,8 +523,6 @@ export default function CommunityPostFeed() {
 		post: CommunityPostFeedItem,
 		reaction: CommunityVoteReaction,
 	) {
-		if (votingIds.has(post.id)) return;
-
 		const { session } = await getFreshAuthSession();
 		const accessToken = session?.access_token;
 		const userId = session?.user?.id;
@@ -519,7 +532,14 @@ export default function CommunityPostFeed() {
 			return;
 		}
 
-		if (userId === post.author_id) {
+		if (votingIds.has(post.id)) return;
+
+		const blockReason = getCommunityPostReactionBlockReason(
+			{ id: userId },
+			post,
+		);
+		if (blockReason) {
+			toast.error(blockReason);
 			return;
 		}
 
@@ -620,12 +640,33 @@ export default function CommunityPostFeed() {
 			</div>
 			{loading ? (
 				<div className="community-feed-loading" aria-label="Loading community posts">
-					{[0, 1, 2, 3, 4].map((item) => (
-						<div className="community-feed-skeleton-row" key={item}>
-							<span />
-							<div>
-								<span />
-								<span />
+					{COMMUNITY_FEED_SKELETON_ROWS.map((kind, item) => (
+						<div
+							className="community-feed-skeleton-row"
+							data-skeleton-kind={kind}
+							key={`${kind}-${item}`}
+						>
+							<div className="community-feed-skeleton-meta">
+								<i className="community-skeleton-avatar" />
+								<i className="community-skeleton-author" />
+								<i className="community-skeleton-chip" />
+								<i className="community-skeleton-chip is-short" />
+								<i className="community-skeleton-date" />
+							</div>
+							<i className="community-skeleton-title" />
+							<div className="community-skeleton-body">
+								<i />
+								<i />
+							</div>
+							<div className="community-skeleton-media" />
+							<div className="community-skeleton-poll">
+								<i />
+								<i />
+							</div>
+							<div className="community-skeleton-actions">
+								<i />
+								<i />
+								<i />
 							</div>
 						</div>
 					))}
@@ -649,12 +690,21 @@ export default function CommunityPostFeed() {
 						const pollClosed = poll ? isPollClosed(poll) : false;
 						const pollTotalVotes = poll ? getPollTotalVotes(poll) : 0;
 						const commentLabel = getCommentLabel(post);
-						const isOwnPost = currentUserId === post.author_id;
+						const activeUser = currentUserId ? { id: currentUserId } : null;
+						const postVoteBlockReason = getCommunityPostReactionBlockReason(
+							activeUser,
+							post,
+						);
 						const postScore = getCommunityPostScore(post);
 						const textPreview = getFeedTextPreview(post);
 
 						return (
-							<article className="community-feed-row" key={post.id}>
+							<article
+								className="community-feed-row"
+								data-author-id={post.author_id}
+								data-post-kind={poll ? "poll" : "standard"}
+								key={post.id}
+							>
 								<div className="community-feed-row-main">
 									<div className="community-feed-row-meta community-meta-tags">
 										<Link
@@ -726,9 +776,12 @@ export default function CommunityPostFeed() {
 														: 0;
 													const isSelected = poll.selectedOptionId === option.id;
 													const canVote =
-														post.status === "active" &&
-														!pollClosed &&
-														!pollVotingIds.has(poll.id);
+														!getCommunityPollVoteBlockReason({
+															activeUser,
+															isClosed: pollClosed,
+															isVoting: pollVotingIds.has(poll.id),
+															postStatus: post.status,
+														});
 
 													return (
 														<button
@@ -752,7 +805,7 @@ export default function CommunityPostFeed() {
 									) : null}
 
 									<div className="community-feed-row-footer post-actions">
-										{isOwnPost ? null : (
+										{postVoteBlockReason ? null : (
 											<div
 												aria-label={`${postScore} score`}
 												className="comment-reactions community-reactions"

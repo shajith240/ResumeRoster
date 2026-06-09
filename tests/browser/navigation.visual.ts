@@ -4,6 +4,8 @@ import {
 	prepareAuthenticatedPage,
 } from "./helpers/supabase";
 
+const TEST_USER_ID = "11111111-1111-4111-8111-111111111111";
+
 async function expectMobileThreadTreeLayout(panel: Locator) {
 	await expect(panel).toBeVisible();
 	await expect(
@@ -173,6 +175,42 @@ async function expectResumeCommentComposerPill(page: Page) {
 	});
 }
 
+test("community loading states use branded feed surfaces", async ({
+	page,
+}) => {
+	await prepareAuthenticatedPage(page, { delayCommunityPostsMs: 900 });
+	await page.goto("/community", { waitUntil: "domcontentloaded" });
+
+	const skeletonRows = page.locator(".community-feed-skeleton-row");
+	await expect(skeletonRows.first()).toBeVisible();
+	const skeletonMetrics = await skeletonRows.first().evaluate((element) => {
+		const style = window.getComputedStyle(element);
+		const separatorStyle = window.getComputedStyle(element, "::after");
+
+		return {
+			actionCount: element.querySelectorAll(".community-skeleton-actions i").length,
+			background: style.backgroundColor,
+			borderTopWidth: Number.parseFloat(style.borderTopWidth),
+			metaCount: element.querySelectorAll(".community-feed-skeleton-meta i").length,
+			separatorHeight: Number.parseFloat(separatorStyle.height),
+		};
+	});
+
+	expect(skeletonMetrics.background).toBe("rgba(0, 0, 0, 0)");
+	expect(skeletonMetrics.borderTopWidth).toBe(0);
+	expect(skeletonMetrics.metaCount).toBeGreaterThanOrEqual(5);
+	expect(skeletonMetrics.actionCount).toBe(3);
+	expect(skeletonMetrics.separatorHeight).toBe(1);
+
+	await page.goto("/community/99999999-9999-4999-8999-000000000001", {
+		waitUntil: "domcontentloaded",
+	});
+	await expect(
+		page.locator(".community-post-detail.is-loading .loading-screen"),
+	).toBeVisible();
+	await expect(page.getByText("Loading post")).toHaveCount(0);
+});
+
 test("primary navigation exposes app sections without account utilities", async ({
 	page,
 }, testInfo) => {
@@ -335,6 +373,11 @@ test("primary navigation exposes app sections without account utilities", async 
 			"A focused community post body",
 		);
 		expect(feedPreviewMetrics.textOnlyExcerptClamp).toBe("2");
+		const ownFeedRow = page.locator(
+			`.community-feed-row[data-author-id="${TEST_USER_ID}"]`,
+		);
+		await expect(ownFeedRow).toBeVisible();
+		await expect(ownFeedRow.locator(".community-reactions")).toHaveCount(0);
 		await expect(page.locator(".community-media-gallery-count")).toHaveCount(0);
 		await expect(page.locator(".community-media-gallery-dots")).toBeVisible();
 		await expect(page.locator(".community-media-gallery-dot")).toHaveCount(3);
@@ -492,6 +535,19 @@ test("primary navigation exposes app sections without account utilities", async 
 		);
 		const mobileCommentsPanel = page.locator(".community-comments-panel");
 		await expectMobileThreadTreeLayout(mobileCommentsPanel);
+		const mobileOwnComment = mobileCommentsPanel.locator(
+			`.thread-roast-node[data-author-id="${TEST_USER_ID}"]`,
+		);
+		await expect(mobileOwnComment).toHaveCount(1);
+		await expect(
+			mobileOwnComment.getByRole("button", { name: "Upvote comment" }),
+		).toHaveCount(0);
+		await expect(
+			mobileOwnComment.getByRole("button", { name: /Reply to/i }),
+		).toHaveCount(0);
+		await expect(
+			mobileOwnComment.getByRole("button", { name: "Edit" }),
+		).toHaveCount(1);
 		await expectCommentComposerMentionAutocomplete({
 			composer: mobileCommentsPanel.locator(
 				".community-root-comment-form-mobile .community-root-comment-composer",
@@ -626,6 +682,11 @@ test("primary navigation exposes app sections without account utilities", async 
 		"A focused community post body",
 	);
 	expect(desktopFeedPreviewMetrics.textOnlyExcerptClamp).toBe("2");
+	const desktopOwnFeedRow = page.locator(
+		`.community-feed-row[data-author-id="${TEST_USER_ID}"]`,
+	);
+	await expect(desktopOwnFeedRow).toBeVisible();
+	await expect(desktopOwnFeedRow.locator(".community-reactions")).toHaveCount(0);
 	await page.mouse.move(8, 8);
 	await page.evaluate(() => {
 		const activeElement = document.activeElement;
@@ -658,6 +719,35 @@ test("primary navigation exposes app sections without account utilities", async 
 	expect(desktopRowDividerMetrics.separatorHeight).toBe(1);
 	expect(desktopRowDividerMetrics.separatorBackground).not.toBe(
 		"rgba(0, 0, 0, 0)",
+	);
+	const desktopPollRow = page
+		.locator('.community-feed-row[data-post-kind="poll"]')
+		.first();
+	await expect(desktopPollRow).toBeVisible();
+	await desktopPollRow.hover();
+	const desktopPollRowHoverMetrics = await desktopPollRow.evaluate((element) => {
+		const style = window.getComputedStyle(element);
+
+		return {
+			background: style.backgroundColor,
+			borderRadius: style.borderRadius,
+		};
+	});
+
+	expect(desktopPollRowHoverMetrics.background).toBe("rgba(0, 0, 0, 0)");
+	expect(desktopPollRowHoverMetrics.borderRadius).toBe("0px");
+	const desktopPollOption = desktopPollRow
+		.locator(".community-poll-options button")
+		.last();
+	const desktopPollOptionBackgroundBefore = await desktopPollOption.evaluate(
+		(element) => window.getComputedStyle(element).backgroundColor,
+	);
+	await desktopPollOption.hover();
+	const desktopPollOptionBackgroundAfter = await desktopPollOption.evaluate(
+		(element) => window.getComputedStyle(element).backgroundColor,
+	);
+	expect(desktopPollOptionBackgroundAfter).not.toBe(
+		desktopPollOptionBackgroundBefore,
 	);
 	await expect(page.locator(".community-media-gallery-count")).toHaveCount(0);
 	await expect(page.locator(".community-media-gallery-dots")).toBeVisible();
@@ -834,6 +924,19 @@ test("primary navigation exposes app sections without account utilities", async 
 
 	const commentsPanel = page.locator(".community-comments-panel");
 	await expect(commentsPanel).toBeVisible();
+	const desktopOwnComment = commentsPanel.locator(
+		`.thread-roast-node[data-author-id="${TEST_USER_ID}"]`,
+	);
+	await expect(desktopOwnComment).toHaveCount(1);
+	await expect(
+		desktopOwnComment.getByRole("button", { name: "Upvote comment" }),
+	).toHaveCount(0);
+	await expect(
+		desktopOwnComment.getByRole("button", { name: /Reply to/i }),
+	).toHaveCount(0);
+	await expect(
+		desktopOwnComment.getByRole("button", { name: "Edit" }),
+	).toHaveCount(1);
 	await expect(commentsPanel.locator("> header")).toHaveCount(0);
 	await expect(page.getByText("Start the discussion")).toHaveCount(0);
 	const joinPill = commentsPanel.getByRole("button", {

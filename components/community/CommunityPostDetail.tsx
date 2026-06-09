@@ -36,6 +36,7 @@ import {
 import { toast } from "sonner";
 import FilledThumbIcon from "@/components/community/FilledThumbIcon";
 import CommunityMediaGallery from "@/components/community/CommunityMediaGallery";
+import LoadingScreen from "@/components/LoadingScreen";
 import { CommentComposer } from "@/components/resume-detail/comment-composer";
 import { Button } from "@/components/ui/button";
 import { getFreshAuthSession } from "@/lib/auth-session";
@@ -47,8 +48,13 @@ import {
 } from "@/lib/comment-mentions";
 import { COMMUNITY_POST_TYPE_LABELS, type CommunityPostType } from "@/lib/community";
 import {
+	getCommunityCommentReactionBlockReason,
+	getCommunityCommentReplyBlockReason,
+	getCommunityPollVoteBlockReason,
+	getCommunityPostReactionBlockReason,
+} from "@/lib/community-guardrails";
+import {
 	buildCommunityCommentTree,
-	canReplyToCommunityComment,
 	COMMUNITY_COMMENT_MAX_DEPTH,
 	type CommunityCommentNode,
 } from "@/lib/community-threading";
@@ -239,6 +245,20 @@ function isMobileGestureBlocked(target: EventTarget | null) {
 
 function getScore(row: { downvote_count: number; upvote_count: number }) {
 	return row.upvote_count - row.downvote_count;
+}
+
+function findCommunityCommentNode(
+	nodes: CommunityCommentNode[],
+	commentId: string,
+): CommunityCommentNode | null {
+	for (const node of nodes) {
+		if (node.id === commentId) return node;
+
+		const child = findCommunityCommentNode(node.children, commentId);
+		if (child) return child;
+	}
+
+	return null;
 }
 
 function isMissingPollSchema(message: string) {
@@ -636,6 +656,26 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			return;
 		}
 
+		if (post.status !== "active") {
+			toast.error("This post is closed for new comments.");
+			return;
+		}
+
+		if (parentId) {
+			const parentComment = findCommunityCommentNode(commentTree, parentId);
+			if (parentComment) {
+				const replyBlockReason = getCommunityCommentReplyBlockReason({
+					activeUser: currentUserId ? { id: currentUserId } : null,
+					comment: parentComment,
+					postStatus: post.status,
+				});
+				if (replyBlockReason) {
+					toast.error(replyBlockReason);
+					return;
+				}
+			}
+		}
+
 		const result = await runCommunityAction<SubmitCommentResponse>(
 			"/api/community/comments/submit",
 			{
@@ -691,7 +731,16 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	}
 
 	async function handlePostVote(reaction: CommunityVoteReaction) {
-		if (!post || currentUserId === post.author_id) return;
+		if (!post) return;
+
+		const blockReason = getCommunityPostReactionBlockReason(
+			currentUserId ? { id: currentUserId } : null,
+			post,
+		);
+		if (blockReason) {
+			toast.error(blockReason);
+			return;
+		}
 
 		const nextReaction = postReaction === reaction ? null : reaction;
 		const result = await runCommunityAction<VoteActionResponse>(
@@ -742,6 +791,16 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 	async function toggleSavedPost() {
 		if (!post) return;
+
+		if (currentUserId && post.author_id === currentUserId) {
+			toast.error("You cannot save your own post.");
+			return;
+		}
+
+		if (post.status !== "active") {
+			toast.error("This post is not available to save.");
+			return;
+		}
 
 		const nextSaved = !postSaved;
 		setPostSaved(nextSaved);
@@ -1016,7 +1075,18 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	}
 
 	async function handlePollVote(optionId: string) {
-		if (!poll || !post || post.status !== "active") return;
+		if (!poll || !post) return;
+
+		const blockReason = getCommunityPollVoteBlockReason({
+			activeUser: currentUserId ? { id: currentUserId } : null,
+			isClosed: new Date(poll.closes_at).getTime() <= Date.now(),
+			isVoting: actionBusy.startsWith("poll-vote-"),
+			postStatus: post.status,
+		});
+		if (blockReason) {
+			toast.error(blockReason);
+			return;
+		}
 
 		const previousOptionId = poll.selectedOptionId;
 		const result = await runCommunityAction<PollVoteActionResponse>(
@@ -1062,7 +1132,14 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		comment: CommunityPostComment,
 		reaction: CommunityVoteReaction,
 	) {
-		if (currentUserId === comment.author_id || comment.status !== "active") return;
+		const blockReason = getCommunityCommentReactionBlockReason(
+			currentUserId ? { id: currentUserId } : null,
+			comment,
+		);
+		if (blockReason) {
+			toast.error(blockReason);
+			return;
+		}
 
 		const currentReaction = commentReactions[comment.id] ?? null;
 		const nextReaction = currentReaction === reaction ? null : reaction;
@@ -1324,11 +1401,17 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		const isRemoved = node.status === "removed";
 		const isUnavailable = isDeleted || isRemoved;
 		const isOwnComment = currentUserId === node.author_id;
-		const canReply =
-			post.status === "active" &&
-			node.status === "active" &&
-			!isOwnComment &&
-			canReplyToCommunityComment(node.depth);
+		const activeUser = currentUserId ? { id: currentUserId } : null;
+		const commentReactionBlockReason = getCommunityCommentReactionBlockReason(
+			activeUser,
+			node,
+		);
+		const replyBlockReason = getCommunityCommentReplyBlockReason({
+			activeUser,
+			comment: node,
+			postStatus: post.status,
+		});
+		const canReply = !replyBlockReason;
 		const reaction = commentReactions[node.id] ?? null;
 		const isEditing = editingCommentId === node.id;
 		const hasReplies = node.children.length > 0;
@@ -1344,6 +1427,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 				className={`thread-roast-node${node.depth > 0 ? " is-nested" : ""}${
 					hasReplies ? " has-replies" : ""
 				}${isCollapsed ? " is-collapsed" : ""}`}
+				data-author-id={node.author_id}
 				data-thread-collapsed={hasReplies ? String(isCollapsed) : undefined}
 				data-thread-depth={Math.min(node.depth, COMMUNITY_COMMENT_MAX_DEPTH)}
 				data-thread-has-replies={hasReplies ? "true" : undefined}
@@ -1474,7 +1558,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 						{node.status !== "active" || isEditing ? null : (
 							<footer>
-								{isOwnComment ? null : (
+								{commentReactionBlockReason ? null : (
 									<div className="comment-reactions">
 										<button
 											aria-label="Upvote comment"
@@ -1677,8 +1761,15 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 	if (loading) {
 		return (
-			<section className="community-post-detail is-loading">
-				<p>Loading post...</p>
+			<section
+				aria-label="Loading community post"
+				className="community-post-detail is-loading"
+			>
+				<LoadingScreen
+					label="Loading community post"
+					theme="dark"
+					variant="plain"
+				/>
 			</section>
 		);
 	}
@@ -1698,11 +1789,18 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	const authorProfile = profiles[post.author_id] ?? null;
 	const score = getScore(post);
 	const isOwnPost = currentUserId === post.author_id;
+	const activeUser = currentUserId ? { id: currentUserId } : null;
+	const postReactionBlockReason = getCommunityPostReactionBlockReason(
+		activeUser,
+		post,
+	);
 	const canEditPost = isOwnPost && (post.status === "active" || post.status === "locked");
+	const canSavePost =
+		Boolean(activeUser) && !isOwnPost && post.status === "active";
 	const canReportPost =
 		Boolean(currentUserId) &&
 		!isOwnPost &&
-		(post.status === "active" || post.status === "locked");
+		post.status === "active";
 	const pollTotalVotes =
 		poll?.options.reduce((total, option) => total + option.vote_count, 0) ?? 0;
 	const pollClosed = poll ? new Date(poll.closes_at).getTime() <= Date.now() : false;
@@ -1832,17 +1930,19 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 						<Share2 aria-hidden="true" />
 						<span>Share</span>
 					</button>
-					<button
-						disabled={actionBusy === "post-save"}
-						onClick={() => {
-							setMobileActionSheetOpen(false);
-							void toggleSavedPost();
-						}}
-						type="button"
-					>
-						<Bookmark aria-hidden="true" />
-						<span>{postSaved ? "Saved" : "Save"}</span>
-					</button>
+					{canSavePost ? (
+						<button
+							disabled={actionBusy === "post-save"}
+							onClick={() => {
+								setMobileActionSheetOpen(false);
+								void toggleSavedPost();
+							}}
+							type="button"
+						>
+							<Bookmark aria-hidden="true" />
+							<span>{postSaved ? "Saved" : "Save"}</span>
+						</button>
+					) : null}
 					{attachments.length ? (
 						<button
 							onClick={() => {
@@ -2029,10 +2129,12 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 									: 0;
 								const isSelected = poll.selectedOptionId === option.id;
 								const canVote =
-									Boolean(currentUserId) &&
-									post.status === "active" &&
-									!pollClosed &&
-									actionBusy !== `poll-vote-${option.id}`;
+									!getCommunityPollVoteBlockReason({
+										activeUser,
+										isClosed: pollClosed,
+										isVoting: actionBusy.startsWith("poll-vote-"),
+										postStatus: post.status,
+									});
 
 								return (
 									<button
@@ -2062,9 +2164,9 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 				<footer
 					className="community-post-actions post-actions"
 					data-has-comments={poll ? "false" : "true"}
-					data-has-reactions={isOwnPost ? "false" : "true"}
+					data-has-reactions={postReactionBlockReason ? "false" : "true"}
 				>
-					{isOwnPost ? null : (
+					{postReactionBlockReason ? null : (
 						<div
 							className="comment-reactions community-reactions"
 							aria-label={`${score} post score`}
