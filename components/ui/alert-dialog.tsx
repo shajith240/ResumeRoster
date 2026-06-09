@@ -19,7 +19,7 @@ const AlertDialogOverlay = React.forwardRef<
 	<AlertDialogPrimitive.Overlay
 		ref={ref}
 		className={cn(
-			"fixed inset-0 z-[120] bg-black/65 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+			"fixed inset-0 z-[120] bg-black/65 backdrop-blur-sm duration-200 ease-out motion-reduce:animate-none motion-reduce:duration-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-150 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
 			className,
 		)}
 		{...props}
@@ -38,7 +38,7 @@ const AlertDialogContent = React.forwardRef<
 		<AlertDialogPrimitive.Content
 			ref={ref}
 			className={cn(
-				"fixed left-1/2 top-1/2 z-[121] grid w-[calc(100vw_-_2rem)] max-w-[440px] -translate-x-1/2 -translate-y-1/2 gap-5 rounded-[18px] border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 text-[var(--text-primary)] shadow-2xl shadow-black/30 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+				"fixed left-1/2 top-1/2 z-[121] grid w-[calc(100vw_-_2rem)] max-w-[440px] -translate-x-1/2 -translate-y-1/2 origin-center gap-5 rounded-[18px] border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 text-[var(--text-primary)] shadow-2xl shadow-black/30 outline-none duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:animate-none motion-reduce:duration-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-150 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
 				size === "sm" && "max-w-[380px] gap-4 p-5",
 				className,
 			)}

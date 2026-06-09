@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import ResumeQueueProgress from "@/components/navigation/ResumeQueueProgress";
 import {
 	getPrimaryNavigationItems,
 	type PrimaryNavigationItem,
 } from "@/components/navigation/primary-nav";
 import { type SidebarAnimatedIconHandle } from "@/components/navigation/sidebar-icons";
+import { useMobileScrollChrome } from "@/components/navigation/useMobileScrollChrome";
 import { useAdminAccess } from "@/lib/use-admin-access";
 import { cn } from "@/lib/utils";
 
@@ -57,12 +59,19 @@ function SidebarNavItem({ item }: { item: PrimaryNavigationItem }) {
 	);
 }
 
-export function SessionNavBar() {
+type SessionNavBarProps = {
+	userId: string;
+};
+
+export function SessionNavBar({ userId }: SessionNavBarProps) {
 	const pathname = usePathname();
 	const { isAdmin } = useAdminAccess();
 	const [isCollapsed, setIsCollapsed] = useState(false);
 	const [hasLoadedSidebarPreference, setHasLoadedSidebarPreference] =
 		useState(false);
+	const { isHidden: isMobileChromeHidden } = useMobileScrollChrome({
+		mediaQuery: "(max-width: 900px)",
+	});
 
 	const items = useMemo(
 		() =>
@@ -96,26 +105,33 @@ export function SessionNavBar() {
 	}, [hasLoadedSidebarPreference, isCollapsed]);
 
 	return (
-		<aside
-			className={cn(
-				"session-sidebar fixed left-0 top-[var(--app-header-height)] z-40 h-[calc(100vh_-_var(--app-header-height))] shrink-0 overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-tertiary)]",
-				isCollapsed && "is-collapsed",
-			)}
-		>
-			<button
-				aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-				aria-pressed={isCollapsed}
-				className="session-sidebar-toggle"
-				onClick={() => setIsCollapsed((current) => !current)}
-				type="button"
+		<>
+			<aside
+				className={cn(
+					"session-sidebar fixed left-0 top-[var(--app-header-height)] z-40 h-[calc(100vh_-_var(--app-header-height))] shrink-0 overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-tertiary)]",
+					isCollapsed && "is-collapsed",
+				)}
 			>
-				<Menu aria-hidden="true" />
-			</button>
-			<nav aria-label="Primary navigation" className="session-sidebar-nav">
-				{items.map((item) => (
-					<SidebarNavItem item={item} key={item.id} />
-				))}
-			</nav>
-		</aside>
+				<button
+					aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+					aria-pressed={isCollapsed}
+					className="session-sidebar-toggle"
+					onClick={() => setIsCollapsed((current) => !current)}
+					type="button"
+				>
+					<Menu aria-hidden="true" />
+				</button>
+				<nav aria-label="Primary navigation" className="session-sidebar-nav">
+					{items.map((item) => (
+						<SidebarNavItem item={item} key={item.id} />
+					))}
+				</nav>
+			</aside>
+			<ResumeQueueProgress
+				mobileChromeHidden={isMobileChromeHidden}
+				sidebarCollapsed={isCollapsed}
+				userId={userId}
+			/>
+		</>
 	);
 }

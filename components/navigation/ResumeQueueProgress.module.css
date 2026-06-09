@@ -1,0 +1,218 @@
+.desktopShell,
+.mobileShell {
+	color: inherit;
+	text-decoration: none;
+}
+
+.desktopShell {
+	display: none;
+}
+
+.mobileShell {
+	display: none;
+}
+
+.card,
+.mobileCard {
+	border: 1px solid color-mix(in srgb, var(--brand) 22%, var(--app-chrome-border));
+	border-radius: 8px;
+	background:
+		linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--brand) 11%, transparent),
+			color-mix(in srgb, #22c55e 9%, transparent)
+		),
+		color-mix(in srgb, var(--bg-surface) 94%, transparent);
+	box-shadow:
+		0 12px 26px rgba(0, 0, 0, 0.12),
+		inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.card {
+	display: grid;
+	grid-template-columns: 30px minmax(0, 1fr);
+	gap: 8px;
+	padding: 8px;
+}
+
+.desktopShell:hover .card,
+.desktopShell:focus-visible .card,
+.mobileShell:hover .mobileCard,
+.mobileShell:focus-visible .mobileCard {
+	border-color: color-mix(in srgb, var(--brand) 38%, var(--app-chrome-border));
+	background:
+		linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--brand) 14%, transparent),
+			color-mix(in srgb, #22c55e 11%, transparent)
+		),
+		color-mix(in srgb, var(--bg-elevated) 94%, transparent);
+}
+
+.desktopShell:focus-visible,
+.mobileShell:focus-visible {
+	border-radius: 8px;
+	outline: none;
+	box-shadow: var(--shadow-focus);
+}
+
+.iconBox {
+	display: grid;
+	width: 30px;
+	height: 30px;
+	place-items: center;
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--brand) 14%, transparent);
+	color: var(--brand);
+}
+
+.content,
+.mobileText {
+	display: grid;
+	min-width: 0;
+}
+
+.content {
+	gap: 4px;
+}
+
+.topRow {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: baseline;
+	gap: 6px;
+	min-width: 0;
+}
+
+.kicker,
+.caption {
+	display: block;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.kicker {
+	color: var(--text-secondary);
+	font-size: 10.5px;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.caption {
+	color: var(--text-tertiary);
+	font-size: 10.5px;
+	font-weight: 600;
+	line-height: 1.15;
+}
+
+.count {
+	color: var(--text-primary);
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	font-weight: 800;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.bar,
+.mobileBar {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	height: 4px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--text-tertiary) 16%, transparent);
+}
+
+.barValue {
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: linear-gradient(90deg, var(--brand), #22c55e);
+	transform: scaleX(var(--queue-progress-ratio));
+	transform-origin: left center;
+	transition: transform 180ms var(--button-ease);
+}
+
+@media (min-width: 1025px) {
+	.desktopShell {
+		position: fixed;
+		bottom: 12px;
+		left: 8px;
+		z-index: 82;
+		display: block;
+		width: calc(var(--session-sidebar-expanded-width) - 38px);
+	}
+}
+
+@media (max-width: 1024px) {
+	.mobileShell {
+		position: fixed;
+		bottom: calc(var(--mobile-dock-space, 96px) - 24px);
+		left: 50%;
+		z-index: 121;
+		display: block;
+		width: min(calc(100dvw - 24px), 430px);
+		max-width: calc(100dvw - 24px);
+		transform: translateX(-50%);
+		transition:
+			opacity 190ms var(--button-ease),
+			transform 190ms var(--button-ease);
+		will-change: opacity, transform;
+	}
+
+	.mobileShellHidden {
+		opacity: 0;
+		pointer-events: none;
+		transform: translateX(-50%) translateY(calc(100% + 12px));
+	}
+
+	.mobileCard {
+		display: grid;
+		grid-template-columns: 28px minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 8px;
+		min-height: 40px;
+		padding: 6px 9px;
+	}
+
+	.mobileText {
+		gap: 2px;
+	}
+
+	.mobileBar {
+		grid-column: 1 / -1;
+		height: 3px;
+	}
+}
+
+@media (max-width: 360px) {
+	.mobileCard {
+		grid-template-columns: 26px minmax(0, 1fr) auto;
+		gap: 6px;
+		padding-inline: 7px;
+	}
+
+	.iconBox {
+		width: 26px;
+		height: 26px;
+	}
+
+	.kicker,
+	.caption {
+		font-size: 10px;
+	}
+
+	.count {
+		font-size: 12px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.barValue,
+	.mobileShell {
+		transition-duration: 0.01ms;
+	}
+}

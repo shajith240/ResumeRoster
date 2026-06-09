@@ -546,34 +546,35 @@ export default function CommunityPostComposer() {
 				>
 					Drafts{drafts.length ? ` (${drafts.length})` : ""}
 				</button>
-			</header>
-
-			<div className="reddit-type-select">
-				<Select
-					value={postType}
-					onValueChange={(value) => setPostType(value as CommunityPostType)}
-				>
-					<SelectTrigger
-						aria-label="Post type"
-						className="reddit-select-trigger"
+				<div className="reddit-type-select">
+					<Select
+						value={postType}
+						onValueChange={(value) =>
+							setPostType(value as CommunityPostType)
+						}
 					>
-						<SelectValue />
-					</SelectTrigger>
-					<SelectContent className="reddit-select-content">
-						<SelectGroup>
-							{COMMUNITY_POST_TYPES.map((type) => (
-								<SelectItem
-									className="reddit-select-item"
-									key={type}
-									value={type}
-								>
-									{COMMUNITY_POST_TYPE_LABELS[type]}
-								</SelectItem>
-							))}
-						</SelectGroup>
-					</SelectContent>
-				</Select>
-			</div>
+						<SelectTrigger
+							aria-label="Post type"
+							className="reddit-select-trigger"
+						>
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent className="reddit-select-content">
+							<SelectGroup>
+								{COMMUNITY_POST_TYPES.map((type) => (
+									<SelectItem
+										className="reddit-select-item"
+										key={type}
+										value={type}
+									>
+										{COMMUNITY_POST_TYPE_LABELS[type]}
+									</SelectItem>
+								))}
+							</SelectGroup>
+						</SelectContent>
+					</Select>
+				</div>
+			</header>
 
 			<nav aria-label="Post format" className="reddit-composer-tabs">
 				{composerTabs.map((tab) => (

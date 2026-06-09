@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { AUTH_NEXT_STORAGE_KEY, getSafeNextPath } from "@/lib/auth-redirect";
 import { consumeSessionSupersededNotice } from "@/lib/session-lock";
 import { signInWithProvider, supabase } from "@/lib/supabase/client";
+import styles from "./SignUp.module.css";
 
 type AuthMode = "signin" | "signup";
 type OAuthProvider = "google" | "github";
@@ -314,23 +315,22 @@ function SignUp() {
 	const isBusy = submitting !== null;
 	const canShowSignupNoticeActions =
 		mode === "signup" && Boolean(confirmationEmail || notice);
-	const title =
-		mode === "signin" ? "Welcome back" : "Create your Linted account";
+	const title = mode === "signin" ? "Welcome back" : "Create your account";
 	const subtitle =
 		mode === "signin"
 			? "Sign in with email, Google, or GitHub."
 			: "Use email, Google, or GitHub to start linting resumes.";
 
 	return (
-		<main className="auth-route page-enter">
-			<section className="auth-card" aria-labelledby="auth-title">
-				<div className="auth-card-surface">
-					<Link className="auth-wordmark" href="/" aria-label="Linted home">
+		<main className={`${styles.route} page-enter`}>
+			<section className={styles.card} aria-labelledby="auth-title">
+				<div className={styles.cardSurface}>
+					<Link className={styles.wordmark} href="/" aria-label="Linted home">
 						<BrandMark />
 					</Link>
 
-					<div className="auth-heading">
-						<div className="auth-mode-tabs" aria-label="Choose auth mode">
+					<div className={styles.heading}>
+						<div className={styles.modeTabs} aria-label="Choose auth mode">
 							<button
 								aria-pressed={mode === "signin"}
 								onClick={() => switchMode("signin")}
@@ -350,9 +350,9 @@ function SignUp() {
 						<p>{subtitle}</p>
 					</div>
 
-					<div className="auth-provider-grid">
+					<div className={styles.providerGrid}>
 						<Button
-							className="auth-provider-button h-10"
+							className={`${styles.providerButton} h-10`}
 							disabled={isBusy}
 							onClick={() => void handleProvider("google")}
 							type="button"
@@ -362,7 +362,7 @@ function SignUp() {
 							<span>{submitting === "google" ? "Opening..." : "Google"}</span>
 						</Button>
 						<Button
-							className="auth-provider-button h-10"
+							className={`${styles.providerButton} h-10`}
 							disabled={isBusy}
 							onClick={() => void handleProvider("github")}
 							type="button"
@@ -373,16 +373,16 @@ function SignUp() {
 						</Button>
 					</div>
 
-					<div className="auth-divider" aria-hidden="true">
+					<div className={styles.divider} aria-hidden="true">
 						<span />
 						<p>or continue with email</p>
 						<span />
 					</div>
 
-					<form className="auth-form" onSubmit={handleEmailSubmit}>
-						<div className="auth-field">
+					<form className={styles.form} onSubmit={handleEmailSubmit}>
+						<div className={styles.field}>
 							<Label htmlFor="auth-email">Email</Label>
-							<div className="auth-input-wrap">
+							<div className={styles.inputWrap}>
 								<Mail aria-hidden="true" size={16} strokeWidth={1.8} />
 								<Input
 									autoComplete="email"
@@ -404,9 +404,9 @@ function SignUp() {
 							</div>
 						</div>
 
-						<div className="auth-field">
+						<div className={styles.field}>
 							<Label htmlFor="auth-password">Password</Label>
-							<div className="auth-input-wrap">
+							<div className={styles.inputWrap}>
 								<Lock aria-hidden="true" size={16} strokeWidth={1.8} />
 								<Input
 									autoComplete={
@@ -424,15 +424,15 @@ function SignUp() {
 						</div>
 
 						{message ? (
-							<p className="auth-form-message" role="alert">
+							<p className={styles.formMessage} role="alert">
 								{message}
 							</p>
 						) : null}
 						{notice ? (
-							<div className="auth-form-notice" role="status">
+							<div className={styles.formNotice} role="status">
 								<p>{notice}</p>
 								{canShowSignupNoticeActions ? (
-									<div className="auth-notice-actions">
+									<div className={styles.noticeActions}>
 										<button
 											disabled={isBusy}
 											onClick={() => void handleResendConfirmation()}
@@ -454,7 +454,7 @@ function SignUp() {
 						) : null}
 
 						<Button
-							className="auth-submit-button h-10 w-full"
+							className={`${styles.submitButton} h-10 w-full`}
 							disabled={isBusy}
 							type="submit"
 						>
@@ -469,7 +469,7 @@ function SignUp() {
 							</span>
 							<ArrowRight aria-hidden="true" size={16} strokeWidth={1.8} />
 						</Button>
-						<p className="auth-legal-copy">
+						<p className={styles.legalCopy}>
 							By continuing, you agree to{" "}
 							<Link href="/terms">Terms</Link> and{" "}
 							<Link href="/privacy">Privacy Policy</Link>.
@@ -477,7 +477,7 @@ function SignUp() {
 					</form>
 				</div>
 
-				<div className="auth-card-footer">
+				<div className={styles.cardFooter}>
 					<p>
 						{mode === "signin"
 							? "New to Linted?"

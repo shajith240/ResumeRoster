@@ -1,0 +1,293 @@
+.backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 2000;
+	display: grid;
+	place-items: center;
+	padding: 18px;
+	background: rgba(0, 0, 0, 0.48);
+	backdrop-filter: blur(2px) saturate(82%);
+	-webkit-backdrop-filter: blur(2px) saturate(82%);
+	animation: reportOverlayFadeIn 180ms ease-out both;
+}
+
+.dialog {
+	display: grid;
+	transform-origin: center;
+	gap: 16px;
+	width: min(700px, 100%);
+	max-height: min(760px, calc(100vh - 36px));
+	overflow: auto;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-xl);
+	padding: clamp(18px, 2.5vw, 24px);
+	background: var(--bg-surface);
+	color: var(--text-primary);
+	box-shadow: var(--shadow-lg);
+	animation: reportDialogPopIn 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes reportOverlayFadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes reportDialogPopIn {
+	from {
+		opacity: 0;
+		transform: scale(0.96);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.backdrop,
+	.dialog {
+		animation: none;
+	}
+}
+
+.header {
+	display: flex;
+	align-items: start;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.header h2 {
+	margin: 0;
+	font-size: 22px;
+	line-height: 1.2;
+}
+
+.closeButton,
+.cancelButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--button-radius);
+	background: var(--bg-base);
+	color: var(--text-secondary);
+	font-size: 13px;
+	font-weight: 750;
+	text-decoration: none;
+	transition:
+		border-color 160ms var(--button-ease),
+		background-color 160ms var(--button-ease),
+		color 160ms var(--button-ease),
+		box-shadow 160ms var(--button-ease);
+}
+
+.closeButton {
+	width: 40px;
+	height: 40px;
+	flex: 0 0 auto;
+	border-radius: 50%;
+}
+
+.closeButton svg,
+.submitButton svg {
+	width: 16px;
+	height: 16px;
+}
+
+.cancelButton {
+	min-height: 40px;
+	padding: 0 14px;
+}
+
+.closeButton:hover,
+.cancelButton:hover {
+	border-color: var(--border-default);
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+}
+
+.closeButton:focus-visible,
+.cancelButton:focus-visible,
+.submitButton:focus-visible {
+	outline: none;
+	box-shadow: var(--shadow-focus);
+}
+
+.options {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 8px;
+}
+
+.option {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: 4px 8px;
+	min-width: 0;
+	min-height: 96px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-lg);
+	padding: 10px;
+	background: var(--bg-base);
+	color: var(--text-primary);
+	cursor: pointer;
+	transition:
+		border-color 160ms var(--button-ease),
+		background-color 160ms var(--button-ease),
+		box-shadow 160ms var(--button-ease);
+}
+
+.option:hover {
+	border-color: var(--border-default);
+	background: var(--bg-elevated);
+}
+
+.option:focus-within {
+	box-shadow: var(--shadow-focus);
+}
+
+.optionSelected {
+	border-color: color-mix(in srgb, var(--brand) 48%, var(--border-default));
+	background: color-mix(in srgb, var(--brand) 9%, var(--bg-base));
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 20%, transparent);
+}
+
+.option input {
+	box-sizing: border-box;
+	display: block;
+	width: 15px;
+	min-width: 15px;
+	height: 15px;
+	min-height: 15px;
+	margin: 3px 0 0;
+	padding: 0;
+	appearance: none;
+	border: 1.5px solid var(--border-default);
+	border-radius: 50%;
+	background: var(--bg-elevated);
+	font: inherit;
+	transition:
+		border-color 160ms var(--button-ease),
+		background-color 160ms var(--button-ease),
+		box-shadow 160ms var(--button-ease);
+}
+
+.option input:checked {
+	border-color: var(--brand);
+	background:
+		radial-gradient(circle, var(--brand) 0 37%, transparent 41%),
+		var(--bg-elevated);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 12%, transparent);
+}
+
+.option input:focus-visible {
+	outline: none;
+}
+
+.option span {
+	font-size: 13px;
+	font-weight: 800;
+	line-height: 1.2;
+}
+
+.option small {
+	grid-column: 2;
+	color: var(--text-secondary);
+	font-size: 12px;
+	line-height: 1.35;
+}
+
+.detailsField {
+	display: grid;
+	gap: 8px;
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.detailsField > span {
+	font-family: var(--font-post-title);
+}
+
+.detailsField textarea {
+	min-height: 124px;
+	resize: vertical;
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius);
+	background: var(--bg-elevated);
+	padding: 12px 14px;
+	color: var(--text-primary);
+	font: inherit;
+	font-weight: 500;
+	line-height: 1.5;
+	box-shadow: none;
+	transition:
+		border-color 160ms var(--button-ease),
+		box-shadow 160ms var(--button-ease);
+}
+
+.detailsField textarea::placeholder {
+	color: var(--text-tertiary);
+	opacity: 1;
+}
+
+.detailsField textarea:focus {
+	border-color: color-mix(in srgb, var(--brand) 68%, var(--border-default));
+	outline: none;
+	box-shadow: var(--shadow-focus);
+}
+
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+.submitButton {
+	min-height: 40px;
+}
+
+@media (max-width: 640px) {
+	.dialog {
+		width: 100%;
+		max-height: calc(100dvh - 28px);
+	}
+
+	.options {
+		grid-template-columns: 1fr;
+	}
+
+	.option {
+		min-height: auto;
+	}
+}
+
+@media (max-width: 420px) {
+	.backdrop {
+		align-items: end;
+		padding: 12px;
+	}
+
+	.dialog {
+		border-radius: var(--radius-lg);
+	}
+
+	.actions {
+		display: grid;
+		grid-template-columns: 1fr;
+	}
+
+	.cancelButton,
+	.submitButton {
+		width: 100%;
+	}
+}

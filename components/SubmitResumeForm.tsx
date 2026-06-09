@@ -41,6 +41,7 @@ import {
 	getSubmitIssue,
 } from "@/lib/submit-validation";
 import { supabase } from "@/lib/supabase/client";
+import styles from "./SubmitResumeForm.module.css";
 
 const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
 
@@ -585,13 +586,18 @@ export default function SubmitResumeForm() {
 				</section>
 			</div>
 
-			<div className="submit-form-actions">
-				<fieldset className="privacy-picker">
+			<div className={styles.formActions}>
+				<fieldset className={styles.privacyPicker}>
 					<legend>Privacy mode</legend>
-					<div className="privacy-options">
+					<div className={styles.privacyOptions}>
 						{RESUME_PRIVACY_MODES.map((mode) => (
 							<label
-								className={privacyMode === mode ? "selected" : ""}
+								className={[
+									styles.optionCard,
+									privacyMode === mode ? styles.optionCardSelected : "",
+								]
+									.filter(Boolean)
+									.join(" ")}
 								key={mode}
 							>
 								<input
@@ -600,8 +606,10 @@ export default function SubmitResumeForm() {
 									onChange={() => setPrivacyMode(mode)}
 									type="radio"
 								/>
-								<span>
-									<strong>{RESUME_PRIVACY_MODE_COPY[mode].label}</strong>
+								<span className={styles.optionBody}>
+									<span className={styles.optionHeader}>
+										<strong>{RESUME_PRIVACY_MODE_COPY[mode].label}</strong>
+									</span>
 									<small>
 										{mode === "public"
 											? `${publicProfileName} and ${publicProfileDetail} can appear with the post.`
@@ -611,12 +619,12 @@ export default function SubmitResumeForm() {
 							</label>
 						))}
 					</div>
-					<p>{getPrivacyModeHelpText(privacyMode)}</p>
+					<p className={styles.privacyHint}>{getPrivacyModeHelpText(privacyMode)}</p>
 				</fieldset>
 
-				<div className="submit-action-panel">
+				<div className={styles.submitActionPanel}>
 					<button
-						className="btn-primary submit-button"
+						className={`btn-primary ${styles.submitButton}`}
 						disabled={submitting || success || Boolean(submitIssue)}
 						title={submitIssue || undefined}
 					>
@@ -632,7 +640,7 @@ export default function SubmitResumeForm() {
 						)}
 					</button>
 					{submitIssue && !submitting && !success ? (
-						<p className="submit-action-hint" aria-live="polite">
+						<p className={styles.submitActionHint} aria-live="polite">
 							{submitIssue}
 						</p>
 					) : null}

@@ -220,7 +220,7 @@ export default function AuthGate({ children, showChrome = true }: AuthGateProps)
 			<AppPresence userId={user.id} />
 			{showChrome ? (
 				<>
-					<SessionNavBar />
+					<SessionNavBar userId={user.id} />
 					<div className="app-with-sidebar">{children}</div>
 				</>
 			) : (

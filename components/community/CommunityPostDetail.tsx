@@ -37,6 +37,16 @@ import FilledThumbIcon from "@/components/community/FilledThumbIcon";
 import CommunityMediaGallery from "@/components/community/CommunityMediaGallery";
 import LoadingScreen from "@/components/LoadingScreen";
 import { CommentComposer } from "@/components/resume-detail/comment-composer";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { getFreshAuthSession } from "@/lib/auth-session";
 import {
@@ -80,6 +90,7 @@ import type {
 	ResumeAuthorProfile,
 } from "@/lib/supabase/types";
 import { useAdminAccess } from "@/lib/use-admin-access";
+import reportStyles from "./CommunityReportDialog.module.css";
 
 type CommunityPost = {
 	author_id: string;
@@ -340,6 +351,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		useState<MobileSheetState>("peek");
 	const [mobilePostBodyExpanded, setMobilePostBodyExpanded] = useState(false);
 	const [post, setPost] = useState<CommunityPost | null>(null);
+	const [postDeleteConfirmOpen, setPostDeleteConfirmOpen] = useState(false);
 	const [postEditBody, setPostEditBody] = useState("");
 	const [postEditTitle, setPostEditTitle] = useState("");
 	const [poll, setPoll] = useState<CommunityPollView | null>(null);
@@ -359,6 +371,8 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	);
 	const [submittingReport, setSubmittingReport] = useState(false);
 	const [commentEditBody, setCommentEditBody] = useState("");
+	const [pendingDeleteComment, setPendingDeleteComment] =
+		useState<CommunityPostComment | null>(null);
 	const [topic, setTopic] = useState<CommunityTopic | null>(null);
 
 	const loadPost = useCallback(async () => {
@@ -1279,15 +1293,9 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 	async function handlePostDelete() {
 		if (!post) return;
-		if (
-			!window.confirm(
-				"Delete this post permanently? This removes the post, comments, votes, poll data, and uploaded media.",
-			)
-		) {
-			return;
-		}
 
 		const postId = post.id;
+		setPostDeleteConfirmOpen(false);
 		setActionBusy("post-delete");
 		router.replace("/community");
 
@@ -1352,10 +1360,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	}
 
 	async function handleCommentDelete(comment: CommunityPostComment) {
-		if (!window.confirm("Delete this comment? Replies stay visible.")) {
-			return;
-		}
-
+		setPendingDeleteComment(null);
 		const result = await runCommunityAction<CommentDeleteResponse>(
 			`/api/community/comments/${comment.id}`,
 			{
@@ -1765,7 +1770,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 											className="comment-action-button comment-delete-button"
 											disabled={actionBusy === `comment-delete-${node.id}`}
 											onClick={() => {
-												void handleCommentDelete(node);
+												setPendingDeleteComment(node);
 											}}
 											type="button"
 										>
@@ -1902,25 +1907,25 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	const canExpandMobilePostBody =
 		post.body.trim().length > 140 || post.body.includes("\n");
 	const reportDialog = reportTarget ? (
-		<div className="community-report-backdrop">
+		<div className={reportStyles.backdrop}>
 			<form
+				aria-labelledby="community-report-title"
 				aria-modal="true"
-				className="community-report-dialog"
+				className={reportStyles.dialog}
 				onSubmit={(event) => {
 					void handleReportSubmit(event);
 				}}
 				role="dialog"
 			>
-				<header>
+				<header className={reportStyles.header}>
 					<div>
-						<span>Report</span>
-						<h2>
+						<h2 id="community-report-title">
 							{reportTarget.type === "post" ? "Report post" : "Report comment"}
 						</h2>
 					</div>
 					<button
 						aria-label="Close report dialog"
-						className="community-action-button"
+						className={reportStyles.closeButton}
 						onClick={() => setReportTarget(null)}
 						type="button"
 					>
@@ -1928,10 +1933,14 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 					</button>
 				</header>
 
-				<div className="community-report-options">
+				<div className={reportStyles.options}>
 					{REPORT_REASON_OPTIONS.map((option) => (
 						<label
-							className={reportReason === option.value ? "is-selected" : undefined}
+							className={
+								reportReason === option.value
+									? `${reportStyles.option} ${reportStyles.optionSelected}`
+									: reportStyles.option
+							}
 							key={option.value}
 						>
 							<input
@@ -1947,7 +1956,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 					))}
 				</div>
 
-				<label className="field-block">
+				<label className={reportStyles.detailsField}>
 					<span>Details</span>
 					<textarea
 						maxLength={800}
@@ -1957,16 +1966,16 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 					/>
 				</label>
 
-				<div className="community-report-actions">
+				<div className={reportStyles.actions}>
 					<button
-						className="community-action-button"
+						className={reportStyles.cancelButton}
 						onClick={() => setReportTarget(null)}
 						type="button"
 					>
 						Cancel
 					</button>
 					<button
-						className="btn-primary"
+						className={`btn-primary ${reportStyles.submitButton}`}
 						disabled={submittingReport || Boolean(reportIssue)}
 						title={reportIssue || undefined}
 						type="submit"
@@ -2052,7 +2061,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 							disabled={actionBusy === "post-delete"}
 							onClick={() => {
 								setMobileActionSheetOpen(false);
-								void handlePostDelete();
+								setPostDeleteConfirmOpen(true);
 							}}
 							type="button"
 						>
@@ -2396,7 +2405,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 									className="community-action-button is-danger"
 									disabled={actionBusy === "post-delete"}
 									onClick={() => {
-										void handlePostDelete();
+										setPostDeleteConfirmOpen(true);
 									}}
 									type="button"
 								>
@@ -2545,6 +2554,78 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 				</div>
 			</section>
 			)}
+
+			<AlertDialog
+				open={postDeleteConfirmOpen && Boolean(post)}
+				onOpenChange={setPostDeleteConfirmOpen}
+			>
+				<AlertDialogContent size="sm">
+					<AlertDialogHeader>
+						<AlertDialogTitle>Delete post?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This permanently removes the post, comments, votes, poll data,
+							and uploaded media.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel disabled={actionBusy === "post-delete"}>
+							Cancel
+						</AlertDialogCancel>
+						<AlertDialogAction
+							disabled={actionBusy === "post-delete"}
+							onClick={(event) => {
+								event.preventDefault();
+								void handlePostDelete();
+							}}
+						>
+							Delete post
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+
+			<AlertDialog
+				open={Boolean(pendingDeleteComment)}
+				onOpenChange={(open) => {
+					if (!open) setPendingDeleteComment(null);
+				}}
+			>
+				<AlertDialogContent size="sm">
+					<AlertDialogHeader>
+						<AlertDialogTitle>Delete comment?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This removes the comment body. Existing replies stay visible in
+							the thread.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel
+							disabled={
+								pendingDeleteComment
+									? actionBusy === `comment-delete-${pendingDeleteComment.id}`
+									: false
+							}
+						>
+							Cancel
+						</AlertDialogCancel>
+						<AlertDialogAction
+							disabled={
+								pendingDeleteComment
+									? actionBusy === `comment-delete-${pendingDeleteComment.id}`
+									: false
+							}
+							onClick={(event) => {
+								event.preventDefault();
+								if (pendingDeleteComment) {
+									void handleCommentDelete(pendingDeleteComment);
+								}
+							}}
+						>
+							Delete comment
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 
 			{reportDialog && typeof document !== "undefined"
 				? createPortal(reportDialog, document.body)

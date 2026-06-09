@@ -28,6 +28,16 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
 	COMMUNITY_POST_TYPE_LABELS,
 	type CommunityPostType,
 } from "@/lib/community";
@@ -285,6 +295,8 @@ export default function CommunityPostFeed() {
 	const [loading, setLoading] = useState(true);
 	const [posts, setPosts] = useState<CommunityPostFeedItem[]>([]);
 	const [currentUserId, setCurrentUserId] = useState("");
+	const [pendingDeletePost, setPendingDeletePost] =
+		useState<CommunityPostFeedItem | null>(null);
 	const [pollVotingIds, setPollVotingIds] = useState<Set<string>>(() => new Set());
 	const [rowActionIds, setRowActionIds] = useState<Set<string>>(() => new Set());
 	const [votingIds, setVotingIds] = useState<Set<string>>(() => new Set());
@@ -732,19 +744,23 @@ export default function CommunityPostFeed() {
 		}
 	}
 
-	async function deletePostFromFeed(post: CommunityPostFeedItem) {
+	function requestDeletePostFromFeed(post: CommunityPostFeedItem) {
 		if (currentUserId !== post.author_id && !isAdmin) {
 			toast.error("Only the post author or an admin can delete this post.");
 			return;
 		}
 
-		if (
-			!window.confirm(
-				"Delete this post permanently? This removes the post, comments, votes, poll data, and uploaded media.",
-			)
-		) {
+		setPendingDeletePost(post);
+	}
+
+	async function deletePostFromFeed(post: CommunityPostFeedItem) {
+		if (currentUserId !== post.author_id && !isAdmin) {
+			toast.error("Only the post author or an admin can delete this post.");
+			setPendingDeletePost(null);
 			return;
 		}
+
+		setPendingDeletePost(null);
 
 		let previousRows: CommunityPostFeedItem[] = [];
 		setPosts((current) => {
@@ -1112,7 +1128,7 @@ export default function CommunityPostFeed() {
 															className="community-row-action-item is-danger"
 															disabled={deleteBusy}
 															onSelect={() => {
-																void deletePostFromFeed(post);
+																requestDeletePostFromFeed(post);
 															}}
 														>
 															<Trash2 aria-hidden="true" />
@@ -1160,6 +1176,48 @@ export default function CommunityPostFeed() {
 					</Link>
 				</div>
 			)}
+			<AlertDialog
+				open={Boolean(pendingDeletePost)}
+				onOpenChange={(open) => {
+					if (!open) setPendingDeletePost(null);
+				}}
+			>
+				<AlertDialogContent size="sm">
+					<AlertDialogHeader>
+						<AlertDialogTitle>Delete post?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This permanently removes the post, comments, votes, poll data,
+							and uploaded media.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel
+							disabled={
+								pendingDeletePost
+									? rowActionIds.has(`post-delete-${pendingDeletePost.id}`)
+									: false
+							}
+						>
+							Cancel
+						</AlertDialogCancel>
+						<AlertDialogAction
+							disabled={
+								pendingDeletePost
+									? rowActionIds.has(`post-delete-${pendingDeletePost.id}`)
+									: false
+							}
+							onClick={(event) => {
+								event.preventDefault();
+								if (pendingDeletePost) {
+									void deletePostFromFeed(pendingDeletePost);
+								}
+							}}
+						>
+							Delete post
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</section>
 	);
 }

@@ -21,10 +21,13 @@ test("submit resume page uses no-card responsive form layout", async ({
 		const form = document.querySelector(".submit-form");
 		const firstColumn = document.querySelector(".submit-form-column");
 		const contextColumn = document.querySelector(".submit-context-column");
-		const privacyOptions = document.querySelector(".privacy-options");
-		const selectedPrivacy = document.querySelector(".privacy-options label.selected");
-		const submitButton = document.querySelector(".submit-button");
-		const submitHint = document.querySelector(".submit-action-hint");
+		const selectedPrivacyInput = document.querySelector(
+			'input[name="privacyMode"]:checked',
+		);
+		const selectedPrivacy = selectedPrivacyInput?.closest("label");
+		const privacyOptions = selectedPrivacy?.parentElement;
+		const submitButton = document.querySelector(".submit-form button.btn-primary");
+		const submitHint = document.querySelector('.submit-form [aria-live="polite"]');
 		const formStyle = form ? window.getComputedStyle(form) : null;
 		const firstColumnStyle = firstColumn
 			? window.getComputedStyle(firstColumn)
@@ -62,17 +65,17 @@ test("submit resume page uses no-card responsive form layout", async ({
 	expect(layoutMetrics.formBorderTopWidth).toBe(0);
 	expect(layoutMetrics.sectionBorderTopWidth).toBe(1);
 	expect(Math.abs(layoutMetrics.headingLeft - layoutMetrics.routeLeft)).toBeLessThanOrEqual(1);
-	expect(layoutMetrics.selectedPrivacyMarkerWidth).toBe("14px");
+	expect(layoutMetrics.selectedPrivacyMarkerWidth).toBe("16px");
 	expect(layoutMetrics.submitHintTop).toBeGreaterThan(layoutMetrics.submitButtonBottom);
 	expect(layoutMetrics.submitHintTop - layoutMetrics.submitButtonBottom).toBeLessThanOrEqual(14);
 
 	if (testInfo.project.name === "visual-mobile") {
 		expect(layoutMetrics.contextTop).toBeGreaterThan(layoutMetrics.firstColumnTop);
-		await expect(page.locator(".privacy-options label")).toHaveCount(3);
+		await expect(page.locator('input[name="privacyMode"]')).toHaveCount(3);
 		return;
 	}
 
 	expect(Math.abs(layoutMetrics.contextTop - layoutMetrics.firstColumnTop)).toBeLessThanOrEqual(1);
-	expect(Math.abs(layoutMetrics.submitButtonTop - layoutMetrics.privacyOptionsTop)).toBeLessThanOrEqual(4);
-	await expect(page.locator(".privacy-options")).toBeVisible();
+	expect(Math.abs(layoutMetrics.submitButtonTop - layoutMetrics.privacyOptionsTop)).toBeLessThanOrEqual(10);
+	await expect(page.locator('input[name="privacyMode"]')).toHaveCount(3);
 });

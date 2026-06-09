@@ -132,7 +132,6 @@ export default function RecentPostsPanel({
 			>
 				<header>
 					<div>
-						<span>Recent</span>
 						<h2>{title}</h2>
 					</div>
 					{items.length ? (
