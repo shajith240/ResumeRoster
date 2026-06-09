@@ -383,6 +383,17 @@ test("primary navigation exposes app sections without account utilities", async 
 		);
 		await expect(ownFeedRow).toBeVisible();
 		await expect(ownFeedRow.locator(".community-reactions")).toHaveCount(0);
+		await ownFeedRow.getByRole("button", { name: /More actions/i }).click();
+		const mobileOwnerEditAction = page.getByRole("menuitem", { name: "Edit" });
+		await expect(mobileOwnerEditAction).toBeVisible();
+		await expect(mobileOwnerEditAction).toHaveAttribute("href", /edit=1/);
+		await expect(
+			page.getByRole("menuitem", { name: "Delete" }),
+		).toBeVisible();
+		await expect(
+			page.getByRole("menuitem", { name: /hide/i }),
+		).toHaveCount(0);
+		await page.keyboard.press("Escape");
 		await expect(page.locator(".community-media-gallery-count")).toHaveCount(0);
 		await expect(page.locator(".community-media-gallery-dots")).toBeVisible();
 		await expect(page.locator(".community-media-gallery-dot")).toHaveCount(3);
@@ -692,6 +703,13 @@ test("primary navigation exposes app sections without account utilities", async 
 	);
 	await expect(desktopOwnFeedRow).toBeVisible();
 	await expect(desktopOwnFeedRow.locator(".community-reactions")).toHaveCount(0);
+	await desktopOwnFeedRow.getByRole("button", { name: /More actions/i }).click();
+	const desktopOwnerEditAction = page.getByRole("menuitem", { name: "Edit" });
+	await expect(desktopOwnerEditAction).toBeVisible();
+	await expect(desktopOwnerEditAction).toHaveAttribute("href", /edit=1/);
+	await expect(page.getByRole("menuitem", { name: "Delete" })).toBeVisible();
+	await expect(page.getByRole("menuitem", { name: /hide/i })).toHaveCount(0);
+	await page.keyboard.press("Escape");
 	await page.mouse.move(8, 8);
 	await page.evaluate(() => {
 		const activeElement = document.activeElement;

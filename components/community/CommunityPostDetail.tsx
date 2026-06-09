@@ -531,6 +531,18 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		}
 	}, []);
 
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		if (new URLSearchParams(window.location.search).get("edit") !== "1") return;
+		if (!post || !currentUserId) return;
+		if (currentUserId !== post.author_id) return;
+		if (post.status !== "active" && post.status !== "locked") return;
+
+		setPostEditTitle(post.title);
+		setPostEditBody(post.body);
+		setEditingPost(true);
+	}, [currentUserId, post]);
+
 	const commentTree = useMemo(
 		() => buildCommunityCommentTree(comments),
 		[comments],

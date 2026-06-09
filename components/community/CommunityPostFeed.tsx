@@ -4,12 +4,17 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
 	ChevronDown,
+	Edit3,
 	Forward,
 	LayoutList,
+	Lock,
 	MessageCircle,
+	MoreHorizontal,
 	RefreshCw,
 	ThumbsDown,
 	ThumbsUp,
+	Trash2,
+	Unlock,
 } from "lucide-react";
 import { toast } from "sonner";
 import FilledThumbIcon from "@/components/community/FilledThumbIcon";
@@ -18,6 +23,7 @@ import FeedSkeleton from "@/components/feed/FeedSkeleton";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuRadioGroup,
 	DropdownMenuRadioItem,
 	DropdownMenuTrigger,
@@ -38,6 +44,7 @@ import {
 import { formatCount } from "@/lib/feed-ranking";
 import { getFreshAuthSession } from "@/lib/auth-session";
 import { supabase } from "@/lib/supabase/client";
+import { useAdminAccess } from "@/lib/use-admin-access";
 import type {
 	CommunityPostAttachment,
 	CommunityPostPoll,
@@ -105,6 +112,24 @@ type PollVoteActionResponse = {
 	message?: string;
 	optionId?: string;
 	pollId?: string;
+};
+
+type PostDeleteActionResponse = {
+	message?: string;
+	post?: {
+		deletedAt?: string | null;
+		id: string;
+		status: CommunityPostRow["status"];
+	};
+};
+
+type PostLockActionResponse = {
+	message?: string;
+	post?: {
+		id: string;
+		status: CommunityPostRow["status"];
+		updatedAt?: string;
+	};
 };
 
 function formatDate(value: string) {
@@ -217,11 +242,13 @@ const PAUSED_LOCAL_COMMUNITY_FILTER_KEYS = [
 ];
 
 export default function CommunityPostFeed() {
+	const { isAdmin } = useAdminAccess();
 	const [errorMessage, setErrorMessage] = useState("");
 	const [loading, setLoading] = useState(true);
 	const [posts, setPosts] = useState<CommunityPostFeedItem[]>([]);
 	const [currentUserId, setCurrentUserId] = useState("");
 	const [pollVotingIds, setPollVotingIds] = useState<Set<string>>(() => new Set());
+	const [rowActionIds, setRowActionIds] = useState<Set<string>>(() => new Set());
 	const [votingIds, setVotingIds] = useState<Set<string>>(() => new Set());
 	const [activeTab, setActiveTab] = useState<CommunityFeedTab>(COMMUNITY_FEED_SORT);
 
@@ -434,6 +461,63 @@ export default function CommunityPostFeed() {
 		});
 	}
 
+	function setRowActionBusy(actionId: string, isBusy: boolean) {
+		setRowActionIds((current) => {
+			const next = new Set(current);
+			if (isBusy) {
+				next.add(actionId);
+			} else {
+				next.delete(actionId);
+			}
+			return next;
+		});
+	}
+
+	async function runPostRowAction<T extends { message?: string }>({
+		body,
+		busyKey,
+		fallbackMessage,
+		method,
+		path,
+	}: {
+		body?: Record<string, unknown>;
+		busyKey: string;
+		fallbackMessage: string;
+		method?: "DELETE" | "POST";
+		path: string;
+	}) {
+		if (rowActionIds.has(busyKey)) return null;
+
+		const { session } = await getFreshAuthSession();
+		const accessToken = session?.access_token;
+		if (!accessToken) {
+			toast.error("Sign in to manage posts.");
+			return null;
+		}
+
+		setRowActionBusy(busyKey, true);
+		try {
+			const response = await fetch(path, {
+				body: body ? JSON.stringify(body) : undefined,
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					...(body ? { "Content-Type": "application/json" } : {}),
+				},
+				method: method ?? "POST",
+			});
+			const result = (await response.json().catch(() => null)) as T | null;
+
+			if (!response.ok || !result) {
+				toast.error(result?.message ?? fallbackMessage);
+				return null;
+			}
+
+			return result;
+		} finally {
+			setRowActionBusy(busyKey, false);
+		}
+	}
+
 	async function handlePollVote(post: CommunityPostFeedItem, optionId: string) {
 		if (!post.poll) return;
 
@@ -600,6 +684,55 @@ export default function CommunityPostFeed() {
 		}
 	}
 
+	async function deletePostFromFeed(post: CommunityPostFeedItem) {
+		if (currentUserId !== post.author_id) {
+			toast.error("Only the post author can delete this post.");
+			return;
+		}
+
+		if (!window.confirm("Delete this post? It will be removed from the community feed.")) {
+			return;
+		}
+
+		const result = await runPostRowAction<PostDeleteActionResponse>({
+			busyKey: `post-delete-${post.id}`,
+			fallbackMessage: "Post was not deleted.",
+			method: "DELETE",
+			path: `/api/community/posts/${post.id}`,
+		});
+
+		if (!result?.post) return;
+
+		setPosts((current) => current.filter((row) => row.id !== post.id));
+		toast.success("Post deleted.");
+	}
+
+	async function togglePostLockFromFeed(post: CommunityPostFeedItem) {
+		if (!isAdmin) return;
+
+		const nextLocked = post.status !== "locked";
+		const result = await runPostRowAction<PostLockActionResponse>({
+			body: { locked: nextLocked },
+			busyKey: `post-lock-${post.id}`,
+			fallbackMessage: "Post lock was not updated.",
+			path: `/api/community/posts/${post.id}/lock`,
+		});
+
+		if (!result?.post) return;
+
+		setPosts((current) =>
+			current.map((row) =>
+				row.id === post.id
+					? {
+							...row,
+							status: result.post?.status ?? row.status,
+						}
+					: row,
+			),
+		);
+		toast.success(nextLocked ? "Post locked." : "Post unlocked.");
+	}
+
 	return (
 		<section className="community-feed-panel" aria-label="Community posts">
 			<div className="community-feed-toolbar" aria-label="Feed view controls">
@@ -668,6 +801,13 @@ export default function CommunityPostFeed() {
 						);
 						const postScore = getCommunityPostScore(post);
 						const textPreview = getFeedTextPreview(post);
+						const isOwnPost = currentUserId === post.author_id;
+						const canManagePost =
+							isOwnPost && (post.status === "active" || post.status === "locked");
+						const canModeratePost =
+							isAdmin && (post.status === "active" || post.status === "locked");
+						const deleteBusy = rowActionIds.has(`post-delete-${post.id}`);
+						const lockBusy = rowActionIds.has(`post-lock-${post.id}`);
 
 						return (
 							<article
@@ -876,6 +1016,71 @@ export default function CommunityPostFeed() {
 											<span className="post-action-button community-static-action">
 												<span className="post-action-label">Locked</span>
 											</span>
+										) : null}
+										{canManagePost || canModeratePost ? (
+											<DropdownMenu>
+												<DropdownMenuTrigger
+													aria-label={`More actions for ${post.title}`}
+													className="post-action-button community-row-menu-trigger"
+												>
+													<MoreHorizontal
+														aria-hidden="true"
+														className="post-action-icon"
+														size={16}
+													/>
+												</DropdownMenuTrigger>
+												<DropdownMenuContent
+													align="end"
+													className="reddit-select-content community-row-action-menu"
+													sideOffset={8}
+												>
+													{canManagePost ? (
+														<>
+															<DropdownMenuItem
+																asChild
+																className="community-row-action-item"
+															>
+																<Link href={`/community/${post.id}?edit=1`}>
+																	<Edit3 aria-hidden="true" />
+																	<span>Edit</span>
+																</Link>
+															</DropdownMenuItem>
+															<DropdownMenuItem
+																className="community-row-action-item is-danger"
+																disabled={deleteBusy}
+																onSelect={() => {
+																	void deletePostFromFeed(post);
+																}}
+															>
+																<Trash2 aria-hidden="true" />
+																<span>{deleteBusy ? "Deleting..." : "Delete"}</span>
+															</DropdownMenuItem>
+														</>
+													) : null}
+													{canModeratePost ? (
+														<DropdownMenuItem
+															className="community-row-action-item"
+															disabled={lockBusy}
+															onSelect={() => {
+																void togglePostLockFromFeed(post);
+															}}
+														>
+															{post.status === "locked" ? (
+																<Unlock aria-hidden="true" />
+															) : (
+																<Lock aria-hidden="true" />
+															)}
+															<span>
+																{lockBusy
+																	? "Updating..."
+																	: post.status === "locked"
+																		? "Unlock"
+																		: "Lock"}
+															</span>
+														</DropdownMenuItem>
+													) : null}
+												</DropdownMenuContent>
+											</DropdownMenu>
 										) : null}
 									</div>
 								</div>
