@@ -89,7 +89,7 @@ describe("health route", () => {
 
 		expect(response.status).toBe(200);
 		expect(response.headers.get("Cache-Control")).toBe("no-store");
-		expect(getBucket).toHaveBeenCalledTimes(4);
+		expect(getBucket).toHaveBeenCalledTimes(5);
 		expect(rpc).toHaveBeenCalledWith("get_temporary_data_cleanup_health", {
 			max_success_age_seconds: 1800,
 		});
@@ -100,23 +100,23 @@ describe("health route", () => {
 				cleanup_cron: { status: "ok" },
 				database: { status: "ok" },
 				push_config: { status: "ok" },
-				storage: { status: "ok", bucket_count: 4 },
+				storage: { status: "ok", bucket_count: 5 },
 			},
 		});
 	});
 
-	it("requires community post media storage only when the community flag is enabled", async () => {
-		vi.stubEnv("NEXT_PUBLIC_COMMUNITY_POSTS_ENABLED", "true");
+	it("omits community post media storage when the community flag is explicitly disabled", async () => {
+		vi.stubEnv("NEXT_PUBLIC_COMMUNITY_POSTS_ENABLED", "false");
 		const { getBucket } = createAdminMock();
 
 		const response = await GET();
 
 		expect(response.status).toBe(200);
-		expect(getBucket).toHaveBeenCalledTimes(5);
-		expect(getBucket).toHaveBeenCalledWith("community-post-media");
+		expect(getBucket).toHaveBeenCalledTimes(4);
+		expect(getBucket).not.toHaveBeenCalledWith("community-post-media");
 		await expect(response.json()).resolves.toMatchObject({
 			checks: {
-				storage: { status: "ok", bucket_count: 5 },
+				storage: { status: "ok", bucket_count: 4 },
 			},
 		});
 	});

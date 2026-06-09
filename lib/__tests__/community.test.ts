@@ -10,14 +10,14 @@ import {
 } from "@/lib/community";
 
 describe("community rollout controls", () => {
-	it("keeps community posting disabled by default", () => {
-		expect(areCommunityPostsEnabled({})).toBe(false);
+	it("keeps launched community posting enabled unless explicitly disabled", () => {
+		expect(areCommunityPostsEnabled({})).toBe(true);
 		expect(parseBooleanFeatureFlag(undefined)).toBe(false);
 		expect(parseBooleanFeatureFlag("maybe")).toBe(false);
 		expect(parseBooleanFeatureFlag("maybe", true)).toBe(true);
 	});
 
-	it("enables community posting only for explicit truthy flag values", () => {
+	it("honors explicit feature flag values", () => {
 		expect(
 			areCommunityPostsEnabled({
 				[COMMUNITY_POSTS_FEATURE_FLAG]: "true",

@@ -8,6 +8,18 @@ function getIds(pathname: string, communityEnabled = true) {
 }
 
 describe("primary navigation", () => {
+	it("defaults to the launched app navigation when no rollout env is provided", () => {
+		expect(
+			getPrimaryNavigationItems({ pathname: "/feed" }).map((item) => item.id),
+		).toEqual([
+			"community",
+			"feed",
+			"submit",
+			"community-new",
+			"leaderboard",
+		]);
+	});
+
 	it("exposes community routes in the primary mobile dock when enabled", () => {
 		expect(getIds("/feed")).toEqual([
 			"community",

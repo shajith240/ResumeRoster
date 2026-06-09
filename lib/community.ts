@@ -36,7 +36,7 @@ export function areCommunityPostsEnabled(
 		? env[COMMUNITY_POSTS_FEATURE_FLAG]
 		: process.env.NEXT_PUBLIC_COMMUNITY_POSTS_ENABLED;
 
-	return parseBooleanFeatureFlag(value, false);
+	return parseBooleanFeatureFlag(value, true);
 }
 
 export const COMMUNITY_POST_TYPES = [
