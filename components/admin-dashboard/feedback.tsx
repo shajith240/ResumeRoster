@@ -7,7 +7,7 @@ import {
 	Send,
 	Sparkles,
 	XCircle,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import {
 	USER_FEEDBACK_CATEGORIES,
 	USER_FEEDBACK_CATEGORY_LABELS,

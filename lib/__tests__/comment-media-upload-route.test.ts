@@ -2,7 +2,7 @@ import { POST } from "@/app/api/comment-media/upload/route";
 import { requireSignedInUser } from "@/lib/server-auth";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/server-auth", () => ({
 	requireSignedInUser: vi.fn(),
@@ -20,6 +20,8 @@ vi.mock("@/lib/server/upload-security", () => ({
 }));
 
 const USER_ID = "11111111-1111-4111-8111-111111111111";
+const originalScanMode = process.env.UPLOAD_MALWARE_SCAN_MODE;
+const originalScanUrl = process.env.UPLOAD_MALWARE_SCAN_URL;
 const pngBytes = new Uint8Array([
 	0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
 ]);
@@ -76,12 +78,28 @@ function mockSignedInUser() {
 describe("comment media upload route rate limits", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		delete process.env.UPLOAD_MALWARE_SCAN_MODE;
+		delete process.env.UPLOAD_MALWARE_SCAN_URL;
 		vi.mocked(enforceApiRateLimit).mockResolvedValue(null);
 		vi.mocked(enforceUploadSecurity).mockResolvedValue({
 			ok: true,
 			sha256:
 				"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
 		});
+	});
+
+	afterEach(() => {
+		if (originalScanMode === undefined) {
+			delete process.env.UPLOAD_MALWARE_SCAN_MODE;
+		} else {
+			process.env.UPLOAD_MALWARE_SCAN_MODE = originalScanMode;
+		}
+
+		if (originalScanUrl === undefined) {
+			delete process.env.UPLOAD_MALWARE_SCAN_URL;
+		} else {
+			process.env.UPLOAD_MALWARE_SCAN_URL = originalScanUrl;
+		}
 	});
 
 	it("checks the DB-backed upload limit before scanning images", async () => {
@@ -98,6 +116,17 @@ describe("comment media upload route rate limits", () => {
 			"commentMediaUpload",
 		);
 		expect(enforceUploadSecurity).toHaveBeenCalled();
+		expect(enforceUploadSecurity).toHaveBeenCalledWith(
+			expect.anything(),
+			expect.objectContaining({
+				mimeType: "image/png",
+				uploadKind: "comment-media",
+				userId: USER_ID,
+			}),
+			expect.objectContaining({
+				UPLOAD_MALWARE_SCAN_MODE: "optional",
+			}),
+		);
 		expect(upload).toHaveBeenCalledTimes(1);
 	});
 

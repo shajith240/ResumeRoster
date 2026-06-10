@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Send } from "lucide-react";
+import { Send } from "@/components/ui/solar-icons";
 import {
 	AlertDialog,
 	AlertDialogAction,

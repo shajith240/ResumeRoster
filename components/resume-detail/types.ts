@@ -23,6 +23,7 @@ export type AuthorProfile = {
 	id: string;
 	username: string | null;
 	full_name: string | null;
+	is_online?: boolean;
 	community_role?: CommunityRole | null;
 	reviewer_type?: ReviewerType | null;
 	reviewer_headline?: string | null;

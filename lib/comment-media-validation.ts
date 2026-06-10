@@ -2,10 +2,9 @@ import {
 	RASTER_IMAGE_ALLOWED_MIME_TYPES,
 	detectRasterImageMimeType,
 	getRasterImageExtension,
-	type RasterImageMimeType,
 } from "@/lib/image-upload-validation";
 
-const COMMENT_IMAGE_MAX_FILE_SIZE_BYTES = 3 * 1024 * 1024;
+const COMMENT_IMAGE_MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024;
 const REVIEW_CONTENT_MIN_LENGTH = 10;
 const REVIEW_CONTENT_MAX_LENGTH = 4000;
 
@@ -13,7 +12,8 @@ const COMMENT_IMAGE_ALLOWED_MIME_TYPES = RASTER_IMAGE_ALLOWED_MIME_TYPES;
 
 const COMMENT_CONTENT_FORMATS = ["plain", "markdown"] as const;
 
-export type CommentImageMimeType = RasterImageMimeType;
+export type CommentImageMimeType =
+	(typeof COMMENT_IMAGE_ALLOWED_MIME_TYPES)[number];
 type CommentContentFormat = (typeof COMMENT_CONTENT_FORMATS)[number];
 
 type SegmenterLike = {
@@ -52,14 +52,18 @@ export function getCommentImageUploadIssue(file: CommentImageFileInput) {
 	if (!file.name.trim()) return "Choose an image file.";
 	if (!file.size || !file.bytes.length) return "Choose a non-empty image file.";
 	if (file.size > COMMENT_IMAGE_MAX_FILE_SIZE_BYTES) {
-		return "Keep comment images under 3MB.";
+		return "Keep comment images under 2MB.";
 	}
 
 	if (
 		!detectedType ||
 		!COMMENT_IMAGE_ALLOWED_MIME_TYPES.includes(
-			declaredType as CommentImageMimeType,
-		)
+			detectedType as CommentImageMimeType,
+		) ||
+		(declaredType &&
+			!COMMENT_IMAGE_ALLOWED_MIME_TYPES.includes(
+				declaredType as CommentImageMimeType,
+			))
 	) {
 		return "Upload a PNG, JPG, or WebP image.";
 	}

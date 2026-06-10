@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, Download, Menu, Plus, Share2, Smartphone } from "lucide-react";
+import { CheckCircle2, Download, Menu, Plus, Share2, Smartphone } from "@/components/ui/solar-icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {

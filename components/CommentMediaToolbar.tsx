@@ -80,7 +80,7 @@ export default function CommentMediaToolbar({
 			if (!data.attachment) throw new Error("Image upload failed.");
 
 			onAttachmentChange(data.attachment);
-			toast.success("Image attached.");
+			toast.success("Media attached.");
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Image upload failed.");
 		} finally {
@@ -142,7 +142,7 @@ export default function CommentMediaToolbar({
 					{attachmentUrl ? (
 						<img alt={attachment.alt_text || attachment.title} src={attachmentUrl} />
 					) : null}
-					<span>{attachment.title || "Image"}</span>
+					<span>{attachment.title || "Media"}</span>
 					<button
 						aria-label="Remove attached media"
 						disabled={disabled}

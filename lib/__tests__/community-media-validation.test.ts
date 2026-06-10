@@ -9,6 +9,7 @@ import {
 const pngBytes = new Uint8Array([
 	0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
 ]);
+const gifBytes = new Uint8Array([0x47, 0x49, 0x46, 0x38, 0x39, 0x61]);
 
 describe("community post image validation", () => {
 	it("detects supported raster image signatures", () => {
@@ -30,7 +31,7 @@ describe("community post image validation", () => {
 				size: COMMUNITY_POST_IMAGE_MAX_FILE_SIZE_BYTES + 1,
 				type: "image/png",
 			}),
-		).toBe("Keep post images under 5MB.");
+		).toBe("Keep post images under 2MB.");
 	});
 
 	it("rejects spoofed upload content", () => {
@@ -42,5 +43,16 @@ describe("community post image validation", () => {
 				type: "image/jpeg",
 			}),
 		).toBe("The image file type does not match its contents.");
+	});
+
+	it("keeps GIF uploads disabled for community posts", () => {
+		expect(
+			getCommunityPostImageUploadIssue({
+				bytes: gifBytes,
+				name: "clip.gif",
+				size: gifBytes.length,
+				type: "image/gif",
+			}),
+		).toBe("Upload a PNG, JPG, or WebP image.");
 	});
 });

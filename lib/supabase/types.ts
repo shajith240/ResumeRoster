@@ -92,6 +92,7 @@ export type ResumeAuthorProfile = {
   target_role?: string | null;
   current_position?: string | null;
   app_status?: AppStatus | null;
+  is_online?: boolean;
   community_role?: CommunityRole | null;
   reviewer_type?: ReviewerType | null;
   reviewer_headline?: string | null;
@@ -159,6 +160,7 @@ export type ReviewerProfileStats = {
   target_role: string | null;
   current_position?: string | null;
   app_status?: AppStatus | null;
+  is_online?: boolean;
   community_role?: CommunityRole | null;
   reviewer_type?: ReviewerType | null;
   reviewer_headline?: string | null;
@@ -179,6 +181,7 @@ export type ReviewerLeaderboardEntry = {
   target_role: string | null;
   current_position?: string | null;
   app_status?: AppStatus | null;
+  is_online?: boolean;
   community_role?: CommunityRole | null;
   reviewer_type?: ReviewerType | null;
   reviewer_headline?: string | null;
@@ -269,6 +272,7 @@ export type CommunityPostComment = {
   post_id: string;
   parent_id: string | null;
   author_id: string;
+  attachment_id?: string | null;
   body: string;
   status: CommunityCommentStatus;
   reply_count: number;

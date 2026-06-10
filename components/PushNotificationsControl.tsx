@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { BellOff, BellRing, Loader2 } from "lucide-react";
+import { BellOff, BellRing, Loader2 } from "@/components/ui/solar-icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {

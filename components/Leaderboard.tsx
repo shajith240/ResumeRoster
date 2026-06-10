@@ -21,6 +21,7 @@ import {
 	enhanceReviewer,
 	sortReviewers,
 } from "@/lib/leaderboard-ranking";
+import { loadOnlineProfileIds } from "@/lib/online-presence";
 import { supabase } from "@/lib/supabase/client";
 import type {
 	ReviewerLeaderboardEntry,
@@ -202,6 +203,19 @@ function normalizeProfileStats(profile: ReviewerProfileStats): ReviewerProfileSt
 	};
 }
 
+async function applyOnlinePresence<T extends { id: string }>(profiles: T[]) {
+	if (!profiles.length) return profiles;
+
+	const onlineProfileIds = await loadOnlineProfileIds(
+		profiles.map((profile) => profile.id),
+	);
+
+	return profiles.map((profile) => ({
+		...profile,
+		is_online: onlineProfileIds.has(profile.id),
+	}));
+}
+
 async function fetchReviewerDirectory() {
 	const profileResult = await supabase
 		.from("profiles")
@@ -250,8 +264,11 @@ async function fetchReviewerDirectory() {
 		topReviews = bestReviewMap((reviewRows ?? []) as ReviewRow[]);
 	}
 
+	const profilesWithPresence = await applyOnlinePresence(profiles);
 	const ranked = sortReviewers(
-		profiles.map((profile) => enhanceReviewer(profile, topReviews[profile.id])),
+		profilesWithPresence.map((profile) =>
+			enhanceReviewer(profile, topReviews[profile.id]),
+		),
 	);
 
 	return {
@@ -276,14 +293,17 @@ async function enrichLeaderboardReviewers(
 		topReviews = bestReviewMap((reviewRows ?? []) as ReviewRow[]);
 	}
 
+	const reviewersWithPresence = await applyOnlinePresence(
+		baseReviewers.map((reviewer) =>
+			mergeProfileMetadata(reviewer, profilesById[reviewer.id]),
+		),
+	);
+
 	return {
 		message: errorMessage,
 		reviewers: sortReviewers(
-			baseReviewers.map((reviewer) =>
-				enhanceReviewer(
-					mergeProfileMetadata(reviewer, profilesById[reviewer.id]),
-					topReviews[reviewer.id],
-				),
+			reviewersWithPresence.map((reviewer) =>
+				enhanceReviewer(reviewer, topReviews[reviewer.id]),
 			),
 		).slice(0, LEADERBOARD_LIMIT),
 	};
@@ -344,10 +364,12 @@ async function fetchLeaderboardData(range: TimeRange) {
 		}, {});
 		const topReviews = bestReviewMap(reviewRows);
 
+		const profilesWithPresence = await applyOnlinePresence(profiles);
+
 		return {
 			message: "",
 			reviewers: sortReviewers(
-				profiles.map((profile) =>
+				profilesWithPresence.map((profile) =>
 					enhanceReviewer(profile, topReviews[profile.id], stats[profile.id]),
 				),
 			).slice(0, LEADERBOARD_LIMIT),

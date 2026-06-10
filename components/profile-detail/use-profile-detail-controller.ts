@@ -45,6 +45,7 @@ export function useProfileDetailController(profileId: string) {
 	const [profile, setProfile] = useState<PublicProfile | null>(null);
 	const [reviews, setReviews] = useState<PublicProfileReview[]>([]);
 	const [resumes, setResumes] = useState<PublicProfileResume[]>([]);
+	const [isOnline, setIsOnline] = useState(false);
 	const [fullName, setFullName] = useState("");
 	const [username, setUsername] = useState("");
 	const [tagline, setTagline] = useState("");
@@ -87,6 +88,7 @@ export function useProfileDetailController(profileId: string) {
 			const {
 				activeUser,
 				errorMessage,
+				isOnline: loadedIsOnline,
 				loadedProfile,
 				loadedResumes,
 				loadedReviews,
@@ -95,11 +97,13 @@ export function useProfileDetailController(profileId: string) {
 
 			if (errorMessage || !loadedProfile) {
 				setMessage(errorMessage);
+				setIsOnline(false);
 				setLoading(false);
 				return;
 			}
 
 			setProfile(loadedProfile);
+			setIsOnline(loadedIsOnline || activeUser?.id === loadedProfile.id);
 			setReviews(loadedReviews);
 			setResumes(loadedResumes);
 			setFullName(
@@ -394,6 +398,7 @@ export function useProfileDetailController(profileId: string) {
 		editOpen,
 		fullName,
 		handleAvatarChange,
+		isOnline,
 		isOwnProfile,
 		loading,
 		message,

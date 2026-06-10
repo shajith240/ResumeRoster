@@ -10,7 +10,7 @@ import {
 	ShieldAlert,
 	Trash2,
 	UserX,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import { Button } from "@/components/ui/button";
 import { ActionButton, EmptyPanel, PanelHeader } from "./shared";
 import {

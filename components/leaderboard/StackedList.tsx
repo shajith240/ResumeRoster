@@ -13,6 +13,7 @@ import {
 
 import LintPointsFlame from "@/components/LintPointsFlame";
 import { Input } from "@/components/ui/input";
+import { PresenceAvatar } from "@/components/user-presence/PresenceAvatar";
 import { cn } from "@/lib/utils";
 import {
 	getGeneratedAvatarUrl,
@@ -182,18 +183,20 @@ function LeaderboardAvatar({
 	const avatarUrl = resolveProfileAvatarUrl(reviewer, reviewer.id || name);
 
 	return (
-		<div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full border border-[rgba(214,179,100,0.52)] bg-[var(--bg-elevated)]">
-			<img
-				src={avatarUrl}
-				alt={`${name} profile photo`}
-				className="h-full w-full object-cover"
-				onError={(event) => {
-					if (event.currentTarget.src !== fallbackUrl) {
-						event.currentTarget.src = fallbackUrl;
-					}
-				}}
-			/>
-		</div>
+		<PresenceAvatar isOnline={reviewer.is_online} size="lg">
+			<span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full border border-[rgba(214,179,100,0.52)] bg-[var(--bg-elevated)]">
+				<img
+					src={avatarUrl}
+					alt={`${name} profile photo`}
+					className="h-full w-full object-cover"
+					onError={(event) => {
+						if (event.currentTarget.src !== fallbackUrl) {
+							event.currentTarget.src = fallbackUrl;
+						}
+					}}
+				/>
+			</span>
+		</PresenceAvatar>
 	);
 }
 
@@ -311,17 +314,22 @@ function AvatarStack({ reviewers }: { reviewers: RankedReviewer[] }) {
 				const avatarUrl = resolveProfileAvatarUrl(reviewer, reviewer.id || name);
 
 				return (
-					<img
-						alt={`${name} profile photo`}
-						className="h-10 w-10 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elevated)] object-cover ring-2 ring-[var(--bg-surface)]"
+					<PresenceAvatar
 						key={reviewer.id}
-						onError={(event) => {
-							if (event.currentTarget.src !== fallbackUrl) {
-								event.currentTarget.src = fallbackUrl;
-							}
-						}}
-						src={avatarUrl}
-					/>
+						isOnline={reviewer.is_online}
+						size="md"
+					>
+						<img
+							alt={`${name} profile photo`}
+							className="h-10 w-10 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elevated)] object-cover ring-2 ring-[var(--bg-surface)]"
+							onError={(event) => {
+								if (event.currentTarget.src !== fallbackUrl) {
+									event.currentTarget.src = fallbackUrl;
+								}
+							}}
+							src={avatarUrl}
+						/>
+					</PresenceAvatar>
 				);
 			})}
 			{remaining ? (

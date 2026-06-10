@@ -1,0 +1,34 @@
+.root {
+	position: relative;
+	display: inline-grid;
+	width: fit-content;
+	height: fit-content;
+	flex: 0 0 auto;
+	line-height: 0;
+}
+
+.dot {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: 2px solid var(--presence-avatar-ring, var(--bg-surface));
+	border-radius: 999px;
+	background: #22c55e;
+	box-shadow: 0 0 0 1px rgba(9, 18, 28, 0.2);
+}
+
+.sm .dot {
+	width: 0.5rem;
+	height: 0.5rem;
+	border-width: 1.5px;
+}
+
+.md .dot {
+	width: 0.625rem;
+	height: 0.625rem;
+}
+
+.lg .dot {
+	width: 0.75rem;
+	height: 0.75rem;
+}

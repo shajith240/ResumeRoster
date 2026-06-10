@@ -9,6 +9,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type CommunityCommentSubmitBody = {
+	attachmentId?: unknown;
 	body?: unknown;
 	parentId?: unknown;
 	postId?: unknown;
@@ -22,6 +23,9 @@ type SubmitCommunityCommentResult = {
 function jsonResponse(message: string, status = 400) {
 	return NextResponse.json({ message }, { status });
 }
+
+const UUID_PATTERN =
+	/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function getBearerToken(request: Request) {
 	const authorization = request.headers.get("authorization") ?? "";
@@ -38,9 +42,11 @@ async function readJsonBody(request: Request) {
 }
 
 function getCommentIssue({
+	attachmentId,
 	body,
 	postId,
 }: {
+	attachmentId: string | null;
 	body: string;
 	postId: string;
 }) {
@@ -48,10 +54,14 @@ function getCommentIssue({
 	if (!body) return "Write a comment.";
 	if (body.length < 2) return "Write at least 2 characters.";
 	if (body.length > 6000) return "Keep comments under 6000 characters.";
+	if (attachmentId && !UUID_PATTERN.test(attachmentId)) {
+		return "Choose a valid image.";
+	}
 	return "";
 }
 
 function getPublicRpcError(message: string) {
+	if (/attachment|image|media/i.test(message)) return "Choose a valid image.";
 	if (/deep|depth/i.test(message)) return "This thread is too deep for more replies.";
 	if (/comment/i.test(message)) return "This post is not open for comments.";
 	if (/parent/i.test(message)) return "Choose an active parent comment.";
@@ -100,7 +110,8 @@ export async function POST(request: Request) {
 	const body = cleanCommunityText(payload.body);
 	const postId = cleanCommunityText(payload.postId);
 	const parentId = cleanCommunityText(payload.parentId) || null;
-	const issue = getCommentIssue({ body, postId });
+	const attachmentId = cleanCommunityText(payload.attachmentId) || null;
+	const issue = getCommentIssue({ attachmentId, body, postId });
 
 	if (issue) {
 		return jsonResponse(issue);
@@ -114,6 +125,7 @@ export async function POST(request: Request) {
 	if (rateLimitResponse) return rateLimitResponse;
 
 	const submitComment = await admin.rpc("submit_community_comment", {
+		comment_attachment_id: attachmentId,
 		comment_body: body,
 		parent_comment_id: parentId,
 		target_post_id: postId,

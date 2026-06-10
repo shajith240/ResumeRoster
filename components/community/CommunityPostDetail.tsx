@@ -30,12 +30,14 @@ import {
 	Unlock,
 } from "@/components/ui/solar-icons";
 import { toast } from "sonner";
+import type { CommentAttachmentOption } from "@/components/CommentMediaToolbar";
 import CommunityMarkdown from "@/components/community/CommunityMarkdown";
 import CommunityMediaGallery from "@/components/community/CommunityMediaGallery";
 import LoadingScreen from "@/components/LoadingScreen";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import ReactionIcon from "@/components/reactions/ReactionIcon";
 import { CommentComposer } from "@/components/resume-detail/comment-composer";
+import { PresenceAvatar } from "@/components/user-presence/PresenceAvatar";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -51,8 +53,12 @@ import { getFreshAuthSession } from "@/lib/auth-session";
 import {
 	buildMentionSuggestions,
 	buildMentionTargetMap,
+	extractMentionHandlesFromTexts,
 	getMentionHandleKey,
+	lookupMentionSuggestionsByHandles,
 	MENTION_TEXT_PATTERN,
+	mergeMentionSuggestions,
+	type MentionSuggestion,
 } from "@/lib/comment-mentions";
 import { COMMUNITY_POST_TYPE_LABELS, type CommunityPostType } from "@/lib/community";
 import {
@@ -77,9 +83,11 @@ import {
 	type ReportReason,
 } from "@/lib/report-validation";
 import { removeRecentPost, writeRecentPost } from "@/lib/recent-posts";
+import { loadOnlineProfileIds } from "@/lib/online-presence";
 import { resolveProfileAvatarUrl } from "@/lib/supabase/avatars";
 import { supabase } from "@/lib/supabase/client";
 import type {
+	CommentAttachment,
 	CommunityPostAttachment,
 	CommunityPostComment,
 	CommunityPostPoll,
@@ -121,9 +129,14 @@ type PublicAttachment = CommunityPostAttachment & {
 	publicUrl: string;
 };
 
+type CommunityCommentLoadResult = {
+	data: CommunityPostComment[];
+	error: { message?: string } | null;
+};
+
 type ProfilePreview = Pick<
 	ResumeAuthorProfile,
-	"avatar_path" | "avatar_url" | "full_name" | "id" | "username"
+	"avatar_path" | "avatar_url" | "full_name" | "id" | "is_online" | "username"
 >;
 
 type SubmitCommentResponse = {
@@ -210,6 +223,10 @@ type CommunityPollView = CommunityPostPoll & {
 };
 
 type MobileSheetState = "open" | "peek";
+
+const COMMUNITY_COMMENT_SELECT =
+	"id,post_id,parent_id,author_id,body,status,reply_count,upvote_count,downvote_count,deleted_at,created_at,updated_at";
+const COMMUNITY_COMMENT_WITH_ATTACHMENT_SELECT = `${COMMUNITY_COMMENT_SELECT},attachment_id`;
 
 function formatDate(value: string) {
 	return new Intl.DateTimeFormat(undefined, {
@@ -327,6 +344,65 @@ function findCommunityCommentNode(
 	return null;
 }
 
+function isCommunityCommentMediaFeatureError(error: { message?: string } | null) {
+	return /attachment_id|comment_attachments|schema cache|column/i.test(
+		error?.message ?? "",
+	);
+}
+
+async function fetchCommunityComments(
+	postId: string,
+): Promise<CommunityCommentLoadResult> {
+	const commentResult = await supabase
+		.from("community_post_comments")
+		.select(COMMUNITY_COMMENT_WITH_ATTACHMENT_SELECT)
+		.eq("post_id", postId)
+		.order("created_at", { ascending: true });
+
+	if (!commentResult.error || !isCommunityCommentMediaFeatureError(commentResult.error)) {
+		return {
+			data: (commentResult.data ?? []) as CommunityPostComment[],
+			error: commentResult.error ?? null,
+		};
+	}
+
+	const fallbackResult = await supabase
+		.from("community_post_comments")
+		.select(COMMUNITY_COMMENT_SELECT)
+		.eq("post_id", postId)
+		.order("created_at", { ascending: true });
+	const fallbackComments = ((fallbackResult.data ?? []) as CommunityPostComment[]).map(
+		(comment) => ({
+			...comment,
+			attachment_id: null,
+		}),
+	);
+
+	return {
+		data: fallbackComments,
+		error: fallbackResult.error ?? null,
+	};
+}
+
+function CommunityCommentAttachment({
+	attachment,
+}: {
+	attachment?: CommentAttachmentOption | null;
+}) {
+	if (!attachment?.publicUrl) return null;
+
+	return (
+		<figure className="roast-attachment">
+			<img
+				alt={attachment.alt_text || attachment.title}
+				decoding="async"
+				loading="lazy"
+				src={attachment.publicUrl}
+			/>
+		</figure>
+	);
+}
+
 function isMissingPollSchema(message: string) {
 	return /community_post_polls|community_post_poll_options|community_post_poll_votes|schema cache|relation .* does not exist/i.test(
 		message,
@@ -338,6 +414,11 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	const { isAdmin } = useAdminAccess();
 	const [actionBusy, setActionBusy] = useState("");
 	const [attachments, setAttachments] = useState<PublicAttachment[]>([]);
+	const [commentAttachment, setCommentAttachment] =
+		useState<CommentAttachmentOption | null>(null);
+	const [commentAttachmentsById, setCommentAttachmentsById] = useState<
+		Record<string, CommentAttachmentOption>
+	>({});
 	const [commentBody, setCommentBody] = useState("");
 	const [commentContentFormat, setCommentContentFormat] =
 		useState<CommentContentFormat>("plain");
@@ -368,7 +449,13 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		null,
 	);
 	const [profiles, setProfiles] = useState<Record<string, ProfilePreview>>({});
+	const [resolvedMentionSuggestions, setResolvedMentionSuggestions] = useState<
+		MentionSuggestion[]
+	>([]);
 	const [replyBodies, setReplyBodies] = useState<Record<string, string>>({});
+	const [replyAttachments, setReplyAttachments] = useState<
+		Record<string, CommentAttachmentOption | null>
+	>({});
 	const [replyContentFormat, setReplyContentFormat] =
 		useState<CommentContentFormat>("plain");
 	const [replyingToId, setReplyingToId] = useState("");
@@ -438,13 +525,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 					)
 					.eq("post_id", postId)
 					.order("display_order", { ascending: true }),
-				supabase
-					.from("community_post_comments")
-					.select(
-						"id,post_id,parent_id,author_id,body,status,reply_count,upvote_count,downvote_count,deleted_at,created_at,updated_at",
-					)
-					.eq("post_id", postId)
-					.order("created_at", { ascending: true }),
+				fetchCommunityComments(postId),
 				userId
 					? supabase
 							.from("community_post_votes")
@@ -476,17 +557,23 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 				...nextComments.map((comment) => comment.author_id),
 			]),
 		);
-		const profileResult = authorIds.length
-			? await supabase
-					.from("profiles")
-					.select("id,username,full_name,avatar_url,avatar_path")
-					.in("id", authorIds)
-			: { data: [], error: null };
+		const [profileResult, onlineProfileIds] = authorIds.length
+			? await Promise.all([
+					supabase
+						.from("profiles")
+						.select("id,username,full_name,avatar_url,avatar_path")
+						.in("id", authorIds),
+					loadOnlineProfileIds(authorIds),
+				])
+			: [{ data: [], error: null }, new Set<string>()] as const;
 
 		const nextProfiles = ((profileResult.data ?? []) as ProfilePreview[]).reduce<
 			Record<string, ProfilePreview>
 		>((profileMap, profile) => {
-			profileMap[profile.id] = profile;
+			profileMap[profile.id] = {
+				...profile,
+				is_online: onlineProfileIds.has(profile.id),
+			};
 			return profileMap;
 		}, {});
 
@@ -509,9 +596,43 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 				.from("community-post-media")
 				.getPublicUrl(attachment.storage_path).data.publicUrl,
 		}));
+		const commentAttachmentIds = Array.from(
+			new Set(
+				nextComments
+					.filter(
+						(comment) =>
+							comment.status !== "deleted" &&
+							comment.status !== "removed" &&
+							Boolean(comment.attachment_id),
+					)
+					.map((comment) => comment.attachment_id as string),
+			),
+		);
+		const commentAttachmentResult = commentAttachmentIds.length
+			? await supabase
+					.from("comment_attachments")
+					.select(
+						"id,kind,source,storage_path,title,alt_text,mime_type,file_size,created_at",
+					)
+					.in("id", commentAttachmentIds)
+			: { data: [], error: null };
+		const nextCommentAttachmentsById = (
+			(commentAttachmentResult.data ?? []) as CommentAttachment[]
+		).reduce<Record<string, CommentAttachmentOption>>((attachmentMap, attachment) => {
+			if (!attachment.storage_path) return attachmentMap;
+
+			attachmentMap[attachment.id] = {
+				...attachment,
+				publicUrl: supabase.storage
+					.from("comment-media")
+					.getPublicUrl(attachment.storage_path).data.publicUrl,
+			};
+			return attachmentMap;
+		}, {});
 
 		setTopic(nextTopic);
 		setAttachments(nextAttachments);
+		setCommentAttachmentsById(nextCommentAttachmentsById);
 
 		const pollResult = await supabase
 			.from("community_post_polls")
@@ -621,7 +742,18 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		() => buildCommunityCommentTree(comments),
 		[comments],
 	);
-	const communityMentionSuggestions = useMemo(() => {
+	const mentionedHandles = useMemo(
+		() =>
+			extractMentionHandlesFromTexts([
+				post?.body ?? "",
+				...comments
+					.filter((comment) => comment.status === "active")
+					.map((comment) => comment.body),
+			]),
+		[comments, post?.body],
+	);
+	const mentionedHandlesKey = mentionedHandles.join("\u001f");
+	const localCommunityMentionSuggestions = useMemo(() => {
 		if (!post) return [];
 
 		return buildMentionSuggestions(
@@ -635,16 +767,56 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			},
 		);
 	}, [comments, currentUserId, post, profiles]);
-	const communityMentionTargets = useMemo(() => {
-		if (!post) return {};
-
-		return buildMentionTargetMap(
-			buildMentionSuggestions(
-				[post.author_id, ...comments.map((comment) => comment.author_id)],
-				profiles,
+	const communityMentionSuggestions = useMemo(
+		() =>
+			mergeMentionSuggestions(
+				localCommunityMentionSuggestions,
+				resolvedMentionSuggestions,
+				120,
 			),
-		);
-	}, [comments, post, profiles]);
+		[localCommunityMentionSuggestions, resolvedMentionSuggestions],
+	);
+	const communityMentionTargets = useMemo(() => {
+		return buildMentionTargetMap(communityMentionSuggestions);
+	}, [communityMentionSuggestions]);
+
+	useEffect(() => {
+		if (!mentionedHandles.length) {
+			setResolvedMentionSuggestions([]);
+			return;
+		}
+
+		const controller = new AbortController();
+		let cancelled = false;
+
+		async function loadMentionTargets() {
+			const { session } = await getFreshAuthSession();
+			const suggestions = await lookupMentionSuggestionsByHandles(
+				mentionedHandles,
+				{
+					accessToken: session?.access_token,
+					limit: 120,
+					signal: controller.signal,
+				},
+			);
+
+			if (!cancelled) {
+				setResolvedMentionSuggestions(suggestions);
+			}
+		}
+
+		void loadMentionTargets().catch((error) => {
+			if (cancelled || controller.signal.aborted) return;
+			if (error instanceof DOMException && error.name === "AbortError") return;
+
+			setResolvedMentionSuggestions([]);
+		});
+
+		return () => {
+			cancelled = true;
+			controller.abort();
+		};
+	}, [mentionedHandles, mentionedHandlesKey]);
 
 	function renderCommunityTextWithMentions(text: string, keyPrefix: string) {
 		const nodes: ReactNode[] = [];
@@ -728,7 +900,11 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		}
 	}
 
-	async function submitComment(parentId: string | null, body: string) {
+	async function submitComment(
+		parentId: string | null,
+		body: string,
+		attachment: CommentAttachmentOption | null,
+	) {
 		if (!post) return;
 
 		const cleanedBody = body.trim();
@@ -761,6 +937,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			"/api/community/comments/submit",
 			{
 				body: {
+					attachmentId: attachment?.id ?? null,
 					body: cleanedBody,
 					parentId,
 					postId: post.id,
@@ -774,8 +951,10 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 		if (parentId) {
 			setReplyBodies((current) => ({ ...current, [parentId]: "" }));
+			updateReplyAttachment(parentId, null);
 			setReplyingToId("");
 		} else {
+			setCommentAttachment(null);
 			setCommentBody("");
 			setCommentContentFormat("plain");
 			setRootCommentComposerOpen(false);
@@ -794,10 +973,11 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 	async function handleRootCommentSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		await submitComment(null, commentBody);
+		await submitComment(null, commentBody, commentAttachment);
 	}
 
 	function handleRootCommentCancel() {
+		setCommentAttachment(null);
 		setCommentBody("");
 		setCommentContentFormat("plain");
 		setRootCommentComposerOpen(false);
@@ -808,7 +988,11 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		parentId: string,
 	) {
 		event.preventDefault();
-		await submitComment(parentId, replyBodies[parentId] ?? "");
+		await submitComment(
+			parentId,
+			replyBodies[parentId] ?? "",
+			replyAttachments[parentId] ?? null,
+		);
 	}
 
 	async function handlePostVote(reaction: CommunityVoteReaction) {
@@ -1114,6 +1298,21 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		toast.error("Sign in to comment.");
 	}
 
+	function updateReplyAttachment(
+		commentId: string,
+		attachment: CommentAttachmentOption | null,
+	) {
+		setReplyAttachments((current) => {
+			const next = { ...current };
+			if (attachment) {
+				next[commentId] = attachment;
+			} else {
+				delete next[commentId];
+			}
+			return next;
+		});
+	}
+
 	function toggleCommentReplies(commentId: string) {
 		setCollapsedCommentIds((current) => {
 			const next = new Set(current);
@@ -1392,6 +1591,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 				row.id === comment.id
 					? {
 							...row,
+							attachment_id: null,
 							body: "[deleted]",
 							deleted_at: result.comment?.deletedAt ?? row.deleted_at,
 							status: result.comment?.status ?? "deleted",
@@ -1578,14 +1778,16 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 						{isUnavailable ? (
 							<span className="thread-roast-avatar is-deleted">D</span>
 						) : (
-							<img
-								alt=""
-								aria-hidden="true"
-								className="thread-roast-avatar"
-								height={32}
-								src={getCommunityAuthorAvatar(node.author_id, profile)}
-								width={32}
-							/>
+							<PresenceAvatar isOnline={profile?.is_online} size="md">
+								<img
+									alt=""
+									aria-hidden="true"
+									className="thread-roast-avatar"
+									height={32}
+									src={getCommunityAuthorAvatar(node.author_id, profile)}
+									width={32}
+								/>
+							</PresenceAvatar>
 						)}
 					</div>
 					<div className="thread-roast-body">
@@ -1661,11 +1863,20 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 								</div>
 							</form>
 						) : (
-							<CommunityMarkdown
-								className="community-comment-body"
-								content={node.body}
-								renderText={renderCommunityTextWithMentions}
-							/>
+							<>
+								<CommunityMarkdown
+									className="community-comment-body"
+									content={node.body}
+									renderText={renderCommunityTextWithMentions}
+								/>
+								<CommunityCommentAttachment
+									attachment={
+										node.attachment_id
+											? commentAttachmentsById[node.attachment_id]
+											: null
+									}
+								/>
+							</>
 						)}
 
 						{node.status !== "active" || isEditing ? null : (
@@ -1810,16 +2021,21 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 								}}
 							>
 								<CommentComposer
-									attachment={null}
+									attachment={replyAttachments[node.id] ?? null}
 									autoFocus
 									className="comment-composer-reply"
 									contentFormat={replyContentFormat}
-									disabledTools
+									disabledTools={actionBusy === `reply-${node.id}`}
 									maxHeight={220}
 									minHeight={56}
 									mentionSuggestions={communityMentionSuggestions}
-									onAttachmentChange={() => undefined}
-									onCancel={() => setReplyingToId("")}
+									onAttachmentChange={(attachment) =>
+										updateReplyAttachment(node.id, attachment)
+									}
+									onCancel={() => {
+										updateReplyAttachment(node.id, null);
+										setReplyingToId("");
+									}}
 									onChange={(value) =>
 										setReplyBodies((current) => ({
 											...current,
@@ -1829,6 +2045,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 									onFormatChange={setReplyContentFormat}
 									onRequireLogin={requireCommentLogin}
 									placeholder={`Reply to ${authorHandle}`}
+									showFormatTools={false}
 									submitDisabled={
 										actionBusy === `reply-${node.id}` ||
 										(replyBodies[node.id] ?? "").trim().length < 2
@@ -2102,13 +2319,15 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 					<span>Back</span>
 				</button>
 				<div className="community-mobile-viewer-title">
-					<img
-						alt=""
-						aria-hidden="true"
-						height={24}
-						src={getCommunityAuthorAvatar(post.author_id, authorProfile)}
-						width={24}
-					/>
+					<PresenceAvatar isOnline={authorProfile?.is_online} size="sm">
+						<img
+							alt=""
+							aria-hidden="true"
+							height={24}
+							src={getCommunityAuthorAvatar(post.author_id, authorProfile)}
+							width={24}
+						/>
+					</PresenceAvatar>
 					<span>{getAuthorName(authorProfile)}</span>
 				</div>
 				<button
@@ -2134,13 +2353,15 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 							className="community-author-badge"
 							href={`/profile/${post.author_id}`}
 						>
-							<img
-								alt=""
-								aria-hidden="true"
-								height={24}
-								src={getCommunityAuthorAvatar(post.author_id, authorProfile)}
-								width={24}
-							/>
+							<PresenceAvatar isOnline={authorProfile?.is_online} size="sm">
+								<img
+									alt=""
+									aria-hidden="true"
+									height={24}
+									src={getCommunityAuthorAvatar(post.author_id, authorProfile)}
+									width={24}
+								/>
+							</PresenceAvatar>
 							<span>{getAuthorName(authorProfile)}</span>
 						</Link>
 						<span className="badge role-badge">{topic?.name ?? "Community"}</span>
@@ -2463,21 +2684,22 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 								onSubmit={handleRootCommentSubmit}
 							>
 								<CommentComposer
-									attachment={null}
+									attachment={commentAttachment}
 									autoFocus
 									cancelLabel="Cancel"
 									className="community-root-comment-composer"
 									contentFormat={commentContentFormat}
-									disabledTools
+									disabledTools={actionBusy === "comment-root"}
 									maxHeight={160}
 									minHeight={44}
 									mentionSuggestions={communityMentionSuggestions}
-									onAttachmentChange={() => undefined}
+									onAttachmentChange={setCommentAttachment}
 									onCancel={handleRootCommentCancel}
 									onChange={setCommentBody}
 									onFormatChange={setCommentContentFormat}
 									onRequireLogin={requireCommentLogin}
 									placeholder="Join the conversation"
+									showFormatTools={false}
 									submitDisabled={
 										actionBusy === "comment-root" ||
 										commentBody.trim().length < 2
@@ -2503,18 +2725,19 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 						>
 							<CommentComposer
 								ariaLabel="Join the conversation"
-								attachment={null}
+								attachment={commentAttachment}
 								className="community-root-comment-composer community-root-comment-composer-mobile"
 								contentFormat={commentContentFormat}
-								disabledTools
+								disabledTools={actionBusy === "comment-root"}
 								maxHeight={96}
 								minHeight={40}
 								mentionSuggestions={communityMentionSuggestions}
-								onAttachmentChange={() => undefined}
+								onAttachmentChange={setCommentAttachment}
 								onChange={setCommentBody}
 								onFormatChange={setCommentContentFormat}
 								onRequireLogin={requireCommentLogin}
 								placeholder="Join the conversation"
+								showFormatTools={false}
 								submitDisabled={
 									actionBusy === "comment-root" || commentBody.trim().length < 2
 								}

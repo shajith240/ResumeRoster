@@ -9,6 +9,7 @@ import {
 import { toast } from "sonner";
 import ReactionIcon from "@/components/reactions/ReactionIcon";
 import { Button } from "@/components/ui/button";
+import { PresenceAvatar } from "@/components/user-presence/PresenceAvatar";
 import type { MentionSuggestion } from "@/lib/comment-mentions";
 import {
 	getReactionBlockReason,
@@ -207,14 +208,16 @@ export function ThreadReviewItem({
 					{isDeleted ? (
 						<span className="thread-roast-avatar is-deleted">D</span>
 					) : (
-						<img
-							className="thread-roast-avatar"
-							src={getAuthorAvatar(review.author_id, authorProfile)}
-							alt=""
-							width={32}
-							height={32}
-							aria-hidden="true"
-						/>
+						<PresenceAvatar isOnline={authorProfile?.is_online} size="md">
+							<img
+								className="thread-roast-avatar"
+								src={getAuthorAvatar(review.author_id, authorProfile)}
+								alt=""
+								width={32}
+								height={32}
+								aria-hidden="true"
+							/>
+						</PresenceAvatar>
 					)}
 				</div>
 				<div className="thread-roast-body">

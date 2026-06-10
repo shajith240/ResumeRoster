@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { POST } from "@/app/api/community/posts/submit/route";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@supabase/supabase-js", () => ({
 	createClient: vi.fn(),
@@ -18,6 +18,8 @@ vi.mock("@/lib/server/upload-security", () => ({
 
 const USER_ID = "11111111-1111-4111-8111-111111111111";
 const TOPIC_ID = "22222222-2222-4222-8222-222222222222";
+const originalScanMode = process.env.UPLOAD_MALWARE_SCAN_MODE;
+const originalScanUrl = process.env.UPLOAD_MALWARE_SCAN_URL;
 const pngBytes = new Uint8Array([
 	0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
 ]);
@@ -117,12 +119,28 @@ describe("community post submit route", () => {
 		process.env.NEXT_PUBLIC_COMMUNITY_POSTS_ENABLED = "true";
 		process.env.NEXT_PUBLIC_SUPABASE_URL = "https://supabase.test";
 		process.env.SUPABASE_SERVICE_ROLE_KEY = "service-role-key";
+		delete process.env.UPLOAD_MALWARE_SCAN_MODE;
+		delete process.env.UPLOAD_MALWARE_SCAN_URL;
 		vi.mocked(enforceApiRateLimit).mockResolvedValue(null);
 		vi.mocked(enforceUploadSecurity).mockResolvedValue({
 			ok: true,
 			sha256:
 				"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
 		});
+	});
+
+	afterEach(() => {
+		if (originalScanMode === undefined) {
+			delete process.env.UPLOAD_MALWARE_SCAN_MODE;
+		} else {
+			process.env.UPLOAD_MALWARE_SCAN_MODE = originalScanMode;
+		}
+
+		if (originalScanUrl === undefined) {
+			delete process.env.UPLOAD_MALWARE_SCAN_URL;
+		} else {
+			process.env.UPLOAD_MALWARE_SCAN_URL = originalScanUrl;
+		}
 	});
 
 	it("keeps the endpoint closed when the feature flag is off", async () => {
@@ -299,6 +317,9 @@ describe("community post submit route", () => {
 				mimeType: "image/png",
 				uploadKind: "community-post-media",
 				userId: USER_ID,
+			}),
+			expect.objectContaining({
+				UPLOAD_MALWARE_SCAN_MODE: "optional",
 			}),
 		);
 		expect(upload).toHaveBeenCalledTimes(1);

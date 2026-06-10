@@ -3,8 +3,15 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { CommentAttachmentOption } from "@/components/CommentMediaToolbar";
 import type { GuidedReviewIssueType } from "@/lib/guided-review";
-import { buildMentionSuggestions } from "@/lib/comment-mentions";
+import {
+	buildMentionSuggestions,
+	extractMentionHandlesFromTexts,
+	lookupMentionSuggestionsByHandles,
+	mergeMentionSuggestions,
+	type MentionSuggestion,
+} from "@/lib/comment-mentions";
 import type { ThreadReviewNode } from "@/lib/resume-thread";
+import { supabase } from "@/lib/supabase/client";
 import type { CommentContentFormat } from "@/lib/supabase/types";
 import { CommentComposer } from "./comment-composer";
 import { GuidedReviewComposer } from "./guided-review-composer";
@@ -34,6 +41,22 @@ type DiscussionPanelProps = ThreadReviewControls & {
 	threadReviews: ThreadReviewNode[];
 	visibleReviewCount: number;
 };
+
+function getThreadMentionHandles(threadReviews: ThreadReviewNode[]) {
+	const reviewTexts: string[] = [];
+	const visitReview = (review: ThreadReviewNode) => {
+		if (!review.is_deleted) reviewTexts.push(review.content);
+		for (const child of review.children) {
+			visitReview(child);
+		}
+	};
+
+	for (const review of threadReviews) {
+		visitReview(review);
+	}
+
+	return extractMentionHandlesFromTexts(reviewTexts);
+}
 
 export function DiscussionPanel({
 	attachmentsById,
@@ -88,16 +111,72 @@ export function DiscussionPanel({
 }: DiscussionPanelProps) {
 	const feedbackLocked = isClosed || isWaiting;
 	const [rootComposerOpen, setRootComposerOpen] = useState(false);
+	const [resolvedMentionSuggestions, setResolvedMentionSuggestions] = useState<
+		MentionSuggestion[]
+	>([]);
 	const wasSubmittingRef = useRef(false);
 	const hasDraftContent = Boolean(content.trim()) || Boolean(selectedAttachment);
 	const showRootComposer = rootComposerOpen || hasDraftContent;
-	const mentionSuggestions = useMemo(
+	const localMentionSuggestions = useMemo(
 		() =>
 			buildMentionSuggestions(Object.keys(authorProfiles), authorProfiles, {
 				excludeUserId: user?.id,
 			}),
 		[authorProfiles, user?.id],
 	);
+	const mentionedHandles = useMemo(
+		() => getThreadMentionHandles(threadReviews),
+		[threadReviews],
+	);
+	const mentionedHandlesKey = mentionedHandles.join("\u001f");
+	const mentionSuggestions = useMemo(
+		() =>
+			mergeMentionSuggestions(
+				localMentionSuggestions,
+				resolvedMentionSuggestions,
+				120,
+			),
+		[localMentionSuggestions, resolvedMentionSuggestions],
+	);
+
+	useEffect(() => {
+		if (!mentionedHandles.length) {
+			setResolvedMentionSuggestions([]);
+			return;
+		}
+
+		const controller = new AbortController();
+		let cancelled = false;
+
+		async function loadMentionTargets() {
+			const session = await supabase.auth.getSession();
+			const accessToken = session.data.session?.access_token;
+			const suggestions = await lookupMentionSuggestionsByHandles(
+				mentionedHandles,
+				{
+					accessToken,
+					limit: 120,
+					signal: controller.signal,
+				},
+			);
+
+			if (!cancelled) {
+				setResolvedMentionSuggestions(suggestions);
+			}
+		}
+
+		void loadMentionTargets().catch((error) => {
+			if (cancelled || controller.signal.aborted) return;
+			if (error instanceof DOMException && error.name === "AbortError") return;
+
+			setResolvedMentionSuggestions([]);
+		});
+
+		return () => {
+			cancelled = true;
+			controller.abort();
+		};
+	}, [mentionedHandles, mentionedHandlesKey]);
 
 	useEffect(() => {
 		if (

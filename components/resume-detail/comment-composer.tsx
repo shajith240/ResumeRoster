@@ -18,9 +18,14 @@ import CommentMediaToolbar, {
 } from "@/components/CommentMediaToolbar";
 import {
 	getMentionAvatarUrl,
+	getCachedMentionSearchSuggestions,
+	getMentionSuggestionMatches,
+	mergeMentionSuggestions,
 	normalizeMentionHandle,
+	searchMentionSuggestions,
 	type MentionSuggestion,
 } from "@/lib/comment-mentions";
+import { supabase } from "@/lib/supabase/client";
 import type { CommentContentFormat } from "@/lib/supabase/types";
 
 type CommentComposerProps = {
@@ -40,6 +45,7 @@ type CommentComposerProps = {
 	onFormatChange: (format: CommentContentFormat) => void;
 	onRequireLogin: () => void;
 	placeholder: string;
+	showFormatTools?: boolean;
 	submitDisabled?: boolean;
 	submitLabel: string;
 	value: string;
@@ -53,6 +59,11 @@ type MentionQuery = {
 
 const MENTION_TRIGGER_PATTERN = /(^|[\s([{"'.,!?;:])@([A-Za-z0-9_.-]{0,32})$/;
 const MAX_MENTION_RESULTS = 6;
+const MAX_MENTION_FETCH_RESULTS = 12;
+const MENTION_SEARCH_DEBOUNCE_MS = 90;
+const MENTION_SESSION_REFRESH_BUFFER_MS = 30_000;
+
+type MentionSearchStatus = "idle" | "loading" | "error";
 
 function getActiveMentionQuery(value: string, cursorIndex: number | null) {
 	if (cursorIndex === null) return null;
@@ -107,6 +118,7 @@ export function CommentComposer({
 	onFormatChange,
 	onRequireLogin,
 	placeholder,
+	showFormatTools = true,
 	submitDisabled = false,
 	submitLabel,
 	value,
@@ -115,25 +127,82 @@ export function CommentComposer({
 	const mentionListId = useId();
 	const [mentionQuery, setMentionQuery] = useState<MentionQuery | null>(null);
 	const [activeMentionIndex, setActiveMentionIndex] = useState(0);
+	const [remoteMentionQuery, setRemoteMentionQuery] = useState("");
+	const [remoteMentionSuggestions, setRemoteMentionSuggestions] = useState<
+		MentionSuggestion[]
+	>([]);
+	const [cachedMentionSuggestions, setCachedMentionSuggestions] = useState<
+		MentionSuggestion[]
+	>([]);
+	const [mentionSearchStatus, setMentionSearchStatus] =
+		useState<MentionSearchStatus>("idle");
+	const mentionAccessTokenRef = useRef<string | null>(null);
+	const mentionAccessTokenExpiresAtRef = useRef(0);
+	const mentionAccessTokenPromiseRef = useRef<Promise<string | null> | null>(
+		null,
+	);
 	const normalizedMentionSuggestions = useMemo(
 		() => getNormalizedSuggestions(mentionSuggestions),
 		[mentionSuggestions],
 	);
+	const normalizedRemoteMentionSuggestions = useMemo(
+		() => getNormalizedSuggestions(remoteMentionSuggestions),
+		[remoteMentionSuggestions],
+	);
+	const normalizedCachedMentionSuggestions = useMemo(
+		() => getNormalizedSuggestions(cachedMentionSuggestions),
+		[cachedMentionSuggestions],
+	);
+	const mentionSearchQuery = mentionQuery?.query.trim().toLowerCase() ?? "";
 	const filteredMentionSuggestions = useMemo(() => {
 		if (!mentionQuery) return [];
 
-		const query = mentionQuery.query.toLowerCase();
-		const matches = normalizedMentionSuggestions.filter((suggestion) => {
-			const handle = suggestion.handle.toLowerCase();
-			const displayName = suggestion.displayName.toLowerCase();
+		const localMatches = getMentionSuggestionMatches(
+			normalizedMentionSuggestions,
+			mentionQuery.query,
+			MAX_MENTION_RESULTS,
+		);
+		const remoteMatches =
+			remoteMentionQuery === mentionSearchQuery
+				? normalizedRemoteMentionSuggestions
+				: [];
+		const cachedMatches = normalizedCachedMentionSuggestions;
 
-			return handle.includes(query) || displayName.includes(query);
-		});
-
-		return matches.slice(0, MAX_MENTION_RESULTS);
-	}, [mentionQuery, normalizedMentionSuggestions]);
+		return mergeMentionSuggestions(
+			localMatches,
+			mergeMentionSuggestions(remoteMatches, cachedMatches, MAX_MENTION_RESULTS),
+			MAX_MENTION_RESULTS,
+		);
+	}, [
+		mentionQuery,
+		mentionSearchQuery,
+		normalizedCachedMentionSuggestions,
+		normalizedMentionSuggestions,
+		normalizedRemoteMentionSuggestions,
+		remoteMentionQuery,
+	]);
+	const showMentionLoading = Boolean(
+		mentionSearchQuery &&
+			mentionSearchStatus === "loading" &&
+			filteredMentionSuggestions.length < MAX_MENTION_RESULTS,
+	);
+	const showMentionError = Boolean(
+		mentionSearchQuery &&
+			mentionSearchStatus === "error" &&
+			!filteredMentionSuggestions.length,
+	);
+	const showMentionEmpty = Boolean(
+		mentionSearchQuery &&
+			mentionSearchStatus === "idle" &&
+			remoteMentionQuery === mentionSearchQuery &&
+			!filteredMentionSuggestions.length,
+	);
 	const mentionListOpen = Boolean(
-		mentionQuery && filteredMentionSuggestions.length,
+		mentionQuery &&
+			(filteredMentionSuggestions.length ||
+				showMentionLoading ||
+				showMentionError ||
+				showMentionEmpty),
 	);
 	const activeMention = mentionListOpen
 		? filteredMentionSuggestions[activeMentionIndex]
@@ -151,14 +220,102 @@ export function CommentComposer({
 
 	useEffect(() => {
 		setActiveMentionIndex(0);
-	}, [mentionQuery?.query, normalizedMentionSuggestions.length]);
+	}, [filteredMentionSuggestions.length, mentionSearchQuery]);
 
-	function updateMentionQuery(nextValue: string, cursorIndex: number | null) {
-		if (!normalizedMentionSuggestions.length) {
-			setMentionQuery(null);
+	useEffect(() => {
+		if (!mentionQuery || !mentionSearchQuery) {
+			setCachedMentionSuggestions([]);
+			setRemoteMentionQuery("");
+			setRemoteMentionSuggestions([]);
+			setMentionSearchStatus("idle");
 			return;
 		}
 
+		const cached = getCachedMentionSearchSuggestions(
+			mentionSearchQuery,
+			MAX_MENTION_RESULTS,
+		);
+		setCachedMentionSuggestions(cached.suggestions);
+
+		if (cached.exact) {
+			setRemoteMentionQuery(mentionSearchQuery);
+			setRemoteMentionSuggestions(cached.suggestions);
+			setMentionSearchStatus("idle");
+			return;
+		}
+
+		const controller = new AbortController();
+		let cancelled = false;
+		if (!cached.suggestions.length) {
+			setMentionSearchStatus("loading");
+		}
+
+		const timeoutId = window.setTimeout(() => {
+			setMentionSearchStatus("loading");
+
+			async function searchPeople() {
+				const accessToken = await getMentionAccessToken();
+
+				const suggestions = await searchMentionSuggestions(mentionSearchQuery, {
+					accessToken,
+					limit: MAX_MENTION_FETCH_RESULTS,
+					signal: controller.signal,
+				});
+
+				if (cancelled) return;
+				setRemoteMentionQuery(mentionSearchQuery);
+				setRemoteMentionSuggestions(suggestions);
+				setMentionSearchStatus("idle");
+			}
+
+			void searchPeople().catch((error) => {
+				if (cancelled || controller.signal.aborted) return;
+				if (error instanceof DOMException && error.name === "AbortError") return;
+
+				setRemoteMentionQuery(mentionSearchQuery);
+				setRemoteMentionSuggestions([]);
+				setMentionSearchStatus("error");
+			});
+		}, MENTION_SEARCH_DEBOUNCE_MS);
+
+		return () => {
+			cancelled = true;
+			controller.abort();
+			window.clearTimeout(timeoutId);
+		};
+	}, [mentionSearchQuery]);
+
+	async function getMentionAccessToken() {
+		const now = Date.now();
+		if (
+			mentionAccessTokenRef.current &&
+			mentionAccessTokenExpiresAtRef.current - MENTION_SESSION_REFRESH_BUFFER_MS >
+				now
+		) {
+			return mentionAccessTokenRef.current;
+		}
+
+		if (!mentionAccessTokenPromiseRef.current) {
+			mentionAccessTokenPromiseRef.current = supabase.auth
+				.getSession()
+				.then(({ data }) => {
+					const session = data.session;
+					const accessToken = session?.access_token ?? null;
+					mentionAccessTokenRef.current = accessToken;
+					mentionAccessTokenExpiresAtRef.current = session?.expires_at
+						? session.expires_at * 1000
+						: 0;
+					return accessToken;
+				})
+				.finally(() => {
+					mentionAccessTokenPromiseRef.current = null;
+				});
+		}
+
+		return mentionAccessTokenPromiseRef.current;
+	}
+
+	function updateMentionQuery(nextValue: string, cursorIndex: number | null) {
 		setMentionQuery(getActiveMentionQuery(nextValue, cursorIndex));
 	}
 
@@ -204,6 +361,14 @@ export function CommentComposer({
 
 	function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
 		if (!mentionListOpen) return;
+
+		if (!filteredMentionSuggestions.length) {
+			if (event.key === "Escape") {
+				event.preventDefault();
+				closeMentionList();
+			}
+			return;
+		}
 
 		if (event.key === "ArrowDown") {
 			event.preventDefault();
@@ -261,9 +426,10 @@ export function CommentComposer({
 				aria-activedescendant={
 					activeMention ? `${mentionListId}-${activeMention.id}` : undefined
 				}
-				aria-autocomplete={mentionSuggestions.length ? "list" : undefined}
+				aria-autocomplete={mentionQuery ? "list" : undefined}
+				aria-busy={showMentionLoading || undefined}
 				aria-controls={mentionListOpen ? mentionListId : undefined}
-				aria-expanded={mentionSuggestions.length ? mentionListOpen : undefined}
+				aria-expanded={mentionQuery ? mentionListOpen : undefined}
 				aria-label={ariaLabel ?? placeholder}
 				autoFocus={autoFocus}
 				className="comment-composer-input"
@@ -324,6 +490,72 @@ export function CommentComposer({
 							</button>
 						);
 					})}
+					{showMentionLoading ? (
+						<button
+							aria-disabled="true"
+							className="mention-suggestion-button"
+							disabled
+							role="option"
+							type="button"
+						>
+							<span
+								aria-hidden="true"
+								className="mention-suggestion-avatar"
+							/>
+							<span className="mention-suggestion-copy">
+								<span className="mention-suggestion-handle">
+									Searching people...
+								</span>
+								<span className="mention-suggestion-name">
+									Checking the full member directory
+								</span>
+							</span>
+						</button>
+					) : null}
+					{showMentionError ? (
+						<button
+							aria-disabled="true"
+							className="mention-suggestion-button"
+							disabled
+							role="option"
+							type="button"
+						>
+							<span
+								aria-hidden="true"
+								className="mention-suggestion-avatar"
+							/>
+							<span className="mention-suggestion-copy">
+								<span className="mention-suggestion-handle">
+									Could not search people
+								</span>
+								<span className="mention-suggestion-name">
+									Try a handle or name again
+								</span>
+							</span>
+						</button>
+					) : null}
+					{showMentionEmpty ? (
+						<button
+							aria-disabled="true"
+							className="mention-suggestion-button"
+							disabled
+							role="option"
+							type="button"
+						>
+							<span
+								aria-hidden="true"
+								className="mention-suggestion-avatar"
+							/>
+							<span className="mention-suggestion-copy">
+								<span className="mention-suggestion-handle">
+									No people found
+								</span>
+								<span className="mention-suggestion-name">
+									Check the spelling and keep typing
+								</span>
+							</span>
+						</button>
+					) : null}
 				</div>
 			) : null}
 			<div className="comment-composer-footer">
@@ -335,6 +567,7 @@ export function CommentComposer({
 						onAttachmentChange={onAttachmentChange}
 						onFormatChange={onFormatChange}
 						onRequireLogin={onRequireLogin}
+						showFormat={showFormatTools}
 					/>
 				</div>
 				<div className="comment-composer-submit-row">

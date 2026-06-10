@@ -20,6 +20,7 @@ import CommunityMediaGallery from "@/components/community/CommunityMediaGallery"
 import FeedSkeleton from "@/components/feed/FeedSkeleton";
 import RecentPostsPanel from "@/components/RecentPostsPanel";
 import ReactionIcon from "@/components/reactions/ReactionIcon";
+import { PresenceAvatar } from "@/components/user-presence/PresenceAvatar";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -60,6 +61,7 @@ import {
 } from "@/lib/community-markdown";
 import { getOptimisticCommunityVoteCounts } from "@/lib/community-optimistic";
 import { removeRecentPost } from "@/lib/recent-posts";
+import { loadOnlineProfileIds } from "@/lib/online-presence";
 import { resolveProfileAvatarUrl } from "@/lib/supabase/avatars";
 import { supabase } from "@/lib/supabase/client";
 import { useAdminAccess } from "@/lib/use-admin-access";
@@ -111,7 +113,7 @@ type CommunityPostFeedItem = CommunityPostRow & {
 	attachments: Array<CommunityPostAttachment & { publicUrl: string }>;
 	authorProfile: Pick<
 		ResumeAuthorProfile,
-		"avatar_url" | "full_name" | "id" | "username"
+		"avatar_path" | "avatar_url" | "full_name" | "id" | "is_online" | "username"
 	> | null;
 	has_poll: boolean;
 	poll: CommunityPostFeedPoll | null;
@@ -377,6 +379,7 @@ export default function CommunityPostFeed() {
 			const [
 				attachmentResult,
 				profileResult,
+				onlineProfileIds,
 				pollResult,
 				topicResult,
 				voteReactions,
@@ -392,6 +395,7 @@ export default function CommunityPostFeed() {
 					.from("profiles")
 					.select("id,username,full_name,avatar_url,avatar_path")
 					.in("id", authorIds),
+				loadOnlineProfileIds(authorIds),
 				supabase
 					.from("community_post_polls")
 					.select("id,post_id,question,duration_days,closes_at,created_at,updated_at")
@@ -456,10 +460,13 @@ export default function CommunityPostFeed() {
 				]),
 			);
 			const profilesById = byId(
-				(profileResult.data ?? []) as Pick<
+				((profileResult.data ?? []) as Pick<
 					ResumeAuthorProfile,
 					"avatar_path" | "avatar_url" | "full_name" | "id" | "username"
-				>[],
+				>[]).map((profile) => ({
+					...profile,
+					is_online: onlineProfileIds.has(profile.id),
+				})),
 			);
 			const topicsById = byId((topicResult.data ?? []) as CommunityTopicRow[]);
 			const nextPosts = postRows.map((post) => ({
@@ -913,16 +920,21 @@ export default function CommunityPostFeed() {
 											className="community-author-badge"
 											href={`/profile/${post.author_id}`}
 										>
-											<img
-												alt=""
-												aria-hidden="true"
-												height={24}
-												src={getCommunityAuthorAvatar(
-													post.author_id,
-													post.authorProfile,
-												)}
-												width={24}
-											/>
+											<PresenceAvatar
+												isOnline={post.authorProfile?.is_online}
+												size="sm"
+											>
+												<img
+													alt=""
+													aria-hidden="true"
+													height={24}
+													src={getCommunityAuthorAvatar(
+														post.author_id,
+														post.authorProfile,
+													)}
+													width={24}
+												/>
+											</PresenceAvatar>
 											<span>{getAuthorName(post.authorProfile)}</span>
 										</Link>
 										<span className="badge role-badge">

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Trash } from "lucide-react";
+import { Trash } from "@/components/ui/solar-icons";
 import type { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
+import { PresenceAvatar } from "@/components/user-presence/PresenceAvatar";
 import {
 	getResumeAffiliationLabel,
 	getResumeRoleLabel,
@@ -75,6 +76,16 @@ export function ResumePreviewPane({
 	user,
 }: ResumePreviewPaneProps) {
 	const authorAvatar = getResumeDetailAuthorAvatar(resume, resumeAuthorProfile);
+	const authorAvatarImage = (
+		<img
+			alt=""
+			aria-hidden="true"
+			className="post-author-avatar"
+			height={24}
+			src={authorAvatar}
+			width={24}
+		/>
+	);
 
 	return (
 		<article className="thread-viewer-card resume-preview-pane">
@@ -82,14 +93,13 @@ export function ResumePreviewPane({
 				<div className="post-meta resume-detail-meta">
 					<div className="post-meta-main">
 						<span className="post-author-cluster">
-							<img
-								alt=""
-								aria-hidden="true"
-								className="post-author-avatar"
-								height={24}
-								src={authorAvatar}
-								width={24}
-							/>
+							{resume.is_anonymous ? (
+								authorAvatarImage
+							) : (
+								<PresenceAvatar isOnline={resumeAuthorProfile?.is_online} size="sm">
+									{authorAvatarImage}
+								</PresenceAvatar>
+							)}
 							{resume.is_anonymous ? (
 								<span className="post-author-name">{posterLabel}</span>
 							) : (

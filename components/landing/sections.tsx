@@ -2,7 +2,7 @@
 
 import type { Dispatch, RefObject, SetStateAction } from "react";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { Star } from "@/components/ui/solar-icons";
 import BrandMark from "@/components/BrandMark";
 import LandingCta from "@/components/LandingCta";
 import { getAppHomeRoute } from "@/lib/app-routes";

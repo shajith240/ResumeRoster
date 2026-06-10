@@ -68,6 +68,17 @@ type SubmitCommunityPostResult = {
 
 type SubmitFormat = "media" | "poll" | "text";
 
+function getCommunityPostMediaScanEnvironment() {
+	if (process.env.UPLOAD_MALWARE_SCAN_MODE || process.env.UPLOAD_MALWARE_SCAN_URL) {
+		return process.env;
+	}
+
+	return {
+		...process.env,
+		UPLOAD_MALWARE_SCAN_MODE: "optional",
+	};
+}
+
 function jsonResponse(message: string, status = 400) {
 	return NextResponse.json({ message }, { status });
 }
@@ -240,14 +251,18 @@ async function uploadPostImage(
 	const mimeType = detectCommunityPostImageMimeType(
 		bytes,
 	) as CommunityPostImageMimeType;
-	const uploadSecurity = await enforceUploadSecurity(admin, {
-		bytes,
-		fileName: file.name,
-		fileSize: file.size,
-		mimeType,
-		uploadKind: "community-post-media",
-		userId,
-	});
+	const uploadSecurity = await enforceUploadSecurity(
+		admin,
+		{
+			bytes,
+			fileName: file.name,
+			fileSize: file.size,
+			mimeType,
+			uploadKind: "community-post-media",
+			userId,
+		},
+		getCommunityPostMediaScanEnvironment(),
+	);
 
 	if (!uploadSecurity.ok) {
 		return { attachment: null, message: uploadSecurity.message };

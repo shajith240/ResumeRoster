@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { toast } from "sonner";
 import NotificationCenter from "@/components/NotificationCenter";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
@@ -15,12 +14,11 @@ import {
 	getAnonymousProfileUsername,
 	isGeneratedAnonymousUsername,
 } from "@/lib/anonymous-profile";
-import { PROFILE_CHANGE_EVENT, normalizeAppStatus } from "@/lib/app-presence";
+import { PROFILE_CHANGE_EVENT } from "@/lib/app-presence";
 import { getAppHomeRoute } from "@/lib/app-routes";
 import { getLoginPath } from "@/lib/auth-redirect";
 import { PWA_INSTALL_OPEN_EVENT } from "@/lib/pwa-install";
 import { signOut, supabase } from "@/lib/supabase/client";
-import type { AppStatus } from "@/lib/supabase/types";
 import { useAdminAccess } from "@/lib/use-admin-access";
 
 type AppTheme = "dark" | "light";
@@ -29,7 +27,6 @@ type NavProfile = {
 	full_name: string | null;
 	username: string | null;
 	avatar_url: string | null;
-	app_status?: AppStatus | null;
 };
 
 type ProfileChangeDetail = Partial<NavProfile> & {
@@ -38,38 +35,20 @@ type ProfileChangeDetail = Partial<NavProfile> & {
 
 const APP_THEME_STORAGE_KEY = "linted-theme";
 const APP_THEME_CHANGE_EVENT = "linted-theme-change";
-const NAV_PROFILE_SELECT_WITH_STATUS =
-	"full_name, username, avatar_url, app_status";
-const NAV_PROFILE_SELECT_BASE = "full_name, username, avatar_url";
-const SUPABASE_MIGRATION_MESSAGE =
-	"Status controls are temporarily unavailable. Please refresh and try again.";
+const NAV_PROFILE_SELECT = "full_name, username, avatar_url";
 
 async function getNavProfile(activeUser: User | null): Promise<NavProfile | null> {
 	if (!activeUser) return null;
 
-	const primaryResult = await supabase
+	const result = await supabase
 		.from("profiles")
-		.select(NAV_PROFILE_SELECT_WITH_STATUS)
+		.select(NAV_PROFILE_SELECT)
 		.eq("id", activeUser.id)
 		.maybeSingle();
 
-	if (
-		primaryResult.error &&
-		/app_status|schema cache|column/i.test(primaryResult.error.message)
-	) {
-		const fallbackResult = await supabase
-			.from("profiles")
-			.select(NAV_PROFILE_SELECT_BASE)
-			.eq("id", activeUser.id)
-			.maybeSingle();
+	if (result.error) return null;
 
-		if (fallbackResult.error) return null;
-		return (fallbackResult.data ?? null) as NavProfile | null;
-	}
-
-	if (primaryResult.error) return null;
-
-	return (primaryResult.data ?? null) as NavProfile | null;
+	return (result.data ?? null) as NavProfile | null;
 }
 
 export default function AuthButton() {
@@ -77,7 +56,6 @@ export default function AuthButton() {
 	const { isAdmin } = useAdminAccess();
 	const [user, setUser] = useState<User | null>(null);
 	const [profile, setProfile] = useState<NavProfile | null>(null);
-	const [status, setStatus] = useState<AppStatus>("online");
 	const [theme, setTheme] = useState<AppTheme>("dark");
 	const [feedbackOpen, setFeedbackOpen] = useState(false);
 	const [loading, setLoading] = useState(true);
@@ -91,7 +69,6 @@ export default function AuthButton() {
 			if (!active) return;
 			setUser(nextUser);
 			setProfile(nextProfile);
-			setStatus(normalizeAppStatus(nextProfile?.app_status));
 			setLoading(false);
 		}
 
@@ -132,9 +109,6 @@ export default function AuthButton() {
 				avatar_url: Object.prototype.hasOwnProperty.call(detail, "avatar_url")
 					? detail.avatar_url ?? null
 					: current?.avatar_url ?? null,
-				app_status: Object.prototype.hasOwnProperty.call(detail, "app_status")
-					? normalizeAppStatus(detail.app_status)
-					: current?.app_status ?? null,
 			}));
 		}
 
@@ -227,42 +201,6 @@ export default function AuthButton() {
 		);
 	}
 
-	async function handleStatusChange(nextStatus: string) {
-		const normalizedStatus = normalizeAppStatus(nextStatus);
-		const previousStatus = status;
-		setStatus(normalizedStatus);
-
-		if (!user) return;
-
-		const { error } = await supabase
-			.from("profiles")
-			.update({ app_status: normalizedStatus })
-			.eq("id", user.id);
-
-		if (!error) {
-			setProfile((current) =>
-				current ? { ...current, app_status: normalizedStatus } : current,
-			);
-			window.dispatchEvent(
-				new CustomEvent(PROFILE_CHANGE_EVENT, {
-					detail: { id: user.id, app_status: normalizedStatus },
-				}),
-			);
-			return;
-		}
-
-		setStatus(previousStatus);
-
-		if (/app_status|schema cache|column/i.test(error.message)) {
-			toast.error(SUPABASE_MIGRATION_MESSAGE);
-			return;
-		}
-
-		toast.error("Could not update your status.", {
-			description: error.message,
-		});
-	}
-
 	return (
 		<div className="profile-menu">
 			<NotificationCenter userId={user.id} />
@@ -270,16 +208,14 @@ export default function AuthButton() {
 			<FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
 			<UserDropdown
 				isAdmin={isAdmin}
-				selectedStatus={status}
+				isOnline={true}
 				user={{
 					name: displayName,
 					username,
 					avatar: avatarUrl,
 					initials: initials || "LI",
-					status,
 				}}
 				onAction={(action) => void handleAction(action)}
-				onStatusChange={(nextStatus) => void handleStatusChange(nextStatus)}
 				onThemeChange={handleThemeChange}
 				selectedTheme={theme}
 			/>

@@ -10,7 +10,7 @@ import {
 	Unlock,
 	UserRound,
 	XCircle,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import type { ContentReportStatus } from "@/lib/supabase/types";
 import {
 	getReviewerTypeLabel,

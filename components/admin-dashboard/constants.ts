@@ -7,7 +7,7 @@ import {
 	Inbox,
 	LayoutDashboard,
 	UsersRound,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import type { ContentReportStatus } from "@/lib/supabase/types";
 import type { ReviewerApplicationStatus } from "@/lib/reviewer-validation";
 import { getAppHomeRoute } from "@/lib/app-routes";

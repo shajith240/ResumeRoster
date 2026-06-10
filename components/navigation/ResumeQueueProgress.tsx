@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ListChecks } from "lucide-react";
+import { ListChecks } from "@/components/ui/solar-icons";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeSummary } from "@/lib/supabase/types";

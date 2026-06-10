@@ -9,6 +9,7 @@ import {
 	isSavedResumeSchemaMissingError,
 	type SavedResumeReference,
 } from "@/lib/saved-resumes";
+import { loadOnlineProfileIds } from "@/lib/online-presence";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeAuthorProfile, ResumeSummary } from "@/lib/supabase/types";
 
@@ -319,7 +320,19 @@ async function fetchPublicAuthorProfiles(resumeRows: ResumeSummary[]) {
 
 	if (profileError) return new Map<string, ResumeAuthorProfile>();
 
-	return new Map(profileRows.map((profile) => [profile.id, profile]));
+	const onlineProfileIds = await loadOnlineProfileIds(
+		profileRows.map((profile) => profile.id),
+	);
+
+	return new Map(
+		profileRows.map((profile) => [
+			profile.id,
+			{
+				...profile,
+				is_online: onlineProfileIds.has(profile.id),
+			},
+		]),
+	);
 }
 
 export async function attachPublicAuthorProfiles(resumeRows: ResumeSummary[]) {

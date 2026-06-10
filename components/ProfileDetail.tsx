@@ -39,6 +39,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		editOpen,
 		fullName,
 		handleAvatarChange,
+		isOnline,
 		isOwnProfile,
 		loading,
 		message,
@@ -139,6 +140,13 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								<Pencil aria-hidden="true" />
 								<span className="sr-only">Edit profile</span>
 							</button>
+						) : null}
+						{isOnline ? (
+							<span
+								aria-label={`${profileView.displayName} is online`}
+								className={styles.onlineIndicator}
+								title="Online now"
+							/>
 						) : null}
 					</div>
 

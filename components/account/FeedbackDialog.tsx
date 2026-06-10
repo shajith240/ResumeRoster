@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { Send } from "lucide-react";
+import { Send } from "@/components/ui/solar-icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {

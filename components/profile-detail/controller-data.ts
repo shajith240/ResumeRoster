@@ -17,10 +17,24 @@ import {
 export type LoadedProfileDetail = {
 	activeUser: User | null;
 	errorMessage: string;
+	isOnline: boolean;
 	loadedProfile: PublicProfile | null;
 	loadedResumes: PublicProfileResume[];
 	loadedReviews: PublicProfileReview[];
 };
+
+const PROFILE_ONLINE_WINDOW_SECONDS = 120;
+
+async function loadProfileOnlineState(profileId: string) {
+	const { data, error } = await supabase.rpc("is_profile_online", {
+		profile_id: profileId,
+		window_seconds: PROFILE_ONLINE_WINDOW_SECONDS,
+	});
+
+	if (error) return false;
+
+	return data === true;
+}
 
 export async function loadProfileDetailData(
 	profileId: string,
@@ -35,6 +49,7 @@ export async function loadProfileDetailData(
 			return {
 				activeUser,
 				errorMessage: "Sign in to open your profile.",
+				isOnline: false,
 				loadedProfile: null,
 				loadedResumes: [],
 				loadedReviews: [],
@@ -53,6 +68,7 @@ export async function loadProfileDetailData(
 			return {
 				activeUser,
 				errorMessage: matchError.message,
+				isOnline: false,
 				loadedProfile: null,
 				loadedResumes: [],
 				loadedReviews: [],
@@ -63,6 +79,7 @@ export async function loadProfileDetailData(
 			return {
 				activeUser,
 				errorMessage: `We could not find a profile for @${profileToken}.`,
+				isOnline: false,
 				loadedProfile: null,
 				loadedResumes: [],
 				loadedReviews: [],
@@ -86,6 +103,7 @@ export async function loadProfileDetailData(
 			return {
 				activeUser,
 				errorMessage: SUPABASE_MIGRATION_MESSAGE,
+				isOnline: false,
 				loadedProfile: null,
 				loadedResumes: [],
 				loadedReviews: [],
@@ -93,14 +111,16 @@ export async function loadProfileDetailData(
 		}
 	}
 
-	const [profileResult, reviewsResult, resumesResult] = await Promise.all([
-		supabase.rpc("get_public_profile", { profile_id: resolvedProfileId }),
-		loadPublicProfileReviews(resolvedProfileId),
-		supabase.rpc("get_public_profile_resumes", {
-			profile_id: resolvedProfileId,
-			limit_count: 20,
-		}),
-	]);
+	const [profileResult, reviewsResult, resumesResult, onlineResult] =
+		await Promise.all([
+			supabase.rpc("get_public_profile", { profile_id: resolvedProfileId }),
+			loadPublicProfileReviews(resolvedProfileId),
+			supabase.rpc("get_public_profile_resumes", {
+				profile_id: resolvedProfileId,
+				limit_count: 20,
+			}),
+			loadProfileOnlineState(resolvedProfileId),
+		]);
 
 	if (profileResult.error) {
 		return {
@@ -108,6 +128,7 @@ export async function loadProfileDetailData(
 			errorMessage: isProfileFeatureError(profileResult.error.message)
 				? SUPABASE_MIGRATION_MESSAGE
 				: profileResult.error.message,
+			isOnline: false,
 			loadedProfile: null,
 			loadedResumes: [],
 			loadedReviews: [],
@@ -118,6 +139,7 @@ export async function loadProfileDetailData(
 		return {
 			activeUser,
 			errorMessage: SUPABASE_MIGRATION_MESSAGE,
+			isOnline: false,
 			loadedProfile: null,
 			loadedResumes: [],
 			loadedReviews: [],
@@ -132,6 +154,7 @@ export async function loadProfileDetailData(
 			errorMessage: isUuid(profileToken)
 				? "We could not find a profile row for this user yet."
 				: `We could not find a profile for @${profileToken}.`,
+			isOnline: false,
 			loadedProfile: null,
 			loadedResumes: [],
 			loadedReviews: [],
@@ -141,6 +164,7 @@ export async function loadProfileDetailData(
 	return {
 		activeUser,
 		errorMessage: "",
+		isOnline: onlineResult,
 		loadedProfile,
 		loadedResumes: (resumesResult.data ?? []) as PublicProfileResume[],
 		loadedReviews: (reviewsResult.data ?? []) as PublicProfileReview[],

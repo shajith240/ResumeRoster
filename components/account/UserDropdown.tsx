@@ -6,16 +6,12 @@ import altArrowRightLineDuotone from "@iconify-icons/solar/alt-arrow-right-line-
 import bookmarkLineDuotone from "@iconify-icons/solar/bookmark-line-duotone";
 import checkCircleBold from "@iconify-icons/solar/check-circle-bold";
 import documentAddLineDuotone from "@iconify-icons/solar/document-add-line-duotone";
-import emojiFunnyCircleLineDuotone from "@iconify-icons/solar/emoji-funny-circle-line-duotone";
-import fireLineDuotone from "@iconify-icons/solar/fire-line-duotone";
 import letterUnreadLineDuotone from "@iconify-icons/solar/letter-unread-line-duotone";
 import logout2BoldDuotone from "@iconify-icons/solar/logout-2-bold-duotone";
 import moonLineDuotone from "@iconify-icons/solar/moon-line-duotone";
-import moonSleepLineDuotone from "@iconify-icons/solar/moon-sleep-line-duotone";
 import paletteRoundLineDuotone from "@iconify-icons/solar/palette-round-line-duotone";
 import questionCircleLineDuotone from "@iconify-icons/solar/question-circle-line-duotone";
 import shieldCheckLineDuotone from "@iconify-icons/solar/shield-check-line-duotone";
-import smileCircleLineDuotone from "@iconify-icons/solar/smile-circle-line-duotone";
 import smartphone2LineDuotone from "@iconify-icons/solar/smartphone-2-line-duotone";
 import squareTopDownLineDuotone from "@iconify-icons/solar/square-top-down-line-duotone";
 import sunLineDuotone from "@iconify-icons/solar/sun-line-duotone";
@@ -50,7 +46,7 @@ type MenuAction =
 	| "logout";
 
 type AppTheme = "dark" | "light";
-type MobilePanel = "main" | "status" | "appearance";
+type MobilePanel = "main" | "appearance";
 
 type MenuItem = {
 	icon: IconifyIcon;
@@ -64,12 +60,6 @@ type MenuItem = {
 	rightIcon?: IconifyIcon;
 };
 
-type StatusItem = {
-	value: string;
-	icon: IconifyIcon;
-	label: string;
-};
-
 type ThemeItem = {
 	value: AppTheme;
 	icon: IconifyIcon;
@@ -81,41 +71,25 @@ type UserDropdownUser = {
 	username: string;
 	avatar?: string;
 	initials: string;
-	status: "online" | "focus" | "offline" | "busy";
 };
 
 type UserDropdownProps = {
 	isAdmin?: boolean;
+	isOnline?: boolean;
 	user?: UserDropdownUser;
 	onAction?: (action: MenuAction) => void;
-	onStatusChange?: (status: string) => void;
 	onThemeChange?: (theme: AppTheme) => void;
-	selectedStatus?: string;
 	selectedTheme?: AppTheme;
 	promoDiscount?: string;
 };
 
 const MENU_ITEMS: {
-	status: StatusItem[];
 	appearance: ThemeItem[];
 	profile: MenuItem[];
 	admin: MenuItem[];
 	activity: MenuItem[];
 	account: MenuItem[];
 } = {
-	status: [
-		{ value: "online", icon: fireLineDuotone, label: "Reviewing" },
-		{
-			value: "focus",
-			icon: emojiFunnyCircleLineDuotone,
-			label: "Focus",
-		},
-		{
-			value: "offline",
-			icon: moonSleepLineDuotone,
-			label: "Appear offline",
-		},
-	],
 	appearance: [
 		{ value: "dark", icon: moonLineDuotone, label: "Dark" },
 		{ value: "light", icon: sunLineDuotone, label: "Light" },
@@ -169,18 +143,16 @@ const MENU_ITEMS: {
 
 export function UserDropdown({
 	isAdmin = false,
+	isOnline = false,
 	user = {
 		name: "Resume reviewer",
 		username: "@linted",
 		avatar:
 			"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces",
 		initials: "LI",
-		status: "online",
 	},
 	onAction = () => undefined,
-	onStatusChange = () => undefined,
 	onThemeChange = () => undefined,
-	selectedStatus = "online",
 	selectedTheme = "dark",
 	promoDiscount,
 }: UserDropdownProps) {
@@ -221,23 +193,6 @@ export function UserDropdown({
 		);
 	};
 
-	const getStatusColor = (status: string) => {
-		const colors = {
-			online:
-				"border-green-300 bg-green-100 text-green-700 dark:border-green-500/50 dark:bg-green-900/30 dark:text-green-400",
-			focus:
-				"border-orange-300 bg-orange-100 text-orange-700 dark:border-orange-500/50 dark:bg-orange-900/30 dark:text-orange-400",
-			offline:
-				"border-gray-300 bg-gray-100 text-gray-600 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400",
-			busy: "border-red-300 bg-red-100 text-red-600 dark:border-red-500/50 dark:bg-red-900/30 dark:text-red-400",
-		};
-
-		return colors[status.toLowerCase() as keyof typeof colors] || colors.online;
-	};
-
-	const selectedStatusItem =
-		MENU_ITEMS.status.find((status) => status.value === selectedStatus) ??
-		MENU_ITEMS.status[0];
 	const selectedThemeItem =
 		MENU_ITEMS.appearance.find((theme) => theme.value === selectedTheme) ??
 		MENU_ITEMS.appearance[0];
@@ -267,10 +222,8 @@ export function UserDropdown({
 	);
 
 	const renderMobileDrilldown = () => {
-		const isStatusPanel = mobilePanel === "status";
-		const title = isStatusPanel ? "Update status" : "Appearance";
-		const items = isStatusPanel ? MENU_ITEMS.status : MENU_ITEMS.appearance;
-		const selectedValue = isStatusPanel ? selectedStatus : selectedTheme;
+		const title = "Appearance";
+		const selectedValue = selectedTheme;
 
 		return (
 			<section className="user-menu-mobile-panel">
@@ -287,7 +240,7 @@ export function UserDropdown({
 					{title}
 				</button>
 				<div className="user-menu-mobile-list" aria-label={title}>
-					{items.map((item) => (
+					{MENU_ITEMS.appearance.map((item) => (
 						<button
 							aria-pressed={selectedValue === item.value}
 							className={cn(
@@ -296,11 +249,7 @@ export function UserDropdown({
 							)}
 							key={item.value}
 							onClick={() => {
-								if (isStatusPanel) {
-									onStatusChange(item.value);
-								} else {
-									onThemeChange(item.value === "light" ? "light" : "dark");
-								}
+								onThemeChange(item.value === "light" ? "light" : "dark");
 								setMobilePanel("main");
 							}}
 							type="button"
@@ -335,12 +284,24 @@ export function UserDropdown({
 			}}
 		>
 			<DropdownMenuTrigger asChild>
-				<Avatar className="size-10 cursor-pointer border border-[var(--border-default)] shadow-sm">
-					<AvatarImage src={user.avatar} alt={user.name} />
-					<AvatarFallback className="bg-[var(--brand)] text-[var(--text-inverse)]">
-						{user.initials}
-					</AvatarFallback>
-				</Avatar>
+				<button
+					aria-label="Open profile menu"
+					className="relative rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
+					type="button"
+				>
+					<Avatar className="size-10 cursor-pointer border border-[var(--border-default)] shadow-sm">
+						<AvatarImage src={user.avatar} alt={user.name} />
+						<AvatarFallback className="bg-[var(--brand)] text-[var(--text-inverse)]">
+							{user.initials}
+						</AvatarFallback>
+					</Avatar>
+					{isOnline ? (
+						<span
+							aria-hidden="true"
+							className="absolute right-0 top-0 size-3 rounded-full border-2 border-[var(--bg-base)] bg-green-500 shadow-sm"
+						/>
+					) : null}
+				</button>
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent
@@ -354,12 +315,21 @@ export function UserDropdown({
 				<section className="rounded-2xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-1 shadow backdrop-blur-lg">
 					<div className="flex items-center p-2">
 						<div className="flex min-w-0 flex-1 items-center gap-2">
-							<Avatar className="size-10 cursor-pointer border border-[var(--border-default)] shadow">
-								<AvatarImage src={user.avatar} alt={user.name} />
-								<AvatarFallback className="bg-[var(--brand)] text-[var(--text-inverse)]">
-									{user.initials}
-								</AvatarFallback>
-							</Avatar>
+							<span className="relative shrink-0">
+								<Avatar className="size-10 cursor-pointer border border-[var(--border-default)] shadow">
+									<AvatarImage src={user.avatar} alt={user.name} />
+									<AvatarFallback className="bg-[var(--brand)] text-[var(--text-inverse)]">
+										{user.initials}
+									</AvatarFallback>
+								</Avatar>
+								{isOnline ? (
+									<span
+										aria-label="Online now"
+										className="absolute right-0 top-0 size-3 rounded-full border-2 border-[var(--bg-surface)] bg-green-500 shadow-sm"
+										title="Online now"
+									/>
+								) : null}
+							</span>
 							<div className="min-w-0 flex-1">
 								<h3
 									className="truncate text-sm font-semibold text-[var(--text-primary)]"
@@ -375,64 +345,8 @@ export function UserDropdown({
 								</p>
 							</div>
 						</div>
-						<Badge
-							className={`${getStatusColor(user.status)} shrink-0 rounded-sm border-[0.5px] text-[11px] capitalize`}
-						>
-							{user.status === "online" ? "reviewing" : user.status}
-						</Badge>
 					</div>
 
-					<DropdownMenuGroup>
-						<div className="user-menu-submenu-only">
-							<DropdownMenuSub>
-								<DropdownMenuSubTrigger className="cursor-pointer rounded-lg p-2">
-									<span className="flex items-center gap-1.5 font-medium text-[var(--text-secondary)]">
-										<Icon
-											aria-hidden="true"
-											className="size-5 text-[var(--text-tertiary)]"
-											icon={smileCircleLineDuotone}
-										/>
-										Update status
-									</span>
-								</DropdownMenuSubTrigger>
-								<DropdownMenuPortal>
-									<DropdownMenuSubContent
-										className="z-[1001] border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] backdrop-blur-lg"
-										collisionPadding={12}
-										sideOffset={8}
-									>
-										<DropdownMenuRadioGroup
-											value={selectedStatus}
-											onValueChange={onStatusChange}
-										>
-											{MENU_ITEMS.status.map((status, index) => (
-												<DropdownMenuRadioItem
-													className="gap-2"
-													key={index}
-													value={status.value}
-												>
-													<Icon
-														aria-hidden="true"
-														className="size-5 text-[var(--text-tertiary)]"
-														icon={status.icon}
-													/>
-													{status.label}
-												</DropdownMenuRadioItem>
-											))}
-										</DropdownMenuRadioGroup>
-									</DropdownMenuSubContent>
-								</DropdownMenuPortal>
-							</DropdownMenuSub>
-						</div>
-						{renderMobilePanelTrigger(
-							"status",
-							smileCircleLineDuotone,
-							"Status",
-							selectedStatusItem.label,
-						)}
-					</DropdownMenuGroup>
-
-					<DropdownMenuSeparator />
 					<DropdownMenuGroup>
 						{MENU_ITEMS.profile.map((item, index) => (
 							<Fragment key={`${item.action}-${index}`}>

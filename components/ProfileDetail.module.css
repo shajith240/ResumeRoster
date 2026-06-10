@@ -45,6 +45,20 @@
 	filter: saturate(0.94) contrast(1.02);
 }
 
+.onlineIndicator {
+	position: absolute;
+	top: clamp(14px, 1.1vw, 18px);
+	right: clamp(14px, 1.1vw, 18px);
+	width: clamp(18px, 1.45vw, 24px);
+	height: clamp(18px, 1.45vw, 24px);
+	border: 3px solid var(--bg-surface);
+	border-radius: 50%;
+	background: #22c55e;
+	box-shadow:
+		0 0 0 1px rgba(21, 128, 61, 0.55),
+		0 6px 16px rgba(34, 197, 94, 0.28);
+}
+
 .avatarEdit {
 	position: absolute;
 	right: 2px;
@@ -1251,6 +1265,14 @@
 		padding: 5px;
 	}
 
+	.onlineIndicator {
+		top: 9px;
+		right: 9px;
+		width: 16px;
+		height: 16px;
+		border-width: 2px;
+	}
+
 	.avatarEdit {
 		right: -4px;
 		bottom: -2px;
@@ -1489,6 +1511,10 @@
 
 :global(body.main-app-dark) .avatarFrame {
 	border-color: rgba(255, 184, 95, 0.55);
+}
+
+:global(body.main-app-dark) .onlineIndicator {
+	border-color: var(--bg-elevated);
 }
 
 :global(body.main-app-dark) .avatarEdit,

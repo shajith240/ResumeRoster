@@ -12,7 +12,7 @@ import {
 	ShieldCheck,
 	UserRound,
 	UsersRound,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_ADMIN_MESSAGE_LINK } from "@/lib/admin-messages";

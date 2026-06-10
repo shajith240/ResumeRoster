@@ -15,6 +15,17 @@ export const dynamic = "force-dynamic";
 const COMMENT_IMAGE_UPLOAD_FAILED_MESSAGE =
 	"Image upload failed. Please try again.";
 
+function getCommentMediaScanEnvironment() {
+	if (process.env.UPLOAD_MALWARE_SCAN_MODE || process.env.UPLOAD_MALWARE_SCAN_URL) {
+		return process.env;
+	}
+
+	return {
+		...process.env,
+		UPLOAD_MALWARE_SCAN_MODE: "optional",
+	};
+}
+
 function badRequest(message: string, status = 400) {
 	return Response.json({ message }, { status });
 }
@@ -76,14 +87,18 @@ export async function POST(request: Request) {
 		if (issue) return badRequest(issue);
 
 		const mimeType = detectCommentImageMimeType(bytes) as CommentImageMimeType;
-		const uploadSecurity = await enforceUploadSecurity(admin, {
-			bytes,
-			fileName: file.name,
-			fileSize: file.size,
-			mimeType,
-			uploadKind: "comment-media",
-			userId: user.id,
-		});
+		const uploadSecurity = await enforceUploadSecurity(
+			admin,
+			{
+				bytes,
+				fileName: file.name,
+				fileSize: file.size,
+				mimeType,
+				uploadKind: "comment-media",
+				userId: user.id,
+			},
+			getCommentMediaScanEnvironment(),
+		);
 
 		if (!uploadSecurity.ok) {
 			return badRequest(uploadSecurity.message, uploadSecurity.status);

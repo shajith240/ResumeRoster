@@ -6,7 +6,7 @@ import {
 } from "@/lib/image-upload-validation";
 
 export const COMMUNITY_POST_IMAGE_MAX_COUNT = 4;
-export const COMMUNITY_POST_IMAGE_MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
+export const COMMUNITY_POST_IMAGE_MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024;
 export const COMMUNITY_POST_IMAGE_ALLOWED_MIME_TYPES =
 	RASTER_IMAGE_ALLOWED_MIME_TYPES;
 
@@ -34,7 +34,7 @@ export function getCommunityPostImageClientIssue(
 	if (!file.name.trim()) return "Choose an image file.";
 	if (!file.size) return "Choose a non-empty image file.";
 	if (file.size > COMMUNITY_POST_IMAGE_MAX_FILE_SIZE_BYTES) {
-		return "Keep post images under 5MB.";
+		return "Keep post images under 2MB.";
 	}
 
 	if (
@@ -58,6 +58,14 @@ export function getCommunityPostImageUploadIssue(
 	const detectedType = detectCommunityPostImageMimeType(file.bytes);
 
 	if (!detectedType) return "Upload a PNG, JPG, or WebP image.";
+
+	if (
+		!COMMUNITY_POST_IMAGE_ALLOWED_MIME_TYPES.includes(
+			detectedType as CommunityPostImageMimeType,
+		)
+	) {
+		return "Upload a PNG, JPG, or WebP image.";
+	}
 
 	if (declaredType && declaredType !== detectedType) {
 		return "The image file type does not match its contents.";

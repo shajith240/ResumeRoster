@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import type { CommentAttachmentOption } from "@/components/CommentMediaToolbar";
+import { loadOnlineProfileIds } from "@/lib/online-presence";
 import { normalizeReview } from "@/lib/resume-thread";
 import { supabase } from "@/lib/supabase/client";
 import type {
@@ -112,12 +113,26 @@ export async function fetchResumeAuthorProfile(activeResume: ResumeSummary) {
 			.maybeSingle();
 
 		if (fallbackResult.error) return null;
-		return (fallbackResult.data ?? null) as ResumeAuthorProfile | null;
+		const profile = (fallbackResult.data ?? null) as ResumeAuthorProfile | null;
+		if (!profile) return null;
+
+		const onlineProfileIds = await loadOnlineProfileIds([profile.id]);
+		return {
+			...profile,
+			is_online: onlineProfileIds.has(profile.id),
+		};
 	}
 
 	if (primaryResult.error) return null;
 
-	return (primaryResult.data ?? null) as ResumeAuthorProfile | null;
+	const profile = (primaryResult.data ?? null) as ResumeAuthorProfile | null;
+	if (!profile) return null;
+
+	const onlineProfileIds = await loadOnlineProfileIds([profile.id]);
+	return {
+		...profile,
+		is_online: onlineProfileIds.has(profile.id),
+	};
 }
 
 export async function recordResumeReadCount(
@@ -226,10 +241,18 @@ async function loadAuthorProfiles(loadedReviews: Review[]) {
 
 	if (profileResult.error) return {};
 
+	const profiles = (profileResult.data ?? []) as AuthorProfile[];
+	const onlineProfileIds = await loadOnlineProfileIds(
+		profiles.map((profile) => profile.id),
+	);
+
 	return Object.fromEntries(
-		(profileResult.data ?? []).map((profile) => [
+		profiles.map((profile) => [
 			profile.id,
-			profile as AuthorProfile,
+			{
+				...profile,
+				is_online: onlineProfileIds.has(profile.id),
+			},
 		]),
 	);
 }

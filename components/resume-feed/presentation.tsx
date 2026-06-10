@@ -14,6 +14,7 @@ import {
 import FeedResumePreview from "@/components/FeedResumePreview";
 import FeedSkeleton from "@/components/feed/FeedSkeleton";
 import RecentPostsPanel from "@/components/RecentPostsPanel";
+import { PresenceAvatar } from "@/components/user-presence/PresenceAvatar";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -191,6 +192,16 @@ export function ResumeFeedCard({
 	const snippet =
 		resume.post_description?.trim() ||
 		"Targeting recruiter screens with a resume that needs sharper bullets, clearer proof, and fewer weak first impressions.";
+	const authorAvatarImage = (
+		<img
+			alt=""
+			aria-hidden="true"
+			className="post-author-avatar"
+			height={24}
+			src={authorAvatar}
+			width={24}
+		/>
+	);
 
 	return (
 		<article
@@ -202,14 +213,13 @@ export function ResumeFeedCard({
 				<div className="post-meta">
 					<div className="post-meta-main">
 						<span className="post-author-cluster">
-							<img
-								alt=""
-								aria-hidden="true"
-								className="post-author-avatar"
-								height={24}
-								src={authorAvatar}
-								width={24}
-							/>
+							{resume.is_anonymous ? (
+								authorAvatarImage
+							) : (
+								<PresenceAvatar isOnline={authorProfile?.is_online} size="sm">
+									{authorAvatarImage}
+								</PresenceAvatar>
+							)}
 							{resume.is_anonymous ? (
 								<span className="post-author-name">{posterLabel}</span>
 							) : (

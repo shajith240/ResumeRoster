@@ -8,7 +8,7 @@ import {
 	History,
 	Inbox,
 	UsersRound,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import { PanelHeader } from "./shared";
 import type { AdminStats } from "./types";
 

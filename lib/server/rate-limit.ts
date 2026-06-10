@@ -44,6 +44,12 @@ export const API_RATE_LIMIT_POLICIES = {
 		publicMessage: "Too many feedback messages. Try again later.",
 		windowSeconds: 3600,
 	},
+	mentionSearch: {
+		action: "mention_search",
+		maxRequests: 240,
+		publicMessage: "Too many user searches. Try again soon.",
+		windowSeconds: 300,
+	},
 	pushSubscriptionWrite: {
 		action: "push_subscription_write",
 		maxRequests: 60,

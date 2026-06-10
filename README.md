@@ -32,7 +32,7 @@ For recruiters or engineering reviewers visiting this repo: the project demonstr
 - **Backend:** Supabase Auth, Postgres, RPC functions, Row Level Security
 - **Storage:** Supabase Storage for private resume PDFs and public avatars
 - **Feedback:** Sonner toast notifications
-- **Icons:** lucide-react and selected animated icon components
+- **Icons:** Solar icons through the shared Iconify adapter
 - **Fonts:** Instrument Serif for identity headings, Work Sans for body text
 
 ## Product Flow

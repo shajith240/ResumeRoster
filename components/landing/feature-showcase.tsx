@@ -2,7 +2,7 @@
 
 import type { Dispatch, SetStateAction } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/ui/solar-icons";
 import {
 	featureContent,
 	featureTabs,
