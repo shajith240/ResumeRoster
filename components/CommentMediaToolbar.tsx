@@ -1,6 +1,7 @@
 "use client";
 
-import { ImageIcon, Loader2, Type, X } from "lucide-react";
+import { X } from "lucide-react";
+import { ImageIcon, Loader2, Type } from "@/components/ui/solar-icons";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import type {
@@ -148,7 +149,7 @@ export default function CommentMediaToolbar({
 						onClick={() => onAttachmentChange(null)}
 						type="button"
 					>
-						<X size={14} strokeWidth={2} aria-hidden="true" />
+						<X size={16} strokeWidth={2} aria-hidden="true" />
 					</button>
 				</div>
 			) : null}

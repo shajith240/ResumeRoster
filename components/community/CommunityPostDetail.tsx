@@ -15,6 +15,7 @@ import {
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import {
 	ChevronLeft,
 	Check,
@@ -28,7 +29,6 @@ import {
 	Share2,
 	Trash2,
 	Unlock,
-	X,
 } from "@/components/ui/solar-icons";
 import { toast } from "sonner";
 import CommunityMarkdown from "@/components/community/CommunityMarkdown";

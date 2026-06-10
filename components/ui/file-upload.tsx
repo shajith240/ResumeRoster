@@ -11,6 +11,7 @@ import {
 	type KeyboardEvent,
 	type ReactNode,
 } from "react";
+import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import {
 	CircleAlert,
@@ -20,8 +21,7 @@ import {
 	Play,
 	Trash,
 	Upload,
-	X,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 
 import { Button } from "@/components/ui/button";
 import { cn, generateUniqueId } from "@/lib/utils";

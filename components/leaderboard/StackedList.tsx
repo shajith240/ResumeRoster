@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import {
@@ -8,7 +9,6 @@ import {
 	FileText,
 	ListOrdered,
 	Search,
-	X,
 } from "@/components/ui/solar-icons";
 
 import LintPointsFlame from "@/components/LintPointsFlame";

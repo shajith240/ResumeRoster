@@ -7,17 +7,8 @@ import {
 	Plus,
 	ShieldCheck,
 	Trophy,
-	type LucideIcon,
-} from "lucide-react";
-import {
-	HomeIcon,
-	PlusIcon,
-	ResumeIcon,
-	ShieldIcon,
-	TrophyIcon,
-	WritePostIcon,
-	type SidebarAnimatedIconComponent,
-} from "@/components/navigation/sidebar-icons";
+	type SolarIconComponent,
+} from "@/components/ui/solar-icons";
 import {
 	getPrimaryNavigationItems as getPrimaryNavigationItemsBase,
 	type PrimaryNavigationContext,
@@ -28,8 +19,8 @@ import {
 export type { PrimaryNavItemId };
 
 type PrimaryNavigationIcons = {
-	dockIcon: LucideIcon;
-	sidebarIcon: SidebarAnimatedIconComponent;
+	dockIcon: SolarIconComponent;
+	sidebarIcon: SolarIconComponent;
 };
 
 export type PrimaryNavigationItem = PrimaryNavigationItemBase &
@@ -38,27 +29,27 @@ export type PrimaryNavigationItem = PrimaryNavigationItemBase &
 const PRIMARY_NAV_ICONS: Record<PrimaryNavItemId, PrimaryNavigationIcons> = {
 	admin: {
 		dockIcon: ShieldCheck,
-		sidebarIcon: ShieldIcon,
+		sidebarIcon: ShieldCheck,
 	},
 	community: {
 		dockIcon: Home,
-		sidebarIcon: HomeIcon,
+		sidebarIcon: Home,
 	},
 	"community-new": {
 		dockIcon: PencilLine,
-		sidebarIcon: WritePostIcon,
+		sidebarIcon: PencilLine,
 	},
 	feed: {
 		dockIcon: FileText,
-		sidebarIcon: ResumeIcon,
+		sidebarIcon: FileText,
 	},
 	leaderboard: {
 		dockIcon: Trophy,
-		sidebarIcon: TrophyIcon,
+		sidebarIcon: Trophy,
 	},
 	submit: {
 		dockIcon: Plus,
-		sidebarIcon: PlusIcon,
+		sidebarIcon: Plus,
 	},
 };
 

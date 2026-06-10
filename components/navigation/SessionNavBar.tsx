@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { Menu } from "@/components/ui/solar-icons";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import ResumeQueueProgress from "@/components/navigation/ResumeQueueProgress";
 import {
 	getPrimaryNavigationItems,
 	type PrimaryNavigationItem,
 } from "@/components/navigation/primary-nav";
-import { type SidebarAnimatedIconHandle } from "@/components/navigation/sidebar-icons";
 import { useMobileScrollChrome } from "@/components/navigation/useMobileScrollChrome";
 import { useAdminAccess } from "@/lib/use-admin-access";
 import { cn } from "@/lib/utils";
@@ -17,16 +16,7 @@ import { cn } from "@/lib/utils";
 const SIDEBAR_COLLAPSED_STORAGE_KEY = "linted.session-sidebar.collapsed";
 
 function SidebarNavItem({ item }: { item: PrimaryNavigationItem }) {
-	const iconRef = useRef<SidebarAnimatedIconHandle>(null);
 	const Icon = item.sidebarIcon;
-
-	function startIconAnimation() {
-		iconRef.current?.startAnimation();
-	}
-
-	function stopIconAnimation() {
-		iconRef.current?.stopAnimation();
-	}
 
 	function releasePointerFocus(event: MouseEvent<HTMLAnchorElement>) {
 		if (event.detail > 0) {
@@ -39,16 +29,11 @@ function SidebarNavItem({ item }: { item: PrimaryNavigationItem }) {
 			href={item.href}
 			key={item.label}
 			aria-label={item.label}
-			onBlur={stopIconAnimation}
 			onClick={releasePointerFocus}
-			onFocus={startIconAnimation}
-			onMouseEnter={startIconAnimation}
-			onMouseLeave={stopIconAnimation}
 			className={cn("session-sidebar-link", item.active && "is-active")}
 		>
 			<span className="session-sidebar-icon-slot">
 				<Icon
-					ref={iconRef}
 					className="session-sidebar-icon"
 					size={21}
 					aria-hidden="true"

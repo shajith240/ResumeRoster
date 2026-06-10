@@ -23,6 +23,7 @@ import {
 	SquareCode as ToolbarCodeBlock,
 	Strikethrough as ToolbarStrikethrough,
 	Table2 as ToolbarTable,
+	X,
 } from "lucide-react";
 import { toast } from "sonner";
 import CommunityMarkdown from "@/components/community/CommunityMarkdown";
@@ -35,7 +36,6 @@ import {
 	Plus,
 	Send,
 	Trash2,
-	X,
 } from "@/components/ui/solar-icons";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import {
