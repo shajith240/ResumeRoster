@@ -3,6 +3,7 @@
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
+import { removeRecentPost } from "@/lib/recent-posts";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeSummary } from "@/lib/supabase/types";
 import { toast } from "sonner";
@@ -99,6 +100,7 @@ export function useResumeOwnerActions({
 			return false;
 		}
 
+		removeRecentPost("resume", resume.id);
 		const removeFile = await supabase.storage
 			.from("resumes")
 			.remove([resume.file_path]);

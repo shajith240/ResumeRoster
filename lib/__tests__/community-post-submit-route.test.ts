@@ -37,6 +37,11 @@ function mockAdmin(rpcResult = { data: [{ id: "post-1" }], error: null }) {
 	const rpc = vi.fn(async () => rpcResult);
 	const upload = vi.fn(async () => ({ data: null, error: null }));
 	const remove = vi.fn(async () => ({ data: null, error: null }));
+	const getPublicUrl = vi.fn((path: string) => ({
+		data: {
+			publicUrl: `https://cdn.linted.test/${path}`,
+		},
+	}));
 	const admin = {
 		auth: {
 			getUser: vi.fn(async () => ({
@@ -50,13 +55,13 @@ function mockAdmin(rpcResult = { data: [{ id: "post-1" }], error: null }) {
 		},
 		rpc,
 		storage: {
-			from: vi.fn(() => ({ remove, upload })),
+			from: vi.fn(() => ({ getPublicUrl, remove, upload })),
 		},
 	};
 
 	vi.mocked(createClient).mockReturnValue(admin as never);
 
-	return { admin, remove, rpc, upload };
+	return { admin, getPublicUrl, remove, rpc, upload };
 }
 
 function communityPostFormRequest() {
@@ -66,6 +71,32 @@ function communityPostFormRequest() {
 	formData.set("tags", JSON.stringify(["interview"]));
 	formData.set("title", "Interview prep");
 	formData.set("topicId", TOPIC_ID);
+	formData.append(
+		"images",
+		new File([pngBytes], "whiteboard.png", { type: "image/png" }),
+	);
+
+	return {
+		formData: async () => formData,
+		headers: new Headers({
+			Authorization: "Bearer session-token",
+			"Content-Type": "multipart/form-data",
+		}),
+	} as Request;
+}
+
+function communityInlinePostFormRequest() {
+	const formData = new FormData();
+	formData.set(
+		"body",
+		"Here is the diagram\n\n\\!\\[Whiteboard\\]\\(linted-inline-image:inline-123\\)",
+	);
+	formData.set("postType", "question");
+	formData.set("tags", JSON.stringify(["interview"]));
+	formData.set("title", "Interview prep");
+	formData.set("topicId", TOPIC_ID);
+	formData.append("imageIds", "inline-123");
+	formData.append("imagePlacements", "inline");
 	formData.append(
 		"images",
 		new File([pngBytes], "whiteboard.png", { type: "image/png" }),
@@ -290,5 +321,33 @@ describe("community post submit route", () => {
 			tag_names: ["interview"],
 			target_user_id: USER_ID,
 		});
+	});
+
+	it("embeds inline post images into the saved markdown body", async () => {
+		const { getPublicUrl, rpc } = mockAdmin({
+			data: [{ id: "33333333-3333-4333-8333-333333333333" }],
+			error: null,
+		});
+
+		const response = await POST(communityInlinePostFormRequest());
+
+		expect(response.status).toBe(200);
+		expect(getPublicUrl).toHaveBeenCalledWith(
+			expect.stringMatching(new RegExp(`^${USER_ID}/.+\\.png$`)),
+		);
+		expect(rpc).toHaveBeenCalledWith(
+			"submit_community_post",
+			expect.objectContaining({
+				attachment_payload: [
+					expect.objectContaining({
+						alt_text: "whiteboard",
+						mime_type: "image/png",
+					}),
+				],
+				post_body: expect.stringMatching(
+					/^Here is the diagram\n\n!\[Whiteboard]\(https:\/\/cdn\.linted\.test\/11111111-1111-4111-8111-111111111111\/.+\.png\)$/,
+				),
+			}),
+		);
 	});
 });

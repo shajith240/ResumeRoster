@@ -2,19 +2,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Clock, Menu, MessageCircle, X } from "lucide-react";
+import { Clock, Menu, MessageCircle, X } from "@/components/ui/solar-icons";
 import {
 	clearRecentPosts,
 	RECENT_POSTS_EVENT,
 	readRecentPosts,
+	removeRecentPosts,
 	type RecentPostItem,
 	type RecentPostKind,
 } from "@/lib/recent-posts";
 import { formatCount } from "@/lib/feed-ranking";
+import { supabase } from "@/lib/supabase/client";
 
 type RecentPostsPanelProps = {
 	kind: RecentPostKind;
-	surface?: "mobile-trigger" | "rail";
+	surface?: "mobile-trigger" | "rail" | "rail-content";
 };
 
 function formatVisitedAt(value: string) {
@@ -38,6 +40,34 @@ function getEmptyCopy(kind: RecentPostKind) {
 	return kind === "resume"
 		? "Open a resume and it will appear here."
 		: "Open a community post and it will appear here.";
+}
+
+async function getAvailableRecentPostIds(kind: RecentPostKind, ids: string[]) {
+	if (!ids.length) return new Set<string>();
+
+	if (kind === "community") {
+		const { data, error } = await supabase
+			.from("community_posts")
+			.select("id,status")
+			.in("id", ids);
+
+		if (error) return null;
+
+		return new Set(
+			(data ?? [])
+				.filter((post) => post.status === "active" || post.status === "locked")
+				.map((post) => post.id),
+		);
+	}
+
+	const { data, error } = await supabase
+		.from("resumes")
+		.select("id")
+		.in("id", ids);
+
+	if (error) return null;
+
+	return new Set((data ?? []).map((resume) => resume.id));
 }
 
 function RecentPostPreview({ item }: { item: RecentPostItem }) {
@@ -101,6 +131,29 @@ export default function RecentPostsPanel({
 			window.removeEventListener("storage", syncItems);
 		};
 	}, [kind]);
+
+	useEffect(() => {
+		if (!items.length) return;
+
+		let cancelled = false;
+		const itemIds = items.map((item) => item.id);
+
+		async function pruneUnavailableItems() {
+			const availableIds = await getAvailableRecentPostIds(kind, itemIds);
+			if (cancelled || !availableIds) return;
+
+			const staleIds = itemIds.filter((id) => !availableIds.has(id));
+			if (staleIds.length) {
+				removeRecentPosts(kind, staleIds);
+			}
+		}
+
+		void pruneUnavailableItems();
+
+		return () => {
+			cancelled = true;
+		};
+	}, [items, kind]);
 
 	useEffect(() => {
 		if (!mobileOpen) return;
@@ -176,6 +229,10 @@ export default function RecentPostsPanel({
 				{renderPanel("desktop")}
 			</aside>
 		);
+	}
+
+	if (surface === "rail-content") {
+		return renderPanel("desktop");
 	}
 
 	return (

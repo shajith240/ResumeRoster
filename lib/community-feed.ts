@@ -13,6 +13,7 @@ export type CommunityFeedPostRankInput = {
 	created_at: string;
 	downvote_count: number;
 	post_type: string;
+	status?: string | null;
 	upvote_count: number;
 };
 
@@ -36,6 +37,10 @@ export function normalizeCommunityFeedTab(
 
 export function getCommunityPostScore(post: CommunityFeedPostRankInput) {
 	return post.upvote_count - post.downvote_count;
+}
+
+export function isVisibleCommunityFeedPostStatus(status: string | null | undefined) {
+	return status === undefined || status === "active" || status === "locked";
 }
 
 export function getCommunityHotScore(
@@ -64,13 +69,13 @@ export function sortCommunityPosts<T extends CommunityFeedPostRankInput>(
 	tab: CommunityFeedTab,
 	now = Date.now(),
 ) {
-	const filteredPosts = posts.filter((post) => {
-		if (tab === "questions" || tab === "unanswered") {
-			return post.post_type === "question";
-		}
-
-		return true;
-	});
+	const filteredPosts = posts.filter(
+		(post) =>
+			isVisibleCommunityFeedPostStatus(post.status) &&
+			(tab === "questions" || tab === "unanswered"
+				? post.post_type === "question"
+				: true),
+	);
 	const visiblePosts =
 		tab === "unanswered"
 			? filteredPosts.filter((post) => post.comment_count === 0)
@@ -96,15 +101,19 @@ export function sortCommunityPosts<T extends CommunityFeedPostRankInput>(
 export function filterCommunityPostsForTabInCurrentOrder<
 	T extends CommunityFeedPostRankInput,
 >(posts: T[], tab: CommunityFeedTab) {
+	const visiblePosts = posts.filter((post) =>
+		isVisibleCommunityFeedPostStatus(post.status),
+	);
+
 	if (tab === "unanswered") {
-		return posts.filter(
+		return visiblePosts.filter(
 			(post) => post.post_type === "question" && post.comment_count === 0,
 		);
 	}
 
 	if (tab === "questions") {
-		return posts.filter((post) => post.post_type === "question");
+		return visiblePosts.filter((post) => post.post_type === "question");
 	}
 
-	return posts;
+	return visiblePosts;
 }

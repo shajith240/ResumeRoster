@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/ui/solar-icons";
 import type { CommunityPostAttachment } from "@/lib/supabase/types";
 
 type PublicAttachment = CommunityPostAttachment & {

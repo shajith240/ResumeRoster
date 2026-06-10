@@ -1,31 +1,42 @@
 "use client";
 
-import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import {
-	Bold,
-	Braces,
+	type FormEvent,
+	type KeyboardEvent as ReactKeyboardEvent,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
+import { useRouter } from "next/navigation";
+import {
+	Bold as ToolbarBold,
+	Code2 as ToolbarInlineCode,
+	Ellipsis as ToolbarMore,
+	Heading2 as ToolbarHeading,
+	Image as ToolbarImage,
+	Italic as ToolbarItalic,
+	Link2 as ToolbarLink,
+	List as ToolbarList,
+	ListOrdered as ToolbarListOrdered,
+	Quote as ToolbarQuote,
+	SquareCode as ToolbarCodeBlock,
+	Strikethrough as ToolbarStrikethrough,
+	Table2 as ToolbarTable,
+} from "lucide-react";
+import { toast } from "sonner";
+import CommunityMarkdown from "@/components/community/CommunityMarkdown";
+import {
 	ChevronLeft,
 	ChevronRight,
-	Code,
-	Heading2,
 	ImageIcon,
 	Images,
-	Italic,
-	Link,
-	List,
-	ListOrdered,
-	MoreHorizontal,
 	Pencil,
 	Plus,
-	Quote,
 	Send,
-	Strikethrough,
-	Table,
 	Trash2,
 	X,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import {
 	Select,
@@ -45,6 +56,14 @@ import {
 	getCommunityPostImageClientIssue,
 } from "@/lib/community-media-validation";
 import {
+	createCommunityInlineImageMarkdown,
+	createCommunityInlineImageUrl,
+} from "@/lib/community-markdown";
+import {
+	COMMUNITY_CODE_LANGUAGE_OPTIONS,
+	type CommunityCodeLanguageValue,
+} from "@/lib/community-code-languages";
+import {
 	COMMUNITY_POST_BODY_MAX_LENGTH,
 	COMMUNITY_POLL_DURATION_DAYS,
 	COMMUNITY_POLL_OPTION_MAX_COUNT,
@@ -56,6 +75,7 @@ import {
 	normalizeCommunityPollOptions,
 } from "@/lib/community-validation";
 import { supabase } from "@/lib/supabase/client";
+import composerStyles from "./CommunityPostComposer.module.css";
 
 type CommunityTopic = {
 	description: string;
@@ -138,15 +158,20 @@ export default function CommunityPostComposer() {
 	const router = useRouter();
 	const bodyInputRef = useRef<HTMLTextAreaElement | null>(null);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
+	const inlineImageInputRef = useRef<HTMLInputElement | null>(null);
 	const imagesRef = useRef<SelectedPostImage[]>([]);
+	const inlineImagesRef = useRef<SelectedPostImage[]>([]);
 	const [activeTab, setActiveTab] = useState<ComposerTab>("text");
 	const [activeImageIndex, setActiveImageIndex] = useState(0);
 	const [activeDraftId, setActiveDraftId] = useState("");
 	const [body, setBody] = useState("");
+	const [codeLanguage, setCodeLanguage] =
+		useState<CommunityCodeLanguageValue>("auto");
 	const [drafts, setDrafts] = useState<ComposerDraft[]>([]);
 	const [draftsOpen, setDraftsOpen] = useState(false);
 	const [galleryOpen, setGalleryOpen] = useState(false);
 	const [images, setImages] = useState<SelectedPostImage[]>([]);
+	const [inlineImages, setInlineImages] = useState<SelectedPostImage[]>([]);
 	const [message, setMessage] = useState("");
 	const [pollDurationDays, setPollDurationDays] = useState("7");
 	const [pollOptions, setPollOptions] = useState<string[]>(DEFAULT_POLL_OPTIONS);
@@ -200,6 +225,10 @@ export default function CommunityPostComposer() {
 	}, [images]);
 
 	useEffect(() => {
+		inlineImagesRef.current = inlineImages;
+	}, [inlineImages]);
+
+	useEffect(() => {
 		setActiveImageIndex((current) => {
 			if (!images.length) return 0;
 			return Math.min(current, images.length - 1);
@@ -210,6 +239,9 @@ export default function CommunityPostComposer() {
 	useEffect(() => {
 		return () => {
 			for (const image of imagesRef.current) {
+				URL.revokeObjectURL(image.previewUrl);
+			}
+			for (const image of inlineImagesRef.current) {
 				URL.revokeObjectURL(image.previewUrl);
 			}
 		};
@@ -239,10 +271,25 @@ export default function CommunityPostComposer() {
 		0,
 	);
 	const activeImage = images[activeImageIndex] ?? images[0] ?? null;
+	const referencedInlineImages = useMemo(
+		() =>
+			inlineImages.filter((image) =>
+				body.includes(createCommunityInlineImageUrl(image.id)),
+			),
+		[body, inlineImages],
+	);
+	const totalImageCount = images.length + referencedInlineImages.length;
 	const canAddImages =
-		!submitting && images.length < COMMUNITY_POST_IMAGE_MAX_COUNT;
+		!submitting && totalImageCount < COMMUNITY_POST_IMAGE_MAX_COUNT;
 	const showBodyEditor = activeTab === "text";
 	const showBodyCounter = showBodyEditor || trimmedBody.length > 0;
+	const inlineImageSources = useMemo(
+		() =>
+			Object.fromEntries(
+				inlineImages.map((image) => [image.id, image.previewUrl]),
+			),
+		[inlineImages],
+	);
 	const hasDraftContent =
 		Boolean(trimmedTitle) ||
 		Boolean(trimmedBody) ||
@@ -255,9 +302,9 @@ export default function CommunityPostComposer() {
 		topicId,
 	});
 	const imageIssue =
-		activeTab === "poll" && images.length
+		activeTab === "poll" && totalImageCount
 			? "Remove images before posting a poll."
-			: images.length > COMMUNITY_POST_IMAGE_MAX_COUNT
+			: totalImageCount > COMMUNITY_POST_IMAGE_MAX_COUNT
 				? `Attach at most ${COMMUNITY_POST_IMAGE_MAX_COUNT} images.`
 				: "";
 	const formIssue = submitIssue || imageIssue || pollIssue;
@@ -297,7 +344,7 @@ export default function CommunityPostComposer() {
 
 		persistDrafts(nextDrafts);
 		setActiveDraftId(draft.id);
-		toast.success(images.length ? "Draft saved without images." : "Draft saved.");
+		toast.success(totalImageCount ? "Draft saved without images." : "Draft saved.");
 	}
 
 	function loadDraft(draft: ComposerDraft) {
@@ -342,10 +389,37 @@ export default function CommunityPostComposer() {
 		);
 	}
 
+	function updateBodySelection(nextBody: string, nextCursor: number) {
+		setBody(nextBody);
+		window.requestAnimationFrame(() => {
+			const textarea = bodyInputRef.current;
+			textarea?.focus();
+			textarea?.setSelectionRange(nextCursor, nextCursor);
+		});
+	}
+
+	function insertBodyText(text: string) {
+		const textarea = bodyInputRef.current;
+		const start = textarea?.selectionStart ?? body.length;
+		const end = textarea?.selectionEnd ?? body.length;
+		const nextBody = body.slice(0, start) + text + body.slice(end);
+		const nextCursor = start + text.length;
+
+		updateBodySelection(nextBody, nextCursor);
+	}
+
+	function createSelectedImage(file: File): SelectedPostImage {
+		return {
+			file,
+			id: crypto.randomUUID(),
+			previewUrl: URL.createObjectURL(file),
+		};
+	}
+
 	function addImages(fileList: FileList | null) {
 		if (!fileList?.length) return;
 
-		const availableSlots = COMMUNITY_POST_IMAGE_MAX_COUNT - images.length;
+		const availableSlots = COMMUNITY_POST_IMAGE_MAX_COUNT - totalImageCount;
 		if (availableSlots <= 0) {
 			showError(`Attach at most ${COMMUNITY_POST_IMAGE_MAX_COUNT} images.`);
 			return;
@@ -365,11 +439,7 @@ export default function CommunityPostComposer() {
 				continue;
 			}
 
-			nextImages.push({
-				file,
-				id: `${file.name}-${file.size}-${file.lastModified}-${crypto.randomUUID()}`,
-				previewUrl: URL.createObjectURL(file),
-			});
+			nextImages.push(createSelectedImage(file));
 		}
 
 		if (fileList.length > availableSlots) {
@@ -382,6 +452,34 @@ export default function CommunityPostComposer() {
 			setActiveImageIndex(firstNewImageIndex);
 			setActiveTab("media");
 		}
+	}
+
+	function addInlineImage(fileList: FileList | null) {
+		const file = fileList?.[0];
+		if (!file) return;
+
+		if (totalImageCount >= COMMUNITY_POST_IMAGE_MAX_COUNT) {
+			showError(`Attach at most ${COMMUNITY_POST_IMAGE_MAX_COUNT} images.`);
+			return;
+		}
+
+		const issue = getCommunityPostImageClientIssue({
+			name: file.name,
+			size: file.size,
+			type: file.type,
+		});
+
+		if (issue) {
+			showError(issue);
+			return;
+		}
+
+		const image = createSelectedImage(file);
+		const markdown = createCommunityInlineImageMarkdown(image.id, file.name);
+		const block = `${bodyInputRef.current?.selectionStart ? "\n\n" : ""}${markdown}\n\n`;
+
+		setInlineImages((current) => [...current, image]);
+		insertBodyText(block);
 	}
 
 	function removeImage(imageId: string) {
@@ -440,11 +538,7 @@ export default function CommunityPostComposer() {
 			body.slice(0, start) + prefix + selectedText + suffix + body.slice(end);
 		const nextCursor = start + prefix.length + selectedText.length + suffix.length;
 
-		setBody(nextBody);
-		window.requestAnimationFrame(() => {
-			textarea?.focus();
-			textarea?.setSelectionRange(nextCursor, nextCursor);
-		});
+		updateBodySelection(nextBody, nextCursor);
 	}
 
 	function addBodyLine(prefix: string) {
@@ -455,11 +549,80 @@ export default function CommunityPostComposer() {
 		const nextBody = `${before}${needsBreak ? "\n" : ""}${prefix}${body.slice(start)}`;
 		const nextCursor = before.length + (needsBreak ? 1 : 0) + prefix.length;
 
-		setBody(nextBody);
-		window.requestAnimationFrame(() => {
-			textarea?.focus();
-			textarea?.setSelectionRange(nextCursor, nextCursor);
-		});
+		updateBodySelection(nextBody, nextCursor);
+	}
+
+	function insertCodeBlock() {
+		const language = codeLanguage === "auto" ? "" : codeLanguage;
+		insertBodyMarkup(`\`\`\`${language}\n`, "\n```", "code");
+	}
+
+	function handleBodyKeyDown(event: ReactKeyboardEvent<HTMLTextAreaElement>) {
+		if (
+			event.key !== "Enter" ||
+			event.altKey ||
+			event.ctrlKey ||
+			event.metaKey ||
+			event.shiftKey
+		) {
+			return;
+		}
+
+		const textarea = event.currentTarget;
+		const start = textarea.selectionStart;
+		const end = textarea.selectionEnd;
+		const lineStart = body.lastIndexOf("\n", Math.max(0, start - 1)) + 1;
+		const currentLine = body.slice(lineStart, start);
+		const numberedMatch = /^(\s*)(\d+)\.\s(.*)$/.exec(currentLine);
+		const bulletMatch = /^(\s*)([-*])\s(.*)$/.exec(currentLine);
+		const quoteMatch = /^(>\s)(.*)$/.exec(currentLine);
+
+		if (numberedMatch) {
+			event.preventDefault();
+			const [, indent = "", currentNumber = "1", content = ""] = numberedMatch;
+			if (!content.trim()) {
+				updateBodySelection(body.slice(0, lineStart) + body.slice(end), lineStart);
+				return;
+			}
+
+			const nextMarker = `\n${indent}${Number(currentNumber) + 1}. `;
+			updateBodySelection(
+				body.slice(0, start) + nextMarker + body.slice(end),
+				start + nextMarker.length,
+			);
+			return;
+		}
+
+		if (bulletMatch) {
+			event.preventDefault();
+			const [, indent = "", marker = "-", content = ""] = bulletMatch;
+			if (!content.trim()) {
+				updateBodySelection(body.slice(0, lineStart) + body.slice(end), lineStart);
+				return;
+			}
+
+			const nextMarker = `\n${indent}${marker} `;
+			updateBodySelection(
+				body.slice(0, start) + nextMarker + body.slice(end),
+				start + nextMarker.length,
+			);
+			return;
+		}
+
+		if (quoteMatch) {
+			event.preventDefault();
+			const [, marker = "> ", content = ""] = quoteMatch;
+			if (!content.trim()) {
+				updateBodySelection(body.slice(0, lineStart) + body.slice(end), lineStart);
+				return;
+			}
+
+			const nextMarker = `\n${marker}`;
+			updateBodySelection(
+				body.slice(0, start) + nextMarker + body.slice(end),
+				start + nextMarker.length,
+			);
+		}
 	}
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -494,8 +657,18 @@ export default function CommunityPostComposer() {
 				formData.append("pollOptions", option);
 			}
 		} else {
-			formData.set("format", images.length ? "media" : "text");
+			formData.set(
+				"format",
+				totalImageCount ? "media" : "text",
+			);
+			for (const image of referencedInlineImages) {
+				formData.append("imageIds", image.id);
+				formData.append("imagePlacements", "inline");
+				formData.append("images", image.file);
+			}
 			for (const image of images) {
+				formData.append("imageIds", image.id);
+				formData.append("imagePlacements", "gallery");
 				formData.append("images", image.file);
 			}
 		}
@@ -638,87 +811,115 @@ export default function CommunityPostComposer() {
 
 			{showBodyEditor ? (
 				<div className="reddit-editor">
-					<div className="reddit-editor-toolbar" aria-label="Body formatting">
+					<div
+						className={`reddit-editor-toolbar ${composerStyles.editorToolbar}`}
+						aria-label="Body formatting"
+					>
 						<button
 							onClick={() => insertBodyMarkup("**", "**", "bold")}
 							title="Bold"
 							type="button"
 						>
-							<Bold aria-hidden="true" />
+							<ToolbarBold aria-hidden="true" />
 						</button>
 						<button
 							onClick={() => insertBodyMarkup("_", "_", "italic")}
 							title="Italic"
 							type="button"
 						>
-							<Italic aria-hidden="true" />
+							<ToolbarItalic aria-hidden="true" />
 						</button>
 						<button
 							onClick={() => insertBodyMarkup("~~", "~~", "strike")}
 							title="Strike"
 							type="button"
 						>
-							<Strikethrough aria-hidden="true" />
+							<ToolbarStrikethrough aria-hidden="true" />
 						</button>
 						<button
 							onClick={() => addBodyLine("## ")}
 							title="Heading"
 							type="button"
 						>
-							<Heading2 aria-hidden="true" />
+							<ToolbarHeading aria-hidden="true" />
 						</button>
 						<button
 							onClick={() => insertBodyMarkup("[", "](https://)", "link")}
 							title="Link"
 							type="button"
 						>
-							<Link aria-hidden="true" />
+							<ToolbarLink aria-hidden="true" />
 						</button>
 						<button
 							onClick={() => {
-								setActiveTab("media");
-								fileInputRef.current?.click();
+								inlineImageInputRef.current?.click();
 							}}
 							title="Image"
 							type="button"
 						>
-							<ImageIcon aria-hidden="true" />
+							<ToolbarImage aria-hidden="true" />
 						</button>
 						<button
 							onClick={() => addBodyLine("- ")}
 							title="Bulleted list"
 							type="button"
 						>
-							<List aria-hidden="true" />
+							<ToolbarList aria-hidden="true" />
 						</button>
 						<button
 							onClick={() => addBodyLine("1. ")}
 							title="Numbered list"
 							type="button"
 						>
-							<ListOrdered aria-hidden="true" />
+							<ToolbarListOrdered aria-hidden="true" />
 						</button>
 						<button
 							onClick={() => addBodyLine("> ")}
 							title="Quote"
 							type="button"
 						>
-							<Quote aria-hidden="true" />
+							<ToolbarQuote aria-hidden="true" />
 						</button>
 						<button
 							onClick={() => insertBodyMarkup("`", "`", "code")}
 							title="Inline code"
 							type="button"
 						>
-							<Code aria-hidden="true" />
+							<ToolbarInlineCode aria-hidden="true" />
 						</button>
 						<button
-							onClick={() => insertBodyMarkup("```\n", "\n```", "code")}
+							onClick={insertCodeBlock}
 							title="Code block"
 							type="button"
 						>
-							<Braces aria-hidden="true" />
+							<ToolbarCodeBlock aria-hidden="true" />
 						</button>
+						<Select
+							value={codeLanguage}
+							onValueChange={(value) =>
+								setCodeLanguage(value as CommunityCodeLanguageValue)
+							}
+						>
+							<SelectTrigger
+								aria-label="Code language"
+								className={composerStyles.codeLanguageTrigger}
+							>
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent className={composerStyles.codeLanguageContent}>
+								<SelectGroup>
+									{COMMUNITY_CODE_LANGUAGE_OPTIONS.map((option) => (
+										<SelectItem
+											className={composerStyles.codeLanguageItem}
+											key={option.value}
+											value={option.value}
+										>
+											{option.label}
+										</SelectItem>
+									))}
+								</SelectGroup>
+							</SelectContent>
+						</Select>
 						<button
 							onClick={() =>
 								addBodyLine("| Column | Column |\n| --- | --- |\n|  |  |")
@@ -726,20 +927,28 @@ export default function CommunityPostComposer() {
 							title="Table"
 							type="button"
 						>
-							<Table aria-hidden="true" />
+							<ToolbarTable aria-hidden="true" />
 						</button>
 						<button disabled title="More" type="button">
-							<MoreHorizontal aria-hidden="true" />
+							<ToolbarMore aria-hidden="true" />
 						</button>
 					</div>
 					<textarea
 						aria-describedby="community-body-help"
 						maxLength={COMMUNITY_POST_BODY_MAX_LENGTH}
 						onChange={(event) => setBody(event.target.value)}
+						onKeyDown={handleBodyKeyDown}
 						placeholder="Body text (optional)"
 						ref={bodyInputRef}
 						value={body}
 					/>
+					{trimmedBody ? (
+						<CommunityMarkdown
+							content={body}
+							inlineImageSources={inlineImageSources}
+							variant="composer"
+						/>
+					) : null}
 				</div>
 			) : null}
 
@@ -815,13 +1024,26 @@ export default function CommunityPostComposer() {
 				accept="image/png,image/jpeg,image/webp"
 				aria-hidden="true"
 				className="reddit-hidden-file-input"
-				disabled={submitting || images.length >= COMMUNITY_POST_IMAGE_MAX_COUNT}
+				disabled={submitting || totalImageCount >= COMMUNITY_POST_IMAGE_MAX_COUNT}
 				multiple
 				onChange={(event) => {
 					addImages(event.target.files);
 					event.currentTarget.value = "";
 				}}
 				ref={fileInputRef}
+				tabIndex={-1}
+				type="file"
+			/>
+			<input
+				accept="image/png,image/jpeg,image/webp"
+				aria-hidden="true"
+				className="reddit-hidden-file-input"
+				disabled={submitting || totalImageCount >= COMMUNITY_POST_IMAGE_MAX_COUNT}
+				onChange={(event) => {
+					addInlineImage(event.target.files);
+					event.currentTarget.value = "";
+				}}
+				ref={inlineImageInputRef}
 				tabIndex={-1}
 				type="file"
 			/>

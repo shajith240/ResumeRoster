@@ -804,6 +804,26 @@ body.main-app-dark .feed-thread-preview:hover {
 	stroke-width: 2;
 }
 
+.resume-feed-route .resume-card .save-icon {
+	transform-origin: 50% 64%;
+	transition: transform 180ms var(--button-ease);
+}
+
+.resume-feed-route .resume-card .save-icon-outline {
+	fill: currentColor;
+	stroke: none;
+}
+
+.resume-feed-route .resume-card .save-icon-filled {
+	color: var(--brand);
+	fill: var(--brand);
+	stroke: none;
+}
+
+.resume-feed-route .resume-card .save-button.is-saved .save-icon-filled {
+	animation: reactionPop 320ms var(--button-ease);
+}
+
 .copy-button em {
 	position: absolute;
 	bottom: calc(100% + 6px);
@@ -2840,8 +2860,8 @@ body.main-app-dark .comment-author-chip:hover {
 }
 
 .reaction-button .reaction-icon-outline {
-	fill: none;
-	stroke: currentColor;
+	fill: currentColor;
+	stroke: none;
 }
 
 .reaction-button .reaction-icon-filled {
@@ -2849,7 +2869,7 @@ body.main-app-dark .comment-author-chip:hover {
 	stroke: none;
 }
 
-.reaction-button.is-active .reaction-icon-filled {
+.reaction-button.is-active .reaction-icon-filled.is-animating {
 	animation: reactionPop 320ms var(--button-ease);
 }
 
@@ -3530,7 +3550,12 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 		position: sticky;
 		top: calc(var(--app-header-height) + clamp(26px, 2vw, 42px));
 		z-index: 40;
+		align-content: space-between;
+		grid-template-rows: minmax(0, auto) auto;
 		width: 100%;
+		height: calc(
+			100dvh - var(--app-header-height) - clamp(52px, 4vw, 72px)
+		);
 		max-height: calc(
 			100dvh - var(--app-header-height) - clamp(52px, 4vw, 72px)
 		);
@@ -3538,7 +3563,7 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	}
 
 	.recent-posts-rail .recent-posts-panel-desktop {
-		max-height: inherit;
+		max-height: 100%;
 		overflow-y: auto;
 		overscroll-behavior: contain;
 	}
@@ -5558,6 +5583,10 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 	}
 }
 
+.community-post-body-more {
+	display: none;
+}
+
 @media (max-width: 760px) {
 	.community-detail-page-shell .app-header,
 	.community-detail-page-shell .bottom-nav {
@@ -5740,7 +5769,7 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		order: 4;
 		position: relative;
 		display: block;
-		max-height: 38px;
+		max-height: calc(1.42em * 2);
 		padding: 0 12px;
 		overflow: hidden;
 		color: rgb(247 242 234 / 0.82);
@@ -5749,10 +5778,6 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		overflow-wrap: anywhere;
 		cursor: default;
 		transition: max-height 240ms cubic-bezier(0.22, 1, 0.36, 1);
-	}
-
-	.community-post-body[data-mobile-body-toggle="true"] {
-		cursor: pointer;
 	}
 
 	.community-post-body p {
@@ -5767,23 +5792,34 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		position: absolute;
 		right: 12px;
 		bottom: 0;
+		display: inline-flex;
+		border: 0;
+		margin: 0;
 		padding-left: 28px;
 		background: linear-gradient(90deg, rgb(0 0 0 / 0), #000 36%);
 		color: #f7f2ea;
+		cursor: pointer;
+		font: inherit;
 		font-size: 12px;
 		font-weight: 750;
 		line-height: 1.42;
 	}
 
-	.community-post-thread[data-mobile-body-expanded="true"] .community-post-body {
-		max-height: min(30dvh, 230px);
-		overflow-y: auto;
-		scrollbar-width: none;
+	.community-post-body-more:focus-visible {
+		outline: 2px solid rgb(247 242 234 / 0.72);
+		outline-offset: 3px;
 	}
 
 	.community-post-thread[data-mobile-body-expanded="true"]
-		.community-post-body::-webkit-scrollbar {
-		display: none;
+		> .community-post-detail {
+		overflow-y: auto;
+		overscroll-behavior-y: contain;
+		touch-action: pan-y;
+	}
+
+	.community-post-thread[data-mobile-body-expanded="true"] .community-post-body {
+		max-height: none;
+		overflow: visible;
 	}
 
 	.community-post-thread[data-mobile-body-expanded="true"]

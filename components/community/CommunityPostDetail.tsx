@@ -26,16 +26,16 @@ import {
 	MessageCircle,
 	MoreHorizontal,
 	Share2,
-	ThumbsDown,
-	ThumbsUp,
 	Trash2,
 	Unlock,
 	X,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import { toast } from "sonner";
-import FilledThumbIcon from "@/components/community/FilledThumbIcon";
+import CommunityMarkdown from "@/components/community/CommunityMarkdown";
 import CommunityMediaGallery from "@/components/community/CommunityMediaGallery";
 import LoadingScreen from "@/components/LoadingScreen";
+import { announceRouteTransition } from "@/components/RouteTransitionLoader";
+import ReactionIcon from "@/components/reactions/ReactionIcon";
 import { CommentComposer } from "@/components/resume-detail/comment-composer";
 import {
 	AlertDialog,
@@ -70,13 +70,14 @@ import {
 	type CommunityCommentNode,
 } from "@/lib/community-threading";
 import { formatCount } from "@/lib/feed-ranking";
+import { filterCommunityInlineAttachments } from "@/lib/community-markdown";
 import { getOptimisticCommunityVoteCounts } from "@/lib/community-optimistic";
 import {
 	getReportIssue,
 	REPORT_REASON_OPTIONS,
 	type ReportReason,
 } from "@/lib/report-validation";
-import { writeRecentPost } from "@/lib/recent-posts";
+import { removeRecentPost, writeRecentPost } from "@/lib/recent-posts";
 import { resolveProfileAvatarUrl } from "@/lib/supabase/avatars";
 import { supabase } from "@/lib/supabase/client";
 import type {
@@ -153,6 +154,15 @@ type PostEditResponse = {
 		status: CommunityPostStatus;
 		title: string;
 		updatedAt: string;
+	};
+};
+
+type PostDeleteResponse = {
+	message?: string;
+	post?: {
+		deletedAt: string | null;
+		id: string;
+		status: "deleted";
 	};
 };
 
@@ -392,6 +402,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			.maybeSingle();
 
 		if (error || !data) {
+			removeRecentPost("community", postId);
 			setPost(null);
 			setLoading(false);
 			return;
@@ -399,6 +410,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 
 		const nextPost = data as CommunityPost;
 		if (nextPost.status === "deleted" || nextPost.status === "removed") {
+			removeRecentPost("community", postId);
 			setPost(null);
 			setLoading(false);
 			return;
@@ -674,14 +686,6 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		return nodes;
 	}
 
-	function renderCommunityParagraphs(body: string) {
-		return body.split(/\n{2,}/).map((paragraph, index) => (
-			<p key={`${index}-${paragraph.slice(0, 20)}`}>
-				{renderCommunityTextWithMentions(paragraph, `community-${index}`)}
-			</p>
-		));
-	}
-
 	async function runCommunityAction<T extends { message?: string }>(
 		path: string,
 		options: {
@@ -905,6 +909,14 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			return;
 		}
 
+		if (
+			mobilePostBodyExpanded &&
+			event.target instanceof HTMLElement &&
+			event.target.closest(".community-post-body")
+		) {
+			return;
+		}
+
 		if (isMobileGestureBlocked(event.target)) return;
 
 		event.currentTarget.setPointerCapture(event.pointerId);
@@ -969,6 +981,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		if (
 			!isMobileViewport() ||
 			poll ||
+			mobilePostBodyExpanded ||
 			mobileCommentsSheetState === "open" ||
 			event.deltaY < 18
 		) {
@@ -1064,7 +1077,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	}
 
 	async function downloadCurrentAttachment() {
-		const attachment = attachments[0];
+		const attachment = visibleAttachments[0];
 		if (!attachment) {
 			toast.error("No image to download.");
 			return;
@@ -1297,31 +1310,34 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		const postId = post.id;
 		setPostDeleteConfirmOpen(false);
 		setActionBusy("post-delete");
-		router.replace("/community");
 
-		void (async () => {
-			try {
-				const token = await getAccessToken();
-				const response = await fetch(`/api/community/posts/${postId}`, {
-					headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-					method: "DELETE",
-				});
-				const result = (await response
-					.json()
-					.catch(() => null)) as CommentDeleteResponse | null;
+		try {
+			const token = await getAccessToken();
+			const response = await fetch(`/api/community/posts/${postId}`, {
+				headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+				method: "DELETE",
+			});
+			const result = (await response
+				.json()
+				.catch(() => null)) as PostDeleteResponse | null;
 
-				if (!response.ok) {
-					toast.error(result?.message ?? "Post was not deleted.");
-					return;
-				}
-
-				toast.success("Post deleted.");
-				router.refresh();
-			} catch (error) {
-				console.error(error);
-				toast.error("Post was not deleted.");
+			if (!response.ok || !result?.post) {
+				toast.error(result?.message ?? "Post was not deleted.");
+				setActionBusy("");
+				return;
 			}
-		})();
+
+			removeRecentPost("community", postId);
+			setPost(null);
+			toast.success("Post deleted.");
+			announceRouteTransition("/community");
+			router.replace("/community");
+			router.refresh();
+		} catch (error) {
+			console.error(error);
+			toast.error("Post was not deleted.");
+			setActionBusy("");
+		}
 	}
 
 	async function handleCommentEditSubmit(
@@ -1646,7 +1662,11 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 								</div>
 							</form>
 						) : (
-							<div>{renderCommunityParagraphs(node.body)}</div>
+							<CommunityMarkdown
+								className="community-comment-body"
+								content={node.body}
+								renderText={renderCommunityTextWithMentions}
+							/>
 						)}
 
 						{node.status !== "active" || isEditing ? null : (
@@ -1666,17 +1686,10 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 											title="Upvote"
 											type="button"
 										>
-											{reaction === "upvote" ? (
-												<FilledThumbIcon
-													className="reaction-icon reaction-icon-filled"
-													direction="up"
-												/>
-											) : (
-												<ThumbsUp
-													aria-hidden="true"
-													className="reaction-icon reaction-icon-outline"
-												/>
-											)}
+											<ReactionIcon
+												active={reaction === "upvote"}
+												direction="up"
+											/>
 											<span className="reaction-count">
 												{formatCount(node.upvote_count)}
 											</span>
@@ -1694,17 +1707,10 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 											title="Downvote"
 											type="button"
 										>
-											{reaction === "downvote" ? (
-												<FilledThumbIcon
-													className="reaction-icon reaction-icon-filled"
-													direction="down"
-												/>
-											) : (
-												<ThumbsDown
-													aria-hidden="true"
-													className="reaction-icon reaction-icon-outline"
-												/>
-											)}
+											<ReactionIcon
+												active={reaction === "downvote"}
+												direction="down"
+											/>
 											<span className="reaction-count">
 												{formatCount(node.downvote_count)}
 											</span>
@@ -1897,6 +1903,10 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		Boolean(currentUserId) &&
 		!isOwnPost &&
 		post.status === "active";
+	const visibleAttachments = filterCommunityInlineAttachments(
+		post.body,
+		attachments,
+	);
 	const pollTotalVotes =
 		poll?.options.reduce((total, option) => total + option.vote_count, 0) ?? 0;
 	const pollClosed = poll ? new Date(poll.closes_at).getTime() <= Date.now() : false;
@@ -2030,7 +2040,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 						<Share2 aria-hidden="true" />
 						<span>Share</span>
 					</button>
-					{attachments.length ? (
+					{visibleAttachments.length ? (
 						<button
 							onClick={() => {
 								setMobileActionSheetOpen(false);
@@ -2077,7 +2087,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	return (
 		<div
 			className="community-post-thread"
-			data-has-media={attachments.length ? "true" : "false"}
+			data-has-media={visibleAttachments.length ? "true" : "false"}
 			data-mobile-body-expanded={mobilePostBodyExpanded ? "true" : "false"}
 			data-mobile-comments-sheet={mobileCommentsSheetState}
 		>
@@ -2201,25 +2211,24 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 							canExpandMobilePostBody ? mobilePostBodyExpanded : undefined
 						}
 						className="community-post-body"
-						data-mobile-body-toggle={canExpandMobilePostBody ? "true" : undefined}
-						onClick={() => {
-							if (!canExpandMobilePostBody || !isMobileViewport()) return;
-							setMobilePostBodyExpanded((current) => !current);
-						}}
-						onKeyDown={(event) => {
-							if (!canExpandMobilePostBody || !isMobileViewport()) return;
-							if (event.key !== "Enter" && event.key !== " ") return;
-							event.preventDefault();
-							setMobilePostBodyExpanded((current) => !current);
-						}}
-						role={canExpandMobilePostBody ? "button" : undefined}
-						tabIndex={canExpandMobilePostBody ? 0 : undefined}
 					>
-						{renderCommunityParagraphs(post.body)}
+						<CommunityMarkdown
+							content={post.body}
+							renderText={renderCommunityTextWithMentions}
+						/>
 						{canExpandMobilePostBody ? (
-							<span className="community-post-body-more">
+							<button
+								aria-expanded={mobilePostBodyExpanded}
+								className="community-post-body-more"
+								data-mobile-body-toggle="true"
+								onClick={() => {
+									if (!isMobileViewport()) return;
+									setMobilePostBodyExpanded((current) => !current);
+								}}
+								type="button"
+							>
 								{mobilePostBodyExpanded ? "less" : "more"}
-							</span>
+							</button>
 						) : null}
 					</div>
 				)}
@@ -2271,8 +2280,8 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 					</section>
 				) : null}
 
-				{attachments.length ? (
-					<CommunityMediaGallery attachments={attachments} variant="detail" />
+				{visibleAttachments.length ? (
+					<CommunityMediaGallery attachments={visibleAttachments} variant="detail" />
 				) : null}
 
 				<footer
@@ -2298,17 +2307,10 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 								title="Upvote"
 								type="button"
 							>
-								{postReaction === "upvote" ? (
-									<FilledThumbIcon
-										className="reaction-icon reaction-icon-filled"
-										direction="up"
-									/>
-								) : (
-									<ThumbsUp
-										aria-hidden="true"
-										className="reaction-icon reaction-icon-outline"
-									/>
-								)}
+								<ReactionIcon
+									active={postReaction === "upvote"}
+									direction="up"
+								/>
 							</button>
 							<span className="community-vote-score">
 								{formatCount(score)}
@@ -2326,17 +2328,10 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 								title="Downvote"
 								type="button"
 							>
-								{postReaction === "downvote" ? (
-									<FilledThumbIcon
-										className="reaction-icon reaction-icon-filled"
-										direction="down"
-									/>
-								) : (
-									<ThumbsDown
-										aria-hidden="true"
-										className="reaction-icon reaction-icon-outline"
-									/>
-								)}
+								<ReactionIcon
+									active={postReaction === "downvote"}
+									direction="down"
+								/>
 							</button>
 						</div>
 					)}

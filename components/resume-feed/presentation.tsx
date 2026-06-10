@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
 	Bookmark,
+	BookmarkFilled,
 	Check,
 	ChevronDown,
 	Eye,
-	Link2,
 	MessageCircle,
-} from "lucide-react";
+	Share2,
+} from "@/components/ui/solar-icons";
 import FeedResumePreview from "@/components/FeedResumePreview";
 import FeedSkeleton from "@/components/feed/FeedSkeleton";
 import RecentPostsPanel from "@/components/RecentPostsPanel";
@@ -177,6 +178,10 @@ export function ResumeFeedCard({
 	const posterLabel = getResumePosterLabel(resume, authorProfile);
 	const authorAvatar = getResumeAuthorAvatar(resume, authorProfile);
 	const saveButtonState = getSaveButtonState(resume.is_saved, isSaving);
+	const SaveIcon = resume.is_saved ? BookmarkFilled : Bookmark;
+	const saveIconClass = `post-action-icon save-icon ${
+		resume.is_saved ? "save-icon-filled" : "save-icon-outline"
+	}`;
 	const reviewSignal = getReviewSignal(resume);
 	const threadActionLabel = getThreadActionLabel(resume);
 	const snippet =
@@ -294,7 +299,7 @@ export function ResumeFeedCard({
 						onClick={() => onShare(resume)}
 						aria-label="Share resume"
 					>
-						<Link2 className="post-action-icon" size={16} aria-hidden="true" />
+						<Share2 className="post-action-icon" size={16} aria-hidden="true" />
 						<span className="post-action-label">Share</span>
 						{copiedId === resume.id ? <em>Copied!</em> : null}
 					</button>
@@ -308,7 +313,7 @@ export function ResumeFeedCard({
 						onClick={() => onToggleSaved(resume)}
 						type="button"
 					>
-						<Bookmark className="post-action-icon" size={16} aria-hidden="true" />
+						<SaveIcon className={saveIconClass} size={16} aria-hidden="true" />
 						<span className="post-action-label">{saveButtonState.label}</span>
 					</button>
 				</div>

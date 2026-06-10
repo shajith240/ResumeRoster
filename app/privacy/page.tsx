@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BrandMark from "@/components/BrandMark";
+import { SUPPORT_EMAIL, SUPPORT_MAILTO } from "@/lib/support-contact";
 
 export const metadata = {
 	title: "Privacy Policy - Linted",
@@ -9,7 +10,6 @@ export const metadata = {
 
 const lastUpdated = "May 30, 2026";
 const websiteUrl = "https://linted.space";
-const contactEmail = "shajith240@gmail.com";
 
 export default function PrivacyPolicyPage() {
 	return (
@@ -47,7 +47,7 @@ export default function PrivacyPolicyPage() {
 					</p>
 					<p>
 						If you have questions or requests about privacy, contact us at{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>.
 					</p>
 				</section>
 
@@ -252,7 +252,7 @@ export default function PrivacyPolicyPage() {
 						authorized purposes and to protect information using appropriate
 						safeguards. A current subprocessors list will be made available upon
 						request by contacting{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>.
 					</p>
 				</section>
 
@@ -331,7 +331,7 @@ export default function PrivacyPolicyPage() {
 					</ul>
 					<p>
 						To make a privacy request, contact us at{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a>. We may need
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>. We may need
 						to verify your identity before completing a request. We will respond
 						within the timeframe required by applicable law.
 					</p>
@@ -393,7 +393,7 @@ export default function PrivacyPolicyPage() {
 						limit certain uses of sensitive personal information, opt out of sale
 						or sharing, and not be discriminated against for exercising privacy
 						rights. Contact us at{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a> to exercise
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a> to exercise
 						these rights.
 					</p>
 				</section>
@@ -411,7 +411,7 @@ export default function PrivacyPolicyPage() {
 						If we learn that we collected personal information from a child under
 						13 without appropriate consent, we will take reasonable steps to
 						delete it. Parents or guardians can contact us at{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>.
 					</p>
 				</section>
 
@@ -467,7 +467,7 @@ export default function PrivacyPolicyPage() {
 					<p>If you have questions, requests, or concerns, contact us:</p>
 					<ul>
 						<li>
-							Email: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+							Email: <a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>
 						</li>
 						<li>
 							Website: <a href={websiteUrl}>{websiteUrl}</a>

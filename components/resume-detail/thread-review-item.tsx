@@ -4,11 +4,10 @@ import {
 	MessageCircle,
 	MoreHorizontal,
 	Share2,
-	ThumbsDown,
-	ThumbsUp,
 	Trash2,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import { toast } from "sonner";
+import ReactionIcon from "@/components/reactions/ReactionIcon";
 import { Button } from "@/components/ui/button";
 import type { MentionSuggestion } from "@/lib/comment-mentions";
 import {
@@ -30,30 +29,6 @@ type ThreadReviewItemProps = ThreadReviewControls & {
 	mentionSuggestions: MentionSuggestion[];
 	review: ThreadReviewNode;
 };
-
-function FilledThumbIcon({
-	className,
-	direction,
-}: {
-	className: string;
-	direction: "up" | "down";
-}) {
-	const path =
-		direction === "up"
-			? "M1 21h4V9H1v12Zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2Z"
-			: "M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2Zm4 0v12h4V3h-4Z";
-
-	return (
-		<svg
-			aria-hidden="true"
-			className={className}
-			focusable="false"
-			viewBox="0 0 24 24"
-		>
-			<path d={path} />
-		</svg>
-	);
-}
 
 export function ThreadReviewItem({
 	attachmentsById,
@@ -294,17 +269,7 @@ export function ThreadReviewItem({
 									type="button"
 									title={reactionBlockReason ?? undefined}
 								>
-									{voted ? (
-										<FilledThumbIcon
-											className="reaction-icon reaction-icon-filled"
-											direction="up"
-										/>
-									) : (
-										<ThumbsUp
-											className="reaction-icon reaction-icon-outline"
-											aria-hidden="true"
-										/>
-									)}
+									<ReactionIcon active={voted} direction="up" />
 									<span className="reaction-count">{review.helpful_votes}</span>
 								</button>
 								<button
@@ -320,17 +285,7 @@ export function ThreadReviewItem({
 									type="button"
 									title={reactionBlockReason ?? undefined}
 								>
-									{disliked ? (
-										<FilledThumbIcon
-											className="reaction-icon reaction-icon-filled"
-											direction="down"
-										/>
-									) : (
-										<ThumbsDown
-											className="reaction-icon reaction-icon-outline"
-											aria-hidden="true"
-										/>
-									)}
+									<ReactionIcon active={disliked} direction="down" />
 									<span className="reaction-count">
 										{review.dislike_count ?? 0}
 									</span>

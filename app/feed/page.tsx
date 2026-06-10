@@ -1,4 +1,5 @@
 import AuthGate from "@/components/AuthGate";
+import FeedRailLegalFooter from "@/components/FeedRailLegalFooter";
 import PersonalizeLintedPrompt from "@/components/PersonalizeLintedPrompt";
 import RecentPostsPanel from "@/components/RecentPostsPanel";
 import ResumeFeed, { type FeedSort } from "@/components/ResumeFeed";
@@ -127,7 +128,10 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 					<ResumeFeed activeSort={activeSort} savedOnly={savedOnly} />
 				</section>
 
-				<RecentPostsPanel kind="resume" surface="rail" />
+				<aside className="feed-right-rail recent-posts-rail">
+					<RecentPostsPanel kind="resume" surface="rail-content" />
+					<FeedRailLegalFooter />
+				</aside>
 			</main>
 		</AuthGate>
 	);

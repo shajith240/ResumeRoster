@@ -11,12 +11,14 @@ import {
 } from "@/lib/community-media-validation";
 import {
 	cleanCommunityText,
+	COMMUNITY_POST_BODY_MAX_LENGTH,
 	getCommunityPollIssue,
 	getCommunityPostIssue,
 	isCommunityPollDurationDays,
 	normalizeCommunityPollOptions,
 	parseCommunityTags,
 } from "@/lib/community-validation";
+import { replaceCommunityInlineImageUrls } from "@/lib/community-markdown";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
 import type { CommunityPostStatus } from "@/lib/supabase/types";
@@ -27,6 +29,8 @@ export const dynamic = "force-dynamic";
 type CommunityPostSubmitBody = {
 	body?: unknown;
 	format?: unknown;
+	imageIds?: unknown;
+	imagePlacements?: unknown;
 	pollDurationDays?: unknown;
 	pollOptions?: unknown;
 	postType?: unknown;
@@ -39,9 +43,19 @@ type CommunityPostSubmitPayload = Required<CommunityPostSubmitBody> & {
 	files: File[];
 };
 
+type ImagePlacement = "gallery" | "inline";
+
+type PostImageInput = {
+	clientId: string;
+	file: File;
+	placement: ImagePlacement;
+};
+
 type UploadedPostAttachment = {
 	alt_text: string;
+	clientId: string;
 	file_size: number;
+	placement: ImagePlacement;
 	mime_type: CommunityPostImageMimeType;
 	storage_path: string;
 	title: string;
@@ -113,6 +127,10 @@ function readSubmitFormat(value: unknown): SubmitFormat {
 	return value === "poll" || value === "media" ? value : "text";
 }
 
+function readImagePlacement(value: unknown): ImagePlacement {
+	return value === "inline" ? "inline" : "gallery";
+}
+
 async function readSubmitPayload(request: Request) {
 	const contentType = request.headers.get("content-type") ?? "";
 
@@ -129,6 +147,8 @@ async function readSubmitPayload(request: Request) {
 						value instanceof File && Boolean(value.name.trim()) && value.size > 0,
 				),
 			format: formData.get("format"),
+			imageIds: formData.getAll("imageIds"),
+			imagePlacements: formData.getAll("imagePlacements"),
 			pollDurationDays: formData.get("pollDurationDays"),
 			pollOptions: formData.getAll("pollOptions"),
 			postType: formData.get("postType"),
@@ -148,6 +168,8 @@ async function readSubmitPayload(request: Request) {
 		body: body.body,
 		files: [],
 		format: body.format,
+		imageIds: body.imageIds,
+		imagePlacements: body.imagePlacements,
 		pollDurationDays: body.pollDurationDays,
 		pollOptions: body.pollOptions,
 		postType: body.postType,
@@ -199,9 +221,10 @@ async function removeUploadedPostImages(
 
 async function uploadPostImage(
 	admin: SupabaseClient,
-	file: File,
+	image: PostImageInput,
 	userId: string,
 ) {
+	const { file } = image;
 	const bytes = new Uint8Array(await file.arrayBuffer());
 	const issue = getCommunityPostImageUploadIssue({
 		bytes,
@@ -247,7 +270,9 @@ async function uploadPostImage(
 	return {
 		attachment: {
 			alt_text: title,
+			clientId: image.clientId,
 			file_size: file.size,
+			placement: image.placement,
 			mime_type: mimeType,
 			storage_path: storagePath,
 			title,
@@ -258,13 +283,13 @@ async function uploadPostImage(
 
 async function uploadPostImages(
 	admin: SupabaseClient,
-	files: File[],
+	images: PostImageInput[],
 	userId: string,
 ) {
 	const uploadedAttachments: UploadedPostAttachment[] = [];
 
-	for (const file of files) {
-		const result = await uploadPostImage(admin, file, userId);
+	for (const image of images) {
+		const result = await uploadPostImage(admin, image, userId);
 
 		if (!result.attachment) {
 			await removeUploadedPostImages(admin, uploadedAttachments);
@@ -275,6 +300,47 @@ async function uploadPostImages(
 	}
 
 	return { attachments: uploadedAttachments, message: "" };
+}
+
+function getPostImageInputs({
+	files,
+	imageIds,
+	imagePlacements,
+}: {
+	files: File[];
+	imageIds: string[];
+	imagePlacements: string[];
+}) {
+	if (!files.length) return { images: [] as PostImageInput[], message: "" };
+
+	if (
+		(imageIds.length > 0 && imageIds.length !== files.length) ||
+		(imagePlacements.length > 0 && imagePlacements.length !== files.length)
+	) {
+		return {
+			images: [] as PostImageInput[],
+			message: "Check the post images and try again.",
+		};
+	}
+
+	return {
+		images: files.map((file, index) => ({
+			clientId: cleanCommunityText(imageIds[index]) || randomUUID(),
+			file,
+			placement: readImagePlacement(imagePlacements[index]),
+		})),
+		message: "",
+	};
+}
+
+function getAttachmentPayload(attachments: UploadedPostAttachment[]) {
+	return attachments.map((attachment) => ({
+		alt_text: attachment.alt_text,
+		file_size: attachment.file_size,
+		mime_type: attachment.mime_type,
+		storage_path: attachment.storage_path,
+		title: attachment.title,
+	}));
 }
 
 export async function POST(request: Request) {
@@ -322,6 +388,15 @@ export async function POST(request: Request) {
 	const tags = readTagList(body.tags);
 	const files = body.files;
 	const format = readSubmitFormat(body.format);
+	const imageIds = readStringList(body.imageIds).map(cleanCommunityText);
+	const imagePlacements = readStringList(body.imagePlacements).map(
+		cleanCommunityText,
+	);
+	const imageInputResult = getPostImageInputs({
+		files,
+		imageIds,
+		imagePlacements,
+	});
 	const pollDurationDays = cleanCommunityText(body.pollDurationDays) || "7";
 	const pollOptions = normalizeCommunityPollOptions(
 		readStringList(body.pollOptions),
@@ -338,8 +413,14 @@ export async function POST(request: Request) {
 		return jsonResponse(issue);
 	}
 
+	if (imageInputResult.message) {
+		return jsonResponse(imageInputResult.message);
+	}
+
+	const postImages = imageInputResult.images;
+
 	if (format === "poll") {
-		if (files.length) {
+		if (postImages.length) {
 			return jsonResponse("Remove images before posting a poll.");
 		}
 
@@ -351,7 +432,7 @@ export async function POST(request: Request) {
 		}
 	}
 
-	if (files.length > COMMUNITY_POST_IMAGE_MAX_COUNT) {
+	if (postImages.length > COMMUNITY_POST_IMAGE_MAX_COUNT) {
 		return jsonResponse(`Attach at most ${COMMUNITY_POST_IMAGE_MAX_COUNT} images.`);
 	}
 
@@ -362,7 +443,7 @@ export async function POST(request: Request) {
 	);
 	if (rateLimitResponse) return rateLimitResponse;
 
-	if (files.length) {
+	if (postImages.length) {
 		const mediaRateLimitResponse = await enforceApiRateLimit(
 			admin,
 			user.id,
@@ -408,14 +489,34 @@ export async function POST(request: Request) {
 		});
 	}
 
-	const uploadResult = await uploadPostImages(admin, files, user.id);
+	const uploadResult = await uploadPostImages(admin, postImages, user.id);
 	if (uploadResult.message) {
 		return jsonResponse(uploadResult.message);
 	}
 
+	const inlineImageReplacements = uploadResult.attachments
+		.filter((attachment) => attachment.placement === "inline")
+		.map((attachment) => ({
+			id: attachment.clientId,
+			publicUrl: admin.storage
+				.from("community-post-media")
+				.getPublicUrl(attachment.storage_path).data.publicUrl,
+		}));
+	const postBodyWithInlineImages = replaceCommunityInlineImageUrls(
+		postBody,
+		inlineImageReplacements,
+	);
+
+	if (postBodyWithInlineImages.length > COMMUNITY_POST_BODY_MAX_LENGTH) {
+		await removeUploadedPostImages(admin, uploadResult.attachments);
+		return jsonResponse(
+			`Keep the body under ${COMMUNITY_POST_BODY_MAX_LENGTH} characters.`,
+		);
+	}
+
 	const submitPost = await admin.rpc("submit_community_post", {
-		attachment_payload: uploadResult.attachments,
-		post_body: postBody,
+		attachment_payload: getAttachmentPayload(uploadResult.attachments),
+		post_body: postBodyWithInlineImages,
 		post_kind: postType,
 		post_title: title,
 		selected_topic_id: topicId,

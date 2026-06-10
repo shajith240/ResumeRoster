@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import AuthGate from "@/components/AuthGate";
 import CommunityPostFeed from "@/components/community/CommunityPostFeed";
+import FeedRailLegalFooter from "@/components/FeedRailLegalFooter";
 import RecentPostsPanel from "@/components/RecentPostsPanel";
 import RouteHeader from "@/components/RouteHeader";
 import { areCommunityPostsEnabled } from "@/lib/community";
@@ -26,7 +27,10 @@ export default async function CommunityPage() {
 					</header>
 					<CommunityPostFeed />
 				</section>
-				<RecentPostsPanel kind="community" surface="rail" />
+				<aside className="feed-right-rail recent-posts-rail">
+					<RecentPostsPanel kind="community" surface="rail-content" />
+					<FeedRailLegalFooter />
+				</aside>
 			</main>
 		</AuthGate>
 	);

@@ -8,7 +8,7 @@ import {
 	GraduationCap,
 	MapPin,
 	Pencil,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import LintPointsFlame from "@/components/LintPointsFlame";
 import { Button } from "@/components/ui/button";
 import {
@@ -159,10 +159,10 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							<div className={styles.roleTag}>{profileView.roleTag}</div>
 							<div
 								className={styles.lintPointsBadge}
-								aria-label={`${profile.helpful_votes.toLocaleString()} lint points`}
+								aria-label={`${profileView.lintPoints.toLocaleString()} lint points`}
 							>
 								<LintPointsFlame className={styles.lintPointsFlame} />
-								<strong>{profile.helpful_votes.toLocaleString()}</strong>
+								<strong>{profileView.lintPoints.toLocaleString()}</strong>
 								<span>Lint Points</span>
 							</div>
 						</div>

@@ -11,16 +11,15 @@ import {
 	MessageCircle,
 	MoreHorizontal,
 	RefreshCw,
-	ThumbsDown,
-	ThumbsUp,
 	Trash2,
 	Unlock,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import { toast } from "sonner";
-import FilledThumbIcon from "@/components/community/FilledThumbIcon";
+import CommunityMarkdown from "@/components/community/CommunityMarkdown";
 import CommunityMediaGallery from "@/components/community/CommunityMediaGallery";
 import FeedSkeleton from "@/components/feed/FeedSkeleton";
 import RecentPostsPanel from "@/components/RecentPostsPanel";
+import ReactionIcon from "@/components/reactions/ReactionIcon";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -55,7 +54,12 @@ import {
 } from "@/lib/community-feed";
 import { formatCount } from "@/lib/feed-ranking";
 import { getFreshAuthSession } from "@/lib/auth-session";
+import {
+	filterCommunityInlineAttachments,
+	getCommunityMarkdownPlainText,
+} from "@/lib/community-markdown";
 import { getOptimisticCommunityVoteCounts } from "@/lib/community-optimistic";
+import { removeRecentPost } from "@/lib/recent-posts";
 import { resolveProfileAvatarUrl } from "@/lib/supabase/avatars";
 import { supabase } from "@/lib/supabase/client";
 import { useAdminAccess } from "@/lib/use-admin-access";
@@ -192,10 +196,13 @@ function getCommentLabel(post: CommunityPostFeedItem) {
 	return post.comment_count === 1 ? "comment" : "comments";
 }
 
-function getFeedTextPreview(post: CommunityPostFeedItem) {
-	if (post.attachments.length || post.poll) return "";
+function getFeedTextPreview(
+	post: CommunityPostFeedItem,
+	attachments: CommunityPostFeedItem["attachments"],
+) {
+	if (attachments.length || post.poll) return "";
 
-	return post.body.replace(/\s+/g, " ").trim();
+	return getCommunityMarkdownPlainText(post.body);
 }
 
 function getPollTotalVotes(poll: CommunityPostFeedPoll) {
@@ -301,6 +308,7 @@ export default function CommunityPostFeed() {
 	const [rowActionIds, setRowActionIds] = useState<Set<string>>(() => new Set());
 	const [votingIds, setVotingIds] = useState<Set<string>>(() => new Set());
 	const [activeTab, setActiveTab] = useState<CommunityFeedTab>(COMMUNITY_FEED_SORT);
+	const [retryToken, setRetryToken] = useState(0);
 
 	useEffect(() => {
 		for (const key of PAUSED_LOCAL_COMMUNITY_FILTER_KEYS) {
@@ -480,7 +488,7 @@ export default function CommunityPostFeed() {
 		return () => {
 			cancelled = true;
 		};
-	}, [activeTab]);
+	}, [activeTab, retryToken]);
 
 	const visiblePosts = useMemo(
 		() => filterCommunityPostsForTabInCurrentOrder(posts, activeTab),
@@ -780,6 +788,7 @@ export default function CommunityPostFeed() {
 			return;
 		}
 
+		removeRecentPost("community", post.id);
 		toast.success("Post deleted.");
 	}
 
@@ -855,7 +864,7 @@ export default function CommunityPostFeed() {
 					<h2>Could not load posts</h2>
 					<p>{errorMessage}</p>
 					<button
-						onClick={() => window.location.reload()}
+						onClick={() => setRetryToken((current) => current + 1)}
 						type="button"
 					>
 						<RefreshCw aria-hidden="true" />
@@ -875,7 +884,11 @@ export default function CommunityPostFeed() {
 							post,
 						);
 						const postScore = getCommunityPostScore(post);
-						const textPreview = getFeedTextPreview(post);
+						const visibleAttachments = filterCommunityInlineAttachments(
+							post.body,
+							post.attachments,
+						);
+						const textPreview = getFeedTextPreview(post, visibleAttachments);
 						const canEditPost = canEditCommunityPost(activeUser, post);
 						const canDeletePost = canDeleteCommunityPost({
 							activeUser,
@@ -934,14 +947,16 @@ export default function CommunityPostFeed() {
 									)}
 
 									{textPreview ? (
-										<p className="community-feed-excerpt">
-											{textPreview}
-										</p>
+										<CommunityMarkdown
+											className="community-feed-excerpt"
+											content={post.body}
+											variant="compact"
+										/>
 									) : null}
 
-									{post.attachments.length ? (
+									{visibleAttachments.length ? (
 										<CommunityMediaGallery
-											attachments={post.attachments}
+											attachments={visibleAttachments}
 											openHref={poll ? undefined : `/community/${post.id}`}
 											openLabel={`Open ${post.title}`}
 											variant="feed"
@@ -1017,17 +1032,10 @@ export default function CommunityPostFeed() {
 													title="Upvote"
 													type="button"
 												>
-													{post.userReaction === "upvote" ? (
-														<FilledThumbIcon
-															className="reaction-icon reaction-icon-filled"
-															direction="up"
-														/>
-													) : (
-														<ThumbsUp
-															aria-hidden="true"
-															className="reaction-icon reaction-icon-outline"
-														/>
-													)}
+													<ReactionIcon
+														active={post.userReaction === "upvote"}
+														direction="up"
+													/>
 												</button>
 												<span className="community-vote-score">
 													{formatCount(postScore)}
@@ -1045,17 +1053,10 @@ export default function CommunityPostFeed() {
 													title="Downvote"
 													type="button"
 												>
-													{post.userReaction === "downvote" ? (
-														<FilledThumbIcon
-															className="reaction-icon reaction-icon-filled"
-															direction="down"
-														/>
-													) : (
-														<ThumbsDown
-															aria-hidden="true"
-															className="reaction-icon reaction-icon-outline"
-														/>
-													)}
+													<ReactionIcon
+														active={post.userReaction === "downvote"}
+														direction="down"
+													/>
 												</button>
 											</div>
 										)}

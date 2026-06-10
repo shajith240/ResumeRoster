@@ -1,3 +1,5 @@
+import { SUPPORT_MAILTO } from "@/lib/support-contact";
+
 export type FeatureKey = "ats" | "jd" | "roast" | "skills" | "optimize";
 export type BenefitKey = "students" | "jobseekers" | "switchers";
 export type FooterLink = {
@@ -24,6 +26,7 @@ export const footerGroups: Array<{ title: string; links: FooterLink[] }> = [
 			{ label: "Top Reviewers", href: "/leaderboard" },
 			{ label: "Invite Reviewers", href: "/submit" },
 			{ label: "Community Guidelines", href: "/guidelines" },
+			{ label: "Help Center", href: "/help" },
 		],
 	},
 	{
@@ -33,7 +36,7 @@ export const footerGroups: Array<{ title: string; links: FooterLink[] }> = [
 			{ label: "Terms of Service", href: "/terms" },
 			{ label: "Copyright Policy", href: "/copyright" },
 			{ label: "Cookie Notice", href: "/privacy" },
-			{ label: "Contact Us", href: "mailto:shajith240@gmail.com" },
+			{ label: "Contact Us", href: SUPPORT_MAILTO },
 		],
 	},
 ];

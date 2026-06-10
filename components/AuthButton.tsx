@@ -211,7 +211,7 @@ export default function AuthButton() {
 			profile: "/profile/me",
 			submit: "/submit",
 			saved: "/feed?saved=1",
-			help: appHomeRoute,
+			help: "/help",
 		};
 
 		const nextRoute = routes[action] || appHomeRoute;

@@ -1,13 +1,12 @@
 "use client";
 
-import fireLineDuotone from "@iconify-icons/solar/fire-line-duotone";
 import {
 	DotLottieReact,
 	setWasmUrl,
 	type DotLottie,
 } from "@lottiefiles/dotlottie-react";
-import { Icon } from "@iconify/react/offline";
 import { useCallback, useEffect, useState } from "react";
+import { Fire } from "@/components/ui/solar-icons";
 import { cn } from "@/lib/utils";
 
 const FIRE_ANIMATION_SRC = "/assets/890cb942-1177-11ee-847c-73f9b2630e61.lottie";
@@ -38,10 +37,9 @@ function usePrefersReducedMotion() {
 
 function StaticFlameIcon({ className }: { className?: string }) {
 	return (
-		<Icon
+		<Fire
 			aria-hidden="true"
 			className={cn("h-4 w-4 text-[var(--brand)]", className)}
-			icon={fireLineDuotone}
 		/>
 	);
 }

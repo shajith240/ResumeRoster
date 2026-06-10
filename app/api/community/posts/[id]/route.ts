@@ -4,6 +4,7 @@ import {
 	COMMUNITY_POST_TITLE_MIN_LENGTH,
 	cleanCommunityText,
 } from "@/lib/community-validation";
+import { normalizeCommunityMarkdown } from "@/lib/community-markdown";
 import { isAdminEmail } from "@/lib/admin";
 import {
 	communityFeatureResponse,
@@ -69,7 +70,7 @@ export async function PATCH(request: Request, context: CommunityRouteContext) {
 		}
 
 		const title = cleanCommunityText(payload.title);
-		const body = cleanCommunityText(payload.body);
+		const body = normalizeCommunityMarkdown(cleanCommunityText(payload.body));
 		const issue = getPostEditIssue(title, body);
 		if (issue) return Response.json({ message: issue }, { status: 400 });
 

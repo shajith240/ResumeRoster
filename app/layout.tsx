@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { Suspense, type ReactNode } from "react";
+import AppScrollRestoration from "@/components/AppScrollRestoration";
 import RouteTransitionLoader from "@/components/RouteTransitionLoader";
 import { Toaster } from "@/components/ui/sonner";
 import { THEME_BOOTSTRAP_SCRIPT } from "@/lib/security/theme-bootstrap";
@@ -94,6 +95,9 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
         />
         <div className="app-root">{children}</div>
+        <Suspense fallback={null}>
+          <AppScrollRestoration />
+        </Suspense>
         <Suspense fallback={null}>
           <RouteTransitionLoader />
         </Suspense>

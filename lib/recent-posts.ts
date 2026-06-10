@@ -89,6 +89,33 @@ export function writeRecentPost(item: RecentPostItem) {
 	}
 }
 
+export function removeRecentPost(kind: RecentPostKind, id: string) {
+	removeRecentPosts(kind, [id]);
+}
+
+export function removeRecentPosts(kind: RecentPostKind, ids: Iterable<string>) {
+	if (typeof window === "undefined") return;
+
+	const removedIds = new Set(ids);
+	if (!removedIds.size) return;
+
+	const existing = readRecentPosts(kind);
+	const nextItems = existing.filter((recentItem) => !removedIds.has(recentItem.id));
+
+	if (nextItems.length === existing.length) return;
+
+	try {
+		if (nextItems.length) {
+			window.localStorage.setItem(getStorageKey(kind), JSON.stringify(nextItems));
+		} else {
+			window.localStorage.removeItem(getStorageKey(kind));
+		}
+		dispatchRecentPostsChange(kind);
+	} catch {
+		// Recent history is optional UI state; storage failures should not block navigation.
+	}
+}
+
 export function clearRecentPosts(kind: RecentPostKind) {
 	if (typeof window === "undefined") return;
 

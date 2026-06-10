@@ -9,7 +9,7 @@ import {
 	ListOrdered,
 	Search,
 	X,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 
 import LintPointsFlame from "@/components/LintPointsFlame";
 import { Input } from "@/components/ui/input";
