@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { areCommunityPostsEnabled } from "@/lib/community";
 import {
 	COMMUNITY_POST_IMAGE_MAX_COUNT,
@@ -20,6 +20,7 @@ import {
 } from "@/lib/community-validation";
 import { replaceCommunityInlineImageUrls } from "@/lib/community-markdown";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
+import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
 import type { CommunityPostStatus } from "@/lib/supabase/types";
 
@@ -81,12 +82,6 @@ function getCommunityPostMediaScanEnvironment() {
 
 function jsonResponse(message: string, status = 400) {
 	return NextResponse.json({ message }, { status });
-}
-
-function getBearerToken(request: Request) {
-	const authorization = request.headers.get("authorization") ?? "";
-	const [scheme, token] = authorization.split(/\s+/);
-	return /^bearer$/i.test(scheme) && token ? token : "";
 }
 
 async function readJsonBody(request: Request) {
@@ -363,33 +358,16 @@ export async function POST(request: Request) {
 		return jsonResponse("Community posting is not enabled.", 404);
 	}
 
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-	const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-	if (!supabaseUrl || !serviceRoleKey) {
-		return jsonResponse("Server community setup is missing.", 503);
+	let signedIn: Awaited<ReturnType<typeof requireSignedInUser>>;
+	try {
+		signedIn = await requireSignedInUser(request, {
+			missingTokenMessage: "Sign in again before posting.",
+			setupMessage: "Server community setup is missing.",
+		});
+	} catch (error) {
+		return serverAuthErrorResponse(error);
 	}
-
-	const token = getBearerToken(request);
-	if (!token) {
-		return jsonResponse("Sign in again before posting.", 401);
-	}
-
-	const admin = createClient(supabaseUrl, serviceRoleKey, {
-		auth: {
-			autoRefreshToken: false,
-			persistSession: false,
-		},
-	});
-
-	const {
-		data: { user },
-		error: userError,
-	} = await admin.auth.getUser(token);
-
-	if (userError || !user) {
-		return jsonResponse("Your session expired. Sign in again.", 401);
-	}
+	const { admin, user } = signedIn;
 
 	const body = await readSubmitPayload(request);
 	if (!body) {

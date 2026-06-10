@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/people.tsx`
 - Kind: React component
-- Size: 9623 bytes
+- Size: 9638 bytes
 - Lines: 385
-- Source hash: `ed21e3da900846de0d6d399fd2cd43de01445ea3a26a570530a2bde048ef67aa`
+- Source hash: `3643eaea8b6f364eb8b129368a71cc7829c26737e58da5371d999780f1f63869`
 
 ## What This File Does
 
@@ -31,7 +31,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./types`
 - `./utils`
 - `@/components/ui/button`
-- `lucide-react`
+- `@/components/ui/solar-icons`
 - `next/link`
 
 ## Functions And Components

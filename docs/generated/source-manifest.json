@@ -10,11 +10,11 @@
   ],
   "files": [
     {
-      "hash": "8692792663c1373da60b4134dd780822f32adef909b32e3a7fe894c2fb66f932",
+      "hash": "ee4ecb7593b672053448361b9573e7f1b850d7317b8e665d5f2a22ce6286fed5",
       "kind": "Project file",
       "lineCount": 0,
       "relativePath": ".env.example",
-      "size": 553,
+      "size": 594,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -30,31 +30,41 @@
       "exportCount": 0
     },
     {
-      "hash": "4e8980a63efa29faa9207d77871709b9c5633b20fed130d9c06bfa4c7e8af4e2",
+      "hash": "44d0c4bdb20c119cec816cac9225681ed0e65572829fa2d17b0c4f56f84b3700",
       "kind": "Project file",
       "lineCount": 0,
       "relativePath": ".gitignore",
-      "size": 190,
+      "size": 206,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "8cfe5f0b1965e69c49fc75e53079ecde7603605f2a51fa224d8bfb1cd7e48f3f",
-      "kind": "Project file",
-      "lineCount": 1277,
-      "relativePath": "app/admin.css",
-      "size": 22727,
-      "functionCount": 0,
-      "importCount": 0,
-      "exportCount": 0
-    },
-    {
-      "hash": "34acecb97aa1a302023bd27574e44ff914af993fb860c6fc48e2f49dc552408e",
+      "hash": "55055dec13df2943ba1d91f93e187f5f04ebb591e121b2c747a6e0b0d73896ab",
       "kind": "Next page route",
-      "lineCount": 37,
+      "lineCount": 100,
+      "relativePath": "app/accessibility/page.tsx",
+      "size": 3138,
+      "functionCount": 2,
+      "importCount": 4,
+      "exportCount": 3
+    },
+    {
+      "hash": "d7f835d473b21670ac2c30a1c337b90932668d6d2297bce0982db5ec247e37d7",
+      "kind": "Project file",
+      "lineCount": 1676,
+      "relativePath": "app/admin.css",
+      "size": 32568,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "621a954ea2adcd43687809c243eca1de840f82ee45827a17a3838c498d6a8a85",
+      "kind": "Next page route",
+      "lineCount": 38,
       "relativePath": "app/admin/[section]/page.tsx",
-      "size": 744,
+      "size": 757,
       "functionCount": 1,
       "importCount": 4,
       "exportCount": 2
@@ -80,13 +90,33 @@
       "exportCount": 3
     },
     {
-      "hash": "dbd89aa89eb5b5059985ef5f7033dcf3bdc832ca0a6bd1b0655bd70e63ff4b2b",
+      "hash": "cc358c08f157aa532bb7e367f6a64fd88d5e522d14e36283c2a0044d0560c3b9",
       "kind": "Next API route",
-      "lineCount": 175,
+      "lineCount": 216,
       "relativePath": "app/api/admin/data/route.ts",
-      "size": 4433,
-      "functionCount": 2,
+      "size": 5462,
+      "functionCount": 3,
       "importCount": 2,
+      "exportCount": 3
+    },
+    {
+      "hash": "7bf78b8fbec735fa805117dcf8685187138d9f6af343ad5631df1bda307c809d",
+      "kind": "Next API route",
+      "lineCount": 244,
+      "relativePath": "app/api/admin/feedback/[id]/action/route.ts",
+      "size": 6750,
+      "functionCount": 7,
+      "importCount": 5,
+      "exportCount": 3
+    },
+    {
+      "hash": "1ca5751faf64bf5589df3aace43f0ad5b9cb540eb17fb955c918a5c15ddd8ce2",
+      "kind": "Next API route",
+      "lineCount": 172,
+      "relativePath": "app/api/admin/feedback/route.ts",
+      "size": 4899,
+      "functionCount": 3,
+      "importCount": 4,
       "exportCount": 3
     },
     {
@@ -110,31 +140,31 @@
       "exportCount": 3
     },
     {
-      "hash": "1846b23c0bfa126f2d0a332ffacc1c680c9572bf091bd7e501d550aaca8122f8",
+      "hash": "e748f7db94f312f6736f5747809edeacec93ed05c064f15ff20b4f9a526b6a29",
       "kind": "Next API route",
-      "lineCount": 125,
+      "lineCount": 150,
       "relativePath": "app/api/admin/overview/route.ts",
-      "size": 3540,
+      "size": 4277,
       "functionCount": 2,
       "importCount": 2,
       "exportCount": 3
     },
     {
-      "hash": "9183b60b384aef8cc9a4f1c5e80c1783ac0719f48d0b6779406c747fd3b4bd53",
+      "hash": "f36a876c905ee3d5b67bb89f9b175b21e25bf7596754c515ecfa1b068b3ba22d",
       "kind": "Next API route",
-      "lineCount": 194,
+      "lineCount": 222,
       "relativePath": "app/api/admin/reports/[id]/action/route.ts",
-      "size": 4758,
+      "size": 5492,
       "functionCount": 8,
       "importCount": 2,
       "exportCount": 3
     },
     {
-      "hash": "7d36fa434f536bc8921c6938ee2c5b3165b19a7cdd20f91d099640c8dff09ba0",
+      "hash": "0fbde71bf0f1ad5ae16bff82822a6a1bac3bf05a2aa264224de73fe3f78a427a",
       "kind": "Next API route",
-      "lineCount": 124,
+      "lineCount": 169,
       "relativePath": "app/api/admin/reports/route.ts",
-      "size": 4258,
+      "size": 5732,
       "functionCount": 2,
       "importCount": 3,
       "exportCount": 3
@@ -160,12 +190,12 @@
       "exportCount": 3
     },
     {
-      "hash": "942bc50a6381c7107a9e0dc5ac58bdf02f9fe8952abfacb1ffc07776e9374fc1",
+      "hash": "751958593eae7e5a0a27b0e6a4da7a952bf2a2915d3a64e8d768fed025eac7ba",
       "kind": "Next API route",
-      "lineCount": 446,
+      "lineCount": 477,
       "relativePath": "app/api/admin/users/[id]/action/route.ts",
-      "size": 11513,
-      "functionCount": 13,
+      "size": 12294,
+      "functionCount": 14,
       "importCount": 3,
       "exportCount": 3
     },
@@ -180,24 +210,134 @@
       "exportCount": 3
     },
     {
-      "hash": "bfec40657369f50beb34e88742dded24bb99ad4b4bd0b3d1f8260c664a5f6994",
+      "hash": "e5a97f8ff14ee04a23184d3c95f082a9c01975e52cc47dfbed7f04735287908c",
       "kind": "Next API route",
-      "lineCount": 140,
+      "lineCount": 101,
+      "relativePath": "app/api/comment-media/[id]/route.ts",
+      "size": 2528,
+      "functionCount": 4,
+      "importCount": 1,
+      "exportCount": 3
+    },
+    {
+      "hash": "82ca49ae63b718a26d268229932ade349443c1de47e627d3cade5d7d26dd206e",
+      "kind": "Next API route",
+      "lineCount": 155,
       "relativePath": "app/api/comment-media/upload/route.ts",
-      "size": 3589,
-      "functionCount": 5,
+      "size": 3871,
+      "functionCount": 6,
       "importCount": 5,
       "exportCount": 3
     },
     {
-      "hash": "501e0e0514ff49b22a5ec3334e8f1c821d7a94ad3727f34ba5a5717dad19f784",
+      "hash": "14a3b577aacde25375cd3123a83a2c84cf67b52f88712fc48497a8fb6f273927",
       "kind": "Next API route",
-      "lineCount": 291,
-      "relativePath": "app/api/health/route.ts",
-      "size": 6962,
-      "functionCount": 11,
+      "lineCount": 123,
+      "relativePath": "app/api/community/comments/[id]/route.ts",
+      "size": 3355,
+      "functionCount": 3,
+      "importCount": 4,
+      "exportCount": 4
+    },
+    {
+      "hash": "c66bace3534ecf97aa9deb9c81ee7f558a37cf03311397d51b8ff4bd4d812996",
+      "kind": "Next API route",
+      "lineCount": 70,
+      "relativePath": "app/api/community/comments/[id]/vote/route.ts",
+      "size": 1983,
+      "functionCount": 1,
       "importCount": 3,
       "exportCount": 3
+    },
+    {
+      "hash": "fd47bf8fc24caff5e37abd05d34add1abea5373a64d08249ff2b9158d3820c98",
+      "kind": "Next API route",
+      "lineCount": 127,
+      "relativePath": "app/api/community/comments/submit/route.ts",
+      "size": 3792,
+      "functionCount": 5,
+      "importCount": 6,
+      "exportCount": 3
+    },
+    {
+      "hash": "6767640937ba33f7f1810c85d91a4be74f0767c7b3d20e680ff4272206a608fe",
+      "kind": "Next API route",
+      "lineCount": 74,
+      "relativePath": "app/api/community/polls/[id]/vote/route.ts",
+      "size": 2006,
+      "functionCount": 1,
+      "importCount": 3,
+      "exportCount": 3
+    },
+    {
+      "hash": "2b0b4c0fb83ab46d1750c54ccabf17bb66002a1bd2b41198216c1ede1d9e9e31",
+      "kind": "Next API route",
+      "lineCount": 73,
+      "relativePath": "app/api/community/posts/[id]/lock/route.ts",
+      "size": 1808,
+      "functionCount": 1,
+      "importCount": 3,
+      "exportCount": 3
+    },
+    {
+      "hash": "2af8740fb8e60a4fe688af97733196dc1a984a6eb7ecbbd07a7132864ab46d89",
+      "kind": "Next API route",
+      "lineCount": 198,
+      "relativePath": "app/api/community/posts/[id]/route.ts",
+      "size": 5498,
+      "functionCount": 4,
+      "importCount": 6,
+      "exportCount": 4
+    },
+    {
+      "hash": "834d3d0d38ddcb58fcf53316c45e5b30c06952e27dbe13ec69ec25fe2a730424",
+      "kind": "Next API route",
+      "lineCount": 70,
+      "relativePath": "app/api/community/posts/[id]/vote/route.ts",
+      "size": 1950,
+      "functionCount": 1,
+      "importCount": 3,
+      "exportCount": 3
+    },
+    {
+      "hash": "df6b244d5d26743b8c59c209db2bd3df5e030af81a5159166159cb4964e52236",
+      "kind": "Next API route",
+      "lineCount": 547,
+      "relativePath": "app/api/community/posts/submit/route.ts",
+      "size": 14718,
+      "functionCount": 17,
+      "importCount": 11,
+      "exportCount": 3
+    },
+    {
+      "hash": "172d1dd31423aa730ea0b9839e742c6daff3728627e1e7ebfc401b31140ba8e1",
+      "kind": "Next API route",
+      "lineCount": 114,
+      "relativePath": "app/api/feedback/route.ts",
+      "size": 3038,
+      "functionCount": 5,
+      "importCount": 6,
+      "exportCount": 3
+    },
+    {
+      "hash": "5c3fb60cb3741716ea9fb4d3643372fa5cfce8e213f8ccb31e4bd674198eae78",
+      "kind": "Next API route",
+      "lineCount": 299,
+      "relativePath": "app/api/health/route.ts",
+      "size": 7263,
+      "functionCount": 12,
+      "importCount": 4,
+      "exportCount": 3
+    },
+    {
+      "hash": "743a4105fa0ceff9d5085aee5c66d7f7f3cb34e7bf722b22b0a300eff4f215de",
+      "kind": "Next API route",
+      "lineCount": 181,
+      "relativePath": "app/api/mentions/users/route.ts",
+      "size": 4654,
+      "functionCount": 9,
+      "importCount": 4,
+      "exportCount": 4
     },
     {
       "hash": "77a77655e6d060411d36a11f531de4fa6a8596787b5e1aba3bb2e37d7d528cd3",
@@ -230,13 +370,13 @@
       "exportCount": 3
     },
     {
-      "hash": "0ce867cfa6340135a4763be4e940d6d9541dfae4e3a723c27177e26394ce9a26",
+      "hash": "0dfb3c9f9aac11614dafd89739e627a277fea47489a8475f81ac6a7d916fdf61",
       "kind": "Next API route",
-      "lineCount": 359,
+      "lineCount": 303,
       "relativePath": "app/api/resumes/submit/route.ts",
-      "size": 9108,
-      "functionCount": 10,
-      "importCount": 8,
+      "size": 7753,
+      "functionCount": 8,
+      "importCount": 9,
       "exportCount": 2
     },
     {
@@ -260,33 +400,63 @@
       "exportCount": 2
     },
     {
-      "hash": "25939df547c6fef5c23182248ad23281b27cede9bc7001149fbe183d91eef170",
+      "hash": "adb00e7ab9af04bf2c7cdf9e6b2bed08f02a88df394d43000a043b766df60540",
       "kind": "Next page route",
-      "lineCount": 251,
-      "relativePath": "app/copyright/page.tsx",
-      "size": 8826,
-      "functionCount": 2,
-      "importCount": 3,
+      "lineCount": 33,
+      "relativePath": "app/community/[id]/page.tsx",
+      "size": 795,
+      "functionCount": 1,
+      "importCount": 5,
       "exportCount": 3
     },
     {
-      "hash": "9a04dc7e2baca32b9595fa6416935459b3d3309cccbb9e60aeb172b85eeb19f9",
+      "hash": "1818ef8d4ee82f02e307453a6bc285897809adba9ca9f92181bdff963b4f18a2",
+      "kind": "Next page route",
+      "lineCount": 23,
+      "relativePath": "app/community/new/page.tsx",
+      "size": 589,
+      "functionCount": 1,
+      "importCount": 5,
+      "exportCount": 3
+    },
+    {
+      "hash": "6dc388d7fc8cc2f22e8def47e9f49b54149c37e675ab42318a6cd2d0632e274c",
+      "kind": "Next page route",
+      "lineCount": 38,
+      "relativePath": "app/community/page.tsx",
+      "size": 1182,
+      "functionCount": 1,
+      "importCount": 7,
+      "exportCount": 3
+    },
+    {
+      "hash": "398faed25ace3e2dd7f0767368e0e52add38f8e974db8c756f2c6de2cd2af998",
+      "kind": "Next page route",
+      "lineCount": 251,
+      "relativePath": "app/copyright/page.tsx",
+      "size": 8816,
+      "functionCount": 2,
+      "importCount": 4,
+      "exportCount": 3
+    },
+    {
+      "hash": "3ff0382f0198914de19e9f86940262f626bf8e5ec841c2bf156dbe9a580bd039",
       "kind": "Project file",
-      "lineCount": 4086,
+      "lineCount": 6502,
       "relativePath": "app/feed.css",
-      "size": 82402,
+      "size": 141353,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "ef5722270e233bb9821b13b99ede7f5817bbee61dfd8fd036e1ce379719068b3",
+      "hash": "67ed4a9171b5e3ea4df648e038c67ca5383c3e83b1683a993299f1a96bb94d82",
       "kind": "Next page route",
-      "lineCount": 223,
+      "lineCount": 139,
       "relativePath": "app/feed/page.tsx",
-      "size": 6781,
+      "size": 4284,
       "functionCount": 4,
-      "importCount": 6,
+      "importCount": 8,
       "exportCount": 2
     },
     {
@@ -300,33 +470,53 @@
       "exportCount": 2
     },
     {
-      "hash": "097a4aac6cc045e1a94f24e45706304d27b80e0659616d4300081044c31b6e3e",
+      "hash": "eca1258d2e208128ab72eb1a350822249a1a30aa51ca6d943e116fd15af37013",
       "kind": "Project file",
-      "lineCount": 5278,
+      "lineCount": 7578,
       "relativePath": "app/globals.css",
-      "size": 95603,
+      "size": 143930,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "122e2b9fd648af53483eae5675efec3a130cb28b17ba4fc25b6313f4798d7e04",
+      "hash": "f6925458318ca3ee49559e6078f6411535fbf70d5f55e81c6f250f7d04487587",
       "kind": "Next page route",
       "lineCount": 201,
       "relativePath": "app/guidelines/page.tsx",
-      "size": 7105,
+      "size": 7113,
       "functionCount": 2,
-      "importCount": 3,
+      "importCount": 4,
       "exportCount": 3
     },
     {
-      "hash": "9ace49e4f05d48b0dff20736447be74c995f115dc9ea3872cb50b9388b2672e3",
-      "kind": "Next root layout",
-      "lineCount": 105,
-      "relativePath": "app/layout.tsx",
-      "size": 2783,
+      "hash": "3dc339774066059038555a61389f30fe9fb453e8dd3c2c1e856d35f78b8971da",
+      "kind": "Project file",
+      "lineCount": 258,
+      "relativePath": "app/help/help.module.css",
+      "size": 4059,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "5b4ba00cecee5fee175fdb5fabefc80084877885fc71e5328bd8d0373ff09164",
+      "kind": "Next page route",
+      "lineCount": 256,
+      "relativePath": "app/help/page.tsx",
+      "size": 8743,
       "functionCount": 1,
-      "importCount": 10,
+      "importCount": 5,
+      "exportCount": 3
+    },
+    {
+      "hash": "6f37a59270c850de2d5140a07be76409f69854cee4015f595c0c076ab6c19f76",
+      "kind": "Next root layout",
+      "lineCount": 109,
+      "relativePath": "app/layout.tsx",
+      "size": 2943,
+      "functionCount": 1,
+      "importCount": 11,
       "exportCount": 4
     },
     {
@@ -360,13 +550,13 @@
       "exportCount": 2
     },
     {
-      "hash": "1aa9e191ad34274594d7b6b3f0d6afe1220455e31df8ef08889e9ea15df80936",
+      "hash": "05e76e7bcbc09f26f15dac5a0e02458def26dc1d31936c465a71e3ffed9c5984",
       "kind": "Project configuration",
-      "lineCount": 29,
+      "lineCount": 30,
       "relativePath": "app/manifest.ts",
-      "size": 615,
+      "size": 677,
       "functionCount": 1,
-      "importCount": 1,
+      "importCount": 2,
       "exportCount": 2
     },
     {
@@ -390,23 +580,23 @@
       "exportCount": 2
     },
     {
-      "hash": "87bc140c17a52fa0430aaed9f623a7b6851680a0f4f72994ad4375e096032276",
+      "hash": "f14e665b2361c4a59436c5fd5cafac5e7c34900957f5f6ff010883bab84e13ba",
       "kind": "Next page route",
-      "lineCount": 244,
+      "lineCount": 246,
       "relativePath": "app/page.tsx",
-      "size": 7258,
+      "size": 7375,
       "functionCount": 2,
-      "importCount": 7,
+      "importCount": 8,
       "exportCount": 2
     },
     {
-      "hash": "8565fc95abf08de46f2befcb5323e152888d051972559cd029516af9ea7252ef",
+      "hash": "9d67fe09692c4649b8a97ca26127e6148006ebc1d0537cd0ba38f07d55721bee",
       "kind": "Next page route",
       "lineCount": 494,
       "relativePath": "app/privacy/page.tsx",
-      "size": 18470,
+      "size": 18442,
       "functionCount": 1,
-      "importCount": 2,
+      "importCount": 3,
       "exportCount": 3
     },
     {
@@ -450,13 +640,13 @@
       "exportCount": 2
     },
     {
-      "hash": "11f7bd342129d38dd1251dbd83516a44a621a0a46b3d25b8f1fda33a389661b5",
+      "hash": "a0733c6602b720d3eae48bdf6e791ddbb9e3adad8abeaf97de06801c404b0ed2",
       "kind": "Next page route",
       "lineCount": 373,
       "relativePath": "app/terms/page.tsx",
-      "size": 13909,
+      "size": 13899,
       "functionCount": 2,
-      "importCount": 2,
+      "importCount": 3,
       "exportCount": 3
     },
     {
@@ -470,23 +660,33 @@
       "exportCount": 0
     },
     {
-      "hash": "3a79f1d34550a6b334fa38a71ea7bc3075ad8aee6200d2de06b06d327955589f",
+      "hash": "2d481bd0f6058a334cb6fdc77e29063c94016fcd69c2fc273da53dec9594a312",
       "kind": "React component",
-      "lineCount": 501,
-      "relativePath": "components/account/UserDropdown.tsx",
-      "size": 14971,
-      "functionCount": 5,
-      "importCount": 24,
+      "lineCount": 196,
+      "relativePath": "components/account/FeedbackDialog.tsx",
+      "size": 5137,
+      "functionCount": 1,
+      "importCount": 9,
       "exportCount": 1
     },
     {
-      "hash": "383a991b42ba3e8b6b4822304271ceb56eb8df0a2fc83573f3f5ddbde680c45d",
+      "hash": "1a3fc04c383f3fb05a0b5a9bdfdaaa2e03a6d2ee5a5f7e51a16fae1deafee545",
       "kind": "React component",
-      "lineCount": 130,
+      "lineCount": 436,
+      "relativePath": "components/account/UserDropdown.tsx",
+      "size": 12438,
+      "functionCount": 4,
+      "importCount": 21,
+      "exportCount": 1
+    },
+    {
+      "hash": "79372d2988ab9e4023ee0c83d350516798047ba010256413c776b36a055f0384",
+      "kind": "React component",
+      "lineCount": 142,
       "relativePath": "components/admin-dashboard/constants.ts",
-      "size": 2822,
+      "size": 3166,
       "functionCount": 0,
-      "importCount": 4,
+      "importCount": 5,
       "exportCount": 5
     },
     {
@@ -510,21 +710,31 @@
       "exportCount": 2
     },
     {
-      "hash": "2b00b9e19a9bddad9147f98b45a79f0ed900b5d316ecceed7742d05cab6927d7",
+      "hash": "66529a05b1fe32bc111363b07cd446b24af0155a63f245731a944a0d94360a94",
       "kind": "React component",
       "lineCount": 299,
       "relativePath": "components/admin-dashboard/dialogs.tsx",
-      "size": 7810,
+      "size": 7830,
       "functionCount": 2,
       "importCount": 10,
       "exportCount": 2
     },
     {
-      "hash": "54bd58e838fe0f1ef11c6f4595779d0148d852bd4e057152120c16ec359cf944",
+      "hash": "92f2913e8cf9b6441ac43b35165418bedb5096991ebc3c40b721cd810f985082",
       "kind": "React component",
-      "lineCount": 437,
+      "lineCount": 348,
+      "relativePath": "components/admin-dashboard/feedback.tsx",
+      "size": 9359,
+      "functionCount": 2,
+      "importCount": 6,
+      "exportCount": 1
+    },
+    {
+      "hash": "8ab1d657dca0fd3a3b395db7934368054dec6d906ef73d2aaf7e522500c454be",
+      "kind": "React component",
+      "lineCount": 561,
       "relativePath": "components/admin-dashboard/moderation.tsx",
-      "size": 11304,
+      "size": 15325,
       "functionCount": 6,
       "importCount": 8,
       "exportCount": 6
@@ -540,101 +750,121 @@
       "exportCount": 1
     },
     {
-      "hash": "0e563c5fff266a5abaeb9b2ca9aa0f81fbddee92dbd6cd8158e11f98ef944161",
+      "hash": "c8352a04083ca1c56d45ab28e4232b032da8367a97696b27f10b245f62785f68",
       "kind": "React component",
-      "lineCount": 88,
+      "lineCount": 102,
       "relativePath": "components/admin-dashboard/overview.tsx",
-      "size": 1924,
+      "size": 2082,
       "functionCount": 2,
       "importCount": 5,
       "exportCount": 2
     },
     {
-      "hash": "ed21e3da900846de0d6d399fd2cd43de01445ea3a26a570530a2bde048ef67aa",
+      "hash": "3643eaea8b6f364eb8b129368a71cc7829c26737e58da5371d999780f1f63869",
       "kind": "React component",
       "lineCount": 385,
       "relativePath": "components/admin-dashboard/people.tsx",
-      "size": 9623,
+      "size": 9638,
       "functionCount": 6,
       "importCount": 6,
       "exportCount": 6
     },
     {
-      "hash": "4577a56139c2c579e6a9b0eb2cf4225a411cdde817a8e888ed0edba86cf637b2",
+      "hash": "cd040cd95a21c95e4e7e315819ff59838cae25050004cc8c57a7a71737912878",
       "kind": "React component",
       "lineCount": 98,
       "relativePath": "components/admin-dashboard/shared.tsx",
-      "size": 1695,
+      "size": 1729,
       "functionCount": 4,
       "importCount": 1,
       "exportCount": 4
     },
     {
-      "hash": "c23cf40fc572ddbf663381cd39515d3a1b8767cf9753855c486bc7c423b83004",
+      "hash": "e79740cfabe7f00987c44392de38af3c7f798dbc2e42e3846708dbc203ad4d0a",
       "kind": "React component",
-      "lineCount": 207,
+      "lineCount": 266,
       "relativePath": "components/admin-dashboard/types.ts",
-      "size": 4047,
+      "size": 5440,
       "functionCount": 0,
       "importCount": 3,
-      "exportCount": 20
+      "exportCount": 24
     },
     {
-      "hash": "bfd5fdfc1e50b6ab15971d877b65ae3833b0733de180e534420ddd39c1a2451d",
+      "hash": "fc61e49520fb66350f4f43d7cba3425eba0091fbfe0adb1873924e6f63056300",
       "kind": "React component",
-      "lineCount": 151,
+      "lineCount": 164,
       "relativePath": "components/admin-dashboard/utils.ts",
-      "size": 4326,
+      "size": 4695,
       "functionCount": 13,
       "importCount": 2,
       "exportCount": 13
     },
     {
-      "hash": "6682b0b476fce25cdfa54bfe58a595361c634e324525351882c523e219c51edd",
+      "hash": "787cec6bf4f927238e5fac470291c2187a31b192d65c39673e388ed20f0b3894",
       "kind": "React component",
-      "lineCount": 563,
+      "lineCount": 675,
       "relativePath": "components/AdminDashboard.tsx",
-      "size": 15401,
+      "size": 18870,
       "functionCount": 1,
-      "importCount": 19,
+      "importCount": 20,
       "exportCount": 3
     },
     {
-      "hash": "f3a10468ee72b2f67832e8690fcdd6e65eb1d311827ba86362401315c606e5ac",
+      "hash": "64a4fdc0274873cfd4122fb5defc0062aae953ac46bc0ba409c86a846890b275",
       "kind": "React component",
-      "lineCount": 216,
+      "lineCount": 186,
       "relativePath": "components/AppPresence.tsx",
-      "size": 5994,
-      "functionCount": 5,
+      "size": 4943,
+      "functionCount": 4,
       "importCount": 6,
       "exportCount": 2
     },
     {
-      "hash": "d38c2e8e83f85cd0a0220c6900521a6991ebd433171a64129d7958630493c8aa",
+      "hash": "1049f98b5283cadaadba07e785093b9ce301ce4ccaa900fa2f68c9d2806389c7",
+      "kind": "React component",
+      "lineCount": 185,
+      "relativePath": "components/AppScrollRestoration.tsx",
+      "size": 4614,
+      "functionCount": 7,
+      "importCount": 2,
+      "exportCount": 2
+    },
+    {
+      "hash": "6701ea1311b889d68d9df659b329e4b2aa54f04d110788a41059a85bd2e01d6d",
+      "kind": "React component",
+      "lineCount": 334,
+      "relativePath": "components/auth/SignUp.module.css",
+      "size": 6167,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "4e3dc9fd757b7b369ac22faafdc7923b7795febdcb47e2022c2a05a1b92c74f0",
       "kind": "React component",
       "lineCount": 499,
       "relativePath": "components/auth/SignUp.tsx",
-      "size": 14863,
+      "size": 14889,
       "functionCount": 9,
-      "importCount": 11,
+      "importCount": 12,
       "exportCount": 2
     },
     {
-      "hash": "f84bd5bee608b275856f2c6da4847e7f665211f58a7962902e7602d90d821591",
+      "hash": "dd7fc4b9421b1d7320e1d93025d84dc1dccafc0f393ddbada3febbb62e9adff5",
       "kind": "React component",
-      "lineCount": 276,
+      "lineCount": 225,
       "relativePath": "components/AuthButton.tsx",
-      "size": 7678,
+      "size": 6218,
       "functionCount": 2,
-      "importCount": 15,
+      "importCount": 16,
       "exportCount": 2
     },
     {
-      "hash": "95c5db8b49caa73033631daea100beb1504e7333b63c639e8c15ff5744e04f10",
+      "hash": "2a1cc360558b68783ca5acd8ab3bd3a28bc11be40f89191c11248db117c92b34",
       "kind": "React component",
       "lineCount": 232,
       "relativePath": "components/AuthGate.tsx",
-      "size": 5934,
+      "size": 5951,
       "functionCount": 5,
       "importCount": 11,
       "exportCount": 2
@@ -650,14 +880,124 @@
       "exportCount": 2
     },
     {
-      "hash": "f1a3bb93e339a16cacc6ce45248f26ecc08255f793483919e54f9ca4bcdb763b",
+      "hash": "24a704838e9490a34928b2c052099d97111c57352a9d79b9c904a7ec90af2ecd",
       "kind": "React component",
-      "lineCount": 158,
+      "lineCount": 200,
       "relativePath": "components/CommentMediaToolbar.tsx",
-      "size": 4188,
+      "size": 5171,
       "functionCount": 3,
-      "importCount": 5,
+      "importCount": 6,
       "exportCount": 3
+    },
+    {
+      "hash": "377ea7f941fd3e8193c0e2fbf1f82c7f027527482e423b8905967e9856511d5d",
+      "kind": "React component",
+      "lineCount": 313,
+      "relativePath": "components/community/CommunityMarkdown.module.css",
+      "size": 5362,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "9683aa92390e15ca430653d221d8b67c18ad201a6341728062418ea25cb5f42b",
+      "kind": "React component",
+      "lineCount": 277,
+      "relativePath": "components/community/CommunityMarkdown.tsx",
+      "size": 6866,
+      "functionCount": 7,
+      "importCount": 9,
+      "exportCount": 2
+    },
+    {
+      "hash": "4d1a6462d26345e40ed42415cffde5ee85b4087f0e17b695ad42bb0ab186a2fc",
+      "kind": "React component",
+      "lineCount": 131,
+      "relativePath": "components/community/CommunityMediaGallery.tsx",
+      "size": 3316,
+      "functionCount": 1,
+      "importCount": 4,
+      "exportCount": 2
+    },
+    {
+      "hash": "38d14f75244e51a30eea88fa21af27b131c5b7d06b3d288a354018f65719dfbb",
+      "kind": "React component",
+      "lineCount": 95,
+      "relativePath": "components/community/CommunityPostComposer.module.css",
+      "size": 1821,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "cad3eeca9b27fad9235234b8186fd3fb349a95919c3b663cf0ef8b18c5d28580",
+      "kind": "React component",
+      "lineCount": 1358,
+      "relativePath": "components/community/CommunityPostComposer.tsx",
+      "size": 37274,
+      "functionCount": 3,
+      "importCount": 15,
+      "exportCount": 2
+    },
+    {
+      "hash": "50a0312c4868befdeeae4142b49b8e3bf3425dd87cdaed10ff16fb7550c14e32",
+      "kind": "React component",
+      "lineCount": 2856,
+      "relativePath": "components/community/CommunityPostDetail.tsx",
+      "size": 79830,
+      "functionCount": 17,
+      "importCount": 33,
+      "exportCount": 2
+    },
+    {
+      "hash": "a2527f9ad4270478b0060a0743615ff22830a9ed3be6e6dd9f450bc34685d0d2",
+      "kind": "React component",
+      "lineCount": 1237,
+      "relativePath": "components/community/CommunityPostFeed.tsx",
+      "size": 35576,
+      "functionCount": 13,
+      "importCount": 26,
+      "exportCount": 2
+    },
+    {
+      "hash": "4a45afc9d0fc2c76ea7a01eaf5e6503a9411a4f845c3374354c52b8024c19ba9",
+      "kind": "React component",
+      "lineCount": 294,
+      "relativePath": "components/community/CommunityReportDialog.module.css",
+      "size": 5340,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "984b2f82e06f6c5781b5a9742d5748b1b5d010c94069f97120573717783b7d02",
+      "kind": "React component",
+      "lineCount": 29,
+      "relativePath": "components/feed/FeedSkeleton.tsx",
+      "size": 803,
+      "functionCount": 1,
+      "importCount": 0,
+      "exportCount": 2
+    },
+    {
+      "hash": "5205824d0b6af5e44fb03cd86806c22079f95299afd9661d1a93b1e3cfac1b56",
+      "kind": "React component",
+      "lineCount": 34,
+      "relativePath": "components/FeedRailLegalFooter.module.css",
+      "size": 468,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "da3b6eafd98b195c1e43ae0e48a167c7e338232040f9083b711d84cd59b7f055",
+      "kind": "React component",
+      "lineCount": 28,
+      "relativePath": "components/FeedRailLegalFooter.tsx",
+      "size": 783,
+      "functionCount": 1,
+      "importCount": 2,
+      "exportCount": 2
     },
     {
       "hash": "889cbd5b07cad662a3b27768c912ccacec7ede1d42843a9f5b865687d5f27159",
@@ -670,21 +1010,21 @@
       "exportCount": 2
     },
     {
-      "hash": "fbe0e3acd573180cbdb339cce7768e5be0231935fa4d07fa359f39257ae6b50a",
+      "hash": "d2eb9936efc1fe93a0d713225282fc6ca8c361491136bc5a1e2b7851245e6051",
       "kind": "React component",
-      "lineCount": 235,
+      "lineCount": 239,
       "relativePath": "components/landing/content.ts",
-      "size": 6986,
+      "size": 7121,
       "functionCount": 1,
-      "importCount": 0,
+      "importCount": 1,
       "exportCount": 12
     },
     {
-      "hash": "967b547787fe9ca90dd2e003ff16b97a1fb966cc507c656046ce5eadb4791ef6",
+      "hash": "657ece823512dcd2f87b5ab8da9956a9290ce08ebabca6fbe63a426f41bc09e8",
       "kind": "React component",
       "lineCount": 168,
       "relativePath": "components/landing/feature-showcase.tsx",
-      "size": 4485,
+      "size": 4660,
       "functionCount": 2,
       "importCount": 4,
       "exportCount": 1
@@ -700,13 +1040,13 @@
       "exportCount": 1
     },
     {
-      "hash": "850e177f4dc730f8c3df2e6e786dacb992d07b907c08ae02dd9cafdf67bf0c57",
+      "hash": "d0ca688eed365705528c63ea6e107fbbffed6e57be1ed4f857da97db63e4a928",
       "kind": "React component",
-      "lineCount": 362,
+      "lineCount": 367,
       "relativePath": "components/landing/sections.tsx",
-      "size": 9205,
+      "size": 9373,
       "functionCount": 7,
-      "importCount": 6,
+      "importCount": 7,
       "exportCount": 9
     },
     {
@@ -730,33 +1070,33 @@
       "exportCount": 0
     },
     {
-      "hash": "c636f18e6150f5b2ea9eecb98ff2199594e65421dc3434b1f4f5caf4a89e2d1f",
+      "hash": "5bceedf7f313ab5215815420ce7055e617fd89024617143e2bfeab55e92d3e7c",
       "kind": "React component",
-      "lineCount": 492,
+      "lineCount": 543,
       "relativePath": "components/Leaderboard.tsx",
-      "size": 13041,
-      "functionCount": 13,
-      "importCount": 8,
+      "size": 14504,
+      "functionCount": 16,
+      "importCount": 9,
       "exportCount": 2
     },
     {
-      "hash": "3a8a60387582015a77d76329ed5f9fc35e04fc39d5aff23f98b300b4ed3ece93",
+      "hash": "bcb734cb57b2f835a69209af70b2f78ece955e7a608de073d84311308ef10a90",
       "kind": "React component",
-      "lineCount": 639,
+      "lineCount": 635,
       "relativePath": "components/leaderboard/StackedList.tsx",
-      "size": 22121,
-      "functionCount": 16,
-      "importCount": 10,
+      "size": 22261,
+      "functionCount": 15,
+      "importCount": 12,
       "exportCount": 3
     },
     {
-      "hash": "80a7a498742ee803053cc6a242c16c8d5eaa262d24d5222af5e9a8ee6410ac1a",
+      "hash": "71bd0c75ce1b871f70dfca852e1d57ede5dadffc76613c75ec22167c89be8371",
       "kind": "React component",
-      "lineCount": 117,
+      "lineCount": 115,
       "relativePath": "components/LintPointsFlame.tsx",
-      "size": 3259,
+      "size": 3168,
       "functionCount": 6,
-      "importCount": 5,
+      "importCount": 4,
       "exportCount": 2
     },
     {
@@ -770,51 +1110,81 @@
       "exportCount": 2
     },
     {
-      "hash": "da117413f95fa855d32089ce42080434059c982d98d753642a933f653b180c1e",
+      "hash": "f192ccc65a628f02539a896c6451f5a2c6633b9d29d1fa3cd62815bb925223b8",
       "kind": "React component",
-      "lineCount": 153,
-      "relativePath": "components/navigation/SessionNavBar.tsx",
-      "size": 3556,
-      "functionCount": 2,
-      "importCount": 6,
-      "exportCount": 1
-    },
-    {
-      "hash": "7607a9821bd7051d9670d82a1da38dd41c68ddb1d57730de8a6282c24944f452",
-      "kind": "React component",
-      "lineCount": 559,
-      "relativePath": "components/navigation/sidebar-icons.tsx",
-      "size": 11817,
+      "lineCount": 64,
+      "relativePath": "components/navigation/primary-nav.ts",
+      "size": 1252,
       "functionCount": 1,
-      "importCount": 5,
-      "exportCount": 15
+      "importCount": 2,
+      "exportCount": 3
     },
     {
-      "hash": "247ee250a262af849de48ae856ad1a352f7dd91d4a0a83792e5d4b0e72547c26",
+      "hash": "96cec9bd8b812770ffbd1319510328ff9948d16318b23091c3746f53af768874",
       "kind": "React component",
-      "lineCount": 393,
-      "relativePath": "components/NotificationCenter.tsx",
-      "size": 9939,
-      "functionCount": 4,
-      "importCount": 12,
+      "lineCount": 219,
+      "relativePath": "components/navigation/ResumeQueueProgress.module.css",
+      "size": 3889,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "1963a8a1a980948153cc0692781318e9676d4ce63bfc08d7aca6417a3297e2b6",
+      "kind": "React component",
+      "lineCount": 215,
+      "relativePath": "components/navigation/ResumeQueueProgress.tsx",
+      "size": 5569,
+      "functionCount": 3,
+      "importCount": 7,
       "exportCount": 2
     },
     {
-      "hash": "119cf0af563eb689bdb291482b084772be4fc9c2f681fc39bc7d2c77a372ce65",
+      "hash": "0de3f24f4341b266d0cdfdc9dafbf2c8055915a0b384c249b63d5d6ccd374102",
       "kind": "React component",
-      "lineCount": 322,
+      "lineCount": 123,
+      "relativePath": "components/navigation/SessionNavBar.tsx",
+      "size": 3381,
+      "functionCount": 2,
+      "importCount": 9,
+      "exportCount": 1
+    },
+    {
+      "hash": "1512b827a3c7b9691d4484d3c9bf11033dfedfd44e039566049e7fd170e3d5fc",
+      "kind": "React component",
+      "lineCount": 79,
+      "relativePath": "components/navigation/useMobileScrollChrome.ts",
+      "size": 2249,
+      "functionCount": 1,
+      "importCount": 1,
+      "exportCount": 1
+    },
+    {
+      "hash": "0f5068566223030c0ab75e46580eb285211cdb2e498cb66cdfa3356254243cee",
+      "kind": "React component",
+      "lineCount": 394,
+      "relativePath": "components/NotificationCenter.tsx",
+      "size": 10016,
+      "functionCount": 4,
+      "importCount": 13,
+      "exportCount": 2
+    },
+    {
+      "hash": "c82a33ba62f83c0d6b4d4c5a25fc04e706583d153461ee5f1490a71b15e75002",
+      "kind": "React component",
+      "lineCount": 306,
       "relativePath": "components/OnboardingFlow.tsx",
-      "size": 8042,
+      "size": 7565,
       "functionCount": 3,
       "importCount": 10,
       "exportCount": 2
     },
     {
-      "hash": "888d3660816299bc4c4e60a9a4e150ad633f7bebc88d1d42be02d6694c3e3c5b",
+      "hash": "a5d9b5ff9ada05ef1a6500086ed8250f6782c6d8ace926bee45e7b84fb078965",
       "kind": "React component",
       "lineCount": 99,
       "relativePath": "components/PersonalizeLintedPrompt.tsx",
-      "size": 2375,
+      "size": 2371,
       "functionCount": 2,
       "importCount": 5,
       "exportCount": 2
@@ -840,12 +1210,12 @@
       "exportCount": 7
     },
     {
-      "hash": "3082bbdfed8efbe476e5d229494d080861be16afd5aa85c2da2038c03b6f3113",
+      "hash": "714ef1d82b92c59b9a70776b2ee1ba79923332568d1b780aa33564d12122e1e1",
       "kind": "React component",
-      "lineCount": 149,
+      "lineCount": 173,
       "relativePath": "components/profile-detail/controller-data.ts",
-      "size": 3707,
-      "functionCount": 1,
+      "size": 4269,
+      "functionCount": 2,
       "importCount": 7,
       "exportCount": 2
     },
@@ -860,23 +1230,23 @@
       "exportCount": 2
     },
     {
-      "hash": "c9c2b33cd9f185782c641347847a9d1644d1e5ab40b9575b97e4135609299d58",
+      "hash": "87a99bfe010c8d0f25685efaea23ec70187deb03b2277593e6ac627485d509bc",
       "kind": "React component",
-      "lineCount": 579,
+      "lineCount": 580,
       "relativePath": "components/profile-detail/edit-dialog.tsx",
-      "size": 16379,
+      "size": 16425,
       "functionCount": 1,
-      "importCount": 14,
+      "importCount": 15,
       "exportCount": 1
     },
     {
-      "hash": "f8d13b4a9380c06f0eff7dc8ab739a0e4b0c840e112b77431630f057152e8f26",
+      "hash": "62bc3d6c2d376994a4aae73d68ed74e2083af89d65912e1c25ab69a4e1ede376",
       "kind": "React component",
-      "lineCount": 42,
+      "lineCount": 45,
       "relativePath": "components/profile-detail/profile-view.ts",
-      "size": 1375,
+      "size": 1541,
       "functionCount": 1,
-      "importCount": 7,
+      "importCount": 8,
       "exportCount": 1
     },
     {
@@ -910,11 +1280,11 @@
       "exportCount": 3
     },
     {
-      "hash": "0e54fd2c76761d19f98a21d27c4c027333b491774a2df04ecc741c8f2e62e7dd",
+      "hash": "32dd317e7717b6d315b35c8cc37342d8af2b37429284e82977bd32fcfb77e314",
       "kind": "React component",
-      "lineCount": 430,
+      "lineCount": 435,
       "relativePath": "components/profile-detail/use-profile-detail-controller.ts",
-      "size": 11451,
+      "size": 11636,
       "functionCount": 1,
       "importCount": 14,
       "exportCount": 1
@@ -930,73 +1300,93 @@
       "exportCount": 13
     },
     {
-      "hash": "4dc24477eed9eb70375ae8ccb7f1cee9cb3c8349402f7e41fcffa327d115cfb2",
+      "hash": "313525a7b06d5250597f7bdc94a2630751c3b471439b5dd02240e023dc17e84f",
       "kind": "React component",
-      "lineCount": 1534,
+      "lineCount": 1560,
       "relativePath": "components/ProfileDetail.module.css",
-      "size": 27060,
+      "size": 27596,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "141e6bcb6d7b4fb1b57f1f67424c06044f480d4c59c7629ae6dbbd2ff1fa1390",
+      "hash": "6103aa63e1956bf972c75f999cdea32e95d8a96ab1fcaf54afdcf205c0575694",
       "kind": "React component",
-      "lineCount": 379,
+      "lineCount": 387,
       "relativePath": "components/ProfileDetail.tsx",
-      "size": 10784,
+      "size": 10994,
       "functionCount": 1,
       "importCount": 13,
       "exportCount": 2
     },
     {
-      "hash": "34cf7168c78628ed4dac0858a17964cf3491b40da894270c38a0c986f785f597",
+      "hash": "f1dbdf61f207d7be6ed05545aceaa5bbe2da88079ea2598f9f90cec014f6eded",
       "kind": "React component",
       "lineCount": 112,
       "relativePath": "components/PushNotificationsControl.tsx",
-      "size": 2405,
+      "size": 2420,
       "functionCount": 1,
       "importCount": 5,
       "exportCount": 2
     },
     {
-      "hash": "3f5211a64f28d21c690a665c39cec36cb44ec6b48a07547a86eeef3a45ea036e",
+      "hash": "16406b23a73c87ae665a1268d65d796ff56992684755f2870fa2c0506b1ff63b",
       "kind": "React component",
       "lineCount": 210,
       "relativePath": "components/PwaInstallPrompt.tsx",
-      "size": 5717,
+      "size": 5732,
       "functionCount": 3,
       "importCount": 6,
       "exportCount": 2
     },
     {
-      "hash": "099e19a6b91d04a3fa2d40eb290ec6cfe00834e11d9d7e2d72be664c8b6998df",
+      "hash": "df2953468f3b169479df7a02a34019b67b3a6b2685d0e2750de22f70cb6cab3e",
       "kind": "React component",
-      "lineCount": 121,
-      "relativePath": "components/resume-detail/comment-composer.tsx",
-      "size": 2938,
+      "lineCount": 52,
+      "relativePath": "components/reactions/ReactionIcon.tsx",
+      "size": 1232,
       "functionCount": 1,
-      "importCount": 3,
+      "importCount": 2,
+      "exportCount": 2
+    },
+    {
+      "hash": "6ec6cdf021b7b6c933668bce1ebab6c3efa603c77776bd3386537dea54098a9b",
+      "kind": "React component",
+      "lineCount": 267,
+      "relativePath": "components/RecentPostsPanel.tsx",
+      "size": 6667,
+      "functionCount": 6,
+      "importCount": 7,
+      "exportCount": 2
+    },
+    {
+      "hash": "a85a76a71d9f14c12220a9c88df92291d264f4a6c7fb1138af1545b4482af3b2",
+      "kind": "React component",
+      "lineCount": 595,
+      "relativePath": "components/resume-detail/comment-composer.tsx",
+      "size": 15950,
+      "functionCount": 3,
+      "importCount": 5,
       "exportCount": 1
     },
     {
-      "hash": "53a7948fd7da9476b521d0c0a1266821ebbc04c24cf091388a8bbe32123f9da7",
+      "hash": "406c3b3ba8ef3942da7a67c1e16b6d2109c821d5e0a487b2c1c72397aed43108",
       "kind": "React component",
-      "lineCount": 194,
+      "lineCount": 273,
       "relativePath": "components/resume-detail/content.tsx",
-      "size": 4245,
-      "functionCount": 5,
-      "importCount": 6,
+      "size": 5824,
+      "functionCount": 6,
+      "importCount": 8,
       "exportCount": 5
     },
     {
-      "hash": "aca2d1f311a1a443a42047f5db93986cdebc11fe4a0047793608b21fce858fe3",
+      "hash": "b4decb34bca5bdc18b1be9a41751384f5414588be5f96a1e33205857143877ae",
       "kind": "React component",
-      "lineCount": 377,
+      "lineCount": 400,
       "relativePath": "components/resume-detail/data.ts",
-      "size": 9966,
+      "size": 10612,
       "functionCount": 8,
-      "importCount": 8,
+      "importCount": 9,
       "exportCount": 6
     },
     {
@@ -1010,13 +1400,13 @@
       "exportCount": 3
     },
     {
-      "hash": "4bffa30779084fd32a49135f33aa5f76f94ede87f19fcaf2d8d96d4d5d4f1ee2",
+      "hash": "83b79f406d5a4912b8064b8b4ca5db88f88769095583e111ab21d6025d27267b",
       "kind": "React component",
-      "lineCount": 220,
+      "lineCount": 360,
       "relativePath": "components/resume-detail/discussion-panel.tsx",
-      "size": 7081,
-      "functionCount": 1,
-      "importCount": 10,
+      "size": 10844,
+      "functionCount": 3,
+      "importCount": 12,
       "exportCount": 1
     },
     {
@@ -1030,13 +1420,13 @@
       "exportCount": 1
     },
     {
-      "hash": "ca645399dd686f82391e5d29580dd784bf08d6d64b4e6b0e1ec7a682a8f3179c",
+      "hash": "644b4ee03eb4ee9eb7321cbe7027ffdb181d396f05bfe99478148e910743b351",
       "kind": "React component",
-      "lineCount": 153,
+      "lineCount": 191,
       "relativePath": "components/resume-detail/resume-preview-pane.tsx",
-      "size": 3839,
-      "functionCount": 1,
-      "importCount": 8,
+      "size": 4990,
+      "functionCount": 2,
+      "importCount": 9,
       "exportCount": 1
     },
     {
@@ -1050,43 +1440,43 @@
       "exportCount": 11
     },
     {
-      "hash": "2fd5429a408212d1f6a06e50948db09298c9072607e8754d060afdc538677589",
+      "hash": "0edc716d5a273e73ddc21a3956ad571601f158df2f46926e878b2110e08924cc",
       "kind": "React component",
-      "lineCount": 460,
+      "lineCount": 424,
       "relativePath": "components/resume-detail/thread-review-item.tsx",
-      "size": 12997,
-      "functionCount": 2,
-      "importCount": 10,
+      "size": 12339,
+      "functionCount": 1,
+      "importCount": 14,
       "exportCount": 1
     },
     {
-      "hash": "f0fcf0a70eb3d77fddcea4ad6b1ffe49bde3e4ed31bfdcbb0d433604433efedf",
+      "hash": "af1155b8d7b50b6d8b3e71fcdfb204d1d3a0354a3dbba4e7cfe9f6378ccc3a28",
       "kind": "React component",
-      "lineCount": 92,
+      "lineCount": 94,
       "relativePath": "components/resume-detail/types.ts",
-      "size": 2566,
+      "size": 2615,
       "functionCount": 0,
       "importCount": 4,
       "exportCount": 7
     },
     {
-      "hash": "eec6245a3b7c689da849cda126bea2c5b9c0bca16afc659a9c1ea4bb612c257b",
+      "hash": "4c5203e99ef70352dcd11439d3bc11d6be08bf81a7764a3b768eaf3365cb7df6",
       "kind": "React component",
-      "lineCount": 170,
+      "lineCount": 175,
       "relativePath": "components/resume-detail/use-owner-actions.ts",
-      "size": 4067,
+      "size": 4176,
       "functionCount": 1,
-      "importCount": 8,
+      "importCount": 9,
       "exportCount": 1
     },
     {
-      "hash": "ad9699379238969d228391c3ce21010154e82ee82577fbf8effe091b287b744e",
+      "hash": "47fa3df5868946330ff671e94fc34be5bf290b4791ed24b0cf407db14a90b55b",
       "kind": "React component",
-      "lineCount": 943,
+      "lineCount": 963,
       "relativePath": "components/resume-detail/use-resume-detail-controller.ts",
-      "size": 24001,
+      "size": 24795,
       "functionCount": 1,
-      "importCount": 21,
+      "importCount": 24,
       "exportCount": 1
     },
     {
@@ -1120,24 +1510,34 @@
       "exportCount": 14
     },
     {
-      "hash": "bb94684cfba72147a5c96690d3857d8b112bc58090edafef8d81b10242c2e363",
+      "hash": "5930a58efef1f673b76b8b7fff92e2e28ccde305013da15e8d79d4fac29a2c50",
       "kind": "React component",
-      "lineCount": 368,
+      "lineCount": 381,
       "relativePath": "components/resume-feed/data.ts",
-      "size": 10278,
+      "size": 10524,
       "functionCount": 18,
-      "importCount": 4,
+      "importCount": 5,
       "exportCount": 25
     },
     {
-      "hash": "e969ab954c1329296c97a175cddff1b89c2a3062c08efa912535013063cea1aa",
+      "hash": "4a5761ac316e7d24d7304d7258083eb7dbcd9538932077539a80345d6f7770e6",
       "kind": "React component",
-      "lineCount": 258,
+      "lineCount": 338,
       "relativePath": "components/resume-feed/presentation.tsx",
-      "size": 7377,
+      "size": 9469,
       "functionCount": 4,
-      "importCount": 8,
+      "importCount": 13,
       "exportCount": 4
+    },
+    {
+      "hash": "bfad14d61527630ed4cd46a596f7a0ab97e0748ee673b6fe3ffbc71830a84fbb",
+      "kind": "React component",
+      "lineCount": 37,
+      "relativePath": "components/resume-feed/ResumeFeedHeader.tsx",
+      "size": 719,
+      "functionCount": 1,
+      "importCount": 1,
+      "exportCount": 2
     },
     {
       "hash": "8bf53f1e71222c45bce44c1b01873027097188acfd8f41f193f4ab3e1dc67df3",
@@ -1150,11 +1550,11 @@
       "exportCount": 2
     },
     {
-      "hash": "6653873c2908bed4814b92f33b0a4ab026f7053a34dd17a70b2e8b4e6f13d124",
+      "hash": "3db5b7184b220de60b94bcef84699d2f4e399f0cf7dade02b2182cc4e1e50f3d",
       "kind": "React component",
-      "lineCount": 467,
+      "lineCount": 474,
       "relativePath": "components/ResumeFeed.tsx",
-      "size": 13593,
+      "size": 13801,
       "functionCount": 1,
       "importCount": 11,
       "exportCount": 3
@@ -1190,61 +1590,71 @@
       "exportCount": 2
     },
     {
-      "hash": "74510574a614a61c3413e7a254f2baa42bcd09a97f100a2734855e085a2ae097",
+      "hash": "43531a7f161be8c371f7bb6171b2776ff23670a108103fa4851a758742b15369",
       "kind": "React component",
-      "lineCount": 127,
+      "lineCount": 77,
       "relativePath": "components/RouteHeader.tsx",
-      "size": 2736,
+      "size": 2023,
       "functionCount": 1,
-      "importCount": 6,
+      "importCount": 7,
       "exportCount": 2
     },
     {
-      "hash": "f8a5cc4949d792c5804bdaa8f5433d3993f0edf03a9670c3371c900c728cfdaa",
+      "hash": "285c57909e6f2ab440dd43158a98e5803c26fdf14a2547047329df1c3c028162",
       "kind": "React component",
-      "lineCount": 189,
+      "lineCount": 196,
       "relativePath": "components/RouteTransitionLoader.tsx",
-      "size": 5326,
+      "size": 5349,
       "functionCount": 7,
       "importCount": 3,
       "exportCount": 3
     },
     {
-      "hash": "806ccd01f73d6e625200bbeac3286bd372ba45e1b1ebe79152c96ab07849c6ea",
+      "hash": "5f27abdead0c83eacd598ed367f10884bb6bb919639ee955c69b7f33e524074c",
       "kind": "React component",
-      "lineCount": 703,
+      "lineCount": 704,
       "relativePath": "components/SecureResumePreview.tsx",
-      "size": 18790,
+      "size": 18836,
       "functionCount": 9,
-      "importCount": 5,
+      "importCount": 6,
       "exportCount": 2
     },
     {
-      "hash": "c7238174285b7b9a1ba4897d2b62fe690e30615293db38a0c331435a3dad9b75",
+      "hash": "73b725d3772f2182810b0cdafcedcad3459e0340689a9cdb683c4c61ed6eb479",
       "kind": "React component",
-      "lineCount": 644,
+      "lineCount": 247,
+      "relativePath": "components/SubmitResumeForm.module.css",
+      "size": 4420,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "a0650f2a4d273fd8b52f72eca4dcc096d3724143b71d258759b6fde6066debce",
+      "kind": "React component",
+      "lineCount": 654,
       "relativePath": "components/SubmitResumeForm.tsx",
-      "size": 18578,
+      "size": 18922,
       "functionCount": 7,
-      "importCount": 12,
+      "importCount": 13,
       "exportCount": 2
     },
     {
-      "hash": "92b45828b4fa5c46ad77e07e84dfefdc78d1d388e17a7c65f2afe577588ee455",
+      "hash": "4a3cbc27f2a5732ad6c388559c311d1b3511f11b66bad0e2cdf860da2e62826b",
       "kind": "React component",
       "lineCount": 468,
       "relativePath": "components/TeamNotifications.tsx",
-      "size": 14526,
+      "size": 14571,
       "functionCount": 5,
-      "importCount": 10,
+      "importCount": 11,
       "exportCount": 3
     },
     {
-      "hash": "daea0f88ebcf62e299aac2ed71a474aa846a360c11c810ed0fd1f12d48b8d514",
+      "hash": "304bec3fd554819f6e24363695eef6c792ca29d1f039ed87487fbd2f8f721401",
       "kind": "UI primitive",
       "lineCount": 146,
       "relativePath": "components/ui/alert-dialog.tsx",
-      "size": 4477,
+      "size": 4730,
       "functionCount": 2,
       "importCount": 4,
       "exportCount": 11
@@ -1280,33 +1690,33 @@
       "exportCount": 3
     },
     {
-      "hash": "b7aa966ec15a3d9323aea3d3bd369b89c355836e03f9a676cfc592a711a4aac7",
+      "hash": "3d04fe4ac9533ad9f8294c9c8abebe0a225f1b85bfb4c8799de36da459d39655",
       "kind": "UI primitive",
-      "lineCount": 110,
+      "lineCount": 122,
       "relativePath": "components/ui/dialog.tsx",
-      "size": 3809,
+      "size": 4268,
       "functionCount": 2,
       "importCount": 4,
       "exportCount": 10
     },
     {
-      "hash": "05b89ac30e55c13c04ccac95b06b0c478b8559c35f049276e97c9db4305b6a63",
+      "hash": "0ba401ad66c790bda9a658bbbb2bcb9f48075f2c9c8c1d094cb0fc1656df9b64",
       "kind": "UI primitive",
       "lineCount": 249,
       "relativePath": "components/ui/dropdown-menu.tsx",
-      "size": 9092,
+      "size": 9077,
       "functionCount": 1,
       "importCount": 4,
       "exportCount": 15
     },
     {
-      "hash": "ac085e02176d30bedb73f017da514619767c414fb42e21feb59553e5db2f85bc",
+      "hash": "36678c76c6b1452b617f712615ccc192d901be0c41d532052a82b88881129eeb",
       "kind": "UI primitive",
       "lineCount": 659,
       "relativePath": "components/ui/file-upload.tsx",
-      "size": 15743,
+      "size": 15788,
       "functionCount": 11,
-      "importCount": 5,
+      "importCount": 6,
       "exportCount": 20
     },
     {
@@ -1340,11 +1750,11 @@
       "exportCount": 2
     },
     {
-      "hash": "1969acd28af9a14b4a2104b80f5658dacc0b21c5092745d8d91016c9eedd276d",
+      "hash": "887203c6481cc6436e2954ce23a826ebd72c291f2e187c46362e1e918a31d8f6",
       "kind": "UI primitive",
       "lineCount": 153,
       "relativePath": "components/ui/select.tsx",
-      "size": 5425,
+      "size": 5437,
       "functionCount": 0,
       "importCount": 4,
       "exportCount": 10
@@ -1360,6 +1770,16 @@
       "exportCount": 1
     },
     {
+      "hash": "c5d6cac90b8bf7f8b14ee32b90247d990c2a49c54ecff27a95a3e58546629e92",
+      "kind": "UI primitive",
+      "lineCount": 249,
+      "relativePath": "components/ui/solar-icons.tsx",
+      "size": 13176,
+      "functionCount": 2,
+      "importCount": 82,
+      "exportCount": 94
+    },
+    {
       "hash": "d1eca70d4cc4070b50a76bce8ab4ab522cd43355be3d14372f05f1feb6578f7c",
       "kind": "UI primitive",
       "lineCount": 51,
@@ -1367,6 +1787,26 @@
       "size": 1366,
       "functionCount": 3,
       "importCount": 2,
+      "exportCount": 1
+    },
+    {
+      "hash": "47fc6df712f37357d73ce014a61458f8b4a28b40ec3a2d8849fecfe02e36c1ed",
+      "kind": "React component",
+      "lineCount": 35,
+      "relativePath": "components/user-presence/PresenceAvatar.module.css",
+      "size": 508,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "2085a4f4adfd6b38f0ec9bf3a769d4474895442b7cf8127b335365bd24de820e",
+      "kind": "React component",
+      "lineCount": 33,
+      "relativePath": "components/user-presence/PresenceAvatar.tsx",
+      "size": 707,
+      "functionCount": 1,
+      "importCount": 3,
       "exportCount": 1
     },
     {
@@ -1430,7 +1870,7 @@
       "exportCount": 0
     },
     {
-      "hash": "745a4c173ad1eeb8f261c8f861548238f36d1fbfe4c43799bb1718316a803a89",
+      "hash": "d6746736cb47206701bdb0c73ae4fdc8504d3841dd5b3c732e5c7aac1be39940",
       "kind": "Documentation",
       "lineCount": 181,
       "relativePath": "docs/community-guidelines.html",
@@ -1440,7 +1880,7 @@
       "exportCount": 0
     },
     {
-      "hash": "98add8f5e02a63d14b0df28477851709be2f928a5e828638786b5248bb009be8",
+      "hash": "6b38b32aab8631b0f54156423e8ead5624a71a6c76efdf8bbbbef48ca0038b66",
       "kind": "Documentation",
       "lineCount": 170,
       "relativePath": "docs/copyright-takedown-policy.html",
@@ -1460,11 +1900,11 @@
       "exportCount": 0
     },
     {
-      "hash": "ec66b61002bdf26ede0a6ce27f01991ffbf34910d88bdfec3be6790549b62668",
+      "hash": "1d66c47935fe5ac3aa0c5c121f6a63fa3cfbb38ada5d9ed391547241256ebabd",
       "kind": "Documentation",
       "lineCount": 53,
       "relativePath": "docs/database/data-retention.md",
-      "size": 2138,
+      "size": 2279,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -1650,7 +2090,7 @@
       "exportCount": 0
     },
     {
-      "hash": "bcac13f75c441af8f4b4b8e40a09ebff9d3e9a808406b77fffbd1b7cfe9befe5",
+      "hash": "4c0ef6c84fdf69bf60d3d61e4edb33495a5acaa453052f3e57ed4400fe855dac",
       "kind": "Documentation",
       "lineCount": 306,
       "relativePath": "docs/privacy-policy.html",
@@ -1660,11 +2100,11 @@
       "exportCount": 0
     },
     {
-      "hash": "4b6f8c6c0bbe66c6229eff15fee822921bf93fe16f5b640604dfdbe9679733f8",
+      "hash": "9b777743538157df769306496eb4151c0d9bb259f4134d1503ef1d58e383f0dc",
       "kind": "Documentation",
-      "lineCount": 164,
+      "lineCount": 199,
       "relativePath": "docs/production-ops.md",
-      "size": 5466,
+      "size": 7034,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -1720,7 +2160,7 @@
       "exportCount": 0
     },
     {
-      "hash": "726b003075e49ccf362457c0b75d9e603ab368d09de5dc6e9951b6a01080d5e2",
+      "hash": "dbf92bc612b8bab65b2fa263670527a7b5e332cac31222025cb31a9f861efbb7",
       "kind": "Documentation",
       "lineCount": 228,
       "relativePath": "docs/terms-of-service.html",
@@ -1780,21 +2220,31 @@
       "exportCount": 0
     },
     {
-      "hash": "3de19f6164044ff68c29c73ef6bd544deef7263b9dd870bfc37634d6e50036ed",
+      "hash": "3e3a7ab10799e4b0b4fc4475ef5e20014464dfdae7719405f2839eadcda9829f",
+      "kind": "Unit test",
+      "lineCount": 235,
+      "relativePath": "lib/__tests__/admin-feedback-route.test.ts",
+      "size": 5983,
+      "functionCount": 5,
+      "importCount": 3,
+      "exportCount": 0
+    },
+    {
+      "hash": "8bb26a553535a2e49da1e4a22ff4047dc7244e68d35bd369c6f22180e49e7f40",
       "kind": "Unit test",
       "lineCount": 85,
       "relativePath": "lib/__tests__/admin-messages.test.ts",
-      "size": 2249,
+      "size": 2253,
       "functionCount": 1,
       "importCount": 2,
       "exportCount": 0
     },
     {
-      "hash": "b109935bda268b1439364c1d785cc30cbe51ffb0ec46cef6bd48e197bd328481",
+      "hash": "218ff224d9048fb250555f682e6aac586140c95e160b8780db4924a7c232a119",
       "kind": "Unit test",
-      "lineCount": 194,
+      "lineCount": 227,
       "relativePath": "lib/__tests__/admin-moderation-actions-route.test.ts",
-      "size": 5055,
+      "size": 5808,
       "functionCount": 2,
       "importCount": 4,
       "exportCount": 0
@@ -1830,11 +2280,11 @@
       "exportCount": 0
     },
     {
-      "hash": "602d9149002e515067436b04e9d9a41516001573f27aba1d01486aca4f8dad33",
+      "hash": "aed951879d550afef4723e2338639a7f2fcf79fc449055a86f790b354352456e",
       "kind": "Unit test",
-      "lineCount": 86,
+      "lineCount": 163,
       "relativePath": "lib/__tests__/api-rate-limit.test.ts",
-      "size": 2329,
+      "size": 4340,
       "functionCount": 1,
       "importCount": 3,
       "exportCount": 0
@@ -1850,31 +2300,161 @@
       "exportCount": 0
     },
     {
-      "hash": "008c2d30204a3682aff5752cd5067347e68a6fb63c134f80d49d3d06d5dea199",
+      "hash": "71d2d2db0dd1fd5f5b5583937de5630634a35078bf077491cb75547e3c4edd84",
       "kind": "Unit test",
       "lineCount": 81,
       "relativePath": "lib/__tests__/avatar-validation.test.ts",
-      "size": 2177,
+      "size": 2189,
       "functionCount": 0,
       "importCount": 2,
       "exportCount": 0
     },
     {
-      "hash": "36d6f04aff4cbb31b20f97a08d4ae19fbd080a506d247f512448afb33b7f36c4",
+      "hash": "f12d5e78a42d43c456d159c89c20f451190ae89498f25b84720fbba3a8ee680a",
       "kind": "Unit test",
-      "lineCount": 125,
+      "lineCount": 230,
       "relativePath": "lib/__tests__/comment-media-upload-route.test.ts",
-      "size": 3454,
+      "size": 6319,
+      "functionCount": 4,
+      "importCount": 6,
+      "exportCount": 0
+    },
+    {
+      "hash": "574d107ff7715f71562b7c55bad7b4741f9fd0cd20fd9a74427fda3c87586d96",
+      "kind": "Unit test",
+      "lineCount": 192,
+      "relativePath": "lib/__tests__/comment-media-validation.test.ts",
+      "size": 4945,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "25bda9bd4940be6ddef4c07b6282fb2ddd83e307bedd9ea6f6a1758454fdfa34",
+      "kind": "Unit test",
+      "lineCount": 79,
+      "relativePath": "lib/__tests__/comment-mentions.test.ts",
+      "size": 1857,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "a3fee3fc6017666e97c7e5aa9932483aaa7a9686887319aae189cf9057a66e8d",
+      "kind": "Unit test",
+      "lineCount": 402,
+      "relativePath": "lib/__tests__/community-action-routes.test.ts",
+      "size": 10244,
+      "functionCount": 6,
+      "importCount": 10,
+      "exportCount": 0
+    },
+    {
+      "hash": "0a3df108f65d43f346b69da158e80476477b900dd36330d0190a7c97edc96ddc",
+      "kind": "Unit test",
+      "lineCount": 20,
+      "relativePath": "lib/__tests__/community-code-languages.test.ts",
+      "size": 745,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "dd17219970743b5cc2cc2495ca49dfbf135df8215a7a62042ed1e0e81ecf9dc4",
+      "kind": "Unit test",
+      "lineCount": 156,
+      "relativePath": "lib/__tests__/community-comment-submit-route.test.ts",
+      "size": 4331,
       "functionCount": 2,
+      "importCount": 4,
+      "exportCount": 0
+    },
+    {
+      "hash": "a1aed69845c10ea036a75492c0f6d9806e94461cd2e21daec8f64b3f95c7e3bc",
+      "kind": "Unit test",
+      "lineCount": 163,
+      "relativePath": "lib/__tests__/community-feed.test.ts",
+      "size": 4210,
+      "functionCount": 1,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "ac3843b78f93af6034a2b8b7e8b1f7e51b268bd8191b68cf41812e0386faa179",
+      "kind": "Unit test",
+      "lineCount": 199,
+      "relativePath": "lib/__tests__/community-guardrails.test.ts",
+      "size": 4569,
+      "functionCount": 0,
+      "importCount": 3,
+      "exportCount": 0
+    },
+    {
+      "hash": "31591bfabf32575db401fef8df721b6c9c02e8d630300356b40b35f6ff6b3d9d",
+      "kind": "Unit test",
+      "lineCount": 70,
+      "relativePath": "lib/__tests__/community-markdown.test.ts",
+      "size": 2112,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "6d7d7d6d7c828cd58465ef54a6b3850b967703fd4c1da851838d1414a170784d",
+      "kind": "Unit test",
+      "lineCount": 59,
+      "relativePath": "lib/__tests__/community-media-validation.test.ts",
+      "size": 1576,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "1d75deea3f4d4b010088c541d47d21f15f5981ca7e07437d9713be522b8b48d4",
+      "kind": "Unit test",
+      "lineCount": 41,
+      "relativePath": "lib/__tests__/community-optimistic.test.ts",
+      "size": 1038,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "0fce5f1f6525ccef5ee05e6e45987a25aa4b9834c5b236786644fd7feb59d203",
+      "kind": "Unit test",
+      "lineCount": 374,
+      "relativePath": "lib/__tests__/community-post-submit-route.test.ts",
+      "size": 10524,
+      "functionCount": 4,
       "importCount": 5,
       "exportCount": 0
     },
     {
-      "hash": "77421519f64a177d57349eba845913d84089ad3bfd2a739d755f30b4ca30437f",
+      "hash": "ed85927d1cfa7b71a3ca3354a365e8ca78caf6c3f9812e235b2404f4c57e021b",
       "kind": "Unit test",
-      "lineCount": 162,
-      "relativePath": "lib/__tests__/comment-media-validation.test.ts",
-      "size": 4303,
+      "lineCount": 71,
+      "relativePath": "lib/__tests__/community-threading.test.ts",
+      "size": 2220,
+      "functionCount": 1,
+      "importCount": 3,
+      "exportCount": 0
+    },
+    {
+      "hash": "8adb375c8b11128e1f7d5298dea0d6b33b6794b9485f5b462eb45f50a0535010",
+      "kind": "Unit test",
+      "lineCount": 97,
+      "relativePath": "lib/__tests__/community-validation.test.ts",
+      "size": 2325,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "0c73ee63ca0bc8f77e73b710fbf157dc0d354fd536241ee299a4e6cee67a6884",
+      "kind": "Unit test",
+      "lineCount": 57,
+      "relativePath": "lib/__tests__/community.test.ts",
+      "size": 1727,
       "functionCount": 0,
       "importCount": 2,
       "exportCount": 0
@@ -1900,23 +2480,33 @@
       "exportCount": 0
     },
     {
-      "hash": "c33a838b98b2c78012abeb23938e4162e6eaee9057a9c217050722435d0f0a0b",
+      "hash": "663c7e6d3ffac14cc80b2a2cd492fcef45587b85416b12797cdb25359d9d4b5c",
       "kind": "Unit test",
-      "lineCount": 223,
+      "lineCount": 239,
       "relativePath": "lib/__tests__/health-route.test.ts",
-      "size": 5936,
+      "size": 6467,
       "functionCount": 2,
       "importCount": 4,
       "exportCount": 0
     },
     {
-      "hash": "dca0160247d8b447d3fa5560349b6a86ae1be4e7e1539f7e315d2329a9ae3452",
+      "hash": "79bdd732629fd219acb80388983f343088999c7b0967937b69666e08a9768ca2",
       "kind": "Unit test",
-      "lineCount": 81,
+      "lineCount": 85,
       "relativePath": "lib/__tests__/leaderboard-ranking.test.ts",
-      "size": 2334,
+      "size": 2687,
       "functionCount": 0,
       "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "48d7b369d5498884120c227cbf5a187079ec7fa336c85c035f0e789f37131f59",
+      "kind": "Unit test",
+      "lineCount": 133,
+      "relativePath": "lib/__tests__/mention-users-route.test.ts",
+      "size": 3492,
+      "functionCount": 1,
+      "importCount": 4,
       "exportCount": 0
     },
     {
@@ -1930,21 +2520,21 @@
       "exportCount": 0
     },
     {
-      "hash": "a5222f2328bcd3b24b72855235effc7e7e004ee3e3c80a2f37a14ca29b7e49f0",
+      "hash": "d158786daa5391e69f26d9073595750b9bb72c336d973ec8fdba9c3b9fb9e889",
       "kind": "Unit test",
-      "lineCount": 36,
+      "lineCount": 39,
       "relativePath": "lib/__tests__/notifications.test.ts",
-      "size": 1072,
+      "size": 1152,
       "functionCount": 0,
-      "importCount": 2,
+      "importCount": 3,
       "exportCount": 0
     },
     {
-      "hash": "6e4139241edacde6471fdc5ce178e3dbb6324f4afccbda15e26d57569b57e145",
+      "hash": "71901116e0ce32d5a2ddcddc179a33d448ba3403b47e54ee4133e5df0f09ae8c",
       "kind": "Unit test",
-      "lineCount": 84,
+      "lineCount": 78,
       "relativePath": "lib/__tests__/onboarding-validation.test.ts",
-      "size": 2713,
+      "size": 2653,
       "functionCount": 0,
       "importCount": 2,
       "exportCount": 0
@@ -1970,6 +2560,16 @@
       "exportCount": 0
     },
     {
+      "hash": "16e135856a9a63ece1845d93b2ba504fce0376f26ce6fdf9c7de33535c391d70",
+      "kind": "Unit test",
+      "lineCount": 93,
+      "relativePath": "lib/__tests__/primary-navigation.test.ts",
+      "size": 2385,
+      "functionCount": 1,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
       "hash": "f946c679c2725353b8273a5ed63d7640b6c1220ee9c681b8e5d4033309b11f93",
       "kind": "Unit test",
       "lineCount": 193,
@@ -1990,6 +2590,16 @@
       "exportCount": 0
     },
     {
+      "hash": "2eda2fdfa2c8d5d7f0c7cb89e6a7191e96bdff46f39767703ef305f81b8136c3",
+      "kind": "Unit test",
+      "lineCount": 65,
+      "relativePath": "lib/__tests__/profile-view.test.ts",
+      "size": 1665,
+      "functionCount": 1,
+      "importCount": 3,
+      "exportCount": 0
+    },
+    {
       "hash": "91464668f72169b0cc05fa1f87a0b7918e2a9a15459ac09acad3e9bbd1e38c1a",
       "kind": "Unit test",
       "lineCount": 256,
@@ -2006,6 +2616,16 @@
       "relativePath": "lib/__tests__/pwa-install.test.ts",
       "size": 1292,
       "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "4a450e4a50a80315785c5c8268f1c887f18362c2961029b847d07a1301612cfb",
+      "kind": "Unit test",
+      "lineCount": 117,
+      "relativePath": "lib/__tests__/recent-posts.test.ts",
+      "size": 3274,
+      "functionCount": 1,
       "importCount": 2,
       "exportCount": 0
     },
@@ -2040,11 +2660,11 @@
       "exportCount": 0
     },
     {
-      "hash": "df9c51f3a197f03cf8660cd6d5a449f6cd65482b3dd988252d60cbf8cdde3dfc",
+      "hash": "e25e7b4931f48652ad4546472d36c367f7c448b21cae6c68fae68b6f55c03e24",
       "kind": "Unit test",
-      "lineCount": 276,
+      "lineCount": 255,
       "relativePath": "lib/__tests__/resume-submit-route.test.ts",
-      "size": 7040,
+      "size": 6747,
       "functionCount": 3,
       "importCount": 6,
       "exportCount": 0
@@ -2080,11 +2700,11 @@
       "exportCount": 0
     },
     {
-      "hash": "3488f68df00b089f2bfb82329eba2caf369028252c6def8bcd2183c6efe7d075",
+      "hash": "c8f6fb123e9d28ad79a60fac9b30b1cc3e92a0324fd9a6535692824a3f6d3d06",
       "kind": "Unit test",
-      "lineCount": 80,
+      "lineCount": 94,
       "relativePath": "lib/__tests__/saved-resumes.test.ts",
-      "size": 2126,
+      "size": 2469,
       "functionCount": 0,
       "importCount": 2,
       "exportCount": 0
@@ -2120,23 +2740,33 @@
       "exportCount": 0
     },
     {
-      "hash": "869b1e6b70bb54aa188f88baf134907b5392181db3b806111526b6f6532f9f14",
+      "hash": "8c1c01dd3dba557b982659ae9093ccf799bd45578ecf5b197ac664f0910f0ae2",
+      "kind": "Unit test",
+      "lineCount": 85,
+      "relativePath": "lib/__tests__/user-feedback.test.ts",
+      "size": 2833,
+      "functionCount": 0,
+      "importCount": 2,
+      "exportCount": 0
+    },
+    {
+      "hash": "eb1cdcf4f48cad5fd83f575c7d66e44a61c0726bb908525dee9e9ce252a4b6cf",
       "kind": "Application library module",
-      "lineCount": 155,
+      "lineCount": 157,
       "relativePath": "lib/admin-messages.ts",
-      "size": 3526,
+      "size": 3589,
       "functionCount": 6,
-      "importCount": 0,
+      "importCount": 1,
       "exportCount": 7
     },
     {
-      "hash": "db76223279d80ab5774c987933594dd1e526f0d0c96803eef588bc0e2b657cba",
+      "hash": "1bff413d4e86ed96e7063e7b2652f245097443e9400700ee5eaeb3579e93f061",
       "kind": "Application library module",
-      "lineCount": 88,
+      "lineCount": 81,
       "relativePath": "lib/admin.ts",
-      "size": 2242,
+      "size": 2043,
       "functionCount": 6,
-      "importCount": 1,
+      "importCount": 2,
       "exportCount": 5
     },
     {
@@ -2160,14 +2790,24 @@
       "exportCount": 1
     },
     {
-      "hash": "ff82fcb8b10030ce4a4e985416518218f62ad952e87681b266c38d85c2b5c560",
+      "hash": "e9e56dac229cafa3672520f352fa61e2645e3a687ca801b69482595b25431ed1",
       "kind": "Application library module",
-      "lineCount": 23,
+      "lineCount": 19,
       "relativePath": "lib/app-presence.ts",
-      "size": 804,
-      "functionCount": 2,
+      "size": 650,
+      "functionCount": 1,
       "importCount": 1,
-      "exportCount": 6
+      "exportCount": 5
+    },
+    {
+      "hash": "94b3ccec678a9ce3c479ea3157efef2edb34d5e82d153a24b9beba64f565a3af",
+      "kind": "Application library module",
+      "lineCount": 9,
+      "relativePath": "lib/app-routes.ts",
+      "size": 306,
+      "functionCount": 1,
+      "importCount": 1,
+      "exportCount": 3
     },
     {
       "hash": "a4fed7f97ca0084bd82510c70c10a8e7224410f45058e148aa8ac2cf05d4f909",
@@ -2180,13 +2820,13 @@
       "exportCount": 3
     },
     {
-      "hash": "2d5b117115df02ca7657a24b40d95b5854c6c332010b046c9069519030e1890a",
+      "hash": "cd1f299aa77fba0d12b326f69b7be59151ad39e4f15cbd3c86de9641dba662c1",
       "kind": "Application library module",
-      "lineCount": 23,
+      "lineCount": 24,
       "relativePath": "lib/auth-redirect.ts",
-      "size": 597,
+      "size": 679,
       "functionCount": 3,
-      "importCount": 0,
+      "importCount": 1,
       "exportCount": 4
     },
     {
@@ -2210,14 +2850,114 @@
       "exportCount": 7
     },
     {
-      "hash": "a7f130f1b5aac1feef9ecfcbf003d8ef50065bb895034666df005dbec5b6e578",
+      "hash": "d26c7c81e77d938eb87913cc8c6245dd6131171c4e101ca0faf2ce8710c4ac8c",
       "kind": "Application library module",
-      "lineCount": 128,
+      "lineCount": 132,
       "relativePath": "lib/comment-media-validation.ts",
-      "size": 3712,
+      "size": 3819,
       "functionCount": 6,
       "importCount": 1,
       "exportCount": 7
+    },
+    {
+      "hash": "15f1f2a7e6bc9f5836bf1460913cf7245251b5dbe787304d677bccd403a82bb3",
+      "kind": "Application library module",
+      "lineCount": 337,
+      "relativePath": "lib/comment-mentions.ts",
+      "size": 8696,
+      "functionCount": 20,
+      "importCount": 0,
+      "exportCount": 19
+    },
+    {
+      "hash": "dea3d5221dfc2ea5500527a7cfa8f37e8e6b71256e445d787b91b28c6ab22c15",
+      "kind": "Application library module",
+      "lineCount": 67,
+      "relativePath": "lib/community-code-languages.ts",
+      "size": 1970,
+      "functionCount": 2,
+      "importCount": 0,
+      "exportCount": 5
+    },
+    {
+      "hash": "8f417caebab60f3a6d2138815d8da0b66977ec8cce808b532b3bace7d73ad484",
+      "kind": "Application library module",
+      "lineCount": 120,
+      "relativePath": "lib/community-feed.ts",
+      "size": 3015,
+      "functionCount": 7,
+      "importCount": 0,
+      "exportCount": 10
+    },
+    {
+      "hash": "556597821cba3d30113b4db71e556bab1e7a40c3a9d39b5097b8160c2c48815d",
+      "kind": "Application library module",
+      "lineCount": 124,
+      "relativePath": "lib/community-guardrails.ts",
+      "size": 2888,
+      "functionCount": 7,
+      "importCount": 2,
+      "exportCount": 7
+    },
+    {
+      "hash": "cebeca0e2a5428fab144eb394000b4d760ad02730bfc1fd084038ee2d9d6e613",
+      "kind": "Application library module",
+      "lineCount": 112,
+      "relativePath": "lib/community-markdown.ts",
+      "size": 3266,
+      "functionCount": 9,
+      "importCount": 0,
+      "exportCount": 8
+    },
+    {
+      "hash": "4ad7cec745b6487fc247c31397db778366eaef0ab08a67c8751f1379c644ca5c",
+      "kind": "Application library module",
+      "lineCount": 76,
+      "relativePath": "lib/community-media-validation.ts",
+      "size": 1966,
+      "functionCount": 2,
+      "importCount": 1,
+      "exportCount": 10
+    },
+    {
+      "hash": "09c2c769dccf4090004f64c0cfecbd2b7dc6dadf94bef6e02c8acf33f51ec477",
+      "kind": "Application library module",
+      "lineCount": 26,
+      "relativePath": "lib/community-optimistic.ts",
+      "size": 726,
+      "functionCount": 1,
+      "importCount": 1,
+      "exportCount": 1
+    },
+    {
+      "hash": "4195375d06515583090a5d52b669e0600a11a9d87be0d775a0c6658bcf1b8b03",
+      "kind": "Application library module",
+      "lineCount": 61,
+      "relativePath": "lib/community-threading.ts",
+      "size": 1413,
+      "functionCount": 3,
+      "importCount": 1,
+      "exportCount": 4
+    },
+    {
+      "hash": "5f106c94c2db93066b42d52b26fd39dc0b9cd955852d902fedb896021d570cbd",
+      "kind": "Application library module",
+      "lineCount": 140,
+      "relativePath": "lib/community-validation.ts",
+      "size": 3904,
+      "functionCount": 9,
+      "importCount": 1,
+      "exportCount": 19
+    },
+    {
+      "hash": "4eca709114c973f21dd1c5739b38cbec70c065c957a7ea6a8e1b4ba467c35573",
+      "kind": "Application library module",
+      "lineCount": 85,
+      "relativePath": "lib/community.ts",
+      "size": 1984,
+      "functionCount": 4,
+      "importCount": 0,
+      "exportCount": 12
     },
     {
       "hash": "4c44170632e7ce960c0bde5cf5a404cb42ef971be88e9bcf33baf59b80b51e49",
@@ -2250,12 +2990,12 @@
       "exportCount": 4
     },
     {
-      "hash": "be2b4554f320c95c250a6e47ab5e4304839b38eb43b173626f525c2915e83e5e",
+      "hash": "36ec8f8bedd7bb016aeeb2e6ba4dfad87d0d8df879c18a2d1e03f39b229efa21",
       "kind": "Application library module",
-      "lineCount": 131,
+      "lineCount": 148,
       "relativePath": "lib/leaderboard-ranking.ts",
-      "size": 3183,
-      "functionCount": 5,
+      "size": 3685,
+      "functionCount": 6,
       "importCount": 1,
       "exportCount": 8
     },
@@ -2280,24 +3020,34 @@
       "exportCount": 4
     },
     {
-      "hash": "563272f24396a33a9587227d67ed61dd641b552a18eb895a1fad0507ced18dbb",
+      "hash": "6bc28178ebaa53f7bafb28e77486eaba095d7d9511398cabbfa0ec1fa66788f0",
       "kind": "Application library module",
-      "lineCount": 39,
+      "lineCount": 40,
       "relativePath": "lib/notifications.ts",
-      "size": 1288,
+      "size": 1350,
       "functionCount": 4,
-      "importCount": 1,
+      "importCount": 2,
       "exportCount": 6
     },
     {
-      "hash": "8b2a62443f34a6c38e69105c33369d61a6e0a7da590536ee45c6579a61a2adfb",
+      "hash": "57dd75c747fe9cdfb31db798e681a9316522b38fb479e4f89ff3bbdbeacd9cfc",
       "kind": "Application library module",
-      "lineCount": 170,
+      "lineCount": 173,
       "relativePath": "lib/onboarding-validation.ts",
       "size": 4487,
       "functionCount": 11,
       "importCount": 1,
       "exportCount": 14
+    },
+    {
+      "hash": "62f78be82ed090db157fcea356be0a96fef7cfdbe4afe07f2437df5c7d583984",
+      "kind": "Application library module",
+      "lineCount": 50,
+      "relativePath": "lib/online-presence.ts",
+      "size": 1281,
+      "functionCount": 1,
+      "importCount": 1,
+      "exportCount": 2
     },
     {
       "hash": "452bdfdbd8bbe32081d670ce6a1df6c49c7012f54caba84a34a0e32a9d3e0778",
@@ -2318,6 +3068,16 @@
       "functionCount": 18,
       "importCount": 4,
       "exportCount": 5
+    },
+    {
+      "hash": "c59466f1983ca80f46ccf9fd0d4e24578adbc985d83f75d3ddb0c1299100f262",
+      "kind": "Application library module",
+      "lineCount": 102,
+      "relativePath": "lib/primary-navigation.ts",
+      "size": 2100,
+      "functionCount": 3,
+      "importCount": 1,
+      "exportCount": 4
     },
     {
       "hash": "7857aa9c5c3a2fc19bf254e3711792388aa6f9c1cf200aabefc52ad3bbaf8c20",
@@ -2348,6 +3108,16 @@
       "functionCount": 2,
       "importCount": 0,
       "exportCount": 4
+    },
+    {
+      "hash": "bebff6792f7e0a5eb3abf3be39a50be746327c3de6593db9b639a4cf69716ae0",
+      "kind": "Application library module",
+      "lineCount": 129,
+      "relativePath": "lib/recent-posts.ts",
+      "size": 3369,
+      "functionCount": 8,
+      "importCount": 0,
+      "exportCount": 8
     },
     {
       "hash": "44b7271300dfd688d4a0c0df86135da5908ba787d7ed5d409b4a22034580b2c7",
@@ -2400,14 +3170,14 @@
       "exportCount": 17
     },
     {
-      "hash": "4391d12c3d48123dfab1ff7702be343e301b0d6f8892540f8d8943b7f834cf92",
+      "hash": "08d28ffc34649dabbfc4e825f02524c6ec4cd8b25ab14ef1a82776cc87bc10df",
       "kind": "Application library module",
-      "lineCount": 67,
+      "lineCount": 76,
       "relativePath": "lib/saved-resumes.ts",
-      "size": 1637,
+      "size": 1806,
       "functionCount": 4,
       "importCount": 0,
-      "exportCount": 7
+      "exportCount": 8
     },
     {
       "hash": "cd2e7e3c3de04deeef5c186a0dfb328c97a85d891f1c2fe8199296ffefd78970",
@@ -2430,14 +3200,24 @@
       "exportCount": 2
     },
     {
-      "hash": "d1e04ff9efba03145918315d544aea0dde20265a50d99ccce5203dcd94a0de92",
+      "hash": "91692e26216751c3cb6e8c1bdaace3a5891f20515a97979519be6e19f3391efc",
       "kind": "Application library module",
-      "lineCount": 68,
+      "lineCount": 81,
       "relativePath": "lib/server-auth.ts",
-      "size": 1772,
+      "size": 2046,
       "functionCount": 4,
       "importCount": 1,
       "exportCount": 4
+    },
+    {
+      "hash": "c37f4e119169128545bca49594471d0a221cdc93daef4d52f2b0cce78fe5dd62",
+      "kind": "Application library module",
+      "lineCount": 98,
+      "relativePath": "lib/server/community-actions.ts",
+      "size": 3822,
+      "functionCount": 9,
+      "importCount": 3,
+      "exportCount": 8
     },
     {
       "hash": "767aeeb909095fb304ef0b6b6ce62c5979e2820b321c7a039f4881e6ee374f49",
@@ -2450,21 +3230,31 @@
       "exportCount": 2
     },
     {
-      "hash": "349ea2f2e748f074eb549b11979c99d33f3ac4d4519e436e8c999cf54419847a",
+      "hash": "fbee5dc9ef0f9da48bc99073300cb55cab39b45836fe00884b897eac11a5a50c",
       "kind": "Application library module",
-      "lineCount": 116,
+      "lineCount": 152,
       "relativePath": "lib/server/rate-limit.ts",
-      "size": 3128,
+      "size": 4125,
       "functionCount": 5,
       "importCount": 2,
       "exportCount": 3
     },
     {
-      "hash": "88c1bef8db3cfb6edce4f643f357ed7de01071c8780fba5fed4ea6f680d9cc3a",
+      "hash": "f42c1b1496013c98518cf03f6803103a3c90e77fd0b1bff2a7104f26169dd953",
+      "kind": "Application library module",
+      "lineCount": 6,
+      "relativePath": "lib/server/supabase-admin.ts",
+      "size": 192,
+      "functionCount": 1,
+      "importCount": 1,
+      "exportCount": 1
+    },
+    {
+      "hash": "e12bdc8f7542689a6bab431a72abe17abcf2311026539527359ba70050f4816a",
       "kind": "Application library module",
       "lineCount": 330,
       "relativePath": "lib/server/upload-security.ts",
-      "size": 8361,
+      "size": 8386,
       "functionCount": 13,
       "importCount": 3,
       "exportCount": 6
@@ -2490,34 +3280,44 @@
       "exportCount": 9
     },
     {
-      "hash": "fb22b29e1f96884f6cfa364b0a60ca720fea6f5c972a8e40260fd172a0e538c2",
+      "hash": "cda7557b8f49d7603b62c25f7a64b8809d1faca1630c8c12e89642b9f173514b",
       "kind": "Application library module",
-      "lineCount": 23,
+      "lineCount": 47,
       "relativePath": "lib/supabase/avatars.ts",
-      "size": 520,
-      "functionCount": 1,
-      "importCount": 1,
-      "exportCount": 1
-    },
-    {
-      "hash": "c2a850a62712837f35bd493b5452742e8c6ff3d998a9eb40c825881b9a1e8634",
-      "kind": "Application library module",
-      "lineCount": 60,
-      "relativePath": "lib/supabase/client.ts",
-      "size": 1576,
+      "size": 1162,
       "functionCount": 3,
-      "importCount": 2,
+      "importCount": 1,
       "exportCount": 3
     },
     {
-      "hash": "974cb92210428e89fb8e0ef33302ad211ae1f53dd37bb8941bae706e80c260ea",
+      "hash": "a6f4ee87c231576432eac6e9e7c8b79f17c0d66271acd030b535d05ae88aa8c6",
       "kind": "Application library module",
-      "lineCount": 244,
+      "lineCount": 61,
+      "relativePath": "lib/supabase/client.ts",
+      "size": 1638,
+      "functionCount": 3,
+      "importCount": 3,
+      "exportCount": 3
+    },
+    {
+      "hash": "79f6a9f0507273cbcfd6495249ba13782241b26deded0bc5dd1e4fe1b3b36e81",
+      "kind": "Application library module",
+      "lineCount": 378,
       "relativePath": "lib/supabase/types.ts",
-      "size": 6407,
+      "size": 9240,
       "functionCount": 0,
       "importCount": 0,
-      "exportCount": 20
+      "exportCount": 35
+    },
+    {
+      "hash": "a164834a3d99d505bb62d57c9cd33d773599f9a8043a13c65dfed8ffd0050214",
+      "kind": "Application library module",
+      "lineCount": 3,
+      "relativePath": "lib/support-contact.ts",
+      "size": 110,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 2
     },
     {
       "hash": "8f899d8ce857298e6d35077f33cdf591fbd8e21f123992b983b4e3b6fbdd570c",
@@ -2528,6 +3328,16 @@
       "functionCount": 1,
       "importCount": 2,
       "exportCount": 1
+    },
+    {
+      "hash": "e8856c22e97431d330c93b35095de20448e35dc597080829e9e53dfef29a2443",
+      "kind": "Application library module",
+      "lineCount": 227,
+      "relativePath": "lib/user-feedback.ts",
+      "size": 5554,
+      "functionCount": 11,
+      "importCount": 1,
+      "exportCount": 21
     },
     {
       "hash": "41cd116aa62e1764c4d2ddb0282f9f4dff47d607b5e49795d709de98f4f48afe",
@@ -2570,21 +3380,21 @@
       "exportCount": 1
     },
     {
-      "hash": "e0f0c90ca3db61c956b73bf280ac8ac69b5ae28b4d8190faf33439c69e8c8d68",
+      "hash": "6a44e42ba2d945077a25b5fa1266c19d94dd780a5a8155984f02193a765ccee8",
       "kind": "Project configuration",
-      "lineCount": 13211,
+      "lineCount": 14207,
       "relativePath": "package-lock.json",
-      "size": 473971,
+      "size": 515213,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "96b791d4a82abd88a3844af39d409578e43c4cc692cff311986db568f351fb9e",
+      "hash": "238d05280347f67f08cd2cf76e4edfb7b0a98ab05073e080b7d1bd4254804b1b",
       "kind": "Project configuration",
-      "lineCount": 94,
+      "lineCount": 97,
       "relativePath": "package.json",
-      "size": 3103,
+      "size": 3188,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2980,11 +3790,11 @@
       "exportCount": 0
     },
     {
-      "hash": "f7b267f70147bea02dbec8da1a73af07a6ee258db13fa94f17a8a0b4220c9f54",
+      "hash": "d5fc09f821a5f6749a8524e076d091176aa51071a29067389654293d26cd80a3",
       "kind": "Root documentation",
       "lineCount": 175,
       "relativePath": "README.md",
-      "size": 6719,
+      "size": 6714,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -3080,11 +3890,11 @@
       "exportCount": 0
     },
     {
-      "hash": "e6ed47ffaea63b5617578399aa97c7af43472e34a0738804f566d29c678c0f44",
+      "hash": "b9e7d154b878042152a21fbac487352c44048eb85458c36ebe15e22d33ccd82b",
       "kind": "Root documentation",
-      "lineCount": 114,
+      "lineCount": 142,
       "relativePath": "supabase/MIGRATIONS.md",
-      "size": 3701,
+      "size": 4845,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -3580,6 +4390,256 @@
       "exportCount": 0
     },
     {
+      "hash": "0ac5dcb66d430d397560685a38c1dde8a67319c90e64a690c9f21ab444897d2e",
+      "kind": "Supabase migration",
+      "lineCount": 698,
+      "relativePath": "supabase/migrations/0050_validate_integrity_and_restore_review_votes.sql",
+      "size": 19761,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "dfc2437c0afb210c755b33241fc4caa31aafbccd075d9b10407378cda0d0ade2",
+      "kind": "Supabase migration",
+      "lineCount": 248,
+      "relativePath": "supabase/migrations/0051_db_lint_warning_cleanup.sql",
+      "size": 5763,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "2129b750d2c78181bf8e9ea7494a389badf6e262b5cc7c48436aa59f1626ed06",
+      "kind": "Supabase migration",
+      "lineCount": 1854,
+      "relativePath": "supabase/migrations/0052_community_database_foundation.sql",
+      "size": 67525,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "724c191e89251aca9d1878fb6d45f38b0941eac9b310b5fa560421de4e96d8e7",
+      "kind": "Supabase migration",
+      "lineCount": 184,
+      "relativePath": "supabase/migrations/0053_submit_community_post_rpc.sql",
+      "size": 5161,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "bab23c4f37320ff79165b6c4f83d83677327a6d0c19440388cf712c4a27dbb28",
+      "kind": "Supabase migration",
+      "lineCount": 506,
+      "relativePath": "supabase/migrations/0054_community_post_media_and_comments.sql",
+      "size": 16389,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "9aa71173d6320705e3ab484d63d062a143e35e16e98b6b22dcbcd16cd9a648cd",
+      "kind": "Supabase migration",
+      "lineCount": 826,
+      "relativePath": "supabase/migrations/0055_community_discussion_actions.sql",
+      "size": 22630,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "b4ec11e7c6e8ae8097c178839c79dd2dd74fc803f2ea26ff2307c90c2454fd32",
+      "kind": "Supabase migration",
+      "lineCount": 1493,
+      "relativePath": "supabase/migrations/0056_community_moderation_controls.sql",
+      "size": 43307,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "c97c7c9cd36603d1ac08dd7af655a2ccc83feae1b8c845ded03dbf92bfe8df4d",
+      "kind": "Supabase migration",
+      "lineCount": 305,
+      "relativePath": "supabase/migrations/0057_fix_community_post_submit_profile_conflict.sql",
+      "size": 8393,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "54603417be2b7ef1a4f9cc975b78a4e06d002ca9e352f1ba2c3f90707a16aa05",
+      "kind": "Supabase migration",
+      "lineCount": 391,
+      "relativePath": "supabase/migrations/0058_allow_title_only_community_posts.sql",
+      "size": 10636,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "d1d055b4f5bc7b174a489d6737452447cde14ab18d08dccbcc6ca844f1a4fcae",
+      "kind": "Supabase migration",
+      "lineCount": 55,
+      "relativePath": "supabase/migrations/0059_allow_reddit_length_community_titles.sql",
+      "size": 1539,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "a4ed83ba3f4d000720c8aeaa474f4049201a3b52eaa209756d1fb48216aa14c8",
+      "kind": "Supabase migration",
+      "lineCount": 450,
+      "relativePath": "supabase/migrations/0060_community_polls_and_drafts_support.sql",
+      "size": 14323,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "4fadbe8fe3d7b9449f7bec8f8f3d8f687e041ec28de82ef8274c4a6336092b0c",
+      "kind": "Supabase migration",
+      "lineCount": 80,
+      "relativePath": "supabase/migrations/0061_fix_community_poll_vote_rpc_conflict.sql",
+      "size": 2059,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "e6fbd719de8b0c727d63c4a155d4077e59c4ac1e076660e6b1b3d2b9262d5364",
+      "kind": "Supabase migration",
+      "lineCount": 263,
+      "relativePath": "supabase/migrations/0062_fix_community_vote_rpc_conflicts.sql",
+      "size": 8199,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "f927974a20ac447d0f8713f6b18f4ae06080c5eba4b59b1aa3ce159b238877be",
+      "kind": "Supabase migration",
+      "lineCount": 85,
+      "relativePath": "supabase/migrations/0063_remove_community_post_saves.sql",
+      "size": 3426,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "e8bc94430412825878d2cb3e295584b8f9b3ca41c1304e8a217e046fe894d229",
+      "kind": "Supabase migration",
+      "lineCount": 129,
+      "relativePath": "supabase/migrations/0064_hard_delete_community_posts.sql",
+      "size": 3598,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "b95b6a5173377d6d743f3807b47bb6e1f3c1af77b6b930b3df3ad8dd658ed123",
+      "kind": "Supabase migration",
+      "lineCount": 15,
+      "relativePath": "supabase/migrations/0065_optimize_community_reaction_lookups.sql",
+      "size": 627,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "f021e65124d7803330021a122b14a18730f3166ed996a64a8f98813f96ec16c8",
+      "kind": "Supabase migration",
+      "lineCount": 149,
+      "relativePath": "supabase/migrations/0066_refine_reviewer_leaderboard_ranking.sql",
+      "size": 4529,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "d9592c04b8ab59131c32d6d8322a4373e3bb91117090d169accd2f333b5f1346",
+      "kind": "Supabase migration",
+      "lineCount": 225,
+      "relativePath": "supabase/migrations/0067_admin_feedback_inbox.sql",
+      "size": 8917,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "360a0518263cdd58d722d5dc0aa1f8af258fb79654df73984920cd1c359105bf",
+      "kind": "Supabase migration",
+      "lineCount": 229,
+      "relativePath": "supabase/migrations/0068_indexed_mention_profile_search.sql",
+      "size": 7632,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "e07ea6fe5054dd2c8352d3897f24791d8687ef7436dc211a88e92042eb995279",
+      "kind": "Supabase migration",
+      "lineCount": 138,
+      "relativePath": "supabase/migrations/0069_optimize_mention_typeahead_latency.sql",
+      "size": 4761,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "26c6493408294697c6309078e5e6089686370beb1eb190c6cd6e01aba3d384b9",
+      "kind": "Supabase migration",
+      "lineCount": 324,
+      "relativePath": "supabase/migrations/0070_community_comment_static_images.sql",
+      "size": 9094,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "527164e872e982afd42a380c1486f2a1cdf9aad0ca9397dd72ba7029b61a7dce",
+      "kind": "Supabase migration",
+      "lineCount": 57,
+      "relativePath": "supabase/migrations/0071_static_image_upload_limits.sql",
+      "size": 1949,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "9ade83f7a11c785358350146d64f49d1d5a1bfb6e6bfd073361b193ea4f5ce7c",
+      "kind": "Supabase migration",
+      "lineCount": 39,
+      "relativePath": "supabase/migrations/0072_profile_online_presence.sql",
+      "size": 978,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "7f41fee4be063f9f057baa2fe07a4030b5eb88463e1cddb6ef77ad5b5c77606e",
+      "kind": "Supabase migration",
+      "lineCount": 40,
+      "relativePath": "supabase/migrations/0073_batch_profile_online_presence.sql",
+      "size": 1169,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
+      "hash": "d2953414ca4a9f7c9f466e5e8eba652fe2ca9b95f37807b27fdac8e400e6f84f",
+      "kind": "Supabase migration",
+      "lineCount": 658,
+      "relativePath": "supabase/migrations/0074_production_backend_integrity_hardening.sql",
+      "size": 21707,
+      "functionCount": 0,
+      "importCount": 0,
+      "exportCount": 0
+    },
+    {
       "hash": "57c569ae5142c18e31ced5594927dd20532370e793ad8577a9e282110d028f8c",
       "kind": "Project configuration",
       "lineCount": 59,
@@ -3630,5 +4690,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd"
+  "manifestHash": "88c2c6a249ea017a35e955321ca9f11874b898dfed04d86165a542d79d8f2a86"
 }

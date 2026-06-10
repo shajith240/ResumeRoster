@@ -4,9 +4,9 @@
 
 - Source path: `components/auth/SignUp.tsx`
 - Kind: React component
-- Size: 14863 bytes
+- Size: 14889 bytes
 - Lines: 499
-- Source hash: `d38c2e8e83f85cd0a0220c6900521a6991ebd433171a64129d7958630493c8aa`
+- Source hash: `4e3dc9fd757b7b369ac22faafdc7923b7795febdcb47e2022c2a05a1b92c74f0`
 
 ## What This File Does
 
@@ -23,14 +23,15 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `./SignUp.module.css`
 - `@/components/BrandMark`
 - `@/components/ui/button`
 - `@/components/ui/input`
 - `@/components/ui/label`
+- `@/components/ui/solar-icons`
 - `@/lib/auth-redirect`
 - `@/lib/session-lock`
 - `@/lib/supabase/client`
-- `lucide-react`
 - `next/link`
 - `next/navigation`
 - `react`
@@ -39,24 +40,24 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 23 | `getStoredAppTheme` | Function | top-level | no | none | `AppTheme` | Implements the getstoredapptheme helper. |
-| 30 | `applyAppTheme` | Function | top-level | no | `theme` | `void` | Implements the applyapptheme helper. |
-| 37 | `getEmailRedirectUrl` | Function | top-level | no | `nextPath` | `string \| undefined` | Implements the getemailredirecturl helper. |
-| 44 | `authErrorMessage` | Function | top-level | no | `error` | `string` | Implements the autherrormessage helper. |
-| 83 | `isExistingAccountError` | Function | top-level | no | `error` | `boolean` | Implements the isexistingaccounterror helper. |
-| 95 | `confirmationNotice` | Function | top-level | no | none | `string` | Implements the confirmationnotice helper. |
-| 99 | `GoogleIcon` | React component | top-level | no | none | `import("react").JSX.Element` | Renders the GoogleIcon UI component. |
-| 122 | `GitHubIcon` | React component | top-level | no | none | `import("react").JSX.Element` | Renders the GitHubIcon UI component. |
-| 135 | `SignUp` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the SignUp UI component. |
+| 24 | `getStoredAppTheme` | Function | top-level | no | none | `AppTheme` | Implements the getstoredapptheme helper. |
+| 31 | `applyAppTheme` | Function | top-level | no | `theme` | `void` | Implements the applyapptheme helper. |
+| 38 | `getEmailRedirectUrl` | Function | top-level | no | `nextPath` | `string \| undefined` | Implements the getemailredirecturl helper. |
+| 45 | `authErrorMessage` | Function | top-level | no | `error` | `string` | Implements the autherrormessage helper. |
+| 84 | `isExistingAccountError` | Function | top-level | no | `error` | `boolean` | Implements the isexistingaccounterror helper. |
+| 96 | `confirmationNotice` | Function | top-level | no | none | `string` | Implements the confirmationnotice helper. |
+| 100 | `GoogleIcon` | React component | top-level | no | none | `import("react").JSX.Element` | Renders the GoogleIcon UI component. |
+| 123 | `GitHubIcon` | React component | top-level | no | none | `import("react").JSX.Element` | Renders the GitHubIcon UI component. |
+| 136 | `SignUp` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the SignUp UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 15 | `AuthMode` | type |
-| 16 | `OAuthProvider` | type |
-| 17 | `SubmitState` | type |
-| 18 | `AppTheme` | type |
+| 16 | `AuthMode` | type |
+| 17 | `OAuthProvider` | type |
+| 18 | `SubmitState` | type |
+| 19 | `AppTheme` | type |
 
 ## Related Tests
 

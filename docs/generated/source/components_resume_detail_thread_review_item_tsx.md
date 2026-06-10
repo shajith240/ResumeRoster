@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/thread-review-item.tsx`
 - Kind: React component
-- Size: 12997 bytes
-- Lines: 460
-- Source hash: `2fd5429a408212d1f6a06e50948db09298c9072607e8754d060afdc538677589`
+- Size: 12339 bytes
+- Lines: 424
+- Source hash: `0edc716d5a273e73ddc21a3956ad571601f158df2f46926e878b2110e08924cc`
 
 ## What This File Does
 
@@ -27,7 +27,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./selectors`
 - `./types`
 - `./utils`
+- `@/components/reactions/ReactionIcon`
 - `@/components/ui/button`
+- `@/components/ui/solar-icons`
+- `@/components/user-presence/PresenceAvatar`
+- `@/lib/comment-mentions`
 - `@/lib/resume-thread`
 - `lucide-react`
 - `next/link`
@@ -37,14 +41,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 32 | `FilledThumbIcon` | React component | top-level | no | `{ className, direction, }` | `import("react").JSX.Element` | Renders the FilledThumbIcon UI component. |
-| 56 | `ThreadReviewItem` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, deleteSchemaReady, del...` | `import("react").JSX.Element` | Renders the ThreadReviewItem UI component. |
+| 34 | `ThreadReviewItem` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, deleteSchemaReady, del...` | `import("react").JSX.Element` | Renders the ThreadReviewItem UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 28 | `ThreadReviewItemProps` | type |
+| 29 | `ThreadReviewItemProps` | type |
 
 ## Related Tests
 

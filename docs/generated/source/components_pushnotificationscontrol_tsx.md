@@ -4,9 +4,9 @@
 
 - Source path: `components/PushNotificationsControl.tsx`
 - Kind: React component
-- Size: 2405 bytes
+- Size: 2420 bytes
 - Lines: 112
-- Source hash: `34cf7168c78628ed4dac0858a17964cf3491b40da894270c38a0c986f785f597`
+- Source hash: `f1dbdf61f207d7be6ed05545aceaa5bbe2da88079ea2598f9f90cec014f6eded`
 
 ## What This File Does
 
@@ -24,8 +24,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `@/components/ui/button`
+- `@/components/ui/solar-icons`
 - `@/lib/push-notifications`
-- `lucide-react`
 - `react`
 - `sonner`
 

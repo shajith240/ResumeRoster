@@ -4,9 +4,9 @@
 
 - Source path: `lib/app-presence.ts`
 - Kind: Application library module
-- Size: 804 bytes
-- Lines: 23
-- Source hash: `ff82fcb8b10030ce4a4e985416518218f62ad952e87681b266c38d85c2b5c560`
+- Size: 650 bytes
+- Lines: 19
+- Source hash: `e9e56dac229cafa3672520f352fa61e2645e3a687ca801b69482595b25431ed1`
 
 ## What This File Does
 
@@ -22,7 +22,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `APP_PRESENCE_CHANNEL`
 - `AppPresencePayload`
 - `isPresenceFeatureError`
-- `normalizeAppStatus`
 - `PROFILE_CHANGE_EVENT`
 
 ## Imports
@@ -33,8 +32,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 14 | `normalizeAppStatus` | Validation or normalization helper | top-level | yes | `value` | `AppStatus` | Validates or normalizes normalizeappstatus values for callers. |
-| 18 | `isPresenceFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the ispresencefeatureerror helper. |
+| 14 | `isPresenceFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the ispresencefeatureerror helper. |
 
 ## Types
 

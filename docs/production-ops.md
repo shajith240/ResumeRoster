@@ -71,6 +71,41 @@ to callers.
 Use this URL in an uptime/readiness monitor. For a fully open-source uptime
 monitor, use Uptime Kuma.
 
+## Supabase Auth
+
+The checked-in `supabase/config.toml` is a local development baseline. Before
+production launch, configure the hosted Supabase project directly:
+
+- Use exact production redirect URLs; do not allow broad localhost or wildcard
+  production redirects.
+- Enable email confirmations for email/password signup, or require OAuth/passkey
+  providers only.
+- Enable secure password changes so password updates require a recent session.
+- Set a stronger password policy than the local minimum.
+- Configure custom SMTP for signup, recovery, and password-change email.
+- Review Supabase Auth rate limits in the dashboard and keep abuse-sensitive
+  endpoints fail-closed in application code.
+- Enable CAPTCHA for signup/sign-in if public abuse starts before invitation or
+  allowlist controls are in place.
+
+Do not commit production Auth secrets, SMTP credentials, JWT signing keys, or
+Management API tokens.
+
+## Backups And Recovery
+
+Before real user traffic:
+
+- Move the project off the Free plan if database size, storage, egress, logs, or
+  recovery requirements exceed Free quotas.
+- Enable daily backups at minimum and Point-in-Time Recovery for production data
+  that cannot be manually reconstructed.
+- Test restore into a separate Supabase project before relying on backups for an
+  incident.
+- Keep `npm run db:push:dry` review as the production migration gate; never run
+  `db reset` against a linked production project.
+- Monitor Storage usage for public media buckets because deleted database rows
+  cannot atomically roll back Storage API cleanup.
+
 ## GlitchTip Setup
 
 For a completely free and open-source setup, self-host GlitchTip. If you want a

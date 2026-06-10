@@ -25,7 +25,7 @@ backstop, but the scheduled job is the primary cleanup path.
 | --- | --- |
 | Notifications | Retained until a user deletes them or a future notification retention policy is approved. |
 | Resume files and rows | Retained until resume deletion, account deletion, user request, or a specific moderation/legal workflow. |
-| Comment media and attachment metadata | Retained while linked to comments or until account/moderation cleanup removes them. |
+| Comment media and attachment metadata | Retained while linked to comments. Unclaimed uploads can be deleted by the owning user through `delete_unclaimed_comment_attachment`; account deletion removes owned comment media paths after the database transaction commits. |
 | Admin audit logs | Retained for accountability and moderation history. |
 
 ## Operations

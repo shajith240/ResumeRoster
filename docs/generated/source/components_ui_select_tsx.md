@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/select.tsx`
 - Kind: UI primitive
-- Size: 5425 bytes
+- Size: 5437 bytes
 - Lines: 153
-- Source hash: `1969acd28af9a14b4a2104b80f5658dacc0b21c5092745d8d91016c9eedd276d`
+- Source hash: `887203c6481cc6436e2954ce23a826ebd72c291f2e187c46362e1e918a31d8f6`
 
 ## What This File Does
 
@@ -31,9 +31,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `@/components/ui/solar-icons`
 - `@/lib/utils`
 - `@radix-ui/react-select`
-- `lucide-react`
 - `react`
 
 ## Functions And Components

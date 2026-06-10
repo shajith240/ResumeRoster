@@ -4,9 +4,9 @@
 
 - Source path: `components/ProfileDetail.tsx`
 - Kind: React component
-- Size: 10784 bytes
-- Lines: 379
-- Source hash: `141e6bcb6d7b4fb1b57f1f67424c06044f480d4c59c7629ae6dbbd2ff1fa1390`
+- Size: 10994 bytes
+- Lines: 387
+- Source hash: `6103aa63e1956bf972c75f999cdea32e95d8a96ab1fcaf54afdcf205c0575694`
 
 ## What This File Does
 
@@ -33,8 +33,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/components/LintPointsFlame`
 - `@/components/ui/button`
 - `@/components/ui/dialog`
+- `@/components/ui/solar-icons`
 - `@/lib/report-validation`
-- `lucide-react`
 - `next/link`
 
 ## Functions And Components

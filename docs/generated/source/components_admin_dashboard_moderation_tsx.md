@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/moderation.tsx`
 - Kind: React component
-- Size: 11304 bytes
-- Lines: 437
-- Source hash: `54bd58e838fe0f1ef11c6f4595779d0148d852bd4e057152120c16ec359cf944`
+- Size: 15325 bytes
+- Lines: 561
+- Source hash: `8ab1d657dca0fd3a3b395db7934368054dec6d906ef73d2aaf7e522500c454be`
 
 ## What This File Does
 
@@ -31,21 +31,21 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./shared`
 - `./types`
 - `./utils`
+- `@/components/ui/solar-icons`
 - `@/lib/reviewer-validation`
 - `@/lib/supabase/types`
-- `lucide-react`
 - `next/link`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 29 | `ReportsPage` | React component | top-level | yes | `{ adminNotes, busyAction, onAction, onNoteChange, onStatusChange, reports, st...` | `import("react").JSX.Element` | Renders the ReportsPage UI component. |
-| 92 | `ReviewersPage` | React component | top-level | yes | `{ applications, busyAction, onAction, onStatusChange, status, }` | `import("react").JSX.Element` | Renders the ReviewersPage UI component. |
-| 152 | `ReportRow` | React component | top-level | yes | `{ busyAction, note, onAction, onNoteChange, report, }` | `import("react").JSX.Element` | Renders the ReportRow UI component. |
-| 309 | `ReviewerRow` | React component | top-level | yes | `{ application, busyAction, onAction, }` | `import("react").JSX.Element` | Renders the ReviewerRow UI component. |
-| 389 | `AuditPage` | React component | top-level | yes | `{ actions }` | `import("react").JSX.Element` | Renders the AuditPage UI component. |
-| 424 | `ActionLogRow` | React component | top-level | yes | `{ action }` | `import("react").JSX.Element` | Renders the ActionLogRow UI component. |
+| 31 | `ReportsPage` | React component | top-level | yes | `{ adminNotes, busyAction, onAction, onNoteChange, onStatusChange, reports, st...` | `import("react").JSX.Element` | Renders the ReportsPage UI component. |
+| 94 | `ReviewersPage` | React component | top-level | yes | `{ applications, busyAction, onAction, onStatusChange, status, }` | `import("react").JSX.Element` | Renders the ReviewersPage UI component. |
+| 154 | `ReportRow` | React component | top-level | yes | `{ busyAction, note, onAction, onNoteChange, report, }` | `import("react").JSX.Element` | Renders the ReportRow UI component. |
+| 433 | `ReviewerRow` | React component | top-level | yes | `{ application, busyAction, onAction, }` | `import("react").JSX.Element` | Renders the ReviewerRow UI component. |
+| 513 | `AuditPage` | React component | top-level | yes | `{ actions }` | `import("react").JSX.Element` | Renders the AuditPage UI component. |
+| 548 | `ActionLogRow` | React component | top-level | yes | `{ action }` | `import("react").JSX.Element` | Renders the ActionLogRow UI component. |
 
 ## Types
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/dialog.tsx`
 - Kind: UI primitive
-- Size: 3809 bytes
-- Lines: 110
-- Source hash: `b7aa966ec15a3d9323aea3d3bd369b89c355836e03f9a676cfc592a711a4aac7`
+- Size: 4268 bytes
+- Lines: 122
+- Source hash: `3d04fe4ac9533ad9f8294c9c8abebe0a225f1b85bfb4c8799de36da459d39655`
 
 ## What This File Does
 
@@ -33,15 +33,15 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 - `@/lib/utils`
 - `@radix-ui/react-dialog`
-- `@radix-ui/react-icons`
+- `lucide-react`
 - `react`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 61 | `DialogHeader` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | Renders the DialogHeader UI component. |
-| 66 | `DialogFooter` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | Renders the DialogFooter UI component. |
+| 66 | `DialogHeader` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | Renders the DialogHeader UI component. |
+| 75 | `DialogFooter` | React component | top-level | yes | `{ className, ...props }` | `React.JSX.Element` | Renders the DialogFooter UI component. |
 
 ## Types
 

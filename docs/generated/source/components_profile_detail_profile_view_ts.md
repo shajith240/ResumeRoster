@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/profile-view.ts`
 - Kind: React component
-- Size: 1375 bytes
-- Lines: 42
-- Source hash: `f8d13b4a9380c06f0eff7dc8ab739a0e4b0c840e112b77431630f057152e8f26`
+- Size: 1541 bytes
+- Lines: 45
+- Source hash: `62bc3d6c2d376994a4aae73d68ed74e2083af89d65912e1c25ab69a4e1ede376`
 
 ## What This File Does
 
@@ -26,6 +26,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./data`
 - `./utils`
 - `@/lib/anonymous-profile`
+- `@/lib/leaderboard-ranking`
 - `@/lib/profile-validation`
 - `@/lib/reviewer-validation`
 - `@/lib/supabase/types`
@@ -34,7 +35,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 13 | `buildProfileView` | Function | top-level | yes | `profile`, `reviews`, `resumes` | `{ activity: import("./types").ActivityItem[]; avatarUrl: string; collegeLabel: string; collegeLocation: string; currentRole: string; disp...` | Implements the buildprofileview helper. |
+| 14 | `buildProfileView` | Function | top-level | yes | `profile`, `reviews`, `resumes` | `{ activity: import("./types").ActivityItem[]; avatarUrl: string; collegeLabel: string; collegeLocation: string; currentRole: string; disp...` | Implements the buildprofileview helper. |
 
 ## Types
 
@@ -42,7 +43,7 @@ No top-level interfaces or type aliases detected.
 
 ## Related Tests
 
-No direct test file detected by naming convention.
+- `lib/__tests__/profile-view.test.ts`
 
 ## Notes
 

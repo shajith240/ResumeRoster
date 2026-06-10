@@ -4,9 +4,9 @@
 
 - Source path: `app/page.tsx`
 - Kind: Next page route
-- Size: 7258 bytes
-- Lines: 244
-- Source hash: `87bc140c17a52fa0430aaed9f623a7b6851680a0f4f72994ad4375e096032276`
+- Size: 7375 bytes
+- Lines: 246
+- Source hash: `f14e665b2361c4a59436c5fd5cafac5e7c34900957f5f6ff010883bab84e13ba`
 
 ## What This File Does
 
@@ -26,6 +26,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 - `@/components/landing/content`
 - `@/components/landing/sections`
 - `@/components/LoadingScreen`
+- `@/lib/app-routes`
 - `@/lib/supabase/client`
 - `@supabase/supabase-js`
 - `next/navigation`
@@ -35,8 +36,8 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 21 | `isSmallScreen` | Function | top-level | no | none | `boolean` | Implements the issmallscreen helper. |
-| 27 | `Home` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the Home UI component. |
+| 22 | `isSmallScreen` | Function | top-level | no | none | `boolean` | Implements the issmallscreen helper. |
+| 28 | `Home` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the Home UI component. |
 
 ## Types
 

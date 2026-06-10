@@ -34,7 +34,7 @@ No top-level interfaces or type aliases detected.
 
 ## Related Tests
 
-No direct test file detected by naming convention.
+- `lib/__tests__/community-action-routes.test.ts`
 
 ## Notes
 

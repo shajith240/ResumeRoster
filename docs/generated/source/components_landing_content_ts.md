@@ -4,9 +4,9 @@
 
 - Source path: `components/landing/content.ts`
 - Kind: React component
-- Size: 6986 bytes
-- Lines: 235
-- Source hash: `fbe0e3acd573180cbdb339cce7768e5be0231935fa4d07fa359f39257ae6b50a`
+- Size: 7121 bytes
+- Lines: 239
+- Source hash: `d2eb9936efc1fe93a0d713225282fc6ca8c361491136bc5a1e2b7851245e6051`
 
 ## What This File Does
 
@@ -33,21 +33,21 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
-None detected.
+- `@/lib/support-contact`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 8 | `asset` | Function | top-level | yes | `path` | `string` | Implements the asset helper. |
+| 10 | `asset` | Function | top-level | yes | `path` | `string` | Implements the asset helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 1 | `FeatureKey` | type |
-| 2 | `BenefitKey` | type |
-| 3 | `FooterLink` | type |
+| 3 | `FeatureKey` | type |
+| 4 | `BenefitKey` | type |
+| 5 | `FooterLink` | type |
 
 ## Related Tests
 

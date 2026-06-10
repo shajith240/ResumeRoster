@@ -1,13 +1,9 @@
-import { createClient } from "@supabase/supabase-js";
 import { POST } from "@/app/api/resumes/submit/route";
 import { redactResumePdf } from "@/lib/pdf-redaction";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
+import { requireSignedInUser } from "@/lib/server-auth";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-
-vi.mock("@supabase/supabase-js", () => ({
-	createClient: vi.fn(),
-}));
 
 vi.mock("@/lib/pdf-redaction", () => ({
 	buildRedactionProfileFromUser: vi.fn(() => ({})),
@@ -16,6 +12,16 @@ vi.mock("@/lib/pdf-redaction", () => ({
 
 vi.mock("@/lib/server/rate-limit", () => ({
 	enforceApiRateLimit: vi.fn(),
+}));
+
+vi.mock("@/lib/server-auth", () => ({
+	requireSignedInUser: vi.fn(),
+	serverAuthErrorResponse: vi.fn((error: unknown) =>
+		Response.json(
+			{ message: error instanceof Error ? error.message : "Auth failed." },
+			{ status: (error as { status?: number }).status ?? 500 },
+		),
+	),
 }));
 
 vi.mock("@/lib/server/upload-security", () => ({
@@ -52,17 +58,6 @@ function mockAdmin() {
 	const rpc = vi.fn();
 	const upload = vi.fn();
 	const admin = {
-		auth: {
-			getUser: vi.fn(async () => ({
-				data: {
-					user: {
-						email: "candidate@example.com",
-						id: USER_ID,
-					},
-				},
-				error: null,
-			})),
-		},
 		from,
 		rpc,
 		storage: {
@@ -70,7 +65,13 @@ function mockAdmin() {
 		},
 	};
 
-	vi.mocked(createClient).mockReturnValue(admin as never);
+	vi.mocked(requireSignedInUser).mockResolvedValue({
+		admin,
+		user: {
+			email: "candidate@example.com",
+			id: USER_ID,
+		},
+	} as never);
 
 	return { admin, from, rpc, upload };
 }
@@ -101,15 +102,7 @@ function mockSuccessfulSubmitAdmin({
 		},
 	];
 	const profileUpdateEq = vi.fn(async () => ({ error: null }));
-	const resumeSingle = vi.fn(async () => ({
-		data: { id: "resume-fallback" },
-		error: null,
-	}));
-	const resumeInsert = vi.fn(() => ({
-		select: vi.fn(() => ({
-			single: resumeSingle,
-		})),
-	}));
+	const resumeInsert = vi.fn();
 	const from = vi.fn((table: string) => {
 		if (table === "profiles") {
 			return {
@@ -131,28 +124,24 @@ function mockSuccessfulSubmitAdmin({
 	});
 	const rpc = vi.fn(async () => rpcResult);
 	const upload = vi.fn(async () => ({ error: null }));
+	const remove = vi.fn(async () => ({ error: null }));
 	const admin = {
-		auth: {
-			getUser: vi.fn(async () => ({
-				data: {
-					user: {
-						email: "candidate@example.com",
-						id: USER_ID,
-					},
-				},
-				error: null,
-			})),
-		},
 		from,
 		rpc,
 		storage: {
-			from: vi.fn(() => ({ upload })),
+			from: vi.fn(() => ({ remove, upload })),
 		},
 	};
 
-	vi.mocked(createClient).mockReturnValue(admin as never);
+	vi.mocked(requireSignedInUser).mockResolvedValue({
+		admin,
+		user: {
+			email: "candidate@example.com",
+			id: USER_ID,
+		},
+	} as never);
 
-	return { admin, from, profileUpdateEq, resumeInsert, rpc, upload };
+	return { admin, from, profileUpdateEq, remove, resumeInsert, rpc, upload };
 }
 
 describe("resume submit route rate limits", () => {
@@ -239,8 +228,8 @@ describe("resume submit route rate limits", () => {
 		});
 	});
 
-	it("falls back to a legacy active insert before the queue migration exists", async () => {
-		const { resumeInsert, rpc } = mockSuccessfulSubmitAdmin({
+	it("fails safely when the queue RPC is missing instead of bypassing review", async () => {
+		const { remove, resumeInsert, rpc } = mockSuccessfulSubmitAdmin({
 			rpcResult: {
 				data: null,
 				error: {
@@ -252,24 +241,14 @@ describe("resume submit route rate limits", () => {
 
 		const response = await POST(submitRequest());
 
-		expect(response.status).toBe(200);
+		expect(response.status).toBe(500);
 		expect(rpc).toHaveBeenCalledOnce();
-		expect(resumeInsert).toHaveBeenCalledWith(
-			expect.objectContaining({
-				is_anonymous: true,
-				job_description:
-					"We need a data analyst with SQL and dashboard experience.",
-				post_description: "Please review the analytics story.",
-				privacy_mode: "anonymous",
-				title: "Data resume",
-				user_id: USER_ID,
-			}),
-		);
-		await expect(response.json()).resolves.toMatchObject({
-			activationReviewsCompleted: 0,
-			activationReviewsRequired: 0,
-			id: "resume-fallback",
-			reviewQueueStatus: "active",
+		expect(resumeInsert).not.toHaveBeenCalled();
+		expect(remove).toHaveBeenCalledWith([
+			expect.stringMatching(new RegExp(`^${USER_ID}/\\d+-resume\\.pdf$`)),
+		]);
+		await expect(response.json()).resolves.toEqual({
+			message: "Resume upload failed. Please try again.",
 		});
 	});
 });

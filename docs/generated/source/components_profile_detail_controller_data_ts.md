@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/controller-data.ts`
 - Kind: React component
-- Size: 3707 bytes
-- Lines: 149
-- Source hash: `3082bbdfed8efbe476e5d229494d080861be16afd5aa85c2da2038c03b6f3113`
+- Size: 4269 bytes
+- Lines: 173
+- Source hash: `714ef1d82b92c59b9a70776b2ee1ba79923332568d1b780aa33564d12122e1e1`
 
 ## What This File Does
 
@@ -35,7 +35,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 25 | `loadProfileDetailData` | Action helper async | top-level | yes | `profileId` | `Promise<LoadedProfileDetail>` | Runs the loadprofiledetaildata workflow for callers. |
+| 28 | `loadProfileOnlineState` | Action helper async | top-level | no | `profileId` | `Promise<boolean>` | Runs the loadprofileonlinestate workflow for callers. |
+| 39 | `loadProfileDetailData` | Action helper async | top-level | yes | `profileId` | `Promise<LoadedProfileDetail>` | Runs the loadprofiledetaildata workflow for callers. |
 
 ## Types
 

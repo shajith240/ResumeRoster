@@ -4,9 +4,9 @@
 
 - Source path: `lib/supabase/types.ts`
 - Kind: Application library module
-- Size: 6407 bytes
-- Lines: 244
-- Source hash: `974cb92210428e89fb8e0ef33302ad211ae1f53dd37bb8941bae706e80c260ea`
+- Size: 9240 bytes
+- Lines: 378
+- Source hash: `79f6a9f0507273cbcfd6495249ba13782241b26deded0bc5dd1e4fe1b3b36e81`
 
 ## What This File Does
 
@@ -21,7 +21,19 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `AppStatus`
 - `CommentAttachment`
 - `CommentContentFormat`
+- `CommunityCommentStatus`
+- `CommunityPost`
+- `CommunityPostAttachment`
+- `CommunityPostComment`
+- `CommunityPostPoll`
+- `CommunityPostPollOption`
+- `CommunityPostPollVote`
+- `CommunityPostStatus`
+- `CommunityPostType`
 - `CommunityRole`
+- `CommunityTag`
+- `CommunityTopic`
+- `CommunityVoteReaction`
 - `ContentReportStatus`
 - `ContentReportTargetType`
 - `LintedNotification`
@@ -38,6 +50,9 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `ReviewerProfileStats`
 - `ReviewerType`
 - `ReviewerVerificationStatus`
+- `UserFeedbackCategory`
+- `UserFeedbackPriority`
+- `UserFeedbackStatus`
 
 ## Imports
 
@@ -57,28 +72,43 @@ No stable named functions or components detected.
 | 4 | `AppStatus` | type |
 | 5 | `ContentReportStatus` | type |
 | 10 | `ContentReportTargetType` | type |
-| 11 | `CommentContentFormat` | type |
-| 12 | `CommentAttachmentKind` | type |
-| 13 | `CommentAttachmentSource` | type |
-| 14 | `CommunityRole` | type |
-| 15 | `ReviewerType` | type |
-| 26 | `ReviewerVerificationStatus` | type |
-| 31 | `OnboardingGoalId` | type |
-| 32 | `OnboardingPersonaId` | type |
-| 45 | `OnboardingStatus` | type |
-| 46 | `NotificationType` | type |
-| 55 | `ResumeAuthorProfile` | type |
-| 72 | `ResumeSummary` | type |
-| 91 | `Review` | type |
-| 109 | `CommentAttachment` | type |
-| 122 | `ReviewerProfileStats` | type |
-| 141 | `ReviewerLeaderboardEntry` | type |
-| 159 | `PublicProfile` | type |
-| 185 | `ProfileOnboarding` | type |
-| 196 | `PublicProfileResume` | type |
-| 205 | `PublicProfileReviewLegacy` | type |
-| 215 | `PublicProfileReview` | type |
-| 225 | `LintedNotification` | type |
+| 16 | `CommunityPostType` | type |
+| 17 | `CommunityPostStatus` | type |
+| 23 | `CommunityCommentStatus` | type |
+| 24 | `CommunityVoteReaction` | type |
+| 25 | `CommentContentFormat` | type |
+| 26 | `CommentAttachmentKind` | type |
+| 27 | `CommentAttachmentSource` | type |
+| 28 | `CommunityRole` | type |
+| 29 | `ReviewerType` | type |
+| 40 | `ReviewerVerificationStatus` | type |
+| 45 | `OnboardingGoalId` | type |
+| 46 | `OnboardingPersonaId` | type |
+| 59 | `OnboardingStatus` | type |
+| 60 | `NotificationType` | type |
+| 68 | `UserFeedbackCategory` | type |
+| 76 | `UserFeedbackPriority` | type |
+| 77 | `UserFeedbackStatus` | type |
+| 85 | `ResumeAuthorProfile` | type |
+| 103 | `ResumeSummary` | type |
+| 122 | `Review` | type |
+| 140 | `CommentAttachment` | type |
+| 153 | `ReviewerProfileStats` | type |
+| 174 | `ReviewerLeaderboardEntry` | type |
+| 195 | `PublicProfile` | type |
+| 221 | `ProfileOnboarding` | type |
+| 232 | `CommunityTopic` | type |
+| 243 | `CommunityTag` | type |
+| 253 | `CommunityPost` | type |
+| 270 | `CommunityPostComment` | type |
+| 286 | `CommunityPostAttachment` | type |
+| 301 | `CommunityPostPoll` | type |
+| 311 | `CommunityPostPollOption` | type |
+| 321 | `CommunityPostPollVote` | type |
+| 330 | `PublicProfileResume` | type |
+| 339 | `PublicProfileReviewLegacy` | type |
+| 349 | `PublicProfileReview` | type |
+| 359 | `LintedNotification` | type |
 
 ## Related Tests
 

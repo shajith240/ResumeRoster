@@ -4,9 +4,9 @@
 
 - Source path: `lib/auth-redirect.ts`
 - Kind: Application library module
-- Size: 597 bytes
-- Lines: 23
-- Source hash: `2d5b117115df02ca7657a24b40d95b5854c6c332010b046c9069519030e1890a`
+- Size: 679 bytes
+- Lines: 24
+- Source hash: `cd1f299aa77fba0d12b326f69b7be59151ad39e4f15cbd3c86de9641dba662c1`
 
 ## What This File Does
 
@@ -25,15 +25,15 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Imports
 
-None detected.
+- `@/lib/app-routes`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3 | `getSafeNextPath` | Function | top-level | yes | `value` | `string` | Implements the getsafenextpath helper. |
-| 11 | `getLoginPath` | Function | top-level | yes | `nextPath` | `string` | Implements the getloginpath helper. |
-| 16 | `getCurrentPathForLogin` | Function | top-level | yes | none | `string` | Implements the getcurrentpathforlogin helper. |
+| 5 | `getSafeNextPath` | Function | top-level | yes | `value` | `string` | Implements the getsafenextpath helper. |
+| 13 | `getLoginPath` | Function | top-level | yes | `nextPath` | `string` | Implements the getloginpath helper. |
+| 18 | `getCurrentPathForLogin` | Function | top-level | yes | none | `string` | Implements the getcurrentpathforlogin helper. |
 
 ## Types
 

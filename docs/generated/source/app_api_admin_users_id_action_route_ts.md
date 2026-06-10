@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/users/[id]/action/route.ts`
 - Kind: Next API route
-- Size: 11513 bytes
-- Lines: 446
-- Source hash: `942bc50a6381c7107a9e0dc5ac58bdf02f9fe8952abfacb1ffc07776e9374fc1`
+- Size: 12294 bytes
+- Lines: 477
+- Source hash: `751958593eae7e5a0a27b0e6a4da7a952bf2a2915d3a64e8d768fed025eac7ba`
 
 ## What This File Does
 
@@ -32,19 +32,20 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 50 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
-| 54 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizenote values for callers. |
-| 58 | `uniqueStrings` | Function | top-level | no | `values` | `string[]` | Implements the uniquestrings helper. |
-| 64 | `removeStorageObjects` | Function async | top-level | no | `admin`, `bucket`, `paths` | `Promise<number>` | Implements the removestorageobjects helper. |
-| 82 | `listUserStorageFolder` | Function async | top-level | no | `admin`, `bucket`, `userId` | `Promise<string[]>` | Implements the listuserstoragefolder helper. |
-| 111 | `removeAccountStorageObjects` | Function async | top-level | no | `admin`, `profileId`, `appData` | `Promise<StorageRemovalCounts>` | Implements the removeaccountstorageobjects helper. |
-| 145 | `firstDeleteResult` | Action helper | top-level | no | `data` | `DeleteUserAppDataResult \| null` | Runs the firstdeleteresult workflow for callers. |
-| 152 | `errorMessage` | Function | top-level | no | `error` | `string` | Implements the errormessage helper. |
-| 156 | `deleteFailureStatus` | Action helper | top-level | no | `stage` | `DeleteFailureStatus` | Runs the deletefailurestatus workflow for callers. |
-| 162 | `buildDeleteAuditMetadata` | Action helper | top-level | no | `{ authUserDeleted = false, baseMetadata, error, stage, storageCounts, appData, }` | `Record<string, unknown>` | Runs the builddeleteauditmetadata workflow for callers. |
-| 204 | `tryUpdateDeleteAuditMetadata` | Action helper async | top-level | no | `admin`, `auditLogId`, `metadata` | `Promise<void>` | Runs the tryupdatedeleteauditmetadata workflow for callers. |
-| 217 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
-| 225 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | Handles the POST request for this API route. |
+| 52 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 56 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizenote values for callers. |
+| 60 | `uniqueStrings` | Function | top-level | no | `values` | `string[]` | Implements the uniquestrings helper. |
+| 66 | `removeStorageObjects` | Function async | top-level | no | `admin`, `bucket`, `paths` | `Promise<number>` | Implements the removestorageobjects helper. |
+| 84 | `listUserStorageFolder` | Function async | top-level | no | `admin`, `bucket`, `userId` | `Promise<string[]>` | Implements the listuserstoragefolder helper. |
+| 113 | `listOptionalUserStorageFolder` | Function async | top-level | no | `admin`, `bucket`, `userId` | `Promise<string[]>` | Implements the listoptionaluserstoragefolder helper. |
+| 127 | `removeAccountStorageObjects` | Function async | top-level | no | `admin`, `profileId`, `appData` | `Promise<StorageRemovalCounts>` | Implements the removeaccountstorageobjects helper. |
+| 175 | `firstDeleteResult` | Action helper | top-level | no | `data` | `DeleteUserAppDataResult \| null` | Runs the firstdeleteresult workflow for callers. |
+| 182 | `errorMessage` | Function | top-level | no | `error` | `string` | Implements the errormessage helper. |
+| 186 | `deleteFailureStatus` | Action helper | top-level | no | `stage` | `DeleteFailureStatus` | Runs the deletefailurestatus workflow for callers. |
+| 192 | `buildDeleteAuditMetadata` | Action helper | top-level | no | `{ authUserDeleted = false, baseMetadata, error, stage, storageCounts, appData, }` | `Record<string, unknown>` | Runs the builddeleteauditmetadata workflow for callers. |
+| 234 | `tryUpdateDeleteAuditMetadata` | Action helper async | top-level | no | `admin`, `auditLogId`, `metadata` | `Promise<void>` | Runs the tryupdatedeleteauditmetadata workflow for callers. |
+| 247 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
+| 255 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
@@ -56,18 +57,18 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 | 23 | `DeleteFailureStatus` | type |
 | 27 | `DeleteAuditStatus` | type |
 | 29 | `DeleteUserAppDataResult` | type |
-| 37 | `StorageRemovalCounts` | type |
+| 38 | `StorageRemovalCounts` | type |
 
 ## Related Tests
 
 - `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-feedback-route.test.ts`
 - `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
 - `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/community-comment-submit-route.test.ts`
+- `lib/__tests__/community-post-submit-route.test.ts`
 - `lib/__tests__/health-route.test.ts`
-- `lib/__tests__/profile-avatar-route.test.ts`
-- `lib/__tests__/push-subscriptions-route.test.ts`
-- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/discussion-panel.tsx`
 - Kind: React component
-- Size: 7081 bytes
-- Lines: 220
-- Source hash: `4bffa30779084fd32a49135f33aa5f76f94ede87f19fcaf2d8d96d4d5d4f1ee2`
+- Size: 10844 bytes
+- Lines: 360
+- Source hash: `83b79f406d5a4912b8064b8b4ca5db88f88769095583e111ab21d6025d27267b`
 
 ## What This File Does
 
@@ -28,8 +28,10 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./thread-review-item`
 - `./types`
 - `@/components/CommentMediaToolbar`
+- `@/lib/comment-mentions`
 - `@/lib/guided-review`
 - `@/lib/resume-thread`
+- `@/lib/supabase/client`
 - `@/lib/supabase/types`
 - `react`
 
@@ -37,13 +39,15 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 35 | `DiscussionPanel` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, content, contentFormat...` | `import("react").JSX.Element` | Renders the DiscussionPanel UI component. |
+| 45 | `getThreadMentionHandles` | Function | top-level | no | `threadReviews` | `string[]` | Implements the getthreadmentionhandles helper. |
+| 47 | `visitReview` | Function | nested | no | `review` | `void` | Implements the visitreview helper. |
+| 61 | `DiscussionPanel` | React component | top-level | yes | `{ attachmentsById, authorProfiles, collapsedReviewIds, content, contentFormat...` | `import("react").JSX.Element` | Renders the DiscussionPanel UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 12 | `DiscussionPanelProps` | type |
+| 22 | `DiscussionPanelProps` | type |
 
 ## Related Tests
 

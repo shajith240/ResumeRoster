@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/types.ts`
 - Kind: React component
-- Size: 4047 bytes
-- Lines: 207
-- Source hash: `c23cf40fc572ddbf663381cd39515d3a1b8767cf9753855c486bc7c423b83004`
+- Size: 5440 bytes
+- Lines: 266
+- Source hash: `e79740cfabe7f00987c44392de38af3c7f798dbc2e42e3846708dbc203ad4d0a`
 
 ## What This File Does
 
@@ -19,8 +19,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Exports
 
 - `ActiveAdminUser`
+- `AdminCommunityComment`
+- `AdminCommunityPost`
 - `AdminDashboardView`
 - `AdminDataInventory`
+- `AdminFeedbackResponse`
 - `AdminMessageDialogTarget`
 - `AdminMessageForm`
 - `AdminMessageResponse`
@@ -38,12 +41,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `ProfilePreview`
 - `ReportPreview`
 - `ReviewerApplicationPreview`
+- `UserFeedbackPreview`
 
 ## Imports
 
+- `@/components/ui/solar-icons`
 - `@/lib/reviewer-validation`
 - `@/lib/supabase/types`
-- `lucide-react`
 
 ## Functions And Components
 
@@ -54,25 +58,29 @@ No stable named functions or components detected.
 | Line | Name | Kind |
 | --- | --- | --- |
 | 8 | `AdminDashboardView` | type |
-| 17 | `AdminStats` | type |
-| 30 | `AdminResume` | type |
-| 39 | `AdminReview` | type |
-| 47 | `AdminOverview` | type |
-| 56 | `ProfilePreview` | type |
-| 70 | `ReportPreview` | type |
-| 87 | `ReviewerApplicationPreview` | type |
-| 103 | `AdminUserDataFootprint` | type |
-| 112 | `AdminUser` | type |
-| 121 | `ActiveAdminUser` | type |
-| 129 | `AdminUsersPagination` | type |
-| 140 | `AdminUsersResponse` | type |
-| 148 | `AdminMessageDialogTarget` | type |
-| 157 | `AdminMessageForm` | type |
-| 165 | `AdminMessageResponse` | type |
-| 174 | `ModerationAction` | type |
-| 185 | `DataMetric` | type |
-| 192 | `AdminDataInventory` | type |
-| 198 | `AdminSection` | type |
+| 18 | `AdminStats` | type |
+| 33 | `AdminResume` | type |
+| 42 | `AdminReview` | type |
+| 50 | `AdminCommunityPost` | type |
+| 60 | `AdminCommunityComment` | type |
+| 70 | `AdminOverview` | type |
+| 80 | `ProfilePreview` | type |
+| 94 | `ReportPreview` | type |
+| 115 | `ReviewerApplicationPreview` | type |
+| 131 | `AdminUserDataFootprint` | type |
+| 140 | `AdminUser` | type |
+| 149 | `ActiveAdminUser` | type |
+| 157 | `AdminUsersPagination` | type |
+| 168 | `AdminUsersResponse` | type |
+| 176 | `AdminMessageDialogTarget` | type |
+| 185 | `AdminMessageForm` | type |
+| 193 | `AdminMessageResponse` | type |
+| 202 | `UserFeedbackPreview` | type |
+| 228 | `AdminFeedbackResponse` | type |
+| 233 | `ModerationAction` | type |
+| 244 | `DataMetric` | type |
+| 251 | `AdminDataInventory` | type |
+| 257 | `AdminSection` | type |
 
 ## Related Tests
 

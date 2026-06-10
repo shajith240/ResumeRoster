@@ -4,9 +4,9 @@
 
 - Source path: `app/globals.css`
 - Kind: Project file
-- Size: 95603 bytes
-- Lines: 5278
-- Source hash: `097a4aac6cc045e1a94f24e45706304d27b80e0659616d4300081044c31b6e3e`
+- Size: 143930 bytes
+- Lines: 7578
+- Source hash: `eca1258d2e208128ab72eb1a350822249a1a30aa51ca6d943e116fd15af37013`
 
 ## What This File Does
 
@@ -67,17 +67,17 @@ No direct test file detected by naming convention.
 - `app-logo`
 - `app-root`
 - `auth-actions`
-- `auth-card`
-- `auth-card-footer`
-- `auth-card-surface`
-- `auth-divider`
-- `auth-field`
-- `auth-form`
-- `auth-form-message`
-- `auth-form-notice`
-- `auth-heading`
 - `auth-inline-error`
-- `auth-input-wrap`
+- `auth-wordmark`
+- `avatar-button`
+- `avatar-skeleton`
+- `badge`
+- `badge-closed`
+- `badge-hot`
+- `badge-open`
+- `benefit-image-card`
+- `benefit-item`
+- `benefit-toggle`
 
 ## Notes
 

@@ -5,8 +5,8 @@
 - Source path: `lib/onboarding-validation.ts`
 - Kind: Application library module
 - Size: 4487 bytes
-- Lines: 170
-- Source hash: `8b2a62443f34a6c38e69105c33369d61a6e0a7da590536ee45c6579a61a2adfb`
+- Lines: 173
+- Source hash: `57dd75c747fe9cdfb31db798e681a9316522b38fb479e4f89ff3bbdbeacd9cfc`
 
 ## What This File Does
 
@@ -47,11 +47,11 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | 110 | `getOnboardingPersona` | Function | top-level | no | `value` | `{ readonly description: "Preparing for internships, placements, or early-career roles."; readonly id: "student"; readonly label: "Student...` | Implements the getonboardingpersona helper. |
 | 117 | `getPersonaProfileLabel` | Function | top-level | yes | `value` | `"Student" \| "Job seeker" \| "Other" \| "Recruiter / HR" \| "Engineer" \| "Product manager" \| "Career coach"` | Implements the getpersonaprofilelabel helper. |
 | 125 | `getCommunityRoleForOnboardingGoal` | Function | top-level | yes | `goalId` | `"reviewer" \| "candidate" \| "both"` | Implements the getcommunityroleforonboardinggoal helper. |
-| 131 | `getReviewerTypeForOnboarding` | Function | top-level | yes | `goalId`, `personaId` | `"student" \| "placed_professional" \| "recruiter" \| "hiring_manager" \| "engineer" \| "designer" \| "product_manager" \| "career_coach"...` | Implements the getreviewertypeforonboarding helper. |
+| 131 | `getReviewerTypeForOnboarding` | Function | top-level | yes | `goalId`, `personaId` | `"other" \| "student" \| "placed_professional" \| "recruiter" \| "hiring_manager" \| "engineer" \| "designer" \| "product_manager" \| "car...` | Implements the getreviewertypeforonboarding helper. |
 | 141 | `normalizeOnboardingTargetRole` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeonboardingtargetrole values for callers. |
 | 145 | `parseOnboardingExpertise` | Validation or normalization helper | top-level | yes | `value` | `string[]` | Validates or normalizes parseonboardingexpertise values for callers. |
-| 149 | `getOnboardingDestination` | Function | top-level | yes | `goalId` | `"/feed?welcome=candidate" \| "/feed?sort=needs&welcome=reviewer" \| "/feed?sort=needs&welcome=both"` | Implements the getonboardingdestination helper. |
-| 156 | `getOnboardingIssue` | Function | top-level | yes | `input` | `"" \| "Choose what you want to do on Linted." \| "Choose the option that best describes you."` | Implements the getonboardingissue helper. |
+| 149 | `getOnboardingDestination` | Function | top-level | yes | `goalId` | `string` | Implements the getonboardingdestination helper. |
+| 159 | `getOnboardingIssue` | Function | top-level | yes | `input` | `"" \| "Choose what you want to do on Linted." \| "Choose the option that best describes you."` | Implements the getonboardingissue helper. |
 
 ## Types
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/NotificationCenter.tsx`
 - Kind: React component
-- Size: 9939 bytes
-- Lines: 393
-- Source hash: `247ee250a262af849de48ae856ad1a352f7dd91d4a0a83792e5d4b0e72547c26`
+- Size: 10016 bytes
+- Lines: 394
+- Source hash: `0f5068566223030c0ab75e46580eb285211cdb2e498cb66cdfa3356254243cee`
 
 ## What This File Does
 
@@ -27,11 +27,12 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/components/RouteTransitionLoader`
 - `@/components/TeamNotifications`
 - `@/components/ui/dropdown-menu`
+- `@/components/ui/solar-icons`
+- `@/lib/app-routes`
 - `@/lib/notifications`
 - `@/lib/supabase/client`
 - `@/lib/supabase/types`
 - `@/lib/utils`
-- `lucide-react`
 - `next/navigation`
 - `react`
 - `sonner`
@@ -40,16 +41,16 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 34 | `normalizeNotification` | Validation or normalization helper | top-level | no | `row` | `LintedNotification` | Validates or normalizes normalizenotification values for callers. |
-| 43 | `getMetadataString` | Function | top-level | no | `metadata`, `keys` | `string \| undefined` | Implements the getmetadatastring helper. |
-| 57 | `toTeamNotification` | Function | top-level | no | `notification` | `TeamNotification` | Implements the toteamnotification helper. |
-| 94 | `NotificationCenter` | React component | top-level | yes | `{ userId }` | `import("react").JSX.Element \| null` | Renders the NotificationCenter UI component. |
+| 35 | `normalizeNotification` | Validation or normalization helper | top-level | no | `row` | `LintedNotification` | Validates or normalizes normalizenotification values for callers. |
+| 44 | `getMetadataString` | Function | top-level | no | `metadata`, `keys` | `string \| undefined` | Implements the getmetadatastring helper. |
+| 58 | `toTeamNotification` | Function | top-level | no | `notification` | `TeamNotification` | Implements the toteamnotification helper. |
+| 95 | `NotificationCenter` | React component | top-level | yes | `{ userId }` | `import("react").JSX.Element \| null` | Renders the NotificationCenter UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 28 | `NotificationCenterProps` | type |
+| 29 | `NotificationCenterProps` | type |
 
 ## Related Tests
 

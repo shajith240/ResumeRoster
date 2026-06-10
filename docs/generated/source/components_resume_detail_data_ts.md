@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/data.ts`
 - Kind: React component
-- Size: 9966 bytes
-- Lines: 377
-- Source hash: `aca2d1f311a1a443a42047f5db93986cdebc11fe4a0047793608b21fce858fe3`
+- Size: 10612 bytes
+- Lines: 400
+- Source hash: `b4decb34bca5bdc18b1be9a41751384f5414588be5f96a1e33205857143877ae`
 
 ## What This File Does
 
@@ -31,6 +31,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./types`
 - `./utils`
 - `@/components/CommentMediaToolbar`
+- `@/lib/online-presence`
 - `@/lib/resume-thread`
 - `@/lib/supabase/client`
 - `@/lib/supabase/types`
@@ -40,20 +41,20 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 45 | `fetchLatestResumeStatus` | Action helper async | top-level | yes | `resumeId` | `Promise<("open" \| "roasted" \| "closed") \| null>` | Runs the fetchlatestresumestatus workflow for callers. |
-| 59 | `fetchResumeWithFallback` | Action helper async | top-level | yes | `resumeId` | `Promise<{ error: { message?: string; } \| null; resume: ResumeSummary \| null; }>` | Runs the fetchresumewithfallback workflow for callers. |
-| 98 | `fetchResumeAuthorProfile` | Action helper async | top-level | yes | `activeResume` | `Promise<ResumeAuthorProfile \| null>` | Runs the fetchresumeauthorprofile workflow for callers. |
-| 123 | `recordResumeReadCount` | Function async | top-level | yes | `activeResume`, `activeUser` | `Promise<{ error: import("@supabase/postgrest-js").PostgrestError; readCount: null; } \| { error: null; readCount: number \| null; }>` | Implements the recordresumereadcount helper. |
-| 152 | `loadReviewAttachmentMap` | Action helper async | top-level | no | `loadedReviews` | `Promise<{ attachmentsById: {}; mediaSchemaReady: boolean \| null; } \| { attachmentsById: { [k: string]: { readonly publicUrl: string \|...` | Runs the loadreviewattachmentmap workflow for callers. |
-| 201 | `loadAuthorProfiles` | Action helper async | top-level | no | `loadedReviews` | `Promise<any>` | Runs the loadauthorprofiles workflow for callers. |
-| 237 | `loadReviewVotes` | Action helper async | top-level | no | `loadedReviews`, `activeUser` | `Promise<{ dislikedReviewIds: Set<any>; likedReviewIds: Set<any>; }>` | Runs the loadreviewvotes workflow for callers. |
-| 286 | `loadResumeThreadData` | Action helper async | top-level | yes | `resumeId`, `activeUser` | `Promise<ResumeThreadData \| null>` | Runs the loadresumethreaddata workflow for callers. |
+| 46 | `fetchLatestResumeStatus` | Action helper async | top-level | yes | `resumeId` | `Promise<("closed" \| "open" \| "roasted") \| null>` | Runs the fetchlatestresumestatus workflow for callers. |
+| 60 | `fetchResumeWithFallback` | Action helper async | top-level | yes | `resumeId` | `Promise<{ error: { message?: string; } \| null; resume: ResumeSummary \| null; }>` | Runs the fetchresumewithfallback workflow for callers. |
+| 99 | `fetchResumeAuthorProfile` | Action helper async | top-level | yes | `activeResume` | `Promise<{ is_online: boolean; id: string; username: string \| null; full_name?: string \| null; avatar_url?: string \| null; avatar_path?...` | Runs the fetchresumeauthorprofile workflow for callers. |
+| 138 | `recordResumeReadCount` | Function async | top-level | yes | `activeResume`, `activeUser` | `Promise<{ error: import("@supabase/postgrest-js").PostgrestError; readCount: null; } \| { error: null; readCount: number \| null; }>` | Implements the recordresumereadcount helper. |
+| 167 | `loadReviewAttachmentMap` | Action helper async | top-level | no | `loadedReviews` | `Promise<{ attachmentsById: {}; mediaSchemaReady: boolean \| null; } \| { attachmentsById: { [k: string]: { readonly publicUrl: string \|...` | Runs the loadreviewattachmentmap workflow for callers. |
+| 216 | `loadAuthorProfiles` | Action helper async | top-level | no | `loadedReviews` | `Promise<{ [k: string]: { is_online: boolean; avatar_url?: string \| null; id: string; username: string \| null; full_name: string \| null...` | Runs the loadauthorprofiles workflow for callers. |
+| 260 | `loadReviewVotes` | Action helper async | top-level | no | `loadedReviews`, `activeUser` | `Promise<{ dislikedReviewIds: Set<any>; likedReviewIds: Set<any>; }>` | Runs the loadreviewvotes workflow for callers. |
+| 309 | `loadResumeThreadData` | Action helper async | top-level | yes | `resumeId`, `activeUser` | `Promise<ResumeThreadData \| null>` | Runs the loadresumethreaddata workflow for callers. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 34 | `ResumeThreadData` | type |
+| 35 | `ResumeThreadData` | type |
 
 ## Related Tests
 

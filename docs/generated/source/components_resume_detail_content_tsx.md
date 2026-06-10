@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/content.tsx`
 - Kind: React component
-- Size: 4245 bytes
-- Lines: 194
-- Source hash: `53a7948fd7da9476b521d0c0a1266821ebbc04c24cf091388a8bbe32123f9da7`
+- Size: 5824 bytes
+- Lines: 273
+- Source hash: `406c3b3ba8ef3942da7a67c1e16b6d2109c821d5e0a487b2c1c72397aed43108`
 
 ## What This File Does
 
@@ -29,19 +29,22 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./types`
 - `./utils`
 - `@/components/CommentMediaToolbar`
+- `@/lib/comment-mentions`
 - `@/lib/reviewer-validation`
 - `@/lib/supabase/types`
+- `next/link`
 - `react`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 12 | `ReviewerTrustChip` | React component | top-level | yes | `{ profile }` | `import("react").JSX.Element \| null` | Renders the ReviewerTrustChip UI component. |
-| 38 | `ResumeContextCard` | React component | top-level | yes | `{ eyebrow, title, content, emptyMessage, }` | `import("react").JSX.Element` | Renders the ResumeContextCard UI component. |
-| 62 | `renderInlineMarkdown` | Function | top-level | yes | `text`, `keyPrefix` | `ReactNode[]` | Implements the renderinlinemarkdown helper. |
-| 104 | `FormattedReviewContent` | React component | top-level | yes | `{ content, format, isDeleted, }` | `import("react").JSX.Element` | Renders the FormattedReviewContent UI component. |
-| 180 | `ReviewAttachment` | React component | top-level | yes | `{ attachment, }` | `import("react").JSX.Element \| null` | Renders the ReviewAttachment UI component. |
+| 19 | `ReviewerTrustChip` | React component | top-level | yes | `{ profile }` | `import("react").JSX.Element \| null` | Renders the ReviewerTrustChip UI component. |
+| 45 | `ResumeContextCard` | React component | top-level | yes | `{ eyebrow, title, content, emptyMessage, }` | `import("react").JSX.Element` | Renders the ResumeContextCard UI component. |
+| 69 | `renderTextWithMentions` | Function | top-level | no | `text`, `keyPrefix`, `mentionTargets` | `ReactNode[]` | Implements the rendertextwithmentions helper. |
+| 111 | `renderInlineMarkdown` | Function | top-level | yes | `text`, `keyPrefix`, `mentionTargets` | `ReactNode[]` | Implements the renderinlinemarkdown helper. |
+| 169 | `FormattedReviewContent` | React component | top-level | yes | `{ content, format, isDeleted, mentionSuggestions = [], }` | `import("react").JSX.Element` | Renders the FormattedReviewContent UI component. |
+| 259 | `ReviewAttachment` | React component | top-level | yes | `{ attachment, }` | `import("react").JSX.Element \| null` | Renders the ReviewAttachment UI component. |
 
 ## Types
 

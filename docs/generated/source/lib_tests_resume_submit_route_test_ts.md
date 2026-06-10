@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/resume-submit-route.test.ts`
 - Kind: Unit test
-- Size: 7040 bytes
-- Lines: 276
-- Source hash: `df9c51f3a197f03cf8660cd6d5a449f6cd65482b3dd988252d60cbf8cdde3dfc`
+- Size: 6747 bytes
+- Lines: 255
+- Source hash: `e25e7b4931f48652ad4546472d36c367f7c448b21cae6c68fae68b6f55c03e24`
 
 ## What This File Does
 
@@ -24,18 +24,18 @@ None detected.
 
 - `@/app/api/resumes/submit/route`
 - `@/lib/pdf-redaction`
+- `@/lib/server-auth`
 - `@/lib/server/rate-limit`
 - `@/lib/server/upload-security`
-- `@supabase/supabase-js`
 - `vitest`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 27 | `submitRequest` | Action helper | top-level | no | none | `Request` | Runs the submitrequest workflow for callers. |
-| 50 | `mockAdmin` | Function | top-level | no | none | `{ admin: { auth: { getUser: import("vitest").Mock<() => Promise<{ data: { user: { email: string; id: string; }; }; error: null; }>>; }; f...` | Implements the mockadmin helper. |
-| 78 | `mockSuccessfulSubmitAdmin` | Action helper | top-level | no | `{ rpcResult = { data: [ { activation_reviews_completed: 0, activation_reviews...` | `{ admin: { auth: { getUser: import("vitest").Mock<() => Promise<{ data: { user: { email: string; id: string; }; }; error: null; }>>; }; f...` | Runs the mocksuccessfulsubmitadmin workflow for callers. |
+| 33 | `submitRequest` | Action helper | top-level | no | none | `Request` | Runs the submitrequest workflow for callers. |
+| 56 | `mockAdmin` | Function | top-level | no | none | `{ admin: { from: import("vitest").Mock<import("@vitest/spy").Procedure>; rpc: import("vitest").Mock<import("@vitest/spy").Procedure>; sto...` | Implements the mockadmin helper. |
+| 79 | `mockSuccessfulSubmitAdmin` | Action helper | top-level | no | `{ rpcResult = { data: [ { activation_reviews_completed: 0, activation_reviews...` | `{ admin: { from: import("vitest").Mock<(table: string) => { insert: import("vitest").Mock<() => Promise<{ error: null; }>>; select: impor...` | Runs the mocksuccessfulsubmitadmin workflow for callers. |
 
 ## Types
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/landing/sections.tsx`
 - Kind: React component
-- Size: 9205 bytes
-- Lines: 362
-- Source hash: `850e177f4dc730f8c3df2e6e786dacb992d07b907c08ae02dd9cafdf67bf0c57`
+- Size: 9373 bytes
+- Lines: 367
+- Source hash: `d0ca688eed365705528c63ea6e107fbbffed6e57be1ed4f857da97db63e4a928`
 
 ## What This File Does
 
@@ -33,7 +33,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./content`
 - `@/components/BrandMark`
 - `@/components/LandingCta`
-- `lucide-react`
+- `@/components/ui/solar-icons`
+- `@/lib/app-routes`
 - `next/link`
 - `react`
 
@@ -41,24 +42,24 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 48 | `LandingNavbar` | React component | top-level | yes | `{ authReady, isSignedIn, navHidden, }` | `import("react").JSX.Element` | Renders the LandingNavbar UI component. |
-| 90 | `HeroTrustSection` | React component | top-level | yes | `{ authReady, isSignedIn }` | `import("react").JSX.Element` | Renders the HeroTrustSection UI component. |
-| 145 | `StickyFeatureSection` | React component | top-level | yes | `{ pinHeadingRef, pinSectionRef, pinTrackRef, }` | `import("react").JSX.Element` | Renders the StickyFeatureSection UI component. |
-| 251 | `QuoteSection` | React component | top-level | yes | `{ second = false }` | `import("react").JSX.Element` | Renders the QuoteSection UI component. |
-| 269 | `BenefitsSection` | React component | top-level | yes | `{ activeBenefit, setActiveBenefit, }` | `import("react").JSX.Element` | Renders the BenefitsSection UI component. |
-| 307 | `CardsStackSection` | React component | top-level | yes | `{ cardsStackRef }` | `import("react").JSX.Element` | Renders the CardsStackSection UI component. |
-| 333 | `CtaBanner` | React component | top-level | yes | `{ isSignedIn }` | `import("react").JSX.Element` | Renders the CtaBanner UI component. |
+| 49 | `LandingNavbar` | React component | top-level | yes | `{ authReady, isSignedIn, navHidden, }` | `import("react").JSX.Element` | Renders the LandingNavbar UI component. |
+| 93 | `HeroTrustSection` | React component | top-level | yes | `{ authReady, isSignedIn }` | `import("react").JSX.Element` | Renders the HeroTrustSection UI component. |
+| 150 | `StickyFeatureSection` | React component | top-level | yes | `{ pinHeadingRef, pinSectionRef, pinTrackRef, }` | `import("react").JSX.Element` | Renders the StickyFeatureSection UI component. |
+| 256 | `QuoteSection` | React component | top-level | yes | `{ second = false }` | `import("react").JSX.Element` | Renders the QuoteSection UI component. |
+| 274 | `BenefitsSection` | React component | top-level | yes | `{ activeBenefit, setActiveBenefit, }` | `import("react").JSX.Element` | Renders the BenefitsSection UI component. |
+| 312 | `CardsStackSection` | React component | top-level | yes | `{ cardsStackRef }` | `import("react").JSX.Element` | Renders the CardsStackSection UI component. |
+| 338 | `CtaBanner` | React component | top-level | yes | `{ isSignedIn }` | `import("react").JSX.Element` | Renders the CtaBanner UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 20 | `AuthLandingProps` | type |
-| 25 | `LandingNavbarProps` | type |
-| 29 | `StickyFeatureSectionProps` | type |
-| 35 | `BenefitsSectionProps` | type |
-| 40 | `CardsStackSectionProps` | type |
-| 44 | `QuoteSectionProps` | type |
+| 21 | `AuthLandingProps` | type |
+| 26 | `LandingNavbarProps` | type |
+| 30 | `StickyFeatureSectionProps` | type |
+| 36 | `BenefitsSectionProps` | type |
+| 41 | `CardsStackSectionProps` | type |
+| 45 | `QuoteSectionProps` | type |
 
 ## Related Tests
 

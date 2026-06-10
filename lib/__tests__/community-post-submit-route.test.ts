@@ -1,15 +1,21 @@
-import { createClient } from "@supabase/supabase-js";
 import { POST } from "@/app/api/community/posts/submit/route";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
+import { requireSignedInUser } from "@/lib/server-auth";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@supabase/supabase-js", () => ({
-	createClient: vi.fn(),
-}));
-
 vi.mock("@/lib/server/rate-limit", () => ({
 	enforceApiRateLimit: vi.fn(),
+}));
+
+vi.mock("@/lib/server-auth", () => ({
+	requireSignedInUser: vi.fn(),
+	serverAuthErrorResponse: vi.fn((error: unknown) =>
+		Response.json(
+			{ message: error instanceof Error ? error.message : "Auth failed." },
+			{ status: (error as { status?: number }).status ?? 500 },
+		),
+	),
 }));
 
 vi.mock("@/lib/server/upload-security", () => ({
@@ -45,23 +51,16 @@ function mockAdmin(rpcResult = { data: [{ id: "post-1" }], error: null }) {
 		},
 	}));
 	const admin = {
-		auth: {
-			getUser: vi.fn(async () => ({
-				data: {
-					user: {
-						id: USER_ID,
-					},
-				},
-				error: null,
-			})),
-		},
 		rpc,
 		storage: {
 			from: vi.fn(() => ({ getPublicUrl, remove, upload })),
 		},
 	};
 
-	vi.mocked(createClient).mockReturnValue(admin as never);
+	vi.mocked(requireSignedInUser).mockResolvedValue({
+		admin,
+		user: { id: USER_ID },
+	} as never);
 
 	return { admin, getPublicUrl, remove, rpc, upload };
 }
@@ -156,7 +155,7 @@ describe("community post submit route", () => {
 		);
 
 		expect(response.status).toBe(404);
-		expect(createClient).not.toHaveBeenCalled();
+		expect(requireSignedInUser).not.toHaveBeenCalled();
 		await expect(response.json()).resolves.toEqual({
 			message: "Community posting is not enabled.",
 		});

@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/reports/[id]/action/route.ts`
 - Kind: Next API route
-- Size: 4758 bytes
-- Lines: 194
-- Source hash: `9183b60b384aef8cc9a4f1c5e80c1783ac0719f48d0b6779406c747fd3b4bd53`
+- Size: 5492 bytes
+- Lines: 222
+- Source hash: `f36a876c905ee3d5b67bb89f9b175b21e25bf7596754c515ecfa1b068b3ba22d`
 
 ## What This File Does
 
@@ -31,33 +31,33 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 88 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
-| 92 | `actionFailure` | Function | top-level | no | `error`, `status` | `Response` | Implements the actionfailure helper. |
-| 110 | `isUuid` | Function | top-level | no | `value` | `boolean` | Implements the isuuid helper. |
-| 114 | `firstRpcResult` | Function | top-level | no | `data` | `AdminReportRpcResult \| null` | Implements the firstrpcresult helper. |
-| 121 | `rpcFailureResponse` | Function | top-level | no | `code` | `Response` | Implements the rpcfailureresponse helper. |
-| 128 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizenote values for callers. |
-| 132 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
-| 140 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | Handles the POST request for this API route. |
+| 116 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 120 | `actionFailure` | Function | top-level | no | `error`, `status` | `Response` | Implements the actionfailure helper. |
+| 138 | `isUuid` | Function | top-level | no | `value` | `boolean` | Implements the isuuid helper. |
+| 142 | `firstRpcResult` | Function | top-level | no | `data` | `AdminReportRpcResult \| null` | Implements the firstrpcresult helper. |
+| 149 | `rpcFailureResponse` | Function | top-level | no | `code` | `Response` | Implements the rpcfailureresponse helper. |
+| 156 | `normalizeNote` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizenote values for callers. |
+| 160 | `getPayload` | Action helper async | top-level | no | `request` | `Promise<any>` | Runs the getpayload workflow for callers. |
+| 168 | `POST` | API handler async | top-level | yes | `request`, `context` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
 | 7 | `AdminReportAction` | type |
-| 19 | `AdminReportRpcResult` | type |
-| 25 | `RouteContext` | type |
+| 25 | `AdminReportRpcResult` | type |
+| 31 | `RouteContext` | type |
 
 ## Related Tests
 
 - `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-feedback-route.test.ts`
 - `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
 - `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/community-comment-submit-route.test.ts`
+- `lib/__tests__/community-post-submit-route.test.ts`
 - `lib/__tests__/health-route.test.ts`
-- `lib/__tests__/profile-avatar-route.test.ts`
-- `lib/__tests__/push-subscriptions-route.test.ts`
-- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

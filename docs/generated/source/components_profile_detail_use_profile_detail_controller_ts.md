@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/use-profile-detail-controller.ts`
 - Kind: React component
-- Size: 11451 bytes
-- Lines: 430
-- Source hash: `0e54fd2c76761d19f98a21d27c4c027333b491774a2df04ecc741c8f2e62e7dd`
+- Size: 11636 bytes
+- Lines: 435
+- Source hash: `32dd317e7717b6d315b35c8cc37342d8af2b37429284e82977bd32fcfb77e314`
 
 ## What This File Does
 

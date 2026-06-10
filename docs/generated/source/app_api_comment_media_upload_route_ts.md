@@ -4,9 +4,9 @@
 
 - Source path: `app/api/comment-media/upload/route.ts`
 - Kind: Next API route
-- Size: 3589 bytes
-- Lines: 140
-- Source hash: `bfec40657369f50beb34e88742dded24bb99ad4b4bd0b3d1f8260c664a5f6994`
+- Size: 3871 bytes
+- Lines: 155
+- Source hash: `82ca49ae63b718a26d268229932ade349443c1de47e627d3cade5d7d26dd206e`
 
 ## What This File Does
 
@@ -34,11 +34,12 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 18 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
-| 22 | `uploadFailure` | Action helper | top-level | no | none | `Response` | Runs the uploadfailure workflow for callers. |
-| 29 | `cleanTitle` | Function | top-level | no | `fileName` | `string` | Implements the cleantitle helper. |
-| 39 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `storagePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
-| 51 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
+| 18 | `getCommentMediaScanEnvironment` | Function | top-level | no | none | `NodeJS.ProcessEnv` | Implements the getcommentmediascanenvironment helper. |
+| 29 | `badRequest` | Function | top-level | no | `message`, `status` | `Response` | Implements the badrequest helper. |
+| 33 | `uploadFailure` | Action helper | top-level | no | none | `Response` | Runs the uploadfailure workflow for callers. |
+| 40 | `cleanTitle` | Function | top-level | no | `fileName` | `string` | Implements the cleantitle helper. |
+| 50 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `storagePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
+| 62 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
@@ -47,13 +48,13 @@ No top-level interfaces or type aliases detected.
 ## Related Tests
 
 - `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-feedback-route.test.ts`
 - `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
 - `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/community-comment-submit-route.test.ts`
+- `lib/__tests__/community-post-submit-route.test.ts`
 - `lib/__tests__/health-route.test.ts`
-- `lib/__tests__/profile-avatar-route.test.ts`
-- `lib/__tests__/push-subscriptions-route.test.ts`
-- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

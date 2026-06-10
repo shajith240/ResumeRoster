@@ -4,9 +4,9 @@
 
 - Source path: `lib/leaderboard-ranking.ts`
 - Kind: Application library module
-- Size: 3183 bytes
-- Lines: 131
-- Source hash: `be2b4554f320c95c250a6e47ab5e4304839b38eb43b173626f525c2915e83e5e`
+- Size: 3685 bytes
+- Lines: 148
+- Source hash: `36ec8f8bedd7bb016aeeb2e6ba4dfad87d0d8df879c18a2d1e03f39b229efa21`
 
 ## What This File Does
 
@@ -35,19 +35,20 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 33 | `roleTag` | Function | top-level | yes | `reviewer` | `string` | Implements the roletag helper. |
-| 62 | `lintPoints` | Function | top-level | yes | `helpfulVotes` | `number` | Implements the lintpoints helper. |
-| 66 | `sortReviewers` | Function | top-level | yes | `reviewers` | `T[]` | Implements the sortreviewers helper. |
-| 83 | `bestReviewMap` | Function | top-level | yes | `reviews` | `Record<string, T>` | Implements the bestreviewmap helper. |
-| 99 | `enhanceReviewer` | Function | top-level | yes | `reviewer`, `topReview`, `stats` | `T & { helpful_votes: number; lint_points: number; roast_count: number; roast_points: number; role_tag: string; top_review: { id: string;...` | Implements the enhancereviewer helper. |
+| 37 | `getLeaderboardProfileRoleLabel` | Function | top-level | no | `reviewer` | `"Career Switcher" \| "Intern" \| "Student" \| "Job Seeker"` | Implements the getleaderboardprofilerolelabel helper. |
+| 58 | `roleTag` | Function | top-level | yes | `reviewer` | `string` | Implements the roletag helper. |
+| 72 | `lintPoints` | Function | top-level | yes | `helpfulVotes`, `reviewCount` | `number` | Implements the lintpoints helper. |
+| 82 | `sortReviewers` | Function | top-level | yes | `reviewers` | `T[]` | Implements the sortreviewers helper. |
+| 99 | `bestReviewMap` | Function | top-level | yes | `reviews` | `Record<string, T>` | Implements the bestreviewmap helper. |
+| 115 | `enhanceReviewer` | Function | top-level | yes | `reviewer`, `topReview`, `stats` | `T & { helpful_votes: number; lint_points: number; roast_count: number; roast_points: number; role_tag: string; top_review: { id: string;...` | Implements the enhancereviewer helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 9 | `LeaderboardStatsInput` | type |
-| 19 | `LeaderboardReviewInput` | type |
-| 25 | `LeaderboardTopReview` | type |
+| 12 | `LeaderboardStatsInput` | type |
+| 23 | `LeaderboardReviewInput` | type |
+| 29 | `LeaderboardTopReview` | type |
 
 ## Related Tests
 

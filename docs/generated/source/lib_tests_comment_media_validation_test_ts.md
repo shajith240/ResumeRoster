@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/comment-media-validation.test.ts`
 - Kind: Unit test
-- Size: 4303 bytes
-- Lines: 162
-- Source hash: `77421519f64a177d57349eba845913d84089ad3bfd2a739d755f30b4ca30437f`
+- Size: 4945 bytes
+- Lines: 192
+- Source hash: `574d107ff7715f71562b7c55bad7b4741f9fd0cd20fd9a74427fda3c87586d96`
 
 ## What This File Does
 

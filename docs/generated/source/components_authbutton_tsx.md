@@ -4,9 +4,9 @@
 
 - Source path: `components/AuthButton.tsx`
 - Kind: React component
-- Size: 7678 bytes
-- Lines: 276
-- Source hash: `f84bd5bee608b275856f2c6da4847e7f665211f58a7962902e7602d90d821591`
+- Size: 6218 bytes
+- Lines: 225
+- Source hash: `dd7fc4b9421b1d7320e1d93025d84dc1dccafc0f393ddbada3febbb62e9adff5`
 
 ## What This File Does
 
@@ -23,35 +23,36 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `@/components/account/FeedbackDialog`
 - `@/components/account/UserDropdown`
 - `@/components/NotificationCenter`
 - `@/components/PwaInstallPrompt`
 - `@/components/RouteTransitionLoader`
 - `@/lib/anonymous-profile`
 - `@/lib/app-presence`
+- `@/lib/app-routes`
 - `@/lib/auth-redirect`
 - `@/lib/pwa-install`
 - `@/lib/supabase/client`
-- `@/lib/supabase/types`
+- `@/lib/use-admin-access`
 - `@supabase/supabase-js`
 - `next/link`
 - `next/navigation`
 - `react`
-- `sonner`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 44 | `getNavProfile` | Function async | top-level | no | `activeUser` | `Promise<NavProfile \| null>` | Implements the getnavprofile helper. |
-| 72 | `AuthButton` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the AuthButton UI component. |
+| 40 | `getNavProfile` | Function async | top-level | no | `activeUser` | `Promise<NavProfile \| null>` | Implements the getnavprofile helper. |
+| 54 | `AuthButton` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the AuthButton UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 23 | `AppTheme` | type |
-| 25 | `NavProfile` | type |
+| 24 | `AppTheme` | type |
+| 26 | `NavProfile` | type |
 | 32 | `ProfileChangeDetail` | type |
 
 ## Related Tests

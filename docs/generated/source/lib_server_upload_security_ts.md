@@ -4,9 +4,9 @@
 
 - Source path: `lib/server/upload-security.ts`
 - Kind: Application library module
-- Size: 8361 bytes
+- Size: 8386 bytes
 - Lines: 330
-- Source hash: `88c1bef8db3cfb6edce4f643f357ed7de01071c8780fba5fed4ea6f680d9cc3a`
+- Source hash: `e12bdc8f7542689a6bab431a72abe17abcf2311026539527359ba70050f4816a`
 
 ## What This File Does
 
@@ -37,7 +37,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 52 | `bytesToBuffer` | Function | top-level | no | `bytes` | `Buffer<ArrayBufferLike>` | Implements the bytestobuffer helper. |
 | 56 | `getUploadSha256` | Action helper | top-level | yes | `bytes` | `string` | Runs the getuploadsha256 workflow for callers. |
-| 60 | `getScanMode` | Function | top-level | no | `env` | `"off" \| "optional" \| "required"` | Implements the getscanmode helper. |
+| 60 | `getScanMode` | Function | top-level | no | `env` | `"optional" \| "off" \| "required"` | Implements the getscanmode helper. |
 | 69 | `containsEicarTestSignature` | Function | top-level | no | `bytes` | `boolean` | Implements the containseicartestsignature helper. |
 | 74 | `normalizeScannerVerdict` | Validation or normalization helper | top-level | no | `payload` | `UploadScanResult` | Validates or normalizes normalizescannerverdict values for callers. |
 | 117 | `scanWithHttpService` | Function async | top-level | no | `input`, `env` | `Promise<UploadScanResult>` | Implements the scanwithhttpservice helper. |

@@ -4,9 +4,9 @@
 
 - Source path: `app/feed.css`
 - Kind: Project file
-- Size: 82402 bytes
-- Lines: 4086
-- Source hash: `9a04dc7e2baca32b9595fa6416935459b3d3309cccbb9e60aeb172b85eeb19f9`
+- Size: 141353 bytes
+- Lines: 6502
+- Source hash: `3ff0382f0198914de19e9f86940262f626bf8e5ec841c2bf156dbe9a580bd039`
 
 ## What This File Does
 
@@ -34,12 +34,13 @@ No top-level interfaces or type aliases detected.
 
 ## Related Tests
 
-No direct test file detected by naming convention.
+- `lib/__tests__/community-feed.test.ts`
 
 ## CSS Selectors
 
 - `app-header`
 - `app-with-sidebar`
+- `badge`
 - `big-number`
 - `bottom-nav`
 - `btn-primary`
@@ -61,23 +62,22 @@ No direct test file detected by naming convention.
 - `comment-composer-submit-row`
 - `comment-composer-tools`
 - `comment-delete-button`
+- `comment-inline-mention`
 - `comment-markdown`
 - `comment-media-actions`
 - `comment-media-preview`
 - `comment-media-toolbar`
 - `comment-more-button`
 - `comment-reactions`
-- `community-feed`
-- `copy-button`
-- `deleted-author-chip`
-- `deleted-roast-copy`
-- `empty-icon`
-- `feed-app-shell`
-- `feed-card-body`
-- `feed-center`
-- `feed-community-header`
-- `feed-empty-state`
-- `feed-personalize-card`
+- `community-author-badge`
+- `community-back-icon-desktop`
+- `community-back-icon-mobile`
+- `community-comment-join-pill`
+- `community-comments-panel`
+- `community-comments-sheet-handle`
+- `community-detail-back-button`
+- `community-detail-page-shell`
+- `community-detail-toolbar`
 
 ## Notes
 

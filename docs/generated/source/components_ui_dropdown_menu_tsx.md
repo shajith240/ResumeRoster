@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/dropdown-menu.tsx`
 - Kind: UI primitive
-- Size: 9092 bytes
+- Size: 9077 bytes
 - Lines: 249
-- Source hash: `05b89ac30e55c13c04ccac95b06b0c478b8559c35f049276e97c9db4305b6a63`
+- Source hash: `0ba401ad66c790bda9a658bbbb2bcb9f48075f2c9c8c1d094cb0fc1656df9b64`
 
 ## What This File Does
 
@@ -36,9 +36,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `@/components/ui/solar-icons`
 - `@/lib/utils`
 - `@radix-ui/react-dropdown-menu`
-- `@radix-ui/react-icons`
 - `react`
 
 ## Functions And Components

@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/use-owner-actions.ts`
 - Kind: React component
-- Size: 4067 bytes
-- Lines: 170
-- Source hash: `eec6245a3b7c689da849cda126bea2c5b9c0bca16afc659a9c1ea4bb612c257b`
+- Size: 4176 bytes
+- Lines: 175
+- Source hash: `4c5203e99ef70352dcd11439d3bc11d6be08bf81a7764a3b768eaf3365cb7df6`
 
 ## What This File Does
 
@@ -25,6 +25,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./types`
 - `./utils`
 - `@/components/RouteTransitionLoader`
+- `@/lib/recent-posts`
 - `@/lib/supabase/client`
 - `@/lib/supabase/types`
 - `next/navigation`
@@ -35,13 +36,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 22 | `useResumeOwnerActions` | React hook | top-level | yes | `{ clearFeedbackDrafts, isClosed, isOwner, reportError, resume, setMessage, se...` | `{ confirmResumeOwnerAction: () => Promise<void>; pendingResumeAction: ResumeOwnerAction \| null; requestDeleteResume: () => void; request...` | Provides reusable useresumeowneractions state and side effects. |
+| 23 | `useResumeOwnerActions` | React hook | top-level | yes | `{ clearFeedbackDrafts, isClosed, isOwner, reportError, resume, setMessage, se...` | `{ confirmResumeOwnerAction: () => Promise<void>; pendingResumeAction: ResumeOwnerAction \| null; requestDeleteResume: () => void; request...` | Provides reusable useresumeowneractions state and side effects. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 12 | `UseResumeOwnerActionsParams` | type |
+| 13 | `UseResumeOwnerActionsParams` | type |
 
 ## Related Tests
 

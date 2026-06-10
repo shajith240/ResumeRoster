@@ -1,14 +1,20 @@
-import { createClient } from "@supabase/supabase-js";
 import { POST } from "@/app/api/community/comments/submit/route";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
+import { requireSignedInUser } from "@/lib/server-auth";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-
-vi.mock("@supabase/supabase-js", () => ({
-	createClient: vi.fn(),
-}));
 
 vi.mock("@/lib/server/rate-limit", () => ({
 	enforceApiRateLimit: vi.fn(),
+}));
+
+vi.mock("@/lib/server-auth", () => ({
+	requireSignedInUser: vi.fn(),
+	serverAuthErrorResponse: vi.fn((error: unknown) =>
+		Response.json(
+			{ message: error instanceof Error ? error.message : "Auth failed." },
+			{ status: (error as { status?: number }).status ?? 500 },
+		),
+	),
 }));
 
 const USER_ID = "11111111-1111-4111-8111-111111111111";
@@ -34,20 +40,13 @@ function mockAdmin(
 ) {
 	const rpc = vi.fn(async () => rpcResult);
 	const admin = {
-		auth: {
-			getUser: vi.fn(async () => ({
-				data: {
-					user: {
-						id: USER_ID,
-					},
-				},
-				error: null,
-			})),
-		},
 		rpc,
 	};
 
-	vi.mocked(createClient).mockReturnValue(admin as never);
+	vi.mocked(requireSignedInUser).mockResolvedValue({
+		admin,
+		user: { id: USER_ID },
+	} as never);
 
 	return { admin, rpc };
 }
@@ -72,7 +71,7 @@ describe("community comment submit route", () => {
 		);
 
 		expect(response.status).toBe(404);
-		expect(createClient).not.toHaveBeenCalled();
+		expect(requireSignedInUser).not.toHaveBeenCalled();
 	});
 
 	it("creates comments through the service-role RPC", async () => {

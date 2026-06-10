@@ -4,9 +4,9 @@
 
 - Source path: `components/AdminDashboard.tsx`
 - Kind: React component
-- Size: 15401 bytes
-- Lines: 563
-- Source hash: `6682b0b476fce25cdfa54bfe58a595361c634e324525351882c523e219c51edd`
+- Size: 18870 bytes
+- Lines: 675
+- Source hash: `787cec6bf4f927238e5fac470291c2187a31b192d65c39673e388ed20f0b3894`
 
 ## What This File Does
 
@@ -28,18 +28,19 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `./admin-dashboard/content`
 - `./admin-dashboard/data`
 - `./admin-dashboard/dialogs`
+- `./admin-dashboard/feedback`
 - `./admin-dashboard/moderation`
 - `./admin-dashboard/navigation`
 - `./admin-dashboard/overview`
 - `./admin-dashboard/people`
 - `./admin-dashboard/types`
 - `@/components/ui/button`
+- `@/components/ui/solar-icons`
 - `@/lib/admin-messages`
 - `@/lib/reviewer-validation`
 - `@/lib/supabase/client`
 - `@/lib/supabase/types`
 - `@/lib/use-admin-access`
-- `lucide-react`
 - `next/link`
 - `react`
 - `sonner`
@@ -48,7 +49,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 56 | `AdminDashboard` | React component | top-level | yes | `{ view = "overview", }` | `import("react").JSX.Element` | Renders the AdminDashboard UI component. |
+| 59 | `AdminDashboard` | React component | top-level | yes | `{ view = "overview", }` | `import("react").JSX.Element` | Renders the AdminDashboard UI component. |
 
 ## Types
 

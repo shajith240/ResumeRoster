@@ -4,9 +4,9 @@
 
 - Source path: `components/TeamNotifications.tsx`
 - Kind: React component
-- Size: 14526 bytes
+- Size: 14571 bytes
 - Lines: 468
-- Source hash: `92b45828b4fa5c46ad77e07e84dfefdc78d1d388e17a7c65f2afe577588ee455`
+- Source hash: `4a3cbc27f2a5732ad6c388559c311d1b3511f11b66bad0e2cdf860da2e62826b`
 
 ## What This File Does
 
@@ -29,6 +29,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/components/ui/button`
 - `@/components/ui/dropdown-menu`
 - `@/components/ui/separator`
+- `@/components/ui/solar-icons`
 - `@/lib/supabase/types`
 - `@/lib/utils`
 - `lucide-react`

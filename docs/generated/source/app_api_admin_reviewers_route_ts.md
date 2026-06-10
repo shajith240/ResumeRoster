@@ -44,13 +44,13 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 ## Related Tests
 
 - `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-feedback-route.test.ts`
 - `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
 - `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/community-comment-submit-route.test.ts`
+- `lib/__tests__/community-post-submit-route.test.ts`
 - `lib/__tests__/health-route.test.ts`
-- `lib/__tests__/profile-avatar-route.test.ts`
-- `lib/__tests__/push-subscriptions-route.test.ts`
-- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

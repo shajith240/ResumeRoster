@@ -4,9 +4,9 @@
 
 - Source path: `lib/notifications.ts`
 - Kind: Application library module
-- Size: 1288 bytes
-- Lines: 39
-- Source hash: `563272f24396a33a9587227d67ed61dd641b552a18eb895a1fad0507ced18dbb`
+- Size: 1350 bytes
+- Lines: 40
+- Source hash: `6bc28178ebaa53f7bafb28e77486eaba095d7d9511398cabbfa0ec1fa66788f0`
 
 ## What This File Does
 
@@ -27,16 +27,17 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Imports
 
+- `@/lib/app-routes`
 - `@/lib/supabase/types`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 8 | `isNotificationsFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isnotificationsfeatureerror helper. |
-| 14 | `getNotificationHref` | Function | top-level | yes | `notification` | `string` | Implements the getnotificationhref helper. |
-| 26 | `getNotificationTone` | Function | top-level | yes | `type` | `"helpful" \| "system" \| "moderation" \| "trust" \| "feedback"` | Implements the getnotificationtone helper. |
-| 34 | `unreadNotificationCount` | Function | top-level | yes | `notifications` | `number` | Implements the unreadnotificationcount helper. |
+| 9 | `isNotificationsFeatureError` | Function | top-level | yes | `error` | `boolean` | Implements the isnotificationsfeatureerror helper. |
+| 15 | `getNotificationHref` | Function | top-level | yes | `notification` | `string` | Implements the getnotificationhref helper. |
+| 27 | `getNotificationTone` | Function | top-level | yes | `type` | `"feedback" \| "helpful" \| "system" \| "moderation" \| "trust"` | Implements the getnotificationtone helper. |
+| 35 | `unreadNotificationCount` | Function | top-level | yes | `notifications` | `number` | Implements the unreadnotificationcount helper. |
 
 ## Types
 

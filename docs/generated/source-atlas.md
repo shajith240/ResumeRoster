@@ -2,8 +2,8 @@
 
 # Generated Source Atlas
 
-Generated from 362 source-controlled files.
-Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd`
+Generated from 468 source-controlled files.
+Manifest hash: `88c2c6a249ea017a35e955321ca9f11874b898dfed04d86165a542d79d8f2a86`
 
 ## Folder Coverage
 
@@ -11,34 +11,34 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | --- | ---: |
 | `.github` | 1 |
 | `(root)` | 19 |
-| `app` | 42 |
-| `components` | 90 |
+| `app` | 61 |
+| `components` | 115 |
 | `docs` | 36 |
-| `lib` | 77 |
+| `lib` | 114 |
 | `public` | 38 |
 | `scripts` | 7 |
-| `supabase` | 52 |
+| `supabase` | 77 |
 
 ## File Kinds
 
 | Kind | Files |
 | --- | ---: |
-| Application library module | 42 |
+| Application library module | 60 |
 | Documentation | 36 |
 | GitHub workflow | 1 |
-| Next API route | 18 |
-| Next page route | 16 |
+| Next API route | 31 |
+| Next page route | 21 |
 | Next root layout | 1 |
 | Project configuration | 17 |
-| Project file | 9 |
+| Project file | 10 |
 | Public browser asset | 1 |
 | Public visual asset | 37 |
-| React component | 77 |
+| React component | 101 |
 | Repository automation | 7 |
 | Root documentation | 3 |
-| Supabase migration | 49 |
-| UI primitive | 13 |
-| Unit test | 35 |
+| Supabase migration | 74 |
+| UI primitive | 14 |
+| Unit test | 54 |
 
 ## Files
 
@@ -47,11 +47,14 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `.env.example` | Project file | [open](source/env_example.md) |
 | `.github/workflows/ci.yml` | GitHub workflow | [open](source/github_workflows_ci_yml.md) |
 | `.gitignore` | Project file | [open](source/gitignore.md) |
+| `app/accessibility/page.tsx` | Next page route | [open](source/app_accessibility_page_tsx.md) |
 | `app/admin.css` | Project file | [open](source/app_admin_css.md) |
 | `app/admin/[section]/page.tsx` | Next page route | [open](source/app_admin_section_page_tsx.md) |
 | `app/admin/page.tsx` | Next page route | [open](source/app_admin_page_tsx.md) |
 | `app/api/admin/actions/route.ts` | Next API route | [open](source/app_api_admin_actions_route_ts.md) |
 | `app/api/admin/data/route.ts` | Next API route | [open](source/app_api_admin_data_route_ts.md) |
+| `app/api/admin/feedback/[id]/action/route.ts` | Next API route | [open](source/app_api_admin_feedback_id_action_route_ts.md) |
+| `app/api/admin/feedback/route.ts` | Next API route | [open](source/app_api_admin_feedback_route_ts.md) |
 | `app/api/admin/me/route.ts` | Next API route | [open](source/app_api_admin_me_route_ts.md) |
 | `app/api/admin/messages/route.ts` | Next API route | [open](source/app_api_admin_messages_route_ts.md) |
 | `app/api/admin/overview/route.ts` | Next API route | [open](source/app_api_admin_overview_route_ts.md) |
@@ -61,20 +64,36 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `app/api/admin/reviewers/route.ts` | Next API route | [open](source/app_api_admin_reviewers_route_ts.md) |
 | `app/api/admin/users/[id]/action/route.ts` | Next API route | [open](source/app_api_admin_users_id_action_route_ts.md) |
 | `app/api/admin/users/route.ts` | Next API route | [open](source/app_api_admin_users_route_ts.md) |
+| `app/api/comment-media/[id]/route.ts` | Next API route | [open](source/app_api_comment_media_id_route_ts.md) |
 | `app/api/comment-media/upload/route.ts` | Next API route | [open](source/app_api_comment_media_upload_route_ts.md) |
+| `app/api/community/comments/[id]/route.ts` | Next API route | [open](source/app_api_community_comments_id_route_ts.md) |
+| `app/api/community/comments/[id]/vote/route.ts` | Next API route | [open](source/app_api_community_comments_id_vote_route_ts.md) |
+| `app/api/community/comments/submit/route.ts` | Next API route | [open](source/app_api_community_comments_submit_route_ts.md) |
+| `app/api/community/polls/[id]/vote/route.ts` | Next API route | [open](source/app_api_community_polls_id_vote_route_ts.md) |
+| `app/api/community/posts/[id]/lock/route.ts` | Next API route | [open](source/app_api_community_posts_id_lock_route_ts.md) |
+| `app/api/community/posts/[id]/route.ts` | Next API route | [open](source/app_api_community_posts_id_route_ts.md) |
+| `app/api/community/posts/[id]/vote/route.ts` | Next API route | [open](source/app_api_community_posts_id_vote_route_ts.md) |
+| `app/api/community/posts/submit/route.ts` | Next API route | [open](source/app_api_community_posts_submit_route_ts.md) |
+| `app/api/feedback/route.ts` | Next API route | [open](source/app_api_feedback_route_ts.md) |
 | `app/api/health/route.ts` | Next API route | [open](source/app_api_health_route_ts.md) |
+| `app/api/mentions/users/route.ts` | Next API route | [open](source/app_api_mentions_users_route_ts.md) |
 | `app/api/profile/avatar/route.ts` | Next API route | [open](source/app_api_profile_avatar_route_ts.md) |
 | `app/api/push/dispatch/route.ts` | Next API route | [open](source/app_api_push_dispatch_route_ts.md) |
 | `app/api/push/subscriptions/route.ts` | Next API route | [open](source/app_api_push_subscriptions_route_ts.md) |
 | `app/api/resumes/submit/route.ts` | Next API route | [open](source/app_api_resumes_submit_route_ts.md) |
 | `app/api/reviewer-application/route.ts` | Next API route | [open](source/app_api_reviewer_application_route_ts.md) |
 | `app/auth/callback/page.tsx` | Next page route | [open](source/app_auth_callback_page_tsx.md) |
+| `app/community/[id]/page.tsx` | Next page route | [open](source/app_community_id_page_tsx.md) |
+| `app/community/new/page.tsx` | Next page route | [open](source/app_community_new_page_tsx.md) |
+| `app/community/page.tsx` | Next page route | [open](source/app_community_page_tsx.md) |
 | `app/copyright/page.tsx` | Next page route | [open](source/app_copyright_page_tsx.md) |
 | `app/feed.css` | Project file | [open](source/app_feed_css.md) |
 | `app/feed/page.tsx` | Next page route | [open](source/app_feed_page_tsx.md) |
 | `app/global-error.tsx` | Project file | [open](source/app_global_error_tsx.md) |
 | `app/globals.css` | Project file | [open](source/app_globals_css.md) |
 | `app/guidelines/page.tsx` | Next page route | [open](source/app_guidelines_page_tsx.md) |
+| `app/help/help.module.css` | Project file | [open](source/app_help_help_module_css.md) |
+| `app/help/page.tsx` | Next page route | [open](source/app_help_page_tsx.md) |
 | `app/layout.tsx` | Next root layout | [open](source/app_layout_tsx.md) |
 | `app/leaderboard/page.tsx` | Next page route | [open](source/app_leaderboard_page_tsx.md) |
 | `app/loading.tsx` | Project file | [open](source/app_loading_tsx.md) |
@@ -90,11 +109,13 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `app/submit/page.tsx` | Next page route | [open](source/app_submit_page_tsx.md) |
 | `app/terms/page.tsx` | Next page route | [open](source/app_terms_page_tsx.md) |
 | `components.json` | Project configuration | [open](source/components_json.md) |
+| `components/account/FeedbackDialog.tsx` | React component | [open](source/components_account_feedbackdialog_tsx.md) |
 | `components/account/UserDropdown.tsx` | React component | [open](source/components_account_userdropdown_tsx.md) |
 | `components/admin-dashboard/constants.ts` | React component | [open](source/components_admin_dashboard_constants_ts.md) |
 | `components/admin-dashboard/content.tsx` | React component | [open](source/components_admin_dashboard_content_tsx.md) |
 | `components/admin-dashboard/data.tsx` | React component | [open](source/components_admin_dashboard_data_tsx.md) |
 | `components/admin-dashboard/dialogs.tsx` | React component | [open](source/components_admin_dashboard_dialogs_tsx.md) |
+| `components/admin-dashboard/feedback.tsx` | React component | [open](source/components_admin_dashboard_feedback_tsx.md) |
 | `components/admin-dashboard/moderation.tsx` | React component | [open](source/components_admin_dashboard_moderation_tsx.md) |
 | `components/admin-dashboard/navigation.tsx` | React component | [open](source/components_admin_dashboard_navigation_tsx.md) |
 | `components/admin-dashboard/overview.tsx` | React component | [open](source/components_admin_dashboard_overview_tsx.md) |
@@ -104,11 +125,24 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `components/admin-dashboard/utils.ts` | React component | [open](source/components_admin_dashboard_utils_ts.md) |
 | `components/AdminDashboard.tsx` | React component | [open](source/components_admindashboard_tsx.md) |
 | `components/AppPresence.tsx` | React component | [open](source/components_apppresence_tsx.md) |
+| `components/AppScrollRestoration.tsx` | React component | [open](source/components_appscrollrestoration_tsx.md) |
+| `components/auth/SignUp.module.css` | React component | [open](source/components_auth_signup_module_css.md) |
 | `components/auth/SignUp.tsx` | React component | [open](source/components_auth_signup_tsx.md) |
 | `components/AuthButton.tsx` | React component | [open](source/components_authbutton_tsx.md) |
 | `components/AuthGate.tsx` | React component | [open](source/components_authgate_tsx.md) |
 | `components/BrandMark.tsx` | React component | [open](source/components_brandmark_tsx.md) |
 | `components/CommentMediaToolbar.tsx` | React component | [open](source/components_commentmediatoolbar_tsx.md) |
+| `components/community/CommunityMarkdown.module.css` | React component | [open](source/components_community_communitymarkdown_module_css.md) |
+| `components/community/CommunityMarkdown.tsx` | React component | [open](source/components_community_communitymarkdown_tsx.md) |
+| `components/community/CommunityMediaGallery.tsx` | React component | [open](source/components_community_communitymediagallery_tsx.md) |
+| `components/community/CommunityPostComposer.module.css` | React component | [open](source/components_community_communitypostcomposer_module_css.md) |
+| `components/community/CommunityPostComposer.tsx` | React component | [open](source/components_community_communitypostcomposer_tsx.md) |
+| `components/community/CommunityPostDetail.tsx` | React component | [open](source/components_community_communitypostdetail_tsx.md) |
+| `components/community/CommunityPostFeed.tsx` | React component | [open](source/components_community_communitypostfeed_tsx.md) |
+| `components/community/CommunityReportDialog.module.css` | React component | [open](source/components_community_communityreportdialog_module_css.md) |
+| `components/feed/FeedSkeleton.tsx` | React component | [open](source/components_feed_feedskeleton_tsx.md) |
+| `components/FeedRailLegalFooter.module.css` | React component | [open](source/components_feedraillegalfooter_module_css.md) |
+| `components/FeedRailLegalFooter.tsx` | React component | [open](source/components_feedraillegalfooter_tsx.md) |
 | `components/FeedResumePreview.tsx` | React component | [open](source/components_feedresumepreview_tsx.md) |
 | `components/landing/content.ts` | React component | [open](source/components_landing_content_ts.md) |
 | `components/landing/feature-showcase.tsx` | React component | [open](source/components_landing_feature_showcase_tsx.md) |
@@ -120,8 +154,11 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `components/leaderboard/StackedList.tsx` | React component | [open](source/components_leaderboard_stackedlist_tsx.md) |
 | `components/LintPointsFlame.tsx` | React component | [open](source/components_lintpointsflame_tsx.md) |
 | `components/LoadingScreen.tsx` | React component | [open](source/components_loadingscreen_tsx.md) |
+| `components/navigation/primary-nav.ts` | React component | [open](source/components_navigation_primary_nav_ts.md) |
+| `components/navigation/ResumeQueueProgress.module.css` | React component | [open](source/components_navigation_resumequeueprogress_module_css.md) |
+| `components/navigation/ResumeQueueProgress.tsx` | React component | [open](source/components_navigation_resumequeueprogress_tsx.md) |
 | `components/navigation/SessionNavBar.tsx` | React component | [open](source/components_navigation_sessionnavbar_tsx.md) |
-| `components/navigation/sidebar-icons.tsx` | React component | [open](source/components_navigation_sidebar_icons_tsx.md) |
+| `components/navigation/useMobileScrollChrome.ts` | React component | [open](source/components_navigation_usemobilescrollchrome_ts.md) |
 | `components/NotificationCenter.tsx` | React component | [open](source/components_notificationcenter_tsx.md) |
 | `components/OnboardingFlow.tsx` | React component | [open](source/components_onboardingflow_tsx.md) |
 | `components/PersonalizeLintedPrompt.tsx` | React component | [open](source/components_personalizelintedprompt_tsx.md) |
@@ -140,6 +177,8 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `components/ProfileDetail.tsx` | React component | [open](source/components_profiledetail_tsx.md) |
 | `components/PushNotificationsControl.tsx` | React component | [open](source/components_pushnotificationscontrol_tsx.md) |
 | `components/PwaInstallPrompt.tsx` | React component | [open](source/components_pwainstallprompt_tsx.md) |
+| `components/reactions/ReactionIcon.tsx` | React component | [open](source/components_reactions_reactionicon_tsx.md) |
+| `components/RecentPostsPanel.tsx` | React component | [open](source/components_recentpostspanel_tsx.md) |
 | `components/resume-detail/comment-composer.tsx` | React component | [open](source/components_resume_detail_comment_composer_tsx.md) |
 | `components/resume-detail/content.tsx` | React component | [open](source/components_resume_detail_content_tsx.md) |
 | `components/resume-detail/data.ts` | React component | [open](source/components_resume_detail_data_ts.md) |
@@ -157,6 +196,7 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `components/resume-detail/utils.ts` | React component | [open](source/components_resume_detail_utils_ts.md) |
 | `components/resume-feed/data.ts` | React component | [open](source/components_resume_feed_data_ts.md) |
 | `components/resume-feed/presentation.tsx` | React component | [open](source/components_resume_feed_presentation_tsx.md) |
+| `components/resume-feed/ResumeFeedHeader.tsx` | React component | [open](source/components_resume_feed_resumefeedheader_tsx.md) |
 | `components/ResumeDetail.tsx` | React component | [open](source/components_resumedetail_tsx.md) |
 | `components/ResumeFeed.tsx` | React component | [open](source/components_resumefeed_tsx.md) |
 | `components/route-lazy/LeaderboardLazy.tsx` | React component | [open](source/components_route_lazy_leaderboardlazy_tsx.md) |
@@ -165,6 +205,7 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `components/RouteHeader.tsx` | React component | [open](source/components_routeheader_tsx.md) |
 | `components/RouteTransitionLoader.tsx` | React component | [open](source/components_routetransitionloader_tsx.md) |
 | `components/SecureResumePreview.tsx` | React component | [open](source/components_secureresumepreview_tsx.md) |
+| `components/SubmitResumeForm.module.css` | React component | [open](source/components_submitresumeform_module_css.md) |
 | `components/SubmitResumeForm.tsx` | React component | [open](source/components_submitresumeform_tsx.md) |
 | `components/TeamNotifications.tsx` | React component | [open](source/components_teamnotifications_tsx.md) |
 | `components/ui/alert-dialog.tsx` | UI primitive | [open](source/components_ui_alert_dialog_tsx.md) |
@@ -179,7 +220,10 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `components/ui/scroll-area.tsx` | UI primitive | [open](source/components_ui_scroll_area_tsx.md) |
 | `components/ui/select.tsx` | UI primitive | [open](source/components_ui_select_tsx.md) |
 | `components/ui/separator.tsx` | UI primitive | [open](source/components_ui_separator_tsx.md) |
+| `components/ui/solar-icons.tsx` | UI primitive | [open](source/components_ui_solar_icons_tsx.md) |
 | `components/ui/sonner.tsx` | UI primitive | [open](source/components_ui_sonner_tsx.md) |
+| `components/user-presence/PresenceAvatar.module.css` | React component | [open](source/components_user_presence_presenceavatar_module_css.md) |
+| `components/user-presence/PresenceAvatar.tsx` | React component | [open](source/components_user_presence_presenceavatar_tsx.md) |
 | `docs/assets/readme_hero image.png` | Documentation | [open](source/docs_assets_readme_hero_image_png.md) |
 | `docs/backend/admin.md` | Documentation | [open](source/docs_backend_admin_md.md) |
 | `docs/backend/api-routes.md` | Documentation | [open](source/docs_backend_api_routes_md.md) |
@@ -221,6 +265,7 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `instrumentation.ts` | Project configuration | [open](source/instrumentation_ts.md) |
 | `knip.json` | Project configuration | [open](source/knip_json.md) |
 | `lib/__tests__/admin-data-route.test.ts` | Unit test | [open](source/lib_tests_admin_data_route_test_ts.md) |
+| `lib/__tests__/admin-feedback-route.test.ts` | Unit test | [open](source/lib_tests_admin_feedback_route_test_ts.md) |
 | `lib/__tests__/admin-messages.test.ts` | Unit test | [open](source/lib_tests_admin_messages_test_ts.md) |
 | `lib/__tests__/admin-moderation-actions-route.test.ts` | Unit test | [open](source/lib_tests_admin_moderation_actions_route_test_ts.md) |
 | `lib/__tests__/admin-users-route.test.ts` | Unit test | [open](source/lib_tests_admin_users_route_test_ts.md) |
@@ -231,19 +276,36 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `lib/__tests__/avatar-validation.test.ts` | Unit test | [open](source/lib_tests_avatar_validation_test_ts.md) |
 | `lib/__tests__/comment-media-upload-route.test.ts` | Unit test | [open](source/lib_tests_comment_media_upload_route_test_ts.md) |
 | `lib/__tests__/comment-media-validation.test.ts` | Unit test | [open](source/lib_tests_comment_media_validation_test_ts.md) |
+| `lib/__tests__/comment-mentions.test.ts` | Unit test | [open](source/lib_tests_comment_mentions_test_ts.md) |
+| `lib/__tests__/community-action-routes.test.ts` | Unit test | [open](source/lib_tests_community_action_routes_test_ts.md) |
+| `lib/__tests__/community-code-languages.test.ts` | Unit test | [open](source/lib_tests_community_code_languages_test_ts.md) |
+| `lib/__tests__/community-comment-submit-route.test.ts` | Unit test | [open](source/lib_tests_community_comment_submit_route_test_ts.md) |
+| `lib/__tests__/community-feed.test.ts` | Unit test | [open](source/lib_tests_community_feed_test_ts.md) |
+| `lib/__tests__/community-guardrails.test.ts` | Unit test | [open](source/lib_tests_community_guardrails_test_ts.md) |
+| `lib/__tests__/community-markdown.test.ts` | Unit test | [open](source/lib_tests_community_markdown_test_ts.md) |
+| `lib/__tests__/community-media-validation.test.ts` | Unit test | [open](source/lib_tests_community_media_validation_test_ts.md) |
+| `lib/__tests__/community-optimistic.test.ts` | Unit test | [open](source/lib_tests_community_optimistic_test_ts.md) |
+| `lib/__tests__/community-post-submit-route.test.ts` | Unit test | [open](source/lib_tests_community_post_submit_route_test_ts.md) |
+| `lib/__tests__/community-threading.test.ts` | Unit test | [open](source/lib_tests_community_threading_test_ts.md) |
+| `lib/__tests__/community-validation.test.ts` | Unit test | [open](source/lib_tests_community_validation_test_ts.md) |
+| `lib/__tests__/community.test.ts` | Unit test | [open](source/lib_tests_community_test_ts.md) |
 | `lib/__tests__/feed-ranking.test.ts` | Unit test | [open](source/lib_tests_feed_ranking_test_ts.md) |
 | `lib/__tests__/guided-review.test.ts` | Unit test | [open](source/lib_tests_guided_review_test_ts.md) |
 | `lib/__tests__/health-route.test.ts` | Unit test | [open](source/lib_tests_health_route_test_ts.md) |
 | `lib/__tests__/leaderboard-ranking.test.ts` | Unit test | [open](source/lib_tests_leaderboard_ranking_test_ts.md) |
+| `lib/__tests__/mention-users-route.test.ts` | Unit test | [open](source/lib_tests_mention_users_route_test_ts.md) |
 | `lib/__tests__/monitoring-sentry.test.ts` | Unit test | [open](source/lib_tests_monitoring_sentry_test_ts.md) |
 | `lib/__tests__/notifications.test.ts` | Unit test | [open](source/lib_tests_notifications_test_ts.md) |
 | `lib/__tests__/onboarding-validation.test.ts` | Unit test | [open](source/lib_tests_onboarding_validation_test_ts.md) |
 | `lib/__tests__/pdf-privacy.test.ts` | Unit test | [open](source/lib_tests_pdf_privacy_test_ts.md) |
 | `lib/__tests__/pdf-redaction.test.ts` | Unit test | [open](source/lib_tests_pdf_redaction_test_ts.md) |
+| `lib/__tests__/primary-navigation.test.ts` | Unit test | [open](source/lib_tests_primary_navigation_test_ts.md) |
 | `lib/__tests__/profile-avatar-route.test.ts` | Unit test | [open](source/lib_tests_profile_avatar_route_test_ts.md) |
 | `lib/__tests__/profile-validation.test.ts` | Unit test | [open](source/lib_tests_profile_validation_test_ts.md) |
+| `lib/__tests__/profile-view.test.ts` | Unit test | [open](source/lib_tests_profile_view_test_ts.md) |
 | `lib/__tests__/push-subscriptions-route.test.ts` | Unit test | [open](source/lib_tests_push_subscriptions_route_test_ts.md) |
 | `lib/__tests__/pwa-install.test.ts` | Unit test | [open](source/lib_tests_pwa_install_test_ts.md) |
+| `lib/__tests__/recent-posts.test.ts` | Unit test | [open](source/lib_tests_recent_posts_test_ts.md) |
 | `lib/__tests__/report-validation.test.ts` | Unit test | [open](source/lib_tests_report_validation_test_ts.md) |
 | `lib/__tests__/resume-display.test.ts` | Unit test | [open](source/lib_tests_resume_display_test_ts.md) |
 | `lib/__tests__/resume-privacy.test.ts` | Unit test | [open](source/lib_tests_resume_privacy_test_ts.md) |
@@ -255,16 +317,28 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `lib/__tests__/security-headers.test.ts` | Unit test | [open](source/lib_tests_security_headers_test_ts.md) |
 | `lib/__tests__/submit-validation.test.ts` | Unit test | [open](source/lib_tests_submit_validation_test_ts.md) |
 | `lib/__tests__/upload-security.test.ts` | Unit test | [open](source/lib_tests_upload_security_test_ts.md) |
+| `lib/__tests__/user-feedback.test.ts` | Unit test | [open](source/lib_tests_user_feedback_test_ts.md) |
 | `lib/admin-messages.ts` | Application library module | [open](source/lib_admin_messages_ts.md) |
 | `lib/admin.ts` | Application library module | [open](source/lib_admin_ts.md) |
 | `lib/anonymous-profile.ts` | Application library module | [open](source/lib_anonymous_profile_ts.md) |
 | `lib/api-errors.ts` | Application library module | [open](source/lib_api_errors_ts.md) |
 | `lib/app-presence.ts` | Application library module | [open](source/lib_app_presence_ts.md) |
+| `lib/app-routes.ts` | Application library module | [open](source/lib_app_routes_ts.md) |
 | `lib/auth-errors.ts` | Application library module | [open](source/lib_auth_errors_ts.md) |
 | `lib/auth-redirect.ts` | Application library module | [open](source/lib_auth_redirect_ts.md) |
 | `lib/auth-session.ts` | Application library module | [open](source/lib_auth_session_ts.md) |
 | `lib/avatar-validation.ts` | Application library module | [open](source/lib_avatar_validation_ts.md) |
 | `lib/comment-media-validation.ts` | Application library module | [open](source/lib_comment_media_validation_ts.md) |
+| `lib/comment-mentions.ts` | Application library module | [open](source/lib_comment_mentions_ts.md) |
+| `lib/community-code-languages.ts` | Application library module | [open](source/lib_community_code_languages_ts.md) |
+| `lib/community-feed.ts` | Application library module | [open](source/lib_community_feed_ts.md) |
+| `lib/community-guardrails.ts` | Application library module | [open](source/lib_community_guardrails_ts.md) |
+| `lib/community-markdown.ts` | Application library module | [open](source/lib_community_markdown_ts.md) |
+| `lib/community-media-validation.ts` | Application library module | [open](source/lib_community_media_validation_ts.md) |
+| `lib/community-optimistic.ts` | Application library module | [open](source/lib_community_optimistic_ts.md) |
+| `lib/community-threading.ts` | Application library module | [open](source/lib_community_threading_ts.md) |
+| `lib/community-validation.ts` | Application library module | [open](source/lib_community_validation_ts.md) |
+| `lib/community.ts` | Application library module | [open](source/lib_community_ts.md) |
 | `lib/feed-ranking.ts` | Application library module | [open](source/lib_feed_ranking_ts.md) |
 | `lib/guided-review.ts` | Application library module | [open](source/lib_guided_review_ts.md) |
 | `lib/image-upload-validation.ts` | Application library module | [open](source/lib_image_upload_validation_ts.md) |
@@ -273,11 +347,14 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `lib/monitoring/error-monitoring.ts` | Application library module | [open](source/lib_monitoring_error_monitoring_ts.md) |
 | `lib/notifications.ts` | Application library module | [open](source/lib_notifications_ts.md) |
 | `lib/onboarding-validation.ts` | Application library module | [open](source/lib_onboarding_validation_ts.md) |
+| `lib/online-presence.ts` | Application library module | [open](source/lib_online_presence_ts.md) |
 | `lib/pdf-privacy.ts` | Application library module | [open](source/lib_pdf_privacy_ts.md) |
 | `lib/pdf-redaction.ts` | Application library module | [open](source/lib_pdf_redaction_ts.md) |
+| `lib/primary-navigation.ts` | Application library module | [open](source/lib_primary_navigation_ts.md) |
 | `lib/profile-validation.ts` | Application library module | [open](source/lib_profile_validation_ts.md) |
 | `lib/push-notifications.ts` | Application library module | [open](source/lib_push_notifications_ts.md) |
 | `lib/pwa-install.ts` | Application library module | [open](source/lib_pwa_install_ts.md) |
+| `lib/recent-posts.ts` | Application library module | [open](source/lib_recent_posts_ts.md) |
 | `lib/report-validation.ts` | Application library module | [open](source/lib_report_validation_ts.md) |
 | `lib/resume-display.ts` | Application library module | [open](source/lib_resume_display_ts.md) |
 | `lib/resume-privacy.ts` | Application library module | [open](source/lib_resume_privacy_ts.md) |
@@ -287,15 +364,19 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `lib/security/headers.ts` | Application library module | [open](source/lib_security_headers_ts.md) |
 | `lib/security/theme-bootstrap.ts` | Application library module | [open](source/lib_security_theme_bootstrap_ts.md) |
 | `lib/server-auth.ts` | Application library module | [open](source/lib_server_auth_ts.md) |
+| `lib/server/community-actions.ts` | Application library module | [open](source/lib_server_community_actions_ts.md) |
 | `lib/server/push.ts` | Application library module | [open](source/lib_server_push_ts.md) |
 | `lib/server/rate-limit.ts` | Application library module | [open](source/lib_server_rate_limit_ts.md) |
+| `lib/server/supabase-admin.ts` | Application library module | [open](source/lib_server_supabase_admin_ts.md) |
 | `lib/server/upload-security.ts` | Application library module | [open](source/lib_server_upload_security_ts.md) |
 | `lib/session-lock.ts` | Application library module | [open](source/lib_session_lock_ts.md) |
 | `lib/submit-validation.ts` | Application library module | [open](source/lib_submit_validation_ts.md) |
 | `lib/supabase/avatars.ts` | Application library module | [open](source/lib_supabase_avatars_ts.md) |
 | `lib/supabase/client.ts` | Application library module | [open](source/lib_supabase_client_ts.md) |
 | `lib/supabase/types.ts` | Application library module | [open](source/lib_supabase_types_ts.md) |
+| `lib/support-contact.ts` | Application library module | [open](source/lib_support_contact_ts.md) |
 | `lib/use-admin-access.ts` | Application library module | [open](source/lib_use_admin_access_ts.md) |
+| `lib/user-feedback.ts` | Application library module | [open](source/lib_user_feedback_ts.md) |
 | `lib/utils.ts` | Application library module | [open](source/lib_utils_ts.md) |
 | `Linted_Design_Brief.md` | Root documentation | [open](source/linted_design_brief_md.md) |
 | `next-env.d.ts` | Project configuration | [open](source/next_env_d_ts.md) |
@@ -401,6 +482,31 @@ Manifest hash: `3f351c14c1811e2569c3fe61ab08a98a8df875e20b7e712be70842e14a958dfd
 | `supabase/migrations/0047_guided_review_queue.sql` | Supabase migration | [open](source/supabase_migrations_0047_guided_review_queue_sql.md) |
 | `supabase/migrations/0048_hide_waiting_resumes_from_public_feed.sql` | Supabase migration | [open](source/supabase_migrations_0048_hide_waiting_resumes_from_public_feed_sql.md) |
 | `supabase/migrations/0049_recalculate_guided_review_queue.sql` | Supabase migration | [open](source/supabase_migrations_0049_recalculate_guided_review_queue_sql.md) |
+| `supabase/migrations/0050_validate_integrity_and_restore_review_votes.sql` | Supabase migration | [open](source/supabase_migrations_0050_validate_integrity_and_restore_review_votes_sql.md) |
+| `supabase/migrations/0051_db_lint_warning_cleanup.sql` | Supabase migration | [open](source/supabase_migrations_0051_db_lint_warning_cleanup_sql.md) |
+| `supabase/migrations/0052_community_database_foundation.sql` | Supabase migration | [open](source/supabase_migrations_0052_community_database_foundation_sql.md) |
+| `supabase/migrations/0053_submit_community_post_rpc.sql` | Supabase migration | [open](source/supabase_migrations_0053_submit_community_post_rpc_sql.md) |
+| `supabase/migrations/0054_community_post_media_and_comments.sql` | Supabase migration | [open](source/supabase_migrations_0054_community_post_media_and_comments_sql.md) |
+| `supabase/migrations/0055_community_discussion_actions.sql` | Supabase migration | [open](source/supabase_migrations_0055_community_discussion_actions_sql.md) |
+| `supabase/migrations/0056_community_moderation_controls.sql` | Supabase migration | [open](source/supabase_migrations_0056_community_moderation_controls_sql.md) |
+| `supabase/migrations/0057_fix_community_post_submit_profile_conflict.sql` | Supabase migration | [open](source/supabase_migrations_0057_fix_community_post_submit_profile_conflict_sql.md) |
+| `supabase/migrations/0058_allow_title_only_community_posts.sql` | Supabase migration | [open](source/supabase_migrations_0058_allow_title_only_community_posts_sql.md) |
+| `supabase/migrations/0059_allow_reddit_length_community_titles.sql` | Supabase migration | [open](source/supabase_migrations_0059_allow_reddit_length_community_titles_sql.md) |
+| `supabase/migrations/0060_community_polls_and_drafts_support.sql` | Supabase migration | [open](source/supabase_migrations_0060_community_polls_and_drafts_support_sql.md) |
+| `supabase/migrations/0061_fix_community_poll_vote_rpc_conflict.sql` | Supabase migration | [open](source/supabase_migrations_0061_fix_community_poll_vote_rpc_conflict_sql.md) |
+| `supabase/migrations/0062_fix_community_vote_rpc_conflicts.sql` | Supabase migration | [open](source/supabase_migrations_0062_fix_community_vote_rpc_conflicts_sql.md) |
+| `supabase/migrations/0063_remove_community_post_saves.sql` | Supabase migration | [open](source/supabase_migrations_0063_remove_community_post_saves_sql.md) |
+| `supabase/migrations/0064_hard_delete_community_posts.sql` | Supabase migration | [open](source/supabase_migrations_0064_hard_delete_community_posts_sql.md) |
+| `supabase/migrations/0065_optimize_community_reaction_lookups.sql` | Supabase migration | [open](source/supabase_migrations_0065_optimize_community_reaction_lookups_sql.md) |
+| `supabase/migrations/0066_refine_reviewer_leaderboard_ranking.sql` | Supabase migration | [open](source/supabase_migrations_0066_refine_reviewer_leaderboard_ranking_sql.md) |
+| `supabase/migrations/0067_admin_feedback_inbox.sql` | Supabase migration | [open](source/supabase_migrations_0067_admin_feedback_inbox_sql.md) |
+| `supabase/migrations/0068_indexed_mention_profile_search.sql` | Supabase migration | [open](source/supabase_migrations_0068_indexed_mention_profile_search_sql.md) |
+| `supabase/migrations/0069_optimize_mention_typeahead_latency.sql` | Supabase migration | [open](source/supabase_migrations_0069_optimize_mention_typeahead_latency_sql.md) |
+| `supabase/migrations/0070_community_comment_static_images.sql` | Supabase migration | [open](source/supabase_migrations_0070_community_comment_static_images_sql.md) |
+| `supabase/migrations/0071_static_image_upload_limits.sql` | Supabase migration | [open](source/supabase_migrations_0071_static_image_upload_limits_sql.md) |
+| `supabase/migrations/0072_profile_online_presence.sql` | Supabase migration | [open](source/supabase_migrations_0072_profile_online_presence_sql.md) |
+| `supabase/migrations/0073_batch_profile_online_presence.sql` | Supabase migration | [open](source/supabase_migrations_0073_batch_profile_online_presence_sql.md) |
+| `supabase/migrations/0074_production_backend_integrity_hardening.sql` | Supabase migration | [open](source/supabase_migrations_0074_production_backend_integrity_hardening_sql.md) |
 | `tailwind.config.ts` | Project configuration | [open](source/tailwind_config_ts.md) |
 | `tsconfig.json` | Project configuration | [open](source/tsconfig_json.md) |
 | `typedoc.json` | Project configuration | [open](source/typedoc_json.md) |

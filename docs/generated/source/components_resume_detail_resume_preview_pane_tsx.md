@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/resume-preview-pane.tsx`
 - Kind: React component
-- Size: 3839 bytes
-- Lines: 153
-- Source hash: `ca645399dd686f82391e5d29580dd784bf08d6d64b4e6b0e1ec7a682a8f3179c`
+- Size: 4990 bytes
+- Lines: 191
+- Source hash: `644b4ee03eb4ee9eb7321cbe7027ffdb181d396f05bfe99478148e910743b351`
 
 ## What This File Does
 
@@ -24,10 +24,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 - `./utils`
 - `@/components/ui/button`
+- `@/components/ui/solar-icons`
+- `@/components/user-presence/PresenceAvatar`
 - `@/lib/resume-display`
 - `@/lib/supabase/types`
 - `@supabase/supabase-js`
-- `lucide-react`
 - `next/dynamic`
 - `next/link`
 
@@ -35,13 +36,14 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 46 | `ResumePreviewPane` | React component | top-level | yes | `{ isClosed, isOwner, onLogin, onOpenFile, onRequestDelete, onRequestStatusCha...` | `import("react").JSX.Element` | Renders the ResumePreviewPane UI component. |
+| 47 | `getResumeDetailAuthorAvatar` | Function | top-level | no | `resume`, `profile` | `string` | Implements the getresumedetailauthoravatar helper. |
+| 63 | `ResumePreviewPane` | React component | top-level | yes | `{ isClosed, isOwner, onLogin, onOpenFile, onRequestDelete, onRequestStatusCha...` | `import("react").JSX.Element` | Renders the ResumePreviewPane UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 30 | `ResumePreviewPaneProps` | type |
+| 31 | `ResumePreviewPaneProps` | type |
 
 ## Related Tests
 

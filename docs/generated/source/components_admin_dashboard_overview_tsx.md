@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/overview.tsx`
 - Kind: React component
-- Size: 1924 bytes
-- Lines: 88
-- Source hash: `0e563c5fff266a5abaeb9b2ca9aa0f81fbddee92dbd6cd8158e11f98ef944161`
+- Size: 2082 bytes
+- Lines: 102
+- Source hash: `c8352a04083ca1c56d45ab28e4232b032da8367a97696b27f10b245f62785f68`
 
 ## What This File Does
 
@@ -25,7 +25,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 - `./shared`
 - `./types`
-- `lucide-react`
+- `@/components/ui/solar-icons`
 - `next/link`
 - `react`
 
@@ -33,8 +33,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 7 | `MetricCard` | React component | top-level | yes | `{ icon, label, tone = "normal", value, }` | `import("react").JSX.Element` | Renders the MetricCard UI component. |
-| 27 | `OverviewPage` | React component | top-level | yes | `{ stats }` | `import("react").JSX.Element` | Renders the OverviewPage UI component. |
+| 15 | `MetricCard` | React component | top-level | yes | `{ icon, label, tone = "normal", value, }` | `import("react").JSX.Element` | Renders the MetricCard UI component. |
+| 35 | `OverviewPage` | React component | top-level | yes | `{ stats }` | `import("react").JSX.Element` | Renders the OverviewPage UI component. |
 
 ## Types
 

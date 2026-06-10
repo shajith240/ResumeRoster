@@ -72,6 +72,13 @@
 0065_optimize_community_reaction_lookups.sql
 0066_refine_reviewer_leaderboard_ranking.sql
 0067_admin_feedback_inbox.sql
+0068_indexed_mention_profile_search.sql
+0069_optimize_mention_typeahead_latency.sql
+0070_community_comment_static_images.sql
+0071_static_image_upload_limits.sql
+0072_profile_online_presence.sql
+0073_batch_profile_online_presence.sql
+0074_production_backend_integrity_hardening.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.

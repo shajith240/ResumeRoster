@@ -4,9 +4,9 @@
 
 - Source path: `app/admin.css`
 - Kind: Project file
-- Size: 22727 bytes
-- Lines: 1277
-- Source hash: `8cfe5f0b1965e69c49fc75e53079ecde7603605f2a51fa224d8bfb1cd7e48f3f`
+- Size: 32568 bytes
+- Lines: 1676
+- Source hash: `d7f835d473b21670ac2c30a1c337b90932668d6d2297bce0982db5ec247e37d7`
 
 ## What This File Does
 
@@ -41,16 +41,12 @@ No top-level interfaces or type aliases detected.
 - `active`
 - `admin-access-card`
 - `admin-action-column`
-- `admin-action-log`
-- `admin-action-log-row`
 - `admin-action-row`
-- `admin-card-topline`
 - `admin-cell-stack`
 - `admin-chip-stack`
 - `admin-command-strip`
 - `admin-compact-list`
 - `admin-console`
-- `admin-console-header`
 - `admin-console-layout`
 - `admin-console-main`
 - `admin-console-section`
@@ -63,6 +59,18 @@ No top-level interfaces or type aliases detected.
 - `admin-data-row`
 - `admin-empty-panel`
 - `admin-eyebrow`
+- `admin-feedback-avatar`
+- `admin-feedback-control-grid`
+- `admin-feedback-filter-grid`
+- `admin-feedback-hero`
+- `admin-feedback-list`
+- `admin-feedback-meta`
+- `admin-feedback-tags`
+- `admin-feedback-ticket`
+- `admin-feedback-ticket-title`
+- `admin-feedback-workspace`
+- `admin-filter-block`
+- `admin-filter-select`
 - `admin-header-actions`
 - `admin-inline-link`
 - `admin-live-count`
@@ -70,14 +78,6 @@ No top-level interfaces or type aliases detected.
 - `admin-message-confirm`
 - `admin-message-dialog`
 - `admin-message-field`
-- `admin-message-form`
-- `admin-message-select`
-- `admin-message-select-content`
-- `admin-message-templates`
-- `admin-metric-card`
-- `admin-metric-danger`
-- `admin-mini-avatar`
-- `admin-mini-copy`
 
 ## Notes
 

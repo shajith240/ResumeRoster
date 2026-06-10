@@ -4,9 +4,9 @@
 
 - Source path: `app/admin/[section]/page.tsx`
 - Kind: Next page route
-- Size: 744 bytes
-- Lines: 37
-- Source hash: `34acecb97aa1a302023bd27574e44ff914af993fb860c6fc48e2f49dc552408e`
+- Size: 757 bytes
+- Lines: 38
+- Source hash: `621a954ea2adcd43687809c243eca1de840f82ee45827a17a3838c498d6a8a85`
 
 ## What This File Does
 
@@ -32,13 +32,13 @@ Edit this when the page-level data loading, route composition, or first-screen e
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 21 | `AdminSectionPage` | React component async | top-level | yes | `{ params, }` | `Promise<import("react").JSX.Element>` | Renders the AdminSectionPage UI component. |
+| 22 | `AdminSectionPage` | React component async | top-level | yes | `{ params, }` | `Promise<import("react").JSX.Element>` | Renders the AdminSectionPage UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 17 | `AdminSectionPageProps` | type |
+| 18 | `AdminSectionPageProps` | type |
 
 ## Related Tests
 

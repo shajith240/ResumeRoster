@@ -4,9 +4,9 @@
 
 - Source path: `app/privacy/page.tsx`
 - Kind: Next page route
-- Size: 18470 bytes
+- Size: 18442 bytes
 - Lines: 494
-- Source hash: `8565fc95abf08de46f2befcb5323e152888d051972559cd029516af9ea7252ef`
+- Source hash: `9d67fe09692c4649b8a97ca26127e6148006ebc1d0537cd0ba38f07d55721bee`
 
 ## What This File Does
 
@@ -25,6 +25,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 ## Imports
 
 - `@/components/BrandMark`
+- `@/lib/support-contact`
 - `next/link`
 
 ## Functions And Components

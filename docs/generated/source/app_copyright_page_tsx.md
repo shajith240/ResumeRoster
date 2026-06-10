@@ -4,9 +4,9 @@
 
 - Source path: `app/copyright/page.tsx`
 - Kind: Next page route
-- Size: 8826 bytes
+- Size: 8816 bytes
 - Lines: 251
-- Source hash: `25939df547c6fef5c23182248ad23281b27cede9bc7001149fbe183d91eef170`
+- Source hash: `398faed25ace3e2dd7f0767368e0e52add38f8e974db8c756f2c6de2cd2af998`
 
 ## What This File Does
 
@@ -25,6 +25,7 @@ Edit this when the page-level data loading, route composition, or first-screen e
 ## Imports
 
 - `@/components/BrandMark`
+- `@/lib/support-contact`
 - `next/link`
 - `react`
 

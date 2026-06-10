@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/comment-media-upload-route.test.ts`
 - Kind: Unit test
-- Size: 3454 bytes
-- Lines: 125
-- Source hash: `36d6f04aff4cbb31b20f97a08d4ae19fbd080a506d247f512448afb33b7f36c4`
+- Size: 6319 bytes
+- Lines: 230
+- Source hash: `f12d5e78a42d43c456d159c89c20f451190ae89498f25b84720fbba3a8ee680a`
 
 ## What This File Does
 
@@ -22,6 +22,7 @@ None detected.
 
 ## Imports
 
+- `@/app/api/comment-media/[id]/route`
 - `@/app/api/comment-media/upload/route`
 - `@/lib/server-auth`
 - `@/lib/server/rate-limit`
@@ -32,8 +33,10 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 27 | `uploadRequest` | Action helper | top-level | no | `file` | `Request` | Runs the uploadrequest workflow for callers. |
-| 36 | `mockSignedInUser` | Function | top-level | no | none | `{ upload: import("vitest").Mock<() => Promise<{ data: null; error: null; }>>; }` | Implements the mocksignedinuser helper. |
+| 31 | `uploadRequest` | Action helper | top-level | no | `file` | `Request` | Runs the uploadrequest workflow for callers. |
+| 40 | `mockSignedInUser` | Function | top-level | no | none | `{ upload: import("vitest").Mock<() => Promise<{ data: null; error: null; }>>; }` | Implements the mocksignedinuser helper. |
+| 80 | `deleteContext` | Action helper | top-level | no | `id` | `{ params: Promise<{ id: string; }>; }` | Runs the deletecontext workflow for callers. |
+| 86 | `mockDeleteSignedInUser` | Action helper | top-level | no | `{ rpcResult = { data: [ { id: ATTACHMENT_ID, storage_path: '${USER_ID}/image....` | `{ remove: import("vitest").Mock<() => Promise<{ data: null; error: { message: string; } \| null; }>>; rpc: import("vitest").Mock<() => Pr...` | Runs the mockdeletesignedinuser workflow for callers. |
 
 ## Types
 

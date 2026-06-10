@@ -39,7 +39,7 @@ No top-level interfaces or type aliases detected.
 
 ## Related Tests
 
-No direct test file detected by naming convention.
+- `lib/__tests__/primary-navigation.test.ts`
 
 ## Notes
 

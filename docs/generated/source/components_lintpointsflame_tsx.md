@@ -4,9 +4,9 @@
 
 - Source path: `components/LintPointsFlame.tsx`
 - Kind: React component
-- Size: 3259 bytes
-- Lines: 117
-- Source hash: `80a7a498742ee803053cc6a242c16c8d5eaa262d24d5222af5e9a8ee6410ac1a`
+- Size: 3168 bytes
+- Lines: 115
+- Source hash: `71bd0c75ce1b871f70dfca852e1d57ede5dadffc76613c75ec22167c89be8371`
 
 ## What This File Does
 
@@ -23,9 +23,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `@/components/ui/solar-icons`
 - `@/lib/utils`
-- `@iconify-icons/solar/fire-line-duotone`
-- `@iconify/react/offline`
 - `@lottiefiles/dotlottie-react`
 - `react`
 
@@ -33,18 +32,18 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 24 | `usePrefersReducedMotion` | React hook | top-level | no | none | `boolean` | Provides reusable useprefersreducedmotion state and side effects. |
-| 29 | `update` | Action helper | nested | no | none | `void` | Runs the update workflow for callers. |
-| 39 | `StaticFlameIcon` | React component | top-level | no | `{ className }` | `import("react").JSX.Element` | Renders the StaticFlameIcon UI component. |
-| 49 | `LintPointsFlame` | React component | top-level | yes | `{ animated = true, className, fallbackClassName, }` | `import("react").JSX.Element` | Renders the LintPointsFlame UI component. |
-| 65 | `markReady` | Function | nested | no | none | `void` | Implements the markready helper. |
-| 66 | `markFailed` | Function | nested | no | none | `void` | Implements the markfailed helper. |
+| 23 | `usePrefersReducedMotion` | React hook | top-level | no | none | `boolean` | Provides reusable useprefersreducedmotion state and side effects. |
+| 28 | `update` | Action helper | nested | no | none | `void` | Runs the update workflow for callers. |
+| 38 | `StaticFlameIcon` | React component | top-level | no | `{ className }` | `import("react").JSX.Element` | Renders the StaticFlameIcon UI component. |
+| 47 | `LintPointsFlame` | React component | top-level | yes | `{ animated = true, className, fallbackClassName, }` | `import("react").JSX.Element` | Renders the LintPointsFlame UI component. |
+| 63 | `markReady` | Function | nested | no | none | `void` | Implements the markready helper. |
+| 64 | `markFailed` | Function | nested | no | none | `void` | Implements the markfailed helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 18 | `LintPointsFlameProps` | type |
+| 17 | `LintPointsFlameProps` | type |
 
 ## Related Tests
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/admin-messages.ts`
 - Kind: Application library module
-- Size: 3526 bytes
-- Lines: 155
-- Source hash: `869b1e6b70bb54aa188f88baf134907b5392181db3b806111526b6f6532f9f14`
+- Size: 3589 bytes
+- Lines: 157
+- Source hash: `eb1cdcf4f48cad5fd83f575c7d66e44a61c0726bb908525dee9e9ce252a4b6cf`
 
 ## What This File Does
 
@@ -28,26 +28,26 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Imports
 
-None detected.
+- `@/lib/app-routes`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 36 | `isRecord` | Function | top-level | no | `value` | `boolean` | Implements the isrecord helper. |
-| 40 | `getTrimmedString` | Function | top-level | no | `value` | `string` | Implements the gettrimmedstring helper. |
-| 44 | `isSafeAdminMessageLink` | Function | top-level | yes | `value` | `boolean` | Implements the issafeadminmessagelink helper. |
-| 63 | `normalizeAdminMessageLink` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeadminmessagelink values for callers. |
-| 71 | `validateTarget` | Validation or normalization helper | top-level | no | `value` | `string \| AdminMessageTarget` | Validates or normalizes validatetarget values for callers. |
-| 92 | `validateAdminMessagePayload` | Validation or normalization helper | top-level | yes | `payload` | `AdminMessageValidationResult` | Validates or normalizes validateadminmessagepayload values for callers. |
+| 38 | `isRecord` | Function | top-level | no | `value` | `boolean` | Implements the isrecord helper. |
+| 42 | `getTrimmedString` | Function | top-level | no | `value` | `string` | Implements the gettrimmedstring helper. |
+| 46 | `isSafeAdminMessageLink` | Function | top-level | yes | `value` | `boolean` | Implements the issafeadminmessagelink helper. |
+| 65 | `normalizeAdminMessageLink` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizeadminmessagelink values for callers. |
+| 73 | `validateTarget` | Validation or normalization helper | top-level | no | `value` | `string \| AdminMessageTarget` | Validates or normalizes validatetarget values for callers. |
+| 94 | `validateAdminMessagePayload` | Validation or normalization helper | top-level | yes | `payload` | `AdminMessageValidationResult` | Validates or normalizes validateadminmessagepayload values for callers. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 5 | `AdminMessageTarget` | type |
-| 14 | `AdminMessageInput` | type |
-| 22 | `AdminMessageValidationResult` | type |
+| 7 | `AdminMessageTarget` | type |
+| 16 | `AdminMessageInput` | type |
+| 24 | `AdminMessageValidationResult` | type |
 
 ## Related Tests
 

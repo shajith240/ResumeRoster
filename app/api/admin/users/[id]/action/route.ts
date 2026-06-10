@@ -30,6 +30,7 @@ type DeleteUserAppDataResult = {
 	audit_log_id: string;
 	avatar_paths: string[] | null;
 	comment_media_paths: string[] | null;
+	community_post_media_paths: string[] | null;
 	deleted_counts: Record<string, unknown> | null;
 	resume_paths: string[] | null;
 };
@@ -162,7 +163,10 @@ async function removeAccountStorageObjects(
 	removed.communityPostMedia = await removeStorageObjects(
 		admin,
 		"community-post-media",
-		communityPostMediaFolderPaths,
+		[
+			...(appData.community_post_media_paths ?? []),
+			...communityPostMediaFolderPaths,
+		],
 	);
 
 	return removed;

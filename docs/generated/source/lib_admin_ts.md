@@ -4,9 +4,9 @@
 
 - Source path: `lib/admin.ts`
 - Kind: Application library module
-- Size: 2242 bytes
-- Lines: 88
-- Source hash: `db76223279d80ab5774c987933594dd1e526f0d0c96803eef588bc0e2b657cba`
+- Size: 2043 bytes
+- Lines: 81
+- Source hash: `1bff413d4e86ed96e7063e7b2652f245097443e9400700ee5eaeb3579e93f061`
 
 ## What This File Does
 
@@ -26,24 +26,25 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Imports
 
+- `@/lib/server/supabase-admin`
 - `@supabase/supabase-js`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 18 | `parseAdminEmails` | Validation or normalization helper | top-level | yes | `value` | `Set<string>` | Validates or normalizes parseadminemails values for callers. |
-| 27 | `isAdminEmail` | Function | top-level | yes | `email`, `adminEmails` | `boolean` | Implements the isadminemail helper. |
-| 36 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
-| 42 | `createAdminSupabaseClient` | Action helper | top-level | no | none | `SupabaseClient<any, "public", "public", any, any>` | Runs the createadminsupabaseclient workflow for callers. |
-| 58 | `requireAdmin` | Function async | top-level | yes | `request` | `Promise<AdminAuthResult>` | Implements the requireadmin helper. |
-| 81 | `adminErrorResponse` | Function | top-level | yes | `error` | `Response` | Implements the adminerrorresponse helper. |
+| 19 | `parseAdminEmails` | Validation or normalization helper | top-level | yes | `value` | `Set<string>` | Validates or normalizes parseadminemails values for callers. |
+| 28 | `isAdminEmail` | Function | top-level | yes | `email`, `adminEmails` | `boolean` | Implements the isadminemail helper. |
+| 37 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
+| 43 | `createAdminSupabaseClient` | Action helper | top-level | no | none | `SupabaseClient<any, "public", "public", any, any>` | Runs the createadminsupabaseclient workflow for callers. |
+| 51 | `requireAdmin` | Function async | top-level | yes | `request` | `Promise<AdminAuthResult>` | Implements the requireadmin helper. |
+| 74 | `adminErrorResponse` | Function | top-level | yes | `error` | `Response` | Implements the adminerrorresponse helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 3 | `AdminAuthResult` | type |
+| 4 | `AdminAuthResult` | type |
 
 ## Related Tests
 

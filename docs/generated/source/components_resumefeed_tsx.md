@@ -4,9 +4,9 @@
 
 - Source path: `components/ResumeFeed.tsx`
 - Kind: React component
-- Size: 13593 bytes
-- Lines: 467
-- Source hash: `6653873c2908bed4814b92f33b0a4ab026f7053a34dd17a70b2e8b4e6f13d124`
+- Size: 13801 bytes
+- Lines: 474
+- Source hash: `3db5b7184b220de60b94bcef84699d2f4e399f0cf7dade02b2182cc4e1e50f3d`
 
 ## What This File Does
 
@@ -40,13 +40,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 61 | `ResumeFeed` | React component | top-level | yes | `{ activeSort = "best", savedOnly = false }` | `import("react").JSX.Element` | Renders the ResumeFeed UI component. |
+| 62 | `ResumeFeed` | React component | top-level | yes | `{ activeSort = "best", savedOnly = false }` | `import("react").JSX.Element` | Renders the ResumeFeed UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 56 | `ResumeFeedProps` | type |
+| 57 | `ResumeFeedProps` | type |
 
 ## Related Tests
 

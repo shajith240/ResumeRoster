@@ -4,9 +4,9 @@
 
 - Source path: `docs/database/data-retention.md`
 - Kind: Documentation
-- Size: 2138 bytes
+- Size: 2279 bytes
 - Lines: 53
-- Source hash: `ec66b61002bdf26ede0a6ce27f01991ffbf34910d88bdfec3be6790549b62668`
+- Source hash: `1d66c47935fe5ac3aa0c5c121f6a63fa3cfbb38ada5d9ed391547241256ebabd`
 
 ## What This File Does
 

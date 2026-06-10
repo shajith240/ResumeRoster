@@ -4,9 +4,9 @@
 
 - Source path: `components/SecureResumePreview.tsx`
 - Kind: React component
-- Size: 18790 bytes
-- Lines: 703
-- Source hash: `806ccd01f73d6e625200bbeac3286bd372ba45e1b1ebe79152c96ab07849c6ea`
+- Size: 18836 bytes
+- Lines: 704
+- Source hash: `5f27abdead0c83eacd598ed367f10884bb6bb919639ee955c69b7f33e524074c`
 
 ## What This File Does
 
@@ -23,6 +23,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `@/components/ui/solar-icons`
 - `@/lib/resume-privacy`
 - `lucide-react`
 - `pdfjs-dist/types/src/display/api`
@@ -33,26 +34,26 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 51 | `loadPdfJs` | Action helper async | top-level | no | none | `Promise<typeof import("pdfjs-dist")>` | Runs the loadpdfjs workflow for callers. |
-| 62 | `normalizeExternalUrl` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizeexternalurl values for callers. |
-| 86 | `renderLinkLayer` | Function | top-level | no | `layer`, `annotations`, `viewport` | `void` | Implements the renderlinklayer helper. |
-| 128 | `clamp` | Function | top-level | no | `value`, `min`, `max` | `number` | Implements the clamp helper. |
-| 132 | `getTouchDistance` | Function | top-level | no | `touches` | `number` | Implements the gettouchdistance helper. |
-| 140 | `SecureResumePage` | React component | top-level | no | `{ allowInteractions, containerWidth, pageNumber, pdf, readerMode = "fit", var...` | `import("react").JSX.Element` | Renders the SecureResumePage UI component. |
-| 306 | `SecureResumeReader` | React component | top-level | no | `{ allowInteractions, isLocked, onClose, onProtectedKeyDown, open, pageCount,...` | `import("react").ReactPortal \| null` | Renders the SecureResumeReader UI component. |
-| 348 | `onKeyDown` | Function | nested | no | `event` | `void` | Implements the onkeydown helper. |
-| 548 | `SecureResumePreview` | React component | top-level | yes | `{ fileUrl, privacyMode, title, }` | `import("react").JSX.Element` | Renders the SecureResumePreview UI component. |
+| 52 | `loadPdfJs` | Action helper async | top-level | no | none | `Promise<typeof import("pdfjs-dist")>` | Runs the loadpdfjs workflow for callers. |
+| 63 | `normalizeExternalUrl` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizeexternalurl values for callers. |
+| 87 | `renderLinkLayer` | Function | top-level | no | `layer`, `annotations`, `viewport` | `void` | Implements the renderlinklayer helper. |
+| 129 | `clamp` | Function | top-level | no | `value`, `min`, `max` | `number` | Implements the clamp helper. |
+| 133 | `getTouchDistance` | Function | top-level | no | `touches` | `number` | Implements the gettouchdistance helper. |
+| 141 | `SecureResumePage` | React component | top-level | no | `{ allowInteractions, containerWidth, pageNumber, pdf, readerMode = "fit", var...` | `import("react").JSX.Element` | Renders the SecureResumePage UI component. |
+| 307 | `SecureResumeReader` | React component | top-level | no | `{ allowInteractions, isLocked, onClose, onProtectedKeyDown, open, pageCount,...` | `import("react").ReactPortal \| null` | Renders the SecureResumeReader UI component. |
+| 349 | `onKeyDown` | Function | nested | no | `event` | `void` | Implements the onkeydown helper. |
+| 549 | `SecureResumePreview` | React component | top-level | yes | `{ fileUrl, privacyMode, title, }` | `import("react").JSX.Element` | Renders the SecureResumePreview UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 20 | `ReaderMode` | type |
-| 21 | `PdfJsModule` | type |
-| 22 | `TextLayerHandle` | type |
-| 27 | `SecureResumePreviewProps` | type |
-| 33 | `PagePreviewProps` | type |
-| 43 | `LinkAnnotation` | type |
+| 21 | `ReaderMode` | type |
+| 22 | `PdfJsModule` | type |
+| 23 | `TextLayerHandle` | type |
+| 28 | `SecureResumePreviewProps` | type |
+| 34 | `PagePreviewProps` | type |
+| 44 | `LinkAnnotation` | type |
 
 ## Related Tests
 

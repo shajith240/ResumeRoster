@@ -4,9 +4,9 @@
 
 - Source path: `lib/saved-resumes.ts`
 - Kind: Application library module
-- Size: 1637 bytes
-- Lines: 67
-- Source hash: `4391d12c3d48123dfab1ff7702be343e301b0d6f8892540f8d8943b7f834cf92`
+- Size: 1806 bytes
+- Lines: 76
+- Source hash: `08d28ffc34649dabbfc4e825f02524c6ec4cd8b25ab14ef1a82776cc87bc10df`
 
 ## What This File Does
 
@@ -22,6 +22,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `getSavedResumeIds`
 - `isSavedResumeSchemaMissingError`
 - `mergeSavedResumeState`
+- `SaveButtonPendingAction`
 - `SaveButtonState`
 - `SAVED_RESUMES_UNAVAILABLE_MESSAGE`
 - `SavedResumeReference`
@@ -34,10 +35,10 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 20 | `isSavedResumeSchemaMissingError` | Function | top-level | yes | `error` | `boolean` | Implements the issavedresumeschemamissingerror helper. |
-| 37 | `getSavedResumeIds` | Function | top-level | yes | `savedRows` | `Set<string>` | Implements the getsavedresumeids helper. |
-| 41 | `mergeSavedResumeState` | Function | top-level | yes | `resumes`, `savedResumeIds` | `(T & { is_saved: boolean; })[]` | Implements the mergesavedresumestate helper. |
-| 51 | `getSaveButtonState` | Function | top-level | yes | `isSaved`, `isPending` | `SaveButtonState` | Implements the getsavebuttonstate helper. |
+| 22 | `isSavedResumeSchemaMissingError` | Function | top-level | yes | `error` | `boolean` | Implements the issavedresumeschemamissingerror helper. |
+| 39 | `getSavedResumeIds` | Function | top-level | yes | `savedRows` | `Set<string>` | Implements the getsavedresumeids helper. |
+| 43 | `mergeSavedResumeState` | Function | top-level | yes | `resumes`, `savedResumeIds` | `(T & { is_saved: boolean; })[]` | Implements the mergesavedresumestate helper. |
+| 53 | `getSaveButtonState` | Function | top-level | yes | `isSaved`, `pendingAction` | `SaveButtonState` | Implements the getsavebuttonstate helper. |
 
 ## Types
 
@@ -45,7 +46,8 @@ None detected.
 | --- | --- | --- |
 | 1 | `SavedResumeReference` | type |
 | 5 | `SaveButtonState` | type |
-| 10 | `SavedResumeError` | type |
+| 10 | `SaveButtonPendingAction` | type |
+| 12 | `SavedResumeError` | type |
 
 ## Related Tests
 

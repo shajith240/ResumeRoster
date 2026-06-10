@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import {
 	buildRedactionProfileFromUser,
@@ -16,6 +16,7 @@ import {
 } from "@/lib/submit-validation";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
+import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
 
@@ -45,21 +46,9 @@ function serverFailure(message = RESUME_SUBMIT_FAILED_MESSAGE) {
 	return badRequest(message, 500);
 }
 
-function isMissingQueueRpc(message: string) {
-	return /create_resume_with_review_queue|review_queue_status|activation_reviews_|schema cache|function|column/i.test(
-		message,
-	);
-}
-
 function getRequiredString(formData: FormData, key: string) {
 	const value = formData.get(key);
 	return typeof value === "string" ? value.trim() : "";
-}
-
-function getBearerToken(request: Request) {
-	const authorization = request.headers.get("authorization") ?? "";
-	const [scheme, token] = authorization.split(/\s+/);
-	return /^bearer$/i.test(scheme) && token ? token : "";
 }
 
 async function ensureSubmitProfile(
@@ -151,68 +140,23 @@ async function insertResumeWithQueue({
 		};
 	}
 
-	if (!isMissingQueueRpc(queuedInsert.error.message)) {
-		return {
-			data: null,
-			error: queuedInsert.error,
-		};
-	}
-
-	const fallbackInsert = await admin
-		.from("resumes")
-		.insert({
-			file_path: filePath,
-			is_anonymous: privacyMode !== "public",
-			job_description: jobDescription,
-			post_description: postDescription,
-			privacy_mode: privacyMode,
-			title,
-			user_id: userId,
-		})
-		.select("id")
-		.single();
-
 	return {
-		data: fallbackInsert.data
-			? ({
-					id: fallbackInsert.data.id,
-					review_queue_status: "active",
-					activation_reviews_completed: 0,
-					activation_reviews_required: 0,
-				} satisfies QueuedResumeInsertResult)
-			: null,
-		error: fallbackInsert.error,
+		data: null,
+		error: queuedInsert.error,
 	};
 }
 
 export async function POST(request: Request) {
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-	const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-	if (!supabaseUrl || !serviceRoleKey) {
-		return badRequest("Server submit setup is missing.", 503);
+	let signedIn: Awaited<ReturnType<typeof requireSignedInUser>>;
+	try {
+		signedIn = await requireSignedInUser(request, {
+			missingTokenMessage: "Sign in again before submitting.",
+			setupMessage: "Server submit setup is missing.",
+		});
+	} catch (error) {
+		return serverAuthErrorResponse(error);
 	}
-
-	const token = getBearerToken(request);
-	if (!token) {
-		return badRequest("Sign in again before submitting.", 401);
-	}
-
-	const admin = createClient(supabaseUrl, serviceRoleKey, {
-		auth: {
-			autoRefreshToken: false,
-			persistSession: false,
-		},
-	});
-
-	const {
-		data: { user },
-		error: userError,
-	} = await admin.auth.getUser(token);
-
-	if (userError || !user) {
-		return badRequest("Your session expired. Sign in again.", 401);
-	}
+	const { admin, user } = signedIn;
 
 	let formData: FormData;
 	try {

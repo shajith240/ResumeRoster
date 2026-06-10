@@ -4,9 +4,9 @@
 
 - Source path: `app/feed/page.tsx`
 - Kind: Next page route
-- Size: 6781 bytes
-- Lines: 223
-- Source hash: `ef5722270e233bb9821b13b99ede7f5817bbee61dfd8fd036e1ce379719068b3`
+- Size: 4284 bytes
+- Lines: 139
+- Source hash: `67ed4a9171b5e3ea4df648e038c67ca5383c3e83b1683a993299f1a96bb94d82`
 
 ## What This File Does
 
@@ -24,27 +24,29 @@ Edit this when the page-level data loading, route composition, or first-screen e
 ## Imports
 
 - `@/components/AuthGate`
+- `@/components/FeedRailLegalFooter`
 - `@/components/PersonalizeLintedPrompt`
+- `@/components/RecentPostsPanel`
+- `@/components/resume-feed/ResumeFeedHeader`
 - `@/components/ResumeFeed`
 - `@/components/RouteHeader`
-- `lucide-react`
 - `next/link`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 58 | `normalizeSort` | Validation or normalization helper | top-level | no | `value` | `FeedSort` | Validates or normalizes normalizesort values for callers. |
-| 64 | `normalizeSaved` | Validation or normalization helper | top-level | no | `value` | `boolean` | Validates or normalizes normalizesaved values for callers. |
-| 70 | `normalizeWelcome` | Validation or normalization helper | top-level | no | `value` | `FeedWelcome \| null` | Validates or normalizes normalizewelcome values for callers. |
-| 80 | `FeedPage` | React component async | top-level | yes | `{ searchParams }` | `Promise<import("react").JSX.Element>` | Renders the FeedPage UI component. |
+| 60 | `normalizeSort` | Validation or normalization helper | top-level | no | `value` | `FeedSort` | Validates or normalizes normalizesort values for callers. |
+| 66 | `normalizeSaved` | Validation or normalization helper | top-level | no | `value` | `boolean` | Validates or normalizes normalizesaved values for callers. |
+| 72 | `normalizeWelcome` | Validation or normalization helper | top-level | no | `value` | `FeedWelcome \| null` | Validates or normalizes normalizewelcome values for callers. |
+| 82 | `FeedPage` | React component async | top-level | yes | `{ searchParams }` | `Promise<import("react").JSX.Element>` | Renders the FeedPage UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 8 | `FeedPageProps` | type |
-| 16 | `FeedWelcome` | type |
+| 10 | `FeedPageProps` | type |
+| 18 | `FeedWelcome` | type |
 
 ## Related Tests
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/PersonalizeLintedPrompt.tsx`
 - Kind: React component
-- Size: 2375 bytes
+- Size: 2371 bytes
 - Lines: 99
-- Source hash: `888d3660816299bc4c4e60a9a4e150ad633f7bebc88d1d42be02d6694c3e3c5b`
+- Source hash: `a5d9b5ff9ada05ef1a6500086ed8250f6782c6d8ace926bee45e7b84fb078965`
 
 ## What This File Does
 

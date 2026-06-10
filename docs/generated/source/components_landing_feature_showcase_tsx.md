@@ -4,9 +4,9 @@
 
 - Source path: `components/landing/feature-showcase.tsx`
 - Kind: React component
-- Size: 4485 bytes
+- Size: 4660 bytes
 - Lines: 168
-- Source hash: `967b547787fe9ca90dd2e003ff16b97a1fb966cc507c656046ce5eadb4791ef6`
+- Source hash: `657ece823512dcd2f87b5ab8da9956a9290ce08ebabca6fbe63a426f41bc09e8`
 
 ## What This File Does
 
@@ -23,7 +23,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `./content`
-- `lucide-react`
+- `@/components/ui/solar-icons`
 - `next/link`
 - `react`
 

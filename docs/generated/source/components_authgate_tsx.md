@@ -4,9 +4,9 @@
 
 - Source path: `components/AuthGate.tsx`
 - Kind: React component
-- Size: 5934 bytes
+- Size: 5951 bytes
 - Lines: 232
-- Source hash: `95c5db8b49caa73033631daea100beb1504e7333b63c639e8c15ff5744e04f10`
+- Source hash: `2a1cc360558b68783ca5acd8ab3bd3a28bc11be40f89191c11248db117c92b34`
 
 ## What This File Does
 

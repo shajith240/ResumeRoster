@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/notifications.test.ts`
 - Kind: Unit test
-- Size: 1072 bytes
-- Lines: 36
-- Source hash: `a5222f2328bcd3b24b72855235effc7e7e004ee3e3c80a2f37a14ca29b7e49f0`
+- Size: 1152 bytes
+- Lines: 39
+- Source hash: `d158786daa5391e69f26d9073595750b9bb72c336d973ec8fdba9c3b9fb9e889`
 
 ## What This File Does
 
@@ -22,6 +22,7 @@ None detected.
 
 ## Imports
 
+- `@/lib/app-routes`
 - `@/lib/notifications`
 - `vitest`
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/CommentMediaToolbar.tsx`
 - Kind: React component
-- Size: 4188 bytes
-- Lines: 158
-- Source hash: `f1a3bb93e339a16cacc6ce45248f26ecc08255f793483919e54f9ca4bcdb763b`
+- Size: 5171 bytes
+- Lines: 200
+- Source hash: `24a704838e9490a34928b2c052099d97111c57352a9d79b9c904a7ec90af2ecd`
 
 ## What This File Does
 
@@ -24,6 +24,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
+- `@/components/ui/solar-icons`
 - `@/lib/supabase/client`
 - `@/lib/supabase/types`
 - `lucide-react`
@@ -34,16 +35,16 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 26 | `getAccessToken` | Function async | top-level | no | none | `Promise<string>` | Implements the getaccesstoken helper. |
-| 33 | `readErrorMessage` | Function async | top-level | no | `response`, `fallback` | `Promise<string>` | Implements the readerrormessage helper. |
-| 38 | `CommentMediaToolbar` | React component | top-level | yes | `{ attachment, contentFormat, disabled = false, onAttachmentChange, onFormatCh...` | `import("react").JSX.Element` | Renders the CommentMediaToolbar UI component. |
+| 27 | `getAccessToken` | Function async | top-level | no | none | `Promise<string>` | Implements the getaccesstoken helper. |
+| 34 | `readErrorMessage` | Function async | top-level | no | `response`, `fallback` | `Promise<string>` | Implements the readerrormessage helper. |
+| 39 | `CommentMediaToolbar` | React component | top-level | yes | `{ attachment, contentFormat, disabled = false, onAttachmentChange, onFormatCh...` | `import("react").JSX.Element` | Renders the CommentMediaToolbar UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 12 | `CommentAttachmentOption` | type |
-| 16 | `CommentMediaToolbarProps` | type |
+| 13 | `CommentAttachmentOption` | type |
+| 17 | `CommentMediaToolbarProps` | type |
 
 ## Related Tests
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/AppPresence.tsx`
 - Kind: React component
-- Size: 5994 bytes
-- Lines: 216
-- Source hash: `f3a10468ee72b2f67832e8690fcdd6e65eb1d311827ba86362401315c606e5ac`
+- Size: 4943 bytes
+- Lines: 186
+- Source hash: `64a4fdc0274873cfd4122fb5defc0062aae953ac46bc0ba409c86a846890b275`
 
 ## What This File Does
 
@@ -34,17 +34,16 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 24 | `getSavedStatus` | Function async | top-level | no | `userId` | `Promise<AppStatus>` | Implements the getsavedstatus helper. |
-| 36 | `getPresenceSessionId` | Function | top-level | no | `userId` | `string` | Implements the getpresencesessionid helper. |
-| 51 | `buildPresencePayload` | Action helper | top-level | no | `userId`, `sessionId`, `status` | `AppPresencePayload` | Runs the buildpresencepayload workflow for callers. |
-| 64 | `announcePresenceChange` | Function | top-level | no | `payload` | `void` | Implements the announcepresencechange helper. |
-| 72 | `AppPresence` | React component | top-level | yes | `{ userId }` | `null` | Renders the AppPresence UI component. |
+| 23 | `getPresenceSessionId` | Function | top-level | no | `userId` | `string` | Implements the getpresencesessionid helper. |
+| 38 | `buildPresencePayload` | Action helper | top-level | no | `userId`, `sessionId`, `status` | `AppPresencePayload` | Runs the buildpresencepayload workflow for callers. |
+| 51 | `announcePresenceChange` | Function | top-level | no | `payload` | `void` | Implements the announcepresencechange helper. |
+| 59 | `AppPresence` | React component | top-level | yes | `{ userId }` | `null` | Renders the AppPresence UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 17 | `AppPresenceProps` | type |
+| 15 | `AppPresenceProps` | type |
 
 ## Related Tests
 

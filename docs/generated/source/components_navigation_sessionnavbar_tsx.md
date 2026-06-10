@@ -4,9 +4,9 @@
 
 - Source path: `components/navigation/SessionNavBar.tsx`
 - Kind: React component
-- Size: 3556 bytes
-- Lines: 153
-- Source hash: `da117413f95fa855d32089ce42080434059c982d98d753642a933f653b180c1e`
+- Size: 3381 bytes
+- Lines: 123
+- Source hash: `0de3f24f4341b266d0cdfdc9dafbf2c8055915a0b384c249b63d5d6ccd374102`
 
 ## What This File Does
 
@@ -22,7 +22,10 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 ## Imports
 
-- `@/components/navigation/sidebar-icons`
+- `@/components/navigation/primary-nav`
+- `@/components/navigation/ResumeQueueProgress`
+- `@/components/navigation/useMobileScrollChrome`
+- `@/components/ui/solar-icons`
 - `@/lib/use-admin-access`
 - `@/lib/utils`
 - `next/link`
@@ -33,14 +36,14 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 29 | `SidebarNavItem` | React component | top-level | no | `{ item }` | `import("react").JSX.Element` | Renders the SidebarNavItem UI component. |
-| 77 | `SessionNavBar` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the SessionNavBar UI component. |
+| 18 | `SidebarNavItem` | React component | top-level | no | `{ item }` | `import("react").JSX.Element` | Renders the SidebarNavItem UI component. |
+| 51 | `SessionNavBar` | React component | top-level | yes | `{ userId }` | `import("react").JSX.Element` | Renders the SessionNavBar UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 21 | `NavItem` | type |
+| 47 | `SessionNavBarProps` | type |
 
 ## Related Tests
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/comment-media-validation.ts`
 - Kind: Application library module
-- Size: 3712 bytes
-- Lines: 128
-- Source hash: `a7f130f1b5aac1feef9ecfcbf003d8ef50065bb895034666df005dbec5b6e578`
+- Size: 3819 bytes
+- Lines: 132
+- Source hash: `d26c7c81e77d938eb87913cc8c6245dd6131171c4e101ca0faf2ce8710c4ac8c`
 
 ## What This File Does
 
@@ -34,18 +34,18 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 48 | `getCommentImageUploadIssue` | Action helper | top-level | yes | `file` | `"" \| "Upload a PNG, JPG, or WebP image." \| "Choose an image file." \| "Choose a non-empty image file." \| "Keep comment images under 3M...` | Runs the getcommentimageuploadissue workflow for callers. |
-| 74 | `isCommentContentFormat` | Function | top-level | no | `value` | `boolean` | Implements the iscommentcontentformat helper. |
-| 78 | `normalizeCommentContent` | Validation or normalization helper | top-level | yes | `content` | `string` | Validates or normalizes normalizecommentcontent values for callers. |
-| 82 | `getVisibleGraphemeCount` | Function | top-level | no | `content` | `number` | Implements the getvisiblegraphemecount helper. |
-| 93 | `getStorageCharacterCount` | Function | top-level | no | `content` | `number` | Implements the getstoragecharactercount helper. |
-| 97 | `getReviewContentIssue` | Function | top-level | yes | `{ attachmentId, content, contentFormat, }` | `"" \| "Write at least 10 characters of useful feedback." \| "Keep feedback under 4000 characters." \| "Choose a valid comment format." \|...` | Implements the getreviewcontentissue helper. |
+| 48 | `getCommentImageUploadIssue` | Action helper | top-level | yes | `file` | `"" \| "Upload a PNG, JPG, or WebP image." \| "Choose an image file." \| "Choose a non-empty image file." \| "Keep comment images under 2M...` | Runs the getcommentimageuploadissue workflow for callers. |
+| 78 | `isCommentContentFormat` | Function | top-level | no | `value` | `boolean` | Implements the iscommentcontentformat helper. |
+| 82 | `normalizeCommentContent` | Validation or normalization helper | top-level | yes | `content` | `string` | Validates or normalizes normalizecommentcontent values for callers. |
+| 86 | `getVisibleGraphemeCount` | Function | top-level | no | `content` | `number` | Implements the getvisiblegraphemecount helper. |
+| 97 | `getStorageCharacterCount` | Function | top-level | no | `content` | `number` | Implements the getstoragecharactercount helper. |
+| 101 | `getReviewContentIssue` | Function | top-level | yes | `{ attachmentId, content, contentFormat, }` | `"" \| "Choose a valid image." \| "Write at least 10 characters of useful feedback." \| "Keep feedback under 4000 characters." \| "Choose...` | Implements the getreviewcontentissue helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 16 | `CommentImageMimeType` | type |
+| 15 | `CommentImageMimeType` | type |
 | 17 | `CommentContentFormat` | type |
 | 19 | `SegmenterLike` | type |
 | 23 | `IntlWithSegmenter` | type |

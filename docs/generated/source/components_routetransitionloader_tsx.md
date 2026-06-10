@@ -4,9 +4,9 @@
 
 - Source path: `components/RouteTransitionLoader.tsx`
 - Kind: React component
-- Size: 5326 bytes
-- Lines: 189
-- Source hash: `f8a5cc4949d792c5804bdaa8f5433d3993f0edf03a9670c3371c900c728cfdaa`
+- Size: 5349 bytes
+- Lines: 196
+- Source hash: `285c57909e6f2ab440dd43158a98e5803c26fdf14a2547047329df1c3c028162`
 
 ## What This File Does
 
@@ -32,19 +32,19 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 16 | `isAppRoute` | Function | top-level | no | `pathname` | `boolean` | Implements the isapproute helper. |
-| 22 | `isModifiedClick` | Function | top-level | no | `event` | `boolean` | Implements the ismodifiedclick helper. |
-| 26 | `getAnchorFromEvent` | Function | top-level | no | `event` | `HTMLAnchorElement \| null` | Implements the getanchorfromevent helper. |
-| 31 | `getInternalNavigationUrl` | Function | top-level | no | `anchor` | `URL \| null` | Implements the getinternalnavigationurl helper. |
-| 49 | `getLoaderTheme` | Action helper | top-level | no | `nextPathname` | `LoaderTheme` | Runs the getloadertheme workflow for callers. |
-| 68 | `announceRouteTransition` | Function | top-level | yes | `href` | `void` | Implements the announceroutetransition helper. |
-| 78 | `RouteTransitionLoader` | React component | top-level | yes | none | `import("react").JSX.Element \| null` | Renders the RouteTransitionLoader UI component. |
+| 23 | `isAppRoute` | Function | top-level | no | `pathname` | `boolean` | Implements the isapproute helper. |
+| 29 | `isModifiedClick` | Function | top-level | no | `event` | `boolean` | Implements the ismodifiedclick helper. |
+| 33 | `getAnchorFromEvent` | Function | top-level | no | `event` | `HTMLAnchorElement \| null` | Implements the getanchorfromevent helper. |
+| 38 | `getInternalNavigationUrl` | Function | top-level | no | `anchor` | `URL \| null` | Implements the getinternalnavigationurl helper. |
+| 56 | `getLoaderTheme` | Action helper | top-level | no | `nextPathname` | `LoaderTheme` | Runs the getloadertheme workflow for callers. |
+| 75 | `announceRouteTransition` | Function | top-level | yes | `href` | `void` | Implements the announceroutetransition helper. |
+| 85 | `RouteTransitionLoader` | React component | top-level | yes | none | `import("react").JSX.Element \| null` | Renders the RouteTransitionLoader UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 14 | `LoaderTheme` | type |
+| 21 | `LoaderTheme` | type |
 
 ## Related Tests
 

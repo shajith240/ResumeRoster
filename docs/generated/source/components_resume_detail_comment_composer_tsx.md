@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/comment-composer.tsx`
 - Kind: React component
-- Size: 2938 bytes
-- Lines: 121
-- Source hash: `099e19a6b91d04a3fa2d40eb290ec6cfe00834e11d9d7e2d72be664c8b6998df`
+- Size: 15950 bytes
+- Lines: 595
+- Source hash: `a85a76a71d9f14c12220a9c88df92291d264f4a6c7fb1138af1545b4482af3b2`
 
 ## What This File Does
 
@@ -23,6 +23,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `@/components/CommentMediaToolbar`
+- `@/lib/comment-mentions`
+- `@/lib/supabase/client`
 - `@/lib/supabase/types`
 - `react`
 
@@ -30,13 +32,17 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 34 | `CommentComposer` | React component | top-level | yes | `{ attachment, autoFocus = false, cancelLabel = "Cancel", className, contentFo...` | `import("react").JSX.Element` | Renders the CommentComposer UI component. |
+| 68 | `getActiveMentionQuery` | Function | top-level | no | `value`, `cursorIndex` | `{ end: number; query: string; start: number; } \| null` | Implements the getactivementionquery helper. |
+| 85 | `getNormalizedSuggestions` | Validation or normalization helper | top-level | no | `suggestions` | `MentionSuggestion[]` | Validates or normalizes getnormalizedsuggestions values for callers. |
+| 104 | `CommentComposer` | React component | top-level | yes | `{ ariaLabel, attachment, autoFocus = false, cancelLabel = "Cancel", className...` | `import("react").JSX.Element` | Renders the CommentComposer UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 14 | `CommentComposerProps` | type |
+| 31 | `CommentComposerProps` | type |
+| 54 | `MentionQuery` | type |
+| 66 | `MentionSearchStatus` | type |
 
 ## Related Tests
 

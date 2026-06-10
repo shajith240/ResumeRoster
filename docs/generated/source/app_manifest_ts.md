@@ -4,9 +4,9 @@
 
 - Source path: `app/manifest.ts`
 - Kind: Project configuration
-- Size: 615 bytes
-- Lines: 29
-- Source hash: `1aa9e191ad34274594d7b6b3f0d6afe1220455e31df8ef08889e9ea15df80936`
+- Size: 677 bytes
+- Lines: 30
+- Source hash: `05e76e7bcbc09f26f15dac5a0e02458def26dc1d31936c465a71e3ffed9c5984`
 
 ## What This File Does
 
@@ -23,13 +23,14 @@ Edit this when tooling, dependency behavior, build settings, or CI requirements 
 
 ## Imports
 
+- `@/lib/app-routes`
 - `next`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3 | `manifest` | Function | top-level | yes | none | `import("next/dist/lib/metadata/types/manifest-types").Manifest` | Implements the manifest helper. |
+| 4 | `manifest` | Function | top-level | yes | none | `import("next/dist/lib/metadata/types/manifest-types").Manifest` | Implements the manifest helper. |
 
 ## Types
 

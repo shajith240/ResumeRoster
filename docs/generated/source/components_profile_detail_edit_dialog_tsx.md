@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/edit-dialog.tsx`
 - Kind: React component
-- Size: 16379 bytes
-- Lines: 579
-- Source hash: `c9c2b33cd9f185782c641347847a9d1644d1e5ab40b9575b97e4135609299d58`
+- Size: 16425 bytes
+- Lines: 580
+- Source hash: `87a99bfe010c8d0f25685efaea23ec70187deb03b2277593e6ac627485d509bc`
 
 ## What This File Does
 
@@ -32,6 +32,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/components/ui/input`
 - `@/components/ui/label`
 - `@/components/ui/select`
+- `@/components/ui/solar-icons`
 - `@/lib/onboarding-validation`
 - `@/lib/profile-validation`
 - `lucide-react`
@@ -41,7 +42,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 43 | `ProfileEditDialog` | React component | top-level | yes | `{ about, avatarPreview, college, collegeLocation, currentPosition, displayNam...` | `import("react").JSX.Element` | Renders the ProfileEditDialog UI component. |
+| 44 | `ProfileEditDialog` | React component | top-level | yes | `{ about, avatarPreview, college, collegeLocation, currentPosition, displayNam...` | `import("react").JSX.Element` | Renders the ProfileEditDialog UI component. |
 
 ## Types
 

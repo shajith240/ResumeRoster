@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/file-upload.tsx`
 - Kind: UI primitive
-- Size: 15743 bytes
+- Size: 15788 bytes
 - Lines: 659
-- Source hash: `ac085e02176d30bedb73f017da514619767c414fb42e21feb59553e5db2f85bc`
+- Source hash: `36678c76c6b1452b617f712615ccc192d901be0c41d532052a82b88881129eeb`
 
 ## What This File Does
 
@@ -42,6 +42,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `@/components/ui/button`
+- `@/components/ui/solar-icons`
 - `@/lib/utils`
 - `lucide-react`
 - `motion/react`

@@ -83,12 +83,12 @@ function mockSignedInRpc(rpcResult: unknown) {
 }
 
 function mockPostDeleteAdmin({
-	attachmentPaths = [`${USER_ID}/post-image.png`],
 	authorId = USER_ID,
 	isAdmin = false,
 	rpcResult = {
 		data: [
 			{
+				community_post_media_paths: [`${USER_ID}/post-image.png`],
 				deleted_at: "2026-01-01T00:00:00.000Z",
 				id: POST_ID,
 			},
@@ -96,7 +96,6 @@ function mockPostDeleteAdmin({
 		error: null,
 	},
 }: {
-	attachmentPaths?: string[];
 	authorId?: string;
 	isAdmin?: boolean;
 	rpcResult?: unknown;
@@ -111,21 +110,11 @@ function mockPostDeleteAdmin({
 		},
 		error: null,
 	}));
-	const attachmentsEq = vi.fn(async () => ({
-		data: attachmentPaths.map((storage_path) => ({ storage_path })),
-		error: null,
-	}));
 	const postsEq = vi.fn(() => ({ maybeSingle }));
 	const from = vi.fn((table: string) => {
 		if (table === "community_posts") {
 			return {
 				select: vi.fn(() => ({ eq: postsEq })),
-			};
-		}
-
-		if (table === "community_post_attachments") {
-			return {
-				select: vi.fn(() => ({ eq: attachmentsEq })),
 			};
 		}
 
@@ -142,7 +131,7 @@ function mockPostDeleteAdmin({
 		user: { email: isAdmin ? "admin@linted.test" : "member@linted.test", id: USER_ID },
 	} as never);
 
-	return { attachmentsEq, from, maybeSingle, remove, rpc, storageFrom };
+	return { from, maybeSingle, remove, rpc, storageFrom };
 }
 
 function mockAdminRpc(rpcResult: unknown) {
@@ -280,7 +269,7 @@ describe("community action routes", () => {
 		});
 	});
 
-	it("hard deletes an owned community post and removes uploaded media first", async () => {
+	it("hard deletes an owned community post and removes uploaded media after DB deletion", async () => {
 		const { remove, rpc, storageFrom } = mockPostDeleteAdmin();
 
 		const response = await deletePost(
@@ -291,12 +280,16 @@ describe("community action routes", () => {
 		expect(response.status).toBe(200);
 		expect(storageFrom).toHaveBeenCalledWith("community-post-media");
 		expect(remove).toHaveBeenCalledWith([`${USER_ID}/post-image.png`]);
+		expect(rpc.mock.invocationCallOrder[0]).toBeLessThan(
+			remove.mock.invocationCallOrder[0],
+		);
 		expect(rpc).toHaveBeenCalledWith("hard_delete_community_post", {
 			requesting_user_is_admin: false,
 			target_post_id: POST_ID,
 			target_user_id: USER_ID,
 		});
 		await expect(response.json()).resolves.toEqual({
+			mediaCleanupFailed: false,
 			post: {
 				deletedAt: "2026-01-01T00:00:00.000Z",
 				id: POST_ID,
@@ -308,9 +301,18 @@ describe("community action routes", () => {
 	it("allows admins to hard delete another user's community post", async () => {
 		vi.mocked(isAdminEmail).mockReturnValue(true);
 		const { remove, rpc } = mockPostDeleteAdmin({
-			attachmentPaths: [],
 			authorId: OTHER_USER_ID,
 			isAdmin: true,
+			rpcResult: {
+				data: [
+					{
+						community_post_media_paths: [],
+						deleted_at: "2026-01-01T00:00:00.000Z",
+						id: POST_ID,
+					},
+				],
+				error: null,
+			},
 		});
 
 		const response = await deletePost(

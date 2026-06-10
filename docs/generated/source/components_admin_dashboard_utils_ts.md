@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/utils.ts`
 - Kind: React component
-- Size: 4326 bytes
-- Lines: 151
-- Source hash: `bfd5fdfc1e50b6ab15971d877b65ae3833b0733de180e534420ddd39c1a2451d`
+- Size: 4695 bytes
+- Lines: 164
+- Source hash: `fc61e49520fb66350f4f43d7cba3425eba0091fbfe0adb1873924e6f63056300`
 
 ## What This File Does
 
@@ -47,13 +47,13 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 | 35 | `formatReason` | Function | top-level | yes | `value` | `string` | Implements the formatreason helper. |
 | 39 | `formatTargetType` | Function | top-level | yes | `value` | `string` | Implements the formattargettype helper. |
 | 43 | `getTargetTitle` | Function | top-level | yes | `report` | `string` | Implements the gettargettitle helper. |
-| 55 | `getFootprintTotal` | Function | top-level | yes | `footprint` | `number` | Implements the getfootprinttotal helper. |
-| 67 | `getAdminMessageAudienceLabel` | Function | top-level | yes | `target` | `string` | Implements the getadminmessageaudiencelabel helper. |
-| 75 | `getAdminMessageLinkChoice` | Function | top-level | yes | `linkHref` | `string` | Implements the getadminmessagelinkchoice helper. |
-| 82 | `createAdminMessageRequestId` | Action helper | top-level | yes | none | `string` | Runs the createadminmessagerequestid workflow for callers. |
-| 105 | `getSectionBadge` | Function | top-level | yes | `sectionId`, `stats` | `number \| null` | Implements the getsectionbadge helper. |
-| 126 | `formatRelativeAdminTime` | Function | top-level | yes | `value` | `string` | Implements the formatrelativeadmintime helper. |
-| 144 | `formatAdminPresenceStatus` | Function | top-level | yes | `value` | `string` | Implements the formatadminpresencestatus helper. |
+| 63 | `getFootprintTotal` | Function | top-level | yes | `footprint` | `number` | Implements the getfootprinttotal helper. |
+| 75 | `getAdminMessageAudienceLabel` | Function | top-level | yes | `target` | `string` | Implements the getadminmessageaudiencelabel helper. |
+| 83 | `getAdminMessageLinkChoice` | Function | top-level | yes | `linkHref` | `string` | Implements the getadminmessagelinkchoice helper. |
+| 90 | `createAdminMessageRequestId` | Action helper | top-level | yes | none | `string` | Runs the createadminmessagerequestid workflow for callers. |
+| 113 | `getSectionBadge` | Function | top-level | yes | `sectionId`, `stats` | `number \| null` | Implements the getsectionbadge helper. |
+| 139 | `formatRelativeAdminTime` | Function | top-level | yes | `value` | `string` | Implements the formatrelativeadmintime helper. |
+| 157 | `formatAdminPresenceStatus` | Function | top-level | yes | `value` | `string` | Implements the formatadminpresencestatus helper. |
 
 ## Types
 

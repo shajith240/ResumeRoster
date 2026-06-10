@@ -4,9 +4,9 @@
 
 - Source path: `app/api/health/route.ts`
 - Kind: Next API route
-- Size: 6962 bytes
-- Lines: 291
-- Source hash: `501e0e0514ff49b22a5ec3334e8f1c821d7a94ad3727f34ba5a5717dad19f784`
+- Size: 7263 bytes
+- Lines: 299
+- Source hash: `5c3fb60cb3741716ea9fb4d3643372fa5cfce8e213f8ccb31e4bd674198eae78`
 
 ## What This File Does
 
@@ -24,6 +24,7 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 ## Imports
 
+- `@/lib/community`
 - `@/lib/monitoring/capture-errors`
 - `@/lib/server-auth`
 - `@supabase/supabase-js`
@@ -32,37 +33,38 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 53 | `publicMetadata` | Function | top-level | no | none | `{ service: string; environment: string; commit: string \| null; checked_at: string; }` | Implements the publicmetadata helper. |
-| 62 | `getElapsedMs` | Function | top-level | no | `startedAt` | `number` | Implements the getelapsedms helper. |
-| 66 | `timedCheck` | Function async | top-level | no | `run` | `Promise<HealthCheck>` | Implements the timedcheck helper. |
-| 91 | `getServiceClient` | Function | top-level | no | none | `{ admin: SupabaseClient<any, "public", "public", any, any>; error: null; } \| { admin: null; error: unknown; }` | Implements the getserviceclient helper. |
-| 111 | `checkDatabase` | Function async | top-level | no | `admin` | `Promise<HealthCheck>` | Implements the checkdatabase helper. |
-| 135 | `checkStorage` | Function async | top-level | no | `admin` | `Promise<HealthCheck>` | Implements the checkstorage helper. |
-| 174 | `firstCleanupHealth` | Function | top-level | no | `data` | `CleanupHealth \| null` | Implements the firstcleanuphealth helper. |
-| 179 | `checkCleanupCron` | Function async | top-level | no | `admin` | `Promise<HealthCheck>` | Implements the checkcleanupcron helper. |
-| 228 | `checkPushConfig` | Function async | top-level | no | none | `Promise<HealthCheck>` | Implements the checkpushconfig helper. |
-| 251 | `skippedCheck` | Function | top-level | no | `message` | `HealthCheck` | Implements the skippedcheck helper. |
-| 259 | `GET` | API handler async | top-level | yes | none | `Promise<Response>` | Handles the GET request for this API route. |
+| 43 | `getRequiredStorageBuckets` | Function | top-level | no | none | `string[]` | Implements the getrequiredstoragebuckets helper. |
+| 60 | `publicMetadata` | Function | top-level | no | none | `{ service: string; environment: string; commit: string \| null; checked_at: string; }` | Implements the publicmetadata helper. |
+| 69 | `getElapsedMs` | Function | top-level | no | `startedAt` | `number` | Implements the getelapsedms helper. |
+| 73 | `timedCheck` | Function async | top-level | no | `run` | `Promise<HealthCheck>` | Implements the timedcheck helper. |
+| 98 | `getServiceClient` | Function | top-level | no | none | `{ admin: SupabaseClient<any, "public", "public", any, any>; error: null; } \| { admin: null; error: unknown; }` | Implements the getserviceclient helper. |
+| 118 | `checkDatabase` | Function async | top-level | no | `admin` | `Promise<HealthCheck>` | Implements the checkdatabase helper. |
+| 142 | `checkStorage` | Function async | top-level | no | `admin` | `Promise<HealthCheck>` | Implements the checkstorage helper. |
+| 182 | `firstCleanupHealth` | Function | top-level | no | `data` | `CleanupHealth \| null` | Implements the firstcleanuphealth helper. |
+| 187 | `checkCleanupCron` | Function async | top-level | no | `admin` | `Promise<HealthCheck>` | Implements the checkcleanupcron helper. |
+| 236 | `checkPushConfig` | Function async | top-level | no | none | `Promise<HealthCheck>` | Implements the checkpushconfig helper. |
+| 259 | `skippedCheck` | Function | top-level | no | `message` | `HealthCheck` | Implements the skippedcheck helper. |
+| 267 | `GET` | API handler async | top-level | yes | none | `Promise<Response>` | Handles the GET request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 8 | `CheckStatus` | type |
-| 10 | `HealthCheck` | type |
-| 17 | `UntimedHealthCheck` | type |
-| 23 | `CleanupHealth` | type |
+| 9 | `CheckStatus` | type |
+| 11 | `HealthCheck` | type |
+| 18 | `UntimedHealthCheck` | type |
+| 24 | `CleanupHealth` | type |
 
 ## Related Tests
 
 - `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-feedback-route.test.ts`
 - `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
 - `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/community-comment-submit-route.test.ts`
+- `lib/__tests__/community-post-submit-route.test.ts`
 - `lib/__tests__/health-route.test.ts`
-- `lib/__tests__/profile-avatar-route.test.ts`
-- `lib/__tests__/push-subscriptions-route.test.ts`
-- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

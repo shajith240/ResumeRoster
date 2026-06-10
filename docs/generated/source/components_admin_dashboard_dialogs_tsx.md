@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/dialogs.tsx`
 - Kind: React component
-- Size: 7810 bytes
+- Size: 7830 bytes
 - Lines: 299
-- Source hash: `2b00b9e19a9bddad9147f98b45a79f0ed900b5d316ecceed7742d05cab6927d7`
+- Source hash: `66529a05b1fe32bc111363b07cd446b24af0155a63f245731a944a0d94360a94`
 
 ## What This File Does
 
@@ -30,8 +30,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 - `@/components/ui/button`
 - `@/components/ui/dialog`
 - `@/components/ui/select`
+- `@/components/ui/solar-icons`
 - `@/lib/admin-messages`
-- `lucide-react`
 - `react`
 
 ## Functions And Components

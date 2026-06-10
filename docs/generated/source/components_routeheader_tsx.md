@@ -4,9 +4,9 @@
 
 - Source path: `components/RouteHeader.tsx`
 - Kind: React component
-- Size: 2736 bytes
-- Lines: 127
-- Source hash: `74510574a614a61c3413e7a254f2baa42bcd09a97f100a2734855e085a2ae097`
+- Size: 2023 bytes
+- Lines: 77
+- Source hash: `43531a7f161be8c371f7bb6171b2776ff23670a108103fa4851a758742b15369`
 
 ## What This File Does
 
@@ -25,8 +25,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 - `./AuthButton`
 - `./BrandMark`
-- `@/lib/use-admin-access`
-- `lucide-react`
+- `@/components/navigation/primary-nav`
+- `@/components/navigation/useMobileScrollChrome`
+- `@/lib/app-routes`
 - `next/link`
 - `next/navigation`
 
@@ -34,13 +35,11 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 64 | `RouteHeader` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the RouteHeader UI component. |
+| 11 | `RouteHeader` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the RouteHeader UI component. |
 
 ## Types
 
-| Line | Name | Kind |
-| --- | --- | --- |
-| 18 | `DockLink` | type |
+No top-level interfaces or type aliases detected.
 
 ## Related Tests
 

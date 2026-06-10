@@ -30,6 +30,7 @@ type PostEditResult = {
 };
 
 type PostDeleteResult = {
+	community_post_media_paths?: string[] | null;
 	deleted_at: string | null;
 	id: string;
 };
@@ -39,6 +40,12 @@ type DeleteTargetPost = {
 	id: string;
 	status: CommunityPostStatus;
 };
+
+function uniqueStoragePaths(paths: Array<string | null | undefined>) {
+	return Array.from(
+		new Set(paths.map((path) => path?.trim()).filter(Boolean) as string[]),
+	);
+}
 
 function getPostEditIssue(title: string, body: string) {
 	if (!title) return "Add a title.";
@@ -141,36 +148,6 @@ export async function DELETE(request: Request, context: CommunityRouteContext) {
 			);
 		}
 
-		const { data: attachmentRows, error: attachmentError } = await admin
-			.from("community_post_attachments")
-			.select("storage_path")
-			.eq("post_id", postId);
-
-		if (attachmentError) {
-			return Response.json({ message: "Post media could not be prepared for deletion." }, { status: 500 });
-		}
-
-		const storagePaths = Array.from(
-			new Set(
-				((attachmentRows as Array<{ storage_path?: string | null }> | null) ?? [])
-					.map((row) => row.storage_path?.trim())
-					.filter((path): path is string => Boolean(path)),
-			),
-		);
-
-		if (storagePaths.length) {
-			const { error: storageError } = await admin.storage
-				.from("community-post-media")
-				.remove(storagePaths);
-
-			if (storageError) {
-				return Response.json(
-					{ message: "Post media was not deleted. Try again." },
-					{ status: 500 },
-				);
-			}
-		}
-
 		const rpcResult = await admin.rpc("hard_delete_community_post", {
 			requesting_user_is_admin: requestingUserIsAdmin,
 			target_post_id: postId,
@@ -187,7 +164,27 @@ export async function DELETE(request: Request, context: CommunityRouteContext) {
 			return Response.json({ message: "Post was not deleted." }, { status: 500 });
 		}
 
+		const storagePaths = uniqueStoragePaths(
+			result.community_post_media_paths ?? [],
+		);
+		let mediaCleanupFailed = false;
+		if (storagePaths.length) {
+			const { error: storageError } = await admin.storage
+				.from("community-post-media")
+				.remove(storagePaths);
+
+			if (storageError) {
+				mediaCleanupFailed = true;
+				console.error("Community post media cleanup failed after delete", {
+					message: storageError.message,
+					postId,
+					storagePathCount: storagePaths.length,
+				});
+			}
+		}
+
 		return Response.json({
+			mediaCleanupFailed,
 			post: {
 				deletedAt: result.deleted_at,
 				id: result.id,

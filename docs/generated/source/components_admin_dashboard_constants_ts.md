@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/constants.ts`
 - Kind: React component
-- Size: 2822 bytes
-- Lines: 130
-- Source hash: `383a991b42ba3e8b6b4822304271ceb56eb8df0a2fc83573f3f5ddbde680c45d`
+- Size: 3166 bytes
+- Lines: 142
+- Source hash: `79372d2988ab9e4023ee0c83d350516798047ba010256413c776b36a055f0384`
 
 ## What This File Does
 
@@ -27,9 +27,10 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `./types`
+- `@/components/ui/solar-icons`
+- `@/lib/app-routes`
 - `@/lib/reviewer-validation`
 - `@/lib/supabase/types`
-- `lucide-react`
 
 ## Functions And Components
 

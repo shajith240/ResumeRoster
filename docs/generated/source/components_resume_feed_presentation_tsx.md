@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-feed/presentation.tsx`
 - Kind: React component
-- Size: 7377 bytes
-- Lines: 258
-- Source hash: `e969ab954c1329296c97a175cddff1b89c2a3062c08efa912535013063cea1aa`
+- Size: 9469 bytes
+- Lines: 338
+- Source hash: `4a5761ac316e7d24d7304d7258083eb7dbcd9538932077539a80345d6f7770e6`
 
 ## What This File Does
 
@@ -26,30 +26,35 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `./data`
+- `@/components/feed/FeedSkeleton`
 - `@/components/FeedResumePreview`
+- `@/components/RecentPostsPanel`
+- `@/components/ui/dropdown-menu`
+- `@/components/ui/solar-icons`
+- `@/components/user-presence/PresenceAvatar`
 - `@/lib/feed-ranking`
 - `@/lib/resume-display`
 - `@/lib/saved-resumes`
 - `@/lib/supabase/types`
-- `lucide-react`
 - `next/link`
+- `next/navigation`
 
 ## Functions And Components
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 44 | `FeedSkeleton` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the FeedSkeleton UI component. |
-| 63 | `FeedEmptyState` | React component | top-level | yes | `{ savedOnly }` | `import("react").JSX.Element` | Renders the FeedEmptyState UI component. |
-| 90 | `FeedSortBar` | React component | top-level | yes | `{ activeSort, savedOnly }` | `import("react").JSX.Element` | Renders the FeedSortBar UI component. |
-| 118 | `ResumeFeedCard` | React component | top-level | yes | `{ copiedId, index, isSaving, onShare, onToggleSaved, previewUrl, previewUrlsL...` | `import("react").JSX.Element` | Renders the ResumeFeedCard UI component. |
+| 69 | `FeedEmptyState` | React component | top-level | yes | `{ savedOnly }` | `import("react").JSX.Element` | Renders the FeedEmptyState UI component. |
+| 99 | `FeedSortBar` | React component | top-level | yes | `{ activeSort, savedOnly }` | `import("react").JSX.Element` | Renders the FeedSortBar UI component. |
+| 154 | `getResumeAuthorAvatar` | Function | top-level | no | `resume`, `profile` | `string` | Implements the getresumeauthoravatar helper. |
+| 170 | `ResumeFeedCard` | React component | top-level | yes | `{ copiedId, index, onShare, onToggleSaved, previewUrl, previewUrlsLoading, re...` | `import("react").JSX.Element` | Renders the ResumeFeedCard UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 23 | `FeedSortBarProps` | type |
-| 28 | `FeedEmptyStateProps` | type |
-| 32 | `ResumeFeedCardProps` | type |
+| 46 | `FeedSortBarProps` | type |
+| 51 | `FeedEmptyStateProps` | type |
+| 55 | `ResumeFeedCardProps` | type |
 
 ## Related Tests
 

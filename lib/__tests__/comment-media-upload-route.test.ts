@@ -1,4 +1,5 @@
 import { POST } from "@/app/api/comment-media/upload/route";
+import { DELETE } from "@/app/api/comment-media/[id]/route";
 import { requireSignedInUser } from "@/lib/server-auth";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
@@ -20,6 +21,7 @@ vi.mock("@/lib/server/upload-security", () => ({
 }));
 
 const USER_ID = "11111111-1111-4111-8111-111111111111";
+const ATTACHMENT_ID = "22222222-2222-4222-8222-222222222222";
 const originalScanMode = process.env.UPLOAD_MALWARE_SCAN_MODE;
 const originalScanUrl = process.env.UPLOAD_MALWARE_SCAN_URL;
 const pngBytes = new Uint8Array([
@@ -73,6 +75,40 @@ function mockSignedInUser() {
 	});
 
 	return { upload };
+}
+
+function deleteContext(id = ATTACHMENT_ID) {
+	return {
+		params: Promise.resolve({ id }),
+	};
+}
+
+function mockDeleteSignedInUser({
+	rpcResult = {
+		data: [
+			{
+				id: ATTACHMENT_ID,
+				storage_path: `${USER_ID}/image.png`,
+			},
+		],
+		error: null,
+	},
+	storageError = null as { message: string } | null,
+} = {}) {
+	const rpc = vi.fn(async () => rpcResult);
+	const remove = vi.fn(async () => ({ data: null, error: storageError }));
+
+	vi.mocked(requireSignedInUser).mockResolvedValue({
+		admin: {
+			rpc,
+			storage: {
+				from: vi.fn(() => ({ remove })),
+			},
+		} as never,
+		user: { id: USER_ID } as never,
+	});
+
+	return { remove, rpc };
 }
 
 describe("comment media upload route rate limits", () => {
@@ -149,5 +185,45 @@ describe("comment media upload route rate limits", () => {
 		await expect(response.json()).resolves.toEqual({
 			message: "Too many image uploads. Try again soon.",
 		});
+	});
+
+	it("deletes unclaimed media through the DB RPC before removing storage", async () => {
+		const { remove, rpc } = mockDeleteSignedInUser();
+
+		const response = await DELETE(
+			new Request(`https://linted.test/api/comment-media/${ATTACHMENT_ID}`, {
+				headers: { Authorization: "Bearer session-token" },
+				method: "DELETE",
+			}),
+			deleteContext(),
+		);
+
+		expect(response.status).toBe(200);
+		expect(rpc).toHaveBeenCalledWith("delete_unclaimed_comment_attachment", {
+			target_attachment_id: ATTACHMENT_ID,
+			target_user_id: USER_ID,
+		});
+		expect(remove).toHaveBeenCalledWith([`${USER_ID}/image.png`]);
+		expect(rpc.mock.invocationCallOrder[0]).toBeLessThan(
+			remove.mock.invocationCallOrder[0],
+		);
+		await expect(response.json()).resolves.toEqual({
+			attachmentId: ATTACHMENT_ID,
+			status: "ok",
+			storageCleanupFailed: false,
+		});
+	});
+
+	it("rejects malformed media ids before auth work", async () => {
+		const response = await DELETE(
+			new Request("https://linted.test/api/comment-media/not-a-uuid", {
+				headers: { Authorization: "Bearer session-token" },
+				method: "DELETE",
+			}),
+			deleteContext("not-a-uuid"),
+		);
+
+		expect(response.status).toBe(404);
+		expect(requireSignedInUser).not.toHaveBeenCalled();
 	});
 });

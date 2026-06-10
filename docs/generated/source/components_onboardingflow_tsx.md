@@ -4,9 +4,9 @@
 
 - Source path: `components/OnboardingFlow.tsx`
 - Kind: React component
-- Size: 8042 bytes
-- Lines: 322
-- Source hash: `119cf0af563eb689bdb291482b084772be4fc9c2f681fc39bc7d2c77a372ce65`
+- Size: 7565 bytes
+- Lines: 306
+- Source hash: `c82a33ba62f83c0d6b4d4c5a25fc04e706583d153461ee5f1490a71b15e75002`
 
 ## What This File Does
 
@@ -24,8 +24,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 ## Imports
 
 - `@/components/BrandMark`
-- `@/components/navigation/sidebar-icons`
 - `@/components/ui/button`
+- `@/components/ui/solar-icons`
 - `@/lib/onboarding-validation`
 - `@/lib/session-lock`
 - `@/lib/supabase/client`
@@ -38,9 +38,9 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 54 | `isOnboardingMigrationError` | Function | top-level | no | `error` | `boolean` | Implements the isonboardingmigrationerror helper. |
-| 60 | `OnboardingChoiceCard` | React component | top-level | no | `{ children, description, icon: Icon, isSelected, label, onSelect, }` | `import("react").JSX.Element` | Renders the OnboardingChoiceCard UI component. |
-| 108 | `OnboardingFlow` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the OnboardingFlow UI component. |
+| 52 | `isOnboardingMigrationError` | Function | top-level | no | `error` | `boolean` | Implements the isonboardingmigrationerror helper. |
+| 58 | `OnboardingChoiceCard` | React component | top-level | no | `{ children, description, icon: Icon, isSelected, label, onSelect, }` | `import("react").JSX.Element` | Renders the OnboardingChoiceCard UI component. |
+| 92 | `OnboardingFlow` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the OnboardingFlow UI component. |
 
 ## Types
 

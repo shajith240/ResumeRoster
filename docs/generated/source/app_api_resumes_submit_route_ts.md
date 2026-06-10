@@ -4,9 +4,9 @@
 
 - Source path: `app/api/resumes/submit/route.ts`
 - Kind: Next API route
-- Size: 9108 bytes
-- Lines: 359
-- Source hash: `0ce867cfa6340135a4763be4e940d6d9541dfae4e3a723c27177e26394ce9a26`
+- Size: 7753 bytes
+- Lines: 303
+- Source hash: `0dfb3c9f9aac11614dafd89739e627a277fea47489a8475f81ac6a7d916fdf61`
 
 ## What This File Does
 
@@ -26,6 +26,7 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 - `@/lib/anonymous-profile`
 - `@/lib/pdf-redaction`
 - `@/lib/resume-privacy`
+- `@/lib/server-auth`
 - `@/lib/server/rate-limit`
 - `@/lib/server/upload-security`
 - `@/lib/submit-validation`
@@ -36,34 +37,32 @@ Edit this when the endpoint contract, authorization, validation, database calls,
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 40 | `badRequest` | Function | top-level | no | `message`, `status` | `NextResponse<{ message: string; }>` | Implements the badrequest helper. |
-| 44 | `serverFailure` | Function | top-level | no | `message` | `NextResponse<{ message: string; }>` | Implements the serverfailure helper. |
-| 48 | `isMissingQueueRpc` | Function | top-level | no | `message` | `boolean` | Implements the ismissingqueuerpc helper. |
-| 54 | `getRequiredString` | Function | top-level | no | `formData`, `key` | `string` | Implements the getrequiredstring helper. |
-| 59 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
-| 65 | `ensureSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<import("@supabase/postgrest-js").PostgrestError \| null>` | Runs the ensuresubmitprofile workflow for callers. |
-| 90 | `getSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<SubmitProfile \| null>` | Runs the getsubmitprofile workflow for callers. |
-| 104 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `filePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
-| 116 | `insertResumeWithQueue` | Function async | top-level | no | `{ admin, filePath, jobDescription, privacyMode, title, userId, postDescriptio...` | `Promise<{ data: QueuedResumeInsertResult \| null; error: null; } \| { data: { id: any; review_queue_status: string; activation_reviews_co...` | Implements the insertresumewithqueue helper. |
-| 188 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
+| 41 | `badRequest` | Function | top-level | no | `message`, `status` | `NextResponse<{ message: string; }>` | Implements the badrequest helper. |
+| 45 | `serverFailure` | Function | top-level | no | `message` | `NextResponse<{ message: string; }>` | Implements the serverfailure helper. |
+| 49 | `getRequiredString` | Function | top-level | no | `formData`, `key` | `string` | Implements the getrequiredstring helper. |
+| 54 | `ensureSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<import("@supabase/postgrest-js").PostgrestError \| null>` | Runs the ensuresubmitprofile workflow for callers. |
+| 79 | `getSubmitProfile` | Action helper async | top-level | no | `admin`, `activeUser` | `Promise<SubmitProfile \| null>` | Runs the getsubmitprofile workflow for callers. |
+| 93 | `removeUploadedFile` | Action helper async | top-level | no | `admin`, `bucket`, `filePath` | `Promise<void>` | Runs the removeuploadedfile workflow for callers. |
+| 105 | `insertResumeWithQueue` | Function async | top-level | no | `{ admin, filePath, jobDescription, privacyMode, title, userId, postDescriptio...` | `Promise<{ data: QueuedResumeInsertResult \| null; error: null; } \| { data: null; error: import("@supabase/postgrest-js").PostgrestError; }>` | Implements the insertresumewithqueue helper. |
+| 149 | `POST` | API handler async | top-level | yes | `request` | `Promise<Response>` | Handles the POST request for this API route. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 28 | `SubmitProfile` | type |
-| 33 | `QueuedResumeInsertResult` | type |
+| 29 | `SubmitProfile` | type |
+| 34 | `QueuedResumeInsertResult` | type |
 
 ## Related Tests
 
 - `lib/__tests__/admin-data-route.test.ts`
+- `lib/__tests__/admin-feedback-route.test.ts`
 - `lib/__tests__/admin-moderation-actions-route.test.ts`
 - `lib/__tests__/admin-users-route.test.ts`
 - `lib/__tests__/comment-media-upload-route.test.ts`
+- `lib/__tests__/community-comment-submit-route.test.ts`
+- `lib/__tests__/community-post-submit-route.test.ts`
 - `lib/__tests__/health-route.test.ts`
-- `lib/__tests__/profile-avatar-route.test.ts`
-- `lib/__tests__/push-subscriptions-route.test.ts`
-- `lib/__tests__/resume-submit-route.test.ts`
 
 ## Notes
 

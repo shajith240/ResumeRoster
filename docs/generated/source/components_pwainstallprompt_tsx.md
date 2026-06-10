@@ -4,9 +4,9 @@
 
 - Source path: `components/PwaInstallPrompt.tsx`
 - Kind: React component
-- Size: 5717 bytes
+- Size: 5732 bytes
 - Lines: 210
-- Source hash: `3f5211a64f28d21c690a665c39cec36cb44ec6b48a07547a86eeef3a45ea036e`
+- Source hash: `16406b23a73c87ae665a1268d65d796ff56992684755f2870fa2c0506b1ff63b`
 
 ## What This File Does
 
@@ -25,8 +25,8 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 - `@/components/ui/button`
 - `@/components/ui/dialog`
+- `@/components/ui/solar-icons`
 - `@/lib/pwa-install`
-- `lucide-react`
 - `react`
 - `sonner`
 
@@ -35,7 +35,7 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 33 | `getPlatformCopy` | Function | top-level | no | `platform`, `canPrompt` | `{ body: string; steps: string[]; title: string; }` | Implements the getplatformcopy helper. |
-| 81 | `getStepIcon` | Function | top-level | no | `index`, `platform`, `canPrompt` | `import("react").ForwardRefExoticComponent<Omit<import("lucide-react").LucideProps, "ref"> & import("react").RefAttributes<SVGSVGElement>>` | Implements the getstepicon helper. |
+| 81 | `getStepIcon` | Function | top-level | no | `index`, `platform`, `canPrompt` | `import("@/components/ui/solar-icons").SolarIconComponent` | Implements the getstepicon helper. |
 | 89 | `PwaInstallPrompt` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the PwaInstallPrompt UI component. |
 
 ## Types

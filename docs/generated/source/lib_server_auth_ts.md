@@ -4,9 +4,9 @@
 
 - Source path: `lib/server-auth.ts`
 - Kind: Application library module
-- Size: 1772 bytes
-- Lines: 68
-- Source hash: `d1e04ff9efba03145918315d544aea0dde20265a50d99ccce5203dcd94a0de92`
+- Size: 2046 bytes
+- Lines: 81
+- Source hash: `91692e26216751c3cb6e8c1bdaace3a5891f20515a97979519be6e19f3391efc`
 
 ## What This File Does
 
@@ -31,16 +31,17 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 18 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
-| 24 | `createServiceSupabaseClient` | Action helper | top-level | yes | none | `SupabaseClient<any, "public", "public", any, any>` | Runs the createservicesupabaseclient workflow for callers. |
-| 40 | `requireSignedInUser` | Function async | top-level | yes | `request` | `Promise<SignedInUserResult>` | Implements the requiresignedinuser helper. |
-| 61 | `serverAuthErrorResponse` | Function | top-level | yes | `error` | `Response` | Implements the serverautherrorresponse helper. |
+| 24 | `getBearerToken` | Function | top-level | no | `request` | `string` | Implements the getbearertoken helper. |
+| 30 | `createServiceSupabaseClient` | Action helper | top-level | yes | `setupMessage` | `SupabaseClient<any, "public", "public", any, any>` | Runs the createservicesupabaseclient workflow for callers. |
+| 46 | `requireSignedInUser` | Function async | top-level | yes | `request`, `options` | `Promise<SignedInUserResult>` | Implements the requiresignedinuser helper. |
+| 74 | `serverAuthErrorResponse` | Function | top-level | yes | `error` | `Response` | Implements the serverautherrorresponse helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
 | 3 | `SignedInUserResult` | type |
+| 8 | `RequireSignedInUserOptions` | type |
 
 ## Related Tests
 

@@ -46,6 +46,7 @@ export default function CommentMediaToolbar({
 	showFormat = true,
 }: CommentMediaToolbarProps) {
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
+	const [deletingImage, setDeletingImage] = useState(false);
 	const [uploadingImage, setUploadingImage] = useState(false);
 
 	async function uploadImage(file: File) {
@@ -85,6 +86,42 @@ export default function CommentMediaToolbar({
 			toast.error(error instanceof Error ? error.message : "Image upload failed.");
 		} finally {
 			setUploadingImage(false);
+		}
+	}
+
+	async function removeImage() {
+		if (!attachment?.id) {
+			onAttachmentChange(null);
+			return;
+		}
+
+		const token = await getAccessToken();
+		if (!token) {
+			onRequireLogin();
+			return;
+		}
+
+		setDeletingImage(true);
+		try {
+			const response = await fetch(`/api/comment-media/${attachment.id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				method: "DELETE",
+			});
+
+			if (!response.ok) {
+				throw new Error(
+					await readErrorMessage(response, "Media was not removed."),
+				);
+			}
+
+			onAttachmentChange(null);
+			toast.success("Media removed.");
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "Media was not removed.");
+		} finally {
+			setDeletingImage(false);
 		}
 	}
 
@@ -145,11 +182,15 @@ export default function CommentMediaToolbar({
 					<span>{attachment.title || "Media"}</span>
 					<button
 						aria-label="Remove attached media"
-						disabled={disabled}
-						onClick={() => onAttachmentChange(null)}
+						disabled={disabled || deletingImage}
+						onClick={() => void removeImage()}
 						type="button"
 					>
-						<X size={16} strokeWidth={2} aria-hidden="true" />
+						{deletingImage ? (
+							<Loader2 className="spin-icon" size={16} strokeWidth={2} aria-hidden="true" />
+						) : (
+							<X size={16} strokeWidth={2} aria-hidden="true" />
+						)}
 					</button>
 				</div>
 			) : null}
