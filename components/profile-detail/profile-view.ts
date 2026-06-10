@@ -1,4 +1,5 @@
 import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
+import { lintPoints } from "@/lib/leaderboard-ranking";
 import { getProfileRoleLabel } from "@/lib/reviewer-validation";
 import type {
 	PublicProfile,
@@ -21,6 +22,7 @@ export function buildProfileView(
 		profile.current_position ||
 		profile.target_role ||
 		"Community contributor";
+	const lintPointTotal = lintPoints(profile.helpful_votes, profile.roast_count);
 	const skills = profile.skills?.length ? profile.skills : fallbackSkills(profile);
 
 	return {
@@ -31,6 +33,7 @@ export function buildProfileView(
 		currentRole,
 		displayName,
 		initials: getInitials(displayName) || "R",
+		lintPoints: lintPointTotal,
 		reviewerStatus: profile.reviewer_verification_status,
 		roleTag: getProfileRoleLabel(profile),
 		skills,
