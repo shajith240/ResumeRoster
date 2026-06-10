@@ -47,7 +47,6 @@ import listIcon from "@iconify-icons/solar/list-line-duotone";
 import lockIcon from "@iconify-icons/solar/lock-keyhole-line-duotone";
 import mapPointIcon from "@iconify-icons/solar/map-point-line-duotone";
 import maximizeIcon from "@iconify-icons/solar/maximize-line-duotone";
-import menuDotsIcon from "@iconify-icons/solar/menu-dots-line-duotone";
 import messageCircleIcon from "@iconify-icons/solar/chat-round-line-duotone";
 import messageReplyIcon from "@iconify-icons/solar/chat-square-arrow-line-duotone";
 import messageSquareIcon from "@iconify-icons/solar/chat-square-line-duotone";
@@ -209,8 +208,6 @@ export const MessageSquareReply = createSolarIcon(
 	messageReplyIcon,
 );
 export const Minus = createSolarIcon("Minus", minusCircleIcon);
-export const MoreHorizontal = createSolarIcon("MoreHorizontal", menuDotsIcon);
-export const MoreVertical = createSolarIcon("MoreVertical", menuDotsIcon);
 export const Pause = createSolarIcon("Pause", pauseIcon);
 export const Pencil = createSolarIcon("Pencil", penIcon);
 export const PencilLine = createSolarIcon("PencilLine", editIcon);

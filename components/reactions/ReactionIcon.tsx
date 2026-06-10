@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-	ThumbsDown,
-	ThumbsDownFilled,
-	ThumbsUp,
-	ThumbsUpFilled,
-} from "@/components/ui/solar-icons";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
 
 type ReactionIconProps = {
 	active: boolean;
@@ -38,14 +33,7 @@ export default function ReactionIcon({ active, direction }: ReactionIconProps) {
 		}
 	}, [active]);
 
-	const Icon =
-		direction === "up"
-			? active
-				? ThumbsUpFilled
-				: ThumbsUp
-			: active
-				? ThumbsDownFilled
-				: ThumbsDown;
+	const Icon = direction === "up" ? ThumbsUp : ThumbsDown;
 
 	return (
 		<Icon
@@ -53,6 +41,11 @@ export default function ReactionIcon({ active, direction }: ReactionIconProps) {
 			className={`reaction-icon ${
 				active ? "reaction-icon-filled" : "reaction-icon-outline"
 			}${animating ? " is-animating" : ""}`}
+			strokeWidth={2.2}
+			style={{
+				fill: active ? "currentColor" : "none",
+				stroke: "currentColor",
+			}}
 		/>
 	);
 }

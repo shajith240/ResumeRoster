@@ -15,7 +15,7 @@ import {
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
+import { MoreHorizontal, X } from "lucide-react";
 import {
 	ChevronLeft,
 	Check,
@@ -25,7 +25,6 @@ import {
 	Forward,
 	Lock,
 	MessageCircle,
-	MoreHorizontal,
 	Share2,
 	Trash2,
 	Unlock,

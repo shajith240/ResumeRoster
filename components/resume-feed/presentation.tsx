@@ -26,7 +26,10 @@ import {
 	getResumePosterLabel,
 	getResumeRoleLabel,
 } from "@/lib/resume-display";
-import { getSaveButtonState } from "@/lib/saved-resumes";
+import {
+	getSaveButtonState,
+	type SaveButtonPendingAction,
+} from "@/lib/saved-resumes";
 import type { ResumeSummary } from "@/lib/supabase/types";
 import {
 	formatDate,
@@ -51,13 +54,13 @@ type FeedEmptyStateProps = {
 type ResumeFeedCardProps = {
 	copiedId: string;
 	index: number;
-	isSaving: boolean;
 	onShare: (resume: ResumeSummary) => void;
 	onToggleSaved: (resume: SavedResumeSummary) => void;
 	previewUrl?: string;
 	previewUrlsLoading: boolean;
 	resume: SavedResumeSummary;
 	reviewPreview?: ReviewPreview;
+	savePendingAction: SaveButtonPendingAction | null;
 };
 
 export { FeedSkeleton };
@@ -166,18 +169,19 @@ function getResumeAuthorAvatar(
 export function ResumeFeedCard({
 	copiedId,
 	index,
-	isSaving,
 	onShare,
 	onToggleSaved,
 	previewUrl,
 	previewUrlsLoading,
 	resume,
 	reviewPreview,
+	savePendingAction,
 }: ResumeFeedCardProps) {
 	const authorProfile = resume.author_profile ?? null;
 	const posterLabel = getResumePosterLabel(resume, authorProfile);
 	const authorAvatar = getResumeAuthorAvatar(resume, authorProfile);
-	const saveButtonState = getSaveButtonState(resume.is_saved, isSaving);
+	const isSaving = Boolean(savePendingAction);
+	const saveButtonState = getSaveButtonState(resume.is_saved, savePendingAction);
 	const SaveIcon = resume.is_saved ? BookmarkFilled : Bookmark;
 	const saveIconClass = `post-action-icon save-icon ${
 		resume.is_saved ? "save-icon-filled" : "save-icon-outline"

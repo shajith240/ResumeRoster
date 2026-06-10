@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { MoreHorizontal } from "lucide-react";
 import {
 	Loader2,
 	MessageCircle,
-	MoreHorizontal,
 	Share2,
 	Trash2,
 } from "@/components/ui/solar-icons";

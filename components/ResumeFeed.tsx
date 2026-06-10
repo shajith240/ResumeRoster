@@ -21,6 +21,7 @@ import {
   isSavedResumeSchemaMissingError,
   mergeSavedResumeState,
   SAVED_RESUMES_UNAVAILABLE_MESSAGE,
+  type SaveButtonPendingAction,
 } from "@/lib/saved-resumes";
 import { supabase } from "@/lib/supabase/client";
 import type { ResumeSummary } from "@/lib/supabase/types";
@@ -67,7 +68,9 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
   const [reviewPreviewsById, setReviewPreviewsById] = useState<Record<string, ReviewPreview>>({});
   const [previewUrlsLoading, setPreviewUrlsLoading] = useState(false);
   const [saveFeatureReady, setSaveFeatureReady] = useState(true);
-  const [savingIds, setSavingIds] = useState<Set<string>>(() => new Set());
+  const [savingActions, setSavingActions] = useState<
+    Record<string, SaveButtonPendingAction>
+  >({});
 
   useEffect(() => {
     let active = true;
@@ -342,20 +345,23 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
     window.setTimeout(() => setCopiedId(""), 1400);
   }
 
-  function setResumeSaving(resumeId: string, isSaving: boolean) {
-    setSavingIds((current) => {
-      const next = new Set(current);
-      if (isSaving) {
-        next.add(resumeId);
+  function setResumeSaving(
+    resumeId: string,
+    pendingAction: SaveButtonPendingAction | null,
+  ) {
+    setSavingActions((current) => {
+      const next = { ...current };
+      if (pendingAction) {
+        next[resumeId] = pendingAction;
       } else {
-        next.delete(resumeId);
+        delete next[resumeId];
       }
       return next;
     });
   }
 
   async function toggleSavedResume(resume: SavedResumeSummary) {
-    if (savingIds.has(resume.id)) return;
+    if (savingActions[resume.id]) return;
 
     if (!saveFeatureReady) {
       toast.error(SAVED_RESUMES_UNAVAILABLE_MESSAGE);
@@ -379,7 +385,8 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
 
     const wasSaved = resume.is_saved;
     const nextSaved = !wasSaved;
-    setResumeSaving(resume.id, true);
+    const pendingAction: SaveButtonPendingAction = nextSaved ? "save" : "remove";
+    setResumeSaving(resume.id, pendingAction);
     setResumes((current) => {
       const next = current.map((row) =>
         row.id === resume.id ? { ...row, is_saved: nextSaved } : row,
@@ -420,12 +427,12 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
         });
       }
 
-      setResumeSaving(resume.id, false);
+      setResumeSaving(resume.id, null);
       return;
     }
 
     toast.success(nextSaved ? "Resume saved." : "Removed from saved resumes.");
-    setResumeSaving(resume.id, false);
+    setResumeSaving(resume.id, null);
   }
 
   if (loading) {
@@ -447,7 +454,6 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
         <ResumeFeedCard
           copiedId={copiedId}
           index={index}
-          isSaving={savingIds.has(resume.id)}
           key={resume.id}
           onShare={(targetResume) => {
             void shareResume(targetResume);
@@ -459,6 +465,7 @@ export default function ResumeFeed({ activeSort = "best", savedOnly = false }: R
           previewUrlsLoading={previewUrlsLoading}
           resume={resume}
           reviewPreview={reviewPreviewsById[resume.id]}
+          savePendingAction={savingActions[resume.id] ?? null}
         />
       ))}
     </section>

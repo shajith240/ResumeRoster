@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { MoreHorizontal } from "lucide-react";
 import {
 	Check,
 	ChevronDown,
@@ -9,7 +10,6 @@ import {
 	Forward,
 	Lock,
 	MessageCircle,
-	MoreHorizontal,
 	RefreshCw,
 	Trash2,
 	Unlock,

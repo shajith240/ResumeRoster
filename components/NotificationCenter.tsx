@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bell } from "lucide-react";
+import { Bell } from "@/components/ui/solar-icons";
 import { toast } from "sonner";
 import PushNotificationsControl from "@/components/PushNotificationsControl";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";

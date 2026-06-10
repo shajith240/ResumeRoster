@@ -1,5 +1,6 @@
 "use client";
 
+import { MoreVertical } from "lucide-react";
 import {
 	Bell,
 	Check,
@@ -7,11 +8,10 @@ import {
 	ExternalLink,
 	MessageCircle,
 	MessageSquare,
-	MoreVertical,
 	ShieldCheck,
 	ThumbsUp,
 	UserCheck,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
