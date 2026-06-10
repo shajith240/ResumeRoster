@@ -4460,7 +4460,7 @@ body.main-app-dark .bottom-nav {
 		will-change: transform;
 	}
 
-	.app-header.is-mobile-hidden:not(.app-header-mobile-hidden) {
+	.app-header.is-mobile-hidden {
 		transform: translateY(calc(-100% - 1px));
 		pointer-events: none;
 	}
@@ -4569,10 +4569,6 @@ body.main-app-dark .bottom-nav {
 		padding: 0 16px;
 	}
 
-	.app-header-mobile-hidden {
-		display: none;
-	}
-
 	.feed-app-shell,
 	.leaderboard-route,
 	.admin-route,
@@ -4584,15 +4580,6 @@ body.main-app-dark .bottom-nav {
 	.feed-app-shell {
 		grid-template-columns: 1fr;
 		padding-top: 18px;
-	}
-
-	.feed-route-header {
-		align-items: flex-start;
-		flex-direction: column;
-	}
-
-	.feed-route-header .btn-primary {
-		display: none;
 	}
 
 	.feed-welcome-card {
@@ -5217,7 +5204,7 @@ body.main-app-dark .bottom-nav {
 		will-change: transform;
 	}
 
-	.app-header.is-mobile-hidden:not(.app-header-mobile-hidden) {
+	.app-header.is-mobile-hidden {
 		transform: translateY(calc(-100% - 1px));
 		pointer-events: none;
 	}
@@ -7055,11 +7042,6 @@ body.main-app-dark .form-message {
 	.feed-app-shell {
 		width: 92%;
 		padding-top: 22px;
-	}
-
-	.feed-route-header {
-		align-items: flex-start;
-		flex-direction: column;
 	}
 
 	.leaderboard-panel {

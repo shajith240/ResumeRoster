@@ -4077,12 +4077,7 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 		overflow-x: clip;
 	}
 
-	.feed-route-header {
-		align-items: flex-start;
-		flex-direction: column;
-	}
-
-	.feed-route-header .btn-primary {
+	.resume-feed-route .feed-route-header {
 		display: none;
 	}
 
@@ -5248,54 +5243,6 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		max-width: none;
 	}
 
-	.feed-route-header {
-		position: sticky;
-		top: 0;
-		z-index: 70;
-		display: flex;
-		align-items: center;
-		flex-direction: row;
-		justify-content: flex-start;
-		gap: 0;
-		margin: -18px -16px 0;
-		border-bottom: 0;
-		min-height: calc(48px + env(safe-area-inset-top));
-		padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
-		background: var(--app-chrome-bg);
-		backdrop-filter: blur(18px) saturate(140%);
-		-webkit-backdrop-filter: blur(18px) saturate(140%);
-		transform: translateY(0);
-		transition:
-			transform 190ms var(--button-ease),
-			border-color 190ms var(--button-ease),
-			box-shadow 190ms var(--button-ease);
-		will-change: transform;
-	}
-
-	.feed-route-header.is-scrolled {
-		box-shadow: 0 10px 24px rgb(0 0 0 / 0.18);
-	}
-
-	.feed-route-header.is-hidden {
-		transform: translateY(calc(-100% - 1px));
-		pointer-events: none;
-	}
-
-	.feed-route-header > div {
-		min-width: 0;
-	}
-
-	.feed-route-header h1 {
-		font-family: var(--font-display);
-		font-size: clamp(22px, 6.2vw, 25px);
-		font-weight: 400;
-		line-height: 1.02;
-	}
-
-	.feed-route-header p {
-		display: none;
-	}
-
 	.community-feed-route .community-feed-panel {
 		gap: 10px;
 	}
@@ -5528,12 +5475,6 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 	}
 }
 
-@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
-	.feed-route-header {
-		transition: none;
-	}
-}
-
 @media (max-width: 420px) {
 	.community-feed-route.feed-app-shell {
 		padding-right: 10px;
@@ -5554,18 +5495,6 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 
 	.community-feed-route .community-feed-title {
 		font-size: clamp(16px, 4.9vw, 18px);
-	}
-
-	.feed-route-header {
-		margin-right: -16px;
-		margin-left: -16px;
-		min-height: calc(46px + env(safe-area-inset-top));
-		padding-right: 16px;
-		padding-left: 16px;
-	}
-
-	.feed-route-header h1 {
-		font-size: clamp(21px, 6.4vw, 24px);
 	}
 
 	.community-feed-route .community-feed-media {

@@ -88,7 +88,7 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 
 	return (
 		<AuthGate>
-			<RouteHeader hideAppHeaderOnMobile />
+			<RouteHeader />
 			<main className="feed-app-shell resume-feed-route page-enter">
 				<section className="feed-center">
 					<ResumeFeedHeader

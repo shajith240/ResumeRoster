@@ -8,13 +8,7 @@ import { getPrimaryNavigationItems } from "@/components/navigation/primary-nav";
 import { useMobileScrollChrome } from "@/components/navigation/useMobileScrollChrome";
 import { getAppHomeRoute } from "@/lib/app-routes";
 
-type RouteHeaderProps = {
-	hideAppHeaderOnMobile?: boolean;
-};
-
-export default function RouteHeader({
-	hideAppHeaderOnMobile = false,
-}: RouteHeaderProps) {
+export default function RouteHeader() {
 	const pathname = usePathname();
 	const dockLinks = getPrimaryNavigationItems({ pathname });
 	const { isHidden: isChromeHidden, isScrolled: isChromeScrolled } =
@@ -26,7 +20,6 @@ export default function RouteHeader({
 			<header
 				className={[
 					"app-header",
-					hideAppHeaderOnMobile ? "app-header-mobile-hidden" : "",
 					isChromeScrolled ? "is-mobile-scrolled" : "",
 					isChromeHidden ? "is-mobile-hidden" : "",
 				]
