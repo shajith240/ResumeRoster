@@ -24,6 +24,7 @@ import { REPORT_DETAILS_MAX_LENGTH, REPORT_REASON_OPTIONS } from "@/lib/report-v
 import styles from "./ProfileDetail.module.css";
 import { SUPABASE_MIGRATION_MESSAGE, VERIFIED_TICK_SRC } from "./profile-detail/constants";
 import { ProfileEditDialog } from "./profile-detail/edit-dialog";
+import { ProfileDetailSkeleton } from "./profile-detail/ProfileDetailSkeleton";
 import { ActivityRow, ReviewRow } from "./profile-detail/rows";
 import type { ProfileDetailProps } from "./profile-detail/types";
 import { useProfileDetailController } from "./profile-detail/use-profile-detail-controller";
@@ -74,22 +75,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	} = useProfileDetailController(profileId);
 
 	if (loading) {
-		return (
-			<section className={styles.shell}>
-				<div className={`${styles.canvas} ${styles.loadingBoard}`}>
-					<div className={styles.loadingHero}>
-						<span />
-						<span />
-						<span />
-					</div>
-					<div className={styles.loadingGrid}>
-						<span />
-						<span />
-						<span />
-					</div>
-				</div>
-			</section>
-		);
+		return <ProfileDetailSkeleton />;
 	}
 
 	if (message) {

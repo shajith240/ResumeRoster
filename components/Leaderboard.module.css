@@ -128,10 +128,26 @@
 	font-weight: 400;
 }
 
-.loadingHero,
-.loadingTable {
-	border: 1px solid var(--border-subtle);
-	border-radius: 18px;
+.loadingTitleGroup {
+	display: grid;
+	gap: 10px;
+	min-width: 0;
+}
+
+.loadingTitle,
+.loadingSubtitle,
+.loadingRangeTrigger,
+.loadingSearch,
+.loadingTableHeader span,
+.loadingRank,
+.loadingAvatar,
+.loadingContributorCopy span,
+.loadingRoleCell,
+.loadingPointsCell,
+.loadingFeedbackCell,
+.loadingActionCell,
+.loadingDirectoryTitle span,
+.loadingAvatarStack span {
 	background: linear-gradient(
 		90deg,
 		var(--bg-surface),
@@ -142,17 +158,253 @@
 	animation: leaderboardShimmer 1.2s linear infinite;
 }
 
-.loadingHero {
-	min-height: 128px;
+.loadingTitle {
+	display: block;
+	width: min(360px, 70vw);
+	height: clamp(50px, 5vw, 68px);
+	border-radius: 14px;
 }
 
-.loadingTable {
+.loadingSubtitle {
+	display: block;
+	width: min(410px, 78vw);
+	height: 18px;
+	border-radius: 999px;
+}
+
+.loadingRangeTrigger {
+	display: block;
+	width: 138px;
+	height: 40px;
+	border: 1px solid var(--border-default);
+	border-radius: var(--button-radius);
+}
+
+.loadingBoard {
+	position: relative;
 	min-height: 560px;
+	overflow: hidden;
+	border: 1px solid var(--border-subtle);
+	border-radius: 18px;
+	padding-bottom: 96px;
+	background: var(--bg-surface);
+}
+
+.loadingSearchShell {
+	border-bottom: 1px solid var(--border-subtle);
+	padding: 16px 20px;
+}
+
+.loadingSearch {
+	display: block;
+	width: min(560px, 100%);
+	height: 44px;
+	border-radius: var(--button-radius);
+}
+
+.loadingTableHeader,
+.loadingRow {
+	display: grid;
+	grid-template-columns:
+		64px minmax(230px, 1.15fr) minmax(116px, 0.45fr) 140px
+		minmax(180px, 1fr) 120px;
+	gap: 16px;
+	align-items: center;
+}
+
+.loadingTableHeader {
+	border-bottom: 1px solid var(--border-subtle);
+	padding: 12px 20px;
+}
+
+.loadingTableHeader span {
+	height: 12px;
+	border-radius: 999px;
+}
+
+.loadingTableHeader span:nth-child(1) {
+	width: 36px;
+}
+
+.loadingTableHeader span:nth-child(2) {
+	width: 92px;
+}
+
+.loadingTableHeader span:nth-child(3) {
+	width: 46px;
+}
+
+.loadingTableHeader span:nth-child(4) {
+	width: 86px;
+}
+
+.loadingTableHeader span:nth-child(5) {
+	width: 110px;
+}
+
+.loadingTableHeader span:nth-child(6) {
+	width: 52px;
+}
+
+.loadingRows {
+	display: grid;
+}
+
+.loadingRow {
+	min-height: 78px;
+	border-bottom: 1px solid var(--border-subtle);
+	padding: 16px 20px;
+}
+
+.loadingRank {
+	width: 38px;
+	height: 18px;
+	border-radius: 999px;
+}
+
+.loadingContributor {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 0;
+}
+
+.loadingAvatar {
+	flex: 0 0 auto;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+}
+
+.loadingContributorCopy {
+	display: grid;
+	flex: 1;
+	gap: 8px;
+	min-width: 0;
+}
+
+.loadingContributorCopy span {
+	height: 13px;
+	border-radius: 999px;
+}
+
+.loadingContributorCopy span:first-child {
+	width: min(190px, 82%);
+}
+
+.loadingContributorCopy span:last-child {
+	width: min(250px, 72%);
+}
+
+.loadingRoleCell {
+	width: min(128px, 100%);
+	height: 24px;
+	border-radius: 999px;
+}
+
+.loadingPointsCell {
+	width: 92px;
+	height: 22px;
+	border-radius: 999px;
+}
+
+.loadingFeedbackCell {
+	width: min(240px, 88%);
+	height: 16px;
+	border-radius: 999px;
+}
+
+.loadingActionCell {
+	justify-self: start;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--button-radius);
+}
+
+.loadingDirectory {
+	position: absolute;
+	right: 16px;
+	bottom: 16px;
+	left: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	height: 76px;
+	border: 1px solid var(--border-default);
+	border-radius: 18px;
+	padding: 0 16px;
+	background: var(--bg-elevated);
+}
+
+.loadingDirectoryTitle {
+	display: grid;
+	gap: 8px;
+	min-width: 0;
+}
+
+.loadingDirectoryTitle span {
+	display: block;
+	border-radius: 999px;
+}
+
+.loadingDirectoryTitle span:first-child {
+	width: 190px;
+	height: 18px;
+}
+
+.loadingDirectoryTitle span:last-child {
+	width: 130px;
+	height: 12px;
+}
+
+.loadingAvatarStack {
+	display: flex;
+	flex: 0 0 auto;
+	margin-right: 2px;
+}
+
+.loadingAvatarStack span {
+	width: 40px;
+	height: 40px;
+	margin-left: -12px;
+	border: 2px solid var(--bg-surface);
+	border-radius: 50%;
+}
+
+.loadingAvatarStack span:first-child {
+	margin-left: 0;
 }
 
 @keyframes leaderboardShimmer {
 	to {
 		background-position: -220% 0;
+	}
+}
+
+@media (max-width: 1320px) {
+	.loadingTableHeader,
+	.loadingRow {
+		grid-template-columns:
+			58px minmax(220px, 1.1fr) 136px minmax(180px, 1fr)
+			112px;
+	}
+
+	.loadingHeaderRole,
+	.loadingRoleCell {
+		display: none;
+	}
+}
+
+@media (max-width: 1080px) {
+	.loadingTableHeader,
+	.loadingRow {
+		grid-template-columns: 54px minmax(220px, 1fr) 132px 112px;
+	}
+
+	.loadingHeaderFeedback,
+	.loadingFeedbackCell {
+		display: none;
 	}
 }
 
@@ -178,6 +430,55 @@
 		max-width: 100%;
 		align-self: flex-start;
 	}
+
+	.loadingRangeTrigger {
+		width: 138px;
+		max-width: 100%;
+	}
+}
+
+@media (max-width: 760px) {
+	.loadingSearchShell {
+		padding: 16px;
+	}
+
+	.loadingTableHeader {
+		display: none;
+	}
+
+	.loadingRow {
+		grid-template-columns: 38px minmax(0, 1fr) auto 42px;
+		gap: 0 12px;
+		min-height: 74px;
+		padding: 16px;
+	}
+
+	.loadingRank {
+		width: 32px;
+	}
+
+	.loadingAvatar {
+		width: 48px;
+		height: 48px;
+	}
+
+	.loadingContributorCopy span:first-child {
+		width: min(170px, 78%);
+	}
+
+	.loadingContributorCopy span:last-child {
+		width: min(210px, 66%);
+	}
+
+	.loadingPointsCell {
+		justify-self: end;
+		width: 72px;
+		height: 20px;
+	}
+
+	.loadingActionCell {
+		justify-self: end;
+	}
 }
 
 @media (max-width: 1024px) {
@@ -194,5 +495,37 @@
 
 	.header h1 {
 		font-size: 46px;
+	}
+
+	.loadingTitle {
+		height: 44px;
+	}
+
+	.loadingSubtitle {
+		width: min(300px, 86vw);
+	}
+
+	.loadingBoard {
+		padding-bottom: 88px;
+	}
+
+	.loadingDirectory {
+		right: 12px;
+		bottom: 12px;
+		left: 12px;
+	}
+
+	.loadingDirectoryTitle span:first-child {
+		width: min(150px, 45vw);
+	}
+
+	.loadingDirectoryTitle span:last-child {
+		width: min(112px, 36vw);
+	}
+
+	.loadingAvatarStack span {
+		width: 36px;
+		height: 36px;
+		margin-left: -14px;
 	}
 }

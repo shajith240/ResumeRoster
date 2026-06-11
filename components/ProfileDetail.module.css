@@ -1173,13 +1173,27 @@
 	color: var(--text-secondary);
 }
 
-.loadingBoard {
+.profileSkeleton {
 	min-height: 760px;
 }
 
-.loadingHero,
-.loadingGrid span {
-	border-radius: 10px;
+.profileSkeletonHero {
+	min-height: 240px;
+}
+
+.skeletonBlock,
+.skeletonPill,
+.skeletonVerifiedBadge,
+.skeletonMetaIcon,
+.skeletonMetaLine,
+.skeletonActionButton,
+.skeletonOnlineDot,
+.skeletonPanelTitle,
+.skeletonCopyGroup span,
+.skeletonSkillCloud span,
+.skeletonPanelHeader span,
+.skeletonList span,
+.skeletonReviewList span {
 	background: linear-gradient(
 		90deg,
 		color-mix(in srgb, var(--bg-surface) 72%, transparent),
@@ -1190,39 +1204,203 @@
 	animation: profileShimmer 1.2s linear infinite;
 }
 
-.loadingHero {
-	display: grid;
-	gap: 16px;
-	min-height: 260px;
-	padding: 32px;
+.skeletonAvatar {
+	display: block;
+	overflow: visible;
+	border-color: color-mix(in srgb, var(--brand) 38%, var(--border-default));
+	background: linear-gradient(
+		90deg,
+		color-mix(in srgb, var(--bg-surface) 72%, transparent),
+		color-mix(in srgb, var(--bg-elevated) 90%, transparent),
+		color-mix(in srgb, var(--bg-surface) 72%, transparent)
+	);
+	background-size: 220% 100%;
+	animation: profileShimmer 1.2s linear infinite;
 }
 
-.loadingHero span {
-	height: 28px;
+.skeletonOnlineDot {
+	position: absolute;
+	top: clamp(14px, 1.1vw, 18px);
+	right: clamp(14px, 1.1vw, 18px);
+	width: clamp(18px, 1.45vw, 24px);
+	height: clamp(18px, 1.45vw, 24px);
+	border: 3px solid var(--bg-surface);
+	border-radius: 50%;
+}
+
+.skeletonName {
+	width: min(520px, 72%);
+	height: clamp(42px, 5vw, 68px);
+	border-radius: 12px;
+}
+
+.skeletonVerifiedBadge {
+	display: inline-block;
+	flex: 0 0 auto;
+	width: clamp(28px, 2.35vw, 36px);
+	height: clamp(28px, 2.35vw, 36px);
+	border-radius: 50%;
+}
+
+.skeletonPill {
+	display: inline-flex;
+	height: 30px;
 	border-radius: 999px;
-	background: color-mix(in srgb, var(--bg-elevated) 65%, transparent);
 }
 
-.loadingHero span:first-child {
-	width: 44%;
+.skeletonRolePill {
+	width: 116px;
 }
 
-.loadingHero span:nth-child(2) {
-	width: 62%;
+.skeletonPointsPill {
+	width: 148px;
 }
 
-.loadingHero span:nth-child(3) {
-	width: 30%;
+.skeletonTagline {
+	width: min(720px, 88%);
+	height: clamp(20px, 1.8vw, 28px);
+	border-radius: 999px;
 }
 
-.loadingGrid {
+.skeletonMetaList {
+	gap: 10px;
+}
+
+.skeletonMetaItem {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+.skeletonMetaIcon {
+	flex: 0 0 auto;
+	width: 17px;
+	height: 17px;
+	border-radius: 50%;
+}
+
+.skeletonMetaLine {
+	width: min(360px, 70%);
+	height: 14px;
+	border-radius: 999px;
+}
+
+.skeletonMetaItem:nth-child(2) .skeletonMetaLine {
+	width: min(420px, 82%);
+}
+
+.skeletonMetaItem:nth-child(3) .skeletonMetaLine {
+	width: min(300px, 64%);
+}
+
+.skeletonMetaItem:nth-child(4) .skeletonMetaLine {
+	width: min(260px, 58%);
+}
+
+.skeletonActionButton {
+	position: absolute;
+	top: 4px;
+	right: 0;
+	display: block;
+	width: 126px;
+	height: 40px;
+	border-radius: var(--button-radius);
+}
+
+.skeletonPanel {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	align-content: start;
 	gap: 14px;
+	min-height: 156px;
 }
 
-.loadingGrid span {
-	min-height: 180px;
+.skeletonPanelTitle {
+	width: 150px;
+	height: 28px;
+	border-radius: 9px;
+}
+
+.skeletonCopyGroup,
+.skeletonList,
+.skeletonReviewList {
+	display: grid;
+	gap: 10px;
+	min-width: 0;
+}
+
+.skeletonCopyGroup span,
+.skeletonList span,
+.skeletonReviewList span {
+	height: 13px;
+	border-radius: 999px;
+}
+
+.skeletonCopyGroup span:first-child {
+	width: 92%;
+}
+
+.skeletonCopyGroup span:nth-child(2) {
+	width: 78%;
+}
+
+.skeletonCopyGroup span:nth-child(3) {
+	width: 56%;
+}
+
+.skeletonSkillCloud {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	min-width: 0;
+}
+
+.skeletonSkillCloud span {
+	width: 82px;
+	height: 32px;
+	border-radius: 7px;
+}
+
+.skeletonSkillCloud span:nth-child(2) {
+	width: 108px;
+}
+
+.skeletonSkillCloud span:nth-child(3) {
+	width: 74px;
+}
+
+.skeletonSkillCloud span:nth-child(4) {
+	width: 96px;
+}
+
+.skeletonPanelHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 2px;
+}
+
+.skeletonPanelHeader span:first-child {
+	width: 168px;
+	height: 28px;
+	border-radius: 9px;
+}
+
+.skeletonPanelHeader span:last-child {
+	width: 54px;
+	height: 14px;
+	border-radius: 999px;
+}
+
+.skeletonList span,
+.skeletonReviewList span {
+	height: 48px;
+	border-radius: 8px;
+}
+
+.skeletonReviewList span {
+	height: 54px;
 }
 
 @keyframes profileShimmer {
@@ -1339,6 +1517,30 @@
 		align-self: flex-start;
 		margin-top: 0;
 	}
+
+	.skeletonOnlineDot {
+		top: 9px;
+		right: 9px;
+		width: 16px;
+		height: 16px;
+		border-width: 2px;
+	}
+
+	.skeletonActionButton {
+		position: static;
+		flex: 0 0 auto;
+		align-self: flex-start;
+		width: 118px;
+	}
+
+	.skeletonName {
+		width: min(360px, 86%);
+		height: 42px;
+	}
+
+	.skeletonTagline {
+		height: 20px;
+	}
 }
 
 @media (max-width: 900px) {
@@ -1441,6 +1643,28 @@
 	.avatarFrame {
 		width: 92px;
 		padding: 4px;
+	}
+
+	.skeletonName {
+		height: 34px;
+	}
+
+	.skeletonVerifiedBadge {
+		width: 28px;
+		height: 28px;
+	}
+
+	.skeletonRolePill {
+		width: 104px;
+	}
+
+	.skeletonPointsPill {
+		width: 128px;
+	}
+
+	.skeletonActionButton {
+		width: 112px;
+		height: 38px;
 	}
 
 	.avatarEdit {

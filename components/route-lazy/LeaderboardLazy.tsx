@@ -1,19 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import styles from "@/components/Leaderboard.module.css";
-
-function LeaderboardRouteSkeleton() {
-	return (
-		<section className={styles.page}>
-			<div className={styles.loadingHero} />
-			<div className={styles.loadingTable} />
-		</section>
-	);
-}
+import { LeaderboardSkeleton } from "@/components/leaderboard/LeaderboardSkeleton";
 
 const Leaderboard = dynamic(() => import("@/components/Leaderboard"), {
-	loading: LeaderboardRouteSkeleton,
+	loading: LeaderboardSkeleton,
 	ssr: false,
 });
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CalendarDays } from "@/components/ui/solar-icons";
 
+import { LeaderboardSkeleton } from "@/components/leaderboard/LeaderboardSkeleton";
 import {
 	StackedList,
 	type LeaderboardReviewPreview,
@@ -483,12 +484,7 @@ export default function Leaderboard() {
 	}, [range]);
 
 	if (loading) {
-		return (
-			<section className={styles.page}>
-				<div className={styles.loadingHero} />
-				<div className={styles.loadingTable} />
-			</section>
-		);
+		return <LeaderboardSkeleton />;
 	}
 
 	return (

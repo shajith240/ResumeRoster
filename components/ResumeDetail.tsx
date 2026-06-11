@@ -6,6 +6,7 @@ import { ResumeContextCard } from "./resume-detail/content";
 import { DeleteReviewDialog, ReportCommentDialog, ResumeOwnerActionDialog } from "./resume-detail/dialogs";
 import { DiscussionPanel } from "./resume-detail/discussion-panel";
 import { ResumePreviewPane } from "./resume-detail/resume-preview-pane";
+import { ResumeDetailSkeleton } from "./resume-detail/ResumeDetailSkeleton";
 import type { ResumeDetailProps } from "./resume-detail/types";
 import { useResumeDetailController } from "./resume-detail/use-resume-detail-controller";
 import { getAuthorHandle } from "./resume-detail/utils";
@@ -14,15 +15,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 	const controller = useResumeDetailController(resumeId);
 
 	if (controller.loading) {
-		return (
-			<section className="resume-thread">
-				<div className="thread-viewer-card">
-					<span className="skeleton skeleton-line title" />
-					<span className="skeleton skeleton-line copy" />
-					<span className="skeleton skeleton-line actions" />
-				</div>
-			</section>
-		);
+		return <ResumeDetailSkeleton />;
 	}
 
 	if (!controller.resume) {
