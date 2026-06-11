@@ -1,0 +1,423 @@
+@font-face {
+	font-family: "Syne";
+	font-style: normal;
+	font-weight: 400 800;
+	font-display: swap;
+	src: url("../../public/assets/fonts/Syne/Syne-VariableFont_wght.ttf")
+		format("truetype");
+}
+
+:root {
+	--orange: #e85d26;
+	--ink: #11100f;
+	--paper: #f6f4f1;
+	--surface: #fffdf8;
+	--line: rgba(17, 16, 15, 0.1);
+	--muted: #6d665f;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	min-height: 100%;
+	margin: 0;
+}
+
+body {
+	background: var(--paper);
+	color: var(--ink);
+	font-family:
+		Syne,
+		ui-sans-serif,
+		system-ui,
+		sans-serif;
+}
+
+.page-shell {
+	width: min(1180px, calc(100% - 40px));
+	margin: 0 auto;
+	padding: 56px 0 64px;
+}
+
+.study-header {
+	max-width: 760px;
+	margin-bottom: 34px;
+}
+
+.eyebrow,
+.variant-label {
+	margin: 0;
+	color: var(--orange);
+	font-size: 12px;
+	font-weight: 800;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.study-header h1 {
+	margin: 14px 0 0;
+	font-size: clamp(44px, 7vw, 84px);
+	font-weight: 650;
+	letter-spacing: 0;
+	line-height: 0.96;
+}
+
+.study-header p:not(.eyebrow) {
+	max-width: 620px;
+	margin: 18px 0 0;
+	color: var(--muted);
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.65;
+}
+
+.hero-board {
+	margin-bottom: 18px;
+}
+
+.wordmark-card,
+.variant-card,
+.spec-card {
+	border: 1px solid var(--line);
+	background: var(--surface);
+}
+
+.wordmark-card {
+	min-height: 410px;
+	padding: clamp(28px, 5vw, 54px);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.wordmark-card-dark,
+.dark-surface {
+	background: #202020;
+	color: #f1f0ee;
+}
+
+.weight-label {
+	margin: 0 0 38px;
+	color: #c5c2bd;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.wordmark {
+	display: inline-flex;
+	align-items: flex-end;
+	white-space: nowrap;
+	font-family: "Syne", sans-serif;
+	font-weight: 500;
+	letter-spacing: -0.035em;
+	line-height: 0.78;
+}
+
+.wordmark > span:not(.i-glyph) {
+	display: inline-block;
+	line-height: 0.78;
+}
+
+.wordmark-light {
+	color: #f2f1ef;
+}
+
+.wordmark-dark {
+	color: var(--ink);
+}
+
+.wordmark-svg {
+	display: block;
+	height: auto;
+}
+
+.wordmark-svg-hero {
+	width: min(100%, 760px);
+}
+
+.wordmark-card .wordmark {
+	font-size: clamp(92px, 18vw, 212px);
+}
+
+.i-glyph {
+	position: relative;
+	display: inline-flex;
+	align-items: flex-end;
+	justify-content: center;
+	width: 0.215em;
+	height: 0.7em;
+	line-height: 1;
+	transform: translateY(-0.071em);
+}
+
+.i-dot {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	width: 0.095em;
+	height: 0.095em;
+	background: var(--orange);
+	transform: translateX(-50%);
+}
+
+.i-stem {
+	display: block;
+	width: 0.095em;
+	height: 0.5em;
+	background: currentColor;
+}
+
+.variant-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+	margin-top: 14px;
+}
+
+.variant-card {
+	min-height: 220px;
+	padding: 26px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.variant-card.dark-surface {
+	border-color: rgba(255, 255, 255, 0.1);
+}
+
+.wordmark-demo {
+	width: min(100%, 430px);
+	margin-top: 26px;
+	font-size: clamp(58px, 9vw, 106px);
+}
+
+.nav-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	margin-top: 28px;
+	border: 1px solid var(--line);
+	background: #ffffff;
+	padding: 18px 20px;
+}
+
+.wordmark-nav {
+	width: 122px;
+	font-size: 36px;
+	letter-spacing: -0.03em;
+}
+
+.nav-pill {
+	background: var(--ink);
+	color: #ffffff;
+	padding: 11px 16px;
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.social-lockup {
+	margin-top: 28px;
+}
+
+.wordmark-social {
+	width: min(100%, 380px);
+	font-size: clamp(52px, 8vw, 92px);
+}
+
+.social-lockup p {
+	max-width: 390px;
+	margin: 18px 0 0;
+	color: #c6c0ba;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 1.6;
+}
+
+.symbol-section {
+	display: grid;
+	grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+	gap: 14px;
+	margin-top: 14px;
+}
+
+.symbol-copy,
+.symbol-preview {
+	border: 1px solid var(--line);
+	background: var(--surface);
+	padding: 26px;
+}
+
+.symbol-copy h2 {
+	margin: 14px 0 0;
+	font-size: clamp(34px, 4vw, 54px);
+	font-weight: 650;
+	letter-spacing: 0;
+	line-height: 0.96;
+}
+
+.symbol-copy p:not(.eyebrow) {
+	margin: 18px 0 0;
+	color: var(--muted);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.7;
+}
+
+.symbol-board {
+	display: grid;
+	grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1.1fr);
+	gap: 14px;
+}
+
+.symbol-preview {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: 220px;
+}
+
+.symbol-preview:first-child {
+	grid-row: span 2;
+}
+
+.li-icon {
+	display: block;
+	shape-rendering: geometricPrecision;
+}
+
+.li-icon-large {
+	width: min(100%, 300px);
+	margin: 26px auto 0;
+}
+
+.icon-bg {
+	fill: #202020;
+}
+
+.icon-white {
+	fill: #f2f1ef;
+}
+
+.icon-orange {
+	fill: var(--orange);
+}
+
+.phone-row {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	margin-top: 26px;
+}
+
+.phone-icon {
+	width: 82px;
+	height: 82px;
+	flex: 0 0 auto;
+}
+
+.phone-row h3 {
+	margin: 0;
+	font-size: 22px;
+	font-weight: 650;
+	line-height: 1.1;
+}
+
+.phone-row p {
+	max-width: 290px;
+	margin: 8px 0 0;
+	color: var(--muted);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.55;
+}
+
+.favicon-row {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	margin-top: 34px;
+}
+
+.icon-64 {
+	width: 64px;
+	height: 64px;
+}
+
+.icon-48 {
+	width: 48px;
+	height: 48px;
+}
+
+.icon-32 {
+	width: 32px;
+	height: 32px;
+}
+
+.icon-24 {
+	width: 24px;
+	height: 24px;
+}
+
+.spec-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+	margin-top: 14px;
+}
+
+.spec-card {
+	padding: 26px;
+}
+
+.spec-card h2 {
+	margin: 0 0 10px;
+	font-size: 22px;
+	font-weight: 650;
+	line-height: 1.15;
+}
+
+.spec-card p {
+	max-width: 520px;
+	margin: 0;
+	color: var(--muted);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+	.page-shell {
+		width: min(92%, 480px);
+		padding: 36px 0 48px;
+	}
+
+	.variant-grid,
+	.symbol-section,
+	.symbol-board,
+	.spec-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.symbol-preview:first-child {
+		grid-row: auto;
+	}
+
+	.wordmark-card {
+		min-height: 300px;
+	}
+
+	.wordmark-card .wordmark {
+		font-size: clamp(72px, 22vw, 116px);
+	}
+
+	.nav-row {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+}

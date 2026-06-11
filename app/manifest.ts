@@ -9,13 +9,13 @@ export default function manifest(): MetadataRoute.Manifest {
 		display: "standalone",
 		icons: [
 			{
-				src: "/assets/lintly/app-icon-192.png",
+				src: "/assets/linted/app-icon-192.png",
 				sizes: "192x192",
 				type: "image/png",
 				purpose: "any",
 			},
 			{
-				src: "/assets/lintly/app-icon-512.png",
+				src: "/assets/linted/app-icon-512.png",
 				sizes: "512x512",
 				type: "image/png",
 				purpose: "any",

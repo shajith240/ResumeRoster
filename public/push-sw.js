@@ -1,5 +1,5 @@
 const DEFAULT_URL = "/feed";
-const ICON_URL = "/assets/Linted-favicon.png";
+const ICON_URL = "/assets/linted/app-icon-192.png";
 
 function toSafePath(value) {
 	if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) {

@@ -10,10 +10,10 @@ import "./notifications.css";
 import "./feed.css";
 import "./admin.css";
 
-const lintlyAppIcon180Path = "/assets/lintly/app-icon-180.png";
-const lintlyFavicon16Path = "/assets/lintly/favicon-16.png";
-const lintlyFavicon32Path = "/assets/lintly/favicon-32.png";
-const lintlyFavicon48Path = "/assets/lintly/favicon-48.png";
+const lintedAppIcon180Path = "/assets/linted/app-icon-180.png";
+const lintedFavicon16Path = "/assets/linted/favicon-16.png";
+const lintedFavicon32Path = "/assets/linted/favicon-32.png";
+const lintedFavicon48Path = "/assets/linted/favicon-48.png";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://linted.space"),
@@ -27,31 +27,31 @@ export const metadata: Metadata = {
   icons: {
     apple: [
       {
-        url: lintlyAppIcon180Path,
+        url: lintedAppIcon180Path,
         sizes: "180x180",
         type: "image/png",
       },
     ],
     icon: [
       {
-        url: lintlyFavicon16Path,
+        url: lintedFavicon16Path,
         sizes: "16x16",
         type: "image/png",
       },
       {
-        url: lintlyFavicon32Path,
+        url: lintedFavicon32Path,
         sizes: "32x32",
         type: "image/png",
       },
       {
-        url: lintlyFavicon48Path,
+        url: lintedFavicon48Path,
         sizes: "48x48",
         type: "image/png",
       },
     ],
     shortcut: [
       {
-        url: lintlyFavicon32Path,
+        url: lintedFavicon32Path,
         sizes: "32x32",
         type: "image/png",
       },

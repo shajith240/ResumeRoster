@@ -512,16 +512,22 @@ body.main-app-dark .app-header {
 	white-space: nowrap;
 }
 
-.brand-mark-icon {
+.brand-mark-wordmark {
+	display: block;
 	flex: 0 0 auto;
-	width: var(--brand-mark-size, 32px);
-	height: var(--brand-mark-size, 32px);
-	object-fit: contain;
+	width: 2.44em;
+	height: 1.04em;
+	color: currentColor;
+	overflow: visible;
+	shape-rendering: geometricPrecision;
 }
 
 .brand-mark-text {
 	display: inline-block;
-	line-height: inherit;
+	font-family: var(--font-display);
+	font-weight: 500;
+	letter-spacing: -0.035em;
+	line-height: 0.78;
 }
 
 .submit-icon {
