@@ -4,9 +4,9 @@
 
 - Source path: `lib/supabase/avatars.ts`
 - Kind: Application library module
-- Size: 1162 bytes
+- Size: 1155 bytes
 - Lines: 47
-- Source hash: `cda7557b8f49d7603b62c25f7a64b8809d1faca1630c8c12e89642b9f173514b`
+- Source hash: `e3235c2b058a301d7ca83ec43616c149431d0a14adef36e8b67b37f9c9f6b5ce`
 
 ## What This File Does
 
@@ -19,7 +19,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 ## Exports
 
 - `getGeneratedAvatarUrl`
-- `resolveAvatarUrl`
 - `resolveProfileAvatarUrl`
 
 ## Imports
@@ -30,7 +29,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 5 | `resolveAvatarUrl` | Function | top-level | yes | `avatarUrl`, `avatarPath` | `string` | Implements the resolveavatarurl helper. |
+| 5 | `resolveAvatarUrl` | Function | top-level | no | `avatarUrl`, `avatarPath` | `string` | Implements the resolveavatarurl helper. |
 | 23 | `getGeneratedAvatarUrl` | Function | top-level | yes | `seed` | `string` | Implements the getgeneratedavatarurl helper. |
 | 27 | `resolveProfileAvatarUrl` | Function | top-level | yes | `profile`, `fallbackSeed` | `string` | Implements the resolveprofileavatarurl helper. |
 

@@ -379,7 +379,7 @@ export function UserDropdown({
 														>
 															{MENU_ITEMS.appearance.map((themeItem) => (
 																<DropdownMenuRadioItem
-																	className="gap-2"
+																	className="gap-2 pr-3"
 																	key={themeItem.value}
 																	value={themeItem.value}
 																>
@@ -388,7 +388,14 @@ export function UserDropdown({
 																		className="size-5 text-[var(--text-tertiary)]"
 																		icon={themeItem.icon}
 																	/>
-																	{themeItem.label}
+																	<span className="flex-1">{themeItem.label}</span>
+																	{selectedTheme === themeItem.value ? (
+																		<Icon
+																			aria-hidden="true"
+																			className="ml-auto size-4 text-[var(--brand)]"
+																			icon={checkCircleBold}
+																		/>
+																	) : null}
 																</DropdownMenuRadioItem>
 															))}
 														</DropdownMenuRadioGroup>

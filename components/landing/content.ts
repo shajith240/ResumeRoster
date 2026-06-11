@@ -1,174 +1,15 @@
-import { SUPPORT_MAILTO } from "@/lib/support-contact";
-
-export type FeatureKey = "ats" | "jd" | "roast" | "skills" | "optimize";
 export type BenefitKey = "students" | "jobseekers" | "switchers";
-export type FooterLink = {
-	href: string;
-	label: string;
-};
 
 export const asset = (path: string) => `/assets/${path}`;
-export const ratingStars = [0, 1, 2, 3, 4];
-
-export const footerGroups: Array<{ title: string; links: FooterLink[] }> = [
-	{
-		title: "Product",
-		links: [
-			{ label: "Our Mission", href: "/" },
-			{ label: "Community", href: "/community" },
-			{ label: "Resume Feed", href: "/feed" },
-			{ label: "Leaderboard", href: "/leaderboard" },
-		],
-	},
-	{
-		title: "Community",
-		links: [
-			{ label: "Top Reviewers", href: "/leaderboard" },
-			{ label: "Invite Reviewers", href: "/submit" },
-			{ label: "Community Guidelines", href: "/guidelines" },
-			{ label: "Help Center", href: "/help" },
-		],
-	},
-	{
-		title: "Legal",
-		links: [
-			{ label: "Privacy Policy", href: "/privacy" },
-			{ label: "Terms of Service", href: "/terms" },
-			{ label: "Copyright Policy", href: "/copyright" },
-			{ label: "Cookie Notice", href: "/privacy" },
-			{ label: "Contact Us", href: SUPPORT_MAILTO },
-		],
-	},
-];
-
-export const featureContent: Record<
-	FeatureKey,
-	{
-		copy: string;
-		good: string;
-		insight: string;
-		listTitle: string;
-		panelTitle: string;
-		points: string[];
-		score: string;
-		scoreLabel: string;
-		theme: string;
-		title: string;
-		warn: string;
-	}
-> = {
-	ats: {
-		copy:
-			"Post a resume without exposing personal details and let reviewers catch the bugs recruiters will reject.",
-		good: "Identity hidden",
-		insight: "New resume failed the clarity check",
-		listTitle: "Static checks",
-		panelTitle: "Career Lint Report",
-		points: [
-			"Hide personal details before the resume goes public.",
-			"Flag vague bullets, weak proof, and recruiter red flags.",
-			"Keep the best fixes attached to each resume version.",
-		],
-		score: "42",
-		scoreLabel: "lint passes",
-		theme: "ats",
-		title: "Anonymous Resume Lint",
-		warn: "Impact bug found",
-	},
-	jd: {
-		copy:
-			"Recruiters behave like strict compilers. Linted lets peers, recruiters, and engineers catch errors before the first screen.",
-		good: "Specific fix suggested",
-		insight: "Top check points out a missing project outcome",
-		listTitle: "Why it helps",
-		panelTitle: "Best Fix",
-		points: [
-			"Feedback is public, so weak advice gets ignored fast.",
-			"Helpful feedback rises through votes instead of authority.",
-			"Real applicants explain what worked for them.",
-		],
-		score: "18",
-		scoreLabel: "helpful votes",
-		theme: "jd",
-		title: "Human Reviewers, Compiler Mindset",
-		warn: "Generic summary called out",
-	},
-	roast: {
-		copy:
-			"Every comment can be voted helpful, so the sharpest fixes rise above noise, jokes, and lazy one-liners.",
-		good: "Actionable comment",
-		insight: "Most-voted comment explains exactly what to rewrite",
-		listTitle: "Voting rules",
-		panelTitle: "Fix Ranking",
-		points: [
-			"Upvote feedback that names the problem and gives a fix.",
-			"Feature comments that improve the resume, not just insult it.",
-			"Let the community decide which feedback deserves attention.",
-		],
-		score: "7",
-		scoreLabel: "top fixes",
-		theme: "roast",
-		title: "Vote the Sharpest Fixes",
-		warn: "Low-effort take buried",
-	},
-	skills: {
-		copy:
-			"People who consistently give useful lint passes build visible contribution history and trust.",
-		good: "Hired-at proof visible",
-		insight: "Placement mentor earned 31 helpful votes this week",
-		listTitle: "Reputation signals",
-		panelTitle: "Contributor History",
-		points: [
-			"Reward people whose feedback gets marked helpful.",
-			"Show strong feedback history without forcing a second profile.",
-			"Turn useful contributors into the reason people return.",
-		],
-		score: "#12",
-		scoreLabel: "contributor rank",
-		theme: "skills",
-		title: "Contributor Reputation",
-		warn: "Unhelpful comments lose reach",
-	},
-	optimize: {
-		copy:
-			"Before-and-after resumes show who cleaned up the most career bugs this week, making progress visible and easy to follow.",
-		good: "Before and after visible",
-		insight: "Resume climbed after 9 community fixes",
-		listTitle: "Leaderboard logic",
-		panelTitle: "Most Improved",
-		points: [
-			"Track resume versions after public feedback.",
-			"Highlight the biggest week-over-week improvements.",
-			"Make great transformations shareable.",
-		],
-		score: "+64%",
-		scoreLabel: "improvement",
-		theme: "optimize",
-		title: "Career Lint Score",
-		warn: "Still needs stronger metrics",
-	},
-};
-
-export const featureTabs: Array<{
-	key: FeatureKey;
-	label: string;
-	mobileLabel: string;
-}> = [
-	{ key: "ats", label: "Resume Lint", mobileLabel: "Post" },
-	{ key: "jd", label: "Guided Checks", mobileLabel: "Check" },
-	{ key: "roast", label: "Useful Fixes", mobileLabel: "Vote" },
-	{ key: "skills", label: "Contributor Trust", mobileLabel: "Trust" },
-	{ key: "optimize", label: "Improvement", mobileLabel: "Improve" },
-];
 
 export const trustSignals = [
-	"Anonymous by default",
-	"Identity redaction",
-	"Human resume feedback",
-	"Useful fixes rise",
+	"Safe resume posting",
+	"Identity controls",
+	"Guided feedback",
+	"Ranked fix list",
 	"Community guidelines",
 	"No fake resume score",
-	"Built for public critique",
+	"Contributor reputation",
 ];
 
 export const benefitImages: Record<BenefitKey, { alt: string; src: string }> = {
@@ -188,51 +29,138 @@ export const benefitImages: Record<BenefitKey, { alt: string; src: string }> = {
 
 export const benefits: Array<{ copy: string; key: BenefitKey; label: string }> = [
 	{
-		copy: "Run your resume through the crowd before placement season treats it like a compile step.",
+		copy: "Post before placement season and learn what your resume actually communicates.",
 		key: "students",
 		label: "For students",
 	},
 	{
-		copy: "Catch unclear proof, weak metrics, and JD mismatch before recruiter screens.",
+		copy: "Catch unclear proof, weak metrics, and role mismatch before recruiter screens.",
 		key: "jobseekers",
 		label: "For job seekers",
 	},
 	{
-		copy: "Make your career story parse cleanly before a stranger has to infer it.",
+		copy: "Make your story easier to understand when your background does not follow a straight line.",
 		key: "switchers",
 		label: "For career switchers",
 	},
 ];
 
-export const stackCards = [
+export const reviewStandards = [
 	{
-		className: "notes-card",
-		copy: "Remove personal details when needed and post your resume to the public lint feed.",
-		image: "Resume_upload.png",
-		title: "Upload the Source",
+		copy: "The best comments name the exact bullet, section, or claim that needs work.",
+		title: "Point to the line",
 	},
 	{
-		className: "chat-card",
-		copy: "Your resume appears beside other submissions waiting for precise feedback.",
-		image: "JD match.png",
-		title: "Run the Lint Pass",
+		copy: "Reviewers explain why a recruiter might skip, doubt, or misunderstand it.",
+		title: "Explain the risk",
 	},
 	{
-		className: "recorder-card",
-		copy: "Guided contributors call out weak, generic, or confusing parts before they reach the first screen.",
-		image: "Recruter_roast.png",
-		title: "Catch Recruiter Errors",
+		copy: "Useful feedback gives a next move, not just a reaction.",
+		title: "Suggest the fix",
+	},
+];
+
+export const productLoopSteps = [
+	{
+		copy:
+			"Choose what to reveal, add role context, and publish when the request is ready.",
+		label: "Controlled post",
+		title: "Post with context",
 	},
 	{
-		className: "tutorials-card",
-		copy: "The strongest comments rise through votes so you know which fixes matter.",
-		image: "fix_plan.png",
-		title: "Apply Useful Fixes",
+		copy:
+			"Prompts push reviewers to name the exact bullet, proof gap, or confusing claim.",
+		label: "Guided review",
+		title: "Get specific fixes",
 	},
 	{
-		className: "tools-card",
-		copy: "Improved resumes and useful contributors get featured every week.",
-		image: "ats.png",
-		title: "Build Contributor Trust",
+		copy:
+			"Votes and rules keep useful comments above vague opinions and lazy takes.",
+		label: "Community signal",
+		title: "Rank useful fixes",
+	},
+	{
+		copy:
+			"Strong reviewers earn visible trust for feedback that helps people improve.",
+		label: "Reputation",
+		title: "Build reviewer trust",
+	},
+];
+
+export const comparisonRows = [
+	{
+		feature: "Best for",
+		linted: "Human review before you apply",
+		resumeWorded: "Instant AI resume score",
+		rezi: "AI resume building and tailoring",
+	},
+	{
+		feature: "Feedback source",
+		linted: "Community reviewers with useful votes",
+		resumeWorded: "AI criteria and resume examples",
+		rezi: "AI writing, scoring, and job-description matching",
+	},
+	{
+		feature: "What you leave with",
+		linted: "A ranked fix list tied to your post",
+		resumeWorded: "A score report with line-by-line suggestions",
+		rezi: "An optimized resume draft",
+	},
+	{
+		feature: "Trust signal",
+		linted: "Reviewer history, guidelines, and leaderboard signals",
+		resumeWorded: "Private score and recruiter-based checks",
+		rezi: "ATS-focused scoring and templates",
+	},
+	{
+		feature: "When it helps most",
+		linted: "When another person needs to spot weak proof",
+		resumeWorded: "When you need a fast diagnostic scan",
+		rezi: "When you need to draft or tailor faster",
+	},
+	{
+		feature: "Product stance",
+		linted: "No fake resume score. Feedback earns trust.",
+		resumeWorded: "Score-driven resume improvement",
+		rezi: "AI-first resume generation",
+	},
+];
+
+export const faqItems = [
+	{
+		answer:
+			"Linted is a community review layer for resumes. You post a resume with context, reviewers leave specific fixes, and useful feedback rises through votes and trust signals.",
+		question: "What is Linted?",
+		value: "what-is-linted",
+	},
+	{
+		answer:
+			"No. Linted is not trying to replace scanners or builders. AI tools can help you score, draft, or tailor faster. Linted is for the human pass: spotting weak proof, unclear bullets, and confusing storylines before recruiters see them.",
+		question: "Is Linted another AI resume checker?",
+		value: "ai-checker",
+	},
+	{
+		answer:
+			"You control what you post. Linted is designed around safer sharing, context, and community rules. You should still remove anything you do not want public before posting a resume.",
+		question: "Is it safe to post my resume?",
+		value: "safe-posting",
+	},
+	{
+		answer:
+			"Good feedback has to point to the exact line or section, explain the risk, and suggest a next move. Votes, guidelines, and reviewer reputation help push useful fixes above vague opinions.",
+		question: "How does Linted keep feedback useful?",
+		value: "useful-feedback",
+	},
+	{
+		answer:
+			"Use Linted when your resume looks finished but you still want another person to catch what is unclear, generic, or hard to trust. It is especially useful before internships, placement season, job switches, and cold applications.",
+		question: "When should I use Linted?",
+		value: "when-to-use",
+	},
+	{
+		answer:
+			"Post your resume, add role context, read the ranked fixes, and apply the feedback that makes your resume clearer. Helpful reviewers build trust by leaving feedback people can actually use.",
+		question: "What happens after I post?",
+		value: "after-posting",
 	},
 ];

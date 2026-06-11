@@ -1,17 +1,27 @@
 "use client";
 
-import type { Dispatch, RefObject, SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import Link from "next/link";
-import { Star } from "@/components/ui/solar-icons";
+import { Menu, X } from "lucide-react";
 import BrandMark from "@/components/BrandMark";
 import LandingCta from "@/components/LandingCta";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
+import { LogoCloud } from "@/components/ui/logo-cloud-4";
 import { getAppHomeRoute } from "@/lib/app-routes";
+import { getLoginPath } from "@/lib/auth-redirect";
 import {
 	asset,
 	benefitImages,
 	benefits,
-	ratingStars,
-	stackCards,
+	comparisonRows,
+	faqItems,
+	productLoopSteps,
+	reviewStandards,
 	trustSignals,
 	type BenefitKey,
 } from "./content";
@@ -27,24 +37,17 @@ type LandingNavbarProps = AuthLandingProps & {
 	navHidden: boolean;
 };
 
-type StickyFeatureSectionProps = {
-	pinHeadingRef: RefObject<HTMLDivElement | null>;
-	pinSectionRef: RefObject<HTMLElement | null>;
-	pinTrackRef: RefObject<HTMLDivElement | null>;
-};
-
 type BenefitsSectionProps = {
 	activeBenefit: BenefitKey;
 	setActiveBenefit: Dispatch<SetStateAction<BenefitKey>>;
 };
 
-type CardsStackSectionProps = {
-	cardsStackRef: RefObject<HTMLElement | null>;
-};
-
-type QuoteSectionProps = {
-	second?: boolean;
-};
+const productNavLinks = [
+	{ href: "/community", label: "Community" },
+	{ href: "/feed", label: "Resume Feed" },
+	{ href: "/leaderboard", label: "Leaderboard" },
+	{ href: "/guidelines", label: "Guidelines" },
+];
 
 export function LandingNavbar({
 	authReady,
@@ -52,39 +55,56 @@ export function LandingNavbar({
 	navHidden,
 }: LandingNavbarProps) {
 	const appHomeRoute = getAppHomeRoute();
+	const [mobileNavOpen, setMobileNavOpen] = useState(false);
+	const primaryCtaHref = isSignedIn ? appHomeRoute : "/submit";
 
 	return (
-		<nav className={`navbar${navHidden ? " nav-hidden" : ""}`}>
+		<nav className={`navbar${navHidden ? " nav-hidden" : ""}`} aria-label="Primary">
 			<div className="container nav-content">
 				<Link className="landing-wordmark" href="/" aria-label="Linted home">
 					<BrandMark />
 				</Link>
 
-				<div className="nav-links">
-					{isSignedIn ? (
-						<>
-							<Link href={appHomeRoute}>Community</Link>
-							<Link href="/feed">Resume Feed</Link>
-							<Link href="/submit">Post resume</Link>
-							<Link href="/leaderboard">Leaderboard</Link>
-						</>
-					) : (
-						<>
-							<a href="#how-it-works">How it works</a>
-							<a href="#features">Features</a>
-							<a href="#use-cases">Use cases</a>
-							<a href="#proof">Proof</a>
-						</>
-					)}
+				<div
+					className={`nav-links${mobileNavOpen ? " nav-links-open" : ""}`}
+					id="landing-nav-links"
+				>
+					{productNavLinks.map((item) => (
+						<Link
+							href={item.href}
+							key={item.href}
+							onClick={() => setMobileNavOpen(false)}
+						>
+							{item.label}
+						</Link>
+					))}
 				</div>
 
-				<LandingCta
-					className="nav-button"
-					href={isSignedIn ? appHomeRoute : "/submit"}
-					isSignedIn={isSignedIn}
+				<div className="nav-actions">
+					{!isSignedIn ? (
+						<Link className="nav-sign-in" href={getLoginPath(appHomeRoute)}>
+							Sign in
+						</Link>
+					) : null}
+					<LandingCta
+						className="nav-button"
+						href={primaryCtaHref}
+						isSignedIn={isSignedIn}
+					>
+						{authReady && isSignedIn ? "Enter app" : "Post resume"}
+					</LandingCta>
+				</div>
+
+				<button
+					aria-controls="landing-nav-links"
+					aria-expanded={mobileNavOpen}
+					aria-label="Toggle navigation menu"
+					className="nav-menu-button"
+					onClick={() => setMobileNavOpen((open) => !open)}
+					type="button"
 				>
-					{authReady && isSignedIn ? "Enter app" : "Sign up now"}
-				</LandingCta>
+					{mobileNavOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+				</button>
 			</div>
 		</nav>
 	);
@@ -110,10 +130,10 @@ export function HeroTrustSection({ authReady, isSignedIn }: AuthLandingProps) {
 						</video>
 					</div>
 
-					<h1>Resume feedback before you apply</h1>
+					<h1>Fix your resume before recruiters see it</h1>
 
 					<p className="hero-subtext">
-						Post anonymously. Get specific fixes from real people.
+						Post safely, get line-level fixes, and apply with a cleaner resume.
 					</p>
 
 					<LandingCta
@@ -121,152 +141,47 @@ export function HeroTrustSection({ authReady, isSignedIn }: AuthLandingProps) {
 						href={isSignedIn ? appHomeRoute : "/submit"}
 						isSignedIn={isSignedIn}
 					>
-						{authReady && isSignedIn ? "Enter community" : "Lint my resume"}
+						{authReady && isSignedIn ? "Enter community" : "Post my resume"}
 					</LandingCta>
 				</div>
 			</section>
 
 			<section className="trust-section" aria-label="Linted trust signals">
-				<div className="trust-marquee">
-					{[0, 1].map((groupIndex) => (
-						<div
-							aria-hidden={groupIndex === 1 ? "true" : undefined}
-							className="trust-track"
-							key={groupIndex}
-						>
-							{trustSignals.map((signal) => (
-								<div className="trust-signal" key={`${groupIndex}-${signal}`}>
-									<span>{signal}</span>
-								</div>
-							))}
-						</div>
-					))}
-				</div>
+				<LogoCloud logos={trustSignals.map((signal) => ({ alt: signal }))} />
 			</section>
 		</div>
 	);
 }
 
-export function StickyFeatureSection({
-	pinHeadingRef,
-	pinSectionRef,
-	pinTrackRef,
-}: StickyFeatureSectionProps) {
+export function ReviewStandardsSection() {
 	return (
-		<section
-			className="sticky-feature-section"
-			id="features"
-			data-pin-section
-			ref={pinSectionRef}
-		>
-			<div className="sticky-content">
-				<div className="stack-doodle-layer" aria-hidden="true">
-					<img
-						className="stack-doodle doodle-trash"
-						src={asset("trashcan_doodle.png")}
-						alt=""
-					/>
-					<img
-						className="stack-doodle doodle-clock"
-						src={asset("clock_doodle.png")}
-						alt=""
-					/>
-					<img
-						className="stack-doodle doodle-rejected"
-						src={asset("rejected_doodle.png")}
-						alt=""
-					/>
-					<img
-						className="stack-doodle doodle-checklist"
-						src={asset("checklist_doodle.png")}
-						alt=""
-					/>
-					<img
-						className="stack-doodle doodle-riphope"
-						src={asset("riphope_doodle.png")}
-						alt=""
-					/>
-					<img
-						className="stack-doodle doodle-tryharder"
-						src={asset("tryharder_doodle.png")}
-						alt=""
-					/>
-				</div>
-				<div className="sticky-heading" ref={pinHeadingRef}>
-					<h2>Humans catch what scans miss</h2>
+		<section className="review-standard-section" id="features">
+			<div className="review-standard-copy">
+				<span className="section-kicker">Review standard</span>
+				<h2>Linted keeps feedback specific.</h2>
+				<p>
+					Every resume post is built around one promise: feedback should point
+					to the work, explain the risk, and leave the owner with a next move.
+				</p>
+			</div>
+
+			<div className="review-standard-panel" aria-label="Linted review standard">
+				<div className="review-standard-visual" aria-hidden="true">
+					<img src={asset("checklist_doodle.png")} alt="" />
 				</div>
 
-				<div className="feature-cards" data-pin-track ref={pinTrackRef}>
-					<div className="feature-card">
-						<div className="feature-illustration feature-illustration-privacy">
-							<img
-								src={asset("post_without_exposing.png")}
-								alt=""
-								aria-hidden="true"
-								loading="lazy"
-								decoding="async"
-							/>
-						</div>
-						<h3>Post without exposing yourself</h3>
-						<p>
-							Upload a redacted resume to the public feed so the work gets
-							judged, not your name, college, or phone number.
-						</p>
-					</div>
-
-					<div className="feature-card">
-						<div className="feature-illustration feature-illustration-compiler">
-							<img
-								src={asset("Catch bugs before the compiler.png")}
-								alt=""
-								aria-hidden="true"
-								loading="lazy"
-								decoding="async"
-							/>
-						</div>
-						<h3>Catch bugs before the compiler</h3>
-						<p>
-							Students, job seekers, and trusted reviewers point out vague
-							bullets, missing proof, and recruiter red flags.
-						</p>
-					</div>
-
-					<div className="feature-card">
-						<div className="feature-illustration feature-illustration-promote">
-							<img
-								src={asset("promote the fix not the noise.png")}
-								alt=""
-								aria-hidden="true"
-								loading="lazy"
-								decoding="async"
-							/>
-						</div>
-						<h3>Promote the fix, not the noise</h3>
-						<p>
-							Votes push the most useful fixes upward, while trusted reviewers
-							build reputation for feedback that actually helps.
-						</p>
-					</div>
+				<div className="review-standard-list">
+					{reviewStandards.map((item, index) => (
+						<article className="review-standard-item" key={item.title}>
+							<span>{String(index + 1).padStart(2, "0")}</span>
+							<div>
+								<h3>{item.title}</h3>
+								<p>{item.copy}</p>
+							</div>
+						</article>
+					))}
 				</div>
 			</div>
-		</section>
-	);
-}
-
-export function QuoteSection({ second = false }: QuoteSectionProps) {
-	return (
-		<section className={`quote-section${second ? " second-quote" : ""}`}>
-			<div className="stars" aria-label="Five star review">
-				{ratingStars.map((star) => (
-					<Star aria-hidden="true" key={star} />
-				))}
-			</div>
-			<blockquote>
-				{second
-					? '"My resume did not need a generic score. It needed someone to point at the bug and tell me the fix."'
-					: '"The best comment read like a lint error: exact line, exact problem, exact fix."'}
-			</blockquote>
-			<p>{second ? "Anonymous software job seeker" : "Anonymous final-year student"}</p>
 		</section>
 	);
 }
@@ -280,7 +195,7 @@ export function BenefitsSection({
 	return (
 		<section className="benefits" id="use-cases">
 			<div className="benefits-copy">
-				<h2>Career linting, in public</h2>
+				<h2>Built for real resume moments</h2>
 				{benefits.map((benefit) => {
 					const isActive = activeBenefit === benefit.key;
 					return (
@@ -309,58 +224,116 @@ export function BenefitsSection({
 	);
 }
 
-export function CardsStackSection({ cardsStackRef }: CardsStackSectionProps) {
+export function ComparisonSection() {
 	return (
-		<section className="cards-stack" ref={cardsStackRef}>
-			<div className="stack-stage">
-				<div className="stack-scene">
-					<h2>Post. Fix. Apply.</h2>
-					<div className="stack-list">
-						{stackCards.map((card) => (
-							<article className={`stack-card ${card.className}`} key={card.title}>
-								<img
-									className="stack-art"
-									src={asset(card.image)}
-									alt=""
-									aria-hidden="true"
-								/>
-								<h3>{card.title}</h3>
-								<p>{card.copy}</p>
-							</article>
+		<section className="comparison-section" aria-labelledby="comparison-heading">
+			<div className="comparison-header">
+				<span className="section-kicker">Comparison</span>
+				<h2 id="comparison-heading">Built for the pass AI checkers miss.</h2>
+				<p>
+					Resume scanners and builders are useful for speed. Linted is for the
+					human review layer: specific fixes, visible trust, and feedback that
+					other people can judge useful.
+				</p>
+			</div>
+
+			<div className="comparison-table-wrap">
+				<table className="comparison-table">
+					<caption className="sr-only">
+						Linted compared with Resume Worded and Rezi
+					</caption>
+					<thead>
+						<tr>
+							<th scope="col">Decision point</th>
+							<th className="comparison-primary" scope="col">
+								Linted
+							</th>
+							<th scope="col">Resume Worded</th>
+							<th scope="col">Rezi</th>
+						</tr>
+					</thead>
+					<tbody>
+						{comparisonRows.map((row) => (
+							<tr key={row.feature}>
+								<th scope="row">{row.feature}</th>
+								<td className="comparison-primary">{row.linted}</td>
+								<td>{row.resumeWorded}</td>
+								<td>{row.rezi}</td>
+							</tr>
 						))}
-					</div>
-				</div>
+					</tbody>
+				</table>
 			</div>
 		</section>
 	);
 }
 
-export function CtaBanner({ isSignedIn }: Pick<AuthLandingProps, "isSignedIn">) {
+export function FaqSection() {
 	return (
-		<section className="cta-banner">
-			<div>
-				<h2>Pass the first scan</h2>
+		<section className="faq-section" aria-labelledby="faq-heading">
+			<div className="faq-header">
+				<span className="section-kicker">FAQ</span>
+				<h2 id="faq-heading">Questions before you post.</h2>
 				<p>
-					Run it through Linted before the recruiter/compiler rejects it. Post
-					anonymously, collect fixes, and ship a cleaner version.
+					The short version: Linted is for getting specific human feedback while
+					keeping the community useful and safer to participate in.
 				</p>
-				<LandingCta className="cta-link" href="/submit" isSignedIn={isSignedIn}>
-					Run a lint pass
-				</LandingCta>
 			</div>
-			<video
-				className="cta-video"
-				autoPlay
-				muted
-				loop
-				playsInline
-				aria-label="Resume first scan preview"
-			>
-				<source
-					src={asset("Your resume should survive the first scan.webm")}
-					type="video/webm"
-				/>
-			</video>
+
+			<Accordion className="faq-list" type="multiple">
+				{faqItems.map((item) => (
+					<AccordionItem className="faq-item" key={item.value} value={item.value}>
+						<AccordionTrigger className="faq-trigger">
+							{item.question}
+						</AccordionTrigger>
+						<AccordionContent className="faq-content">
+							<p>{item.answer}</p>
+						</AccordionContent>
+					</AccordionItem>
+				))}
+			</Accordion>
+		</section>
+	);
+}
+
+export function ProductLoopSection() {
+	return (
+		<section className="product-loop-section" id="community-loop">
+			<div className="product-loop-copy">
+				<span className="section-kicker">Product loop</span>
+				<h2>How Linted turns a post into trusted feedback.</h2>
+				<p>
+					Linted is built for the messy part before applying: when the resume
+					looks finished, but another person can still spot the weak proof.
+				</p>
+				<div className="product-loop-promise" aria-label="Linted product promise">
+					<strong>No fake resume score.</strong>
+					<span>Specific feedback, visible trust, and safer posting rules.</span>
+				</div>
+			</div>
+
+			<div className="product-loop-flow" aria-label="How Linted works">
+				{productLoopSteps.map((step, index) => (
+					<article className="product-loop-step" key={step.title}>
+						<span className="product-loop-index">
+							{String(index + 1).padStart(2, "0")}
+						</span>
+						<div>
+							<span>{step.label}</span>
+							<h3>{step.title}</h3>
+							<p>{step.copy}</p>
+						</div>
+					</article>
+				))}
+
+				<div className="product-loop-outcome">
+					<span>Outcome</span>
+					<p>
+						The resume owner leaves with a ranked fix list. The community gets
+						rewarded for feedback people can actually use.
+					</p>
+				</div>
+			</div>
 		</section>
 	);
 }

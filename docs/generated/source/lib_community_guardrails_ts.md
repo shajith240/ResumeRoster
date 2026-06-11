@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-guardrails.ts`
 - Kind: Application library module
-- Size: 2888 bytes
-- Lines: 124
-- Source hash: `556597821cba3d30113b4db71e556bab1e7a40c3a9d39b5097b8160c2c48815d`
+- Size: 2723 bytes
+- Lines: 119
+- Source hash: `a87d6c28cb0de26bf6ca2d1b80f201b71ad4ce700c8554b54cd237bf12d834b5`
 
 ## What This File Does
 
@@ -24,7 +24,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `getCommunityCommentReplyBlockReason`
 - `getCommunityPollVoteBlockReason`
 - `getCommunityPostReactionBlockReason`
-- `isCommunityReaction`
 
 ## Imports
 
@@ -35,21 +34,20 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 25 | `getCommunityPostReactionBlockReason` | Function | top-level | yes | `activeUser`, `post` | `"You cannot vote on your own post." \| "This post is not open for voting." \| null` | Implements the getcommunitypostreactionblockreason helper. |
-| 40 | `canEditCommunityPost` | Function | top-level | yes | `activeUser`, `post` | `boolean` | Implements the caneditcommunitypost helper. |
-| 51 | `canDeleteCommunityPost` | Action helper | top-level | yes | `{ activeUser, isAdmin, post, }` | `boolean` | Runs the candeletecommunitypost workflow for callers. |
-| 66 | `getCommunityCommentReactionBlockReason` | Function | top-level | yes | `activeUser`, `comment` | `"You cannot vote on your own comment." \| "This comment is not open for voting." \| null` | Implements the getcommunitycommentreactionblockreason helper. |
-| 81 | `getCommunityCommentReplyBlockReason` | Function | top-level | yes | `{ activeUser, comment, postStatus, }` | `"This post is closed for new replies." \| "This comment cannot receive replies." \| "You cannot reply to your own comment." \| "This thre...` | Implements the getcommunitycommentreplyblockreason helper. |
-| 102 | `getCommunityPollVoteBlockReason` | Function | top-level | yes | `{ activeUser, isClosed, isVoting, postStatus, }` | `"This poll is closed." \| "This poll is not open for voting." \| "Your poll vote is already updating." \| null` | Implements the getcommunitypollvoteblockreason helper. |
-| 121 | `isCommunityReaction` | Function | top-level | yes | `value` | `boolean` | Implements the iscommunityreaction helper. |
+| 24 | `getCommunityPostReactionBlockReason` | Function | top-level | yes | `activeUser`, `post` | `"You cannot vote on your own post." \| "This post is not open for voting." \| null` | Implements the getcommunitypostreactionblockreason helper. |
+| 39 | `canEditCommunityPost` | Function | top-level | yes | `activeUser`, `post` | `boolean` | Implements the caneditcommunitypost helper. |
+| 50 | `canDeleteCommunityPost` | Action helper | top-level | yes | `{ activeUser, isAdmin, post, }` | `boolean` | Runs the candeletecommunitypost workflow for callers. |
+| 65 | `getCommunityCommentReactionBlockReason` | Function | top-level | yes | `activeUser`, `comment` | `"You cannot vote on your own comment." \| "This comment is not open for voting." \| null` | Implements the getcommunitycommentreactionblockreason helper. |
+| 80 | `getCommunityCommentReplyBlockReason` | Function | top-level | yes | `{ activeUser, comment, postStatus, }` | `"This post is closed for new replies." \| "This comment cannot receive replies." \| "You cannot reply to your own comment." \| "This thre...` | Implements the getcommunitycommentreplyblockreason helper. |
+| 101 | `getCommunityPollVoteBlockReason` | Function | top-level | yes | `{ activeUser, isClosed, isVoting, postStatus, }` | `"This poll is closed." \| "This poll is not open for voting." \| "Your poll vote is already updating." \| null` | Implements the getcommunitypollvoteblockreason helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 11 | `ActiveUserLike` | type |
-| 15 | `CommunityPostLike` | type |
-| 20 | `CommunityCommentLike` | type |
+| 10 | `ActiveUserLike` | type |
+| 14 | `CommunityPostLike` | type |
+| 19 | `CommunityCommentLike` | type |
 
 ## Related Tests
 

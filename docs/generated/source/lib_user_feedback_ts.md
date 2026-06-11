@@ -4,9 +4,9 @@
 
 - Source path: `lib/user-feedback.ts`
 - Kind: Application library module
-- Size: 5554 bytes
+- Size: 5533 bytes
 - Lines: 227
-- Source hash: `e8856c22e97431d330c93b35095de20448e35dc597080829e9e53dfef29a2443`
+- Source hash: `56dd6ffc35b32470a29d4eb5404f571bb9be4b6b882560d1facc053b16c4f778`
 
 ## What This File Does
 
@@ -24,8 +24,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `isUserFeedbackCategory`
 - `isUserFeedbackPriority`
 - `isUserFeedbackStatus`
-- `normalizeFeedbackMetadata`
-- `normalizeFeedbackPath`
 - `USER_FEEDBACK_ADMIN_NOTE_MAX_LENGTH`
 - `USER_FEEDBACK_ADMIN_REPLY_MAX_LENGTH`
 - `USER_FEEDBACK_BODY_MAX_LENGTH`
@@ -36,7 +34,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `USER_FEEDBACK_STATUS_LABELS`
 - `USER_FEEDBACK_STATUSES`
 - `USER_FEEDBACK_TITLE_MAX_LENGTH`
-- `UserFeedbackInput`
 - `UserFeedbackValidationResult`
 - `validateUserFeedbackPayload`
 
@@ -57,8 +54,8 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | 149 | `isAdminFeedbackAction` | Function | top-level | yes | `value` | `boolean` | Implements the isadminfeedbackaction helper. |
 | 155 | `getFeedbackStatusForAction` | Function | top-level | yes | `action` | `UserFeedbackStatus \| null` | Implements the getfeedbackstatusforaction helper. |
 | 167 | `validateUserFeedbackPayload` | Validation or normalization helper | top-level | yes | `payload` | `UserFeedbackValidationResult` | Validates or normalizes validateuserfeedbackpayload values for callers. |
-| 207 | `normalizeFeedbackPath` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizefeedbackpath values for callers. |
-| 214 | `normalizeFeedbackMetadata` | Validation or normalization helper | top-level | yes | `value` | `Record<string, string>` | Validates or normalizes normalizefeedbackmetadata values for callers. |
+| 207 | `normalizeFeedbackPath` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizefeedbackpath values for callers. |
+| 214 | `normalizeFeedbackMetadata` | Validation or normalization helper | top-level | no | `value` | `Record<string, string>` | Validates or normalizes normalizefeedbackmetadata values for callers. |
 
 ## Types
 

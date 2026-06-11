@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-markdown.ts`
 - Kind: Application library module
-- Size: 3266 bytes
+- Size: 3259 bytes
 - Lines: 112
-- Source hash: `cebeca0e2a5428fab144eb394000b4d760ad02730bfc1fd084038ee2d9d6e613`
+- Source hash: `bcd1878e2ba166bac0a4ddddc8ee1420e2fd1fcdcab932d230faa1ec5bc49396`
 
 ## What This File Does
 
@@ -22,7 +22,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `createCommunityInlineImageUrl`
 - `filterCommunityInlineAttachments`
 - `getCommunityInlineImageId`
-- `getCommunityMarkdownImageUrls`
 - `getCommunityMarkdownPlainText`
 - `normalizeCommunityMarkdown`
 - `replaceCommunityInlineImageUrls`
@@ -40,7 +39,7 @@ None detected.
 | 28 | `getCommunityInlineImageId` | Function | top-level | yes | `url` | `string` | Implements the getcommunityinlineimageid helper. |
 | 35 | `createCommunityInlineImageMarkdown` | Action helper | top-level | yes | `id`, `altText` | `string` | Runs the createcommunityinlineimagemarkdown workflow for callers. |
 | 40 | `normalizeCommunityMarkdown` | Validation or normalization helper | top-level | yes | `markdown` | `string` | Validates or normalizes normalizecommunitymarkdown values for callers. |
-| 44 | `getCommunityMarkdownImageUrls` | Function | top-level | yes | `markdown` | `Set<string>` | Implements the getcommunitymarkdownimageurls helper. |
+| 44 | `getCommunityMarkdownImageUrls` | Function | top-level | no | `markdown` | `Set<string>` | Implements the getcommunitymarkdownimageurls helper. |
 | 58 | `replaceCommunityInlineImageUrls` | Function | top-level | yes | `markdown`, `replacements` | `string` | Implements the replacecommunityinlineimageurls helper. |
 | 80 | `filterCommunityInlineAttachments` | Function | top-level | yes | `markdown`, `attachments` | `T[]` | Implements the filtercommunityinlineattachments helper. |
 | 95 | `getCommunityMarkdownPlainText` | Function | top-level | yes | `markdown` | `string` | Implements the getcommunitymarkdownplaintext helper. |

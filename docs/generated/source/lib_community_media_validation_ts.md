@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-media-validation.ts`
 - Kind: Application library module
-- Size: 1966 bytes
+- Size: 1959 bytes
 - Lines: 76
-- Source hash: `4ad7cec745b6487fc247c31397db778366eaef0ab08a67c8751f1379c644ca5c`
+- Source hash: `d2a8467d41f6277252af3295af189fab93f4f49b673a9c7c9800106c1f40978b`
 
 ## What This File Does
 
@@ -18,7 +18,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Exports
 
-- `COMMUNITY_POST_IMAGE_ALLOWED_MIME_TYPES`
 - `COMMUNITY_POST_IMAGE_MAX_COUNT`
 - `COMMUNITY_POST_IMAGE_MAX_FILE_SIZE_BYTES`
 - `CommunityPostImageClientInput`

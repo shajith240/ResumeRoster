@@ -9,8 +9,180 @@ Exit code: `0`
 
 ```text
 Clone found (sql):
+ - supabase\migrations\0068_indexed_mention_profile_search.sql [24:1 - 55:6] (31 lines, 236 tokens)
+   supabase\migrations\0069_optimize_mention_typeahead_latency.sql [6:1 - 37:24]
+
+Clone found (sql):
+ - supabase\migrations\0068_indexed_mention_profile_search.sql [69:9 - 97:68] (28 lines, 290 tokens)
+   supabase\migrations\0069_optimize_mention_typeahead_latency.sql [56:43 - 85:9]
+
+Clone found (sql):
+ - supabase\migrations\0066_refine_reviewer_leaderboard_ranking.sql [83:3 - 115:10] (32 lines, 209 tokens)
+   supabase\migrations\0066_refine_reviewer_leaderboard_ranking.sql [16:60 - 47:10]
+
+Clone found (sql):
+ - supabase\migrations\0066_refine_reviewer_leaderboard_ranking.sql [116:5 - 146:64] (30 lines, 276 tokens)
+   supabase\migrations\0066_refine_reviewer_leaderboard_ranking.sql [47:5 - 77:58]
+
+Clone found (sql):
+ - supabase\migrations\0064_hard_delete_community_posts.sql [48:1 - 82:9] (34 lines, 216 tokens)
+   supabase\migrations\0074_production_backend_integrity_hardening.sql [110:1 - 144:9]
+
+Clone found (sql):
+ - supabase\migrations\0064_hard_delete_community_posts.sql [80:9 - 126:134] (46 lines, 307 tokens)
+   supabase\migrations\0074_production_backend_integrity_hardening.sql [153:60 - 199:108]
+
+Clone found (sql):
+ - supabase\migrations\0062_fix_community_vote_rpc_conflicts.sql [194:9 - 214:32] (20 lines, 148 tokens)
+   supabase\migrations\0070_community_comment_static_images.sql [271:58 - 291:32]
+
+Clone found (sql):
+ - supabase\migrations\0060_community_polls_and_drafts_support.sql [329:9 - 366:16] (37 lines, 237 tokens)
+   supabase\migrations\0061_fix_community_poll_vote_rpc_conflict.sql [28:58 - 65:17]
+
+Clone found (sql):
+ - supabase\migrations\0058_allow_title_only_community_posts.sql [128:11 - 166:5] (38 lines, 169 tokens)
+   supabase\migrations\0060_community_polls_and_drafts_support.sql [207:53 - 245:9]
+
+Clone found (sql):
+ - supabase\migrations\0057_fix_community_post_submit_profile_conflict.sql [5:1 - 67:33] (62 lines, 511 tokens)
+   supabase\migrations\0058_allow_title_only_community_posts.sql [10:1 - 72:33]
+
+Clone found (sql):
+ - supabase\migrations\0057_fix_community_post_submit_profile_conflict.sql [68:74 - 302:92] (234 lines, 1725 tokens)
+   supabase\migrations\0058_allow_title_only_community_posts.sql [73:65 - 307:113]
+
+Clone found (sql):
+ - supabase\migrations\0055_community_discussion_actions.sql [156:56 - 203:9] (47 lines, 335 tokens)
+   supabase\migrations\0070_community_comment_static_images.sql [101:27 - 148:5]
+
+Clone found (sql):
+ - supabase\migrations\0055_community_discussion_actions.sql [235:18 - 299:18] (64 lines, 430 tokens)
+   supabase\migrations\0062_fix_community_vote_rpc_conflicts.sql [77:7 - 141:19]
+
+Clone found (sql):
+ - supabase\migrations\0055_community_discussion_actions.sql [299:37 - 391:18] (92 lines, 664 tokens)
+   supabase\migrations\0062_fix_community_vote_rpc_conflicts.sql [142:7 - 233:19]
+
+Clone found (sql):
+ - supabase\migrations\0055_community_discussion_actions.sql [391:40 - 416:7] (25 lines, 190 tokens)
+   supabase\migrations\0062_fix_community_vote_rpc_conflicts.sql [234:7 - 258:8]
+
+Clone found (sql):
+ - supabase\migrations\0055_community_discussion_actions.sql [414:18 - 449:33] (35 lines, 245 tokens)
+   supabase\migrations\0058_allow_title_only_community_posts.sql [307:113 - 342:33]
+
+Clone found (sql):
+ - supabase\migrations\0055_community_discussion_actions.sql [450:72 - 497:7] (47 lines, 339 tokens)
+   supabase\migrations\0058_allow_title_only_community_posts.sql [343:63 - 390:7]
+
+Clone found (sql):
+ - supabase\migrations\0055_community_discussion_actions.sql [589:67 - 611:61] (22 lines, 166 tokens)
+   supabase\migrations\0062_fix_community_vote_rpc_conflicts.sql [193:43 - 292:63]
+
+Clone found (sql):
+ - supabase\migrations\0055_community_discussion_actions.sql [634:83 - 684:9] (50 lines, 317 tokens)
+   supabase\migrations\0070_community_comment_static_images.sql [247:87 - 297:18]
+
+Clone found (sql):
+ - supabase\migrations\0055_community_discussion_actions.sql [684:5 - 706:7] (22 lines, 171 tokens)
+   supabase\migrations\0070_community_comment_static_images.sql [298:5 - 320:8]
+
+Clone found (sql):
+ - supabase\migrations\0054_community_post_media_and_comments.sql [162:3 - 228:16] (66 lines, 576 tokens)
+   supabase\migrations\0058_allow_title_only_community_posts.sql [33:3 - 99:17]
+
+Clone found (sql):
+ - supabase\migrations\0054_community_post_media_and_comments.sql [228:20 - 259:9] (31 lines, 280 tokens)
+   supabase\migrations\0058_allow_title_only_community_posts.sql [99:43 - 130:9]
+
+Clone found (sql):
+ - supabase\migrations\0054_community_post_media_and_comments.sql [283:17 - 389:13] (106 lines, 817 tokens)
+   supabase\migrations\0058_allow_title_only_community_posts.sql [189:9 - 295:9]
+
+Clone found (sql):
+ - supabase\migrations\0054_community_post_media_and_comments.sql [427:9 - 449:9] (22 lines, 151 tokens)
+   supabase\migrations\0070_community_comment_static_images.sql [110:58 - 131:38]
+
+Clone found (sql):
+ - supabase\migrations\0054_community_post_media_and_comments.sql [462:30 - 498:8] (36 lines, 220 tokens)
+   supabase\migrations\0055_community_discussion_actions.sql [201:9 - 237:7]
+
+Clone found (sql):
+ - supabase\migrations\0053_submit_community_post_rpc.sql [35:54 - 66:9] (31 lines, 277 tokens)
+   supabase\migrations\0058_allow_title_only_community_posts.sql [45:75 - 71:5]
+
+Clone found (sql):
+ - supabase\migrations\0053_submit_community_post_rpc.sql [63:74 - 166:5] (103 lines, 740 tokens)
+   supabase\migrations\0054_community_post_media_and_comments.sql [212:47 - 221:6]
+
+Clone found (sql):
+ - supabase\migrations\0047_guided_review_queue.sql [316:129 - 343:5] (27 lines, 170 tokens)
+   supabase\migrations\0051_db_lint_warning_cleanup.sql [141:35 - 168:10]
+
+Clone found (sql):
+ - supabase\migrations\0047_guided_review_queue.sql [343:3 - 416:138] (73 lines, 570 tokens)
+   supabase\migrations\0051_db_lint_warning_cleanup.sql [170:3 - 245:127]
+
+Clone found (sql):
+ - supabase\migrations\0042_transactional_admin_moderation_actions.sql [217:37 - 322:19] (105 lines, 682 tokens)
+   supabase\migrations\0050_validate_integrity_and_restore_review_votes.sql [294:24 - 399:11]
+
+Clone found (sql):
+ - supabase\migrations\0042_transactional_admin_moderation_actions.sql [325:72 - 374:9] (49 lines, 366 tokens)
+   supabase\migrations\0050_validate_integrity_and_restore_review_votes.sql [418:39 - 467:56]
+
+Clone found (sql):
+ - supabase\migrations\0042_transactional_admin_moderation_actions.sql [402:66 - 562:64] (160 lines, 1092 tokens)
+   supabase\migrations\0050_validate_integrity_and_restore_review_votes.sql [529:5 - 689:56]
+
+Clone found (sql):
+ - supabase\migrations\0037_admin_delete_user_transaction.sql [28:32 - 97:52] (69 lines, 559 tokens)
+   supabase\migrations\0074_production_backend_integrity_hardening.sql [299:32 - 367:53]
+
+Clone found (sql):
+ - supabase\migrations\0037_admin_delete_user_transaction.sql [94:24 - 119:7] (25 lines, 220 tokens)
+   supabase\migrations\0074_production_backend_integrity_hardening.sql [403:76 - 428:11]
+
+Clone found (sql):
+ - supabase\migrations\0037_admin_delete_user_transaction.sql [117:56 - 139:37] (22 lines, 218 tokens)
+   supabase\migrations\0074_production_backend_integrity_hardening.sql [452:70 - 474:47]
+
+Clone found (sql):
+ - supabase\migrations\0037_admin_delete_user_transaction.sql [144:56 - 173:42] (29 lines, 327 tokens)
+   supabase\migrations\0074_production_backend_integrity_hardening.sql [499:80 - 528:48]
+
+Clone found (sql):
+ - supabase\migrations\0037_admin_delete_user_transaction.sql [171:72 - 198:38] (27 lines, 277 tokens)
+   supabase\migrations\0074_production_backend_integrity_hardening.sql [542:70 - 569:30]
+
+Clone found (sql):
+ - supabase\migrations\0037_admin_delete_user_transaction.sql [196:80 - 231:16] (35 lines, 258 tokens)
+   supabase\migrations\0074_production_backend_integrity_hardening.sql [589:3 - 624:27]
+
+Clone found (sql):
+ - supabase\migrations\0037_admin_delete_user_transaction.sql [230:48 - 260:31] (30 lines, 212 tokens)
+   supabase\migrations\0074_production_backend_integrity_hardening.sql [625:55 - 657:31]
+
+Clone found (sql):
+ - supabase\migrations\0036_refine_linted_usernames.sql [5:1 - 113:7] (108 lines, 701 tokens)
+   supabase\migrations\0051_db_lint_warning_cleanup.sql [4:1 - 112:8]
+
+Clone found (sql):
+ - supabase\migrations\0036_refine_linted_usernames.sql [113:3 - 136:4] (23 lines, 230 tokens)
+   supabase\migrations\0051_db_lint_warning_cleanup.sql [112:24 - 136:9]
+
+Clone found (sql):
  - supabase\migrations\0028_authenticated_write_rate_limits.sql [137:1 - 165:18] (28 lines, 169 tokens)
    supabase\migrations\0030_rate_limit_pgcrypto_schema.sql [23:5 - 51:22]
+
+Clone found (sql):
+ - supabase\migrations\0026_data_integrity_guardrails.sql [29:1 - 40:8] (11 lines, 142 tokens)
+   supabase\migrations\0050_validate_integrity_and_restore_review_votes.sql [92:1 - 103:8]
+
+Clone found (sql):
+ - supabase\migrations\0026_data_integrity_guardrails.sql [76:14 - 91:13] (15 lines, 176 tokens)
+   supabase\migrations\0050_validate_integrity_and_restore_review_votes.sql [128:7 - 143:15]
 
 Clone found (sql):
  - supabase\migrations\0025_linted_naming_compatibility.sql [143:94 - 186:5] (43 lines, 357 tokens)
@@ -73,16 +245,20 @@ Clone found (sql):
    supabase\migrations\0039_transactional_admin_messages.sql [248:7 - 267:6]
 
 Clone found (sql):
+ - supabase\migrations\0019_realtime_notifications.sql [538:3 - 576:5] (38 lines, 271 tokens)
+   supabase\migrations\0050_validate_integrity_and_restore_review_votes.sql [225:3 - 263:7]
+
+Clone found (sql):
  - supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [3:1 - 25:21] (22 lines, 153 tokens)
-   supabase\migrations\0047_guided_review_queue.sql [318:1 - 340:22]
+   supabase\migrations\0051_db_lint_warning_cleanup.sql [143:1 - 165:22]
 
 Clone found (sql):
  - supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [27:27 - 55:9] (28 lines, 216 tokens)
-   supabase\migrations\0047_guided_review_queue.sql [340:27 - 368:9]
+   supabase\migrations\0047_guided_review_queue.sql [340:27 - 195:9]
 
 Clone found (sql):
  - supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [77:9 - 105:35] (28 lines, 161 tokens)
-   supabase\migrations\0047_guided_review_queue.sql [366:66 - 394:33]
+   supabase\migrations\0051_db_lint_warning_cleanup.sql [193:66 - 221:33]
 
 Clone found (sql):
  - supabase\migrations\0018_map_onboarding_persona_to_profile_role.sql [140:1 - 181:40] (41 lines, 259 tokens)
@@ -94,11 +270,11 @@ Clone found (sql):
 
 Clone found (sql):
  - supabase\migrations\0016_fix_onboarding_rpc_ambiguity.sql [3:1 - 28:6] (25 lines, 172 tokens)
-   supabase\migrations\0047_guided_review_queue.sql [318:1 - 28:24]
+   supabase\migrations\0051_db_lint_warning_cleanup.sql [143:1 - 28:24]
 
 Clone found (sql):
  - supabase\migrations\0016_fix_onboarding_rpc_ambiguity.sql [27:27 - 53:9] (26 lines, 190 tokens)
-   supabase\migrations\0047_guided_review_queue.sql [341:29 - 366:24]
+   supabase\migrations\0047_guided_review_queue.sql [341:29 - 193:24]
 
 Clone found (sql):
  - supabase\migrations\0016_fix_onboarding_rpc_ambiguity.sql [51:83 - 104:18] (53 lines, 410 tokens)
@@ -106,7 +282,7 @@ Clone found (sql):
 
 Clone found (sql):
  - supabase\migrations\0015_role_onboarding.sql [224:76 - 316:16] (92 lines, 683 tokens)
-   supabase\migrations\0047_guided_review_queue.sql [316:129 - 95:17]
+   supabase\migrations\0051_db_lint_warning_cleanup.sql [141:35 - 95:17]
 
 Clone found (sql):
  - supabase\migrations\0013_reviewer_community_layer.sql [230:56 - 314:13] (84 lines, 603 tokens)
@@ -195,10 +371,10 @@ Clone found (sql):
 ┌────────┬────────────────┬─────────────┬──────────────┬──────────────┬──────────────────┬───────────────────┐
 │ Format │ Files analyzed │ Total lines │ Total tokens │ Clones found │ Duplicated lines │ Duplicated tokens │
 ├────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ sql    │ 49             │ 11228       │ 93249        │ 46           │ 2176 (19.38%)    │ 17317 (18.57%)    │
+│ sql    │ 72             │ 17276       │ 139317       │ 90           │ 4413 (25.54%)    │ 34030 (24.43%)    │
 ├────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
-│ Total: │ 49             │ 11228       │ 93249        │ 46           │ 2176 (19.38%)    │ 17317 (18.57%)    │
+│ Total: │ 72             │ 17276       │ 139317       │ 90           │ 4413 (25.54%)    │ 34030 (24.43%)    │
 └────────┴────────────────┴─────────────┴──────────────┴──────────────┴──────────────────┴───────────────────┘
-Found 46 clones.
+Found 90 clones.
 time: deterministic
 ```

@@ -4,9 +4,9 @@
 
 - Source path: `lib/online-presence.ts`
 - Kind: Application library module
-- Size: 1281 bytes
+- Size: 1274 bytes
 - Lines: 50
-- Source hash: `62f78be82ed090db157fcea356be0a96fef7cfdbe4afe07f2437df5c7d583984`
+- Source hash: `a6607ce93b28a3a0fd5273e3bada60aba15d558c00c565d85e7491a4d25e3a9e`
 
 ## What This File Does
 
@@ -19,7 +19,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 ## Exports
 
 - `loadOnlineProfileIds`
-- `ONLINE_PRESENCE_WINDOW_SECONDS`
 
 ## Imports
 

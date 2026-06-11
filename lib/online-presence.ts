@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase/client";
 
-export const ONLINE_PRESENCE_WINDOW_SECONDS = 120;
+const ONLINE_PRESENCE_WINDOW_SECONDS = 120;
 const ONLINE_PRESENCE_LOOKUP_CHUNK_SIZE = 200;
 const MAX_ONLINE_PRESENCE_LOOKUP_IDS = 500;
 

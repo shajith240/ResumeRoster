@@ -4,9 +4,9 @@
 
 - Source path: `lib/server/rate-limit.ts`
 - Kind: Application library module
-- Size: 4125 bytes
-- Lines: 152
-- Source hash: `fbee5dc9ef0f9da48bc99073300cb55cab39b45836fe00884b897eac11a5a50c`
+- Size: 3940 bytes
+- Lines: 146
+- Source hash: `ad08750425257a31035cb759f43d76e0daebea2a21dcc8cf7b6a8b3201cd25a7`
 
 ## What This File Does
 
@@ -31,18 +31,18 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 81 | `firstRateLimitRow` | Function | top-level | no | `data` | `RateLimitRow \| null` | Implements the firstratelimitrow helper. |
-| 86 | `positiveInteger` | Function | top-level | no | `value`, `fallback` | `number` | Implements the positiveinteger helper. |
-| 91 | `rateLimiterUnavailableResponse` | Function | top-level | no | none | `Response` | Implements the ratelimiterunavailableresponse helper. |
-| 98 | `rateLimitedResponse` | Function | top-level | no | `policy`, `row` | `Response` | Implements the ratelimitedresponse helper. |
-| 114 | `enforceApiRateLimit` | Function async | top-level | yes | `admin`, `userId`, `policyName` | `Promise<Response \| null>` | Implements the enforceapiratelimit helper. |
+| 75 | `firstRateLimitRow` | Function | top-level | no | `data` | `RateLimitRow \| null` | Implements the firstratelimitrow helper. |
+| 80 | `positiveInteger` | Function | top-level | no | `value`, `fallback` | `number` | Implements the positiveinteger helper. |
+| 85 | `rateLimiterUnavailableResponse` | Function | top-level | no | none | `Response` | Implements the ratelimiterunavailableresponse helper. |
+| 92 | `rateLimitedResponse` | Function | top-level | no | `policy`, `row` | `Response` | Implements the ratelimitedresponse helper. |
+| 108 | `enforceApiRateLimit` | Function async | top-level | yes | `admin`, `userId`, `policyName` | `Promise<Response \| null>` | Implements the enforceapiratelimit helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 73 | `ApiRateLimitPolicyName` | type |
-| 75 | `RateLimitRow` | type |
+| 67 | `ApiRateLimitPolicyName` | type |
+| 69 | `RateLimitRow` | type |
 
 ## Related Tests
 

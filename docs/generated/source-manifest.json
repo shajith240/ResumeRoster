@@ -670,11 +670,11 @@
       "exportCount": 1
     },
     {
-      "hash": "1a3fc04c383f3fb05a0b5a9bdfdaaa2e03a6d2ee5a5f7e51a16fae1deafee545",
+      "hash": "bb259ef10a27669f645c0305733696ea5e5585e6e498f53d19a73cae5ef94025",
       "kind": "React component",
-      "lineCount": 436,
+      "lineCount": 443,
       "relativePath": "components/account/UserDropdown.tsx",
-      "size": 12438,
+      "size": 12749,
       "functionCount": 4,
       "importCount": 21,
       "exportCount": 1
@@ -2800,14 +2800,14 @@
       "exportCount": 5
     },
     {
-      "hash": "94b3ccec678a9ce3c479ea3157efef2edb34d5e82d153a24b9beba64f565a3af",
+      "hash": "9a39d5745ff6077022bc0c9c221e7d190ca6815c6f0e72a454c0b150ffe46cc1",
       "kind": "Application library module",
       "lineCount": 9,
       "relativePath": "lib/app-routes.ts",
-      "size": 306,
+      "size": 292,
       "functionCount": 1,
       "importCount": 1,
-      "exportCount": 3
+      "exportCount": 1
     },
     {
       "hash": "a4fed7f97ca0084bd82510c70c10a8e7224410f45058e148aa8ac2cf05d4f909",
@@ -2860,14 +2860,14 @@
       "exportCount": 7
     },
     {
-      "hash": "15f1f2a7e6bc9f5836bf1460913cf7245251b5dbe787304d677bccd403a82bb3",
+      "hash": "1c634c299db80e766b173411603e4a8afd06c17448b19fc68887c7e4256c6b20",
       "kind": "Application library module",
       "lineCount": 337,
       "relativePath": "lib/comment-mentions.ts",
-      "size": 8696,
+      "size": 8682,
       "functionCount": 20,
       "importCount": 0,
-      "exportCount": 19
+      "exportCount": 17
     },
     {
       "hash": "dea3d5221dfc2ea5500527a7cfa8f37e8e6b71256e445d787b91b28c6ab22c15",
@@ -2880,44 +2880,44 @@
       "exportCount": 5
     },
     {
-      "hash": "8f417caebab60f3a6d2138815d8da0b66977ec8cce808b532b3bace7d73ad484",
-      "kind": "Application library module",
-      "lineCount": 120,
-      "relativePath": "lib/community-feed.ts",
-      "size": 3015,
-      "functionCount": 7,
-      "importCount": 0,
-      "exportCount": 10
-    },
-    {
-      "hash": "556597821cba3d30113b4db71e556bab1e7a40c3a9d39b5097b8160c2c48815d",
-      "kind": "Application library module",
-      "lineCount": 124,
-      "relativePath": "lib/community-guardrails.ts",
-      "size": 2888,
-      "functionCount": 7,
-      "importCount": 2,
-      "exportCount": 7
-    },
-    {
-      "hash": "cebeca0e2a5428fab144eb394000b4d760ad02730bfc1fd084038ee2d9d6e613",
+      "hash": "2c2ec6d4e70f128ac29b5fd27ef76a3eb605f32bc7007228a84234b21abbdf13",
       "kind": "Application library module",
       "lineCount": 112,
-      "relativePath": "lib/community-markdown.ts",
-      "size": 3266,
-      "functionCount": 9,
+      "relativePath": "lib/community-feed.ts",
+      "size": 2836,
+      "functionCount": 7,
       "importCount": 0,
       "exportCount": 8
     },
     {
-      "hash": "4ad7cec745b6487fc247c31397db778366eaef0ab08a67c8751f1379c644ca5c",
+      "hash": "a87d6c28cb0de26bf6ca2d1b80f201b71ad4ce700c8554b54cd237bf12d834b5",
+      "kind": "Application library module",
+      "lineCount": 119,
+      "relativePath": "lib/community-guardrails.ts",
+      "size": 2723,
+      "functionCount": 6,
+      "importCount": 2,
+      "exportCount": 6
+    },
+    {
+      "hash": "bcd1878e2ba166bac0a4ddddc8ee1420e2fd1fcdcab932d230faa1ec5bc49396",
+      "kind": "Application library module",
+      "lineCount": 112,
+      "relativePath": "lib/community-markdown.ts",
+      "size": 3259,
+      "functionCount": 9,
+      "importCount": 0,
+      "exportCount": 7
+    },
+    {
+      "hash": "d2a8467d41f6277252af3295af189fab93f4f49b673a9c7c9800106c1f40978b",
       "kind": "Application library module",
       "lineCount": 76,
       "relativePath": "lib/community-media-validation.ts",
-      "size": 1966,
+      "size": 1959,
       "functionCount": 2,
       "importCount": 1,
-      "exportCount": 10
+      "exportCount": 9
     },
     {
       "hash": "09c2c769dccf4090004f64c0cfecbd2b7dc6dadf94bef6e02c8acf33f51ec477",
@@ -2940,24 +2940,24 @@
       "exportCount": 4
     },
     {
-      "hash": "5f106c94c2db93066b42d52b26fd39dc0b9cd955852d902fedb896021d570cbd",
+      "hash": "c5401d64269a7e48422f5b1c7d63b2d543fdb513e3fcd8a685713b405b62e19d",
       "kind": "Application library module",
       "lineCount": 140,
       "relativePath": "lib/community-validation.ts",
-      "size": 3904,
+      "size": 3869,
       "functionCount": 9,
       "importCount": 1,
-      "exportCount": 19
+      "exportCount": 14
     },
     {
-      "hash": "4eca709114c973f21dd1c5739b38cbec70c065c957a7ea6a8e1b4ba467c35573",
+      "hash": "9e7d58ac353a1c38a48d0455779a73c4f6e2367a36e17ec224ac2d324e5dc18b",
       "kind": "Application library module",
-      "lineCount": 85,
+      "lineCount": 78,
       "relativePath": "lib/community.ts",
-      "size": 1984,
+      "size": 1849,
       "functionCount": 4,
       "importCount": 0,
-      "exportCount": 12
+      "exportCount": 11
     },
     {
       "hash": "4c44170632e7ce960c0bde5cf5a404cb42ef971be88e9bcf33baf59b80b51e49",
@@ -3040,14 +3040,14 @@
       "exportCount": 14
     },
     {
-      "hash": "62f78be82ed090db157fcea356be0a96fef7cfdbe4afe07f2437df5c7d583984",
+      "hash": "a6607ce93b28a3a0fd5273e3bada60aba15d558c00c565d85e7491a4d25e3a9e",
       "kind": "Application library module",
       "lineCount": 50,
       "relativePath": "lib/online-presence.ts",
-      "size": 1281,
+      "size": 1274,
       "functionCount": 1,
       "importCount": 1,
-      "exportCount": 2
+      "exportCount": 1
     },
     {
       "hash": "452bdfdbd8bbe32081d670ce6a1df6c49c7012f54caba84a34a0e32a9d3e0778",
@@ -3230,11 +3230,11 @@
       "exportCount": 2
     },
     {
-      "hash": "fbee5dc9ef0f9da48bc99073300cb55cab39b45836fe00884b897eac11a5a50c",
+      "hash": "ad08750425257a31035cb759f43d76e0daebea2a21dcc8cf7b6a8b3201cd25a7",
       "kind": "Application library module",
-      "lineCount": 152,
+      "lineCount": 146,
       "relativePath": "lib/server/rate-limit.ts",
-      "size": 4125,
+      "size": 3940,
       "functionCount": 5,
       "importCount": 2,
       "exportCount": 3
@@ -3280,14 +3280,14 @@
       "exportCount": 9
     },
     {
-      "hash": "cda7557b8f49d7603b62c25f7a64b8809d1faca1630c8c12e89642b9f173514b",
+      "hash": "e3235c2b058a301d7ca83ec43616c149431d0a14adef36e8b67b37f9c9f6b5ce",
       "kind": "Application library module",
       "lineCount": 47,
       "relativePath": "lib/supabase/avatars.ts",
-      "size": 1162,
+      "size": 1155,
       "functionCount": 3,
       "importCount": 1,
-      "exportCount": 3
+      "exportCount": 2
     },
     {
       "hash": "a6f4ee87c231576432eac6e9e7c8b79f17c0d66271acd030b535d05ae88aa8c6",
@@ -3330,14 +3330,14 @@
       "exportCount": 1
     },
     {
-      "hash": "e8856c22e97431d330c93b35095de20448e35dc597080829e9e53dfef29a2443",
+      "hash": "56dd6ffc35b32470a29d4eb5404f571bb9be4b6b882560d1facc053b16c4f778",
       "kind": "Application library module",
       "lineCount": 227,
       "relativePath": "lib/user-feedback.ts",
-      "size": 5554,
+      "size": 5533,
       "functionCount": 11,
       "importCount": 1,
-      "exportCount": 21
+      "exportCount": 18
     },
     {
       "hash": "41cd116aa62e1764c4d2ddb0282f9f4dff47d607b5e49795d709de98f4f48afe",
@@ -4690,5 +4690,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "88c2c6a249ea017a35e955321ca9f11874b898dfed04d86165a542d79d8f2a86"
+  "manifestHash": "5c1bfdc14c148df17f5fe4185ef3e69fc1d361c739e1ca2ed9a7b0e0532f6a76"
 }

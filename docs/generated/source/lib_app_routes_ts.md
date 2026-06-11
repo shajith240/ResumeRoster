@@ -4,9 +4,9 @@
 
 - Source path: `lib/app-routes.ts`
 - Kind: Application library module
-- Size: 306 bytes
+- Size: 292 bytes
 - Lines: 9
-- Source hash: `94b3ccec678a9ce3c479ea3157efef2edb34d5e82d153a24b9beba64f565a3af`
+- Source hash: `9a39d5745ff6077022bc0c9c221e7d190ca6815c6f0e72a454c0b150ffe46cc1`
 
 ## What This File Does
 
@@ -18,9 +18,7 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Exports
 
-- `COMMUNITY_HOME_ROUTE`
 - `getAppHomeRoute`
-- `RESUME_FEED_ROUTE`
 
 ## Imports
 

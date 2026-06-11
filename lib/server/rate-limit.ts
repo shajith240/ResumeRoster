@@ -62,12 +62,6 @@ export const API_RATE_LIMIT_POLICIES = {
 		publicMessage: "Too many resume uploads. Try again later.",
 		windowSeconds: 3600,
 	},
-	reviewerApplicationSubmit: {
-		action: "reviewer_application_submit",
-		maxRequests: 8,
-		publicMessage: "Too many reviewer applications. Try again later.",
-		windowSeconds: 3600,
-	},
 } as const;
 
 export type ApiRateLimitPolicyName = keyof typeof API_RATE_LIMIT_POLICIES;

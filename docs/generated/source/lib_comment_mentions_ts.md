@@ -4,9 +4,9 @@
 
 - Source path: `lib/comment-mentions.ts`
 - Kind: Application library module
-- Size: 8696 bytes
+- Size: 8682 bytes
 - Lines: 337
-- Source hash: `15f1f2a7e6bc9f5836bf1460913cf7245251b5dbe787304d677bccd403a82bb3`
+- Source hash: `1c634c299db80e766b173411603e4a8afd06c17448b19fc68887c7e4256c6b20`
 
 ## What This File Does
 
@@ -22,12 +22,10 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `buildMentionSuggestions`
 - `buildMentionTargetMap`
 - `cacheMentionSearchSuggestions`
-- `extractMentionHandlesFromText`
 - `extractMentionHandlesFromTexts`
 - `getCachedMentionSearchSuggestions`
 - `getMentionAvatarUrl`
 - `getMentionHandleKey`
-- `getMentionSearchQueryKey`
 - `getMentionSuggestionMatches`
 - `lookupMentionSuggestionsByHandles`
 - `MENTION_TEXT_PATTERN`
@@ -48,7 +46,7 @@ None detected.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 38 | `normalizeMentionHandle` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizementionhandle values for callers. |
 | 48 | `getMentionHandleKey` | Function | top-level | yes | `value` | `string` | Implements the getmentionhandlekey helper. |
-| 52 | `getMentionSearchQueryKey` | Function | top-level | yes | `value` | `string` | Implements the getmentionsearchquerykey helper. |
+| 52 | `getMentionSearchQueryKey` | Function | top-level | no | `value` | `string` | Implements the getmentionsearchquerykey helper. |
 | 56 | `getFallbackMentionHandle` | Function | top-level | no | `userId` | `string` | Implements the getfallbackmentionhandle helper. |
 | 61 | `getMentionAvatarUrl` | Function | top-level | yes | `userId`, `profile` | `string` | Implements the getmentionavatarurl helper. |
 | 66 | `buildMentionSuggestion` | Function | top-level | yes | `userId`, `profile`, `subtitle` | `MentionSuggestion` | Implements the buildmentionsuggestion helper. |
@@ -59,7 +57,7 @@ None detected.
 | 152 | `cacheMentionSearchSuggestions` | Function | top-level | yes | `query`, `suggestions` | `void` | Implements the cachementionsearchsuggestions helper. |
 | 164 | `getCachedMentionSearchSuggestions` | Function | top-level | yes | `query`, `limit` | `MentionSearchCacheResult` | Implements the getcachedmentionsearchsuggestions helper. |
 | 195 | `mergeMentionSuggestions` | Function | top-level | yes | `primary`, `secondary`, `limit` | `MentionSuggestion[]` | Implements the mergementionsuggestions helper. |
-| 222 | `extractMentionHandlesFromText` | Function | top-level | yes | `text` | `string[]` | Implements the extractmentionhandlesfromtext helper. |
+| 222 | `extractMentionHandlesFromText` | Function | top-level | no | `text` | `string[]` | Implements the extractmentionhandlesfromtext helper. |
 | 240 | `extractMentionHandlesFromTexts` | Function | top-level | yes | `texts` | `string[]` | Implements the extractmentionhandlesfromtexts helper. |
 | 257 | `normalizeMentionHandleList` | Validation or normalization helper | top-level | yes | `values`, `limit` | `string[]` | Validates or normalizes normalizementionhandlelist values for callers. |
 | 274 | `mentionAuthHeaders` | Function | top-level | no | `accessToken` | `{ Authorization: string; } \| null` | Implements the mentionauthheaders helper. |

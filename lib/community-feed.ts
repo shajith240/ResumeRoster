@@ -1,4 +1,4 @@
-export const COMMUNITY_FEED_TABS = [
+const COMMUNITY_FEED_TABS = [
 	"hot",
 	"new",
 	"top",
@@ -15,14 +15,6 @@ export type CommunityFeedPostRankInput = {
 	post_type: string;
 	status?: string | null;
 	upvote_count: number;
-};
-
-export const COMMUNITY_FEED_TAB_LABELS: Record<CommunityFeedTab, string> = {
-	hot: "Hot",
-	new: "New",
-	questions: "Questions",
-	top: "Top",
-	unanswered: "Unanswered",
 };
 
 export function normalizeCommunityFeedTab(

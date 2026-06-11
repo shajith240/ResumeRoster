@@ -5,7 +5,6 @@ import {
 import type {
 	CommunityPostComment,
 	CommunityPostStatus,
-	CommunityVoteReaction,
 } from "@/lib/supabase/types";
 
 type ActiveUserLike = {
@@ -116,8 +115,4 @@ export function getCommunityPollVoteBlockReason({
 	if (isVoting) return "Your poll vote is already updating.";
 
 	return null;
-}
-
-export function isCommunityReaction(value: unknown): value is CommunityVoteReaction {
-	return value === "upvote" || value === "downvote";
 }

@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-validation.ts`
 - Kind: Application library module
-- Size: 3904 bytes
+- Size: 3869 bytes
 - Lines: 140
-- Source hash: `5f106c94c2db93066b42d52b26fd39dc0b9cd955852d902fedb896021d570cbd`
+- Source hash: `c5401d64269a7e48422f5b1c7d63b2d543fdb513e3fcd8a685713b405b62e19d`
 
 ## What This File Does
 
@@ -21,21 +21,16 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `cleanCommunityText`
 - `COMMUNITY_POLL_DURATION_DAYS`
 - `COMMUNITY_POLL_OPTION_MAX_COUNT`
-- `COMMUNITY_POLL_OPTION_MAX_LENGTH`
-- `COMMUNITY_POLL_OPTION_MIN_COUNT`
 - `COMMUNITY_POST_BODY_MAX_LENGTH`
 - `COMMUNITY_POST_TAG_MAX_COUNT`
-- `COMMUNITY_POST_TAG_MAX_LENGTH`
 - `COMMUNITY_POST_TITLE_MAX_LENGTH`
 - `COMMUNITY_POST_TITLE_MIN_LENGTH`
 - `CommunityPostInput`
 - `getCommunityPollIssue`
 - `getCommunityPostIssue`
-- `getCommunityTagIssue`
 - `getDefaultCommunityPostType`
 - `isCommunityPollDurationDays`
 - `normalizeCommunityPollOptions`
-- `normalizeCommunityTag`
 - `parseCommunityTags`
 
 ## Imports
@@ -47,9 +42,9 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 25 | `cleanCommunityText` | Function | top-level | yes | `value` | `string` | Implements the cleancommunitytext helper. |
-| 29 | `normalizeCommunityTag` | Validation or normalization helper | top-level | yes | `value` | `string` | Validates or normalizes normalizecommunitytag values for callers. |
+| 29 | `normalizeCommunityTag` | Validation or normalization helper | top-level | no | `value` | `string` | Validates or normalizes normalizecommunitytag values for callers. |
 | 33 | `parseCommunityTags` | Validation or normalization helper | top-level | yes | `value` | `string[]` | Validates or normalizes parsecommunitytags values for callers. |
-| 50 | `getCommunityTagIssue` | Function | top-level | yes | `tags` | `"" \| "Use at most 5 tags." \| "Keep each tag between 2 and 40 characters."` | Implements the getcommunitytagissue helper. |
+| 50 | `getCommunityTagIssue` | Function | top-level | no | `tags` | `"" \| "Use at most 5 tags." \| "Keep each tag between 2 and 40 characters."` | Implements the getcommunitytagissue helper. |
 | 66 | `getCommunityPostIssue` | Function | top-level | yes | `input` | `string` | Implements the getcommunitypostissue helper. |
 | 94 | `normalizeCommunityPollOptions` | Validation or normalization helper | top-level | yes | `options` | `string[]` | Validates or normalizes normalizecommunitypolloptions values for callers. |
 | 98 | `getCommunityPollIssue` | Function | top-level | yes | `options` | `"" \| "Poll options must be unique." \| "Add at least 2 poll options." \| "Use at most 6 poll options." \| "Keep poll options under 120 c...` | Implements the getcommunitypollissue helper. |

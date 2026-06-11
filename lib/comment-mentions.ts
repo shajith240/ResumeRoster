@@ -49,7 +49,7 @@ export function getMentionHandleKey(value?: string | null) {
 	return normalizeMentionHandle(value).toLowerCase();
 }
 
-export function getMentionSearchQueryKey(value?: string | null) {
+function getMentionSearchQueryKey(value?: string | null) {
 	return normalizeMentionHandle(value).toLowerCase();
 }
 
@@ -219,7 +219,7 @@ export function mergeMentionSuggestions(
 	return merged;
 }
 
-export function extractMentionHandlesFromText(text: string) {
+function extractMentionHandlesFromText(text: string) {
 	const handles: string[] = [];
 	const seen = new Set<string>();
 	let match: RegExpExecArray | null;

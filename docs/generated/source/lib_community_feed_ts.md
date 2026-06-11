@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-feed.ts`
 - Kind: Application library module
-- Size: 3015 bytes
-- Lines: 120
-- Source hash: `8f417caebab60f3a6d2138815d8da0b66977ec8cce808b532b3bace7d73ad484`
+- Size: 2836 bytes
+- Lines: 112
+- Source hash: `2c2ec6d4e70f128ac29b5fd27ef76a3eb605f32bc7007228a84234b21abbdf13`
 
 ## What This File Does
 
@@ -18,8 +18,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 
 ## Exports
 
-- `COMMUNITY_FEED_TAB_LABELS`
-- `COMMUNITY_FEED_TABS`
 - `CommunityFeedPostRankInput`
 - `CommunityFeedTab`
 - `filterCommunityPostsForTabInCurrentOrder`
@@ -37,13 +35,13 @@ None detected.
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 28 | `normalizeCommunityFeedTab` | Validation or normalization helper | top-level | yes | `value` | `"new" \| "top" \| "hot" \| "questions" \| "unanswered"` | Validates or normalizes normalizecommunityfeedtab values for callers. |
-| 38 | `getCommunityPostScore` | Function | top-level | yes | `post` | `number` | Implements the getcommunitypostscore helper. |
-| 42 | `isVisibleCommunityFeedPostStatus` | Function | top-level | yes | `status` | `boolean` | Implements the isvisiblecommunityfeedpoststatus helper. |
-| 46 | `getCommunityHotScore` | Function | top-level | yes | `post`, `now` | `number` | Implements the getcommunityhotscore helper. |
-| 60 | `newestFirst` | Function | top-level | no | `a`, `b` | `number` | Implements the newestfirst helper. |
-| 67 | `sortCommunityPosts` | Function | top-level | yes | `posts`, `tab`, `now` | `T[]` | Implements the sortcommunityposts helper. |
-| 101 | `filterCommunityPostsForTabInCurrentOrder` | Function | top-level | yes | `posts`, `tab` | `T[]` | Implements the filtercommunitypostsfortabincurrentorder helper. |
+| 20 | `normalizeCommunityFeedTab` | Validation or normalization helper | top-level | yes | `value` | `"new" \| "top" \| "hot" \| "questions" \| "unanswered"` | Validates or normalizes normalizecommunityfeedtab values for callers. |
+| 30 | `getCommunityPostScore` | Function | top-level | yes | `post` | `number` | Implements the getcommunitypostscore helper. |
+| 34 | `isVisibleCommunityFeedPostStatus` | Function | top-level | yes | `status` | `boolean` | Implements the isvisiblecommunityfeedpoststatus helper. |
+| 38 | `getCommunityHotScore` | Function | top-level | yes | `post`, `now` | `number` | Implements the getcommunityhotscore helper. |
+| 52 | `newestFirst` | Function | top-level | no | `a`, `b` | `number` | Implements the newestfirst helper. |
+| 59 | `sortCommunityPosts` | Function | top-level | yes | `posts`, `tab`, `now` | `T[]` | Implements the sortcommunityposts helper. |
+| 93 | `filterCommunityPostsForTabInCurrentOrder` | Function | top-level | yes | `posts`, `tab` | `T[]` | Implements the filtercommunitypostsfortabincurrentorder helper. |
 
 ## Types
 

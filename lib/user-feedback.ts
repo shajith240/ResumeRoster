@@ -67,7 +67,7 @@ export const USER_FEEDBACK_PRIORITY_LABELS: Record<
 	urgent: "Urgent",
 };
 
-export type UserFeedbackInput = {
+type UserFeedbackInput = {
 	body: string;
 	category: UserFeedbackCategory;
 	metadata: Record<string, string>;
@@ -204,14 +204,14 @@ export function validateUserFeedbackPayload(
 	};
 }
 
-export function normalizeFeedbackPath(value: unknown) {
+function normalizeFeedbackPath(value: unknown) {
 	const path = limitString(value, 500);
 	if (!path || !path.startsWith("/") || path.startsWith("//")) return "/";
 	if (path.includes("\\") || /\s/.test(path)) return "/";
 	return path;
 }
 
-export function normalizeFeedbackMetadata(value: unknown) {
+function normalizeFeedbackMetadata(value: unknown) {
 	if (!isRecord(value)) return {};
 
 	const metadata: Record<string, string> = {};

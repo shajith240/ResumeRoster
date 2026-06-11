@@ -8,10 +8,10 @@ export const COMMUNITY_POST_TITLE_MIN_LENGTH = 8;
 export const COMMUNITY_POST_TITLE_MAX_LENGTH = 300;
 export const COMMUNITY_POST_BODY_MAX_LENGTH = 12000;
 export const COMMUNITY_POST_TAG_MAX_COUNT = 5;
-export const COMMUNITY_POST_TAG_MAX_LENGTH = 40;
-export const COMMUNITY_POLL_OPTION_MIN_COUNT = 2;
+const COMMUNITY_POST_TAG_MAX_LENGTH = 40;
+const COMMUNITY_POLL_OPTION_MIN_COUNT = 2;
 export const COMMUNITY_POLL_OPTION_MAX_COUNT = 6;
-export const COMMUNITY_POLL_OPTION_MAX_LENGTH = 120;
+const COMMUNITY_POLL_OPTION_MAX_LENGTH = 120;
 export const COMMUNITY_POLL_DURATION_DAYS = [1, 3, 7, 14, 30] as const;
 
 export type CommunityPostInput = {
@@ -26,7 +26,7 @@ export function cleanCommunityText(value: unknown) {
 	return typeof value === "string" ? value.trim() : "";
 }
 
-export function normalizeCommunityTag(value: string) {
+function normalizeCommunityTag(value: string) {
 	return value.replace(/\s+/g, " ").trim();
 }
 
@@ -47,7 +47,7 @@ export function parseCommunityTags(value: string) {
 	return tags;
 }
 
-export function getCommunityTagIssue(tags: string[]) {
+function getCommunityTagIssue(tags: string[]) {
 	if (tags.length > COMMUNITY_POST_TAG_MAX_COUNT) {
 		return `Use at most ${COMMUNITY_POST_TAG_MAX_COUNT} tags.`;
 	}

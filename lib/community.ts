@@ -58,13 +58,6 @@ export const COMMUNITY_POST_TYPE_LABELS: Record<CommunityPostType, string> = {
 	resource: "Resource",
 };
 
-export const RESERVED_COMMUNITY_POST_TYPE_LABELS: Record<
-	ReservedCommunityPostType,
-	string
-> = {
-	announcement: "Announcement",
-};
-
 export function isCommunityPostType(
 	value: unknown,
 ): value is CommunityPostType {

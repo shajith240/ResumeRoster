@@ -41,7 +41,7 @@ export function normalizeCommunityMarkdown(markdown: string) {
 	return markdown.replace(MARKDOWN_ESCAPE_PATTERN, "$1");
 }
 
-export function getCommunityMarkdownImageUrls(markdown: string) {
+function getCommunityMarkdownImageUrls(markdown: string) {
 	const urls = new Set<string>();
 	let match: RegExpExecArray | null;
 	const normalizedMarkdown = normalizeCommunityMarkdown(markdown);

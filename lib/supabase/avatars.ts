@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase/client";
 
 const AVATAR_BUCKET = "avatars";
 
-export function resolveAvatarUrl(
+function resolveAvatarUrl(
 	avatarUrl?: string | null,
 	avatarPath?: string | null,
 ) {

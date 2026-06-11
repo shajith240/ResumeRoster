@@ -7,7 +7,7 @@ import {
 
 export const COMMUNITY_POST_IMAGE_MAX_COUNT = 4;
 export const COMMUNITY_POST_IMAGE_MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024;
-export const COMMUNITY_POST_IMAGE_ALLOWED_MIME_TYPES =
+const COMMUNITY_POST_IMAGE_ALLOWED_MIME_TYPES =
 	RASTER_IMAGE_ALLOWED_MIME_TYPES;
 
 export type CommunityPostImageMimeType = RasterImageMimeType;

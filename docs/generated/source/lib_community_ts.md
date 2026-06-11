@@ -4,9 +4,9 @@
 
 - Source path: `lib/community.ts`
 - Kind: Application library module
-- Size: 1984 bytes
-- Lines: 85
-- Source hash: `4eca709114c973f21dd1c5739b38cbec70c065c957a7ea6a8e1b4ba467c35573`
+- Size: 1849 bytes
+- Lines: 78
+- Source hash: `9e7d58ac353a1c38a48d0455779a73c4f6e2367a36e17ec224ac2d324e5dc18b`
 
 ## What This File Does
 
@@ -27,7 +27,6 @@ Edit this when shared business logic, validation, ranking, privacy, auth, or hel
 - `isCommunityPostType`
 - `isReservedCommunityPostType`
 - `parseBooleanFeatureFlag`
-- `RESERVED_COMMUNITY_POST_TYPE_LABELS`
 - `RESERVED_COMMUNITY_POST_TYPES`
 - `ReservedCommunityPostType`
 
@@ -41,8 +40,8 @@ None detected.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 11 | `parseBooleanFeatureFlag` | Validation or normalization helper | top-level | yes | `value`, `defaultValue` | `boolean` | Validates or normalizes parsebooleanfeatureflag values for callers. |
 | 32 | `areCommunityPostsEnabled` | Function | top-level | yes | `env` | `boolean` | Implements the arecommunitypostsenabled helper. |
-| 68 | `isCommunityPostType` | Function | top-level | yes | `value` | `boolean` | Implements the iscommunityposttype helper. |
-| 77 | `isReservedCommunityPostType` | Function | top-level | yes | `value` | `boolean` | Implements the isreservedcommunityposttype helper. |
+| 61 | `isCommunityPostType` | Function | top-level | yes | `value` | `boolean` | Implements the iscommunityposttype helper. |
+| 70 | `isReservedCommunityPostType` | Function | top-level | yes | `value` | `boolean` | Implements the isreservedcommunityposttype helper. |
 
 ## Types
 
