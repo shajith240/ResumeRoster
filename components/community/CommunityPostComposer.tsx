@@ -10,21 +10,21 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import {
-	Bold as ToolbarBold,
-	Code2 as ToolbarInlineCode,
-	Ellipsis as ToolbarMore,
-	Heading2 as ToolbarHeading,
-	Image as ToolbarImage,
-	Italic as ToolbarItalic,
-	Link2 as ToolbarLink,
-	List as ToolbarList,
-	ListOrdered as ToolbarListOrdered,
-	Quote as ToolbarQuote,
-	SquareCode as ToolbarCodeBlock,
-	Strikethrough as ToolbarStrikethrough,
-	Table2 as ToolbarTable,
+	TextB          as ToolbarBold,
+	Code           as ToolbarInlineCode,
+	DotsThree      as ToolbarMore,
+	TextHTwo       as ToolbarHeading,
+	Image          as ToolbarImage,
+	TextItalic     as ToolbarItalic,
+	Link           as ToolbarLink,
+	ListBullets    as ToolbarList,
+	ListNumbers    as ToolbarListOrdered,
+	Quotes         as ToolbarQuote,
+	CodeBlock      as ToolbarCodeBlock,
+	TextStrikethrough as ToolbarStrikethrough,
+	Table          as ToolbarTable,
 	X,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
 import CommunityMarkdown from "@/components/community/CommunityMarkdown";
 import {

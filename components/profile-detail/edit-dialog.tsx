@@ -6,7 +6,7 @@ import {
 	type FormEvent,
 	type KeyboardEvent,
 } from "react";
-import { X } from "lucide-react";
+import { X } from "@phosphor-icons/react";
 import { Camera, Plus, Search, Upload } from "@/components/ui/solar-icons";
 import { Button } from "@/components/ui/button";
 import {

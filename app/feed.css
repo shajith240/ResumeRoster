@@ -2851,26 +2851,49 @@ body.main-app-dark .comment-author-chip:hover {
 	overflow: visible;
 }
 
-.reaction-button .reaction-icon {
+/* Two-icon crossfade (YouTube / Reddit method) ───────────────────────────── */
+.reaction-button .reaction-icon-wrap {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	width: 18px;
 	height: 18px;
-	transform-origin: 50% 60%;
+	flex-shrink: 0;
+}
+
+.reaction-button .reaction-icon {
+	position: absolute;
+	width: 18px;
+	height: 18px;
 	transition:
-		transform 180ms var(--button-ease);
+		opacity   140ms ease,
+		transform 140ms ease;
 }
 
+/* Inactive: outline visible, fill hidden */
 .reaction-button .reaction-icon-outline {
-	fill: currentColor;
-	stroke: none;
+	opacity: 1;
+	transform: scale(1);
+}
+.reaction-button .reaction-icon-fill {
+	opacity: 0;
+	transform: scale(0.5);
 }
 
-.reaction-button .reaction-icon-filled {
-	fill: currentColor;
-	stroke: none;
+/* Active: fill visible, outline hidden */
+.reaction-button .reaction-icon-wrap[data-active="true"] .reaction-icon-outline {
+	opacity: 0;
+	transform: scale(0.5);
+}
+.reaction-button .reaction-icon-wrap[data-active="true"] .reaction-icon-fill {
+	opacity: 1;
+	transform: scale(1);
 }
 
-.reaction-button.is-active .reaction-icon-filled.is-animating {
-	animation: reactionPop 320ms var(--button-ease);
+/* Spring pop on activation — overrides the transition */
+.reaction-button .reaction-icon-wrap.is-animating .reaction-icon-fill {
+	animation: reactionPop 380ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .reaction-button.is-like.is-active {
@@ -4851,12 +4874,6 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 .community-feed-route .reaction-button .reaction-icon {
 	width: 18px;
 	height: 18px;
-	stroke-width: 2;
-}
-
-.community-feed-route .reaction-button .reaction-icon-filled {
-	fill: currentColor;
-	stroke: none;
 }
 
 .community-feed-route .reaction-button.is-like.is-active {
@@ -4945,12 +4962,6 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 .community-post-actions.post-actions .reaction-button .reaction-icon {
 	width: 18px;
 	height: 18px;
-	stroke-width: 2;
-}
-
-.community-post-actions.post-actions .reaction-button .reaction-icon-filled {
-	fill: currentColor;
-	stroke: none;
 }
 
 .community-post-actions.post-actions .reaction-button.is-like.is-active {

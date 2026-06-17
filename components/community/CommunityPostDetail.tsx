@@ -15,7 +15,7 @@ import {
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, X } from "lucide-react";
+import { DotsThree as MoreHorizontal, X } from "@phosphor-icons/react";
 import {
 	ChevronLeft,
 	Check,

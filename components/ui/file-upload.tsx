@@ -11,7 +11,7 @@ import {
 	type KeyboardEvent,
 	type ReactNode,
 } from "react";
-import { X } from "lucide-react";
+import { X } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import {
 	CircleAlert,

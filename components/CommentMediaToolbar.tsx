@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { X } from "@phosphor-icons/react";
 import { ImageIcon, Loader2, Type } from "@/components/ui/solar-icons";
 import { useRef, useState } from "react";
 import { toast } from "sonner";

@@ -1,22 +1,25 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import altArrowLeftLineDuotone from "@iconify-icons/solar/alt-arrow-left-line-duotone";
-import altArrowRightLineDuotone from "@iconify-icons/solar/alt-arrow-right-line-duotone";
-import bookmarkLineDuotone from "@iconify-icons/solar/bookmark-line-duotone";
-import checkCircleBold from "@iconify-icons/solar/check-circle-bold";
-import documentAddLineDuotone from "@iconify-icons/solar/document-add-line-duotone";
-import letterUnreadLineDuotone from "@iconify-icons/solar/letter-unread-line-duotone";
-import logout2BoldDuotone from "@iconify-icons/solar/logout-2-bold-duotone";
-import moonLineDuotone from "@iconify-icons/solar/moon-line-duotone";
-import paletteRoundLineDuotone from "@iconify-icons/solar/palette-round-line-duotone";
-import questionCircleLineDuotone from "@iconify-icons/solar/question-circle-line-duotone";
-import shieldCheckLineDuotone from "@iconify-icons/solar/shield-check-line-duotone";
-import smartphone2LineDuotone from "@iconify-icons/solar/smartphone-2-line-duotone";
-import squareTopDownLineDuotone from "@iconify-icons/solar/square-top-down-line-duotone";
-import sunLineDuotone from "@iconify-icons/solar/sun-line-duotone";
-import userCircleLineDuotone from "@iconify-icons/solar/user-circle-line-duotone";
-import { Icon, type IconifyIcon } from "@iconify/react/offline";
+import {
+	ArrowLeft,
+	ArrowRight,
+	Bookmark,
+	CheckCircle,
+	DeviceMobile,
+	EnvelopeOpen,
+	FilePlus,
+	Moon,
+	Palette,
+	Question,
+	ShieldCheck,
+	SignOut,
+	Sun,
+	UserCircle,
+	type Icon,
+	type IconProps,
+} from "@phosphor-icons/react";
+import type { ComponentType } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -48,8 +51,10 @@ type MenuAction =
 type AppTheme = "dark" | "light";
 type MobilePanel = "main" | "appearance";
 
+type PhosphorIcon = ComponentType<IconProps>;
+
 type MenuItem = {
-	icon: IconifyIcon;
+	icon: PhosphorIcon;
 	label: string;
 	action: MenuAction;
 	iconClass?: string;
@@ -57,12 +62,12 @@ type MenuItem = {
 		text: string;
 		className: string;
 	};
-	rightIcon?: IconifyIcon;
+	rightIcon?: PhosphorIcon;
 };
 
 type ThemeItem = {
 	value: AppTheme;
-	icon: IconifyIcon;
+	icon: PhosphorIcon;
 	label: string;
 };
 
@@ -91,53 +96,53 @@ const MENU_ITEMS: {
 	account: MenuItem[];
 } = {
 	appearance: [
-		{ value: "dark", icon: moonLineDuotone, label: "Dark" },
-		{ value: "light", icon: sunLineDuotone, label: "Light" },
+		{ value: "dark", icon: Moon, label: "Dark" },
+		{ value: "light", icon: Sun, label: "Light" },
 	],
 	profile: [
 		{
-			icon: userCircleLineDuotone,
+			icon: UserCircle,
 			label: "Your profile",
 			action: "profile",
 		},
 		{
-			icon: documentAddLineDuotone,
+			icon: FilePlus,
 			label: "Post resume",
 			action: "submit",
 		},
 		{
-			icon: smartphone2LineDuotone,
+			icon: DeviceMobile,
 			label: "Install Linted",
 			action: "install",
 		},
 	],
 	admin: [
 		{
-			icon: shieldCheckLineDuotone,
+			icon: ShieldCheck,
 			label: "Admin console",
 			action: "admin",
 		},
 	],
 	activity: [
 		{
-			icon: bookmarkLineDuotone,
+			icon: Bookmark,
 			label: "Saved resumes",
 			action: "saved",
 		},
 		{
-			icon: questionCircleLineDuotone,
+			icon: Question,
 			label: "Get help",
 			action: "help",
 		},
 		{
-			icon: letterUnreadLineDuotone,
+			icon: EnvelopeOpen,
 			label: "Send feedback",
 			action: "feedback",
-			rightIcon: squareTopDownLineDuotone,
+			rightIcon: ArrowRight,
 		},
 	],
 	account: [
-		{ icon: logout2BoldDuotone, label: "Log out", action: "logout" },
+		{ icon: SignOut, label: "Log out", action: "logout" },
 	],
 };
 
@@ -160,6 +165,8 @@ export function UserDropdown({
 	const [mobilePanel, setMobilePanel] = useState<MobilePanel>("main");
 
 	const renderMenuItem = (item: MenuItem, index: number) => {
+		const ItemIcon = item.icon;
+		const RightIcon = item.rightIcon;
 		return (
 			<DropdownMenuItem
 				key={`${item.action}-${index}`}
@@ -170,9 +177,8 @@ export function UserDropdown({
 				onClick={() => onAction(item.action)}
 			>
 				<span className="flex items-center gap-1.5 font-medium">
-					<Icon
+					<ItemIcon
 						aria-hidden="true"
-						icon={item.icon}
 						className={cn("size-5 text-[var(--text-tertiary)]", item.iconClass)}
 					/>
 					{item.label}
@@ -182,10 +188,9 @@ export function UserDropdown({
 						{promoDiscount || item.badge.text}
 					</Badge>
 				) : null}
-				{item.rightIcon ? (
-					<Icon
+				{RightIcon ? (
+					<RightIcon
 						aria-hidden="true"
-						icon={item.rightIcon}
 						className="size-4 text-[var(--text-tertiary)]"
 					/>
 				) : null}
@@ -199,7 +204,7 @@ export function UserDropdown({
 
 	const renderMobilePanelTrigger = (
 		panel: Exclude<MobilePanel, "main">,
-		icon: IconifyIcon,
+		PanelIcon: PhosphorIcon,
 		label: string,
 		valueLabel: string,
 	) => (
@@ -209,14 +214,13 @@ export function UserDropdown({
 			type="button"
 		>
 			<span className="user-menu-mobile-trigger-label">
-				<Icon aria-hidden="true" className="size-5" icon={icon} />
+				<PanelIcon aria-hidden="true" className="size-5" />
 				{label}
 			</span>
 			<span className="user-menu-mobile-trigger-value">{valueLabel}</span>
-			<Icon
+			<ArrowRight
 				aria-hidden="true"
 				className="user-menu-mobile-trigger-chevron"
-				icon={altArrowRightLineDuotone}
 			/>
 		</button>
 	);
@@ -232,41 +236,36 @@ export function UserDropdown({
 					onClick={() => setMobilePanel("main")}
 					type="button"
 				>
-					<Icon
-						aria-hidden="true"
-						className="size-5"
-						icon={altArrowLeftLineDuotone}
-					/>
+					<ArrowLeft aria-hidden="true" className="size-5" />
 					{title}
 				</button>
 				<div className="user-menu-mobile-list" aria-label={title}>
-					{MENU_ITEMS.appearance.map((item) => (
-						<button
-							aria-pressed={selectedValue === item.value}
-							className={cn(
-								"user-menu-mobile-option",
-								selectedValue === item.value ? "is-selected" : "",
-							)}
-							key={item.value}
-							onClick={() => {
-								onThemeChange(item.value === "light" ? "light" : "dark");
-								setMobilePanel("main");
-							}}
-							type="button"
-						>
-							<span>
-								<Icon aria-hidden="true" className="size-5" icon={item.icon} />
-								{item.label}
-							</span>
-							{selectedValue === item.value ? (
-								<Icon
-									aria-hidden="true"
-									className="size-5"
-									icon={checkCircleBold}
-								/>
-							) : null}
-						</button>
-					))}
+					{MENU_ITEMS.appearance.map((item) => {
+						const ThemeIcon = item.icon;
+						return (
+							<button
+								aria-pressed={selectedValue === item.value}
+								className={cn(
+									"user-menu-mobile-option",
+									selectedValue === item.value ? "is-selected" : "",
+								)}
+								key={item.value}
+								onClick={() => {
+									onThemeChange(item.value === "light" ? "light" : "dark");
+									setMobilePanel("main");
+								}}
+								type="button"
+							>
+								<span>
+									<ThemeIcon aria-hidden="true" className="size-5" />
+									{item.label}
+								</span>
+								{selectedValue === item.value ? (
+									<CheckCircle aria-hidden="true" className="size-5" />
+								) : null}
+							</button>
+						);
+					})}
 				</div>
 			</section>
 		);
@@ -357,10 +356,9 @@ export function UserDropdown({
 											<DropdownMenuSub>
 												<DropdownMenuSubTrigger className="cursor-pointer rounded-lg p-2">
 													<span className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
-														<Icon
+														<Palette
 															aria-hidden="true"
 															className="size-5 text-[var(--text-tertiary)]"
-															icon={paletteRoundLineDuotone}
 														/>
 														Appearance
 													</span>
@@ -377,27 +375,28 @@ export function UserDropdown({
 																onThemeChange(value === "light" ? "light" : "dark")
 															}
 														>
-															{MENU_ITEMS.appearance.map((themeItem) => (
-																<DropdownMenuRadioItem
-																	className="gap-2 pr-3"
-																	key={themeItem.value}
-																	value={themeItem.value}
-																>
-																	<Icon
-																		aria-hidden="true"
-																		className="size-5 text-[var(--text-tertiary)]"
-																		icon={themeItem.icon}
-																	/>
-																	<span className="flex-1">{themeItem.label}</span>
-																	{selectedTheme === themeItem.value ? (
-																		<Icon
+															{MENU_ITEMS.appearance.map((themeItem) => {
+																const ThemeIcon = themeItem.icon;
+																return (
+																	<DropdownMenuRadioItem
+																		className="gap-2 pr-3"
+																		key={themeItem.value}
+																		value={themeItem.value}
+																	>
+																		<ThemeIcon
 																			aria-hidden="true"
-																			className="ml-auto size-4 text-[var(--brand)]"
-																			icon={checkCircleBold}
+																			className="size-5 text-[var(--text-tertiary)]"
 																		/>
-																	) : null}
-																</DropdownMenuRadioItem>
-															))}
+																		<span className="flex-1">{themeItem.label}</span>
+																		{selectedTheme === themeItem.value ? (
+																			<CheckCircle
+																				aria-hidden="true"
+																				className="ml-auto size-4 text-[var(--brand)]"
+																			/>
+																		) : null}
+																	</DropdownMenuRadioItem>
+																);
+															})}
 														</DropdownMenuRadioGroup>
 													</DropdownMenuSubContent>
 												</DropdownMenuPortal>
@@ -405,7 +404,7 @@ export function UserDropdown({
 										</div>
 										{renderMobilePanelTrigger(
 											"appearance",
-											paletteRoundLineDuotone,
+											Palette,
 											"Appearance",
 											selectedThemeItem.label,
 										)}

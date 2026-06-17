@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { X } from "lucide-react";
+import { X } from "@phosphor-icons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import {

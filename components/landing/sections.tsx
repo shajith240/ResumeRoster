@@ -2,7 +2,7 @@
 
 import { useState, type Dispatch, type SetStateAction } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { List as Menu, X } from "@phosphor-icons/react";
 import BrandMark from "@/components/BrandMark";
 import LandingCta from "@/components/LandingCta";
 import {

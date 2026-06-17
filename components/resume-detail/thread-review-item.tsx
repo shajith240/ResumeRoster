@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MoreHorizontal } from "lucide-react";
+import { DotsThree as MoreHorizontal } from "@phosphor-icons/react";
 import {
 	Loader2,
 	MessageCircle,
