@@ -9,6 +9,7 @@ import {
 	useCallback,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 	type ReactNode,
 } from "react";
@@ -435,10 +436,12 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	const [editingPost, setEditingPost] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [loading, setLoading] = useState(true);
+	const [keyboardInset, setKeyboardInset] = useState(0);
 	const [mobileActionSheetOpen, setMobileActionSheetOpen] = useState(false);
 	const [mobileCommentsSheetDrag, setMobileCommentsSheetDrag] = useState(0);
 	const [mobileCommentsSheetState, setMobileCommentsSheetState] =
 		useState<MobileSheetState>("peek");
+	const hasAutoOpenedSheetRef = useRef(false);
 	const [mobilePostBodyExpanded, setMobilePostBodyExpanded] = useState(false);
 	const [post, setPost] = useState<CommunityPost | null>(null);
 	const [postDeleteConfirmOpen, setPostDeleteConfirmOpen] = useState(false);
@@ -818,6 +821,36 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		};
 	}, [mentionedHandles, mentionedHandlesKey]);
 
+	// Track iOS virtual keyboard height so the comment sheet stays above the keyboard.
+	// visualViewport is the only reliable API for this on iOS Safari 17+.
+	useEffect(() => {
+		const vv = window.visualViewport;
+		if (!vv) return;
+
+		function update() {
+			if (!vv) return;
+			const inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+			setKeyboardInset(inset);
+		}
+
+		vv.addEventListener("resize", update);
+		vv.addEventListener("scroll", update);
+		return () => {
+			vv.removeEventListener("resize", update);
+			vv.removeEventListener("scroll", update);
+		};
+	}, []);
+
+	// For text-only posts (no attachments, no poll), auto-open the comment sheet
+	// so the user sees comments immediately instead of a half-empty post view.
+	useEffect(() => {
+		if (hasAutoOpenedSheetRef.current || loading || !post) return;
+		hasAutoOpenedSheetRef.current = true;
+		if (!poll && !attachments.length && isMobileViewport()) {
+			setMobileCommentsSheetState("open");
+		}
+	}, [attachments.length, loading, poll, post]);
+
 	function renderCommunityTextWithMentions(text: string, keyPrefix: string) {
 		const nodes: ReactNode[] = [];
 		let lastIndex = 0;
@@ -1108,6 +1141,9 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		let shouldReveal = false;
 
 		if (mobileCommentsSheetState === "open") {
+			let prevY = startY;
+			let articleVelocity = 0;
+
 			function cleanupCloseGesture() {
 				window.removeEventListener("pointermove", handleClosePointerMove);
 				window.removeEventListener("pointerup", cleanupCloseGesture);
@@ -1115,8 +1151,11 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			}
 
 			function handleClosePointerMove(moveEvent: PointerEvent) {
+				articleVelocity = moveEvent.clientY - prevY;
+				prevY = moveEvent.clientY;
 				const deltaY = moveEvent.clientY - startY;
-				if (deltaY <= 42) return;
+				// Dismiss on either sufficient distance OR a fast downward fling
+				if (deltaY <= 42 && articleVelocity <= 8) return;
 				moveEvent.preventDefault();
 				setMobileCommentsSheetDrag(0);
 				setMobileCommentsSheetState("peek");
@@ -1187,13 +1226,27 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		if (!isMobileViewport()) return;
 		if (isMobileGestureBlocked(event.target)) return;
 
+		// If the touch starts inside the scrollable comment list, only allow the
+		// dismiss gesture when the list is already scrolled to the top. Otherwise
+		// the native scroll should take precedence.
+		const sheetEl = event.currentTarget;
+		const roastList = sheetEl.querySelector<HTMLElement>(".roast-list");
+		const isInList =
+			event.target instanceof HTMLElement &&
+			Boolean(event.target.closest(".roast-list"));
+		if (isInList && roastList && roastList.scrollTop > 2) return;
+
 		event.currentTarget.setPointerCapture(event.pointerId);
 		const startY = event.clientY;
 		const startState = mobileCommentsSheetState;
 		const maxDrag = Math.round(window.innerHeight * 0.72);
 		let didDrag = false;
+		let lastY = startY;
+		let velocity = 0;
 
 		function handlePointerMove(moveEvent: PointerEvent) {
+			velocity = moveEvent.clientY - lastY;
+			lastY = moveEvent.clientY;
 			const delta = moveEvent.clientY - startY;
 			if (Math.abs(delta) > 8) {
 				didDrag = true;
@@ -1210,9 +1263,12 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			const delta = upEvent.clientY - startY;
 			setMobileCommentsSheetDrag(0);
 			if (didDrag) {
-				if (startState === "peek" && delta < -42) {
+				// A fast fling (velocity > 6px/frame) dismisses with a smaller distance threshold
+				const isFlingDown = velocity > 6;
+				const isFlingUp = velocity < -6;
+				if (startState === "peek" && (delta < -42 || isFlingUp)) {
 					setMobileCommentsSheetState("open");
-				} else if (startState === "open" && delta > 56) {
+				} else if (startState === "open" && (delta > 56 || isFlingDown)) {
 					setMobileCommentsSheetState("peek");
 				}
 			}
@@ -2224,6 +2280,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	) : null;
 	const mobileCommentsSheetStyle = {
 		"--mobile-comments-sheet-drag": `${mobileCommentsSheetDrag}px`,
+		"--keyboard-inset": `${keyboardInset}px`,
 	} as CSSProperties;
 	const mobileActionSheet = mobileActionSheetOpen ? (
 		<div
