@@ -4521,6 +4521,17 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	max-width: 100%;
 }
 
+/* Transparent wrapper on desktop so all .community-post-thread > direct-child selectors keep working */
+.community-thread-body {
+	display: contents;
+}
+
+/* Mobile-only elements: hidden on desktop */
+.community-mobile-join-trigger,
+.community-mobile-composer-overlay {
+	display: none;
+}
+
 .community-feed-route.feed-app-shell {
 	gap: clamp(20px, 2.4vw, 30px);
 }
@@ -5562,7 +5573,7 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		height: 100dvh;
 		gap: 0;
 		overflow: hidden;
-		background: #000;
+		background: #0d0f10;
 		overscroll-behavior: none;
 	}
 
@@ -5572,8 +5583,7 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 	}
 
 	.community-post-thread > .community-detail-toolbar {
-		position: sticky;
-		top: 0;
+		position: relative;
 		z-index: 30;
 		display: grid;
 		grid-template-columns: 44px minmax(0, 1fr) 44px;
@@ -5581,7 +5591,8 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		gap: 8px;
 		min-height: calc(58px + env(safe-area-inset-top));
 		padding: calc(8px + env(safe-area-inset-top)) 10px 8px;
-		background: linear-gradient(180deg, rgb(0 0 0 / 0.86), rgb(0 0 0 / 0));
+		background: #0d0f10;
+		border-bottom: 1px solid rgb(255 255 255 / 0.06);
 		pointer-events: none;
 	}
 
@@ -6533,6 +6544,357 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		width: 19px;
 		height: 19px;
 		flex: 0 0 auto;
+	}
+
+	/* ── Scroll-based mobile layout (replaces fixed bottom sheet) ──────────── */
+
+	/* On mobile the wrapper becomes a real scroll container */
+	.community-thread-body {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		min-height: 0;
+		overflow-y: auto;
+		overflow-x: hidden;
+		overscroll-behavior: contain;
+		scrollbar-width: none;
+	}
+
+	.community-thread-body::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Article in the scroll body — takes only the space it needs */
+	.community-thread-body > .community-post-detail {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		width: 100%;
+		max-width: none;
+		min-height: 0;
+		overflow: visible;
+		border: 0;
+		padding: 12px 0;
+		background: #0d0f10;
+		touch-action: auto;
+		will-change: auto;
+		transition: none;
+	}
+
+	/* Status note inside new scroll layout */
+	.community-thread-body .community-status-note {
+		order: 2;
+		margin: 0 14px;
+	}
+
+	/* Comments section: normal block flow, NOT a fixed sheet */
+	.community-thread-body
+		> .community-comments-panel.thread-discussion-panel {
+		position: relative;
+		display: block;
+		width: 100%;
+		max-width: none;
+		height: auto;
+		max-height: none;
+		border: 0;
+		border-top: 1px solid rgb(255 255 255 / 0.07);
+		border-radius: 0;
+		padding: 14px 16px calc(76px + env(safe-area-inset-bottom));
+		background: #111416;
+		box-shadow: none;
+		transform: none;
+		transition: none;
+		will-change: auto;
+		touch-action: auto;
+		overflow: visible;
+		inset: auto;
+		z-index: auto;
+	}
+
+	/* Hide the drag handle pill, old mobile form, and desktop pill in the new layout */
+	.community-thread-body > .community-comments-panel .community-comments-sheet-handle {
+		display: none;
+	}
+
+	.community-thread-body > .community-comments-panel .community-root-comment-form-mobile,
+	.community-thread-body > .community-comments-panel .community-root-comment-form-desktop,
+	.community-thread-body > .community-comments-panel .community-comment-join-pill {
+		display: none;
+	}
+
+	/* Comment list: normal document flow, no forced flex-child sizing */
+	.community-thread-body > .community-comments-panel .roast-list {
+		order: unset;
+		flex: unset;
+		overflow: visible;
+		overscroll-behavior: auto;
+		min-height: 0;
+	}
+
+	/* Full post body visible in scroll layout — no 2-line clamp */
+	.community-thread-body .community-post-body {
+		max-height: none;
+		overflow: visible;
+		padding: 0 16px;
+		color: rgb(247 242 234 / 0.85);
+		font-size: 15px;
+		line-height: 1.55;
+	}
+
+	.community-thread-body .community-post-body-more {
+		display: none;
+	}
+
+	/* Post title */
+	.community-thread-body .community-post-detail h1 {
+		padding: 0 16px;
+		overflow: visible;
+		-webkit-line-clamp: unset;
+		display: block;
+		font-size: 18px;
+		line-height: 1.28;
+		color: #f7f2ea;
+	}
+
+	/* Post detail header padding */
+	.community-thread-body .community-post-detail-header {
+		padding: 4px 16px 0;
+	}
+
+	/* Post actions: was position:fixed in old sheet layout, now in scroll flow */
+	.community-thread-body .community-post-actions.post-actions {
+		position: relative;
+		inset: auto;
+		z-index: auto;
+		order: 5;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		width: auto;
+		padding: 10px 16px 14px;
+		color: #f7f2ea;
+		pointer-events: auto;
+	}
+
+	.community-thread-body .community-post-actions .community-reactions,
+	.community-thread-body .community-post-actions .post-action-button {
+		width: auto;
+		min-width: 0;
+	}
+
+	.community-thread-body .community-post-actions .community-share-action,
+	.community-thread-body .community-post-actions .community-static-action {
+		width: auto;
+	}
+
+	/* Media gallery: natural height in scroll layout, no flex-fill */
+	.community-thread-body .community-media-gallery-detail {
+		flex: 0 1 auto;
+		min-height: 0;
+	}
+
+	/* Give thread-body the same dark bg as comment section so no black gap shows */
+	.community-thread-body {
+		background: #111416;
+	}
+
+	/* ── Fixed "Join the conversation" trigger bar at bottom ─────────────── */
+
+	.community-mobile-join-trigger {
+		position: fixed;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 60;
+		display: flex;
+		align-items: center;
+		padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
+		background: #0d0f10;
+		border-top: 1px solid rgb(255 255 255 / 0.08);
+	}
+
+	.community-mobile-join-pill {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 100%;
+		height: 44px;
+		border-radius: 22px;
+		padding: 0 16px;
+		background: rgb(255 255 255 / 0.08);
+		border: 1px solid rgb(255 255 255 / 0.12);
+		color: rgb(247 242 234 / 0.45);
+		font-size: 15px;
+		font-weight: 400;
+		text-align: left;
+		cursor: pointer;
+		touch-action: manipulation;
+		transition: background 120ms;
+	}
+
+	.community-mobile-join-pill:active {
+		background: rgb(255 255 255 / 0.12);
+	}
+
+	.community-mobile-join-pill span {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.community-mobile-join-pill svg {
+		flex-shrink: 0;
+		width: 20px;
+		height: 20px;
+		color: rgb(247 242 234 / 0.5);
+	}
+
+	/* ── Full-screen comment composer overlay (Reddit-style dedicated page) ─ */
+
+	.community-mobile-composer-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 1100;
+		display: flex;
+		flex-direction: column;
+		background: #111416;
+		overscroll-behavior: none;
+		padding-bottom: var(--keyboard-inset, 0px);
+	}
+
+	.community-mobile-composer-header {
+		display: grid;
+		grid-template-columns: 48px 1fr 72px;
+		align-items: center;
+		gap: 0;
+		min-height: calc(52px + env(safe-area-inset-top));
+		padding: calc(8px + env(safe-area-inset-top)) 8px 8px;
+		background: #151718;
+		border-bottom: 1px solid rgb(255 255 255 / 0.07);
+		flex-shrink: 0;
+	}
+
+	.community-mobile-composer-close {
+		display: inline-grid;
+		width: 40px;
+		height: 40px;
+		place-items: center;
+		border: 0;
+		border-radius: 20px;
+		background: transparent;
+		color: rgb(247 242 234 / 0.75);
+		touch-action: manipulation;
+	}
+
+	.community-mobile-composer-close svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.community-mobile-composer-title {
+		text-align: center;
+		color: #f7f2ea;
+		font-size: 15px;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+	}
+
+	.community-mobile-composer-post {
+		justify-self: end;
+		display: inline-flex;
+		align-items: center;
+		height: 32px;
+		border-radius: 16px;
+		padding: 0 16px;
+		margin-right: 4px;
+		background: #f7f2ea;
+		color: #1a1410;
+		font-size: 13px;
+		font-weight: 700;
+		border: 0;
+		touch-action: manipulation;
+		transition: opacity 140ms;
+		white-space: nowrap;
+	}
+
+	.community-mobile-composer-post:disabled {
+		opacity: 0.35;
+		cursor: default;
+	}
+
+	.community-mobile-composer-context {
+		padding: 12px 16px 10px;
+		border-bottom: 1px solid rgb(255 255 255 / 0.06);
+		flex-shrink: 0;
+	}
+
+	.community-mobile-composer-post-title {
+		color: rgb(247 242 234 / 0.6);
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1.35;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+
+	.community-mobile-composer-body {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	/* CommentComposer wrapper: strip its card styling in the overlay */
+	.community-mobile-composer-body .community-mobile-composer-input-area {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		border: 0;
+		border-radius: 0;
+		background: transparent;
+		box-shadow: none;
+		padding: 0;
+		gap: 0;
+		overflow: hidden;
+	}
+
+	/* Textarea fills overlay. padding !important beats body.main-app-dark specificity (0,3,1). */
+	.community-mobile-composer-body .community-mobile-composer-input-area .comment-composer-input {
+		flex: 1;
+		height: auto !important;
+		max-height: none !important;
+		min-height: 120px;
+		padding: 16px !important;
+		font-size: 15px;
+		line-height: 1.5;
+		color: #f7f2ea;
+		background: transparent;
+		border: 0;
+		resize: none;
+		overflow-y: auto;
+	}
+
+	/* Hide mention suggestions (not needed in simple overlay) */
+	.community-mobile-composer-body .mention-suggestions {
+		display: none;
+	}
+
+	/* Footer: push to bottom, hide submit row */
+	.community-mobile-composer-body .comment-composer-footer {
+		flex-shrink: 0;
+		padding: 6px 12px calc(8px + env(safe-area-inset-bottom));
+		border-top: 1px solid rgb(255 255 255 / 0.06);
+	}
+
+	.community-mobile-composer-body .comment-composer-submit-row {
+		display: none;
 	}
 }
 

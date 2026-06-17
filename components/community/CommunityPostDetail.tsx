@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { DotsThree as MoreHorizontal, X } from "@phosphor-icons/react";
 import {
 	ChevronLeft,
+	ChevronUp,
 	Check,
 	Download,
 	Edit3,
@@ -438,6 +439,8 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 	const [loading, setLoading] = useState(true);
 	const [keyboardInset, setKeyboardInset] = useState(0);
 	const [mobileActionSheetOpen, setMobileActionSheetOpen] = useState(false);
+	const [mobileComposerOpen, setMobileComposerOpen] = useState(false);
+	const mobileComposerFormRef = useRef<HTMLFormElement | null>(null);
 	const [mobileCommentsSheetDrag, setMobileCommentsSheetDrag] = useState(0);
 	const [mobileCommentsSheetState, setMobileCommentsSheetState] =
 		useState<MobileSheetState>("peek");
@@ -831,6 +834,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			if (!vv) return;
 			const inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
 			setKeyboardInset(inset);
+			document.documentElement.style.setProperty("--keyboard-inset", `${inset}px`);
 		}
 
 		vv.addEventListener("resize", update);
@@ -1014,6 +1018,16 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		setCommentBody("");
 		setCommentContentFormat("plain");
 		setRootCommentComposerOpen(false);
+	}
+
+	async function handleMobileComposerSubmit(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		setMobileComposerOpen(false);
+		await submitComment(null, commentBody, commentAttachment);
+	}
+
+	function closeMobileComposer() {
+		setMobileComposerOpen(false);
 	}
 
 	async function handleReplySubmit(
@@ -2398,6 +2412,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 					<MoreHorizontal aria-hidden="true" />
 				</button>
 			</div>
+			<div className="community-thread-body">
 			<article
 				className="community-post-detail"
 				onClick={handleMobilePostSurfaceClick}
@@ -2828,6 +2843,80 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 				</div>
 			</section>
 			)}
+			</div>{/* end community-thread-body */}
+
+			{/* Mobile "Join the conversation" trigger — opens dedicated composer overlay */}
+			{post.status === "active" && !poll ? (
+				<div className="community-mobile-join-trigger">
+					<button
+						className="community-mobile-join-pill"
+						onClick={() => setMobileComposerOpen(true)}
+						type="button"
+					>
+						<span>Join the conversation</span>
+						<ChevronUp aria-hidden="true" />
+					</button>
+				</div>
+			) : null}
+
+			{/* Mobile full-screen comment composer overlay (Reddit-style dedicated page) */}
+			{mobileComposerOpen && typeof document !== "undefined"
+				? createPortal(
+						<form
+							aria-label="Add comment"
+							aria-modal="true"
+							className="community-mobile-composer-overlay"
+							onSubmit={(event) => { void handleMobileComposerSubmit(event); }}
+							ref={mobileComposerFormRef}
+							role="dialog"
+						>
+							<header className="community-mobile-composer-header">
+								<button
+									aria-label="Cancel"
+									className="community-mobile-composer-close"
+									onClick={closeMobileComposer}
+									type="button"
+								>
+									<X aria-hidden="true" />
+								</button>
+								<span className="community-mobile-composer-title">Add comment</span>
+								<button
+									className="community-mobile-composer-post"
+									disabled={actionBusy === "comment-root" || commentBody.trim().length < 2}
+									type="submit"
+								>
+									{actionBusy === "comment-root" ? "Posting…" : "Post"}
+								</button>
+							</header>
+							<div className="community-mobile-composer-context">
+								<p className="community-mobile-composer-post-title">{post.title}</p>
+							</div>
+							<div className="community-mobile-composer-body">
+								<CommentComposer
+									ariaLabel="Add comment"
+									attachment={commentAttachment}
+									autoFocus
+									className="community-mobile-composer-input-area"
+									contentFormat={commentContentFormat}
+									disabledTools={actionBusy === "comment-root"}
+									maxHeight={9999}
+									minHeight={80}
+									mentionSuggestions={communityMentionSuggestions}
+									onAttachmentChange={setCommentAttachment}
+									onChange={setCommentBody}
+									onFormatChange={setCommentContentFormat}
+									onRequireLogin={requireCommentLogin}
+									placeholder="Join the conversation"
+									showFormatTools={false}
+									submitDisabled={true}
+									submitLabel="Post"
+									value={commentBody}
+								/>
+							</div>
+						</form>,
+						document.body,
+					)
+				: null}
 
 			<AlertDialog
 				open={postDeleteConfirmOpen && Boolean(post)}
