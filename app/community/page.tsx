@@ -6,8 +6,6 @@ import RecentPostsPanel from "@/components/RecentPostsPanel";
 import RouteHeader from "@/components/RouteHeader";
 import { areCommunityPostsEnabled } from "@/lib/community";
 
-export const dynamic = "force-dynamic";
-
 export default async function CommunityPage() {
 	if (!areCommunityPostsEnabled()) {
 		notFound();

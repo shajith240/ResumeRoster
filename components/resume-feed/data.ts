@@ -378,3 +378,186 @@ export async function fetchSavedResumeIds(userId: string | null) {
 }
 
 export { withResumeDefaults };
+
+// ─── Pagination ───────────────────────────────────────────────────────────────
+
+export const FEED_PAGE_SIZE = 20;
+
+// ─── Signed-URL sessionStorage cache ─────────────────────────────────────────
+
+type SignedUrlCacheEntry = { url: string; expiresAt: number };
+const SIGNED_URL_CACHE_KEY = "linted_signed_urls_v1";
+const SIGNED_URL_SAFETY_BUFFER_MS = 120_000; // expire 2 min early
+
+function readSignedUrlCache(): Record<string, SignedUrlCacheEntry> {
+	if (typeof window === "undefined") return {};
+	try {
+		return JSON.parse(sessionStorage.getItem(SIGNED_URL_CACHE_KEY) ?? "{}");
+	} catch {
+		return {};
+	}
+}
+
+function writeSignedUrlCache(cache: Record<string, SignedUrlCacheEntry>) {
+	if (typeof window === "undefined") return;
+	try {
+		sessionStorage.setItem(SIGNED_URL_CACHE_KEY, JSON.stringify(cache));
+	} catch {
+		// ignore quota errors
+	}
+}
+
+export async function fetchSignedUrlsCached(
+	targets: Array<{ id: string; filePath: string }>,
+): Promise<Record<string, string>> {
+	if (!targets.length) return {};
+
+	const now = Date.now();
+	const cache = readSignedUrlCache();
+	const result: Record<string, string> = {};
+	const stale: typeof targets = [];
+
+	for (const t of targets) {
+		const entry = cache[t.id];
+		if (entry && entry.expiresAt > now) {
+			result[t.id] = entry.url;
+		} else {
+			stale.push(t);
+		}
+	}
+
+	if (!stale.length) return result;
+
+	const { data, error } = await supabase.storage
+		.from("resumes")
+		.createSignedUrls(
+			stale.map((t) => t.filePath),
+			FEED_PREVIEW_SIGNED_URL_TTL_SECONDS,
+		);
+
+	if (error || !data) return result;
+
+	const expiresAt =
+		now + FEED_PREVIEW_SIGNED_URL_TTL_SECONDS * 1000 - SIGNED_URL_SAFETY_BUFFER_MS;
+	const nextCache = { ...cache };
+
+	stale.forEach((t, i) => {
+		const url = data[i]?.signedUrl;
+		if (url) {
+			result[t.id] = url;
+			nextCache[t.id] = { url, expiresAt };
+		}
+	});
+
+	writeSignedUrlCache(nextCache);
+	return result;
+}
+
+// ─── Feed query (with schema-fallback chain + pagination) ─────────────────────
+
+export async function fetchFeedResumes(
+	sort: FeedSort,
+	offset: number,
+): Promise<{ rows: ResumeSummary[]; hasMore: boolean; error: Error | null }> {
+	const LIMIT = FEED_PAGE_SIZE;
+	const isTop = sort === "top";
+
+	// Attempt 1 – full context schema
+	const primary = await (isTop
+		? supabase
+				.from("resumes")
+				.select(RESUME_SELECT_WITH_CONTEXT)
+				.eq("review_queue_status", "active")
+				.range(offset, offset + LIMIT)
+				.order("roast_count", { ascending: false })
+				.order("created_at", { ascending: false })
+		: supabase
+				.from("resumes")
+				.select(RESUME_SELECT_WITH_CONTEXT)
+				.eq("review_queue_status", "active")
+				.range(offset, offset + LIMIT)
+				.order("created_at", { ascending: false }));
+
+	if (!primary.error) {
+		const rows = (primary.data ?? []).map(withResumeDefaults);
+		return { rows: rows.slice(0, LIMIT), hasMore: rows.length > LIMIT, error: null };
+	}
+
+	if (!isResumeContextFeatureError(primary.error)) {
+		return { rows: [], hasMore: false, error: primary.error };
+	}
+
+	// Attempt 2 – with read counts (no activation context)
+	const withReads = await (isTop
+		? supabase
+				.from("resumes")
+				.select(RESUME_SELECT_WITH_READS)
+				.eq("review_queue_status", "active")
+				.range(offset, offset + LIMIT)
+				.order("roast_count", { ascending: false })
+				.order("created_at", { ascending: false })
+		: supabase
+				.from("resumes")
+				.select(RESUME_SELECT_WITH_READS)
+				.eq("review_queue_status", "active")
+				.range(offset, offset + LIMIT)
+				.order("created_at", { ascending: false }));
+
+	if (!withReads.error) {
+		const rows = (withReads.data ?? []).map(withResumeDefaults);
+		return { rows: rows.slice(0, LIMIT), hasMore: rows.length > LIMIT, error: null };
+	}
+
+	if (!isReadCountFeatureError(withReads.error)) {
+		return { rows: [], hasMore: false, error: withReads.error };
+	}
+
+	// Attempt 3 – base schema only
+	const base = await (isTop
+		? supabase
+				.from("resumes")
+				.select(RESUME_SELECT_BASE)
+				.eq("review_queue_status", "active")
+				.range(offset, offset + LIMIT)
+				.order("roast_count", { ascending: false })
+				.order("created_at", { ascending: false })
+		: supabase
+				.from("resumes")
+				.select(RESUME_SELECT_BASE)
+				.eq("review_queue_status", "active")
+				.range(offset, offset + LIMIT)
+				.order("created_at", { ascending: false }));
+
+	const rows = (base.data ?? []).map(withResumeDefaults);
+	return { rows: rows.slice(0, LIMIT), hasMore: rows.length > LIMIT, error: base.error ?? null };
+}
+
+// ─── Review previews (extracted for parallel fetch) ───────────────────────────
+
+export async function fetchReviewPreviewsForIds(
+	resumeIds: string[],
+): Promise<Record<string, ReviewPreview>> {
+	if (!resumeIds.length) return {};
+
+	const primary = await supabase
+		.from("roasts")
+		.select(REVIEW_PREVIEW_SELECT_WITH_THREADS)
+		.in("resume_id", resumeIds)
+		.eq("is_deleted", false)
+		.is("parent_id", null)
+		.order("helpful_votes", { ascending: false })
+		.order("created_at", { ascending: false });
+
+	const result =
+		primary.error && isReviewPreviewFeatureError(primary.error)
+			? await supabase
+					.from("roasts")
+					.select(REVIEW_PREVIEW_SELECT_BASE)
+					.in("resume_id", resumeIds)
+					.order("helpful_votes", { ascending: false })
+					.order("created_at", { ascending: false })
+			: primary;
+
+	if (result.error) return {};
+	return getReviewPreviewsByResumeId((result.data ?? []) as ReviewPreviewRow[]);
+}

@@ -877,6 +877,16 @@ body.main-app-dark .feed-thread-preview:hover {
 	margin-top: 4px;
 }
 
+.feed-load-more {
+	display: flex;
+	justify-content: center;
+	padding: 24px 0 8px;
+}
+
+.feed-load-more .btn-primary {
+	min-width: 180px;
+}
+
 .feed-right-rail {
 	display: grid;
 	align-content: start;

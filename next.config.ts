@@ -12,17 +12,44 @@ const shouldUploadErrorMonitoringSourceMaps = Boolean(
 		process.env.ERROR_MONITORING_URL,
 );
 
+// Supabase project URL — used to allowlist image and preconnect domains.
+// Falls back gracefully if the env var is not set (e.g. during local dev without .env).
+const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
+	? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+	: null;
+
 const nextConfig: NextConfig = {
 	eslint: {
 		// CI runs `npm run lint` with the flat ESLint config. Skipping Next's
 		// build-time lint avoids duplicate linting and its legacy plugin detector.
 		ignoreDuringBuilds: true,
 	},
+	images: {
+		// Allow Next.js <Image> to serve optimised (WebP/AVIF) avatars from Supabase Storage.
+		remotePatterns: supabaseHostname
+			? [{ protocol: "https", hostname: supabaseHostname }]
+			: [],
+		// Generate AVIF first (smaller), then WebP as fallback.
+		formats: ["image/avif", "image/webp"],
+	},
 	async headers() {
+		const securityHeaders = buildStaticSecurityHeaders();
+
+		// Preconnect to Supabase so the TCP+TLS handshake is already done when
+		// the first query fires. This shaves ~150-300 ms off cold-start loads.
+		const preconnectHeaders = supabaseHostname
+			? [
+					{
+						key: "Link",
+						value: `<https://${supabaseHostname}>; rel=preconnect`,
+					},
+				]
+			: [];
+
 		return [
 			{
 				source: "/(.*)",
-				headers: buildStaticSecurityHeaders(),
+				headers: [...securityHeaders, ...preconnectHeaders],
 			},
 		];
 	},

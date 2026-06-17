@@ -5,6 +5,7 @@ import AppScrollRestoration from "@/components/AppScrollRestoration";
 import RouteTransitionLoader from "@/components/RouteTransitionLoader";
 import { Toaster } from "@/components/ui/sonner";
 import { THEME_BOOTSTRAP_SCRIPT } from "@/lib/security/theme-bootstrap";
+import { Providers } from "./providers";
 import "./globals.css";
 import "./notifications.css";
 import "./feed.css";
@@ -94,7 +95,9 @@ export default async function RootLayout({
         <script
           dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
         />
-        <div className="app-root">{children}</div>
+        <Providers>
+          <div className="app-root">{children}</div>
+        </Providers>
         <Suspense fallback={null}>
           <AppScrollRestoration />
         </Suspense>
