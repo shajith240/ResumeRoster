@@ -244,6 +244,10 @@ body:not(.main-app):not(.main-app-dark) {
 html {
 	scroll-behavior: smooth;
 	overflow-x: hidden;
+	/* Reserve the scrollbar gutter space permanently so that when any modal/dropdown
+	   locks body scroll and the scrollbar disappears, the layout width never changes.
+	   This prevents the sticky right-rail from shifting when dropdowns open. */
+	scrollbar-gutter: stable;
 }
 
 html,

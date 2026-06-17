@@ -105,7 +105,7 @@ export function FeedSortBar({ activeSort, savedOnly }: FeedSortBarProps) {
 	return (
 		<nav className="feed-sortbar feed-toolbar" aria-label="Feed sort">
 			<RecentPostsPanel kind="resume" surface="mobile-trigger" />
-			<DropdownMenu>
+			<DropdownMenu modal={false}>
 				<DropdownMenuTrigger
 					aria-label={`Sort resumes by ${activeOption.label}`}
 					className="feed-sort-trigger"

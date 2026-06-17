@@ -829,7 +829,7 @@ export default function CommunityPostFeed() {
 		<section className="community-feed-panel" aria-label="Community posts">
 			<div className="community-feed-toolbar" aria-label="Feed view controls">
 				<RecentPostsPanel kind="community" surface="mobile-trigger" />
-				<DropdownMenu>
+				<DropdownMenu modal={false}>
 					<DropdownMenuTrigger
 						aria-label={`Sort community posts by ${COMMUNITY_FEED_SORT_LABELS[activeTab]}`}
 						className="community-feed-sort-indicator feed-sort-trigger"
@@ -1109,7 +1109,7 @@ export default function CommunityPostFeed() {
 											</span>
 										) : null}
 										{canEditPost || canDeletePost || canModeratePost ? (
-											<DropdownMenu>
+											<DropdownMenu modal={false}>
 												<DropdownMenuTrigger
 													aria-label={`More actions for ${post.title}`}
 													className="post-action-button community-row-menu-trigger"
