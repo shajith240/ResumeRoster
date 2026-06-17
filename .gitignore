@@ -9,7 +9,9 @@ out
 vercel
 .vercel
 *.tsbuildinfo
-docs/generated/typedoc/
+docs/generated/
+docs/design/logo-redesign/
+.codex/
 coverage/
 playwright-report/
 test-results/

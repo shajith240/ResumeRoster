@@ -3,13 +3,13 @@ export type BenefitKey = "students" | "jobseekers" | "switchers";
 export const asset = (path: string) => `/assets/${path}`;
 
 export const trustSignals = [
-	"Safe resume posting",
-	"Identity controls",
-	"Guided feedback",
-	"Ranked fix list",
+	"Post anonymously",
+	"Control your privacy",
+	"Guided reviewer prompts",
+	"Top fixes ranked by votes",
 	"Community guidelines",
-	"No fake resume score",
-	"Contributor reputation",
+	"No AI resume score",
+	"Reviewer leaderboard",
 ];
 
 export const benefitImages: Record<BenefitKey, { alt: string; src: string }> = {
@@ -34,7 +34,7 @@ export const benefits: Array<{ copy: string; key: BenefitKey; label: string }> =
 		label: "For students",
 	},
 	{
-		copy: "Catch unclear proof, weak metrics, and role mismatch before recruiter screens.",
+		copy: "Catch vague bullets, weak metrics, and mismatched claims before recruiter screens.",
 		key: "jobseekers",
 		label: "For job seekers",
 	},
@@ -69,7 +69,7 @@ export const productLoopSteps = [
 	},
 	{
 		copy:
-			"Prompts push reviewers to name the exact bullet, proof gap, or confusing claim.",
+			"Prompts guide reviewers to name the exact bullet, the weak claim, or the confusing line.",
 		label: "Guided review",
 		title: "Get specific fixes",
 	},

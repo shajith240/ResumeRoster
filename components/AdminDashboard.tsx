@@ -101,10 +101,12 @@ export default function AdminDashboard({
 	const [userQuery, setUserQuery] = useState("");
 	const [peoplePage, setPeoplePage] = useState(1);
 	const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
-	const [feedbackNotes, setFeedbackNotes] = useState<Record<string, string>>({});
-	const [feedbackReplies, setFeedbackReplies] = useState<Record<string, string>>(
+	const [feedbackNotes, setFeedbackNotes] = useState<Record<string, string>>(
 		{},
 	);
+	const [feedbackReplies, setFeedbackReplies] = useState<
+		Record<string, string>
+	>({});
 	const [feedbackPriorities, setFeedbackPriorities] = useState<
 		Record<string, string>
 	>({});

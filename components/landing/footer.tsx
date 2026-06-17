@@ -107,11 +107,9 @@ export function Footer() {
 				<div className="footer-newsletter-row">
 					<motion.div className="footer-newsletter-copy" variants={riseItem}>
 						<h2>
-							Better resume feedback
+							Better resume feedback,
 							<br />
 							without the noise.
-							<br />
-							Build trust before you apply.
 						</h2>
 					</motion.div>
 				</div>
@@ -122,8 +120,8 @@ export function Footer() {
 							<BrandMark />
 						</Link>
 						<p>
-							A community review layer for posting resumes safely, collecting
-							specific fixes, and building reviewer trust.
+							A community for posting your resume safely, getting real feedback,
+							and building a reviewer reputation.
 						</p>
 					</motion.div>
 

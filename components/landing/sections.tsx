@@ -157,11 +157,11 @@ export function ReviewStandardsSection() {
 	return (
 		<section className="review-standard-section" id="features">
 			<div className="review-standard-copy">
-				<span className="section-kicker">Review standard</span>
+				<span className="section-kicker">How reviews work</span>
 				<h2>Linted keeps feedback specific.</h2>
 				<p>
-					Every resume post is built around one promise: feedback should point
-					to the work, explain the risk, and leave the owner with a next move.
+					Every piece of feedback must name the exact line, explain why it matters,
+					and leave the resume owner with a clear next step.
 				</p>
 			</div>
 
@@ -229,11 +229,11 @@ export function ComparisonSection() {
 		<section className="comparison-section" aria-labelledby="comparison-heading">
 			<div className="comparison-header">
 				<span className="section-kicker">Comparison</span>
-				<h2 id="comparison-heading">Built for the pass AI checkers miss.</h2>
+				<h2 id="comparison-heading">Built for what AI resume tools miss.</h2>
 				<p>
-					Resume scanners and builders are useful for speed. Linted is for the
-					human review layer: specific fixes, visible trust, and feedback that
-					other people can judge useful.
+					Resume scanners and builders are great for speed. Linted covers the
+					human step — specific fixes from real people, with votes to surface
+					what actually helps.
 				</p>
 			</div>
 
@@ -300,11 +300,11 @@ export function ProductLoopSection() {
 	return (
 		<section className="product-loop-section" id="community-loop">
 			<div className="product-loop-copy">
-				<span className="section-kicker">Product loop</span>
-				<h2>How Linted turns a post into trusted feedback.</h2>
+				<span className="section-kicker">Step by step</span>
+				<h2>Post once. Leave with real fixes.</h2>
 				<p>
-					Linted is built for the messy part before applying: when the resume
-					looks finished, but another person can still spot the weak proof.
+					Linted is built for the stage just before applying: when your resume
+					looks done, but someone else can still catch what is unclear.
 				</p>
 				<div className="product-loop-promise" aria-label="Linted product promise">
 					<strong>No fake resume score.</strong>
