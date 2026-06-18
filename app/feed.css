@@ -1574,6 +1574,49 @@ body.main-app-dark .feed-thread-preview:hover {
 	min-width: 0;
 }
 
+.premium-claim-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin: 0 0 2px;
+	padding: 14px 18px;
+	border-radius: var(--radius-lg);
+	border: 1px solid color-mix(in srgb, #c99a14 38%, var(--border-subtle));
+	background: color-mix(in srgb, #c99a14 7%, var(--bg-elevated));
+}
+
+.premium-claim-info {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+
+.premium-claim-info p {
+	margin: 0;
+	color: var(--text-secondary);
+	font-size: 13px;
+	line-height: 1.45;
+}
+
+.premium-claim-btn {
+	flex-shrink: 0;
+	padding: 8px 18px;
+	font-size: 13px;
+}
+
+.premium-claimed-banner {
+	margin: 0 0 2px;
+	padding: 12px 18px;
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border-subtle);
+	background: var(--bg-elevated);
+	color: var(--text-secondary);
+	font-size: 13px;
+	line-height: 1.45;
+}
+
 .thread-viewer-card {
 	border-radius: var(--radius-xl);
 	padding: 24px;

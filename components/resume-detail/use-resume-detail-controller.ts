@@ -98,6 +98,7 @@ export function useResumeDetailController(resumeId: string) {
 		useState(false);
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
+	const [claiming, setClaiming] = useState(false);
 	const [message, setMessage] = useState("");
 
 	const threadReviews = useMemo(
@@ -108,6 +109,13 @@ export function useResumeDetailController(resumeId: string) {
 	const isClosed = resume?.status === "closed";
 	const isWaiting = resume?.review_queue_status === "waiting";
 	const shouldUseGuidedReview = needsGuidedReviewCredit && !isOwner;
+	const isClaimable = Boolean(
+		resume?.is_premium &&
+			resume.payment_status === "paid" &&
+			!resume.assigned_reviewer_id &&
+			resume.status === "open" &&
+			!isOwner,
+	);
 
 	function goToLogin() {
 		const loginRoute = getLoginPath(`/resume/${resumeId}`);
@@ -472,6 +480,44 @@ export function useResumeDetailController(resumeId: string) {
 			void supabase.removeChannel(channel);
 		};
 	}, [resumeId, router]);
+
+	async function handleClaimResume() {
+		if (!user) { goToLogin(); return; }
+
+		setClaiming(true);
+		const session = await supabase.auth.getSession();
+		const accessToken = session.data.session?.access_token;
+		if (!accessToken) {
+			setClaiming(false);
+			reportError("Your session expired. Sign in again.");
+			return;
+		}
+
+		const response = await fetch(`/api/resumes/${resumeId}/claim`, {
+			method: "POST",
+			headers: { Authorization: `Bearer ${accessToken}` },
+		});
+
+		const result = (await response.json().catch(() => null)) as {
+			claimed?: boolean;
+			message?: string;
+		} | null;
+
+		setClaiming(false);
+
+		if (!response.ok || !result?.claimed) {
+			reportError(result?.message ?? "Could not claim this resume. Please try again.");
+			return;
+		}
+
+		toast.success("Resume claimed.", {
+			description: "You have 24 hours to submit your review.",
+		});
+
+		setResume((prev) =>
+			prev ? { ...prev, assigned_reviewer_id: user.id } : prev,
+		);
+	}
 
 	async function handleReviewSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -903,9 +949,12 @@ export function useResumeDetailController(resumeId: string) {
 		guidedIssue,
 		guidedIssueType,
 		guidedSuggestion,
+		claiming,
+		handleClaimResume,
 		handleReplySubmit,
 		handleReviewSubmit,
 		isClosed,
+		isClaimable,
 		isOwner,
 		isWaiting,
 		likedReviewIds,
