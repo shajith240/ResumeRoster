@@ -102,36 +102,10 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						</div>
 					</aside>
 
-					{controller.isClaimable && (
-						<div className="premium-claim-banner">
-							<div className="premium-claim-info">
-								<span className="badge premium-badge">Priority review</span>
-								<p>This resume needs a verified reviewer. Claim it to get 24 hours to submit your review.</p>
-							</div>
-							<button
-								className="btn-primary premium-claim-btn"
-								disabled={controller.claiming}
-								onClick={() => { void controller.handleClaimResume(); }}
-								type="button"
-							>
-								{controller.claiming ? (
-									<><span className="button-spinner" /> Claiming...</>
-								) : (
-									"Claim this review"
-								)}
-							</button>
-						</div>
-					)}
-
-					{resume.is_premium && resume.assigned_reviewer_id && !controller.isOwner && (
-						<div className="premium-claimed-banner">
-							A reviewer has been assigned and is working on this. Expect feedback within 24 hours.
-						</div>
-					)}
-
 					<DiscussionPanel
 						attachmentsById={controller.attachmentsById}
 						authorProfiles={controller.authorProfiles}
+						claiming={controller.claiming}
 						collapsedReviewIds={controller.collapsedReviewIds}
 						content={controller.content}
 						contentFormat={controller.contentFormat}
@@ -142,6 +116,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						guidedIssueType={controller.guidedIssueType}
 						guidedSuggestion={controller.guidedSuggestion}
 						isClosed={controller.isClosed}
+						isClaimable={controller.isClaimable}
+						isPremiumClaimed={Boolean(resume.is_premium && resume.assigned_reviewer_id)}
 						isOwner={controller.isOwner}
 						isWaiting={controller.isWaiting}
 						likedReviewIds={controller.likedReviewIds}
@@ -178,6 +154,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							controller.setReplyContentFormat("plain");
 							controller.setReplyAttachment(null);
 						}}
+						onClaim={() => { void controller.handleClaimResume(); }}
 						onRequireLogin={controller.goToLogin}
 						onReviewSubmit={controller.handleReviewSubmit}
 						onSelectedAttachmentChange={controller.setSelectedAttachment}
