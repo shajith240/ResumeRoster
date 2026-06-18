@@ -254,6 +254,9 @@ export function ResumeFeedCard({
 					<span className="badge neutral-badge">
 						{getResumeAffiliationLabel(resume, authorProfile)}
 					</span>
+					{resume.is_premium ? (
+						<span className="badge premium-badge">Priority review</span>
+					) : null}
 				</div>
 
 				<div className="feed-card-body">

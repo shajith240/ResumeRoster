@@ -497,6 +497,16 @@ textarea:focus {
 	background: #eceae5;
 	color: var(--text-secondary);
 }
+.premium-badge {
+	background: color-mix(in srgb, var(--brand) 14%, transparent);
+	color: color-mix(in srgb, var(--brand) 30%, var(--text-primary));
+	font-weight: 650;
+}
+
+body.main-app-dark .premium-badge {
+	background: color-mix(in srgb, var(--brand) 18%, transparent);
+	color: var(--brand);
+}
 
 body.main-app-dark .badge-open,
 body.main-app-dark .file-check {

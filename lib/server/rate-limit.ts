@@ -62,6 +62,12 @@ export const API_RATE_LIMIT_POLICIES = {
 		publicMessage: "Too many resume uploads. Try again later.",
 		windowSeconds: 3600,
 	},
+	paymentCreateOrder: {
+		action: "payment_create_order",
+		maxRequests: 5,
+		publicMessage: "Too many payment attempts. Try again in an hour.",
+		windowSeconds: 3600,
+	},
 } as const;
 
 export type ApiRateLimitPolicyName = keyof typeof API_RATE_LIMIT_POLICIES;
