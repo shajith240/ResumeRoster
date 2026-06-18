@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { adminErrorResponse, requireAdmin } from "@/lib/admin";
 import { internalErrorResponse } from "@/lib/api-errors";
+import { getAppHomeRoute } from "@/lib/app-routes";
 import type {
 	UserFeedbackPriority,
 	UserFeedbackStatus,
@@ -144,7 +145,7 @@ export async function POST(request: Request, context: RouteContext) {
 
 			const sendResult = await admin.rpc("admin_send_message", {
 				message_body: reply,
-				message_link_href: ticketResult.data.source_path || "/community",
+				message_link_href: ticketResult.data.source_path || getAppHomeRoute(),
 				message_request_id: randomUUID(),
 				message_title: "Reply from Linted",
 				sending_admin_email: user.email ?? null,

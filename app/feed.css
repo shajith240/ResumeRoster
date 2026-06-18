@@ -5838,34 +5838,22 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 
 	.community-post-route {
 		width: 100%;
-		height: 100dvh;
 		min-height: 100dvh;
 		margin: 0;
 		padding: 0;
-		overflow: hidden;
-		background: #000;
 		color: #f7f2ea;
-		overscroll-behavior: none;
 	}
 
 	.community-post-thread {
-		--mobile-comments-open-height: min(72dvh, calc(100dvh - 172px));
 		width: 100%;
 		max-width: none;
-		height: 100dvh;
 		gap: 0;
-		overflow: hidden;
 		background: #0d0f10;
-		overscroll-behavior: none;
-	}
-
-	/* Text-only posts: sheet takes up almost the full screen so comments are immediately visible */
-	.community-post-thread[data-has-media="false"] {
-		--mobile-comments-open-height: calc(100dvh - 58px - env(safe-area-inset-top));
 	}
 
 	.community-post-thread > .community-detail-toolbar {
-		position: relative;
+		position: sticky;
+		top: 0;
 		z-index: 30;
 		display: grid;
 		grid-template-columns: 44px minmax(0, 1fr) 44px;
@@ -6109,39 +6097,14 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 			padding 360ms cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	.community-post-thread[data-mobile-comments-sheet="open"][data-has-media="true"]
-		.community-media-gallery-detail {
-		flex: 1 1 auto;
-		padding: 0;
-	}
-
 	.community-post-media-frame {
 		width: 100%;
-		height: min(72dvh, calc(100dvh - 210px));
-		min-height: 300px;
+		height: clamp(220px, 78vw, 520px);
+		min-height: 0;
 		max-height: none;
 		border: 0;
-		border-radius: 0;
+		border-radius: 10px;
 		background: #000;
-		transition: height 360ms cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.community-post-thread[data-mobile-comments-sheet="open"][data-has-media="true"]
-		.community-post-media-frame {
-		height: 100%;
-		min-height: 140px;
-	}
-
-	.community-post-thread[data-mobile-comments-sheet="peek"][data-mobile-body-expanded="true"][data-has-media="true"]
-		.community-media-gallery-detail {
-		padding-top: 2px;
-		padding-bottom: 4px;
-	}
-
-	.community-post-thread[data-mobile-comments-sheet="peek"][data-mobile-body-expanded="true"][data-has-media="true"]
-		.community-post-media-frame {
-		height: min(43dvh, calc(100dvh - 350px));
-		min-height: 160px;
 	}
 
 	.community-post-media-frame::after {
@@ -6830,20 +6793,10 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 
 	/* ── Scroll-based mobile layout (replaces fixed bottom sheet) ──────────── */
 
-	/* On mobile the wrapper becomes a real scroll container */
+	/* On mobile the wrapper is a plain block; page body scrolls */
 	.community-thread-body {
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-		min-height: 0;
-		overflow-y: auto;
-		overflow-x: hidden;
-		overscroll-behavior: contain;
-		scrollbar-width: none;
-	}
-
-	.community-thread-body::-webkit-scrollbar {
-		display: none;
+		display: block;
+		width: 100%;
 	}
 
 	/* Article in the scroll body — takes only the space it needs */

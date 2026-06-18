@@ -2375,8 +2375,6 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		<div
 			className="community-post-thread"
 			data-has-media={visibleAttachments.length ? "true" : "false"}
-			data-mobile-body-expanded={mobilePostBodyExpanded ? "true" : "false"}
-			data-mobile-comments-sheet={mobileCommentsSheetState}
 		>
 			<div className="community-detail-toolbar" aria-label="Post navigation">
 				<button
@@ -2413,12 +2411,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 				</button>
 			</div>
 			<div className="community-thread-body">
-			<article
-				className="community-post-detail"
-				onClick={handleMobilePostSurfaceClick}
-				onPointerDown={startMobilePostRevealGesture}
-				onWheel={handleMobilePostWheel}
-			>
+			<article className="community-post-detail">
 				<header className="community-post-detail-header">
 					<div className="community-post-meta-row community-meta-tags">
 						<Link
@@ -2631,7 +2624,6 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 						<a
 							className="post-action-button post-comments-link"
 							href="#comments"
-							onClick={openCommentsShelf}
 						>
 							<MessageCircle className="post-action-icon" size={16} aria-hidden="true" />
 							<span className="post-action-count">{formatCount(post.comment_count)}</span>
@@ -2726,28 +2718,8 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			<section
 				aria-label="Comments"
 				className="community-comments-panel thread-discussion-panel mobile-thread-comments"
-				data-mobile-sheet={mobileCommentsSheetState}
 				id="comments"
-				onPointerDown={startMobileCommentsSheetDrag}
-				style={mobileCommentsSheetStyle}
 			>
-				<button
-					aria-label={
-						mobileCommentsSheetState === "open"
-							? "Collapse comments"
-							: "Open comments"
-					}
-					className="community-comments-sheet-handle"
-					onClick={() =>
-						setMobileCommentsSheetState((current) =>
-							current === "open" ? "peek" : "open",
-						)
-					}
-					type="button"
-				>
-					<span aria-hidden="true" />
-				</button>
-
 				{post.status === "active" ? (
 					<>
 						{rootCommentComposerOpen || commentBody.trim().length ? (
@@ -2845,19 +2817,23 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			)}
 			</div>{/* end community-thread-body */}
 
-			{/* Mobile "Join the conversation" trigger — opens dedicated composer overlay */}
-			{post.status === "active" && !poll ? (
-				<div className="community-mobile-join-trigger">
-					<button
-						className="community-mobile-join-pill"
-						onClick={() => setMobileComposerOpen(true)}
-						type="button"
-					>
-						<span>Join the conversation</span>
-						<ChevronUp aria-hidden="true" />
-					</button>
-				</div>
-			) : null}
+			{/* Mobile "Join the conversation" trigger — portaled to body so it's fixed to
+			    the viewport, not the containing block created by page-enter's transform */}
+			{post.status === "active" && !poll && typeof document !== "undefined"
+				? createPortal(
+					<div className="community-mobile-join-trigger">
+						<button
+							className="community-mobile-join-pill"
+							onClick={() => setMobileComposerOpen(true)}
+							type="button"
+						>
+							<span>Join the conversation</span>
+							<ChevronUp aria-hidden="true" />
+						</button>
+					</div>,
+					document.body,
+				)
+				: null}
 
 			{/* Mobile full-screen comment composer overlay (Reddit-style dedicated page) */}
 			{mobileComposerOpen && typeof document !== "undefined"
