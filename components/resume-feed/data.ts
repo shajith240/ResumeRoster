@@ -43,11 +43,11 @@ export type ReviewPreview = {
 
 export const FEED_PREVIEW_SIGNED_URL_TTL_SECONDS = 60 * 20;
 export const RESUME_SELECT_WITH_CONTEXT =
-	"id,user_id,title,file_path,is_anonymous,status,review_queue_status,activation_reviews_required,activation_reviews_completed,roast_count,read_count,job_description,post_description,created_at";
+	"id,user_id,title,file_path,is_anonymous,status,review_queue_status,activation_reviews_required,activation_reviews_completed,roast_count,read_count,job_description,post_description,is_premium,created_at";
 export const RESUME_SELECT_WITH_READS =
-	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,created_at";
+	"id,user_id,title,file_path,is_anonymous,status,roast_count,read_count,is_premium,created_at";
 export const RESUME_SELECT_BASE =
-	"id,user_id,title,file_path,is_anonymous,status,roast_count,created_at";
+	"id,user_id,title,file_path,is_anonymous,status,roast_count,is_premium,created_at";
 export const REVIEW_PREVIEW_SELECT_WITH_THREADS =
 	"id,resume_id,parent_id,content,attachment_id,content_format,sticker_id,helpful_votes,is_deleted,created_at";
 export const REVIEW_PREVIEW_SELECT_BASE =
