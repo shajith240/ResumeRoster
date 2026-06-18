@@ -7,6 +7,8 @@ export type SaveButtonState = {
 	ariaLabel: string;
 };
 
+export type SaveButtonPendingAction = "remove" | "save";
+
 type SavedResumeError = {
 	code?: string;
 	details?: string;
@@ -50,12 +52,19 @@ export function mergeSavedResumeState<T extends { id: string }>(
 
 export function getSaveButtonState(
 	isSaved: boolean,
-	isPending = false,
+	pendingAction: SaveButtonPendingAction | null = null,
 ): SaveButtonState {
-	if (isPending) {
+	if (pendingAction === "save") {
 		return {
-			label: isSaved ? "Removing..." : "Saving...",
-			ariaLabel: isSaved ? "Remove saved resume" : "Save resume",
+			label: "Saving...",
+			ariaLabel: "Saving resume",
+		};
+	}
+
+	if (pendingAction === "remove") {
+		return {
+			label: "Removing...",
+			ariaLabel: "Removing saved resume",
 		};
 	}
 

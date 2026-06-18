@@ -2,7 +2,6 @@
 
 import {
 	type ReactNode,
-	useRef,
 	useState,
 } from "react";
 import Link from "next/link";
@@ -11,23 +10,21 @@ import { toast } from "sonner";
 import BrandMark from "@/components/BrandMark";
 import { Button } from "@/components/ui/button";
 import {
-	ArrowRightIcon,
-	BriefcaseIcon,
-	GraduationCapIcon,
-	SearchIcon,
-	ShieldIcon,
-	SparklesIcon,
-	UsersIcon,
-	type SidebarAnimatedIconComponent,
-	type SidebarAnimatedIconHandle,
-} from "@/components/ui/sidebar-icons";
+	ArrowRight,
+	BriefcaseBusiness,
+	GraduationCap,
+	Search,
+	ShieldCheck,
+	Sparkles,
+	UsersRound,
+	type SolarIconComponent,
+} from "@/components/ui/solar-icons";
 import {
 	ONBOARDING_GOALS,
 	ONBOARDING_PERSONAS,
 	getCommunityRoleForOnboardingGoal,
 	getOnboardingDestination,
 	getOnboardingIssue,
-	getReviewerTypeForOnboarding,
 	isOnboardingGoalId,
 	isOnboardingPersonaId,
 	type OnboardingGoalId,
@@ -36,20 +33,20 @@ import {
 import { ensureActiveUserSession } from "@/lib/session-lock";
 import { supabase } from "@/lib/supabase/client";
 
-const goalIcons: Record<OnboardingGoalId, SidebarAnimatedIconComponent> = {
-	both: SparklesIcon,
-	get_feedback: SearchIcon,
-	review_resumes: ShieldIcon,
+const goalIcons: Record<OnboardingGoalId, SolarIconComponent> = {
+	both: Sparkles,
+	get_feedback: Search,
+	review_resumes: ShieldCheck,
 };
 
-const personaIcons: Record<OnboardingPersonaId, SidebarAnimatedIconComponent> = {
-	career_coach: UsersIcon,
-	engineer: BriefcaseIcon,
-	job_seeker: SearchIcon,
-	other: ArrowRightIcon,
-	product_manager: SparklesIcon,
-	recruiter_hr: ShieldIcon,
-	student: GraduationCapIcon,
+const personaIcons: Record<OnboardingPersonaId, SolarIconComponent> = {
+	career_coach: UsersRound,
+	engineer: BriefcaseBusiness,
+	job_seeker: Search,
+	other: ArrowRight,
+	product_manager: Sparkles,
+	recruiter_hr: ShieldCheck,
+	student: GraduationCap,
 };
 
 function isOnboardingMigrationError(error: { message?: string } | null) {
@@ -68,35 +65,21 @@ function OnboardingChoiceCard({
 }: {
 	children?: ReactNode;
 	description: string;
-	icon: SidebarAnimatedIconComponent;
+	icon: SolarIconComponent;
 	isSelected: boolean;
 	label: string;
 	onSelect: () => void;
 }) {
-	const iconRef = useRef<SidebarAnimatedIconHandle>(null);
-
-	function startIconAnimation() {
-		iconRef.current?.startAnimation();
-	}
-
-	function stopIconAnimation() {
-		iconRef.current?.stopAnimation();
-	}
-
 	return (
 		<Button
 			aria-pressed={isSelected}
 			className="onboarding-choice-card"
-			onBlur={stopIconAnimation}
 			onClick={onSelect}
-			onFocus={startIconAnimation}
-			onMouseEnter={startIconAnimation}
-			onMouseLeave={stopIconAnimation}
 			type="button"
 			variant="ghost"
 		>
 			<span className="onboarding-choice-icon">
-				<Icon ref={iconRef} aria-hidden="true" size={20} />
+				<Icon aria-hidden="true" size={20} />
 			</span>
 			<strong>{label}</strong>
 			<span>{description}</span>
@@ -189,16 +172,13 @@ export default function OnboardingFlow() {
 			return;
 		}
 
-		const reviewerType = getReviewerTypeForOnboarding(selectedGoal, selectedPersona);
 		const communityRole = getCommunityRoleForOnboardingGoal(selectedGoal);
 
 		toast.success("Linted is personalized.", {
 			description:
 				communityRole === "candidate"
 					? "You can still review any open resume whenever you want."
-					: reviewerType
-						? "You can review any open resume and update your profile later."
-						: "You can review any open resume and update your profile later.",
+					: "You can review any open resume whenever you want.",
 		});
 		router.replace(getOnboardingDestination(selectedGoal));
 	}
@@ -316,7 +296,7 @@ export default function OnboardingFlow() {
 									: "Enter Linted"
 								: "Continue"}
 						</span>
-						<ArrowRightIcon aria-hidden="true" size={16} />
+						<ArrowRight aria-hidden="true" size={16} />
 					</Button>
 				</footer>
 			</section>

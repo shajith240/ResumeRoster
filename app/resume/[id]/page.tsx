@@ -1,6 +1,6 @@
 import AuthGate from "@/components/AuthGate";
-import ResumeDetail from "@/components/ResumeDetail";
 import RouteHeader from "@/components/RouteHeader";
+import ResumeDetailLazy from "@/components/route-lazy/ResumeDetailLazy";
 
 type ResumePageProps = {
   params: Promise<{ id: string }>;
@@ -13,7 +13,7 @@ export default async function ResumePage({ params }: ResumePageProps) {
     <AuthGate>
       <RouteHeader />
       <main className="resume-detail-route page-enter">
-        <ResumeDetail resumeId={id} />
+        <ResumeDetailLazy resumeId={id} />
       </main>
     </AuthGate>
   );

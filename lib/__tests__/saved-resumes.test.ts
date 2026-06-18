@@ -41,8 +41,22 @@ describe("saved resumes", () => {
 			label: "Saved",
 			ariaLabel: "Remove saved resume",
 		});
-		expect(getSaveButtonState(false, true).label).toBe("Saving...");
-		expect(getSaveButtonState(true, true).label).toBe("Removing...");
+		expect(getSaveButtonState(false, "save")).toEqual({
+			label: "Saving...",
+			ariaLabel: "Saving resume",
+		});
+		expect(getSaveButtonState(true, "save")).toEqual({
+			label: "Saving...",
+			ariaLabel: "Saving resume",
+		});
+		expect(getSaveButtonState(true, "remove")).toEqual({
+			label: "Removing...",
+			ariaLabel: "Removing saved resume",
+		});
+		expect(getSaveButtonState(false, "remove")).toEqual({
+			label: "Removing...",
+			ariaLabel: "Removing saved resume",
+		});
 	});
 
 	it("detects only missing saved-resume schema errors", () => {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import {
 	buildRedactionProfileFromUser,
@@ -14,29 +14,41 @@ import {
 	TARGET_ROLES,
 	cleanResumeFileName,
 } from "@/lib/submit-validation";
+import { enforceApiRateLimit } from "@/lib/server/rate-limit";
+import { enforceUploadSecurity } from "@/lib/server/upload-security";
+import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
 
 const MAX_PDF_SIZE_BYTES = 5 * 1024 * 1024;
+const RESUME_SUBMIT_FAILED_MESSAGE =
+	"Resume upload failed. Please try again.";
+const RESUME_PROFILE_UPDATE_FAILED_MESSAGE =
+	"We could not save your target role. Please try again.";
 
 type SubmitProfile = {
 	full_name: string | null;
 	username: string | null;
 };
 
+type QueuedResumeInsertResult = {
+	activation_reviews_completed?: number;
+	activation_reviews_required?: number;
+	id: string;
+	review_queue_status?: string;
+};
+
 function badRequest(message: string, status = 400) {
 	return NextResponse.json({ message }, { status });
+}
+
+function serverFailure(message = RESUME_SUBMIT_FAILED_MESSAGE) {
+	return badRequest(message, 500);
 }
 
 function getRequiredString(formData: FormData, key: string) {
 	const value = formData.get(key);
 	return typeof value === "string" ? value.trim() : "";
-}
-
-function getBearerToken(request: Request) {
-	const authorization = request.headers.get("authorization") ?? "";
-	const [scheme, token] = authorization.split(/\s+/);
-	return /^bearer$/i.test(scheme) && token ? token : "";
 }
 
 async function ensureSubmitProfile(
@@ -78,34 +90,73 @@ async function getSubmitProfile(
 	return result.data as SubmitProfile | null;
 }
 
-export async function POST(request: Request) {
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-	const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-	if (!supabaseUrl || !serviceRoleKey) {
-		return badRequest("Server submit setup is missing.", 503);
+async function removeUploadedFile(
+	admin: SupabaseClient,
+	bucket: string,
+	filePath: string,
+) {
+	try {
+		await admin.storage.from(bucket).remove([filePath]);
+	} catch {
+		// The client still gets the original upload failure response.
 	}
+}
 
-	const token = getBearerToken(request);
-	if (!token) {
-		return badRequest("Sign in again before submitting.", 401);
-	}
-
-	const admin = createClient(supabaseUrl, serviceRoleKey, {
-		auth: {
-			autoRefreshToken: false,
-			persistSession: false,
-		},
+async function insertResumeWithQueue({
+	admin,
+	filePath,
+	jobDescription,
+	privacyMode,
+	title,
+	userId,
+	postDescription,
+}: {
+	admin: SupabaseClient;
+	filePath: string;
+	jobDescription: string;
+	privacyMode: string;
+	title: string;
+	userId: string;
+	postDescription: string;
+}) {
+	const queuedInsert = await admin.rpc("create_resume_with_review_queue", {
+		resume_file_path: filePath,
+		resume_is_anonymous: privacyMode !== "public",
+		resume_job_description: jobDescription,
+		resume_post_description: postDescription,
+		resume_privacy_mode: privacyMode,
+		resume_title: title,
+		target_user_id: userId,
 	});
 
-	const {
-		data: { user },
-		error: userError,
-	} = await admin.auth.getUser(token);
+	if (!queuedInsert.error) {
+		const row = Array.isArray(queuedInsert.data)
+			? queuedInsert.data[0]
+			: queuedInsert.data;
 
-	if (userError || !user) {
-		return badRequest("Your session expired. Sign in again.", 401);
+		return {
+			data: row as QueuedResumeInsertResult | null,
+			error: null,
+		};
 	}
+
+	return {
+		data: null,
+		error: queuedInsert.error,
+	};
+}
+
+export async function POST(request: Request) {
+	let signedIn: Awaited<ReturnType<typeof requireSignedInUser>>;
+	try {
+		signedIn = await requireSignedInUser(request, {
+			missingTokenMessage: "Sign in again before submitting.",
+			setupMessage: "Server submit setup is missing.",
+		});
+	} catch (error) {
+		return serverAuthErrorResponse(error);
+	}
+	const { admin, user } = signedIn;
 
 	let formData: FormData;
 	try {
@@ -159,13 +210,33 @@ export async function POST(request: Request) {
 		return badRequest("Add what you want help with.");
 	}
 
+	const rateLimitResponse = await enforceApiRateLimit(
+		admin,
+		user.id,
+		"resumeSubmit",
+	);
+	if (rateLimitResponse) return rateLimitResponse;
+
 	const profileError = await ensureSubmitProfile(admin, user);
 	if (profileError) {
-		return badRequest(`Profile setup failed: ${profileError.message}`, 500);
+		return serverFailure();
 	}
 
 	const profile = await getSubmitProfile(admin, user);
 	const originalBytes = new Uint8Array(await file.arrayBuffer());
+	const uploadSecurity = await enforceUploadSecurity(admin, {
+		bytes: originalBytes,
+		fileName: file.name,
+		fileSize: file.size,
+		mimeType: "application/pdf",
+		uploadKind: "resume",
+		userId: user.id,
+	});
+
+	if (!uploadSecurity.ok) {
+		return badRequest(uploadSecurity.message, uploadSecurity.status);
+	}
+
 	let processedPdf: Awaited<ReturnType<typeof redactResumePdf>>;
 
 	try {
@@ -186,6 +257,15 @@ export async function POST(request: Request) {
 		);
 	}
 
+	const profileUpdate = await admin
+		.from("profiles")
+		.update({ target_role: targetRole })
+		.eq("id", user.id);
+
+	if (profileUpdate.error) {
+		return serverFailure(RESUME_PROFILE_UPDATE_FAILED_MESSAGE);
+	}
+
 	const filePath = `${user.id}/${Date.now()}-${cleanResumeFileName(file.name)}`;
 	const upload = await admin.storage.from("resumes").upload(filePath, processedPdf.bytes, {
 		contentType: "application/pdf",
@@ -193,33 +273,30 @@ export async function POST(request: Request) {
 	});
 
 	if (upload.error) {
-		return badRequest(`Upload failed: ${upload.error.message}`, 500);
+		return serverFailure();
 	}
 
-	await admin.from("profiles").update({ target_role: targetRole }).eq("id", user.id);
+	const insert = await insertResumeWithQueue({
+		admin,
+		filePath,
+		jobDescription,
+		postDescription,
+		privacyMode,
+		title,
+		userId: user.id,
+	});
 
-	const insert = await admin
-		.from("resumes")
-		.insert({
-			file_path: filePath,
-			is_anonymous: privacyMode !== "public",
-			job_description: jobDescription,
-			post_description: postDescription,
-			privacy_mode: privacyMode,
-			title,
-			user_id: user.id,
-		})
-		.select("id")
-		.single();
-
-	if (insert.error) {
-		void admin.storage.from("resumes").remove([filePath]);
-		return badRequest(`Upload failed: ${insert.error.message}`, 500);
+	if (insert.error || !insert.data?.id) {
+		await removeUploadedFile(admin, "resumes", filePath);
+		return serverFailure();
 	}
 
 	return NextResponse.json({
-		id: insert.data.id,
+		activationReviewsCompleted: insert.data?.activation_reviews_completed ?? 0,
+		activationReviewsRequired: insert.data?.activation_reviews_required ?? 0,
+		id: insert.data?.id,
 		privacyMode,
+		reviewQueueStatus: insert.data?.review_queue_status ?? "active",
 		redactionCounts: processedPdf.redactionCounts,
 	});
 }

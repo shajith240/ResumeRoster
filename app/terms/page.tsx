@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BrandMark from "@/components/BrandMark";
+import { SUPPORT_EMAIL, SUPPORT_MAILTO } from "@/lib/support-contact";
 
 export const metadata = {
 	title: "Terms of Service - Linted",
@@ -9,7 +10,6 @@ export const metadata = {
 
 const lastUpdated = "May 30, 2026";
 const websiteUrl = "https://linted.space";
-const contactEmail = "shajith240@gmail.com";
 
 function Section({
 	children,
@@ -84,7 +84,7 @@ export default function TermsOfServicePage() {
 						<li>Keep your password and sign-in methods secure.</li>
 						<li>Do not share, sell, or transfer your account without permission.</li>
 						<li>
-							Notify us at <a href={`mailto:${contactEmail}`}>{contactEmail}</a>{" "}
+							Notify us at <a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>{" "}
 							if you believe your account was compromised.
 						</li>
 					</ul>
@@ -98,8 +98,8 @@ export default function TermsOfServicePage() {
 				<Section title="4. What Linted Provides">
 					<p>
 						Linted lets users upload resumes, choose privacy modes, request or
-						provide feedback, post reviews and replies, build public reviewer
-						profiles, earn helpful votes called lint points, and appear on
+						provide feedback, post reviews and replies, build public profile
+						activity, earn helpful votes called lint points, and appear on
 						leaderboards or directories based on community activity.
 					</p>
 					<p>
@@ -157,7 +157,7 @@ export default function TermsOfServicePage() {
 				<Section title="7. Reviews, Lint Points, and Leaderboards">
 					<p>
 						Linted uses community feedback signals, including helpful votes, lint
-						points, public review activity, reviewer profiles, and leaderboards.
+						points, public review activity, contribution history, and leaderboards.
 						Lint points represent helpful votes from other users; they are not
 						money, property, rewards, or transferable value.
 					</p>
@@ -177,7 +177,7 @@ export default function TermsOfServicePage() {
 						<li>post hateful, sexual, exploitative, violent, or illegal content;</li>
 						<li>upload malware, phishing content, spam, or deceptive material;</li>
 						<li>impersonate another person, company, school, or recruiter;</li>
-						<li>post fake reviews, fake credentials, or misleading reviewer claims;</li>
+						<li>post fake reviews, fake credentials, or misleading professional claims;</li>
 						<li>copy, scrape, or harvest user data without permission;</li>
 						<li>try to bypass security, rate limits, access controls, or moderation;</li>
 						<li>
@@ -198,16 +198,16 @@ export default function TermsOfServicePage() {
 					</p>
 					<p>
 						We may make mistakes. If you believe a moderation action was wrong,
-						contact us at <a href={`mailto:${contactEmail}`}>{contactEmail}</a>{" "}
+						contact us at <a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>{" "}
 						with relevant details.
 					</p>
 				</Section>
 
-				<Section title="10. Reviewer Profiles and Trust Labels">
+				<Section title="10. Trust Labels">
 					<p>
-						Users may create reviewer profiles and describe their experience.
-						You must not make false claims about employment, recruiting status,
-						education, credentials, or professional qualifications.
+						Linted may show trust labels for limited legacy or admin-reviewed
+						signals. You must not make false claims about employment, recruiting
+						status, education, credentials, or professional qualifications.
 					</p>
 					<p>
 						A trust label or reviewer status means only that Linted has reviewed
@@ -223,7 +223,7 @@ export default function TermsOfServicePage() {
 						Linted infringes your rights, use our{" "}
 						<Link href="/copyright">Copyright and Takedown Policy</Link> or
 						contact us at{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a> with enough
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a> with enough
 						information for us to identify the content and review the claim.
 					</p>
 					<p>
@@ -346,7 +346,7 @@ export default function TermsOfServicePage() {
 				<Section title="22. Contact">
 					<p>
 						Questions about these Terms can be sent to{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>.
 					</p>
 					<ul>
 						<li>Website: <a href={websiteUrl}>{websiteUrl}</a></li>

@@ -1,4 +1,5 @@
 import { createClient, type Provider } from "@supabase/supabase-js";
+import { getAppHomeRoute } from "@/lib/app-routes";
 import { AUTH_NEXT_STORAGE_KEY, getSafeNextPath } from "@/lib/auth-redirect";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -28,7 +29,7 @@ function getAuthCallbackUrl(nextPath: string) {
 
 export async function signInWithProvider(
 	provider: LintedAuthProvider,
-	nextPath = "/feed",
+	nextPath = getAppHomeRoute(),
 ) {
 	const safeNextPath = getSafeNextPath(nextPath);
 
@@ -52,10 +53,6 @@ export async function signInWithProvider(
   }
 
   return data;
-}
-
-export async function signInWithGoogle(nextPath = "/feed") {
-	return signInWithProvider("google", nextPath);
 }
 
 export async function signOut() {

@@ -1,0 +1,13 @@
+{
+	"threshold": 100,
+	"minLines": 8,
+	"minTokens": 80,
+	"ignore": [
+		"**/.next/**",
+		"**/node_modules/**",
+		"docs/generated/**",
+		"public/assets/**",
+		"supabase/.temp/**"
+	],
+	"reporters": ["console"]
+}

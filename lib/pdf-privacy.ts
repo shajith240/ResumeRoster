@@ -1,6 +1,6 @@
 export const MAX_PRIVACY_SCAN_PAGES = 8;
 
-export type PrivacyFindingType = "email" | "phone" | "link";
+type PrivacyFindingType = "email" | "phone" | "link";
 
 export type PrivacyFinding = {
 	type: PrivacyFindingType;

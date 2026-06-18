@@ -1,4 +1,5 @@
 import { adminErrorResponse, requireAdmin } from "@/lib/admin";
+import { internalErrorResponse } from "@/lib/api-errors";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -14,6 +15,21 @@ async function getCount(query: CountQuery) {
 	return count ?? 0;
 }
 
+async function getOptionalCommunityPostAttachmentCount(query: CountQuery) {
+	const { count, error } = await query;
+	if (!error) return count ?? 0;
+
+	if (
+		/community_post_attachments|schema cache|relation .* does not exist/i.test(
+			error.message ?? "",
+		)
+	) {
+		return 0;
+	}
+
+	throw new Error(error.message ?? "Count query failed.");
+}
+
 export async function GET(request: Request) {
 	try {
 		const { admin } = await requireAdmin(request);
@@ -26,11 +42,13 @@ export async function GET(request: Request) {
 			commentAttachments,
 			reports,
 			reviewerApplications,
+			feedbackTickets,
 			notifications,
 			moderationActions,
 			resumeFiles,
 			avatarFiles,
 			commentMediaFiles,
+			communityPostMediaFiles,
 		] = await Promise.all([
 			getCount(admin.from("profiles").select("id", { count: "exact", head: true })),
 			getCount(admin.from("resumes").select("id", { count: "exact", head: true })),
@@ -49,6 +67,12 @@ export async function GET(request: Request) {
 			),
 			getCount(
 				admin.from("reviewer_applications").select("id", {
+					count: "exact",
+					head: true,
+				}),
+			),
+			getCount(
+				admin.from("user_feedback").select("id", {
 					count: "exact",
 					head: true,
 				}),
@@ -83,6 +107,12 @@ export async function GET(request: Request) {
 					.select("storage_path", { count: "exact", head: true })
 					.not("storage_path", "is", null),
 			),
+			getOptionalCommunityPostAttachmentCount(
+				admin
+					.from("community_post_attachments")
+					.select("storage_path", { count: "exact", head: true })
+					.not("storage_path", "is", null),
+			),
 		]);
 
 		return Response.json({
@@ -100,7 +130,7 @@ export async function GET(request: Request) {
 					value: "cascade",
 				},
 				{
-					detail: "Resume, avatar, and comment upload objects are removed first.",
+					detail: "Resume, avatar, comment, and community post upload objects are removed first.",
 					key: "storage",
 					label: "Storage",
 					value: "cleanup",
@@ -131,6 +161,13 @@ export async function GET(request: Request) {
 					label: "Comment media",
 					value: commentMediaFiles,
 				},
+				{
+					detail:
+						"Public images linked from community_post_attachments.storage_path.",
+					key: "community-post-media",
+					label: "Community post media",
+					value: communityPostMediaFiles,
+				},
 			],
 			tables: [
 				{ key: "profiles", label: "Profiles", value: profiles },
@@ -148,6 +185,11 @@ export async function GET(request: Request) {
 					label: "Reviewer applications",
 					value: reviewerApplications,
 				},
+				{
+					key: "user_feedback",
+					label: "Feedback tickets",
+					value: feedbackTickets,
+				},
 				{ key: "notifications", label: "Notifications", value: notifications },
 				{
 					key: "moderation_actions",
@@ -158,7 +200,14 @@ export async function GET(request: Request) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return internalErrorResponse(error, {
+				context: {
+					area: "admin",
+					operation: "load_data_inventory",
+					route: "GET /api/admin/data",
+				},
+				publicMessage: "Admin data inventory could not be loaded.",
+			});
 		}
 
 		return adminErrorResponse(error);

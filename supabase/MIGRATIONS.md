@@ -1,6 +1,6 @@
 # Linted Supabase Migrations
 
-`supabase/migrations/` is the database source of truth for Linted. The loose SQL files in this folder are legacy one-off scripts kept as reference while the ordered migrations are validated in production and local environments.
+`supabase/migrations/` is the database source of truth for Linted. Database schema changes must be captured as ordered migration files, not loose SQL scripts under `supabase/`.
 
 ## Files
 
@@ -35,6 +35,50 @@
 0028_authenticated_write_rate_limits.sql
 0029_saved_resumes_api_contract.sql
 0030_rate_limit_pgcrypto_schema.sql
+0031_notifications_delete_policy.sql
+0032_web_push_subscriptions.sql
+0033_privacy_first_profile_defaults.sql
+0034_allow_admin_delete_cascades.sql
+0035_admin_inbox_messages.sql
+0036_refine_linted_usernames.sql
+0037_admin_delete_user_transaction.sql
+0038_remove_auth_email_lookup.sql
+0039_transactional_admin_messages.sql
+0040_scheduled_temporary_data_cleanup.sql
+0041_admin_user_search_rpc.sql
+0042_transactional_admin_moderation_actions.sql
+0043_transactional_reviewer_application_submit.sql
+0044_upload_security_quarantine.sql
+0045_authenticated_api_rate_limits.sql
+0046_health_readiness_checks.sql
+0047_guided_review_queue.sql
+0048_hide_waiting_resumes_from_public_feed.sql
+0049_recalculate_guided_review_queue.sql
+0050_validate_integrity_and_restore_review_votes.sql
+0051_db_lint_warning_cleanup.sql
+0052_community_database_foundation.sql
+0053_submit_community_post_rpc.sql
+0054_community_post_media_and_comments.sql
+0055_community_discussion_actions.sql
+0056_community_moderation_controls.sql
+0057_fix_community_post_submit_profile_conflict.sql
+0058_allow_title_only_community_posts.sql
+0059_allow_reddit_length_community_titles.sql
+0060_community_polls_and_drafts_support.sql
+0061_fix_community_poll_vote_rpc_conflict.sql
+0062_fix_community_vote_rpc_conflicts.sql
+0063_remove_community_post_saves.sql
+0064_hard_delete_community_posts.sql
+0065_optimize_community_reaction_lookups.sql
+0066_refine_reviewer_leaderboard_ranking.sql
+0067_admin_feedback_inbox.sql
+0068_indexed_mention_profile_search.sql
+0069_optimize_mention_typeahead_latency.sql
+0070_community_comment_static_images.sql
+0071_static_image_upload_limits.sql
+0072_profile_online_presence.sql
+0073_batch_profile_online_presence.sql
+0074_production_backend_integrity_hardening.sql
 ```
 
 The migrations are written as idempotent forward migrations. They use `create table if not exists`, `alter table ... add column if not exists`, `drop policy if exists`, `drop trigger if exists`, and `create or replace function` so they can run against both an existing Supabase project and a fresh local database without truncating user data.
@@ -66,6 +110,32 @@ npm run db:reset
 
 That command rebuilds the local Supabase database from the ordered migrations. It is destructive for the local database only.
 
-## Legacy SQL
+## SQL Source Of Truth
 
-Do not add new feature SQL as loose files. Add a new ordered migration instead. The legacy files can be moved into an archive after the migration reset and production dry-run have both been verified.
+Tracked SQL under `supabase/` is limited to:
+
+- `supabase/migrations/*.sql`
+- `supabase/seed.sql` if seed data is needed
+
+Run the guard before opening a PR:
+
+```bash
+npm run db:check
+```
+
+CI also runs this check so legacy one-off SQL cannot drift back into the active Supabase tree.
+
+## Duplicate SQL History
+
+Applied migrations are append-only production history. Do not edit, reorder, or
+deduplicate old migration files only to reduce jscpd percentages.
+
+The active duplicate-code report excludes `supabase/migrations/**` so SQL clone
+cleanup does not encourage unsafe history rewrites. Historical duplication is
+still generated in `docs/generated/quality/migration-history-jscpd-report.md`
+as an audit aid.
+
+If the migration chain becomes too long to operate comfortably, plan a migration
+squash or bootstrap migration as a coordinated database operation. Validate it
+against a fresh local database and a linked staging project before changing the
+production workflow.

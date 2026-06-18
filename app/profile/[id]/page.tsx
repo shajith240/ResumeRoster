@@ -1,6 +1,6 @@
 import AuthGate from "@/components/AuthGate";
-import ProfileDetail from "@/components/ProfileDetail";
 import RouteHeader from "@/components/RouteHeader";
+import ProfileDetailLazy from "@/components/route-lazy/ProfileDetailLazy";
 
 type ProfilePageProps = {
   params: Promise<{ id: string }>;
@@ -13,7 +13,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     <AuthGate>
       <RouteHeader />
       <main>
-        <ProfileDetail profileId={id} />
+        <ProfileDetailLazy profileId={id} />
       </main>
     </AuthGate>
   );

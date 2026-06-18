@@ -1,0 +1,76 @@
+@theme {
+  /* Colors */
+  --color-linted-paper: #fafaf8;
+  --color-linted-canvas: #f4f1eb;
+  --color-linted-surface: #ffffff;
+  --color-linted-pebble: #efede8;
+  --color-linted-border: #e4e1da;
+  --color-linted-border-strong: #d5d0c7;
+  --color-linted-ink: #17130f;
+  --color-linted-carbon: #3f3932;
+  --color-linted-slate: #625b52;
+  --color-linted-stone: #8a8176;
+  --color-linted-orange: #e85d26;
+  --color-linted-orange-hover: #f26b32;
+  --color-linted-orange-deep: #bf4518;
+  --color-linted-orange-wash: #f7e4da;
+  --color-linted-success: #2d7a4f;
+  --color-linted-warning: #b86f13;
+  --color-linted-danger: #c4341a;
+
+  /* Dark colors */
+  --color-linted-dark-canvas: #100f0e;
+  --color-linted-dark-surface: #171513;
+  --color-linted-dark-elevated: #211f1c;
+  --color-linted-dark-chrome: #100f0e;
+  --color-linted-dark-ink: #f7f1e8;
+  --color-linted-dark-slate: #c9bfb2;
+  --color-linted-dark-stone: #90877b;
+  --color-linted-dark-orange: #ff864d;
+  --color-linted-dark-orange-hover: #ff9a63;
+
+  /* Typography */
+  --font-ui: "Reddit Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+
+  --text-caption: 12px;
+  --leading-caption: 1.5;
+  --text-label: 13px;
+  --leading-label: 1.4;
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.55;
+  --text-body: 16px;
+  --leading-body: 1.55;
+  --text-ui-title: 18px;
+  --leading-ui-title: 1.35;
+  --text-section-heading: 32px;
+  --leading-section-heading: 1.12;
+  --text-page-heading: 44px;
+  --leading-page-heading: 1.05;
+  --text-hero-display: 64px;
+  --leading-hero-display: 0.98;
+
+  /* Spacing */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(23, 19, 15, 0.06), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  --shadow-md: 0 8px 24px rgba(23, 19, 15, 0.08), 0 1px 0 rgba(255, 255, 255, 0.72) inset;
+  --shadow-lg: 0 18px 44px rgba(23, 19, 15, 0.12);
+  --shadow-focus: 0 0 0 3px rgba(232, 93, 38, 0.24);
+}

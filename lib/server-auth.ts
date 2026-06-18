@@ -5,7 +5,13 @@ export type SignedInUserResult = {
 	user: User;
 };
 
-export class ServerAuthError extends Error {
+type RequireSignedInUserOptions = {
+	expiredSessionMessage?: string;
+	missingTokenMessage?: string;
+	setupMessage?: string;
+};
+
+class ServerAuthError extends Error {
 	status: number;
 
 	constructor(message: string, status = 401) {
@@ -21,12 +27,12 @@ function getBearerToken(request: Request) {
 	return /^bearer$/i.test(scheme) && token ? token : "";
 }
 
-export function createServiceSupabaseClient() {
+export function createServiceSupabaseClient(setupMessage = "Server auth setup is missing.") {
 	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 	const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 	if (!supabaseUrl || !serviceRoleKey) {
-		throw new ServerAuthError("Server auth setup is missing.", 503);
+		throw new ServerAuthError(setupMessage, 503);
 	}
 
 	return createClient(supabaseUrl, serviceRoleKey, {
@@ -39,20 +45,27 @@ export function createServiceSupabaseClient() {
 
 export async function requireSignedInUser(
 	request: Request,
+	options: RequireSignedInUserOptions = {},
 ): Promise<SignedInUserResult> {
 	const token = getBearerToken(request);
 	if (!token) {
-		throw new ServerAuthError("Sign in again before posting.", 401);
+		throw new ServerAuthError(
+			options.missingTokenMessage ?? "Sign in again before posting.",
+			401,
+		);
 	}
 
-	const admin = createServiceSupabaseClient();
+	const admin = createServiceSupabaseClient(options.setupMessage);
 	const {
 		data: { user },
 		error,
 	} = await admin.auth.getUser(token);
 
 	if (error || !user) {
-		throw new ServerAuthError("Your session expired. Sign in again.", 401);
+		throw new ServerAuthError(
+			options.expiredSessionMessage ?? "Your session expired. Sign in again.",
+			401,
+		);
 	}
 
 	return { admin, user };

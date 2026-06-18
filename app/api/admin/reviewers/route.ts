@@ -1,4 +1,5 @@
 import { adminErrorResponse, requireAdmin } from "@/lib/admin";
+import { internalErrorResponse } from "@/lib/api-errors";
 import {
 	isReviewerApplicationStatus,
 	type ReviewerApplicationStatus,
@@ -75,7 +76,14 @@ export async function GET(request: Request) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return internalErrorResponse(error, {
+				context: {
+					area: "admin",
+					operation: "list_reviewer_applications",
+					route: "GET /api/admin/reviewers",
+				},
+				publicMessage: "Reviewer applications could not be loaded.",
+			});
 		}
 
 		return adminErrorResponse(error);

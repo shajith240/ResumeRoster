@@ -1,11 +1,20 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Suspense, type ReactNode } from "react";
+import AppScrollRestoration from "@/components/AppScrollRestoration";
 import RouteTransitionLoader from "@/components/RouteTransitionLoader";
 import { Toaster } from "@/components/ui/sonner";
+import { THEME_BOOTSTRAP_SCRIPT } from "@/lib/security/theme-bootstrap";
+import { Providers } from "./providers";
 import "./globals.css";
-import "./feed-canvas.css";
+import "./notifications.css";
+import "./feed.css";
+import "./admin.css";
 
-const lintyFaviconPath = "/assets/linty-favicon.png";
+const lintedAppIcon180Path = "/assets/linted/app-icon-180.png";
+const lintedFavicon16Path = "/assets/linted/favicon-16.png";
+const lintedFavicon32Path = "/assets/linted/favicon-32.png";
+const lintedFavicon48Path = "/assets/linted/favicon-48.png";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://linted.space"),
@@ -19,22 +28,32 @@ export const metadata: Metadata = {
   icons: {
     apple: [
       {
-        url: lintyFaviconPath,
-        sizes: "750x750",
+        url: lintedAppIcon180Path,
+        sizes: "180x180",
         type: "image/png",
       },
     ],
     icon: [
       {
-        url: lintyFaviconPath,
-        sizes: "750x750",
+        url: lintedFavicon16Path,
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: lintedFavicon32Path,
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: lintedFavicon48Path,
+        sizes: "48x48",
         type: "image/png",
       },
     ],
     shortcut: [
       {
-        url: lintyFaviconPath,
-        sizes: "750x750",
+        url: lintedFavicon32Path,
+        sizes: "32x32",
         type: "image/png",
       },
     ],
@@ -61,25 +80,27 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-const themeBootstrapScript = `
-try {
-  var theme = window.localStorage.getItem("linted-theme") === "light" ? "light" : "dark";
-  document.documentElement.dataset.appTheme = theme;
-} catch (error) {
-  document.documentElement.dataset.appTheme = "dark";
-}
-`;
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
+  // Keep the layout dynamic so middleware-generated CSP nonces are available
+  // to Next-managed scripts. The manual theme bootstrap is allowed by hash.
+  await headers();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
-        <div className="app-root">{children}</div>
+        <script
+          dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
+        />
+        <Providers>
+          <div className="app-root">{children}</div>
+        </Providers>
+        <Suspense fallback={null}>
+          <AppScrollRestoration />
+        </Suspense>
         <Suspense fallback={null}>
           <RouteTransitionLoader />
         </Suspense>

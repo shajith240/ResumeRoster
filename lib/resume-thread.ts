@@ -100,33 +100,24 @@ function buildChildrenByParent(reviews: Review[]) {
 	return childrenByParent;
 }
 
-export function buildThreadReviewTree(
-	reviews: Review[],
-	collapsedReviewIds: Set<string>,
-): ThreadReviewNode[] {
+export function buildThreadReviewTree(reviews: Review[]): ThreadReviewNode[] {
 	const childrenByParent = buildChildrenByParent(reviews);
 
 	function buildNode(review: Review, depth: number): ThreadReviewNode {
 		const children = childrenByParent.get(review.id) ?? [];
-		const visibleChildren = collapsedReviewIds.has(review.id)
-			? []
-			: children.map((child) => buildNode(child, depth + 1));
 
 		return {
 			...review,
 			childCount: children.length,
 			depth,
-			children: visibleChildren,
+			children: children.map((child) => buildNode(child, depth + 1)),
 		};
 	}
 
 	return (childrenByParent.get(null) ?? []).map((review) => buildNode(review, 0));
 }
 
-export function buildThreadReviews(
-	reviews: Review[],
-	collapsedReviewIds: Set<string>,
-): ThreadReview[] {
+export function buildThreadReviews(reviews: Review[]): ThreadReview[] {
 	const flattened: ThreadReview[] = [];
 
 	function visit(node: ThreadReviewNode) {
@@ -135,12 +126,6 @@ export function buildThreadReviews(
 		children.forEach(visit);
 	}
 
-	buildThreadReviewTree(reviews, collapsedReviewIds).forEach(visit);
+	buildThreadReviewTree(reviews).forEach(visit);
 	return flattened;
 }
-
-export type ThreadRoast = ThreadReview;
-export type ThreadRoastNode = ThreadReviewNode;
-export const normalizeRoast = normalizeReview;
-export const buildThreadRoastTree = buildThreadReviewTree;
-export const buildThreadRoasts = buildThreadReviews;

@@ -1,18 +1,19 @@
 "use client";
 
+import { DotsThreeVertical as MoreVertical } from "@phosphor-icons/react";
 import {
 	Bell,
 	Check,
 	CheckCheck,
+	ExternalLink,
 	MessageCircle,
 	MessageSquare,
-	MoreVertical,
 	ShieldCheck,
 	ThumbsUp,
 	UserCheck,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -156,6 +157,9 @@ export default function TeamNotifications({
 }: TeamNotificationsProps) {
 	const [typeFilter, setTypeFilter] = useState<TeamNotificationFilter>("all");
 	const [statusFilter, setStatusFilter] = useState<TeamNotificationStatus>("all");
+	const [expandedNotificationId, setExpandedNotificationId] = useState<
+		string | null
+	>(null);
 
 	function setQuickFilter(value: NotificationFilterOption["value"]) {
 		if (value === "unread") {
@@ -186,6 +190,24 @@ export default function TeamNotifications({
 			}),
 		[notifications, statusFilter, typeFilter],
 	);
+
+	useEffect(() => {
+		if (
+			expandedNotificationId &&
+			!filteredNotifications.some(
+				(notification) => notification.id === expandedNotificationId,
+			)
+		) {
+			setExpandedNotificationId(null);
+		}
+	}, [expandedNotificationId, filteredNotifications]);
+
+	function toggleNotificationDetails(notification: TeamNotification) {
+		const nextExpanded =
+			expandedNotificationId === notification.id ? null : notification.id;
+
+		setExpandedNotificationId(nextExpanded);
+	}
 
 	const loadedUnreadCount = notifications.filter((notification) => !notification.read).length;
 	const displayUnreadCount = unreadCount ?? loadedUnreadCount;
@@ -273,6 +295,8 @@ export default function TeamNotifications({
 					<div className="flex flex-col">
 						{filteredNotifications.map((notification, index) => {
 							const unread = !notification.read;
+							const expanded = expandedNotificationId === notification.id;
+							const detailId = `notification-detail-${notification.id}`;
 
 							return (
 								<div key={notification.id}>
@@ -285,7 +309,9 @@ export default function TeamNotifications({
 									>
 										<button
 											className="grid min-w-0 grid-cols-[34px_minmax(0,1fr)] gap-2.5 rounded-xl px-2.5 py-2.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
-											onClick={() => void onOpen?.(notification)}
+											aria-controls={detailId}
+											aria-expanded={expanded}
+											onClick={() => toggleNotificationDetails(notification)}
 											type="button"
 										>
 											<span
@@ -367,7 +393,7 @@ export default function TeamNotifications({
 														onSelect={() => void onOpen?.(notification)}
 													>
 														<MessageCircle className="size-4" />
-														View
+														Open link
 													</DropdownMenuItem>
 												) : null}
 												{onDelete ? (
@@ -383,6 +409,49 @@ export default function TeamNotifications({
 												) : null}
 											</DropdownMenuContent>
 										</DropdownMenu>
+
+										{expanded ? (
+											<div
+												className="col-span-2 px-2.5 pb-2.5 pt-0"
+												id={detailId}
+											>
+												<div className="rounded-[10px] border border-border/70 bg-background/80 p-3">
+													<p className="whitespace-pre-wrap break-words text-[0.76rem] font-medium leading-5 text-foreground/90">
+														{notification.message || "No message details."}
+													</p>
+													{(unread && onMarkAsRead) || notification.link ? (
+														<div className="mt-3 flex flex-wrap gap-2">
+															{unread && onMarkAsRead ? (
+																<Button
+																	className="w-full justify-center sm:w-auto"
+																	onClick={() =>
+																		void onMarkAsRead(notification.id)
+																	}
+																	size="xs"
+																	type="button"
+																	variant="outline"
+																>
+																	<Check className="size-3" />
+																	Mark read
+																</Button>
+															) : null}
+															{notification.link ? (
+																<Button
+																	className="w-full justify-center sm:w-auto"
+																	onClick={() => void onOpen?.(notification)}
+																	size="xs"
+																	type="button"
+																	variant="outline"
+																>
+																	<ExternalLink className="size-3" />
+																	Open link
+																</Button>
+															) : null}
+														</div>
+													) : null}
+												</div>
+											</div>
+										) : null}
 									</div>
 									{index < filteredNotifications.length - 1 ? (
 										<Separator className="my-1" />

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import BrandMark from "@/components/BrandMark";
+import { SUPPORT_EMAIL, SUPPORT_MAILTO } from "@/lib/support-contact";
 
 export const metadata = {
 	title: "Community Guidelines - Linted",
@@ -9,7 +10,6 @@ export const metadata = {
 };
 
 const lastUpdated = "May 30, 2026";
-const contactEmail = "shajith240@gmail.com";
 
 function Section({
 	children,
@@ -105,7 +105,7 @@ export default function CommunityGuidelinesPage() {
 						placements, or hiring authority.
 					</p>
 					<p>
-						Reviewer profiles and trust labels are meant to help users understand
+						Public profiles and trust labels are meant to help users understand
 						context. They are not a license to mislead people or overstate your
 						authority.
 					</p>
@@ -160,7 +160,7 @@ export default function CommunityGuidelinesPage() {
 						<Link href="/terms">Terms</Link>, or our{" "}
 						<Link href="/privacy">Privacy Policy</Link>. If the in-product
 						reporting flow is unavailable, email{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a> with the link,
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a> with the link,
 						screenshot if appropriate, and a short explanation.
 					</p>
 				</Section>
@@ -181,7 +181,7 @@ export default function CommunityGuidelinesPage() {
 				<Section title="12. Appeals and Mistakes">
 					<p>
 						Moderation is imperfect. If you believe we made a mistake, contact{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a> with the
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a> with the
 						account, content link, and why you think the decision should be
 						reviewed.
 					</p>

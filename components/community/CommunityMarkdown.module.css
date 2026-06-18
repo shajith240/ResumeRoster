@@ -1,0 +1,312 @@
+.markdown {
+	color: inherit;
+	font-size: inherit;
+	line-height: 1.55;
+	overflow-wrap: anywhere;
+	white-space: normal;
+}
+
+.compact {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 6;
+}
+
+.composerPreview {
+	border-top: 1px solid var(--border-subtle);
+	padding: 0.85rem 1rem 1rem;
+	background: color-mix(in srgb, var(--bg-muted) 48%, transparent);
+}
+
+.markdown > :first-child {
+	margin-top: 0;
+}
+
+.markdown > :last-child {
+	margin-bottom: 0;
+}
+
+.markdown p,
+.markdown ul,
+.markdown ol,
+.markdown blockquote,
+.markdown pre,
+.markdown table,
+.markdown figure {
+	margin: 0 0 0.75rem;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+	margin: 1rem 0 0.45rem;
+	color: var(--text-primary);
+	font-family: var(--font-post-title);
+	font-weight: 720;
+	line-height: 1.2;
+}
+
+.markdown h1 {
+	font-size: 1.35rem;
+}
+
+.markdown h2 {
+	font-size: 1.16rem;
+}
+
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+	font-size: 1rem;
+}
+
+.markdown strong {
+	color: var(--text-primary);
+	font-weight: 750;
+}
+
+.markdown em {
+	font-style: italic;
+}
+
+.markdown a {
+	color: var(--brand);
+	font-weight: 650;
+	text-decoration: none;
+}
+
+.markdown a:hover,
+.markdown a:focus-visible {
+	text-decoration: underline;
+}
+
+.markdown ul,
+.markdown ol {
+	padding-left: 1.35rem;
+}
+
+.markdown ul {
+	list-style-type: disc;
+}
+
+.markdown ol {
+	list-style-type: decimal;
+}
+
+.markdown li {
+	display: list-item;
+	padding-left: 0.15rem;
+}
+
+.markdown li::marker {
+	color: var(--text-secondary);
+	font-weight: 720;
+}
+
+.markdown li + li {
+	margin-top: 0.25rem;
+}
+
+.markdown li > p {
+	margin: 0;
+}
+
+.markdown li > p + p {
+	margin-top: 0.45rem;
+}
+
+.markdown blockquote {
+	border-left: 3px solid color-mix(in srgb, var(--brand) 56%, transparent);
+	padding: 0.08rem 0 0.08rem 0.85rem;
+	color: var(--text-secondary);
+}
+
+.markdown code {
+	border: 1px solid var(--border-subtle);
+	border-radius: 5px;
+	padding: 0.08rem 0.28rem;
+	background: var(--bg-muted);
+	color: var(--text-primary);
+	font-family: var(--font-mono);
+	font-size: 0.92em;
+}
+
+.markdown pre,
+.codePre {
+	overflow-x: auto;
+	border: 1px solid var(--border-subtle);
+	border-radius: 8px;
+	padding: 0.85rem;
+	background: var(--bg-muted);
+	scrollbar-width: thin;
+}
+
+.markdown pre code,
+.codePre code {
+	border: 0;
+	padding: 0;
+	background: transparent;
+	font-size: 0.9rem;
+	line-height: 1.55;
+}
+
+.codeBlock {
+	display: block;
+	min-width: max-content;
+	color: var(--text-primary);
+	font-family: var(--font-mono);
+	white-space: pre;
+	tab-size: 2;
+}
+
+.codeBlock[data-language-label]::before {
+	content: attr(data-language-label);
+	display: block;
+	width: fit-content;
+	margin: 0 0 0.7rem;
+	border: 1px solid color-mix(in srgb, var(--brand) 28%, var(--border-subtle));
+	border-radius: 999px;
+	padding: 0.18rem 0.55rem;
+	background: color-mix(in srgb, var(--brand) 12%, transparent);
+	color: var(--brand);
+	font-family: var(--font-app-body);
+	font-size: 0.72rem;
+	font-weight: 750;
+	line-height: 1.2;
+}
+
+.codeBlock :global(.hljs-keyword),
+.codeBlock :global(.hljs-selector-tag),
+.codeBlock :global(.hljs-built_in),
+.codeBlock :global(.hljs-type) {
+	color: #ff9f6e;
+}
+
+.codeBlock :global(.hljs-string),
+.codeBlock :global(.hljs-regexp),
+.codeBlock :global(.hljs-symbol) {
+	color: #8bdc9b;
+}
+
+.codeBlock :global(.hljs-number),
+.codeBlock :global(.hljs-literal),
+.codeBlock :global(.hljs-variable),
+.codeBlock :global(.hljs-template-variable) {
+	color: #9ecbff;
+}
+
+.codeBlock :global(.hljs-title),
+.codeBlock :global(.hljs-title.function_),
+.codeBlock :global(.hljs-section),
+.codeBlock :global(.hljs-name) {
+	color: #ffd166;
+}
+
+.codeBlock :global(.hljs-comment),
+.codeBlock :global(.hljs-quote) {
+	color: var(--text-tertiary);
+	font-style: italic;
+}
+
+.codeBlock :global(.hljs-attr),
+.codeBlock :global(.hljs-attribute),
+.codeBlock :global(.hljs-property) {
+	color: #c7b9ff;
+}
+
+.codeBlock :global(.hljs-meta),
+.codeBlock :global(.hljs-operator),
+.codeBlock :global(.hljs-punctuation) {
+	color: var(--text-secondary);
+}
+
+.tableScroll {
+	margin: 0 0 0.85rem;
+	overflow-x: auto;
+	border: 1px solid var(--border-subtle);
+	border-radius: 8px;
+	background: var(--bg-surface);
+}
+
+.tableScroll table {
+	width: 100%;
+	min-width: 420px;
+	margin: 0;
+	border-collapse: collapse;
+	font-size: 0.92rem;
+}
+
+.tableScroll th,
+.tableScroll td {
+	border-bottom: 1px solid var(--border-subtle);
+	padding: 0.62rem 0.75rem;
+	text-align: left;
+	vertical-align: top;
+}
+
+.tableScroll th {
+	background: var(--bg-muted);
+	color: var(--text-primary);
+	font-weight: 720;
+}
+
+.tableScroll tr:last-child td {
+	border-bottom: 0;
+}
+
+.image {
+	display: block;
+	max-width: min(100%, 560px);
+	max-height: 340px;
+	margin: 0.35rem 0 0.85rem;
+	border: 1px solid var(--border-subtle);
+	border-radius: 8px;
+	object-fit: contain;
+	background: var(--bg-muted);
+}
+
+.compact .image {
+	max-width: min(100%, 360px);
+	max-height: 180px;
+}
+
+.imageFallback {
+	color: var(--text-secondary);
+	font-size: 0.92em;
+}
+
+@media (max-width: 640px) {
+	.markdown {
+		line-height: 1.5;
+	}
+
+	.tableScroll {
+		margin-right: calc(-1 * min(12px, 3vw));
+		margin-left: calc(-1 * min(12px, 3vw));
+		border-right: 0;
+		border-left: 0;
+		border-radius: 0;
+	}
+
+	.tableScroll table {
+		min-width: 360px;
+	}
+
+	.tableScroll th,
+	.tableScroll td {
+		padding: 0.55rem 0.62rem;
+	}
+
+	.image {
+		max-height: 260px;
+	}
+
+	.compact .image {
+		max-height: 150px;
+	}
+}

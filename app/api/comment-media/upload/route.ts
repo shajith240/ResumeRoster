@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import {
 	detectCommentImageMimeType,
 	getCommentImageExtension,
@@ -5,12 +6,35 @@ import {
 	type CommentImageMimeType,
 } from "@/lib/comment-media-validation";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
+import { enforceApiRateLimit } from "@/lib/server/rate-limit";
+import { enforceUploadSecurity } from "@/lib/server/upload-security";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const COMMENT_IMAGE_UPLOAD_FAILED_MESSAGE =
+	"Image upload failed. Please try again.";
+
+function getCommentMediaScanEnvironment() {
+	if (process.env.UPLOAD_MALWARE_SCAN_MODE || process.env.UPLOAD_MALWARE_SCAN_URL) {
+		return process.env;
+	}
+
+	return {
+		...process.env,
+		UPLOAD_MALWARE_SCAN_MODE: "optional",
+	};
+}
+
 function badRequest(message: string, status = 400) {
 	return Response.json({ message }, { status });
+}
+
+function uploadFailure() {
+	return Response.json(
+		{ message: COMMENT_IMAGE_UPLOAD_FAILED_MESSAGE },
+		{ status: 500 },
+	);
 }
 
 function cleanTitle(fileName: string) {
@@ -23,6 +47,18 @@ function cleanTitle(fileName: string) {
 	);
 }
 
+async function removeUploadedFile(
+	admin: SupabaseClient,
+	bucket: string,
+	storagePath: string,
+) {
+	try {
+		await admin.storage.from(bucket).remove([storagePath]);
+	} catch {
+		// The client still gets the original upload failure response.
+	}
+}
+
 export async function POST(request: Request) {
 	try {
 		const { admin, user } = await requireSignedInUser(request);
@@ -32,6 +68,13 @@ export async function POST(request: Request) {
 		if (!file || !(file instanceof File)) {
 			return badRequest("Upload a PNG, JPG, or WebP image.");
 		}
+
+		const rateLimitResponse = await enforceApiRateLimit(
+			admin,
+			user.id,
+			"commentMediaUpload",
+		);
+		if (rateLimitResponse) return rateLimitResponse;
 
 		const bytes = new Uint8Array(await file.arrayBuffer());
 		const issue = getCommentImageUploadIssue({
@@ -44,6 +87,23 @@ export async function POST(request: Request) {
 		if (issue) return badRequest(issue);
 
 		const mimeType = detectCommentImageMimeType(bytes) as CommentImageMimeType;
+		const uploadSecurity = await enforceUploadSecurity(
+			admin,
+			{
+				bytes,
+				fileName: file.name,
+				fileSize: file.size,
+				mimeType,
+				uploadKind: "comment-media",
+				userId: user.id,
+			},
+			getCommentMediaScanEnvironment(),
+		);
+
+		if (!uploadSecurity.ok) {
+			return badRequest(uploadSecurity.message, uploadSecurity.status);
+		}
+
 		const extension = getCommentImageExtension(mimeType);
 		const storagePath = `${user.id}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
 		const title = cleanTitle(file.name);
@@ -55,7 +115,7 @@ export async function POST(request: Request) {
 				upsert: false,
 			});
 
-		if (upload.error) throw new Error(upload.error.message);
+		if (upload.error) return uploadFailure();
 
 		const insert = await admin
 			.from("comment_attachments")
@@ -73,8 +133,8 @@ export async function POST(request: Request) {
 			.single();
 
 		if (insert.error) {
-			void admin.storage.from("comment-media").remove([storagePath]);
-			throw new Error(insert.error.message);
+			await removeUploadedFile(admin, "comment-media", storagePath);
+			return uploadFailure();
 		}
 
 		return Response.json({
@@ -86,7 +146,7 @@ export async function POST(request: Request) {
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return uploadFailure();
 		}
 
 		return serverAuthErrorResponse(error);

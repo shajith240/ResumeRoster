@@ -1,0 +1,94 @@
+.editorToolbar.editorToolbar {
+	gap: 3px;
+	min-height: 44px;
+}
+
+.editorToolbar.editorToolbar > button {
+	color: color-mix(in srgb, #b8ddff 72%, var(--text-secondary));
+}
+
+.editorToolbar.editorToolbar > button > svg {
+	stroke-width: 2.15;
+}
+
+.codeLanguageTrigger.codeLanguageTrigger {
+	display: inline-flex;
+	width: auto;
+	min-width: 76px;
+	height: 34px;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	border: 0;
+	border-radius: 8px;
+	padding: 0 8px;
+	background: transparent;
+	color: color-mix(in srgb, #8bc9ff 58%, var(--text-secondary));
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 1;
+	box-shadow: none;
+}
+
+.codeLanguageTrigger.codeLanguageTrigger:hover,
+.codeLanguageTrigger.codeLanguageTrigger:focus-visible {
+	background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
+	color: var(--text-primary);
+}
+
+.codeLanguageTrigger.codeLanguageTrigger > span {
+	display: inline-flex;
+	min-width: 0;
+	align-items: center;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.codeLanguageTrigger.codeLanguageTrigger > svg {
+	width: 14px;
+	height: 14px;
+	flex: 0 0 auto;
+	opacity: 0.72;
+	stroke-width: 2.2;
+}
+
+.codeLanguageContent {
+	border-color: var(--border-default);
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+}
+
+.codeLanguageItem {
+	font-size: 13px;
+	font-weight: 650;
+}
+
+@media (max-width: 640px) {
+	.editorToolbar.editorToolbar {
+		flex-wrap: wrap;
+		gap: 4px;
+		overflow-x: visible;
+		min-height: 82px;
+		align-content: start;
+		padding: 8px 10px 6px;
+		scrollbar-width: auto;
+	}
+
+	.editorToolbar.editorToolbar > button {
+		width: 34px;
+		height: 34px;
+	}
+
+	.editorToolbar.editorToolbar > button > svg {
+		width: 18px;
+		height: 18px;
+	}
+
+	.codeLanguageTrigger.codeLanguageTrigger {
+		min-width: 74px;
+		height: 34px;
+		padding-inline: 8px;
+		font-size: 11px;
+	}
+}

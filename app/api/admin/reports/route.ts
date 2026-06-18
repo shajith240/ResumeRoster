@@ -1,4 +1,5 @@
 import { adminErrorResponse, requireAdmin } from "@/lib/admin";
+import { internalErrorResponse } from "@/lib/api-errors";
 import type { ContentReportStatus } from "@/lib/supabase/types";
 
 export const runtime = "nodejs";
@@ -25,7 +26,7 @@ export async function GET(request: Request) {
 		let query = admin
 			.from("content_reports")
 			.select(
-				"id,reporter_id,reported_user_id,resume_id,roast_id,profile_id,target_type,reason,details,status,moderator_note,reviewed_by,reviewed_at,report_count,last_reported_at,created_at,updated_at",
+				"id,reporter_id,reported_user_id,resume_id,roast_id,profile_id,community_post_id,community_comment_id,target_type,reason,details,status,moderator_note,reviewed_by,reviewed_at,report_count,last_reported_at,created_at,updated_at",
 			)
 			.order("status", { ascending: true })
 			.order("report_count", { ascending: false })
@@ -50,8 +51,20 @@ export async function GET(request: Request) {
 		);
 		const resumeIds = uniqueIds(reportRows.map((report) => report.resume_id));
 		const reviewIds = uniqueIds(reportRows.map((report) => report.roast_id));
+		const communityPostIds = uniqueIds(
+			reportRows.map((report) => report.community_post_id),
+		);
+		const communityCommentIds = uniqueIds(
+			reportRows.map((report) => report.community_comment_id),
+		);
 
-		const [profilesResult, resumesResult, reviewsResult] = await Promise.all([
+		const [
+			profilesResult,
+			resumesResult,
+			reviewsResult,
+			communityPostsResult,
+			communityCommentsResult,
+		] = await Promise.all([
 			profileIds.length
 				? admin
 						.from("profiles")
@@ -72,11 +85,29 @@ export async function GET(request: Request) {
 						.select("id,resume_id,parent_id,author_id,content,attachment_id,content_format,is_deleted,created_at")
 						.in("id", reviewIds)
 				: Promise.resolve({ data: [], error: null }),
+			communityPostIds.length
+				? admin
+						.from("community_posts")
+						.select("id,author_id,title,body,status,post_type,created_at")
+						.in("id", communityPostIds)
+				: Promise.resolve({ data: [], error: null }),
+			communityCommentIds.length
+				? admin
+						.from("community_post_comments")
+						.select("id,post_id,parent_id,author_id,body,status,created_at")
+						.in("id", communityCommentIds)
+				: Promise.resolve({ data: [], error: null }),
 		]);
 
 		if (profilesResult.error) throw new Error(profilesResult.error.message);
 		if (resumesResult.error) throw new Error(resumesResult.error.message);
 		if (reviewsResult.error) throw new Error(reviewsResult.error.message);
+		if (communityPostsResult.error) {
+			throw new Error(communityPostsResult.error.message);
+		}
+		if (communityCommentsResult.error) {
+			throw new Error(communityCommentsResult.error.message);
+		}
 
 		const profilesById = new Map(
 			(profilesResult.data ?? []).map((profile) => [profile.id, profile]),
@@ -86,6 +117,15 @@ export async function GET(request: Request) {
 		);
 		const reviewsById = new Map(
 			(reviewsResult.data ?? []).map((review) => [review.id, review]),
+		);
+		const communityPostsById = new Map(
+			(communityPostsResult.data ?? []).map((post) => [post.id, post]),
+		);
+		const communityCommentsById = new Map(
+			(communityCommentsResult.data ?? []).map((comment) => [
+				comment.id,
+				comment,
+			]),
 		);
 
 		return Response.json({
@@ -104,11 +144,24 @@ export async function GET(request: Request) {
 					: null,
 				review: report.roast_id ? reviewsById.get(report.roast_id) ?? null : null,
 				roast: report.roast_id ? reviewsById.get(report.roast_id) ?? null : null,
+				communityPost: report.community_post_id
+					? communityPostsById.get(report.community_post_id) ?? null
+					: null,
+				communityComment: report.community_comment_id
+					? communityCommentsById.get(report.community_comment_id) ?? null
+					: null,
 			})),
 		});
 	} catch (error) {
 		if (error instanceof Error && !(error as { status?: number }).status) {
-			return Response.json({ message: error.message }, { status: 500 });
+			return internalErrorResponse(error, {
+				context: {
+					area: "admin",
+					operation: "list_reports",
+					route: "GET /api/admin/reports",
+				},
+				publicMessage: "Admin reports could not be loaded.",
+			});
 		}
 		return adminErrorResponse(error);
 	}

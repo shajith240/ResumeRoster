@@ -1,0 +1,15 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": ["app", "components", "lib"],
+	"entryPointStrategy": "expand",
+	"out": "docs/generated/typedoc",
+	"exclude": [
+		"**/__tests__/**",
+		"**/*.test.ts",
+		"**/*.test.tsx"
+	],
+	"excludeInternal": false,
+	"excludePrivate": false,
+	"readme": "none",
+	"skipErrorChecking": true
+}

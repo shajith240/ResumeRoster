@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bell } from "lucide-react";
+import { Bell } from "@/components/ui/solar-icons";
 import { toast } from "sonner";
 import PushNotificationsControl from "@/components/PushNotificationsControl";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
@@ -21,6 +21,7 @@ import {
 	isNotificationsFeatureError,
 	unreadNotificationCount,
 } from "@/lib/notifications";
+import { getAppHomeRoute } from "@/lib/app-routes";
 import { supabase } from "@/lib/supabase/client";
 import type { LintedNotification } from "@/lib/supabase/types";
 import { cn } from "@/lib/utils";
@@ -35,7 +36,7 @@ function normalizeNotification(row: LintedNotification): LintedNotification {
 	return {
 		...row,
 		body: row.body ?? "",
-		link_href: row.link_href || "/feed",
+		link_href: row.link_href || getAppHomeRoute(),
 		metadata: row.metadata ?? {},
 	};
 }

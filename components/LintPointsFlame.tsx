@@ -1,11 +1,18 @@
 "use client";
 
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { Flame } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+	DotLottieReact,
+	setWasmUrl,
+	type DotLottie,
+} from "@lottiefiles/dotlottie-react";
+import { useCallback, useEffect, useState } from "react";
+import { Fire } from "@/components/ui/solar-icons";
 import { cn } from "@/lib/utils";
 
 const FIRE_ANIMATION_SRC = "/assets/890cb942-1177-11ee-847c-73f9b2630e61.lottie";
+const DOTLOTTIE_WASM_SRC = "/assets/dotlottie-player.wasm";
+
+setWasmUrl(DOTLOTTIE_WASM_SRC);
 
 type LintPointsFlameProps = {
 	animated?: boolean;
@@ -28,36 +35,80 @@ function usePrefersReducedMotion() {
 	return reducedMotion;
 }
 
+function StaticFlameIcon({ className }: { className?: string }) {
+	return (
+		<Fire
+			aria-hidden="true"
+			className={cn("h-4 w-4 text-[var(--brand)]", className)}
+		/>
+	);
+}
+
 export default function LintPointsFlame({
 	animated = true,
 	className,
 	fallbackClassName,
 }: LintPointsFlameProps) {
 	const reducedMotion = usePrefersReducedMotion();
+	const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
+	const [animationReady, setAnimationReady] = useState(false);
+	const [animationFailed, setAnimationFailed] = useState(false);
+	const handleDotLottieRef = useCallback((instance: DotLottie | null) => {
+		setDotLottie(instance);
+	}, []);
+
+	useEffect(() => {
+		if (!dotLottie) return;
+
+		const markReady = () => setAnimationReady(true);
+		const markFailed = () => setAnimationFailed(true);
+
+		dotLottie.addEventListener("ready", markReady);
+		dotLottie.addEventListener("load", markReady);
+		dotLottie.addEventListener("render", markReady);
+		dotLottie.addEventListener("loadError", markFailed);
+		dotLottie.addEventListener("renderError", markFailed);
+
+		return () => {
+			dotLottie.removeEventListener("ready", markReady);
+			dotLottie.removeEventListener("load", markReady);
+			dotLottie.removeEventListener("render", markReady);
+			dotLottie.removeEventListener("loadError", markFailed);
+			dotLottie.removeEventListener("renderError", markFailed);
+		};
+	}, [dotLottie]);
 
 	if (!animated || reducedMotion) {
-		return (
-			<Flame
-				aria-hidden="true"
-				className={cn("h-4 w-4 text-[var(--brand)]", fallbackClassName)}
-			/>
-		);
+		return <StaticFlameIcon className={fallbackClassName} />;
 	}
 
 	return (
 		<span
 			aria-hidden="true"
 			className={cn(
-				"inline-flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden",
+				"relative inline-flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden text-[var(--brand)]",
 				className,
 			)}
 		>
-			<DotLottieReact
-				autoplay
-				className="h-full w-full"
-				loop
-				src={FIRE_ANIMATION_SRC}
+			<StaticFlameIcon
+				className={cn(
+					"absolute inset-0 m-auto h-full w-full transition-opacity duration-200",
+					animationReady && !animationFailed ? "opacity-0" : "opacity-100",
+					fallbackClassName,
+				)}
 			/>
+			{animationFailed ? null : (
+				<DotLottieReact
+					autoplay
+					className={cn(
+						"relative z-10 h-full w-full transition-opacity duration-200",
+						animationReady ? "opacity-100" : "opacity-0",
+					)}
+					dotLottieRefCallback={handleDotLottieRef}
+					loop
+					src={FIRE_ANIMATION_SRC}
+				/>
+			)}
 		</span>
 	);
 }

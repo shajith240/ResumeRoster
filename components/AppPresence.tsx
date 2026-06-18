@@ -5,11 +5,10 @@ import type { RealtimeChannel } from "@supabase/supabase-js";
 import {
 	APP_PRESENCE_CHANNEL,
 	APP_PRESENCE_CHANGE_EVENT,
-	PROFILE_CHANGE_EVENT,
 	isPresenceFeatureError,
-	normalizeAppStatus,
 	type AppPresencePayload,
 } from "@/lib/app-presence";
+import { refreshAuthSessionAfterError } from "@/lib/auth-session";
 import { supabase } from "@/lib/supabase/client";
 import type { AppStatus } from "@/lib/supabase/types";
 
@@ -19,18 +18,7 @@ type AppPresenceProps = {
 
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const PRESENCE_SESSION_KEY = "linted.presence.session";
-
-async function getSavedStatus(userId: string): Promise<AppStatus> {
-	const result = await supabase
-		.from("profiles")
-		.select("app_status")
-		.eq("id", userId)
-		.maybeSingle();
-
-	if (result.error) return "online";
-
-	return normalizeAppStatus(result.data?.app_status);
-}
+const ONLINE_STATUS: AppStatus = "online";
 
 function getPresenceSessionId(userId: string) {
 	if (typeof window === "undefined") return userId;
@@ -72,7 +60,6 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 	const channelRef = useRef<RealtimeChannel | null>(null);
 	const realtimeSubscribedRef = useRef(false);
 	const sessionIdRef = useRef("");
-	const statusRef = useRef<AppStatus>("online");
 	const heartbeatTimerRef = useRef<number | null>(null);
 	const presenceFeatureReadyRef = useRef(true);
 
@@ -80,30 +67,32 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 		let mounted = true;
 		sessionIdRef.current = getPresenceSessionId(userId);
 
-		async function trackRealtimePresence(status = statusRef.current) {
-			statusRef.current = status;
+		async function trackRealtimePresence() {
 			const channel = channelRef.current;
 			if (!channel || !realtimeSubscribedRef.current) return;
 
 			const payload = buildPresencePayload(
 				userId,
 				sessionIdRef.current,
-				status,
+				ONLINE_STATUS,
 			);
 			await channel.track(payload);
 			if (mounted) announcePresenceChange(payload);
 		}
 
-		async function recordPresence(status = statusRef.current) {
-			statusRef.current = status;
+		async function recordPresence(retried = false) {
 			if (!presenceFeatureReadyRef.current) return false;
 
 			const { error } = await supabase.rpc("record_app_presence", {
-				app_status: status,
+				app_status: ONLINE_STATUS,
 				session_id: sessionIdRef.current,
 			});
 
 			if (error) {
+				if (!retried && (await refreshAuthSessionAfterError(error))) {
+					return recordPresence(true);
+				}
+
 				if (isPresenceFeatureError(error)) {
 					presenceFeatureReadyRef.current = false;
 					if (heartbeatTimerRef.current) {
@@ -116,7 +105,7 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 
 			if (!error && mounted) {
 				announcePresenceChange(
-					buildPresencePayload(userId, sessionIdRef.current, status),
+					buildPresencePayload(userId, sessionIdRef.current, ONLINE_STATUS),
 				);
 			}
 			return true;
@@ -133,9 +122,7 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 		}
 
 		async function startPresence() {
-			const savedStatus = await getSavedStatus(userId);
 			if (!mounted) return;
-			statusRef.current = savedStatus;
 
 			const channel = supabase.channel(APP_PRESENCE_CHANNEL, {
 				config: {
@@ -149,21 +136,12 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 			channel.subscribe((subscriptionStatus) => {
 				if (subscriptionStatus !== "SUBSCRIBED" || !mounted) return;
 				realtimeSubscribedRef.current = true;
-				void trackRealtimePresence(statusRef.current);
+				void trackRealtimePresence();
 			});
 
-			const recorded = await recordPresence(savedStatus);
+			const recorded = await recordPresence();
 			if (!mounted) return;
 			if (recorded) scheduleHeartbeat();
-		}
-
-		function handleProfileChange(event: Event) {
-			const detail = (event as CustomEvent<{ id?: string; app_status?: string }>)
-				.detail;
-			if (!detail?.app_status || (detail.id && detail.id !== userId)) return;
-			const nextStatus = normalizeAppStatus(detail.app_status);
-			void trackRealtimePresence(nextStatus);
-			void recordPresence(nextStatus);
 		}
 
 		function handleVisibilityChange() {
@@ -180,14 +158,12 @@ export default function AppPresence({ userId }: AppPresenceProps) {
 			});
 		}
 
-		window.addEventListener(PROFILE_CHANGE_EVENT, handleProfileChange);
 		document.addEventListener("visibilitychange", handleVisibilityChange);
 		window.addEventListener("pagehide", clearPresence);
 		void startPresence();
 
 		return () => {
 			mounted = false;
-			window.removeEventListener(PROFILE_CHANGE_EVENT, handleProfileChange);
 			document.removeEventListener("visibilitychange", handleVisibilityChange);
 			window.removeEventListener("pagehide", clearPresence);
 			if (heartbeatTimerRef.current) {

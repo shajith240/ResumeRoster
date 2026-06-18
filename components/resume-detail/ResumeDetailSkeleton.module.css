@@ -1,0 +1,593 @@
+.thread {
+	display: grid;
+	gap: 20px;
+	width: 100%;
+	min-width: 0;
+}
+
+.mainScroll {
+	display: grid;
+	gap: 20px;
+	width: 100%;
+	min-width: 0;
+}
+
+.previewPane,
+.contextCard,
+.discussionPanel {
+	min-width: 0;
+}
+
+.header,
+.threadListHeader {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
+	min-width: 0;
+}
+
+.authorCluster,
+.headerActions,
+.tags,
+.feedbackRow,
+.feedbackHeader,
+.feedbackActions {
+	display: flex;
+	align-items: center;
+	min-width: 0;
+}
+
+.authorCluster {
+	gap: 9px;
+	max-width: min(360px, 58vw);
+}
+
+.authorAvatar,
+.feedbackAvatar {
+	flex: 0 0 auto;
+	border-radius: 50%;
+}
+
+.authorAvatar {
+	width: 24px;
+	height: 24px;
+}
+
+.authorCopy,
+.feedbackBody,
+.feedbackCopy,
+.contextCopy {
+	display: grid;
+	min-width: 0;
+}
+
+.authorCopy {
+	gap: 7px;
+	width: min(210px, 46vw);
+}
+
+.authorCopy span:first-child {
+	width: 72%;
+	height: 11px;
+}
+
+.authorCopy span:last-child {
+	width: 42%;
+	height: 10px;
+}
+
+.headerActions {
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+.statusPill,
+.ownerButton,
+.tags span,
+.joinPill,
+.eyebrow {
+	border-radius: var(--button-radius);
+}
+
+.statusPill {
+	width: 112px;
+	height: 28px;
+}
+
+.ownerButton {
+	width: 132px;
+	height: 36px;
+}
+
+.titleLine {
+	display: block;
+	width: min(620px, 82%);
+	height: clamp(28px, 3vw, 38px);
+	margin: 10px 0 8px;
+	border-radius: 10px;
+}
+
+.tags {
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.tags span {
+	width: 96px;
+	height: 26px;
+}
+
+.tags span:last-child {
+	width: 132px;
+}
+
+.previewShell {
+	overflow: hidden;
+	margin-top: 18px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-lg);
+	background: #242321;
+}
+
+.previewToolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	padding: 11px 14px;
+	background: #1b1a18;
+}
+
+.previewToolbar span:first-child {
+	width: 172px;
+	height: 13px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.16);
+}
+
+.previewToolbar span:last-child {
+	width: 92px;
+	height: 30px;
+	border-radius: var(--button-radius-sm);
+	background: rgba(255, 255, 255, 0.12);
+}
+
+.previewPage {
+	display: grid;
+	align-content: start;
+	gap: 14px;
+	width: min(560px, calc(100% - 40px));
+	min-height: 620px;
+	margin: 20px auto;
+	border-radius: 8px;
+	padding: clamp(28px, 4vw, 52px);
+	background: #f8f8f5;
+	box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
+}
+
+.previewPage span {
+	height: 10px;
+	border-radius: 999px;
+	background: rgba(36, 35, 33, 0.16);
+}
+
+.previewPage span:nth-child(1) {
+	width: 56%;
+	height: 18px;
+	margin-bottom: 8px;
+}
+
+.previewPage span:nth-child(2),
+.previewPage span:nth-child(5) {
+	width: 88%;
+}
+
+.previewPage span:nth-child(3),
+.previewPage span:nth-child(6) {
+	width: 74%;
+}
+
+.previewPage span:nth-child(4),
+.previewPage span:nth-child(7) {
+	width: 96%;
+}
+
+.previewPage span:nth-child(8) {
+	width: 66%;
+}
+
+.contextPanel {
+	min-width: 0;
+}
+
+.contextGrid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	grid-template-rows: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+	height: 100%;
+	min-height: 0;
+	min-width: 0;
+}
+
+.contextCard {
+	display: grid;
+	grid-template-rows: auto auto minmax(0, 1fr);
+	gap: 8px;
+	overflow: hidden;
+	padding: 16px;
+	background:
+		linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--brand) 6%, transparent),
+			transparent 48%
+		),
+		var(--bg-surface);
+}
+
+.eyebrow {
+	width: 42px;
+	height: 20px;
+}
+
+.contextTitle {
+	width: min(220px, 72%);
+	height: 18px;
+	border-radius: 7px;
+}
+
+.contextCopy {
+	align-content: start;
+	gap: 10px;
+	padding-top: 3px;
+}
+
+.contextCopy span {
+	height: 11px;
+	border-radius: 999px;
+}
+
+.contextCopy span:nth-child(1),
+.contextCopy span:nth-child(3) {
+	width: 94%;
+}
+
+.contextCopy span:nth-child(2) {
+	width: 82%;
+}
+
+.contextCopy span:nth-child(4) {
+	width: 64%;
+}
+
+.discussionPanel {
+	display: grid;
+	grid-template-rows: auto auto minmax(0, 1fr);
+	gap: 16px;
+	width: 100%;
+	max-width: none;
+}
+
+.joinPill {
+	width: min(100%, 100%);
+	height: 44px;
+}
+
+.threadListHeader span:first-child {
+	width: 176px;
+	height: 24px;
+	border-radius: 9px;
+}
+
+.threadListHeader span:last-child {
+	width: 92px;
+	height: 18px;
+	border-radius: 999px;
+}
+
+.feedbackList {
+	display: grid;
+}
+
+.feedbackRow {
+	align-items: flex-start;
+	gap: 12px;
+	padding: 16px 0;
+	border-bottom: 1px solid var(--border-subtle);
+}
+
+.feedbackRow:last-child {
+	border-bottom: 0;
+}
+
+.feedbackAvatar {
+	width: 32px;
+	height: 32px;
+}
+
+.feedbackBody {
+	flex: 1;
+	gap: 10px;
+}
+
+.feedbackHeader {
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.feedbackHeader span:first-child {
+	width: min(220px, 64%);
+	height: 14px;
+	border-radius: 999px;
+}
+
+.feedbackHeader span:last-child {
+	width: 68px;
+	height: 12px;
+	border-radius: 999px;
+}
+
+.feedbackCopy {
+	gap: 9px;
+}
+
+.feedbackCopy span {
+	height: 12px;
+	border-radius: 999px;
+}
+
+.feedbackCopy span:first-child {
+	width: 94%;
+}
+
+.feedbackCopy span:last-child {
+	width: 72%;
+}
+
+.feedbackActions {
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.feedbackActions span {
+	width: 74px;
+	height: 26px;
+	border-radius: var(--button-radius-sm);
+}
+
+.authorAvatar,
+.authorCopy span,
+.statusPill,
+.ownerButton,
+.titleLine,
+.tags span,
+.eyebrow,
+.contextTitle,
+.contextCopy span,
+.joinPill,
+.threadListHeader span,
+.feedbackAvatar,
+.feedbackHeader span,
+.feedbackCopy span,
+.feedbackActions span {
+	background: linear-gradient(
+		90deg,
+		color-mix(in srgb, var(--bg-surface) 72%, transparent),
+		color-mix(in srgb, var(--bg-elevated) 90%, transparent),
+		color-mix(in srgb, var(--bg-surface) 72%, transparent)
+	);
+	background-size: 220% 100%;
+	animation: resumeDetailSkeletonShimmer 1.2s linear infinite;
+}
+
+@keyframes resumeDetailSkeletonShimmer {
+	to {
+		background-position: -220% 0;
+	}
+}
+
+@media (min-width: 1025px) {
+	.thread {
+		grid-template-columns:
+			minmax(0, 1fr)
+			minmax(340px, clamp(360px, 28%, 500px));
+		align-items: start;
+		gap: var(--feed-shell-gutter);
+		min-height: 0;
+	}
+
+	.mainScroll {
+		grid-column: 1 / -1;
+		grid-row: 1;
+		grid-template-columns:
+			minmax(0, 1fr)
+			minmax(340px, clamp(360px, 28%, 500px));
+		align-content: start;
+		align-items: start;
+		gap: var(--feed-shell-gutter);
+		min-height: 0;
+	}
+
+	.contextPanel {
+		grid-column: 2;
+		grid-row: 1;
+		position: sticky;
+		top: calc(var(--app-header-height) + clamp(18px, 2vw, 28px));
+		display: grid;
+		align-content: stretch;
+		align-self: start;
+		height: calc(100svh - var(--app-header-height) - clamp(36px, 4vw, 56px));
+		max-height: calc(
+			100svh - var(--app-header-height) - clamp(36px, 4vw, 56px)
+		);
+		overflow: hidden;
+		gap: 16px;
+		container-name: skeleton-thread-panel;
+		container-type: inline-size;
+	}
+
+	.discussionPanel {
+		grid-column: 1;
+		grid-row: 2;
+	}
+
+	@container skeleton-thread-panel (max-width: 460px) {
+		.contextGrid {
+			grid-template-columns: 1fr;
+		}
+	}
+}
+
+@media (min-width: 1440px) {
+	.thread {
+		grid-template-columns:
+			minmax(0, 1fr)
+			minmax(380px, clamp(400px, 28%, 500px));
+	}
+
+	.mainScroll {
+		grid-template-columns:
+			minmax(0, 1fr)
+			minmax(380px, clamp(400px, 28%, 500px));
+	}
+}
+
+@media (min-width: 1800px) {
+	.thread {
+		grid-template-columns: minmax(0, 1fr) minmax(420px, 500px);
+		gap: var(--feed-shell-gutter);
+	}
+
+	.mainScroll {
+		grid-template-columns: minmax(0, 1fr) minmax(420px, 500px);
+		gap: var(--feed-shell-gutter);
+	}
+}
+
+@media (min-width: 1025px) and (max-width: 1240px) {
+	.thread {
+		grid-template-columns: minmax(0, 1fr);
+		height: auto;
+	}
+
+	.mainScroll {
+		grid-column: 1;
+		grid-template-columns: minmax(0, 1fr);
+		height: auto;
+		overflow: visible;
+		padding-right: 0;
+	}
+
+	.contextPanel {
+		grid-column: 1;
+		grid-row: 2;
+		position: static;
+		height: auto;
+		max-height: none;
+		overflow: visible;
+	}
+
+	.contextGrid {
+		grid-template-rows: none;
+		height: auto;
+	}
+
+	.contextCard {
+		min-height: clamp(156px, 18vw, 220px);
+	}
+
+	.discussionPanel {
+		grid-column: 1;
+		grid-row: 3;
+	}
+
+	.previewPage {
+		min-height: 520px;
+	}
+}
+
+@media (max-width: 1024px) {
+	.thread {
+		grid-template-columns: 1fr;
+	}
+
+	.mainScroll {
+		grid-column: 1;
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+
+	.contextPanel {
+		grid-column: 1;
+		grid-row: 2;
+		display: grid;
+		align-content: start;
+		height: auto;
+		max-height: none;
+		gap: 16px;
+	}
+
+	.contextGrid {
+		grid-template-rows: none;
+		height: auto;
+	}
+
+	.discussionPanel {
+		grid-column: 1;
+		grid-row: 3;
+	}
+
+	.headerActions {
+		flex-direction: column;
+		align-items: flex-end;
+	}
+}
+
+@media (max-width: 520px) {
+	.thread,
+	.mainScroll,
+	.previewPane,
+	.previewShell,
+	.previewPage,
+	.contextCard {
+		max-width: 100%;
+		min-width: 0;
+	}
+
+	.header,
+	.threadListHeader {
+		flex-direction: column;
+	}
+
+	.headerActions {
+		align-items: flex-start;
+		width: 100%;
+	}
+
+	.statusPill,
+	.ownerButton {
+		max-width: 100%;
+	}
+
+	.ownerButton {
+		width: 146px;
+	}
+
+	.titleLine {
+		width: 92%;
+	}
+
+	.previewPage {
+		width: calc(100% - 24px);
+		min-height: 380px;
+		margin: 12px auto;
+		padding: 28px 22px;
+	}
+
+	.feedbackRow {
+		gap: 10px;
+		padding: 14px 0;
+	}
+}

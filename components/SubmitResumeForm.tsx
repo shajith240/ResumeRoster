@@ -41,6 +41,7 @@ import {
 	getSubmitIssue,
 } from "@/lib/submit-validation";
 import { supabase } from "@/lib/supabase/client";
+import styles from "./SubmitResumeForm.module.css";
 
 const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
 
@@ -395,8 +396,11 @@ export default function SubmitResumeForm() {
 		});
 
 		const result = (await response.json().catch(() => null)) as {
+			activationReviewsCompleted?: number;
+			activationReviewsRequired?: number;
 			id?: string;
 			message?: string;
+			reviewQueueStatus?: "active" | "waiting";
 		} | null;
 
 		setSubmitting(false);
@@ -413,7 +417,21 @@ export default function SubmitResumeForm() {
 		}
 
 		setSuccess(true);
-		toast.success("Resume posted.");
+		if (result.reviewQueueStatus === "waiting") {
+			const remaining = Math.max(
+				(result.activationReviewsRequired ?? 2) -
+					(result.activationReviewsCompleted ?? 0),
+				0,
+			);
+			toast.success("Resume posted to the queue.", {
+				description:
+					remaining > 0
+						? `Complete ${remaining} guided ${remaining === 1 ? "review" : "reviews"} to activate it faster.`
+						: "Your resume is ready for community review.",
+			});
+		} else {
+			toast.success("Resume posted.");
+		}
 		window.setTimeout(() => {
 			const resumeRoute = `/resume/${result.id}`;
 			announceRouteTransition(resumeRoute);
@@ -568,13 +586,18 @@ export default function SubmitResumeForm() {
 				</section>
 			</div>
 
-			<div className="submit-form-actions">
-				<fieldset className="privacy-picker">
+			<div className={styles.formActions}>
+				<fieldset className={styles.privacyPicker}>
 					<legend>Privacy mode</legend>
-					<div className="privacy-options">
+					<div className={styles.privacyOptions}>
 						{RESUME_PRIVACY_MODES.map((mode) => (
 							<label
-								className={privacyMode === mode ? "selected" : ""}
+								className={[
+									styles.optionCard,
+									privacyMode === mode ? styles.optionCardSelected : "",
+								]
+									.filter(Boolean)
+									.join(" ")}
 								key={mode}
 							>
 								<input
@@ -583,8 +606,10 @@ export default function SubmitResumeForm() {
 									onChange={() => setPrivacyMode(mode)}
 									type="radio"
 								/>
-								<span>
-									<strong>{RESUME_PRIVACY_MODE_COPY[mode].label}</strong>
+								<span className={styles.optionBody}>
+									<span className={styles.optionHeader}>
+										<strong>{RESUME_PRIVACY_MODE_COPY[mode].label}</strong>
+									</span>
 									<small>
 										{mode === "public"
 											? `${publicProfileName} and ${publicProfileDetail} can appear with the post.`
@@ -594,30 +619,32 @@ export default function SubmitResumeForm() {
 							</label>
 						))}
 					</div>
-					<p>{getPrivacyModeHelpText(privacyMode)}</p>
+					<p className={styles.privacyHint}>{getPrivacyModeHelpText(privacyMode)}</p>
 				</fieldset>
 
-				<button
-					className="btn-primary submit-button"
-					disabled={submitting || success || Boolean(submitIssue)}
-					title={submitIssue || undefined}
-				>
-					{success ? (
-						"Posted. Redirecting..."
-					) : submitting ? (
-						<>
-							<span className="button-spinner" />
-							Processing PDF...
-						</>
-					) : (
-						"Submit for review"
-					)}
-				</button>
-				{submitIssue && !submitting && !success ? (
-					<p className="submit-action-hint" aria-live="polite">
-						{submitIssue}
-					</p>
-				) : null}
+				<div className={styles.submitActionPanel}>
+					<button
+						className={`btn-primary ${styles.submitButton}`}
+						disabled={submitting || success || Boolean(submitIssue)}
+						title={submitIssue || undefined}
+					>
+						{success ? (
+							"Posted. Redirecting..."
+						) : submitting ? (
+							<>
+								<span className="button-spinner" />
+								Processing PDF...
+							</>
+						) : (
+							"Submit for review"
+						)}
+					</button>
+					{submitIssue && !submitting && !success ? (
+						<p className={styles.submitActionHint} aria-live="polite">
+							{submitIssue}
+						</p>
+					) : null}
+				</div>
 			</div>
 
 			{message ? <p className="form-message">{message}</p> : null}

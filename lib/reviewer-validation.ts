@@ -1,5 +1,5 @@
-export const COMMUNITY_ROLES = ["candidate", "reviewer", "both"] as const;
-export const REVIEWER_TYPES = [
+const COMMUNITY_ROLES = ["candidate", "reviewer", "both"] as const;
+const REVIEWER_TYPES = [
 	"student",
 	"placed_professional",
 	"recruiter",
@@ -11,13 +11,7 @@ export const REVIEWER_TYPES = [
 	"founder",
 	"other",
 ] as const;
-export const REVIEWER_VERIFICATION_STATUSES = [
-	"none",
-	"pending",
-	"verified",
-	"rejected",
-] as const;
-export const REVIEWER_APPLICATION_STATUSES = [
+const REVIEWER_APPLICATION_STATUSES = [
 	"pending",
 	"approved",
 	"rejected",
@@ -26,7 +20,10 @@ export const REVIEWER_APPLICATION_STATUSES = [
 export type CommunityRole = (typeof COMMUNITY_ROLES)[number];
 export type ReviewerType = (typeof REVIEWER_TYPES)[number];
 export type ReviewerVerificationStatus =
-	(typeof REVIEWER_VERIFICATION_STATUSES)[number];
+	| "none"
+	| "pending"
+	| "verified"
+	| "rejected";
 export type ReviewerApplicationStatus =
 	(typeof REVIEWER_APPLICATION_STATUSES)[number];
 
@@ -53,26 +50,12 @@ const reviewerTypeLabels: Record<ReviewerType, string> = {
 	student: "Student reviewer",
 };
 
-const communityRoleLabels: Record<CommunityRole, string> = {
-	both: "Get feedback and review resumes",
-	candidate: "Get feedback",
-	reviewer: "Review resumes",
-};
-
 export function isCommunityRole(value: unknown): value is CommunityRole {
 	return COMMUNITY_ROLES.includes(value as CommunityRole);
 }
 
 export function isReviewerType(value: unknown): value is ReviewerType {
 	return REVIEWER_TYPES.includes(value as ReviewerType);
-}
-
-export function isReviewerVerificationStatus(
-	value: unknown,
-): value is ReviewerVerificationStatus {
-	return REVIEWER_VERIFICATION_STATUSES.includes(
-		value as ReviewerVerificationStatus,
-	);
 }
 
 export function isReviewerApplicationStatus(
@@ -107,10 +90,6 @@ export function parseReviewerExpertise(value: string | string[] | null | undefin
 		.slice(0, REVIEWER_FIELD_LIMITS.expertise);
 }
 
-export function getCommunityRoleLabel(role: CommunityRole | null | undefined) {
-	return communityRoleLabels[role && isCommunityRole(role) ? role : "candidate"];
-}
-
 export function getReviewerTypeLabel(type: ReviewerType | null | undefined) {
 	return reviewerTypeLabels[type && isReviewerType(type) ? type : "other"];
 }
@@ -118,8 +97,10 @@ export function getReviewerTypeLabel(type: ReviewerType | null | undefined) {
 export function canShowReviewerProfile(
 	role: CommunityRole | null | undefined,
 	type?: ReviewerType | null,
+	status?: ReviewerVerificationStatus | null,
 ) {
 	return (
+		isTrustedReviewer(status) &&
 		(role === "reviewer" || role === "both") &&
 		Boolean(type && isReviewerType(type))
 	);
@@ -152,14 +133,6 @@ export function getProfileRoleLabel(profile: {
 	const currentPosition = profile.current_position?.trim().replace(/\s+/g, " ");
 	if (currentPosition) return currentPosition;
 
-	if (profile.community_role === "reviewer") {
-		return "Reviewer";
-	}
-
-	if (profile.community_role === "both") {
-		return "Reviewer + candidate";
-	}
-
 	const role = `${profile.current_position ?? profile.target_role ?? ""} ${
 		profile.college ?? ""
 	}`.toLowerCase();
@@ -179,7 +152,7 @@ export function getProfileRoleLabel(profile: {
 	return "Job seeker";
 }
 
-export function normalizeProofUrl(value: string) {
+function normalizeProofUrl(value: string) {
 	return limitReviewerText(value, REVIEWER_FIELD_LIMITS.proofUrl);
 }
 

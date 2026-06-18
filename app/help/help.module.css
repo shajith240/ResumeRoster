@@ -1,0 +1,257 @@
+.page {
+	min-height: 100vh;
+	background:
+		linear-gradient(180deg, color-mix(in srgb, var(--brand) 8%, transparent), transparent 320px),
+		var(--bg-base);
+	color: var(--text-primary);
+}
+
+.shell {
+	width: min(1120px, calc(100% - 32px));
+	margin: 0 auto;
+	padding: 24px 0 56px;
+}
+
+.brandLink {
+	display: inline-flex;
+	width: fit-content;
+	margin-bottom: 28px;
+	color: inherit;
+	text-decoration: none;
+}
+
+.hero {
+	display: grid;
+	gap: 22px;
+	align-items: end;
+	padding-bottom: 28px;
+	border-bottom: 1px solid var(--border-default);
+}
+
+.heroCopy {
+	display: grid;
+	gap: 12px;
+}
+
+.eyebrow {
+	margin: 0;
+	color: var(--brand);
+	font-size: 0.78rem;
+	font-weight: 800;
+	letter-spacing: 0;
+	text-transform: uppercase;
+}
+
+.hero h1,
+.contactPanel h2 {
+	max-width: 780px;
+	margin: 0;
+	color: var(--text-primary);
+	font-size: clamp(2.1rem, 1.65rem + 1.8vw, 3.65rem);
+	line-height: 1.04;
+	letter-spacing: 0;
+}
+
+.hero p,
+.hero span,
+.helpSection header p,
+.supportStrip p,
+.answer p,
+.contactPanel p {
+	margin: 0;
+	color: var(--text-secondary);
+	line-height: 1.65;
+}
+
+.hero p {
+	max-width: 680px;
+	font-size: 1rem;
+}
+
+.hero span {
+	font-size: 0.9rem;
+}
+
+.heroActions {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+}
+
+.primaryAction,
+.secondaryAction {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 44px;
+	padding: 0 16px;
+	border-radius: 8px;
+	font-weight: 800;
+	text-decoration: none;
+}
+
+.primaryAction {
+	background: var(--brand);
+	color: var(--text-inverse);
+}
+
+.secondaryAction {
+	border: 1px solid var(--border-default);
+	background: var(--bg-surface);
+	color: var(--text-primary);
+}
+
+.topicNav {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 8px;
+	margin: 24px 0;
+}
+
+.topicNav a {
+	display: flex;
+	align-items: center;
+	min-height: 42px;
+	padding: 0 12px;
+	border: 1px solid var(--border-default);
+	border-radius: 8px;
+	background: var(--bg-surface);
+	color: var(--text-primary);
+	font-size: 0.92rem;
+	font-weight: 750;
+	text-decoration: none;
+}
+
+.topicNav a:hover,
+.secondaryAction:hover {
+	border-color: color-mix(in srgb, var(--brand) 48%, var(--border-default));
+}
+
+.supportStrip,
+.contactPanel {
+	display: grid;
+	gap: 16px;
+	padding: 18px;
+	border: 1px solid color-mix(in srgb, var(--brand) 34%, var(--border-default));
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--brand) 8%, var(--bg-surface));
+}
+
+.supportStrip strong {
+	display: block;
+	margin-bottom: 6px;
+	color: var(--text-primary);
+}
+
+.supportStrip a,
+.answer a {
+	color: var(--brand);
+	font-weight: 750;
+}
+
+.sections {
+	display: grid;
+	gap: 36px;
+	margin-top: 36px;
+}
+
+.helpSection {
+	display: grid;
+	gap: 18px;
+	scroll-margin-top: 96px;
+}
+
+.helpSection header {
+	display: grid;
+	gap: 8px;
+	max-width: 760px;
+}
+
+.helpSection h2 {
+	margin: 0;
+	color: var(--text-primary);
+	font-size: 1.45rem;
+	line-height: 1.2;
+	letter-spacing: 0;
+}
+
+.answerList {
+	display: grid;
+	gap: 10px;
+}
+
+.answer {
+	padding: 16px;
+	border: 1px solid var(--border-default);
+	border-radius: 8px;
+	background: var(--bg-surface);
+}
+
+.answer h3 {
+	margin: 0 0 8px;
+	color: var(--text-primary);
+	font-size: 1rem;
+	line-height: 1.35;
+	letter-spacing: 0;
+}
+
+.contactPanel {
+	align-items: center;
+	margin-top: 42px;
+}
+
+.contactPanel h2 {
+	margin-top: 6px;
+	font-size: clamp(1.6rem, 1.35rem + 0.9vw, 2.35rem);
+}
+
+.contactPanel .primaryAction {
+	width: 100%;
+}
+
+@media (min-width: 560px) {
+	.topicNav {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.heroActions {
+		flex-direction: row;
+		width: auto;
+	}
+}
+
+@media (min-width: 768px) {
+	.shell {
+		width: min(1120px, calc(100% - 56px));
+		padding-top: 36px;
+	}
+
+	.hero {
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 32px;
+	}
+
+	.topicNav {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.answerList {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		align-items: stretch;
+	}
+
+	.contactPanel {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+
+	.contactPanel .primaryAction {
+		width: auto;
+	}
+}
+
+@media (min-width: 1280px) {
+	.shell {
+		width: min(1180px, calc(100% - 72px));
+	}
+}

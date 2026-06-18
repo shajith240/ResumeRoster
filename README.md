@@ -1,6 +1,6 @@
 # Linted
 
-![Linted hero](public/assets/readme_hero%20image.png)
+![Linted hero](docs/assets/readme_hero%20image.png)
 
 Linted is a Next.js community app for human-powered resume linting. Users sign in with email, Google, or GitHub, upload a resume, receive structured feedback from students, recruiters, and working professionals, reply in discussion threads, and discover strong reviewers through public profiles and a leaderboard.
 
@@ -32,7 +32,7 @@ For recruiters or engineering reviewers visiting this repo: the project demonstr
 - **Backend:** Supabase Auth, Postgres, RPC functions, Row Level Security
 - **Storage:** Supabase Storage for private resume PDFs and public avatars
 - **Feedback:** Sonner toast notifications
-- **Icons:** lucide-react and selected animated icon components
+- **Icons:** Solar icons through the shared Iconify adapter
 - **Fonts:** Instrument Serif for identity headings, Work Sans for body text
 
 ## Product Flow

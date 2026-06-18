@@ -1,6 +1,7 @@
 "use client";
 
-import { ImageIcon, Loader2, Type, X } from "lucide-react";
+import { X } from "@phosphor-icons/react";
+import { ImageIcon, Loader2, Type } from "@/components/ui/solar-icons";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import type {
@@ -20,6 +21,7 @@ type CommentMediaToolbarProps = {
 	onAttachmentChange: (attachment: CommentAttachmentOption | null) => void;
 	onFormatChange: (format: CommentContentFormat) => void;
 	onRequireLogin: () => void;
+	showFormat?: boolean;
 };
 
 async function getAccessToken() {
@@ -41,8 +43,10 @@ export default function CommentMediaToolbar({
 	onAttachmentChange,
 	onFormatChange,
 	onRequireLogin,
+	showFormat = true,
 }: CommentMediaToolbarProps) {
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
+	const [deletingImage, setDeletingImage] = useState(false);
 	const [uploadingImage, setUploadingImage] = useState(false);
 
 	async function uploadImage(file: File) {
@@ -77,11 +81,47 @@ export default function CommentMediaToolbar({
 			if (!data.attachment) throw new Error("Image upload failed.");
 
 			onAttachmentChange(data.attachment);
-			toast.success("Image attached.");
+			toast.success("Media attached.");
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Image upload failed.");
 		} finally {
 			setUploadingImage(false);
+		}
+	}
+
+	async function removeImage() {
+		if (!attachment?.id) {
+			onAttachmentChange(null);
+			return;
+		}
+
+		const token = await getAccessToken();
+		if (!token) {
+			onRequireLogin();
+			return;
+		}
+
+		setDeletingImage(true);
+		try {
+			const response = await fetch(`/api/comment-media/${attachment.id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				method: "DELETE",
+			});
+
+			if (!response.ok) {
+				throw new Error(
+					await readErrorMessage(response, "Media was not removed."),
+				);
+			}
+
+			onAttachmentChange(null);
+			toast.success("Media removed.");
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "Media was not removed.");
+		} finally {
+			setDeletingImage(false);
 		}
 	}
 
@@ -116,20 +156,22 @@ export default function CommentMediaToolbar({
 					tabIndex={-1}
 					type="file"
 				/>
-				<button
-					aria-pressed={contentFormat === "markdown"}
-					className={contentFormat === "markdown" ? "is-active" : ""}
-					disabled={disabled}
-					onClick={() =>
-						onFormatChange(contentFormat === "markdown" ? "plain" : "markdown")
-					}
-					title={
-						contentFormat === "markdown" ? "Markdown on" : "Markdown off"
-					}
-					type="button"
-				>
-					<Type size={16} strokeWidth={2} aria-hidden="true" />
-				</button>
+				{showFormat ? (
+					<button
+						aria-pressed={contentFormat === "markdown"}
+						className={contentFormat === "markdown" ? "is-active" : ""}
+						disabled={disabled}
+						onClick={() =>
+							onFormatChange(contentFormat === "markdown" ? "plain" : "markdown")
+						}
+						title={
+							contentFormat === "markdown" ? "Markdown on" : "Markdown off"
+						}
+						type="button"
+					>
+						<Type size={16} strokeWidth={2} aria-hidden="true" />
+					</button>
+				) : null}
 			</div>
 
 			{attachment ? (
@@ -137,14 +179,18 @@ export default function CommentMediaToolbar({
 					{attachmentUrl ? (
 						<img alt={attachment.alt_text || attachment.title} src={attachmentUrl} />
 					) : null}
-					<span>{attachment.title || "Image"}</span>
+					<span>{attachment.title || "Media"}</span>
 					<button
 						aria-label="Remove attached media"
-						disabled={disabled}
-						onClick={() => onAttachmentChange(null)}
+						disabled={disabled || deletingImage}
+						onClick={() => void removeImage()}
 						type="button"
 					>
-						<X size={14} strokeWidth={2} aria-hidden="true" />
+						{deletingImage ? (
+							<Loader2 className="spin-icon" size={16} strokeWidth={2} aria-hidden="true" />
+						) : (
+							<X size={16} strokeWidth={2} aria-hidden="true" />
+						)}
 					</button>
 				</div>
 			) : null}

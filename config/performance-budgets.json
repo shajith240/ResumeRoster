@@ -1,0 +1,26 @@
+{
+	"manifestPath": ".next/app-build-manifest.json",
+	"routes": {
+		"/page": {
+			"maxGzipBytes": 310000
+		},
+		"/login/page": {
+			"maxGzipBytes": 310000
+		},
+		"/feed/page": {
+			"maxGzipBytes": 430000
+		},
+		"/leaderboard/page": {
+			"maxGzipBytes": 425000
+		},
+		"/profile/[id]/page": {
+			"maxGzipBytes": 425000
+		},
+		"/resume/[id]/page": {
+			"maxGzipBytes": 425000
+		},
+		"/submit/page": {
+			"maxGzipBytes": 430000
+		}
+	}
+}

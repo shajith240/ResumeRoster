@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import BrandMark from "@/components/BrandMark";
+import { SUPPORT_EMAIL, SUPPORT_MAILTO } from "@/lib/support-contact";
 
 export const metadata = {
 	title: "Copyright and Takedown Policy - Linted",
@@ -9,7 +10,6 @@ export const metadata = {
 };
 
 const lastUpdated = "May 30, 2026";
-const contactEmail = "shajith240@gmail.com";
 const siteUrl = "https://linted.space";
 
 function Section({
@@ -53,7 +53,7 @@ export default function CopyrightPolicyPage() {
 					<p>
 						Linted is operated by Bathina Shajith. The Service is available at{" "}
 						<a href={siteUrl}>{siteUrl}</a>. Copyright and takedown requests can
-						be sent to <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+						be sent to <a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>.
 					</p>
 					<p>
 						This contact is for copyright and intellectual property complaints.
@@ -94,7 +94,7 @@ export default function CopyrightPolicyPage() {
 				<Section title="4. Copyright Takedown Notices">
 					<p>
 						To report alleged copyright infringement, email{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a> with a written
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a> with a written
 						notice that includes:
 					</p>
 					<ul>
@@ -149,7 +149,7 @@ export default function CopyrightPolicyPage() {
 					<p>
 						If your content was removed because of a copyright complaint and you
 						believe the removal was a mistake or misidentification, contact{" "}
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+						<a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>.
 					</p>
 					<p>
 						If your counter-notice is intended under the U.S. DMCA, it should
@@ -211,7 +211,7 @@ export default function CopyrightPolicyPage() {
 				<Section title="9. Trademarks and Other IP">
 					<p>
 						If your complaint involves trademarks, logos, impersonation, or other
-						non-copyright rights, email <a href={`mailto:${contactEmail}`}>{contactEmail}</a>{" "}
+						non-copyright rights, email <a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>{" "}
 						with enough detail for us to identify the issue. We may handle those
 						complaints under this policy, the Terms, the Community Guidelines, or
 						another appropriate process.

@@ -1,8 +1,8 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import * as React from "react";
+import { X } from "@phosphor-icons/react";
 
 import { cn } from "@/lib/utils";
 
@@ -20,8 +20,9 @@ const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
+    data-slot="dialog-overlay"
     className={cn(
-      "fixed inset-0 z-[220] bg-black/65 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-[220] bg-black/65 backdrop-blur-sm duration-200 ease-out motion-reduce:animate-none motion-reduce:duration-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-150 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
     {...props}
@@ -37,15 +38,19 @@ const DialogContent = React.forwardRef<
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      data-slot="dialog-content"
       className={cn(
-        "fixed left-1/2 top-1/2 z-[221] grid max-h-[calc(100%-4rem)] w-full -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto border bg-background p-6 shadow-lg shadow-black/5 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:max-w-[400px] sm:rounded-xl",
+        "fixed left-1/2 top-1/2 z-[221] grid max-h-[calc(100%-4rem)] w-full -translate-x-1/2 -translate-y-1/2 origin-center gap-4 overflow-y-auto border bg-background p-6 shadow-lg shadow-black/5 duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:animate-none motion-reduce:duration-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-150 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:max-w-[400px] sm:rounded-xl",
         className,
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="group absolute right-3 top-3 flex size-7 items-center justify-center rounded-lg outline-offset-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none">
-        <Cross2Icon
+      <DialogPrimitive.Close
+        className="group absolute right-3 top-3 flex size-7 items-center justify-center rounded-lg outline-offset-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none"
+        data-slot="dialog-close"
+      >
+        <X
           width={16}
           height={16}
           strokeWidth={2}
@@ -59,13 +64,18 @@ const DialogContent = React.forwardRef<
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)} {...props} />
+  <div
+    className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)}
+    data-slot="dialog-header"
+    {...props}
+  />
 );
 DialogHeader.displayName = "DialogHeader";
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3", className)}
+    data-slot="dialog-footer"
     {...props}
   />
 );
@@ -78,6 +88,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn("text-lg font-semibold tracking-tight", className)}
+    data-slot="dialog-title"
     {...props}
   />
 ));
@@ -90,6 +101,7 @@ const DialogDescription = React.forwardRef<
   <DialogPrimitive.Description
     ref={ref}
     className={cn("text-sm text-muted-foreground", className)}
+    data-slot="dialog-description"
     {...props}
   />
 ));

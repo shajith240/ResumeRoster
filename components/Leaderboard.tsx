@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays } from "@/components/ui/solar-icons";
 
-import StackedList, {
+import { LeaderboardSkeleton } from "@/components/leaderboard/LeaderboardSkeleton";
+import {
+	StackedList,
 	type LeaderboardReviewPreview,
 	type LeaderboardReviewer,
-} from "@/components/ui/stacked-list";
+} from "@/components/leaderboard/StackedList";
 import {
 	Select,
 	SelectContent,
@@ -20,6 +22,7 @@ import {
 	enhanceReviewer,
 	sortReviewers,
 } from "@/lib/leaderboard-ranking";
+import { loadOnlineProfileIds } from "@/lib/online-presence";
 import { supabase } from "@/lib/supabase/client";
 import type {
 	ReviewerLeaderboardEntry,
@@ -35,10 +38,12 @@ type ReviewRow = LeaderboardReviewPreview & {
 
 const REVIEW_SELECT = "id,resume_id,author_id,content,helpful_votes,created_at";
 const PROFILE_SELECT =
-	"id,username,full_name,avatar_url,avatar_path,college,target_role,community_role,reviewer_type,reviewer_headline,reviewer_expertise,reviewer_verification_status,roast_count,helpful_votes";
+	"id,username,full_name,avatar_url,avatar_path,college,target_role,current_position,community_role,reviewer_type,reviewer_headline,reviewer_expertise,reviewer_verification_status,roast_count,helpful_votes";
 const PROFILE_FALLBACK_SELECT =
-	"id,username,college,target_role,roast_count,helpful_votes";
+	"id,username,college,target_role,current_position,roast_count,helpful_votes";
 const LEADERBOARD_LIMIT = 100;
+const DIRECTORY_LIMIT = 500;
+const TOP_REVIEW_FETCH_LIMIT = 2000;
 const SUPABASE_MIGRATION_MESSAGE =
 	"Leaderboard data is temporarily unavailable. Please refresh and try again.";
 
@@ -68,6 +73,10 @@ function isMissingReviewerLeaderboardRpc(message: string) {
 	return /get_reviewer_leaderboard|schema cache|function/i.test(message);
 }
 
+function isMissingReviewerLeaderboardSinceRpc(message: string) {
+	return /get_reviewer_leaderboard_since|schema cache|function/i.test(message);
+}
+
 function normalizeLeaderboardEntry(
 	row: ReviewerProfileStats | ReviewerLeaderboardEntry,
 ): ReviewerProfileStats {
@@ -76,7 +85,10 @@ function normalizeLeaderboardEntry(
 	return {
 		...entry,
 		roast_count: entry.roast_count ?? entry.review_count ?? 0,
-		helpful_votes: entry.helpful_votes ?? entry.lint_points ?? 0,
+		helpful_votes:
+			typeof entry.helpful_votes === "number"
+				? entry.helpful_votes
+				: entry.lint_points ?? 0,
 	};
 }
 
@@ -105,7 +117,7 @@ async function fetchReviewRows({
 		return query
 			.order("helpful_votes", { ascending: false })
 			.order("created_at", { ascending: false })
-			.limit(1000);
+			.limit(TOP_REVIEW_FETCH_LIMIT);
 	}
 
 	const activeReviews = await run(true);
@@ -167,6 +179,8 @@ function mergeProfileMetadata(
 		avatar_url: profile.avatar_url ?? reviewer.avatar_url ?? null,
 		avatar_path: profile.avatar_path ?? reviewer.avatar_path ?? null,
 		community_role: profile.community_role ?? reviewer.community_role ?? null,
+		current_position:
+			profile.current_position ?? reviewer.current_position ?? null,
 		username: profile.username ?? reviewer.username,
 		college: profile.college ?? reviewer.college,
 		reviewer_expertise:
@@ -182,24 +196,67 @@ function mergeProfileMetadata(
 	};
 }
 
+function normalizeProfileStats(profile: ReviewerProfileStats): ReviewerProfileStats {
+	return {
+		...profile,
+		helpful_votes: profile.helpful_votes ?? 0,
+		roast_count: profile.roast_count ?? 0,
+	};
+}
+
+async function applyOnlinePresence<T extends { id: string }>(profiles: T[]) {
+	if (!profiles.length) return profiles;
+
+	const onlineProfileIds = await loadOnlineProfileIds(
+		profiles.map((profile) => profile.id),
+	);
+
+	return profiles.map((profile) => ({
+		...profile,
+		is_online: onlineProfileIds.has(profile.id),
+	}));
+}
+
 async function fetchReviewerDirectory() {
 	const profileResult = await supabase
 		.from("profiles")
 		.select(PROFILE_SELECT)
-		.in("community_role", ["reviewer", "both"])
 		.order("helpful_votes", { ascending: false })
 		.order("roast_count", { ascending: false })
-		.limit(100);
+		.order("username", { ascending: true })
+		.limit(DIRECTORY_LIMIT);
+
+	let profiles: ReviewerProfileStats[] = [];
 
 	if (profileResult.error) {
 		if (isMissingProfileMetadataColumn(profileResult.error.message)) {
-			return { message: SUPABASE_MIGRATION_MESSAGE, reviewers: [] };
-		}
+			const fallbackResult = await supabase
+				.from("profiles")
+				.select(PROFILE_FALLBACK_SELECT)
+				.order("helpful_votes", { ascending: false })
+				.order("roast_count", { ascending: false })
+				.order("username", { ascending: true })
+				.limit(DIRECTORY_LIMIT);
 
-		return { message: profileResult.error.message, reviewers: [] };
+			if (fallbackResult.error) {
+				return {
+					message: SUPABASE_MIGRATION_MESSAGE,
+					reviewers: [],
+				};
+			}
+
+			profiles = ((fallbackResult.data ?? []) as ReviewerProfileStats[]).map(
+				normalizeProfileStats,
+			);
+		} else {
+			return { message: profileResult.error.message, reviewers: [] };
+		}
+	} else {
+		profiles = ((profileResult.data ?? []) as ReviewerProfileStats[]).map(
+			normalizeProfileStats,
+		);
 	}
 
-	const profiles = (profileResult.data ?? []) as ReviewerProfileStats[];
 	const authorIds = profiles.map((profile) => profile.id);
 	let topReviews: Record<string, ReviewRow> = {};
 
@@ -208,19 +265,48 @@ async function fetchReviewerDirectory() {
 		topReviews = bestReviewMap((reviewRows ?? []) as ReviewRow[]);
 	}
 
+	const profilesWithPresence = await applyOnlinePresence(profiles);
 	const ranked = sortReviewers(
-		profiles.map((profile) => enhanceReviewer(profile, topReviews[profile.id])),
-	).sort(
-		(a, b) =>
-			Number(b.reviewer_verification_status === "verified") -
-				Number(a.reviewer_verification_status === "verified") ||
-			(b.helpful_votes ?? 0) - (a.helpful_votes ?? 0) ||
-			(b.roast_count ?? 0) - (a.roast_count ?? 0),
+		profilesWithPresence.map((profile) =>
+			enhanceReviewer(profile, topReviews[profile.id]),
+		),
 	);
 
 	return {
 		message: "",
-		reviewers: ranked.slice(0, LEADERBOARD_LIMIT),
+		reviewers: ranked,
+	};
+}
+
+async function enrichLeaderboardReviewers(
+	baseReviewers: ReviewerProfileStats[],
+	since?: string,
+) {
+	const authorIds = baseReviewers.map((reviewer) => reviewer.id);
+	const { profiles, errorMessage } = await fetchProfilesById(authorIds);
+	const profilesById = Object.fromEntries(
+		profiles.map((profile) => [profile.id, profile]),
+	);
+	let topReviews: Record<string, ReviewRow> = {};
+
+	if (authorIds.length) {
+		const { data: reviewRows } = await fetchReviewRows({ authorIds, since });
+		topReviews = bestReviewMap((reviewRows ?? []) as ReviewRow[]);
+	}
+
+	const reviewersWithPresence = await applyOnlinePresence(
+		baseReviewers.map((reviewer) =>
+			mergeProfileMetadata(reviewer, profilesById[reviewer.id]),
+		),
+	);
+
+	return {
+		message: errorMessage,
+		reviewers: sortReviewers(
+			reviewersWithPresence.map((reviewer) =>
+				enhanceReviewer(reviewer, topReviews[reviewer.id]),
+			),
+		).slice(0, LEADERBOARD_LIMIT),
 	};
 }
 
@@ -228,6 +314,24 @@ async function fetchLeaderboardData(range: TimeRange) {
 	const since = getRangeStart(range);
 
 	if (since) {
+		const reviewerResult = await supabase.rpc("get_reviewer_leaderboard_since", {
+			limit_count: LEADERBOARD_LIMIT,
+			since_at: since,
+		});
+
+		if (!reviewerResult.error) {
+			return enrichLeaderboardReviewers(
+				((reviewerResult.data ?? []) as Array<
+					ReviewerProfileStats | ReviewerLeaderboardEntry
+				>).map(normalizeLeaderboardEntry),
+				since,
+			);
+		}
+
+		if (!isMissingReviewerLeaderboardSinceRpc(reviewerResult.error.message)) {
+			return { message: SUPABASE_MIGRATION_MESSAGE, reviewers: [] };
+		}
+
 		const { data: periodReviews, error: reviewError } = await fetchReviewRows({
 			since,
 		});
@@ -261,10 +365,12 @@ async function fetchLeaderboardData(range: TimeRange) {
 		}, {});
 		const topReviews = bestReviewMap(reviewRows);
 
+		const profilesWithPresence = await applyOnlinePresence(profiles);
+
 		return {
 			message: "",
 			reviewers: sortReviewers(
-				profiles.map((profile) =>
+				profilesWithPresence.map((profile) =>
 					enhanceReviewer(profile, topReviews[profile.id], stats[profile.id]),
 				),
 			).slice(0, LEADERBOARD_LIMIT),
@@ -293,29 +399,7 @@ async function fetchLeaderboardData(range: TimeRange) {
 	const baseReviewers = (
 		(data ?? []) as Array<ReviewerProfileStats | ReviewerLeaderboardEntry>
 	).map(normalizeLeaderboardEntry);
-	const authorIds = baseReviewers.map((reviewer) => reviewer.id);
-	const { profiles, errorMessage } = await fetchProfilesById(authorIds);
-	const profilesById = Object.fromEntries(
-		profiles.map((profile) => [profile.id, profile]),
-	);
-	let topReviews: Record<string, ReviewRow> = {};
-
-	if (authorIds.length) {
-		const { data: reviewRows } = await fetchReviewRows({ authorIds });
-		topReviews = bestReviewMap((reviewRows ?? []) as ReviewRow[]);
-	}
-
-	return {
-		message: errorMessage,
-		reviewers: sortReviewers(
-			baseReviewers.map((reviewer) =>
-				enhanceReviewer(
-					mergeProfileMetadata(reviewer, profilesById[reviewer.id]),
-					topReviews[reviewer.id],
-				),
-			),
-		).slice(0, LEADERBOARD_LIMIT),
-	};
+	return enrichLeaderboardReviewers(baseReviewers);
 }
 
 export default function Leaderboard() {
@@ -400,12 +484,7 @@ export default function Leaderboard() {
 	}, [range]);
 
 	if (loading) {
-		return (
-			<section className={styles.page}>
-				<div className={styles.loadingHero} />
-				<div className={styles.loadingTable} />
-			</section>
-		);
+		return <LeaderboardSkeleton />;
 	}
 
 	return (
@@ -446,14 +525,12 @@ export default function Leaderboard() {
 			</header>
 
 			<StackedList
-				description="Reviewer directory ranked by useful resume feedback."
 				directoryReviewers={directoryReviewers}
-				heading="Top 100"
 				message={message}
 				onSearchQueryChange={setSearchQuery}
 				reviewers={reviewers}
 				searchQuery={searchQuery}
-				searchPlaceholder="Search reviewers, roles, top feedback..."
+				searchPlaceholder="Search contributors, roles, top feedback..."
 				startRank={1}
 			/>
 		</section>

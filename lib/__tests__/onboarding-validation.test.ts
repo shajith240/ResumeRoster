@@ -19,26 +19,26 @@ describe("onboarding validation", () => {
 		expect(isOnboardingPersonaId("hr")).toBe(false);
 	});
 
-	it("maps goals to existing community roles", () => {
+	it("keeps onboarding goals on a single community member role", () => {
 		expect(getCommunityRoleForOnboardingGoal("get_feedback")).toBe("candidate");
 		expect(getCommunityRoleForOnboardingGoal("review_resumes")).toBe(
-			"reviewer",
+			"candidate",
 		);
-		expect(getCommunityRoleForOnboardingGoal("both")).toBe("both");
+		expect(getCommunityRoleForOnboardingGoal("both")).toBe("candidate");
 	});
 
-	it("maps personas to reviewer types only when reviewing is part of the goal", () => {
+	it("does not create reviewer identity from onboarding personas", () => {
 		expect(getReviewerTypeForOnboarding("get_feedback", "recruiter_hr")).toBe(
 			null,
 		);
 		expect(getReviewerTypeForOnboarding("review_resumes", "recruiter_hr")).toBe(
-			"recruiter",
+			null,
 		);
 		expect(getReviewerTypeForOnboarding("both", "product_manager")).toBe(
-			"product_manager",
+			null,
 		);
 		expect(getReviewerTypeForOnboarding("review_resumes", "job_seeker")).toBe(
-			"other",
+			null,
 		);
 	});
 
@@ -48,16 +48,10 @@ describe("onboarding validation", () => {
 		expect(getPersonaProfileLabel("career_coach")).toBe("Career coach");
 	});
 
-	it("builds the personalized first destination", () => {
-		expect(getOnboardingDestination("get_feedback")).toBe(
-			"/feed?welcome=candidate",
-		);
-		expect(getOnboardingDestination("review_resumes")).toBe(
-			"/feed?sort=needs&welcome=reviewer",
-		);
-		expect(getOnboardingDestination("both")).toBe(
-			"/feed?sort=needs&welcome=both",
-		);
+	it("routes every onboarded user to the Community home feed first", () => {
+		expect(getOnboardingDestination("get_feedback")).toBe("/community");
+		expect(getOnboardingDestination("review_resumes")).toBe("/community");
+		expect(getOnboardingDestination("both")).toBe("/community");
 	});
 
 	it("normalizes optional setup fields", () => {

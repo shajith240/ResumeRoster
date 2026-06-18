@@ -9,3 +9,10 @@ out
 vercel
 .vercel
 *.tsbuildinfo
+docs/generated/
+docs/design/logo-redesign/
+.codex/
+coverage/
+playwright-report/
+test-results/
+dev-server*.log

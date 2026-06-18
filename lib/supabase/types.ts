@@ -1,23 +1,30 @@
-export type ResumeStatus = "open" | "roasted" | "closed";
-export type ResumePrivacyMode = "public" | "contact_hidden" | "anonymous";
+type ResumeStatus = "open" | "roasted" | "closed";
+type ResumePrivacyMode = "public" | "contact_hidden" | "anonymous";
+type ResumeQueueStatus = "waiting" | "active";
 export type AppStatus = "online" | "focus" | "offline";
-export type ContentReportReason =
-  | "personal_info"
-  | "harassment"
-  | "spam"
-  | "unsafe"
-  | "off_topic"
-  | "other";
 export type ContentReportStatus =
   | "pending"
   | "reviewing"
   | "dismissed"
   | "actioned";
-export type ContentReportTargetType = "resume" | "roast" | "profile";
-export type ContentReportInputTargetType = "resume" | "review" | "profile";
+export type ContentReportTargetType =
+  | "resume"
+  | "roast"
+  | "profile"
+  | "community_post"
+  | "community_comment";
+export type CommunityPostType = "question" | "discussion" | "resource" | "announcement";
+export type CommunityPostStatus =
+  | "active"
+  | "locked"
+  | "held"
+  | "deleted"
+  | "removed";
+export type CommunityCommentStatus = "active" | "held" | "deleted" | "removed";
+export type CommunityVoteReaction = "upvote" | "downvote";
 export type CommentContentFormat = "plain" | "markdown";
-export type CommentAttachmentKind = "image";
-export type CommentAttachmentSource = "upload";
+type CommentAttachmentKind = "image";
+type CommentAttachmentSource = "upload";
 export type CommunityRole = "candidate" | "reviewer" | "both";
 export type ReviewerType =
   | "student"
@@ -35,9 +42,8 @@ export type ReviewerVerificationStatus =
   | "pending"
   | "verified"
   | "rejected";
-export type ReviewerApplicationStatus = "pending" | "approved" | "rejected";
-export type OnboardingGoalId = "get_feedback" | "review_resumes" | "both";
-export type OnboardingPersonaId =
+type OnboardingGoalId = "get_feedback" | "review_resumes" | "both";
+type OnboardingPersonaId =
   | "student"
   | "new_grad"
   | "job_seeker"
@@ -50,7 +56,7 @@ export type OnboardingPersonaId =
   | "career_coach"
   | "founder"
   | "other";
-export type OnboardingStatus = "pending" | "completed" | "not_required";
+type OnboardingStatus = "pending" | "completed" | "not_required";
 export type NotificationType =
   | "resume_feedback"
   | "comment_reply"
@@ -59,6 +65,22 @@ export type NotificationType =
   | "reviewer_status"
   | "moderation"
   | "system";
+export type UserFeedbackCategory =
+  | "bug"
+  | "ui_ux"
+  | "performance"
+  | "feature_request"
+  | "account"
+  | "content_safety"
+  | "other";
+export type UserFeedbackPriority = "low" | "normal" | "high" | "urgent";
+export type UserFeedbackStatus =
+  | "new"
+  | "reviewing"
+  | "needs_user_reply"
+  | "planned"
+  | "resolved"
+  | "closed";
 
 export type ResumeAuthorProfile = {
   id: string;
@@ -70,6 +92,7 @@ export type ResumeAuthorProfile = {
   target_role?: string | null;
   current_position?: string | null;
   app_status?: AppStatus | null;
+  is_online?: boolean;
   community_role?: CommunityRole | null;
   reviewer_type?: ReviewerType | null;
   reviewer_headline?: string | null;
@@ -85,6 +108,9 @@ export type ResumeSummary = {
   is_anonymous: boolean;
   privacy_mode?: ResumePrivacyMode;
   status: ResumeStatus;
+  review_queue_status: ResumeQueueStatus;
+  activation_reviews_required: number;
+  activation_reviews_completed: number;
   roast_count: number;
   read_count: number;
   job_description: string | null;
@@ -101,27 +127,10 @@ export type Review = {
   content: string;
   attachment_id?: string | null;
   content_format?: CommentContentFormat;
+  guided_issue_type?: string | null;
   helpful_votes: number;
   dislike_count?: number;
-  reply_count?: number;
-  is_deleted?: boolean;
-  deleted_at?: string | null;
-  created_at: string;
-};
-
-export type Roast = Review;
-
-export type ResumeReview = {
-  id: string;
-  resume_id: string;
-  parent_review_id?: string | null;
-  reviewer_id: string;
-  content: string;
-  attachment_id?: string | null;
-  content_format?: CommentContentFormat;
-  sticker_id?: string | null;
-  lint_points: number;
-  dislike_count?: number;
+  is_guided_review?: boolean;
   reply_count?: number;
   is_deleted?: boolean;
   deleted_at?: string | null;
@@ -149,17 +158,18 @@ export type ReviewerProfileStats = {
   avatar_path?: string | null;
   college: string | null;
   target_role: string | null;
+  current_position?: string | null;
   app_status?: AppStatus | null;
+  is_online?: boolean;
   community_role?: CommunityRole | null;
   reviewer_type?: ReviewerType | null;
   reviewer_headline?: string | null;
   reviewer_expertise?: string[] | null;
   reviewer_verification_status?: ReviewerVerificationStatus | null;
+  review_credit_balance?: number;
   roast_count: number;
   helpful_votes: number;
 };
-
-export type RoasterLeaderboardEntry = ReviewerProfileStats;
 
 export type ReviewerLeaderboardEntry = {
   id: string;
@@ -169,13 +179,16 @@ export type ReviewerLeaderboardEntry = {
   avatar_path?: string | null;
   college: string | null;
   target_role: string | null;
+  current_position?: string | null;
   app_status?: AppStatus | null;
+  is_online?: boolean;
   community_role?: CommunityRole | null;
   reviewer_type?: ReviewerType | null;
   reviewer_headline?: string | null;
   reviewer_expertise?: string[] | null;
   reviewer_verification_status?: ReviewerVerificationStatus | null;
   review_count: number;
+  helpful_votes?: number | null;
   lint_points: number;
 };
 
@@ -205,21 +218,6 @@ export type PublicProfile = ReviewerProfileStats & {
   created_at: string;
 };
 
-export type ReviewerApplication = {
-  id: string;
-  user_id: string;
-  requested_type: ReviewerType;
-  expertise: string[];
-  proof_url: string;
-  note: string;
-  status: ReviewerApplicationStatus;
-  admin_note: string;
-  reviewed_by: string | null;
-  reviewed_at: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
 export type ProfileOnboarding = {
   user_id: string;
   goal_id: OnboardingGoalId | null;
@@ -227,6 +225,104 @@ export type ProfileOnboarding = {
   status: OnboardingStatus;
   version: number;
   completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityTopic = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  display_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityTag = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  status: "active" | "hidden";
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPost = {
+  id: string;
+  author_id: string;
+  topic_id: string;
+  post_type: CommunityPostType;
+  title: string;
+  body: string;
+  status: CommunityPostStatus;
+  comment_count: number;
+  upvote_count: number;
+  downvote_count: number;
+  last_activity_at: string;
+  deleted_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPostComment = {
+  id: string;
+  post_id: string;
+  parent_id: string | null;
+  author_id: string;
+  attachment_id?: string | null;
+  body: string;
+  status: CommunityCommentStatus;
+  reply_count: number;
+  upvote_count: number;
+  downvote_count: number;
+  deleted_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPostAttachment = {
+  id: string;
+  post_id: string;
+  user_id: string;
+  kind: "image";
+  source: "upload";
+  storage_path: string;
+  title: string;
+  alt_text: string;
+  mime_type: "image/png" | "image/jpeg" | "image/webp";
+  file_size: number;
+  display_order: number;
+  created_at: string;
+};
+
+export type CommunityPostPoll = {
+  id: string;
+  post_id: string;
+  question: string;
+  duration_days: number;
+  closes_at: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPostPollOption = {
+  id: string;
+  poll_id: string;
+  option_text: string;
+  display_order: number;
+  vote_count: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CommunityPostPollVote = {
+  id: string;
+  poll_id: string;
+  option_id: string;
+  voter_id: string;
   created_at: string;
   updated_at: string;
 };
@@ -249,8 +345,6 @@ export type PublicProfileReviewLegacy = {
   helpful_votes: number;
   created_at: string;
 };
-
-export type PublicProfileRoast = PublicProfileReviewLegacy;
 
 export type PublicProfileReview = {
   id: string;

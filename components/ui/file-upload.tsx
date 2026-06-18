@@ -11,7 +11,8 @@ import {
 	type KeyboardEvent,
 	type ReactNode,
 } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { X } from "@phosphor-icons/react";
+import { AnimatePresence, motion } from "motion/react";
 import {
 	CircleAlert,
 	FileText,
@@ -20,8 +21,7 @@ import {
 	Play,
 	Trash,
 	Upload,
-	X,
-} from "lucide-react";
+} from "@/components/ui/solar-icons";
 
 import { Button } from "@/components/ui/button";
 import { cn, generateUniqueId } from "@/lib/utils";

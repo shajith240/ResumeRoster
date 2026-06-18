@@ -75,7 +75,7 @@ async function revokeDeadSubscription(
 		.eq("id", subscriptionId);
 }
 
-export async function sendPushForNotification(
+async function sendPushForNotification(
 	admin: SupabaseClient,
 	notification: LintedNotification,
 ): Promise<PushDispatchResult> {

@@ -9,7 +9,14 @@ const ROUTE_READY_SETTLE_MS = 120;
 const STALLED_TRANSITION_MS = 2200;
 const ROUTE_TRANSITION_EVENT = "linted-route-transition";
 const APP_THEME_STORAGE_KEY = "linted-theme";
-const APP_ROUTE_PREFIXES = ["/feed", "/submit", "/leaderboard", "/profile", "/resume"];
+const APP_ROUTE_PREFIXES = [
+	"/community",
+	"/feed",
+	"/submit",
+	"/leaderboard",
+	"/profile",
+	"/resume",
+];
 
 type LoaderTheme = "dark" | "light";
 
