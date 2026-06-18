@@ -469,6 +469,7 @@ export async function fetchFeedResumes(
 				.select(RESUME_SELECT_WITH_CONTEXT)
 				.eq("review_queue_status", "active")
 				.range(offset, offset + LIMIT)
+				.order("is_premium", { ascending: false })
 				.order("roast_count", { ascending: false })
 				.order("created_at", { ascending: false })
 		: supabase
@@ -476,6 +477,7 @@ export async function fetchFeedResumes(
 				.select(RESUME_SELECT_WITH_CONTEXT)
 				.eq("review_queue_status", "active")
 				.range(offset, offset + LIMIT)
+				.order("is_premium", { ascending: false })
 				.order("created_at", { ascending: false }));
 
 	if (!primary.error) {
@@ -494,6 +496,7 @@ export async function fetchFeedResumes(
 				.select(RESUME_SELECT_WITH_READS)
 				.eq("review_queue_status", "active")
 				.range(offset, offset + LIMIT)
+				.order("is_premium", { ascending: false })
 				.order("roast_count", { ascending: false })
 				.order("created_at", { ascending: false })
 		: supabase
@@ -501,6 +504,7 @@ export async function fetchFeedResumes(
 				.select(RESUME_SELECT_WITH_READS)
 				.eq("review_queue_status", "active")
 				.range(offset, offset + LIMIT)
+				.order("is_premium", { ascending: false })
 				.order("created_at", { ascending: false }));
 
 	if (!withReads.error) {
@@ -519,6 +523,7 @@ export async function fetchFeedResumes(
 				.select(RESUME_SELECT_BASE)
 				.eq("review_queue_status", "active")
 				.range(offset, offset + LIMIT)
+				.order("is_premium", { ascending: false })
 				.order("roast_count", { ascending: false })
 				.order("created_at", { ascending: false })
 		: supabase
@@ -526,6 +531,7 @@ export async function fetchFeedResumes(
 				.select(RESUME_SELECT_BASE)
 				.eq("review_queue_status", "active")
 				.range(offset, offset + LIMIT)
+				.order("is_premium", { ascending: false })
 				.order("created_at", { ascending: false }));
 
 	const rows = (base.data ?? []).map(withResumeDefaults);
