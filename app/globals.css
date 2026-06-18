@@ -498,14 +498,51 @@ textarea:focus {
 	color: var(--text-secondary);
 }
 .premium-badge {
-	background: color-mix(in srgb, var(--brand) 14%, transparent);
-	color: color-mix(in srgb, var(--brand) 30%, var(--text-primary));
-	font-weight: 650;
+	background: linear-gradient(
+		108deg,
+		#7c4f00 0%,
+		#c98b12 16%,
+		#f2c94c 32%,
+		#fef9e3 50%,
+		#f2c94c 68%,
+		#c98b12 84%,
+		#7c4f00 100%
+	);
+	background-size: 220% auto;
+	color: #2b1500;
+	font-weight: 740;
+	letter-spacing: 0.04em;
+	border: 1px solid #b8780c;
+	box-shadow:
+		0 0 0 1px rgba(255, 220, 100, 0.18) inset,
+		0 1px 6px rgba(180, 120, 10, 0.28);
+	text-shadow: 0 1px 0 rgba(255, 245, 180, 0.55);
+	animation: premium-badge-shimmer 3.5s linear infinite;
+}
+
+@keyframes premium-badge-shimmer {
+	0%   { background-position: 200% center; }
+	100% { background-position: -200% center; }
 }
 
 body.main-app-dark .premium-badge {
-	background: color-mix(in srgb, var(--brand) 18%, transparent);
-	color: var(--brand);
+	background: linear-gradient(
+		108deg,
+		#5c3600 0%,
+		#c98b12 16%,
+		#f2c94c 32%,
+		#fef9e3 50%,
+		#f2c94c 68%,
+		#c98b12 84%,
+		#5c3600 100%
+	);
+	background-size: 220% auto;
+	color: #1a0c00;
+	border: 1px solid #d4960f;
+	box-shadow:
+		0 0 0 1px rgba(255, 230, 120, 0.14) inset,
+		0 1px 8px rgba(200, 140, 14, 0.4);
+	animation: premium-badge-shimmer 3.5s linear infinite;
 }
 
 body.main-app-dark .badge-open,
