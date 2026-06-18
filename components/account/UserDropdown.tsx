@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import {
 	ArrowLeft,
 	ArrowRight,
@@ -8,7 +8,6 @@ import {
 	CheckCircle,
 	DeviceMobile,
 	EnvelopeOpen,
-	FilePlus,
 	Moon,
 	Palette,
 	Question,
@@ -41,7 +40,6 @@ import { cn } from "@/lib/utils";
 type MenuAction =
 	| "admin"
 	| "profile"
-	| "submit"
 	| "install"
 	| "saved"
 	| "help"
@@ -104,11 +102,6 @@ const MENU_ITEMS: {
 			icon: UserCircle,
 			label: "Your profile",
 			action: "profile",
-		},
-		{
-			icon: FilePlus,
-			label: "Post resume",
-			action: "submit",
 		},
 		{
 			icon: DeviceMobile,
@@ -297,7 +290,7 @@ export function UserDropdown({
 					{isOnline ? (
 						<span
 							aria-hidden="true"
-							className="absolute right-0 top-0 size-3 rounded-full border-2 border-[var(--bg-base)] bg-green-500 shadow-sm"
+							className="absolute bottom-0 right-0 size-3 rounded-full border-2 border-[var(--bg-base)] bg-green-500 shadow-sm"
 						/>
 					) : null}
 				</button>
@@ -324,7 +317,7 @@ export function UserDropdown({
 								{isOnline ? (
 									<span
 										aria-label="Online now"
-										className="absolute right-0 top-0 size-3 rounded-full border-2 border-[var(--bg-surface)] bg-green-500 shadow-sm"
+										className="absolute bottom-0 right-0 size-3 rounded-full border-2 border-[var(--bg-surface)] bg-green-500 shadow-sm"
 										title="Online now"
 									/>
 								) : null}
@@ -347,71 +340,63 @@ export function UserDropdown({
 					</div>
 
 					<DropdownMenuGroup>
-						{MENU_ITEMS.profile.map((item, index) => (
-							<Fragment key={`${item.action}-${index}`}>
-								{renderMenuItem(item, index)}
-								{item.action === "submit" ? (
-									<>
-										<div className="user-menu-submenu-only">
-											<DropdownMenuSub>
-												<DropdownMenuSubTrigger className="cursor-pointer rounded-lg p-2">
-													<span className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
-														<Palette
+						{MENU_ITEMS.profile.map(renderMenuItem)}
+						<div className="user-menu-submenu-only">
+							<DropdownMenuSub>
+								<DropdownMenuSubTrigger className="cursor-pointer rounded-lg p-2">
+									<span className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
+										<Palette
+											aria-hidden="true"
+											className="size-5 text-[var(--text-tertiary)]"
+										/>
+										Appearance
+									</span>
+								</DropdownMenuSubTrigger>
+								<DropdownMenuPortal>
+									<DropdownMenuSubContent
+										className="z-[1001] border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] backdrop-blur-lg"
+										collisionPadding={12}
+										sideOffset={8}
+									>
+										<DropdownMenuRadioGroup
+											value={selectedTheme}
+											onValueChange={(value) =>
+												onThemeChange(value === "light" ? "light" : "dark")
+											}
+										>
+											{MENU_ITEMS.appearance.map((themeItem) => {
+												const ThemeIcon = themeItem.icon;
+												return (
+													<DropdownMenuRadioItem
+														className="gap-2 pr-3"
+														key={themeItem.value}
+														value={themeItem.value}
+													>
+														<ThemeIcon
 															aria-hidden="true"
 															className="size-5 text-[var(--text-tertiary)]"
 														/>
-														Appearance
-													</span>
-												</DropdownMenuSubTrigger>
-												<DropdownMenuPortal>
-													<DropdownMenuSubContent
-														className="z-[1001] border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] backdrop-blur-lg"
-														collisionPadding={12}
-														sideOffset={8}
-													>
-														<DropdownMenuRadioGroup
-															value={selectedTheme}
-															onValueChange={(value) =>
-																onThemeChange(value === "light" ? "light" : "dark")
-															}
-														>
-															{MENU_ITEMS.appearance.map((themeItem) => {
-																const ThemeIcon = themeItem.icon;
-																return (
-																	<DropdownMenuRadioItem
-																		className="gap-2 pr-3"
-																		key={themeItem.value}
-																		value={themeItem.value}
-																	>
-																		<ThemeIcon
-																			aria-hidden="true"
-																			className="size-5 text-[var(--text-tertiary)]"
-																		/>
-																		<span className="flex-1">{themeItem.label}</span>
-																		{selectedTheme === themeItem.value ? (
-																			<CheckCircle
-																				aria-hidden="true"
-																				className="ml-auto size-4 text-[var(--brand)]"
-																			/>
-																		) : null}
-																	</DropdownMenuRadioItem>
-																);
-															})}
-														</DropdownMenuRadioGroup>
-													</DropdownMenuSubContent>
-												</DropdownMenuPortal>
-											</DropdownMenuSub>
-										</div>
-										{renderMobilePanelTrigger(
-											"appearance",
-											Palette,
-											"Appearance",
-											selectedThemeItem.label,
-										)}
-									</>
-								) : null}
-							</Fragment>
-						))}
+														<span className="flex-1">{themeItem.label}</span>
+														{selectedTheme === themeItem.value ? (
+															<CheckCircle
+																aria-hidden="true"
+																className="ml-auto size-4 text-[var(--brand)]"
+															/>
+														) : null}
+													</DropdownMenuRadioItem>
+												);
+											})}
+										</DropdownMenuRadioGroup>
+									</DropdownMenuSubContent>
+								</DropdownMenuPortal>
+							</DropdownMenuSub>
+						</div>
+						{renderMobilePanelTrigger(
+							"appearance",
+							Palette,
+							"Appearance",
+							selectedThemeItem.label,
+						)}
 					</DropdownMenuGroup>
 
 					{isAdmin ? (

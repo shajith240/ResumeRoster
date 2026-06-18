@@ -117,16 +117,6 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 							width={180}
 							height={180}
 						/>
-						{isOwnProfile ? (
-							<button
-								className={styles.avatarEdit}
-								onClick={() => setEditOpen(true)}
-								type="button"
-							>
-								<Pencil aria-hidden="true" />
-								<span className="sr-only">Edit profile</span>
-							</button>
-						) : null}
 						{isOnline ? (
 							<span
 								aria-label={`${profileView.displayName} is online`}

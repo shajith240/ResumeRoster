@@ -7,6 +7,7 @@ import {
 	Plus,
 	ShieldCheck,
 	Trophy,
+	UsersRound,
 	type SolarIconComponent,
 } from "@/components/ui/solar-icons";
 import {
@@ -40,8 +41,8 @@ const PRIMARY_NAV_ICONS: Record<PrimaryNavItemId, PrimaryNavigationIcons> = {
 		sidebarIcon: PencilLine,
 	},
 	feed: {
-		dockIcon: FileText,
-		sidebarIcon: FileText,
+		dockIcon: UsersRound,
+		sidebarIcon: UsersRound,
 	},
 	leaderboard: {
 		dockIcon: Trophy,

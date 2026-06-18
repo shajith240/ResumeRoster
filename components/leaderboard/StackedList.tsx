@@ -293,7 +293,7 @@ function LeaderboardRow({
 			<Link
 				href={topReviewHref}
 				aria-label={`View ${name}`}
-				className="inline-grid h-10 w-10 select-none place-items-center rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px max-[760px]:col-start-4 max-[760px]:row-start-1 max-[760px]:h-10 max-[760px]:w-10 max-[760px]:self-center"
+				className="inline-grid h-10 w-10 select-none place-items-center justify-self-center rounded-[var(--button-radius)] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] active:translate-y-px max-[760px]:col-start-4 max-[760px]:row-start-1 max-[760px]:h-10 max-[760px]:w-10 max-[760px]:self-center max-[760px]:justify-self-center"
 			>
 				<span className="sr-only">View</span>
 				<ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -490,13 +490,13 @@ export function StackedList({
 				<span className="role-head">Role</span>
 				<span>Lint Points</span>
 				<span className="top-review-head">Top feedback</span>
-				<span>Action</span>
+				<span className="justify-self-center text-center">Action</span>
 			</div>
 
 			{message ? <p className="form-message m-5">{message}</p> : null}
 
 			<motion.div
-				className="max-h-[min(62vh,720px)] overflow-y-auto"
+				className="max-h-[min(62vh,720px)] overflow-y-auto [scrollbar-gutter:stable]"
 				layout={!reducedMotion}
 			>
 				<AnimatePresence initial={false}>

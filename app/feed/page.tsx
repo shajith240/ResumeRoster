@@ -1,4 +1,5 @@
 import AuthGate from "@/components/AuthGate";
+import CommunityHighlightsRail from "@/components/community/CommunityHighlightsRail";
 import FeedRailLegalFooter from "@/components/FeedRailLegalFooter";
 import PersonalizeLintedPrompt from "@/components/PersonalizeLintedPrompt";
 import RecentPostsPanel from "@/components/RecentPostsPanel";
@@ -101,6 +102,7 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
 						}
 						title={savedOnly ? "Saved Resumes" : "Resume Feed"}
 					/>
+					<CommunityHighlightsRail hidden={savedOnly} />
 					{welcomeState ? (
 						<section
 							className="feed-welcome-card"

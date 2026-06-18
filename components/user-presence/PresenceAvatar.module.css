@@ -9,7 +9,7 @@
 
 .dot {
 	position: absolute;
-	top: 0;
+	bottom: 0;
 	right: 0;
 	z-index: 2;
 	border: 2px solid var(--presence-avatar-ring, var(--bg-surface));
