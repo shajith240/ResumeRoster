@@ -463,13 +463,14 @@ export async function fetchFeedResumes(
 	const isTop = sort === "top";
 
 	// Attempt 1 – full context schema
+	// "New" pins paid premium first — reviewers see them immediately for 24h SLA.
+	// "Top" is pure engagement rank — paid status must not inflate position there.
 	const primary = await (isTop
 		? supabase
 				.from("resumes")
 				.select(RESUME_SELECT_WITH_CONTEXT)
 				.eq("review_queue_status", "active")
 				.range(offset, offset + LIMIT)
-				.order("is_premium", { ascending: false })
 				.order("roast_count", { ascending: false })
 				.order("created_at", { ascending: false })
 		: supabase
@@ -496,7 +497,6 @@ export async function fetchFeedResumes(
 				.select(RESUME_SELECT_WITH_READS)
 				.eq("review_queue_status", "active")
 				.range(offset, offset + LIMIT)
-				.order("is_premium", { ascending: false })
 				.order("roast_count", { ascending: false })
 				.order("created_at", { ascending: false })
 		: supabase
@@ -523,7 +523,6 @@ export async function fetchFeedResumes(
 				.select(RESUME_SELECT_BASE)
 				.eq("review_queue_status", "active")
 				.range(offset, offset + LIMIT)
-				.order("is_premium", { ascending: false })
 				.order("roast_count", { ascending: false })
 				.order("created_at", { ascending: false })
 		: supabase
