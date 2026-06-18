@@ -22,7 +22,7 @@ const DialogOverlay = React.forwardRef<
     ref={ref}
     data-slot="dialog-overlay"
     className={cn(
-      "fixed inset-0 z-[220] bg-black/65 backdrop-blur-sm duration-200 ease-out motion-reduce:animate-none motion-reduce:duration-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-150 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-[220] bg-black/60 backdrop-blur-sm duration-[220ms] ease-[cubic-bezier(0,0,0.2,1)] motion-reduce:animate-none motion-reduce:duration-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-[160ms] data-[state=closed]:ease-[cubic-bezier(0.4,0,1,1)] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
     {...props}
@@ -40,7 +40,7 @@ const DialogContent = React.forwardRef<
       ref={ref}
       data-slot="dialog-content"
       className={cn(
-        "fixed left-1/2 top-1/2 z-[221] grid max-h-[calc(100%-4rem)] w-full -translate-x-1/2 -translate-y-1/2 origin-center gap-4 overflow-y-auto border bg-background p-6 shadow-lg shadow-black/5 duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:animate-none motion-reduce:duration-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-150 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:max-w-[400px] sm:rounded-xl",
+        "fixed left-1/2 top-1/2 z-[221] grid max-h-[calc(100%-4rem)] w-full -translate-x-1/2 -translate-y-1/2 origin-center gap-4 overflow-y-auto border bg-background p-6 shadow-lg shadow-black/5 duration-[240ms] ease-[cubic-bezier(0,0,0.2,1)] motion-reduce:animate-none motion-reduce:duration-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-[180ms] data-[state=closed]:ease-[cubic-bezier(0.4,0,1,1)] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-[0.97] data-[state=open]:zoom-in-[0.97] sm:max-w-[400px] sm:rounded-xl",
         className,
       )}
       {...props}
