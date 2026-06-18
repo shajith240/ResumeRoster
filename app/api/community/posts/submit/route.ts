@@ -22,6 +22,7 @@ import { replaceCommunityInlineImageUrls } from "@/lib/community-markdown";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
+import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import type { CommunityPostStatus } from "@/lib/supabase/types";
 
 export const runtime = "nodejs";
@@ -220,8 +221,8 @@ async function removeUploadedPostImages(
 		await admin.storage
 			.from("community-post-media")
 			.remove(attachments.map((attachment) => attachment.storage_path));
-	} catch {
-		// The client still receives the original submit failure.
+	} catch (error) {
+		capturePrivateError(error, { area: "community", operation: "cleanup_post_images", count: attachments.length });
 	}
 }
 
