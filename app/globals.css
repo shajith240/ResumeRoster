@@ -88,6 +88,9 @@
 	--button-radius: 10px;
 	--button-radius-sm: 8px;
 	--button-ease: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-out: cubic-bezier(0, 0, 0.2, 1);
+	--ease-in: cubic-bezier(0.4, 0, 1, 1);
+	--ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 	--mobile-dock-space: 0px;
 	--shadow-sm:
 		0 1px 3px rgba(26, 25, 22, 0.08), 0 1px 2px rgba(26, 25, 22, 0.04);
@@ -278,12 +281,15 @@ img {
 a {
 	color: inherit;
 	text-decoration: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 button {
 	border: 0;
 	cursor: pointer;
 	font: inherit;
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
 }
 
 h1,
@@ -3909,14 +3915,20 @@ body.main-app-dark .community-meta-tags a.badge:hover {
 	font-weight: 650;
 	line-height: 1;
 	cursor: pointer;
+	touch-action: manipulation;
 	transition:
 		background-color 160ms var(--button-ease),
-		color 160ms var(--button-ease);
+		color 160ms var(--button-ease),
+		transform 100ms var(--button-ease);
 }
 
 .community-detail-back-button:hover {
 	background: color-mix(in srgb, var(--bg-surface) 70%, transparent);
 	color: var(--text-primary);
+}
+
+.community-detail-back-button:active {
+	transform: scale(0.94);
 }
 
 .community-detail-back-button:focus-visible {
@@ -8233,5 +8245,17 @@ body.main-app-dark .form-message {
 
 	.footer-link-grid {
 		grid-template-columns: 1fr;
+	}
+}
+
+/* ── Motion safety: disable all transitions/animations for users who prefer reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
 	}
 }

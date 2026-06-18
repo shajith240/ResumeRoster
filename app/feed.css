@@ -477,10 +477,16 @@ body.main-app-dark .ch-type-announcement {
 	font-size: 12px;
 	font-weight: 600;
 	line-height: 1;
+	touch-action: manipulation;
 	transition:
 		background-color 160ms var(--button-ease),
 		border-color 160ms var(--button-ease),
-		color 160ms var(--button-ease);
+		color 160ms var(--button-ease),
+		transform 100ms var(--button-ease);
+}
+
+.feed-sort-trigger:active:not([data-state="open"]) {
+	transform: scale(0.95);
 }
 
 .feed-sort-trigger:hover,
@@ -508,6 +514,19 @@ body.main-app-dark .ch-type-announcement {
 .feed-sort-menu {
 	min-width: 176px;
 	padding: 6px;
+	transform-origin: top center;
+	animation: menuScaleIn 140ms var(--ease-out) both;
+}
+
+@keyframes menuScaleIn {
+	from {
+		opacity: 0;
+		transform: scale(0.93) translateY(-4px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
 }
 
 .feed-sort-menu-item {
@@ -525,6 +544,8 @@ body.main-app-dark .ch-type-announcement {
 	line-height: 1;
 	text-decoration: none;
 	cursor: pointer;
+	touch-action: manipulation;
+	transition: background-color 120ms var(--button-ease), color 120ms var(--button-ease);
 }
 
 .feed-sort-menu-item:hover,
@@ -580,6 +601,12 @@ body.main-app-dark .ch-type-announcement {
 		background: color-mix(in srgb, var(--bg-elevated) 42%, transparent);
 		box-shadow: none;
 		transform: none;
+	}
+}
+
+@media (hover: none) and (pointer: coarse) {
+	.resume-card:active {
+		background: color-mix(in srgb, var(--bg-elevated) 32%, transparent);
 	}
 }
 
@@ -1026,12 +1053,22 @@ body.main-app-dark .feed-thread-preview:hover {
 	font-size: 12px;
 	font-weight: 600;
 	line-height: 1;
+	touch-action: manipulation;
+	transition:
+		background-color 140ms var(--button-ease),
+		border-color 140ms var(--button-ease),
+		color 140ms var(--button-ease),
+		transform 100ms var(--button-ease);
 }
 
 .post-action-button:hover {
 	border-color: color-mix(in srgb, var(--border-default) 84%, transparent);
 	background: color-mix(in srgb, var(--bg-elevated) 90%, var(--text-primary) 4%);
 	color: var(--text-primary);
+}
+
+.post-action-button:active:not(:disabled) {
+	transform: scale(0.94);
 }
 
 .post-action-button:disabled {
@@ -1274,9 +1311,16 @@ body.main-app-dark .feed-thread-preview:hover {
 	padding: 9px 8px;
 	color: var(--text-primary);
 	text-decoration: none;
+	touch-action: manipulation;
 	transition:
 		background-color 160ms var(--button-ease),
-		color 160ms var(--button-ease);
+		color 160ms var(--button-ease),
+		transform 100ms var(--button-ease);
+}
+
+.recent-post-item:active {
+	transform: scale(0.98);
+	background: color-mix(in srgb, var(--bg-elevated) 74%, transparent);
 }
 
 .recent-post-item:hover,
@@ -2451,10 +2495,17 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 	font-weight: 600;
 	line-height: 1;
 	white-space: nowrap;
+	touch-action: manipulation;
 	transition:
-		background-color 160ms ease,
-		color 160ms ease,
-		opacity 160ms ease;
+		background-color 140ms var(--button-ease),
+		color 140ms var(--button-ease),
+		opacity 140ms var(--button-ease),
+		transform 100ms var(--button-ease);
+}
+
+.comment-composer-cancel:active:not(:disabled),
+.comment-composer-submit:active:not(:disabled) {
+	transform: scale(0.96);
 }
 
 .comment-composer-cancel {
@@ -5020,6 +5071,12 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	}
 }
 
+@media (hover: none) and (pointer: coarse) {
+	.community-feed-route .community-feed-row:active {
+		background: color-mix(in srgb, var(--bg-elevated) 32%, transparent);
+	}
+}
+
 .community-feed-route .community-feed-loading > .feed-skeleton-list {
 	width: 100%;
 }
@@ -5129,6 +5186,8 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	font-weight: 600;
 	line-height: 1;
 	text-decoration: none;
+	touch-action: manipulation;
+	transition: background-color 120ms var(--button-ease), color 120ms var(--button-ease);
 }
 
 .community-row-action-item:hover,
@@ -6770,11 +6829,20 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		font-size: 14px;
 		font-weight: 750;
 		text-align: left;
+		touch-action: manipulation;
+		transition:
+			background-color 140ms var(--button-ease),
+			transform 100ms var(--button-ease);
 	}
 
 	.community-mobile-action-list button:hover,
 	.community-mobile-action-list button:focus-visible {
 		background: rgb(255 255 255 / 0.07);
+	}
+
+	.community-mobile-action-list button:active:not(:disabled) {
+		background: rgb(255 255 255 / 0.1);
+		transform: scale(0.98);
 	}
 
 	.community-mobile-action-list button:disabled {
@@ -6965,11 +7033,16 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		text-align: left;
 		cursor: pointer;
 		touch-action: manipulation;
-		transition: background 120ms;
+		transition:
+			background 140ms var(--button-ease),
+			border-color 140ms var(--button-ease),
+			transform 100ms var(--button-ease);
 	}
 
 	.community-mobile-join-pill:active {
-		background: rgb(255 255 255 / 0.12);
+		background: rgb(255 255 255 / 0.13);
+		border-color: rgb(255 255 255 / 0.2);
+		transform: scale(0.98);
 	}
 
 	.community-mobile-join-pill span {
