@@ -393,10 +393,21 @@ body.main-app
 .btn-brand {
 	background: var(--brand);
 	color: #fff;
+	transition:
+		background 0.15s var(--button-ease),
+		transform 0.1s var(--button-ease),
+		box-shadow 0.15s var(--button-ease);
 }
 
 .btn-brand:hover {
 	background: var(--brand-dark);
+	transform: translateY(-1px);
+	box-shadow: var(--shadow-md);
+}
+
+.btn-brand:active {
+	transform: translateY(0);
+	box-shadow: none;
 }
 
 body.main-app-dark .btn-brand,
@@ -411,12 +422,22 @@ body.main-app-dark .avatar-skeleton {
 	border: 1.5px solid var(--border-default);
 	background: transparent;
 	color: var(--text-secondary);
+	transition:
+		border-color 0.15s var(--button-ease),
+		background 0.15s var(--button-ease),
+		color 0.15s var(--button-ease),
+		transform 0.1s var(--button-ease);
 }
 
 .btn-ghost:hover {
 	border-color: var(--border-strong);
 	background: var(--bg-base);
 	color: var(--text-primary);
+	transform: translateY(-1px);
+}
+
+.btn-ghost:active {
+	transform: translateY(0);
 }
 
 input,
@@ -576,6 +597,19 @@ body.main-app-dark .app-header {
 
 .user-menu-content {
 	max-width: calc(100vw - 24px);
+	transform-origin: top right;
+	animation: panelDropIn 160ms var(--ease-out) both;
+}
+
+@keyframes panelDropIn {
+	from {
+		opacity: 0;
+		transform: scale(0.95) translateY(-6px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
 }
 
 .user-menu-mobile-trigger,
@@ -728,6 +762,21 @@ body.main-app-dark .app-header {
 
 .avatar-button {
 	background: var(--brand);
+	cursor: pointer;
+	transition:
+		opacity 140ms var(--button-ease),
+		transform 100ms var(--button-ease),
+		box-shadow 140ms var(--button-ease);
+}
+
+.avatar-button:hover {
+	opacity: 0.88;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 28%, transparent);
+}
+
+.avatar-button:active {
+	transform: scale(0.93);
+	opacity: 0.75;
 }
 
 .avatar-skeleton {
@@ -5097,6 +5146,15 @@ body.main-app-dark .bottom-nav {
 		font-size: 14px;
 		font-weight: 650;
 		text-align: left;
+		touch-action: manipulation;
+		transition:
+			background-color 140ms var(--button-ease),
+			transform 100ms var(--button-ease);
+	}
+
+	.user-menu-mobile-trigger:active {
+		transform: scale(0.98);
+		background: color-mix(in srgb, var(--bg-elevated) 78%, transparent);
 	}
 
 	.user-menu-mobile-trigger:hover,
@@ -5156,12 +5214,20 @@ body.main-app-dark .bottom-nav {
 		font-size: 14px;
 		font-weight: 700;
 		text-align: left;
+		touch-action: manipulation;
+		transition:
+			background-color 140ms var(--button-ease),
+			transform 100ms var(--button-ease);
 	}
 
 	.user-menu-mobile-back:hover,
 	.user-menu-mobile-back:focus-visible {
 		background: color-mix(in srgb, var(--bg-elevated) 78%, transparent);
 		outline: none;
+	}
+
+	.user-menu-mobile-back:active {
+		transform: scale(0.97);
 	}
 
 	.user-menu-mobile-list {
@@ -5183,6 +5249,16 @@ body.main-app-dark .bottom-nav {
 		font-size: 13px;
 		font-weight: 650;
 		text-align: left;
+		touch-action: manipulation;
+		transition:
+			border-color 140ms var(--button-ease),
+			background-color 140ms var(--button-ease),
+			color 140ms var(--button-ease),
+			transform 100ms var(--button-ease);
+	}
+
+	.user-menu-mobile-option:active {
+		transform: scale(0.98);
 	}
 
 	.user-menu-mobile-option span {

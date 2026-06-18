@@ -580,7 +580,10 @@ body.main-app-dark .ch-type-announcement {
 	background: transparent;
 	box-shadow: none;
 	animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
-	transition: background-color 160ms var(--button-ease);
+	transition:
+		background-color 180ms var(--button-ease),
+		border-radius 180ms var(--button-ease),
+		box-shadow 180ms var(--button-ease);
 }
 
 .resume-card::after {
@@ -592,6 +595,7 @@ body.main-app-dark .ch-type-announcement {
 	background: var(--border-subtle);
 	content: "";
 	pointer-events: none;
+	transition: opacity 180ms var(--button-ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -599,8 +603,14 @@ body.main-app-dark .ch-type-announcement {
 	.resume-card:focus-within {
 		border-radius: 10px;
 		background: color-mix(in srgb, var(--bg-elevated) 42%, transparent);
-		box-shadow: none;
-		transform: none;
+		box-shadow:
+			0 2px 8px rgba(0, 0, 0, 0.06),
+			0 0 0 1px color-mix(in srgb, var(--border-subtle) 60%, transparent);
+	}
+
+	.resume-card:hover::after,
+	.resume-card:focus-within::after {
+		opacity: 0;
 	}
 }
 
@@ -1277,6 +1287,11 @@ body.main-app-dark .feed-thread-preview:hover {
 	color: var(--text-secondary);
 	font-size: 12px;
 	font-weight: 650;
+	touch-action: manipulation;
+	transition:
+		background-color 140ms var(--button-ease),
+		color 140ms var(--button-ease),
+		transform 100ms var(--button-ease);
 }
 
 .recent-posts-clear {
@@ -1296,6 +1311,11 @@ body.main-app-dark .feed-thread-preview:hover {
 .recent-posts-close:hover {
 	background: color-mix(in srgb, var(--bg-elevated) 74%, transparent);
 	color: var(--text-primary);
+}
+
+.recent-posts-clear:active,
+.recent-posts-close:active {
+	transform: scale(0.94);
 }
 
 .recent-post-list {
@@ -2976,12 +2996,26 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 	font-weight: 650;
 	line-height: 1;
 	box-shadow: var(--shadow-sm);
+	touch-action: manipulation;
+	transition:
+		border-color 140ms var(--button-ease),
+		background-color 140ms var(--button-ease),
+		color 140ms var(--button-ease),
+		transform 100ms var(--button-ease),
+		box-shadow 140ms var(--button-ease);
 }
 
 .comment-author-chip:hover {
 	border-color: rgba(232, 93, 38, 0.26);
 	background: var(--brand-muted);
 	color: var(--brand);
+	transform: translateY(-1px);
+	box-shadow: var(--shadow-md);
+}
+
+.comment-author-chip:active {
+	transform: translateY(0) scale(0.97);
+	box-shadow: var(--shadow-sm);
 }
 
 body.main-app-dark .comment-author-chip {
@@ -3744,13 +3778,18 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 		transform: translateZ(0);
 		transition:
 			background-color 160ms var(--button-ease),
-			color 160ms var(--button-ease);
+			color 160ms var(--button-ease),
+			transform 100ms var(--button-ease);
 	}
 
 	.session-sidebar-link:hover,
 	.session-sidebar-link:focus-visible {
 		background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
 		color: var(--text-primary);
+	}
+
+	.session-sidebar-link:active:not(.is-active) {
+		transform: scale(0.98) translateZ(0);
 	}
 
 	.session-sidebar-link:focus-visible {
@@ -5038,7 +5077,10 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	border: 0;
 	border-radius: 0;
 	padding: 16px 14px;
-	transition: background-color 160ms var(--button-ease);
+	transition:
+		background-color 180ms var(--button-ease),
+		border-radius 180ms var(--button-ease),
+		box-shadow 180ms var(--button-ease);
 }
 
 .community-feed-route .community-feed-row::after {
@@ -5050,6 +5092,7 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	background: var(--border-subtle);
 	content: "";
 	pointer-events: none;
+	transition: opacity 180ms var(--button-ease);
 }
 
 .community-feed-route .community-feed-row:last-child::after {
@@ -5061,13 +5104,22 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	.community-feed-route .community-feed-row:focus-within {
 		border-radius: 10px;
 		background: color-mix(in srgb, var(--bg-elevated) 42%, transparent);
+		box-shadow:
+			0 2px 8px rgba(0, 0, 0, 0.06),
+			0 0 0 1px color-mix(in srgb, var(--border-subtle) 60%, transparent);
 		outline: none;
+	}
+
+	.community-feed-route .community-feed-row:hover::after,
+	.community-feed-route .community-feed-row:focus-within::after {
+		opacity: 0;
 	}
 
 	.community-feed-route .community-feed-row[data-post-kind="poll"]:hover,
 	.community-feed-route .community-feed-row[data-post-kind="poll"]:focus-within {
 		border-radius: 0;
 		background: transparent;
+		box-shadow: none;
 	}
 }
 
