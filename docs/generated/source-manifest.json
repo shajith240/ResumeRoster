@@ -500,11 +500,11 @@
       "exportCount": 3
     },
     {
-      "hash": "e524d5b6730c894d25462adf3a275cb397185e97233d4856c70cb60237833ee4",
+      "hash": "21513b05145661fb1fc7a2f506e1620e2d93ffbc7475d86d5c3a2cd1c59843f2",
       "kind": "Project file",
-      "lineCount": 7300,
+      "lineCount": 7295,
       "relativePath": "app/feed.css",
-      "size": 155972,
+      "size": 155832,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -5280,5 +5280,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "6a234305939ea29ea183037a3bb14cfadcbeb89cede0d51f5b5e03ba7aa0bec7"
+  "manifestHash": "50ec0a8dd94d524ea1062221022bf8ee7f40486c048943f1526fdf74bce9fdb7"
 }
