@@ -3713,7 +3713,7 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 		right: 0;
 		left: 0;
 		z-index: 1000;
-		width: auto;
+		width: 100dvw;
 		margin-left: 0;
 		padding-left: 24px;
 		transition: none;

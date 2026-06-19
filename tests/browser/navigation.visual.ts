@@ -893,9 +893,7 @@ test("primary navigation exposes app sections without account utilities", async 
 				headerLeft: headerRect.left,
 				headerRight: headerRect.right,
 				logoLeft: logoRect?.left ?? 0,
-				// clientWidth excludes classic scrollbars (Linux CI); window.innerWidth
-				// includes them, causing fixed-element right edges to measure ~10px short.
-				viewportWidth: document.documentElement.clientWidth,
+				viewportWidth: window.innerWidth,
 			};
 		},
 	);
