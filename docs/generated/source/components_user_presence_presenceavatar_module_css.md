@@ -4,9 +4,9 @@
 
 - Source path: `components/user-presence/PresenceAvatar.module.css`
 - Kind: React component
-- Size: 583 bytes
+- Size: 547 bytes
 - Lines: 37
-- Source hash: `b50b1b836db4b65b787a6cbf2b67f0b6a26d808f0da526d01e309781284c5f81`
+- Source hash: `05be1a0e0ef6b5e0390e232bd9adefec8461fe5b2059d7d06e77a8dd2192749d`
 
 ## What This File Does
 

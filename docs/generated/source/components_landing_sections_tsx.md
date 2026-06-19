@@ -4,9 +4,9 @@
 
 - Source path: `components/landing/sections.tsx`
 - Kind: React component
-- Size: 9663 bytes
+- Size: 9324 bytes
 - Lines: 340
-- Source hash: `bbb624b6185ad8ab8bf27c033e4c24d57e8782a8fab17011e5e57f15c5454839`
+- Source hash: `cdb631797de37df9127252d3d6cdfd48d99b24c3769cdb49e15999c96e3a74b5`
 
 ## What This File Does
 

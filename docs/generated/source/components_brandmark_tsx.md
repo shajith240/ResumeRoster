@@ -4,9 +4,9 @@
 
 - Source path: `components/BrandMark.tsx`
 - Kind: React component
-- Size: 553 bytes
+- Size: 529 bytes
 - Lines: 25
-- Source hash: `7984298e43188628d01593bcdc03f5bf2220bbbf675b38a06708836eddd95898`
+- Source hash: `c325310567f6f3acce79bd03885965eab19e5860ac2f2140e14e5ca223b5ff0a`
 
 ## What This File Does
 

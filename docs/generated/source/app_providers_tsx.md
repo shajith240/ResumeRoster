@@ -4,9 +4,9 @@
 
 - Source path: `app/providers.tsx`
 - Kind: Project file
-- Size: 766 bytes
+- Size: 739 bytes
 - Lines: 28
-- Source hash: `08dac08b70beff9414fee1ed059270f1c8ea160a99e71bfac17ec5142e10e98b`
+- Source hash: `7cc6ba002b5e1f9f6f6e2cb8f1c45fa11cb134c0a0ae225f7675f323eef0dbd2`
 
 ## What This File Does
 

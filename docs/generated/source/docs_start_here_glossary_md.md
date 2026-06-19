@@ -4,9 +4,9 @@
 
 - Source path: `docs/start-here/glossary.md`
 - Kind: Documentation
-- Size: 1390 bytes
+- Size: 1357 bytes
 - Lines: 34
-- Source hash: `7ad921f6a7697f5316c3342121e0e5333b581972ea56b70682a11e98f9e3e5de`
+- Source hash: `9bdaa0f02349426f33b8e13a04e7c22d72d29752cd8488d45b2fb266b6c61319`
 
 ## What This File Does
 

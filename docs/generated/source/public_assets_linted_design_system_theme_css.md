@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/linted_design_system/theme.css`
 - Kind: Public visual asset
-- Size: 2326 bytes
+- Size: 2250 bytes
 - Lines: 77
-- Source hash: `76898f8b5ce0a08eac63c54a3e93c1658f05a64e67b444bee302ac8eda853e88`
+- Source hash: `7a195ce59c122da936b28cd7b211a335adccea9b817dd9ef54e6bc4ef4eeb4a9`
 
 ## What This File Does
 

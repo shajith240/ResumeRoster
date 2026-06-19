@@ -3,7 +3,7 @@
 # Generated Source Atlas
 
 Generated from 527 source-controlled files.
-Manifest hash: `9840d658477a01357940b83fbd795ecd76664c9e64f29b138f4275367c234218`
+Manifest hash: `352ee39a29a8428b4fee1a10686b700a6b3e1e5da80346593995895bc46c2d47`
 
 ## Folder Coverage
 

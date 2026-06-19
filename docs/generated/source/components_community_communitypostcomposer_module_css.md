@@ -4,9 +4,9 @@
 
 - Source path: `components/community/CommunityPostComposer.module.css`
 - Kind: React component
-- Size: 1915 bytes
+- Size: 1821 bytes
 - Lines: 95
-- Source hash: `e5910bb9fc806e8ad7d92bfe26c89f3095548aa71af94b3beb2cd5e3f43d5c25`
+- Source hash: `38d14f75244e51a30eea88fa21af27b131c5b7d06b3d288a354018f65719dfbb`
 
 ## What This File Does
 

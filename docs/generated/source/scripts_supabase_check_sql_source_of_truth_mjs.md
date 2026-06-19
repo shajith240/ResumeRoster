@@ -4,9 +4,9 @@
 
 - Source path: `scripts/supabase/check-sql-source-of-truth.mjs`
 - Kind: Repository automation
-- Size: 1293 bytes
+- Size: 1244 bytes
 - Lines: 50
-- Source hash: `a3a5fd91bfea934efb2570e5a5594f2eeedf43b194ee2cd856f75cf51e18a4fa`
+- Source hash: `1ecb3bd33b012aa644464462417c8d2bde46bd274bb5bb340dc867480816bce0`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/reviewer-validation.test.ts`
 - Kind: Unit test
-- Size: 3642 bytes
+- Size: 3513 bytes
 - Lines: 130
-- Source hash: `2a8fa72759d9a119f4b4ea5c3bc3848bde96e2f7c47d97b9a2e9ae6b2346c00c`
+- Source hash: `beec34ff9c3abb5d3723f5b766561d1b14bdcb06bff8d5252e84b7b05cc6c258`
 
 ## What This File Does
 

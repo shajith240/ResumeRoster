@@ -4,9 +4,9 @@
 
 - Source path: `app/leaderboard/page.tsx`
 - Kind: Next page route
-- Size: 377 bytes
+- Size: 363 bytes
 - Lines: 15
-- Source hash: `aaf41abf8180941f0e8428211e32177241fda6abfd4fdbf60e281da358567da5`
+- Source hash: `20ba095b62edd05342598b53e5a2e4df1cf2f977aa5defceeaf2731ddecdc0d1`
 
 ## What This File Does
 

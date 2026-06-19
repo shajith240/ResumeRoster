@@ -4,9 +4,9 @@
 
 - Source path: `components/Leaderboard.module.css`
 - Kind: React component
-- Size: 9093 bytes
+- Size: 8562 bytes
 - Lines: 532
-- Source hash: `bfb339a50ba19806a378018a64a521e5b0db3970d2b7406c1830ea83a28c121e`
+- Source hash: `527fda9e0841a5b55d299957b35b586a68517ab889ffd84954dcd85f10e26ae4`
 
 ## What This File Does
 

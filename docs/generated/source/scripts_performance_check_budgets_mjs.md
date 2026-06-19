@@ -4,9 +4,9 @@
 
 - Source path: `scripts/performance/check-budgets.mjs`
 - Kind: Repository automation
-- Size: 4956 bytes
+- Size: 4761 bytes
 - Lines: 196
-- Source hash: `e3b1b962589498018db56926e3b6da4b3551d4f08b4ca0313db5e7e7a079c127`
+- Source hash: `6643ab2ce55e82fe17ec5cc04a5eea6176cabab5c3f6b2a7d1e5e07aa42c3552`
 
 ## What This File Does
 

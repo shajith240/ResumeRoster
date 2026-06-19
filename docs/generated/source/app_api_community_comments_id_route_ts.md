@@ -4,9 +4,9 @@
 
 - Source path: `app/api/community/comments/[id]/route.ts`
 - Kind: Next API route
-- Size: 3477 bytes
+- Size: 3355 bytes
 - Lines: 123
-- Source hash: `01263af20416dde7f898febfcfad1917b0e49f219dafe68f6f3aced0f9bb2fbd`
+- Source hash: `14a3b577aacde25375cd3123a83a2c84cf67b52f88712fc48497a8fb6f273927`
 
 ## What This File Does
 

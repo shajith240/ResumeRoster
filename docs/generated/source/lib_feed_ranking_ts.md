@@ -4,9 +4,9 @@
 
 - Source path: `lib/feed-ranking.ts`
 - Kind: Application library module
-- Size: 3266 bytes
+- Size: 3146 bytes
 - Lines: 121
-- Source hash: `9d20f9fcc703ac29437f6fe9851ae0c5301b7d39ee9a8b432167db5828a2b2bc`
+- Source hash: `4c44170632e7ce960c0bde5cf5a404cb42ef971be88e9bcf33baf59b80b51e49`
 
 ## What This File Does
 

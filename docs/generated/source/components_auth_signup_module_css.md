@@ -4,9 +4,9 @@
 
 - Source path: `components/auth/SignUp.module.css`
 - Kind: React component
-- Size: 6500 bytes
+- Size: 6167 bytes
 - Lines: 334
-- Source hash: `05b61333f7b42489971c55263986f2ef5a9349fe609a488a36fa960219d378c0`
+- Source hash: `6701ea1311b889d68d9df659b329e4b2aa54f04d110788a41059a85bd2e01d6d`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/NotificationCenter.tsx`
 - Kind: React component
-- Size: 10409 bytes
+- Size: 10016 bytes
 - Lines: 394
-- Source hash: `52c33d593b933df28956e71e2d5cde9c53c00ad55df06c53ed3295798e950919`
+- Source hash: `0f5068566223030c0ab75e46580eb285211cdb2e498cb66cdfa3356254243cee`
 
 ## What This File Does
 

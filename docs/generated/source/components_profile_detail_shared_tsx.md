@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/shared.tsx`
 - Kind: React component
-- Size: 492 bytes
+- Size: 467 bytes
 - Lines: 26
-- Source hash: `f47d5225f9e4a71dd7d3d5a2129b72942e37b055bdc43a8b30385ad0dbd068ce`
+- Source hash: `c49150953c3dc7855150d16e1148fa9e8e73c117fb056e33721fb993fec6e4d2`
 
 ## What This File Does
 

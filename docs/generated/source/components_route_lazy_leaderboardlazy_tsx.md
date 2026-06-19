@@ -4,9 +4,9 @@
 
 - Source path: `components/route-lazy/LeaderboardLazy.tsx`
 - Kind: React component
-- Size: 341 bytes
+- Size: 328 bytes
 - Lines: 14
-- Source hash: `15edebdd06a99f787154c9b36bd6ce98acc79bf274acaa2b55988e70f5120a05`
+- Source hash: `bc662fb1aaaff5e2c672ad6645eee3792ccd2606c4af2b6677b16fdfcb623cd5`
 
 ## What This File Does
 

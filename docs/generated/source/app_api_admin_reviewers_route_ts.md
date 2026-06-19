@@ -4,9 +4,9 @@
 
 - Source path: `app/api/admin/reviewers/route.ts`
 - Kind: Next API route
-- Size: 2843 bytes
+- Size: 2752 bytes
 - Lines: 92
-- Source hash: `03f925d02b9c8985536cec7881500ddcce04dd163fa4da1f145fc36e8a6a8356`
+- Source hash: `66662dd38f95c2e2ad285776c2cff4cb74f3989f7c297be38cd870d5d7dbb98f`
 
 ## What This File Does
 

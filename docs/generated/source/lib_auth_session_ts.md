@@ -4,9 +4,9 @@
 
 - Source path: `lib/auth-session.ts`
 - Kind: Application library module
-- Size: 1035 bytes
+- Size: 1000 bytes
 - Lines: 36
-- Source hash: `68aea9d3b88b2daf48f52d363a4a740a7e58fa4739418b34c8120c30fea8c40e`
+- Source hash: `a9b366d3bea463cc00e091f46bbf024563d921a948de5a1fa05fcbe46ae4e6b9`
 
 ## What This File Does
 

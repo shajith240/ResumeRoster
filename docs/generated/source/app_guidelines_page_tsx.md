@@ -4,9 +4,9 @@
 
 - Source path: `app/guidelines/page.tsx`
 - Kind: Next page route
-- Size: 7313 bytes
+- Size: 7113 bytes
 - Lines: 201
-- Source hash: `0ba3bdcad9d76d9b096569819c1b55e13347a99e0318b3cd4cb894525e86dc84`
+- Source hash: `f6925458318ca3ee49559e6078f6411535fbf70d5f55e81c6f250f7d04487587`
 
 ## What This File Does
 

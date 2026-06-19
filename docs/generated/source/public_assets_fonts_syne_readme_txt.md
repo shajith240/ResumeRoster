@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/fonts/Syne/README.txt`
 - Kind: Public visual asset
-- Size: 2193 bytes
+- Size: 2126 bytes
 - Lines: 68
-- Source hash: `3eb7c616957e171deddf6bfb69b76d47f1f3fef6d236e6acb6a37f9764943646`
+- Source hash: `e3d9cbe4e77f31291fa892ec36d37a201741a3d3db56dc3e07e96bedd95a7854`
 
 ## What This File Does
 

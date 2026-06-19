@@ -4,9 +4,9 @@
 
 - Source path: `lib/primary-navigation.ts`
 - Kind: Application library module
-- Size: 2552 bytes
+- Size: 2436 bytes
 - Lines: 117
-- Source hash: `c9416573ed9284823e1d8153afc15cfb16012be785082cdd97889d5662ef6216`
+- Source hash: `a705ec30e7856e0ffa28050fbd040711d79cfd1ca154714748cc16fb3a102bad`
 
 ## What This File Does
 

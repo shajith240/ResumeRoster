@@ -4,9 +4,9 @@
 
 - Source path: `components/account/UserDropdown.tsx`
 - Kind: React component
-- Size: 11483 bytes
+- Size: 11057 bytes
 - Lines: 427
-- Source hash: `2e38fa9c2552add2706cb6c97a25318abb89e828bf3fa9bbfc34456730c2a47b`
+- Source hash: `87c65208ca3955fe5a792d40d39af97fce61805cb8daa53b46c73b949d0c8edd`
 
 ## What This File Does
 

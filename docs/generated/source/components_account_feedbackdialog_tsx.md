@@ -4,9 +4,9 @@
 
 - Source path: `components/account/FeedbackDialog.tsx`
 - Kind: React component
-- Size: 5332 bytes
+- Size: 5137 bytes
 - Lines: 196
-- Source hash: `c488b260a9550044e89cc538d137678cf37bb6aaf18dd2a998085f19a7a2603b`
+- Source hash: `2d481bd0f6058a334cb6fdc77e29063c94016fcd69c2fc273da53dec9594a312`
 
 ## What This File Does
 

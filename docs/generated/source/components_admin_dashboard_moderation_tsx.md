@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/moderation.tsx`
 - Kind: React component
-- Size: 15885 bytes
+- Size: 15325 bytes
 - Lines: 561
-- Source hash: `ce447ef2179b71b49b6f8a0242a154b42637a3a7bd3bfc2a263eb2129277fff0`
+- Source hash: `8ab1d657dca0fd3a3b395db7934368054dec6d906ef73d2aaf7e522500c454be`
 
 ## What This File Does
 

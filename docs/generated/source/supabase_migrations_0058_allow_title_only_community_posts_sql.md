@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0058_allow_title_only_community_posts.sql`
 - Kind: Supabase migration
-- Size: 11026 bytes
+- Size: 10636 bytes
 - Lines: 391
-- Source hash: `cffb18e05625e831f983297679a8047657134693c30fe89c93c29bf7784d154e`
+- Source hash: `54603417be2b7ef1a4f9cc975b78a4e06d002ca9e352f1ba2c3f90707a16aa05`
 
 ## What This File Does
 

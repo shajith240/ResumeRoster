@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0043_transactional_reviewer_application_submit.sql`
 - Kind: Supabase migration
-- Size: 5439 bytes
+- Size: 5240 bytes
 - Lines: 200
-- Source hash: `b011113df9d94ea1a401b51b51dbdbe8c44f31391214679ff6f4d758d72072cb`
+- Source hash: `88836256146669397ccb718a6017f2db8641f765572693b882561db7f3a6c364`
 
 ## What This File Does
 

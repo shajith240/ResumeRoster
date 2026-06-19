@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-feed/ResumeFeedHeader.tsx`
 - Kind: React component
-- Size: 755 bytes
+- Size: 719 bytes
 - Lines: 37
-- Source hash: `41724bed368a018eb97f5a5a74b4b5df8883bc087dcec3c41f126e97f189deab`
+- Source hash: `bfad14d61527630ed4cd46a596f7a0ab97e0748ee673b6fe3ffbc71830a84fbb`
 
 ## What This File Does
 

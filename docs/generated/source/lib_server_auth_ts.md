@@ -4,9 +4,9 @@
 
 - Source path: `lib/server-auth.ts`
 - Kind: Application library module
-- Size: 2090 bytes
+- Size: 2010 bytes
 - Lines: 81
-- Source hash: `f0f3db7710d0efc78ad2d2b1903f244a83b67f0d7cf3e763022c07a30167735d`
+- Source hash: `eb8940288d873a2a6c5aa55ebe9dfbf419b4adb07cf5719d59d8cb7389ee7ce0`
 
 ## What This File Does
 

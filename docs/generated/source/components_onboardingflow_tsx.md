@@ -4,9 +4,9 @@
 
 - Source path: `components/OnboardingFlow.tsx`
 - Kind: React component
-- Size: 7793 bytes
+- Size: 7488 bytes
 - Lines: 306
-- Source hash: `6ec756644715ad0a96f6388a71036dd406224ff4049a5e49a75bb3cf159dcffd`
+- Source hash: `7861dfbedda2fdd0ca525aefcbfdb34303c602582eca51fb6bf9be48577c81b0`
 
 ## What This File Does
 

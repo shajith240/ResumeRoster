@@ -4,9 +4,9 @@
 
 - Source path: `docs/copyright-takedown-policy.html`
 - Kind: Documentation
-- Size: 8630 bytes
+- Size: 8461 bytes
 - Lines: 170
-- Source hash: `3ddbe1edce185c40ade832768580ed2cf2c4b9891373e062613a01926a6a20db`
+- Source hash: `6b38b32aab8631b0f54156423e8ead5624a71a6c76efdf8bbbbef48ca0038b66`
 
 ## What This File Does
 

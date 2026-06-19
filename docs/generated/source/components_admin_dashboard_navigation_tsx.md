@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/navigation.tsx`
 - Kind: React component
-- Size: 1564 bytes
+- Size: 1513 bytes
 - Lines: 52
-- Source hash: `00bfe73f48e55323c26110c6776107927dfcbe8a73f8aa02f99c14162881d5cc`
+- Source hash: `796aa8aac4bc881f65974a0a19915800abc18fbe076cfbbaf9a49cb190560c76`
 
 ## What This File Does
 

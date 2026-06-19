@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/dialogs.tsx`
 - Kind: React component
-- Size: 5662 bytes
+- Size: 5459 bytes
 - Lines: 204
-- Source hash: `680655517ce90fa6a8855de5dd060c13277c1a71f0fef66bda4b6e329ac0f90d`
+- Source hash: `b7652f413bd8929cdb8e4c2cdf27b2b87412177d0eed885b4f487841248c3d01`
 
 ## What This File Does
 

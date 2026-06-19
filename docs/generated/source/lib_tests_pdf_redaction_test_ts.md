@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/pdf-redaction.test.ts`
 - Kind: Unit test
-- Size: 4045 bytes
+- Size: 3914 bytes
 - Lines: 132
-- Source hash: `4af994ab11645a284456aceba9735b71f0108248d959c6bf4d92179593b87038`
+- Source hash: `77658bb468fd7e58a2ec079201f3bbe46a9c27dc22d372bb8e88280b1fa6a413`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `docs/database/rls-and-security.md`
 - Kind: Documentation
-- Size: 1041 bytes
+- Size: 1011 bytes
 - Lines: 31
-- Source hash: `3455a472c8f7ae188586dfac68cdf56edb84ca2a816346b3cec7b32593a72a41`
+- Source hash: `e1a7b1d5025d226592456ed39e88a0a1603af6ba79f87461adfd9c11f85c078d`
 
 ## What This File Does
 

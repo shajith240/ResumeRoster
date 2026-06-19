@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/profile-view.test.ts`
 - Kind: Unit test
-- Size: 1729 bytes
+- Size: 1665 bytes
 - Lines: 65
-- Source hash: `3efe0bd1b3e47561e04ce03beb1041f4ce143ce3ee587629ab89b9f8c7d80050`
+- Source hash: `2eda2fdfa2c8d5d7f0c7cb89e6a7191e96bdff46f39767703ef305f81b8136c3`
 
 ## What This File Does
 

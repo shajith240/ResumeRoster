@@ -4,9 +4,9 @@
 
 - Source path: `docs/database/migrations.md`
 - Kind: Documentation
-- Size: 1247 bytes
+- Size: 1221 bytes
 - Lines: 27
-- Source hash: `e4f646c6b8c7f8c443de68d211b8d73582ef366b0262369a609bec53d3a79cd6`
+- Source hash: `486dd4d4c7ac099fe33d2444060fd20a0a03cb62b1961ce57885fb95e1acebbd`
 
 ## What This File Does
 

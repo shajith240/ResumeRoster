@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0068_indexed_mention_profile_search.sql`
 - Kind: Supabase migration
-- Size: 7860 bytes
+- Size: 7632 bytes
 - Lines: 229
-- Source hash: `906c5bc57f98441533a4670bfe14d33f9a231cce53c734e09d335f8f630f122a`
+- Source hash: `360a0518263cdd58d722d5dc0aa1f8af258fb79654df73984920cd1c359105bf`
 
 ## What This File Does
 

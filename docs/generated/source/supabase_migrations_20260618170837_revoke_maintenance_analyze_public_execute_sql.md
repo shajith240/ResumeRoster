@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/20260618170837_revoke_maintenance_analyze_public_execute.sql`
 - Kind: Supabase migration
-- Size: 440 bytes
+- Size: 433 bytes
 - Lines: 8
-- Source hash: `e191cd24420d8caca821ed51b708fff67adee0d157bffec82d5d4a476e86f3eb`
+- Source hash: `a435b82559647728a24c76680953a4eeff0d8b5ac1f8640619e6d8c6c636c251`
 
 ## What This File Does
 

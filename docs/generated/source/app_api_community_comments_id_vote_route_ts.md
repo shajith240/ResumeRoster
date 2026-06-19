@@ -4,9 +4,9 @@
 
 - Source path: `app/api/community/comments/[id]/vote/route.ts`
 - Kind: Next API route
-- Size: 2052 bytes
+- Size: 1983 bytes
 - Lines: 70
-- Source hash: `70f96bcb9cd4d0cac8eafc40ad033e06ecdd5646459d0dfe7e653a4cb4eb0861`
+- Source hash: `c66bace3534ecf97aa9deb9c81ee7f558a37cf03311397d51b8ff4bd4d812996`
 
 ## What This File Does
 

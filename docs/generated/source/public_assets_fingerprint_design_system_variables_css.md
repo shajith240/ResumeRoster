@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/fingerprint_design_system/variables.css`
 - Kind: Public visual asset
-- Size: 3189 bytes
+- Size: 3087 bytes
 - Lines: 103
-- Source hash: `e11b444a875c70b0f761c6f76673a8879d86e4d4c2a3f35e16b9e2531624761c`
+- Source hash: `8b7a8e27b92865a72bdedb3ec30bb35045d9a491f09f2f9063d9e04c832d0bc4`
 
 ## What This File Does
 

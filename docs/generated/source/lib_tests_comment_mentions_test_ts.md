@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/comment-mentions.test.ts`
 - Kind: Unit test
-- Size: 1935 bytes
+- Size: 1857 bytes
 - Lines: 79
-- Source hash: `d83d535e3e60a72ed22831fcfd5fcefa0d44279ef8c9606992c4f5883c29e8cd`
+- Source hash: `25bda9bd4940be6ddef4c07b6282fb2ddd83e307bedd9ea6f6a1758454fdfa34`
 
 ## What This File Does
 

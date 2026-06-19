@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0061_fix_community_poll_vote_rpc_conflict.sql`
 - Kind: Supabase migration
-- Size: 2138 bytes
+- Size: 2059 bytes
 - Lines: 80
-- Source hash: `b922fe9342e3ae943c59eed54e513f3a16ae6c08eab3c27a8d06a9028aab49dc`
+- Source hash: `4fadbe8fe3d7b9449f7bec8f8f3d8f687e041ec28de82ef8274c4a6336092b0c`
 
 ## What This File Does
 

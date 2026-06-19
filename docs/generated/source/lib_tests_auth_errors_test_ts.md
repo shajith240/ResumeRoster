@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/auth-errors.test.ts`
 - Kind: Unit test
-- Size: 934 bytes
+- Size: 902 bytes
 - Lines: 33
-- Source hash: `95608240da889e7fe56bac9c8f18c06a9e81043f009271512704041533ecdb3f`
+- Source hash: `cd79c16b963b8f843ea57f6a9417f95030cf03447899ee8e9497d07508a87683`
 
 ## What This File Does
 

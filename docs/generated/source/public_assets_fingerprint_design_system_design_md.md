@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/fingerprint_design_system/DESIGN.md`
 - Kind: Public visual asset
-- Size: 25033 bytes
+- Size: 24598 bytes
 - Lines: 436
-- Source hash: `cf6cc89b0f2c152b7d03b3ba784ce08754594f0aa8f55e65f92f1e53f638e07e`
+- Source hash: `d8b7a8794f06ead27557daf7f439a73f8c05a2503674c0f72ae0ec728220e5f2`
 
 ## What This File Does
 

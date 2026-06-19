@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/file-upload.tsx`
 - Kind: UI primitive
-- Size: 16455 bytes
+- Size: 15797 bytes
 - Lines: 659
-- Source hash: `58c694c759164ec3ee9ea31f2a0bb26a6593e9b38e13d62018bbcd71ee363fac`
+- Source hash: `5217096ea9dcdf593d5403f9c3933221936d53a574dd6101b17db89f4faf8eb4`
 
 ## What This File Does
 

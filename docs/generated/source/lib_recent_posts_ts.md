@@ -4,9 +4,9 @@
 
 - Source path: `lib/recent-posts.ts`
 - Kind: Application library module
-- Size: 3497 bytes
+- Size: 3369 bytes
 - Lines: 129
-- Source hash: `3d5fd8b0683c94fa276e4e155340bfdfe59b939705f12b0c10501fbc9110617c`
+- Source hash: `bebff6792f7e0a5eb3abf3be39a50be746327c3de6593db9b639a4cf69716ae0`
 
 ## What This File Does
 

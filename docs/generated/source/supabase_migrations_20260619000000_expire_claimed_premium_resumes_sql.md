@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/20260619000000_expire_claimed_premium_resumes.sql`
 - Kind: Supabase migration
-- Size: 2411 bytes
+- Size: 2337 bytes
 - Lines: 75
-- Source hash: `ca72281e80b90e462809b880fdeb157054872ee8748e48b1c0c04f5230427a7e`
+- Source hash: `c32d7b757b57817aad065878d7abb16d2164dc3c08ff15d158aaa5b7b6d8f0ad`
 
 ## What This File Does
 

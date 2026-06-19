@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/types.ts`
 - Kind: React component
-- Size: 2700 bytes
+- Size: 2607 bytes
 - Lines: 94
-- Source hash: `157c91a5be94863fe65c352cf84efd2b04cd5329c5dbbd79cf066ff7fddd65ea`
+- Source hash: `46ebbba06d9e0992d64f371d68131915ec194b9d7e6a51165b9fb98fdde9fe21`
 
 ## What This File Does
 

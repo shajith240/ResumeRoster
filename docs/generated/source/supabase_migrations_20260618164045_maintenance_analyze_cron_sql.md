@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/20260618164045_maintenance_analyze_cron.sql`
 - Kind: Supabase migration
-- Size: 1439 bytes
+- Size: 1396 bytes
 - Lines: 44
-- Source hash: `914a41c11a1f0ae3f73e6f2ed9b142550a4fd2045c632890797e3c7165e7525f`
+- Source hash: `4bca970904d4380389ce02f8b4c3f98b8a389f22f138c8b8f8847d4781d20334`
 
 ## What This File Does
 

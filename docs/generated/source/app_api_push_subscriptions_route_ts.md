@@ -4,9 +4,9 @@
 
 - Source path: `app/api/push/subscriptions/route.ts`
 - Kind: Next API route
-- Size: 5193 bytes
+- Size: 4986 bytes
 - Lines: 208
-- Source hash: `74e371e35603f2fab3634cc4d7f357e743e4cededce637e18c6a5ff709c580c5`
+- Source hash: `31429f173a3fb6062c7fb8b8a63aa9bff8fa641cbac52d55ac26d47533ac1728`
 
 ## What This File Does
 

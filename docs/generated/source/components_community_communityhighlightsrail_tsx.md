@@ -4,9 +4,9 @@
 
 - Source path: `components/community/CommunityHighlightsRail.tsx`
 - Kind: React component
-- Size: 5804 bytes
+- Size: 5590 bytes
 - Lines: 215
-- Source hash: `6921e65cacec316904da7773f5d5e4c1198396f643e38d5700c7ea1a63978e41`
+- Source hash: `6069dd4bcd70abe9855a7f67d0a309b7f437719cde28f6d5bd9a0e4011b88e88`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `docs/privacy-policy.html`
 - Kind: Documentation
-- Size: 17810 bytes
+- Size: 17505 bytes
 - Lines: 306
-- Source hash: `51b292927b36ae9b38a669188d0f3cdd1231494c98da0b8a88b9c5ef8b68746c`
+- Source hash: `4c0ef6c84fdf69bf60d3d61e4edb33495a5acaa453052f3e57ed4400fe855dac`
 
 ## What This File Does
 

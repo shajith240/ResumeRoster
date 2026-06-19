@@ -4,9 +4,9 @@
 
 - Source path: `app/api/cron/expire-claims/route.ts`
 - Kind: Next API route
-- Size: 3031 bytes
+- Size: 2942 bytes
 - Lines: 90
-- Source hash: `3b98125d0a7b01f48158f77803634c28c573da15dc46230bd2307cee7b68b504`
+- Source hash: `d6f11f83a3d77ee9e5d161852b8dcce1339c0200e03359cfd71402c0f85821af`
 
 ## What This File Does
 

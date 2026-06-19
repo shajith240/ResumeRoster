@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-feed/data.ts`
 - Kind: React component
-- Size: 17159 bytes
+- Size: 16591 bytes
 - Lines: 569
-- Source hash: `15e83837800fae07192a107d10215342e11c016e53efe1d01e66d95b3a8b8129`
+- Source hash: `046c490b2ab8c174aecfa83803d9c64fdcba6ecbcea6916240ae97b5b1664807`
 
 ## What This File Does
 

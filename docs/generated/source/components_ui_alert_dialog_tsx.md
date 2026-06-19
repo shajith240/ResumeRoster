@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/alert-dialog.tsx`
 - Kind: UI primitive
-- Size: 5172 bytes
+- Size: 5027 bytes
 - Lines: 146
-- Source hash: `19ad7482af0087cb41eaaf8bc6eb4f1d2d68c5cd717eadc8a3204d39d3e8b1c9`
+- Source hash: `27102e8892c0d17e5ffa9e9e4dd47ebfb9529b064a793f6a21231fbff275a865`
 
 ## What This File Does
 

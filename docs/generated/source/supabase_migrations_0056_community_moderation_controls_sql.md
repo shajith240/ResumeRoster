@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0056_community_moderation_controls.sql`
 - Kind: Supabase migration
-- Size: 44799 bytes
+- Size: 43307 bytes
 - Lines: 1493
-- Source hash: `2880af5137057a2bced280af9e3350c42d27fa17a15c60f2be38bd025ad4dfdd`
+- Source hash: `b4ec11e7c6e8ae8097c178839c79dd2dd74fc803f2ea26ff2307c90c2454fd32`
 
 ## What This File Does
 

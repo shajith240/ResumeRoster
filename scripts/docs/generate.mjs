@@ -79,13 +79,16 @@ function readFile(relativePath) {
 	const buffer = fs.readFileSync(absolutePath);
 	const ext = path.extname(relativePath).toLowerCase();
 	const text = isProbablyText(buffer, ext) ? buffer.toString("utf8") : "";
+	// Normalise CRLF → LF for text files so hash and size are identical on
+	// Windows (CRLF checkout) and Linux CI (LF checkout).
+	const canonical = text ? Buffer.from(text.replace(/\r\n/g, "\n")) : buffer;
 	return {
 		absolutePath,
 		buffer,
 		ext,
-		hash: sha256(buffer),
+		hash: sha256(canonical),
 		lineCount: text ? text.split(/\r\n|\r|\n/).length : 0,
-		size: buffer.length,
+		size: canonical.length,
 		text,
 	};
 }

@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0036_refine_linted_usernames.sql`
 - Kind: Supabase migration
-- Size: 3280 bytes
+- Size: 3133 bytes
 - Lines: 148
-- Source hash: `083721c820ed54fbfe3d46318bf4a0c7ae23843015f2d6f77a07b64ac7f2a0bf`
+- Source hash: `41ae44a7de6dc48ca2fb1f3f22fbee935bb1d7614adac61d6e3290e3bad42ac4`
 
 ## What This File Does
 

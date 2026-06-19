@@ -4,9 +4,9 @@
 
 - Source path: `app/accessibility/page.tsx`
 - Kind: Next page route
-- Size: 3237 bytes
+- Size: 3138 bytes
 - Lines: 100
-- Source hash: `12deb9da337d91cdcb7a976e9c28ae2ffc6c2d63728a5ed5feb843f829603cfb`
+- Source hash: `55055dec13df2943ba1d91f93e187f5f04ebb591e121b2c747a6e0b0d73896ab`
 
 ## What This File Does
 

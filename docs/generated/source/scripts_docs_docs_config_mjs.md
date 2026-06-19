@@ -4,9 +4,9 @@
 
 - Source path: `scripts/docs/docs-config.mjs`
 - Kind: Repository automation
-- Size: 1597 bytes
+- Size: 1526 bytes
 - Lines: 72
-- Source hash: `d0933e42336d3000ad57c09671c78baac5b58ebf8e407df8c9a7f9c0adc3e5c5`
+- Source hash: `6caa9b4f4c2155deb61e46243bd97a5bb8796a6b44159b46fdc31e0a1582bd90`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `docs/start-here/beginner-map.md`
 - Kind: Documentation
-- Size: 1841 bytes
+- Size: 1796 bytes
 - Lines: 46
-- Source hash: `0c2163f221a49f18c7f296cc7a6c0dd90235438cc80cbd35dd12ebef7c715a9c`
+- Source hash: `fd97d6f6bd81a0ddf754f950e1a040f840fc797552cb54421b6cbd84f535e735`
 
 ## What This File Does
 

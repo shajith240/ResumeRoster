@@ -4,9 +4,9 @@
 
 - Source path: `docs/frontend/ui-patterns.md`
 - Kind: Documentation
-- Size: 1096 bytes
+- Size: 1063 bytes
 - Lines: 34
-- Source hash: `c5caa9d3b9db0d6d1bbbaf4155354adb8227b282f3ac1af4a1c141c9011207af`
+- Source hash: `bc10b7ead98e6f0dde266cc5e007ddbb51329d9733306688e2caf75a1cee665d`
 
 ## What This File Does
 

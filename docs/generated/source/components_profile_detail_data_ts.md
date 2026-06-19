@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/data.ts`
 - Kind: React component
-- Size: 2477 bytes
+- Size: 2391 bytes
 - Lines: 87
-- Source hash: `97793af7bed102c878fed03cbe394a589142d8d7a25c8f65b52ce339e59f06a9`
+- Source hash: `eb97de6b8260f8072c0d923bd6dc39df7b478fd7c98b958852c4ced3d72929f0`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-code-languages.ts`
 - Kind: Application library module
-- Size: 2036 bytes
+- Size: 1970 bytes
 - Lines: 67
-- Source hash: `4ab0b5d07b10a62de500f2eb9d9c84385073e46327363384ddf717576a913a97`
+- Source hash: `dea3d5221dfc2ea5500527a7cfa8f37e8e6b71256e445d787b91b28c6ab22c15`
 
 ## What This File Does
 

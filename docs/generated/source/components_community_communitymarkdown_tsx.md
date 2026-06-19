@@ -4,9 +4,9 @@
 
 - Source path: `components/community/CommunityMarkdown.tsx`
 - Kind: React component
-- Size: 7142 bytes
+- Size: 6866 bytes
 - Lines: 277
-- Source hash: `3f1d34b6ef3f53956915e49b463148bb361d650a081adb9e715a5b9cbbf1a37b`
+- Source hash: `9683aa92390e15ca430653d221d8b67c18ad201a6341728062418ea25cb5f42b`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0038_remove_auth_email_lookup.sql`
 - Kind: Supabase migration
-- Size: 291 bytes
+- Size: 284 bytes
 - Lines: 8
-- Source hash: `ade67a1615e899c0309cd920027fcd255bba533ea6f7f949c225ebb787371886`
+- Source hash: `0427d5cd4dadeb870fc65e9c7a33884cdea7f4434c32b7da715eb2ab6d6c0702`
 
 ## What This File Does
 

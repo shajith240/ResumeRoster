@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0046_health_readiness_checks.sql`
 - Kind: Supabase migration
-- Size: 4191 bytes
+- Size: 4069 bytes
 - Lines: 123
-- Source hash: `bd4f6784da6904a94b037dfb1f95f5c8737c8c0b2f60609d5621958bd85ac4a5`
+- Source hash: `5f39484d435ff633995d750a55f4de714c7fd4c743bea3ce74a5ff3f2863dc70`
 
 ## What This File Does
 

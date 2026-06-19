@@ -4,9 +4,9 @@
 
 - Source path: `components/PushNotificationsControl.tsx`
 - Kind: React component
-- Size: 2531 bytes
+- Size: 2420 bytes
 - Lines: 112
-- Source hash: `c28e7769daee0257828be891bc047e3433970ea4a6e235b72131151d16a15801`
+- Source hash: `f1dbdf61f207d7be6ed05545aceaa5bbe2da88079ea2598f9f90cec014f6eded`
 
 ## What This File Does
 

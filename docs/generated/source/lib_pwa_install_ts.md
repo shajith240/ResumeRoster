@@ -4,9 +4,9 @@
 
 - Source path: `lib/pwa-install.ts`
 - Kind: Application library module
-- Size: 1053 bytes
+- Size: 1014 bytes
 - Lines: 40
-- Source hash: `b21e6bd8f325bac41e591fee936ffb88eac3e6424dc99dbd005c1ae6d358c031`
+- Source hash: `ac18b681233397ed8eab7eaf6c393b5bf59905c2ada8de7b91af65c224e90ef7`
 
 ## What This File Does
 

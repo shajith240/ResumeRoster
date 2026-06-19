@@ -4,9 +4,9 @@
 
 - Source path: `lib/security/theme-bootstrap.ts`
 - Kind: Application library module
-- Size: 370 bytes
+- Size: 361 bytes
 - Lines: 10
-- Source hash: `94a0c7b4bdca53e8e9918a421c5911212c2a0a9e97d45a5c9fef9fcd9a8eb811`
+- Source hash: `8031e69b69aeb1caf770ca9c7f62e8d272349ece23782e715e19e7801ee8968d`
 
 ## What This File Does
 

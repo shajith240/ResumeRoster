@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0050_validate_integrity_and_restore_review_votes.sql`
 - Kind: Supabase migration
-- Size: 20458 bytes
+- Size: 19761 bytes
 - Lines: 698
-- Source hash: `3da9017dd43c05537742e79330cf44960be7d73c682467d6b12da037791cd24f`
+- Source hash: `0ac5dcb66d430d397560685a38c1dde8a67319c90e64a690c9f21ab444897d2e`
 
 ## What This File Does
 

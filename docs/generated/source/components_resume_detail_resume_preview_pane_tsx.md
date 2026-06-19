@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/resume-preview-pane.tsx`
 - Kind: React component
-- Size: 5180 bytes
+- Size: 4990 bytes
 - Lines: 191
-- Source hash: `0aee08e8e7ee74d45fa34394bf87f2e8fddaae81e1ca25720e85daef2540e4aa`
+- Source hash: `644b4ee03eb4ee9eb7321cbe7027ffdb181d396f05bfe99478148e910743b351`
 
 ## What This File Does
 

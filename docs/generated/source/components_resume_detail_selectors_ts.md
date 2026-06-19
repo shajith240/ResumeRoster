@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/selectors.ts`
 - Kind: React component
-- Size: 1866 bytes
+- Size: 1832 bytes
 - Lines: 35
-- Source hash: `1c0cf6014b4a93846675396ec4e1877080ec120a47692c9ca8c4ecaa6458c8b4`
+- Source hash: `d1f61d74366455c090bf00c3d17f3bd72999c24561974fa8c8097311d08e4450`
 
 ## What This File Does
 

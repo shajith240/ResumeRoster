@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/linted_design_system/DESIGN.md`
 - Kind: Public visual asset
-- Size: 8640 bytes
+- Size: 8467 bytes
 - Lines: 174
-- Source hash: `c5f5fe7d31c071f04a9351a222eb64c6a888419aac312bd5c6a84bcca3f1eda5`
+- Source hash: `25c77c9791dffeed0912ea5045962a5f087139a801e0438cd94516e1273e128e`
 
 ## What This File Does
 

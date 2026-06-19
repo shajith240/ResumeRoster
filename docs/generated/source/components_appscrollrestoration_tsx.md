@@ -4,9 +4,9 @@
 
 - Source path: `components/AppScrollRestoration.tsx`
 - Kind: React component
-- Size: 4798 bytes
+- Size: 4614 bytes
 - Lines: 185
-- Source hash: `2dddd7bd06f5c99af3ac8af26bfde9c22bb51ab3d09a20aa6a84b798ef6c0f7b`
+- Source hash: `1049f98b5283cadaadba07e785093b9ce301ce4ccaa900fa2f68c9d2806389c7`
 
 ## What This File Does
 

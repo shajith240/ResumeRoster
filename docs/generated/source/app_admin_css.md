@@ -4,9 +4,9 @@
 
 - Source path: `app/admin.css`
 - Kind: Project file
-- Size: 34243 bytes
+- Size: 32568 bytes
 - Lines: 1676
-- Source hash: `904aa8c56cb06ecf91fe35536fa7be9f6a87c50e9ec49d18a2a46fbf1e38b717`
+- Source hash: `d7f835d473b21670ac2c30a1c337b90932668d6d2297bce0982db5ec247e37d7`
 
 ## What This File Does
 

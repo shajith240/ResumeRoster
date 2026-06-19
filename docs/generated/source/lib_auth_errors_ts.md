@@ -4,9 +4,9 @@
 
 - Source path: `lib/auth-errors.ts`
 - Kind: Application library module
-- Size: 794 bytes
+- Size: 766 bytes
 - Lines: 29
-- Source hash: `8d1e2de2b07b5640c07a48845bb2f256bb951df0eae10afde457bea87afff3d6`
+- Source hash: `a4fed7f97ca0084bd82510c70c10a8e7224410f45058e148aa8ac2cf05d4f909`
 
 ## What This File Does
 

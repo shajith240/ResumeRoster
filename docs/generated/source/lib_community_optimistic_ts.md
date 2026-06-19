@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-optimistic.ts`
 - Kind: Application library module
-- Size: 751 bytes
+- Size: 726 bytes
 - Lines: 26
-- Source hash: `d3b1bc9bfc386804d04b20a34d3b4fe6b7fde34e1414d8dc01443298afb08729`
+- Source hash: `09c2c769dccf4090004f64c0cfecbd2b7dc6dadf94bef6e02c8acf33f51ec477`
 
 ## What This File Does
 

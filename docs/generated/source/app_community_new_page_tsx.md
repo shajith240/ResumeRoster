@@ -4,9 +4,9 @@
 
 - Source path: `app/community/new/page.tsx`
 - Kind: Next page route
-- Size: 611 bytes
+- Size: 589 bytes
 - Lines: 23
-- Source hash: `080a9f9d50c022792e929a7fbc8fa84bae3bfb67e15ab87899db98d36cd553e4`
+- Source hash: `1818ef8d4ee82f02e307453a6bc285897809adba9ca9f92181bdff963b4f18a2`
 
 ## What This File Does
 

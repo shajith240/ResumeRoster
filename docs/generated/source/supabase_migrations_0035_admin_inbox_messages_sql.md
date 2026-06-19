@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0035_admin_inbox_messages.sql`
 - Kind: Supabase migration
-- Size: 1150 bytes
+- Size: 1116 bytes
 - Lines: 35
-- Source hash: `6376af33f094fe8206d1384cb27612eb9edb0766168ba928fb046888ecf9d38e`
+- Source hash: `c8249929284bda2a880914924c339b6f02706d3fa22bbb7e098c7634b7f29e17`
 
 ## What This File Does
 

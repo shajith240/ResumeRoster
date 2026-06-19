@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/fingerprint_design_system/theme.css`
 - Kind: Public visual asset
-- Size: 2433 bytes
+- Size: 2361 bytes
 - Lines: 73
-- Source hash: `8838e51b100a545a82b986fa169630a9ac7b61df767563f28894fd7380d05ffa`
+- Source hash: `df565c97a89cd5f74f6ea6d01296fa1151d9f25fbc3564561f2273bf5a0fe5fd`
 
 ## What This File Does
 

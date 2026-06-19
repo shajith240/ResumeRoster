@@ -4,9 +4,9 @@
 
 - Source path: `components/landing/footer.tsx`
 - Kind: React component
-- Size: 3619 bytes
+- Size: 3463 bytes
 - Lines: 157
-- Source hash: `c4555c5ddd1d828aee5dee8148b2a098ae79e36d748ca9c8b93618e4d47e7493`
+- Source hash: `739538d8d610df4b0369e4fd0043bbfa3a65681a2b054dfdacb88d5270dd142f`
 
 ## What This File Does
 

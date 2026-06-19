@@ -4,9 +4,9 @@
 
 - Source path: `instrumentation-client.ts`
 - Kind: Project configuration
-- Size: 598 bytes
+- Size: 576 bytes
 - Lines: 23
-- Source hash: `b5fabccad4152072a05a1c9caf08b3e6596c4b4f678feb2c9c88763bca3e3594`
+- Source hash: `708a0fae980d543b963a2e3e67299d9d6a23628e6ef628713acb748905c15746`
 
 ## What This File Does
 

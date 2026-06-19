@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-guardrails.ts`
 - Kind: Application library module
-- Size: 2841 bytes
+- Size: 2723 bytes
 - Lines: 119
-- Source hash: `b3b2dafa2af293d3ba83e2eb8eadcb207e96e5538008a95549da2733520cefbd`
+- Source hash: `a87d6c28cb0de26bf6ca2d1b80f201b71ad4ce700c8554b54cd237bf12d834b5`
 
 ## What This File Does
 

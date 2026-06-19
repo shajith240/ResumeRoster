@@ -4,9 +4,9 @@
 
 - Source path: `lib/resume-thread.ts`
 - Kind: Application library module
-- Size: 3509 bytes
+- Size: 3378 bytes
 - Lines: 132
-- Source hash: `5555482c7df76fc6be4ea888b58396a0c4f81474fc616dbfe63b9ecb664e86d6`
+- Source hash: `695c61c84adea24a52769cd8e8aa15ff2bcfe6b0217462a0af0e36a0be75bbdb`
 
 ## What This File Does
 

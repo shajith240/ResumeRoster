@@ -4,9 +4,9 @@
 
 - Source path: `components/landing/feature-showcase.tsx`
 - Kind: React component
-- Size: 9372 bytes
+- Size: 9015 bytes
 - Lines: 358
-- Source hash: `1755fa25b04728b8e1b5028c2804851fd0ecd6f8eaf99b7820166bea052e10ba`
+- Source hash: `9662192a0915727b2bf79110ecc2a7228d1c3024787fab6b209ecbca43ace5d9`
 
 ## What This File Does
 

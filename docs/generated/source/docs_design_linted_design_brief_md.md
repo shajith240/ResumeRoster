@@ -4,9 +4,9 @@
 
 - Source path: `docs/design/Linted_Design_Brief.md`
 - Kind: Documentation
-- Size: 29766 bytes
+- Size: 28780 bytes
 - Lines: 987
-- Source hash: `284a5e1407869b9d015ecf524c42920c68e764f712a3556f1e7919238a388dc6`
+- Source hash: `d1ee38ef9c4462d95a56d84dd55b56f9ab825f3f8cab1613f3b20f1515ef000e`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/route-lazy/ProfileDetailLazy.tsx`
 - Kind: React component
-- Size: 503 bytes
+- Size: 486 bytes
 - Lines: 18
-- Source hash: `486e87d8936ce9c1cc1bdd10c4b5121c06dbb8ffc85909f10ac2495510946dc4`
+- Source hash: `5a51dc43a6ad29e2bb6faf9905f1d9de6d707aec97a85c77e2845922b0bb1757`
 
 ## What This File Does
 

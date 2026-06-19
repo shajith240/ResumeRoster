@@ -4,9 +4,9 @@
 
 - Source path: `docs/operations/setup.md`
 - Kind: Documentation
-- Size: 607 bytes
+- Size: 573 bytes
 - Lines: 35
-- Source hash: `b710826c91fe9064147b414647c4482040c0f6b8e2a2ca53c130121640f13743`
+- Source hash: `fb10f3828a0406171f8c5e1513989c8b738ab6c81676b141414e8f535ade5cb2`
 
 ## What This File Does
 

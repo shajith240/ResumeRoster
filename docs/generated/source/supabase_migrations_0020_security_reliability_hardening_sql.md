@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0020_security_reliability_hardening.sql`
 - Kind: Supabase migration
-- Size: 21254 bytes
+- Size: 20556 bytes
 - Lines: 699
-- Source hash: `a6da85c9c98771c220caf280804939515be2db8cdc2938ac8768568050a5f0b8`
+- Source hash: `18775d3f08a516693e8c18d90e3649605ccd57109236d91f8a5542ab3c832d79`
 
 ## What This File Does
 

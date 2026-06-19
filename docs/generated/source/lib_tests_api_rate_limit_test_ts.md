@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/api-rate-limit.test.ts`
 - Kind: Unit test
-- Size: 4502 bytes
+- Size: 4340 bytes
 - Lines: 163
-- Source hash: `bb0dfe5f5d283f575cc0ae9fc1e6de252b1d08059f25b6c529addd6730882167`
+- Source hash: `aed951879d550afef4723e2338639a7f2fcf79fc449055a86f790b354352456e`
 
 ## What This File Does
 

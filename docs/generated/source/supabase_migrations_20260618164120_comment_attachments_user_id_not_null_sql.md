@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/20260618164120_comment_attachments_user_id_not_null.sql`
 - Kind: Supabase migration
-- Size: 342 bytes
+- Size: 336 bytes
 - Lines: 7
-- Source hash: `e4925fe9b22f932634adaf579f7ed7086276bf7d425a38e7ea4ab1c860db6706`
+- Source hash: `e89a3da15d79f5f0e4195d1836acaf28166204e09be2206c1fda92a07c00c652`
 
 ## What This File Does
 

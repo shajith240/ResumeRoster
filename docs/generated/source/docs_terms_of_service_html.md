@@ -4,9 +4,9 @@
 
 - Source path: `docs/terms-of-service.html`
 - Kind: Documentation
-- Size: 12527 bytes
+- Size: 12300 bytes
 - Lines: 228
-- Source hash: `def2e197bef1685c6a3968ea8175bd94a9f6585f838dfcd1db84c6c4de789c71`
+- Source hash: `dbf92bc612b8bab65b2fa263670527a7b5e332cac31222025cb31a9f861efbb7`
 
 ## What This File Does
 

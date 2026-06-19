@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/dialog.tsx`
 - Kind: UI primitive
-- Size: 4695 bytes
+- Size: 4574 bytes
 - Lines: 122
-- Source hash: `a868130ec8be19c8c181fa19b666f115e65a59a63d00c5ea6dfa3a43cd9f6204`
+- Source hash: `49106221d8ad5fd3904e9c5412926f6797c32fd4550345e71f5df9c2d150690f`
 
 ## What This File Does
 

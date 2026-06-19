@@ -4,9 +4,9 @@
 
 - Source path: `app/profile/[id]/page.tsx`
 - Kind: Next page route
-- Size: 508 bytes
+- Size: 488 bytes
 - Lines: 21
-- Source hash: `de80826589a97b058fcb99249ad96c6f34523d138d187679520e3ec185283f6d`
+- Source hash: `6227945cbc49609ec00eec2e6bc25ec9b288f15e6aeddf04c9f44d0694d9e72d`
 
 ## What This File Does
 

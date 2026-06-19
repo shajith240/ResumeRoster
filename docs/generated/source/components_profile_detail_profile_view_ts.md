@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/profile-view.ts`
 - Kind: React component
-- Size: 1585 bytes
+- Size: 1541 bytes
 - Lines: 45
-- Source hash: `c9de215df0f01c5039653cb4e1bfd8ba9d74b74678cc8f4463c4202fd3e6bf3b`
+- Source hash: `62bc3d6c2d376994a4aae73d68ed74e2083af89d65912e1c25ab69a4e1ede376`
 
 ## What This File Does
 

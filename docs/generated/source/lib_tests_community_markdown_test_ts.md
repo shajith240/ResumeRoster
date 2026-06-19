@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/community-markdown.test.ts`
 - Kind: Unit test
-- Size: 2181 bytes
+- Size: 2112 bytes
 - Lines: 70
-- Source hash: `9d6ad329b566b023adcafec69f87ca3d1620592cd4c376db3df2831bdee7d312`
+- Source hash: `31591bfabf32575db401fef8df721b6c9c02e8d630300356b40b35f6ff6b3d9d`
 
 ## What This File Does
 

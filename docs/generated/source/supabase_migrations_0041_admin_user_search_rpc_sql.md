@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0041_admin_user_search_rpc.sql`
 - Kind: Supabase migration
-- Size: 10903 bytes
+- Size: 10592 bytes
 - Lines: 312
-- Source hash: `8023b48876e6071ed833575ce6fc6b50a256684f498fac33b09d376fc90edd8d`
+- Source hash: `053783c926a6d77f18b7e2009c3e58b0a7de56415230685309d90f877cc7ace3`
 
 ## What This File Does
 

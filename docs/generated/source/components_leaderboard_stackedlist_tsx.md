@@ -4,9 +4,9 @@
 
 - Source path: `components/leaderboard/StackedList.tsx`
 - Kind: React component
-- Size: 22845 bytes
+- Size: 22211 bytes
 - Lines: 635
-- Source hash: `9524228c738e0dc7ef6c38f542e03bf439f45271d2b70cba235e6c5f122bfde3`
+- Source hash: `8c5e6a16f768a39ee65a4af1368021cd8276b9b0a06e231e5f8c873f39a4a382`
 
 ## What This File Does
 

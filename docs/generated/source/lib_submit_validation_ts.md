@@ -4,9 +4,9 @@
 
 - Source path: `lib/submit-validation.ts`
 - Kind: Application library module
-- Size: 1809 bytes
+- Size: 1739 bytes
 - Lines: 71
-- Source hash: `1ead6cbe4e1c57373405c9efce1b4d2655c23346d78b0c2f42a659bf91bd5cc9`
+- Source hash: `3b5ed64e6087c4204e73e0b49a9636909d7cf5a061e137ee8a61a9ba9e3e9bb8`
 
 ## What This File Does
 

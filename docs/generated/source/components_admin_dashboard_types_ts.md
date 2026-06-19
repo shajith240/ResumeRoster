@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/types.ts`
 - Kind: React component
-- Size: 5705 bytes
+- Size: 5440 bytes
 - Lines: 266
-- Source hash: `5ed5e4b5b73585e0f717a1c62e19f495470da84998f2e2cc030fb65ba866760e`
+- Source hash: `e79740cfabe7f00987c44392de38af3c7f798dbc2e42e3846708dbc203ad4d0a`
 
 ## What This File Does
 

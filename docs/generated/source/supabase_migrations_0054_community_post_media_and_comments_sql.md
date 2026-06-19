@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0054_community_post_media_and_comments.sql`
 - Kind: Supabase migration
-- Size: 16894 bytes
+- Size: 16389 bytes
 - Lines: 506
-- Source hash: `38ab86edd65a654e816fbe5055ecd5a3b47da9248a8f6e7c44ec4b1d0b1e6543`
+- Source hash: `bab23c4f37320ff79165b6c4f83d83677327a6d0c19440388cf712c4a27dbb28`
 
 ## What This File Does
 

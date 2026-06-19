@@ -4,9 +4,9 @@
 
 - Source path: `components/Leaderboard.tsx`
 - Kind: React component
-- Size: 14833 bytes
+- Size: 14295 bytes
 - Lines: 539
-- Source hash: `4ab9a0cd4defd588194ff719743ceeea952bd6ac7ac26a20f96f6bb3fbc97ef7`
+- Source hash: `d76c304abe803ddd2a5d52bef129ec52219bf8120482a613a6c7e175569d74ca`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/route-lazy/ResumeDetailLazy.tsx`
 - Kind: React component
-- Size: 491 bytes
+- Size: 474 bytes
 - Lines: 18
-- Source hash: `e5fe9db76cae877dac91dee8602c63739c7ceabd6e2f1d71f9da71cf4e7a030a`
+- Source hash: `aec25712911274dc7c9d69c89a88914038541089e94a4d07580d4c1682a5e47c`
 
 ## What This File Does
 

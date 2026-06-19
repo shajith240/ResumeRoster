@@ -4,9 +4,9 @@
 
 - Source path: `lib/comment-mentions.ts`
 - Kind: Application library module
-- Size: 9018 bytes
+- Size: 8682 bytes
 - Lines: 337
-- Source hash: `d90a809af9b9cc48c2c6bae0efbf60fa512e642bceb0d97c1d004dd7529b6e61`
+- Source hash: `1c634c299db80e766b173411603e4a8afd06c17448b19fc68887c7e4256c6b20`
 
 ## What This File Does
 

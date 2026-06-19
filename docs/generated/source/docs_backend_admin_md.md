@@ -4,9 +4,9 @@
 
 - Source path: `docs/backend/admin.md`
 - Kind: Documentation
-- Size: 1478 bytes
+- Size: 1430 bytes
 - Lines: 49
-- Source hash: `0f257364fb2812042e751c782263295859c011bd7d6300b6b13d81964898f774`
+- Source hash: `276cdc2dfc1d15536841b563a3c8d6ff83261b79fb8d8b27ee8c023c2662880c`
 
 ## What This File Does
 

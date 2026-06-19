@@ -4,9 +4,9 @@
 
 - Source path: `docs/start-here/where-to-fix.md`
 - Kind: Documentation
-- Size: 2567 bytes
+- Size: 2540 bytes
 - Lines: 28
-- Source hash: `9ace11893941f8b2f9725d2c30b18c083cb48e5b498d58b60064d500ced12f0f`
+- Source hash: `d1db418958af2119b5a14ee9250ee3b22ac6042944bf0a94e4ceb262e60c8bdc`
 
 ## What This File Does
 

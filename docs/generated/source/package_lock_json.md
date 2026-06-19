@@ -4,9 +4,9 @@
 
 - Source path: `package-lock.json`
 - Kind: Project configuration
-- Size: 538821 bytes
+- Size: 524239 bytes
 - Lines: 14583
-- Source hash: `3ac67c5b01fd6302200187b24870f379a9514401456e8796480b175514abed0d`
+- Source hash: `b1bbaab8d26ac6f2918ea50e1b785f2fb55533c070780693d5535b5012792f89`
 
 ## What This File Does
 

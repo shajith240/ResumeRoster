@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/anonymous-profile.test.ts`
 - Kind: Unit test
-- Size: 1374 bytes
+- Size: 1331 bytes
 - Lines: 44
-- Source hash: `a07cc3f7e25e19c09160b5e12174e61185fd034015bb087afade6e8663f97641`
+- Source hash: `4a10f99ff28ccf3fb5edb7aa69e3ded5a6b95e8a90019797603312ea9cb4e694`
 
 ## What This File Does
 

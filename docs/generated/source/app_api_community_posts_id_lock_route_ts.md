@@ -4,9 +4,9 @@
 
 - Source path: `app/api/community/posts/[id]/lock/route.ts`
 - Kind: Next API route
-- Size: 1880 bytes
+- Size: 1808 bytes
 - Lines: 73
-- Source hash: `e236a7d4fbd071aed58fd54dcc78b9c77373ee4f608850b7f0b9137183d57893`
+- Source hash: `2b0b4c0fb83ab46d1750c54ccabf17bb66002a1bd2b41198216c1ede1d9e9e31`
 
 ## What This File Does
 

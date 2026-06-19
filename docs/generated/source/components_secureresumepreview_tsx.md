@@ -4,9 +4,9 @@
 
 - Source path: `components/SecureResumePreview.tsx`
 - Kind: React component
-- Size: 19372 bytes
+- Size: 18669 bytes
 - Lines: 704
-- Source hash: `2348f9256ad88141d97d3003e5c11df6e27f8053dd4385f503e76d3aabc1645e`
+- Source hash: `17b8bb29e5dc383d358add9276d1dcfae2f6b5cd994ac37efc8feb2892ee634f`
 
 ## What This File Does
 

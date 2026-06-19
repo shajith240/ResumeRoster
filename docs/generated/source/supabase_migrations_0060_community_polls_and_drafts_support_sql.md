@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0060_community_polls_and_drafts_support.sql`
 - Kind: Supabase migration
-- Size: 14772 bytes
+- Size: 14323 bytes
 - Lines: 450
-- Source hash: `b108077082b3708b2efe031b288ffbf7d42065227361debc367b13621fba5dfe`
+- Source hash: `a4ed83ba3f4d000720c8aeaa474f4049201a3b52eaa209756d1fb48216aa14c8`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/community.ts`
 - Kind: Application library module
-- Size: 1926 bytes
+- Size: 1849 bytes
 - Lines: 78
-- Source hash: `59980d1aebe97a0481b1dcff98e085118a4eacc4bb8cad82dfa0984564ae302f`
+- Source hash: `9e7d58ac353a1c38a48d0455779a73c4f6e2367a36e17ec224ac2d324e5dc18b`
 
 ## What This File Does
 

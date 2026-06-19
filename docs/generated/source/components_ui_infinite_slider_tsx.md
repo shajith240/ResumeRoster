@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/infinite-slider.tsx`
 - Kind: UI primitive
-- Size: 1354 bytes
+- Size: 1298 bytes
 - Lines: 57
-- Source hash: `db9d1f5488c991ee792b400de09cc5b6c88aa920ef94378d3d3790368d7582b9`
+- Source hash: `a15d9478097587de5641e513098e4a2f2467b9bbf22fc084f3f3c69c9263e9be`
 
 ## What This File Does
 

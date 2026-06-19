@@ -4,9 +4,9 @@
 
 - Source path: `app/api/health/route.ts`
 - Kind: Next API route
-- Size: 7561 bytes
+- Size: 7263 bytes
 - Lines: 299
-- Source hash: `0984e44bffebebb240adedceb2efe5750e6bd7a2776f251160d6809b885f0870`
+- Source hash: `5c3fb60cb3741716ea9fb4d3643372fa5cfce8e213f8ccb31e4bd674198eae78`
 
 ## What This File Does
 

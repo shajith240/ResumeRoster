@@ -4,9 +4,9 @@
 
 - Source path: `lib/supabase/types.ts`
 - Kind: Application library module
-- Size: 9812 bytes
+- Size: 9431 bytes
 - Lines: 382
-- Source hash: `83afab317284902c92ceb68e45ccae50d98fd1398ae0d9a9dd1dd9829bd9c14d`
+- Source hash: `a9748ecfc11744bac16a401ef4d1e495dfc9fa0c64f903c9fa269d8829e0ea3b`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/navigation/SessionNavBar.tsx`
 - Kind: React component
-- Size: 3694 bytes
+- Size: 3568 bytes
 - Lines: 127
-- Source hash: `9307497148d5ca2ddd6087d9697686858aee35c3380bcdac59397f8e400ddbbb`
+- Source hash: `56f247a350db5dfd884b656ac4b92c2e2c1ef72e61e03d15c1c986240e5282f2`
 
 ## What This File Does
 

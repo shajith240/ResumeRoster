@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/20260618164100_maintenance_vacuum_cron.sql`
 - Kind: Supabase migration
-- Size: 1133 bytes
+- Size: 1120 bytes
 - Lines: 14
-- Source hash: `d3818cee6ec20be50db49fbef5798110bffca60afd89dc0b50ad05adc44b5fda`
+- Source hash: `895bb17648b594f1d76a9a218d0b0b26be449cf00041e5161d5403ecefcb5b46`
 
 ## What This File Does
 

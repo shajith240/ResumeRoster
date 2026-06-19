@@ -4,9 +4,9 @@
 
 - Source path: `lib/monitoring/capture-errors.ts`
 - Kind: Application library module
-- Size: 1056 bytes
+- Size: 1016 bytes
 - Lines: 41
-- Source hash: `8ddc8b1f126f99c1844d57ad38fc7ea600196dbe5a4a1c35e724c418378f00a8`
+- Source hash: `05755dbef610bc704e41cd6691234b427ab372fb3939b0b97b4e4da59dfcf149`
 
 ## What This File Does
 

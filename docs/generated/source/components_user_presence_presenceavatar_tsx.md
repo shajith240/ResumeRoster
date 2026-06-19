@@ -4,9 +4,9 @@
 
 - Source path: `components/user-presence/PresenceAvatar.tsx`
 - Kind: React component
-- Size: 739 bytes
+- Size: 707 bytes
 - Lines: 33
-- Source hash: `e9ba65f71fa14147a48771efb307a44481fce14d34afda927af71a50af0926fe`
+- Source hash: `2085a4f4adfd6b38f0ec9bf3a769d4474895442b7cf8127b335365bd24de820e`
 
 ## What This File Does
 

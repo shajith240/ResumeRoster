@@ -4,9 +4,9 @@
 
 - Source path: `app/privacy/page.tsx`
 - Kind: Next page route
-- Size: 18935 bytes
+- Size: 18442 bytes
 - Lines: 494
-- Source hash: `4e8e11519884f997f1521f4e69bcc921de55dabf0f53b4fcc404a5dc17157fc1`
+- Source hash: `9d67fe09692c4649b8a97ca26127e6148006ebc1d0537cd0ba38f07d55721bee`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/thread-review-item.tsx`
 - Kind: React component
-- Size: 12784 bytes
+- Size: 12361 bytes
 - Lines: 424
-- Source hash: `21063b1e5aae1f083f646889923931c8ea118fff08cab3fdeb20bda3baebda2d`
+- Source hash: `2edfdc5c314bbada042f747f40d16201997b89374dab2884437fc89f7d2b4890`
 
 ## What This File Does
 

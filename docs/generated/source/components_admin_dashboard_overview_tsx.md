@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/overview.tsx`
 - Kind: React component
-- Size: 2183 bytes
+- Size: 2082 bytes
 - Lines: 102
-- Source hash: `5c503e53a990d21c4b5b400d814db86a0b3e5b91463bc6dd57c83f6f3decd81c`
+- Source hash: `c8352a04083ca1c56d45ab28e4232b032da8367a97696b27f10b245f62785f68`
 
 ## What This File Does
 

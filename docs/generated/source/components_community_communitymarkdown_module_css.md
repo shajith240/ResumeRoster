@@ -4,9 +4,9 @@
 
 - Source path: `components/community/CommunityMarkdown.module.css`
 - Kind: React component
-- Size: 5674 bytes
+- Size: 5362 bytes
 - Lines: 313
-- Source hash: `9e4457e1ef6047f5a0a80fc5ed56d9204d165b3910ff435b9c4e6f6be9abd7cc`
+- Source hash: `377ea7f941fd3e8193c0e2fbf1f82c7f027527482e423b8905967e9856511d5d`
 
 ## What This File Does
 

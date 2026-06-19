@@ -4,9 +4,9 @@
 
 - Source path: `docs/backend/notifications.md`
 - Kind: Documentation
-- Size: 1235 bytes
+- Size: 1204 bytes
 - Lines: 32
-- Source hash: `75fdc65068ccdf508e4d03f226ae65a49f1916bf4aeb91cdbd0d305e7154e7cc`
+- Source hash: `86c7a55749d540d56de73ea0e6906293f06f1e370a59fea93706118fedf5a6bd`
 
 ## What This File Does
 

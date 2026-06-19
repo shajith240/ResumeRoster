@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/20260618172939_premium_resume_payments.sql`
 - Kind: Supabase migration
-- Size: 5259 bytes
+- Size: 5103 bytes
 - Lines: 157
-- Source hash: `8d865756fdab63076088bc09818741feeba7e4126e6aaa0b831918384d634ff5`
+- Source hash: `e529a85087622d3cd31bc98b52d1cf3931024af444c8f0b485359e04f0695038`
 
 ## What This File Does
 

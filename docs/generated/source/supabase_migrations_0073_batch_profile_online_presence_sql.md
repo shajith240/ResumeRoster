@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0073_batch_profile_online_presence.sql`
 - Kind: Supabase migration
-- Size: 1208 bytes
+- Size: 1169 bytes
 - Lines: 40
-- Source hash: `5d2f02f24da77b7352a742cc05b7f0cb0d70acb2f7e7ffc3b16095b4a8d7686a`
+- Source hash: `7f41fee4be063f9f057baa2fe07a4030b5eb88463e1cddb6ef77ad5b5c77606e`
 
 ## What This File Does
 

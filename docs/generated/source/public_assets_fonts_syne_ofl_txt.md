@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/fonts/Syne/OFL.txt`
 - Kind: Public visual asset
-- Size: 4494 bytes
+- Size: 4401 bytes
 - Lines: 94
-- Source hash: `39fcc297e1d7f8c1078ab2df238f397b56f472488768fbdfb22cf801643e47f4`
+- Source hash: `e42b3afce38337e4920c36328af68f4e462ca86aa74dd585614a58afb954c6f6`
 
 ## What This File Does
 

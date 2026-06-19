@@ -4,9 +4,9 @@
 
 - Source path: `components/AuthButton.tsx`
 - Kind: React component
-- Size: 6442 bytes
+- Size: 6218 bytes
 - Lines: 225
-- Source hash: `dba96bf2d2ade46b5e64c997df45a557cb49e50eec5d89588ec86998ff9919f4`
+- Source hash: `dd7fc4b9421b1d7320e1d93025d84dc1dccafc0f393ddbada3febbb62e9adff5`
 
 ## What This File Does
 

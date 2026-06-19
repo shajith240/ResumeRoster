@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0045_authenticated_api_rate_limits.sql`
 - Kind: Supabase migration
-- Size: 1777 bytes
+- Size: 1723 bytes
 - Lines: 55
-- Source hash: `c4be6946d8e53effed4739d9d1253489cb7b9a215e672833bcc1f0a0abd4dc9a`
+- Source hash: `b8acaf8e08eccc56be8671541cf73dda2649fa3ad46fc734f310a963e3207c18`
 
 ## What This File Does
 

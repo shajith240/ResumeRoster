@@ -4,9 +4,9 @@
 
 - Source path: `app/api/profile/avatar/route.ts`
 - Kind: Next API route
-- Size: 4625 bytes
+- Size: 4457 bytes
 - Lines: 169
-- Source hash: `940014930197792cffe09fedf47fffebd64e02f84493cb3520ff8edfffd52631`
+- Source hash: `77a77655e6d060411d36a11f531de4fa6a8596787b5e1aba3bb2e37d7d528cd3`
 
 ## What This File Does
 

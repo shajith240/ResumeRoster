@@ -4,9 +4,9 @@
 
 - Source path: `docs/frontend/routes.md`
 - Kind: Documentation
-- Size: 1358 bytes
+- Size: 1321 bytes
 - Lines: 38
-- Source hash: `da25f5ca5aadc2a8c729dfab9d53398c1f806d1d03fef81d579cdf8e23399270`
+- Source hash: `872a7f6ef579d2d8343f08d655ac4c68de0a0760add04fd993f48433f167192b`
 
 ## What This File Does
 

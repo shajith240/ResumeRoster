@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0065_optimize_community_reaction_lookups.sql`
 - Kind: Supabase migration
-- Size: 641 bytes
+- Size: 627 bytes
 - Lines: 15
-- Source hash: `6c7b8c7c0938a7e6fecf12fe96b449544121ffa632daf7fa19e6413631ebc6fc`
+- Source hash: `b95b6a5173377d6d743f3807b47bb6e1f3c1af77b6b930b3df3ad8dd658ed123`
 
 ## What This File Does
 

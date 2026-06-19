@@ -4,9 +4,9 @@
 
 - Source path: `lib/online-presence.ts`
 - Kind: Application library module
-- Size: 1323 bytes
+- Size: 1274 bytes
 - Lines: 50
-- Source hash: `4e615c2496ef4e9a4562255c36372a0e1bf01f7300a2ea47828fe02c17da62f4`
+- Source hash: `a6607ce93b28a3a0fd5273e3bada60aba15d558c00c565d85e7491a4d25e3a9e`
 
 ## What This File Does
 

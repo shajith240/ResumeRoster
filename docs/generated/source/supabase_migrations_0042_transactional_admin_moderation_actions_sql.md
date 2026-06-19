@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0042_transactional_admin_moderation_actions.sql`
 - Kind: Supabase migration
-- Size: 16182 bytes
+- Size: 15604 bytes
 - Lines: 579
-- Source hash: `f800e927870f7ffa17ae71f0b86d9bdaf96d210836d015cfab209f7f4bef478e`
+- Source hash: `7b6122903316a41c9b3260dfae0d0c4a7bdb0cc2953a7e7fdad50fc458e04739`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `package.json`
 - Kind: Project configuration
-- Size: 3727 bytes
+- Size: 3620 bytes
 - Lines: 108
-- Source hash: `0afefd174a009e58050979cd68cd38754502991350d42012eb7287ef22cfe926`
+- Source hash: `88ad200dd36e760456bee927c48fdc797e40cabe0d24de70de1f976f5d1198d1`
 
 ## What This File Does
 

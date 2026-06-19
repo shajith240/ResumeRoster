@@ -4,9 +4,9 @@
 
 - Source path: `app/notifications.css`
 - Kind: Project file
-- Size: 7476 bytes
+- Size: 7152 bytes
 - Lines: 325
-- Source hash: `2f2c94d3c3d95554e7a8ca10b155903e3610da9c834a8b7cdc6de80430b43a24`
+- Source hash: `0d38355e19ad6fc0631a0e8cd6f8a44a5e9b2835d388cb82950a0957ed4cfda3`
 
 ## What This File Does
 

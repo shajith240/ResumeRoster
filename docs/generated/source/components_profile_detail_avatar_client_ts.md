@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/avatar-client.ts`
 - Kind: React component
-- Size: 2031 bytes
+- Size: 1950 bytes
 - Lines: 82
-- Source hash: `a31ca1c13db75e048b88f71733e268033b0e8ca5871688c27397a3a08023100e`
+- Source hash: `c980a7c43cec368fa56651675c505e500c10ec1207b07abb7e8981e5bcc0e039`
 
 ## What This File Does
 

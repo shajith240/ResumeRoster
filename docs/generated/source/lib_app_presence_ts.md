@@ -4,9 +4,9 @@
 
 - Source path: `lib/app-presence.ts`
 - Kind: Application library module
-- Size: 668 bytes
+- Size: 650 bytes
 - Lines: 19
-- Source hash: `13248bb11ce11706bb0a0d4f1fe960f452129fb233623589fdfbf13f9df820e4`
+- Source hash: `e9e56dac229cafa3672520f352fa61e2645e3a687ca801b69482595b25431ed1`
 
 ## What This File Does
 

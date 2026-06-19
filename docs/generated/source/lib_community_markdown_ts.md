@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-markdown.ts`
 - Kind: Application library module
-- Size: 3370 bytes
+- Size: 3259 bytes
 - Lines: 112
-- Source hash: `e3fa576ee6f30c291f0104ef117e944afcedd877277f5919fbbb18ee2f04c93a`
+- Source hash: `bcd1878e2ba166bac0a4ddddc8ee1420e2fd1fcdcab932d230faa1ec5bc49396`
 
 ## What This File Does
 

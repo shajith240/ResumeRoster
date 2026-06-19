@@ -4,9 +4,9 @@
 
 - Source path: `components/AppPresence.tsx`
 - Kind: React component
-- Size: 5128 bytes
+- Size: 4943 bytes
 - Lines: 186
-- Source hash: `1848763a6dbffc08bc0b36e7192af0916e8c8cfc943588dab4518301e6f01cea`
+- Source hash: `64a4fdc0274873cfd4122fb5defc0062aae953ac46bc0ba409c86a846890b275`
 
 ## What This File Does
 

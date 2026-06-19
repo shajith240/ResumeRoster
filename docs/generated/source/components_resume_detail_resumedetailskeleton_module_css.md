@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/ResumeDetailSkeleton.module.css`
 - Kind: React component
-- Size: 9493 bytes
+- Size: 8900 bytes
 - Lines: 594
-- Source hash: `0b628965ac76f44dcbcaacb676ad78130fe65557c285df3b84eed3bfb20844ac`
+- Source hash: `09b744ca2993b412520c4d053fb127fc72b7d39e2f83291e5845b12c9a2ac784`
 
 ## What This File Does
 

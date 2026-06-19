@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/avatar-validation.test.ts`
 - Kind: Unit test
-- Size: 2269 bytes
+- Size: 2189 bytes
 - Lines: 81
-- Source hash: `662d31576b69a7567ba0b5311931e1fafebd6c85d2a1aa105d5fad46befe75f9`
+- Source hash: `71d2d2db0dd1fd5f5b5583937de5630634a35078bf077491cb75547e3c4edd84`
 
 ## What This File Does
 

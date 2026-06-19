@@ -4,9 +4,9 @@
 
 - Source path: `components/navigation/ResumeQueueProgress.tsx`
 - Kind: React component
-- Size: 5783 bytes
+- Size: 5569 bytes
 - Lines: 215
-- Source hash: `dcb3e35d83a144476267b1afea6333539af29abab939a78fde659ed07c433d30`
+- Source hash: `1963a8a1a980948153cc0692781318e9676d4ce63bfc08d7aca6417a3297e2b6`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/pdf-redaction.ts`
 - Kind: Application library module
-- Size: 11075 bytes
+- Size: 10657 bytes
 - Lines: 419
-- Source hash: `d4df01953d09f736a292bea535ba0c8ee616ed9d4d6274fbc3a2ed04dab43b88`
+- Source hash: `a134e43d39e78df4c07edde4897b274554d80bbd34a55ce85b26186c626a8c34`
 
 ## What This File Does
 

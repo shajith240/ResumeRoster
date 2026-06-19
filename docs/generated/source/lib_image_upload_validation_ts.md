@@ -4,9 +4,9 @@
 
 - Source path: `lib/image-upload-validation.ts`
 - Kind: Application library module
-- Size: 996 bytes
+- Size: 952 bytes
 - Lines: 45
-- Source hash: `5417eb62580136649dda30233195181b1d0fe24baf81fdb88c1f06065ba58db5`
+- Source hash: `37fefde0e2458ae70146fbb65c881b44481220ed8e2a0f6e82f6358aef4d1be3`
 
 ## What This File Does
 

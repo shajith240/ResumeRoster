@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0063_remove_community_post_saves.sql`
 - Kind: Supabase migration
-- Size: 3510 bytes
+- Size: 3426 bytes
 - Lines: 85
-- Source hash: `5af50c84444bc652f82657feef2644ff7e19f50fdea16381541c6987d639209f`
+- Source hash: `f927974a20ac447d0f8713f6b18f4ae06080c5eba4b59b1aa3ce159b238877be`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/navigation/ResumeQueueProgress.module.css`
 - Kind: React component
-- Size: 4107 bytes
+- Size: 3889 bytes
 - Lines: 219
-- Source hash: `ce39bc12ed9ec67a1d88f3eac8af6d4a2c3cbc13427b603493cf9a984e2ae2c1`
+- Source hash: `96cec9bd8b812770ffbd1319510328ff9948d16318b23091c3746f53af768874`
 
 ## What This File Does
 

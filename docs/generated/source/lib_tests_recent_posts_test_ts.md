@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/recent-posts.test.ts`
 - Kind: Unit test
-- Size: 3390 bytes
+- Size: 3274 bytes
 - Lines: 117
-- Source hash: `5294cb7a702a7d461fb31e487f2ae2a10a4fcce5418b36d3b467c4c435ee82c6`
+- Source hash: `4a450e4a50a80315785c5c8268f1c887f18362c2961029b847d07a1301612cfb`
 
 ## What This File Does
 

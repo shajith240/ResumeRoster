@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/rows.tsx`
 - Kind: React component
-- Size: 959 bytes
+- Size: 920 bytes
 - Lines: 40
-- Source hash: `0df4f590060d62c013bd50b4655bf37b5432485fa660c3116a20e1970ab6ca4b`
+- Source hash: `370dacc9dc19ef24f5a6c9266e473c526cb427d6aa520993611363fadb263b59`
 
 ## What This File Does
 

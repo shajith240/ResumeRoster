@@ -4,9 +4,9 @@
 
 - Source path: `lib/support-contact.ts`
 - Kind: Application library module
-- Size: 112 bytes
+- Size: 110 bytes
 - Lines: 3
-- Source hash: `8650e17c9132c84987218c702ee31f64b0f45ba7fbf9519a10a3724ac2f779be`
+- Source hash: `a164834a3d99d505bb62d57c9cd33d773599f9a8043a13c65dfed8ffd0050214`
 
 ## What This File Does
 

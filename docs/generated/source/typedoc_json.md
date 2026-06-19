@@ -4,9 +4,9 @@
 
 - Source path: `typedoc.json`
 - Kind: Project configuration
-- Size: 353 bytes
+- Size: 338 bytes
 - Lines: 16
-- Source hash: `00f0edfaef359c1c846b9f94f29549c7899393cc914aa91e4042b5d83ef2a6ef`
+- Source hash: `2ffe1c1e0200e5ccc34d4fb69f59fc5cbf9dc03b9cf99c6d0aedd60788a0efc4`
 
 ## What This File Does
 

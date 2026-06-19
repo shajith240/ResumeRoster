@@ -4,9 +4,9 @@
 
 - Source path: `lib/server/upload-security.ts`
 - Kind: Application library module
-- Size: 8715 bytes
+- Size: 8386 bytes
 - Lines: 330
-- Source hash: `94398a516e9107ed6a7b9d626f96340a941f1c9f9c81777958ae49e365ce8fb4`
+- Source hash: `e12bdc8f7542689a6bab431a72abe17abcf2311026539527359ba70050f4816a`
 
 ## What This File Does
 

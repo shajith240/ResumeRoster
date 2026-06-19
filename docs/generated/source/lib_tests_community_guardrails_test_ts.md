@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/community-guardrails.test.ts`
 - Kind: Unit test
-- Size: 4767 bytes
+- Size: 4569 bytes
 - Lines: 199
-- Source hash: `f19bf53d94d9aef95b63486cba98ed1f28cb8a73598d13dae27f97b99cb3e7bc`
+- Source hash: `ac3843b78f93af6034a2b8b7e8b1f7e51b268bd8191b68cf41812e0386faa179`
 
 ## What This File Does
 

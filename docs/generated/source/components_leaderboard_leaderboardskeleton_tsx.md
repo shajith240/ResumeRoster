@@ -4,9 +4,9 @@
 
 - Source path: `components/leaderboard/LeaderboardSkeleton.tsx`
 - Kind: React component
-- Size: 2027 bytes
+- Size: 1950 bytes
 - Lines: 78
-- Source hash: `d19547c64e1f9fde7401d4c877defaefd2f74a48532c6cd4c406e2f14a049388`
+- Source hash: `54c96675f0f5e7788137197223252529c3e1b98fc8cd76f937e43a3a9893828d`
 
 ## What This File Does
 

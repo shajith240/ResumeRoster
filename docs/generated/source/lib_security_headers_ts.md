@@ -4,9 +4,9 @@
 
 - Source path: `lib/security/headers.ts`
 - Kind: Application library module
-- Size: 4765 bytes
+- Size: 4596 bytes
 - Lines: 170
-- Source hash: `de5649ce8032d09d50db8495739f9bc49a378058041308d47eb7f5c5dc1183cc`
+- Source hash: `1ef7f9fdda3f1e5026693f30f602adf701fadc23790a429c0239830be96ea59c`
 
 ## What This File Does
 

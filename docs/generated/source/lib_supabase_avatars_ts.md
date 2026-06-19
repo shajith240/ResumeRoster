@@ -4,9 +4,9 @@
 
 - Source path: `lib/supabase/avatars.ts`
 - Kind: Application library module
-- Size: 1201 bytes
+- Size: 1155 bytes
 - Lines: 47
-- Source hash: `c37d66ba0fecd2ce6623c807f203140dbecd300823f7e476703f6c58759459e7`
+- Source hash: `e3235c2b058a301d7ca83ec43616c149431d0a14adef36e8b67b37f9c9f6b5ce`
 
 ## What This File Does
 

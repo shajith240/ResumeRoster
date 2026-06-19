@@ -4,9 +4,9 @@
 
 - Source path: `components/navigation/useMobileScrollChrome.ts`
 - Kind: React component
-- Size: 2327 bytes
+- Size: 2249 bytes
 - Lines: 79
-- Source hash: `de7668aceb00d596face8fc5d74d7fe9985e20795a56cd5f8e2f44efdb8fca3c`
+- Source hash: `1512b827a3c7b9691d4484d3c9bf11033dfedfd44e039566049e7fd170e3d5fc`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/FeedRailLegalFooter.tsx`
 - Kind: React component
-- Size: 810 bytes
+- Size: 783 bytes
 - Lines: 28
-- Source hash: `9499997fb28c6619e7376e70ccdd7b9a80b24bb9a8b8541841c7e968c6442a2a`
+- Source hash: `da3b6eafd98b195c1e43ae0e48a167c7e338232040f9083b711d84cd59b7f055`
 
 ## What This File Does
 

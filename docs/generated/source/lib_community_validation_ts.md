@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-validation.ts`
 - Kind: Application library module
-- Size: 4008 bytes
+- Size: 3869 bytes
 - Lines: 140
-- Source hash: `e3db365da482c0a3dd6b43abc435e03db66bda8b82ee92b6db0d98aa8b550b3c`
+- Source hash: `c5401d64269a7e48422f5b1c7d63b2d543fdb513e3fcd8a685713b405b62e19d`
 
 ## What This File Does
 

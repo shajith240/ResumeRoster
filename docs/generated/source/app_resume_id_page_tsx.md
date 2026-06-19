@@ -4,9 +4,9 @@
 
 - Source path: `app/resume/[id]/page.tsx`
 - Kind: Next page route
-- Size: 544 bytes
+- Size: 524 bytes
 - Lines: 21
-- Source hash: `9913027377c0a5f82aa20c24d7d1d337b11f862b6fce7555221445ca66f557fb`
+- Source hash: `32fa26e59e3a22d6b886cc01dcb8a237089ea869e57b0318fac42f404133847e`
 
 ## What This File Does
 

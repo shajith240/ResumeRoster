@@ -4,9 +4,9 @@
 
 - Source path: `scripts/docs/check.mjs`
 - Kind: Repository automation
-- Size: 85 bytes
+- Size: 82 bytes
 - Lines: 4
-- Source hash: `e41f479fb4335b5f05cd04cdb08146b0c3c3b8fd2540f783fb2538f604dfc2f6`
+- Source hash: `dd40435414fb8a83ece5f793750925249ea36d2c93a6fd8070b55887761605fc`
 
 ## What This File Does
 

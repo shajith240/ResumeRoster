@@ -4,9 +4,9 @@
 
 - Source path: `app/layout.tsx`
 - Kind: Next root layout
-- Size: 3138 bytes
+- Size: 3027 bytes
 - Lines: 112
-- Source hash: `035892381ee38a93e30473ed405fc380c841fe39b6a35ff0f5e0bf935ee73698`
+- Source hash: `1d11ced233ddbf8d4151eb0a290f9e4651d99b785cd1b6cdadc5843f098456ba`
 
 ## What This File Does
 

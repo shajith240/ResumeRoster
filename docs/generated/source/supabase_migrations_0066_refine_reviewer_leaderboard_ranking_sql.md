@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0066_refine_reviewer_leaderboard_ranking.sql`
 - Kind: Supabase migration
-- Size: 4677 bytes
+- Size: 4529 bytes
 - Lines: 149
-- Source hash: `47efc50423d224cbd9ad33239481f7b6f157c632eef575dd1154d15fee04565f`
+- Source hash: `f021e65124d7803330021a122b14a18730f3166ed996a64a8f98813f96ec16c8`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0053_submit_community_post_rpc.sql`
 - Kind: Supabase migration
-- Size: 5344 bytes
+- Size: 5161 bytes
 - Lines: 184
-- Source hash: `1b31b072e3c8bb19b0f6ab9dd0a73e2a82a2b1303750bccd948434a5304aaec9`
+- Source hash: `724c191e89251aca9d1878fb6d45f38b0941eac9b310b5fa560421de4e96d8e7`
 
 ## What This File Does
 

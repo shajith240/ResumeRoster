@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/select.tsx`
 - Kind: UI primitive
-- Size: 5638 bytes
+- Size: 5486 bytes
 - Lines: 153
-- Source hash: `612a9e69aa75bd8699f6a98f1148ec47c2d45806d45295066b72ad44e5eaa871`
+- Source hash: `d6416fd0e5324c817da9a36c3fdedc914ac12eb08f783b9c97e2cc1ea9c1162d`
 
 ## What This File Does
 

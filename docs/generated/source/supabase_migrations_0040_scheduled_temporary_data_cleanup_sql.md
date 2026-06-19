@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0040_scheduled_temporary_data_cleanup.sql`
 - Kind: Supabase migration
-- Size: 2921 bytes
+- Size: 2843 bytes
 - Lines: 79
-- Source hash: `f02bafe6feb80d2889a96d6d5782959b32205ea123e26098b6cf98eb4bc58b11`
+- Source hash: `6af9a734d527563c461b5e682198aed3762b5b80f103adbae2fa1005b61774fc`
 
 ## What This File Does
 

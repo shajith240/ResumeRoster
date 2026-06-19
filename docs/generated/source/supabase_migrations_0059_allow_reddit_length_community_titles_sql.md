@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0059_allow_reddit_length_community_titles.sql`
 - Kind: Supabase migration
-- Size: 1593 bytes
+- Size: 1539 bytes
 - Lines: 55
-- Source hash: `cf22bacfadbeb68c351cb7c4e1f1e283b613f01349e04a53742bc8ab9c35e756`
+- Source hash: `d1d055b4f5bc7b174a489d6737452447cde14ab18d08dccbcc6ca844f1a4fcae`
 
 ## What This File Does
 

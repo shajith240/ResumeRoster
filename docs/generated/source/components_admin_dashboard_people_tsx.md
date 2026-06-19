@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/people.tsx`
 - Kind: React component
-- Size: 10022 bytes
+- Size: 9638 bytes
 - Lines: 385
-- Source hash: `987255852b272dfba6b985ba8f8cb426831e9b0a9be31dcead165bbe307880b0`
+- Source hash: `3643eaea8b6f364eb8b129368a71cc7829c26737e58da5371d999780f1f63869`
 
 ## What This File Does
 

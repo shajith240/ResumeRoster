@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/use-owner-actions.ts`
 - Kind: React component
-- Size: 4350 bytes
+- Size: 4176 bytes
 - Lines: 175
-- Source hash: `c05f6ff454e974e72039bea80b6bb2b3da191e43e3578eef4e74b6a68793885e`
+- Source hash: `4c5203e99ef70352dcd11439d3bc11d6be08bf81a7764a3b768eaf3365cb7df6`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0051_db_lint_warning_cleanup.sql`
 - Kind: Supabase migration
-- Size: 6010 bytes
+- Size: 5763 bytes
 - Lines: 248
-- Source hash: `ad058a96d51635aa3b68d6c7e8833dec8fedac6a898a6a5e6c8076d39d4d5e92`
+- Source hash: `dfc2437c0afb210c755b33241fc4caa31aafbccd075d9b10407378cda0d0ade2`
 
 ## What This File Does
 

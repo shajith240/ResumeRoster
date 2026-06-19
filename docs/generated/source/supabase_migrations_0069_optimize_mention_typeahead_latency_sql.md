@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0069_optimize_mention_typeahead_latency.sql`
 - Kind: Supabase migration
-- Size: 4898 bytes
+- Size: 4761 bytes
 - Lines: 138
-- Source hash: `99fa51c65149bd9adf5808b7ea7276f7f0276a45176e399d40faa418d6e981af`
+- Source hash: `e07ea6fe5054dd2c8352d3897f24791d8687ef7436dc211a88e92042eb995279`
 
 ## What This File Does
 

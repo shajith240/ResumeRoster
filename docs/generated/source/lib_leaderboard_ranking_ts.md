@@ -4,9 +4,9 @@
 
 - Source path: `lib/leaderboard-ranking.ts`
 - Kind: Application library module
-- Size: 3832 bytes
+- Size: 3685 bytes
 - Lines: 148
-- Source hash: `d611f8fcebc2be532cf3a96c18d644d1d2902ea7391c07b992280697c1d86b1b`
+- Source hash: `36ec8f8bedd7bb016aeeb2e6ba4dfad87d0d8df879c18a2d1e03f39b229efa21`
 
 ## What This File Does
 

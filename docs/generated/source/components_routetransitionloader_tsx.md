@@ -4,9 +4,9 @@
 
 - Source path: `components/RouteTransitionLoader.tsx`
 - Kind: React component
-- Size: 5544 bytes
+- Size: 5349 bytes
 - Lines: 196
-- Source hash: `96a29666384187b1d913c5fa4ee7e3f6759ab369c123eedb8e0c3d8613731ded`
+- Source hash: `285c57909e6f2ab440dd43158a98e5803c26fdf14a2547047329df1c3c028162`
 
 ## What This File Does
 

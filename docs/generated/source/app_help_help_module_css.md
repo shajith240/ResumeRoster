@@ -4,9 +4,9 @@
 
 - Source path: `app/help/help.module.css`
 - Kind: Project file
-- Size: 4316 bytes
+- Size: 4059 bytes
 - Lines: 258
-- Source hash: `e5c632e017090f145793c1558dfe47db8ab27c4149e6902ea2ad2328ab3fd013`
+- Source hash: `3dc339774066059038555a61389f30fe9fb453e8dd3c2c1e856d35f78b8971da`
 
 ## What This File Does
 

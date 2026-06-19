@@ -4,9 +4,9 @@
 
 - Source path: `docs/community-guidelines.html`
 - Kind: Documentation
-- Size: 7430 bytes
+- Size: 7250 bytes
 - Lines: 181
-- Source hash: `b05e000decd0da38e1478ce0787958370bc9bfd807c0149ecbd8f7b09ef9a025`
+- Source hash: `d6746736cb47206701bdb0c73ae4fdc8504d3841dd5b3c732e5c7aac1be39940`
 
 ## What This File Does
 

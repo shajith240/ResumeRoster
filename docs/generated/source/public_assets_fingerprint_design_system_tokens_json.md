@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/fingerprint_design_system/tokens.json`
 - Kind: Public visual asset
-- Size: 24688 bytes
+- Size: 23835 bytes
 - Lines: 854
-- Source hash: `ad9bb7163389ec7118ed6a38d7d6f6a5989e14184af3ed23944fca3a4f6d9f8a`
+- Source hash: `922bf2a116e3fc605ff09e1a892aeedafae7308daddfd9d49408c78e014262ad`
 
 ## What This File Does
 

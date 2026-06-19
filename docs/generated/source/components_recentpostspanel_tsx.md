@@ -4,9 +4,9 @@
 
 - Source path: `components/RecentPostsPanel.tsx`
 - Kind: React component
-- Size: 6942 bytes
+- Size: 6676 bytes
 - Lines: 267
-- Source hash: `125acb679b79801b2b702f64e1fac3d637309937a455d620c940fe368db1a970`
+- Source hash: `7832b6708c202aa979a93949efb1356fad7e5e8588f7afb6fb11f10899f4990f`
 
 ## What This File Does
 

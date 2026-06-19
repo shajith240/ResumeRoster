@@ -4,9 +4,9 @@
 
 - Source path: `docs/frontend/components.md`
 - Kind: Documentation
-- Size: 1579 bytes
+- Size: 1547 bytes
 - Lines: 33
-- Source hash: `8280b85909b21446a8652632e9ae53d5a8d8b418e73bdee24cf446fb93791bc7`
+- Source hash: `b8e6f977b17e18c831c6c714c6362df2cc166f46abb5ee030bcbe30b9dbcb1ca`
 
 ## What This File Does
 

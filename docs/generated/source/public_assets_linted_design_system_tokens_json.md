@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/linted_design_system/tokens.json`
 - Kind: Public visual asset
-- Size: 7129 bytes
+- Size: 6864 bytes
 - Lines: 266
-- Source hash: `2f1a1e4d5212f48228ac07234db95487ffc574ed1cac32a95686bda33f3afcea`
+- Source hash: `91070b9b04d634d3883e421647d2a078edc3507a353ee3b60c7bb9fc37e083fe`
 
 ## What This File Does
 

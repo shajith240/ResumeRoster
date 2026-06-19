@@ -4,9 +4,9 @@
 
 - Source path: `components/ProfileDetail.module.css`
 - Kind: React component
-- Size: 33662 bytes
+- Size: 31847 bytes
 - Lines: 1816
-- Source hash: `914d4c5d53dd77357855837fc587341903abb04d80c2c2eb7aedf299e325a067`
+- Source hash: `779291fe05228d2b0830b3583e7635ac067ee046c2667415d3ea461cde2d1d13`
 
 ## What This File Does
 

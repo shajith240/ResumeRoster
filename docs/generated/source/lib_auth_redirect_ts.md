@@ -4,9 +4,9 @@
 
 - Source path: `lib/auth-redirect.ts`
 - Kind: Application library module
-- Size: 702 bytes
+- Size: 679 bytes
 - Lines: 24
-- Source hash: `71d22d3ca22db15712b487983915262d0e82520ab13ef66476b079e10b3596a2`
+- Source hash: `cd1f299aa77fba0d12b326f69b7be59151ad39e4f15cbd3c86de9641dba662c1`
 
 ## What This File Does
 

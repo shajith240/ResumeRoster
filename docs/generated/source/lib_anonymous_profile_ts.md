@@ -4,9 +4,9 @@
 
 - Source path: `lib/anonymous-profile.ts`
 - Kind: Application library module
-- Size: 2479 bytes
+- Size: 2358 bytes
 - Lines: 122
-- Source hash: `42e6043032e34f7d01b5151a4d2ef0546c3fc685060ca89913c58caf5ff37e89`
+- Source hash: `631703848ad2e0cbfc4821c83507d95af362dd75812ae032d4df3a3cc3a2e1a8`
 
 ## What This File Does
 

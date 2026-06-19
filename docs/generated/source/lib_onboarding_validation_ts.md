@@ -4,9 +4,9 @@
 
 - Source path: `lib/onboarding-validation.ts`
 - Kind: Application library module
-- Size: 4659 bytes
+- Size: 4487 bytes
 - Lines: 173
-- Source hash: `0b1f48d37a4b2299560d6d6521c111d63a7aaae6bc992bc54f12a06ca67a7aff`
+- Source hash: `57dd75c747fe9cdfb31db798e681a9316522b38fb479e4f89ff3bbdbeacd9cfc`
 
 ## What This File Does
 

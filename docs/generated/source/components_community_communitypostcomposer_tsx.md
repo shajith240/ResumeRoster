@@ -4,9 +4,9 @@
 
 - Source path: `components/community/CommunityPostComposer.tsx`
 - Kind: React component
-- Size: 38735 bytes
+- Size: 37378 bytes
 - Lines: 1358
-- Source hash: `63db4f04ac9e2a279593fe673a1d8480989c7e84419379ddecbeb94e03bcb6c1`
+- Source hash: `24c6fa92b2980ac861831c2b76ed4703041a8b3ddff3db88d6530b01b6858fd9`
 
 ## What This File Does
 

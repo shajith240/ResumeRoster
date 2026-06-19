@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/dropdown-menu.tsx`
 - Kind: UI primitive
-- Size: 9498 bytes
+- Size: 9250 bytes
 - Lines: 249
-- Source hash: `06c6809c2bdc62332a8e4c4105313a19ade6ee14009f51440c0c11fa11a8aae0`
+- Source hash: `d9643374676da64acf02ab4c4a66434c4a4ce90d2e7291abc1d11e19a66b8d16`
 
 ## What This File Does
 

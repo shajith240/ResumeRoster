@@ -4,9 +4,9 @@
 
 - Source path: `docs/operations/ci-and-docs.md`
 - Kind: Documentation
-- Size: 1909 bytes
+- Size: 1834 bytes
 - Lines: 76
-- Source hash: `3f64855cf7254ecb0dba550e22cff153ede72c4e45cdccbebabd57b8068348b3`
+- Source hash: `0418fe4b60f725e8b6b8de0bc1dc20d2e9dc3ce295b3cedbb7c03b0ef68c1701`
 
 ## What This File Does
 

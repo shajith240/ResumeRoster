@@ -4,9 +4,9 @@
 
 - Source path: `components/reactions/ReactionIcon.tsx`
 - Kind: React component
-- Size: 1466 bytes
+- Size: 1419 bytes
 - Lines: 48
-- Source hash: `4c3358a94f9b89421251b2092489db6b52760af313bab20cadb6e0a989d451bf`
+- Source hash: `7bfd46466e006838da4c7e4e50976407bcd90c67cf9bda5c26275235926f51a1`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `docs/backend/auth-and-sessions.md`
 - Kind: Documentation
-- Size: 1378 bytes
+- Size: 1337 bytes
 - Lines: 42
-- Source hash: `0172c618aa71997924cec6a280aa3b257e3f127371ac9fc509c56951e711929f`
+- Source hash: `f2bb55b5ee1e5ca0da91b065c5d51f8a1c0fa3c8f3e8af7b2f4a444258805c5f`
 
 ## What This File Does
 

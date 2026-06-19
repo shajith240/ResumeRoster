@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/ResumeDetailSkeleton.tsx`
 - Kind: React component
-- Size: 2745 bytes
+- Size: 2631 bytes
 - Lines: 115
-- Source hash: `11258fa31b5d9564943c9e0d96c3a3332815faf98507601dd16d302fd7b1ca1e`
+- Source hash: `d57ae9612dae9c5cc0a6a3d4d787f505e8ec8d7d003935bbe3c21c1c28b24fff`
 
 ## What This File Does
 

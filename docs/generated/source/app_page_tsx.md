@@ -4,9 +4,9 @@
 
 - Source path: `app/page.tsx`
 - Kind: Next page route
-- Size: 2795 bytes
+- Size: 2688 bytes
 - Lines: 108
-- Source hash: `f8e2502d3b96d5776a6e551cc9fcb012784082b57e2fe15acdf2ba3f05405093`
+- Source hash: `7a645d75292f07f84f56de04f6de97ddb6ae9633120f4e875c5a1d328297fa36`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/community-code-languages.test.ts`
 - Kind: Unit test
-- Size: 764 bytes
+- Size: 745 bytes
 - Lines: 20
-- Source hash: `1c34027ba8f935b82bb3dd9c4426c564db4d59dbfd8d9361f8cdeae75e87d46b`
+- Source hash: `0a3df108f65d43f346b69da158e80476477b900dd36330d0190a7c97edc96ddc`
 
 ## What This File Does
 

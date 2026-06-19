@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0064_hard_delete_community_posts.sql`
 - Kind: Supabase migration
-- Size: 3726 bytes
+- Size: 3598 bytes
 - Lines: 129
-- Source hash: `9bc88f64280b7455f22a21ab61f8f32907a438b84ca2ee547fa92e87c1e279cf`
+- Source hash: `e8bc94430412825878d2cb3e295584b8f9b3ca41c1304e8a217e046fe894d229`
 
 ## What This File Does
 

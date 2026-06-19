@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/primary-navigation.test.ts`
 - Kind: Unit test
-- Size: 2477 bytes
+- Size: 2385 bytes
 - Lines: 93
-- Source hash: `d7f5f0a844660b4c9b71029fcea460b012c0b824859745fd8b5e7e9e8d848bf3`
+- Source hash: `16e135856a9a63ece1845d93b2ba504fce0376f26ce6fdf9c7de33535c391d70`
 
 ## What This File Does
 

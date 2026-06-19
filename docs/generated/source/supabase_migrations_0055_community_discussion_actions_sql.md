@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0055_community_discussion_actions.sql`
 - Kind: Supabase migration
-- Size: 23455 bytes
+- Size: 22630 bytes
 - Lines: 826
-- Source hash: `82a4a03060d3dcab550d65f59d48d8a566030c7d090f280b5c78a419822d5e0d`
+- Source hash: `9aa71173d6320705e3ab484d63d062a143e35e16e98b6b22dcbcd16cd9a648cd`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/progressive-blur.tsx`
 - Kind: UI primitive
-- Size: 1426 bytes
+- Size: 1373 bytes
 - Lines: 54
-- Source hash: `907efd7ccadb7662756819ae2dc244f53c11dc9883a9a868612b3d464a26626b`
+- Source hash: `cebee57ef74526cecd383864347a706b2ea7ebc204c44c007df272e4de125915`
 
 ## What This File Does
 

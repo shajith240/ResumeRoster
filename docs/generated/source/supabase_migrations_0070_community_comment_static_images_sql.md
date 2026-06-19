@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0070_community_comment_static_images.sql`
 - Kind: Supabase migration
-- Size: 9417 bytes
+- Size: 9094 bytes
 - Lines: 324
-- Source hash: `8a50c692875f3107d4872ced1aedc60c2c7dd458d5db5def56230290f03e4500`
+- Source hash: `26c6493408294697c6309078e5e6089686370beb1eb190c6cd6e01aba3d384b9`
 
 ## What This File Does
 

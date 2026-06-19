@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/20260618161905_security_audit_hardening.sql`
 - Kind: Supabase migration
-- Size: 4080 bytes
+- Size: 4007 bytes
 - Lines: 74
-- Source hash: `61e0eec0b9fbdb83c702d5ce07b52ffd74fa7c6cd3f6bf9f646d40dd64cb6f40`
+- Source hash: `12e86e54cd148c19d68dbaadf6b421aeeab9e086ea1d5641499857deb24cf73d`
 
 ## What This File Does
 

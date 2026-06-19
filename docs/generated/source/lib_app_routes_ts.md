@@ -4,9 +4,9 @@
 
 - Source path: `lib/app-routes.ts`
 - Kind: Application library module
-- Size: 106 bytes
+- Size: 101 bytes
 - Lines: 6
-- Source hash: `9aeeb721492370f6da3ec59dc22804064432f3a18dc5f0bae7fdf929045b8555`
+- Source hash: `90fc1085804cc31e7eb93e808d1d9bd7b87115400ce19b4d83351104ebee1f74`
 
 ## What This File Does
 

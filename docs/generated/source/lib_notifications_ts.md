@@ -4,9 +4,9 @@
 
 - Source path: `lib/notifications.ts`
 - Kind: Application library module
-- Size: 1389 bytes
+- Size: 1350 bytes
 - Lines: 40
-- Source hash: `1b3645a2b19d0613d4afa465a806fd358051d57bc7801b5ceb65b1180972cc8a`
+- Source hash: `6bc28178ebaa53f7bafb28e77486eaba095d7d9511398cabbfa0ec1fa66788f0`
 
 ## What This File Does
 

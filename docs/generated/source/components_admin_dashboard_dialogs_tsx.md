@@ -4,9 +4,9 @@
 
 - Source path: `components/admin-dashboard/dialogs.tsx`
 - Kind: React component
-- Size: 8128 bytes
+- Size: 7830 bytes
 - Lines: 299
-- Source hash: `d9fd24428d6307d1a4e82fb35498c4d1b3aba2e9500ca9d4e7e5c2aa3d4062df`
+- Source hash: `66529a05b1fe32bc111363b07cd446b24af0155a63f245731a944a0d94360a94`
 
 ## What This File Does
 

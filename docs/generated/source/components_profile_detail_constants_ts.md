@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/constants.ts`
 - Kind: React component
-- Size: 676 bytes
+- Size: 655 bytes
 - Lines: 22
-- Source hash: `a3f49daa04d1177d526e361d627ce786fb52e154d0ec9049a6656088dacf40f5`
+- Source hash: `8eed15d4dc47c702cd8a0cf60296416ffc5e0164af94f015a4e1f0d26e056b44`
 
 ## What This File Does
 

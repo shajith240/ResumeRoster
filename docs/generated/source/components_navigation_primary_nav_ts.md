@@ -4,9 +4,9 @@
 
 - Source path: `components/navigation/primary-nav.ts`
 - Kind: React component
-- Size: 1419 bytes
+- Size: 1350 bytes
 - Lines: 70
-- Source hash: `5435497e61d8babf3c02bd9aaa65b6b3a660d7ae4cd67ee83f9c01cccb5bf871`
+- Source hash: `f86c6a75030b89e07ac984369cd81cdf71ae56b7f73e70978294eda4161a6247`
 
 ## What This File Does
 

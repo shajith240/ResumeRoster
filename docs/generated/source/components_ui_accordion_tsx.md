@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/accordion.tsx`
 - Kind: UI primitive
-- Size: 3921 bytes
+- Size: 3748 bytes
 - Lines: 174
-- Source hash: `5dbadbf7ac9bed9ec640dc91c08cf1989a6b68ba8eb749e3f66e201d0931c296`
+- Source hash: `2d9e2c61ab9fc5565f151225fd5b341ce06e79635db2f0593d46f4dc20ef6292`
 
 ## What This File Does
 

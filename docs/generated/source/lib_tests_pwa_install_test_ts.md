@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/pwa-install.test.ts`
 - Kind: Unit test
-- Size: 1338 bytes
+- Size: 1292 bytes
 - Lines: 47
-- Source hash: `00aa46979c1a4b350a38d5e3ead88632c141b55721d84dbf7a0f4868d515b9f4`
+- Source hash: `54aa925dd2f9fb994be5a154ed0692487f9c7bc02c43cef391704b3f486d1aa7`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/community-validation.test.ts`
 - Kind: Unit test
-- Size: 2421 bytes
+- Size: 2325 bytes
 - Lines: 97
-- Source hash: `4a9526ef7be9f8806379c17f8120c16cbdd21ebdbc5b6b057bd3accbac589bd8`
+- Source hash: `8adb375c8b11128e1f7d5298dea0d6b33b6794b9485f5b462eb45f50a0535010`
 
 ## What This File Does
 

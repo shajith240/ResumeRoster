@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0067_admin_feedback_inbox.sql`
 - Kind: Supabase migration
-- Size: 9141 bytes
+- Size: 8917 bytes
 - Lines: 225
-- Source hash: `e01d4c9603ff8d517484ce80b780807754121ab082741686240c1399a9f9ae79`
+- Source hash: `d9592c04b8ab59131c32d6d8322a4373e3bb91117090d169accd2f333b5f1346`
 
 ## What This File Does
 

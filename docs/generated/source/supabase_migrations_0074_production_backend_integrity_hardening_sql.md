@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0074_production_backend_integrity_hardening.sql`
 - Kind: Supabase migration
-- Size: 22364 bytes
+- Size: 21707 bytes
 - Lines: 658
-- Source hash: `228fa7b679783c742cef81c8e3caf39747bbd0e8d3d9bffbbe524eca72da8b9b`
+- Source hash: `d2953414ca4a9f7c9f466e5e8eba652fe2ca9b95f37807b27fdac8e400e6f84f`
 
 ## What This File Does
 

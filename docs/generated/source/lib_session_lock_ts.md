@@ -4,9 +4,9 @@
 
 - Source path: `lib/session-lock.ts`
 - Kind: Application library module
-- Size: 3950 bytes
+- Size: 3811 bytes
 - Lines: 140
-- Source hash: `bc949818661d63a4fb53c3509c152acf41ae06cea6be8e553ac8ced3eb2c9c49`
+- Source hash: `a8f42befddc90865f86c50b0d2f89a4b62a84fd0bb23dc0e9960207620cacc3e`
 
 ## What This File Does
 

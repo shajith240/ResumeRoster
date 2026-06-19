@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/guided-review-composer.tsx`
 - Kind: React component
-- Size: 7229 bytes
+- Size: 6952 bytes
 - Lines: 278
-- Source hash: `0493277c300d009283aea424204031b36993b287ee1083374bcb4f6b4ca80ad3`
+- Source hash: `06ddb954edbf04af46baefa54edb1058c01a4549f449b079208a60f05fc72688`
 
 ## What This File Does
 

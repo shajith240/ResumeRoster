@@ -4,9 +4,9 @@
 
 - Source path: `lib/avatar-validation.ts`
 - Kind: Application library module
-- Size: 1386 bytes
+- Size: 1341 bytes
 - Lines: 46
-- Source hash: `8e7bcd15961de890bd9cf9b0cc0ddb855dfc1b36b9456a586376c5532c51ffbc`
+- Source hash: `5c3515e9febbb32d5b5c58425ec6a9a8338b9d08454c8837ac44f70600447727`
 
 ## What This File Does
 

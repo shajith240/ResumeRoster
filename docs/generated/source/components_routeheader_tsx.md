@@ -4,9 +4,9 @@
 
 - Source path: `components/RouteHeader.tsx`
 - Kind: React component
-- Size: 2099 bytes
+- Size: 2023 bytes
 - Lines: 77
-- Source hash: `0c430fcca0f9bc0a65efc48fb4198475ccb3440fe238dd892fe2abfebc57f03c`
+- Source hash: `43531a7f161be8c371f7bb6171b2776ff23670a108103fa4851a758742b15369`
 
 ## What This File Does
 

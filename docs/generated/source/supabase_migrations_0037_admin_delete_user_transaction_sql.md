@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0037_admin_delete_user_transaction.sql`
 - Kind: Supabase migration
-- Size: 9302 bytes
+- Size: 9042 bytes
 - Lines: 261
-- Source hash: `3a06f4633930c8a222bc0de5203a1ac87217fb4facec6a6569b97c83bc1a1817`
+- Source hash: `265182ec94accca4fca2af6c85b849941c7ccf3ce601a71121f8d277987cefcc`
 
 ## What This File Does
 

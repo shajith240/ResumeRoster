@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0039_transactional_admin_messages.sql`
 - Kind: Supabase migration
-- Size: 10240 bytes
+- Size: 9918 bytes
 - Lines: 323
-- Source hash: `17788063ce51d36a9442b5652922727b5064b74004418d4f55b2ec38f31cdef6`
+- Source hash: `d226a1eec0440034cd9e3b2b9502f3d384faca5a09e9782ea925ad8b7b52a629`
 
 ## What This File Does
 

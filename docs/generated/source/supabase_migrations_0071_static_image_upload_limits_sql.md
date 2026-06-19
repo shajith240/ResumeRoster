@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0071_static_image_upload_limits.sql`
 - Kind: Supabase migration
-- Size: 2005 bytes
+- Size: 1949 bytes
 - Lines: 57
-- Source hash: `1433ba734fd02dc186d068b877c9b10f5ea06e3ca397e6b9b59063610422e186`
+- Source hash: `527164e872e982afd42a380c1486f2a1cdf9aad0ca9397dd72ba7029b61a7dce`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `docs/README.md`
 - Kind: Documentation
-- Size: 2635 bytes
+- Size: 2571 bytes
 - Lines: 65
-- Source hash: `268f9147de471265272660139fb886abd153d180c9ced40e905c4c8f5a90b2b6`
+- Source hash: `ba8db43584d9f813bcb3210be5d04b5596de58a616944cc5192d90ccdc8f0da5`
 
 ## What This File Does
 

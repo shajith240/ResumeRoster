@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-feed/feed-loader.ts`
 - Kind: React component
-- Size: 3077 bytes
+- Size: 2974 bytes
 - Lines: 104
-- Source hash: `d18393edd73a96cc5a576fb5c0fcc64ceef74b43b9f85fa20e5c92e8717a2491`
+- Source hash: `0a3832b2a80cde052669b1db833ee4b63efb57c9cf923f0c3b41c6343ea45c05`
 
 ## What This File Does
 

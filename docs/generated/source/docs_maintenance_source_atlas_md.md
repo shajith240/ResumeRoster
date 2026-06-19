@@ -4,9 +4,9 @@
 
 - Source path: `docs/maintenance/source-atlas.md`
 - Kind: Documentation
-- Size: 1083 bytes
+- Size: 1046 bytes
 - Lines: 38
-- Source hash: `0a2969d8b650c49f370231dd3a384d9cccd6d1e4e4ff13b581ec2c847e271e6a`
+- Source hash: `9597e1c40a7d64a568aa9a3de8c3944a8a511fa035a49708be0bd17b03eca69e`
 
 ## What This File Does
 

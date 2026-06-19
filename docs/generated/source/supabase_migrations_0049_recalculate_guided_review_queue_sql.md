@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0049_recalculate_guided_review_queue.sql`
 - Kind: Supabase migration
-- Size: 7922 bytes
+- Size: 7631 bytes
 - Lines: 292
-- Source hash: `4a3a609e94b0098e060ec9d15786caeef4555b397aa86d2a7b1ebe90b6ba6db5`
+- Source hash: `16a4642cc1872d5292b15aea22f5c1a4da868035f31c9b26d822b4015b9452d5`
 
 ## What This File Does
 

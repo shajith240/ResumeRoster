@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0048_hide_waiting_resumes_from_public_feed.sql`
 - Kind: Supabase migration
-- Size: 2347 bytes
+- Size: 2265 bytes
 - Lines: 83
-- Source hash: `6cfd4bb72e16a40ff285b669db887c44376537ad25585b7ee573a4b14b7f6bea`
+- Source hash: `95d84a8125199ce86d30a40b62b008e52f174673db9008599c9a60b30faa1f3b`
 
 ## What This File Does
 

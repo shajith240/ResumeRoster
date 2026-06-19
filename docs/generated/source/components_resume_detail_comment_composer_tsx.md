@@ -4,9 +4,9 @@
 
 - Source path: `components/resume-detail/comment-composer.tsx`
 - Kind: React component
-- Size: 16545 bytes
+- Size: 15951 bytes
 - Lines: 595
-- Source hash: `ec548fc03d22ba86adb09a7ce2119bdc54d4d6bca24d3d30f4444d2bc8c50705`
+- Source hash: `f45f65fe8e46cb044e8cb04c7594cddd76ba5863abe6f8aee5e628e4c14ee221`
 
 ## What This File Does
 

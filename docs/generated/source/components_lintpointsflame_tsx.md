@@ -4,9 +4,9 @@
 
 - Source path: `components/LintPointsFlame.tsx`
 - Kind: React component
-- Size: 3282 bytes
+- Size: 3168 bytes
 - Lines: 115
-- Source hash: `4267b38e68e20ff0eb2676345e3671d5aeb06b499c2c740afbe820ad419a4372`
+- Source hash: `71bd0c75ce1b871f70dfca852e1d57ede5dadffc76613c75ec22167c89be8371`
 
 ## What This File Does
 

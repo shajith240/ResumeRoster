@@ -4,9 +4,9 @@
 
 - Source path: `lib/community-media-validation.ts`
 - Kind: Application library module
-- Size: 2034 bytes
+- Size: 1959 bytes
 - Lines: 76
-- Source hash: `300366cb7d2f44f95bc0dfacadc38f2c59f3f0a5653eddd91326e73262fe695e`
+- Source hash: `d2a8467d41f6277252af3295af189fab93f4f49b673a9c7c9800106c1f40978b`
 
 ## What This File Does
 

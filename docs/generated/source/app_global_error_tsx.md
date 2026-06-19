@@ -4,9 +4,9 @@
 
 - Source path: `app/global-error.tsx`
 - Kind: Project file
-- Size: 1834 bytes
+- Size: 1752 bytes
 - Lines: 83
-- Source hash: `4528ed89455ac6f844480cebdb528731dc471e1a9929765d01bf34f2005fd753`
+- Source hash: `b64102e86429695c5b96657f806ac701230a99fcab08e206cea06c55fefbadec`
 
 ## What This File Does
 

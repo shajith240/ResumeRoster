@@ -4,9 +4,9 @@
 
 - Source path: `components/profile-detail/ProfileDetailSkeleton.tsx`
 - Kind: React component
-- Size: 3298 bytes
+- Size: 3172 bytes
 - Lines: 127
-- Source hash: `dfc4304895a136caad63f5e126b2b6ae3ab0a30baf3438422abb6fcebce655cc`
+- Source hash: `a6cd05def55deb78802ec2331fc1870934aeb9c0319d939622b9a7167d45924d`
 
 ## What This File Does
 

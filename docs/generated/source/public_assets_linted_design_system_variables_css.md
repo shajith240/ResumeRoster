@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/linted_design_system/variables.css`
 - Kind: Public visual asset
-- Size: 1872 bytes
+- Size: 1812 bytes
 - Lines: 61
-- Source hash: `b8d0c7903882d365d5572a3f5de7a945e935b708e8a23a55eb09edf9713b36b6`
+- Source hash: `3632e0c95ecf5845937e9b9204330d7dc1352634a7917a139abb1e6356cd7298`
 
 ## What This File Does
 

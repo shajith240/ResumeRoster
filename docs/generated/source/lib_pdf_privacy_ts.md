@@ -4,9 +4,9 @@
 
 - Source path: `lib/pdf-privacy.ts`
 - Kind: Application library module
-- Size: 2158 bytes
+- Size: 2077 bytes
 - Lines: 82
-- Source hash: `01b215db89d77f448db3314e854e9cc67d43149e9dd771600e59c09e073d6309`
+- Source hash: `452bdfdbd8bbe32081d670ce6a1df6c49c7012f54caba84a34a0e32a9d3e0778`
 
 ## What This File Does
 

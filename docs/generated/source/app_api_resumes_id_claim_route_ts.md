@@ -4,9 +4,9 @@
 
 - Source path: `app/api/resumes/[id]/claim/route.ts`
 - Kind: Next API route
-- Size: 2802 bytes
+- Size: 2699 bytes
 - Lines: 104
-- Source hash: `2f2c959a779540ddc5d4d40f3a59de173f2f29f76b9c07b85bdf5148bd5a15b3`
+- Source hash: `aa80386f22ba5580a61a61ae42b502d2e7f33c94fecd682c3b38899913d330d9`
 
 ## What This File Does
 

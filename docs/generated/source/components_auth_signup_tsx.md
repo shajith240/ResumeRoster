@@ -4,9 +4,9 @@
 
 - Source path: `components/auth/SignUp.tsx`
 - Kind: React component
-- Size: 15082 bytes
+- Size: 14584 bytes
 - Lines: 499
-- Source hash: `b52085ff642f72fdf071edfe63b10e2e6aeda8ee7169c8e6d5299f075d70e434`
+- Source hash: `0ffd0bcf8e4f641982464465764962a4ef4ac6e439aff70dafbe87461a473986`
 
 ## What This File Does
 

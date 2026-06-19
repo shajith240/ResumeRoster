@@ -4,9 +4,9 @@
 
 - Source path: `lib/api-errors.ts`
 - Kind: Application library module
-- Size: 419 bytes
+- Size: 398 bytes
 - Lines: 22
-- Source hash: `9b22a27dc727fab2a0ee46d2a5b3afb8a8e87189824372805ab69a9344657e76`
+- Source hash: `6085fb81abf667185b3d73cc3003f24010994dc8c012edf436605cced9544a18`
 
 ## What This File Does
 

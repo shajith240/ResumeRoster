@@ -4,9 +4,9 @@
 
 - Source path: `components/PwaInstallPrompt.tsx`
 - Kind: React component
-- Size: 5941 bytes
+- Size: 5732 bytes
 - Lines: 210
-- Source hash: `4a2f4f3158d14e328c4ad41bad0ea5263ad2e69109c0b7f6b955f4dd4a29635a`
+- Source hash: `16406b23a73c87ae665a1268d65d796ff56992684755f2870fa2c0506b1ff63b`
 
 ## What This File Does
 

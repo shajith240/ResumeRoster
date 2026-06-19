@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/0052_community_database_foundation.sql`
 - Kind: Supabase migration
-- Size: 69378 bytes
+- Size: 67525 bytes
 - Lines: 1854
-- Source hash: `aaf37841401287f65eb26392cad186bbffded3a9c150ea4930c3e45e9710392f`
+- Source hash: `2129b750d2c78181bf8e9ea7494a389badf6e262b5cc7c48436aa59f1626ed06`
 
 ## What This File Does
 

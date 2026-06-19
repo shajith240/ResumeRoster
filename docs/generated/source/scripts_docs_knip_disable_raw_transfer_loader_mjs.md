@@ -4,9 +4,9 @@
 
 - Source path: `scripts/docs/knip-disable-raw-transfer-loader.mjs`
 - Kind: Repository automation
-- Size: 433 bytes
+- Size: 416 bytes
 - Lines: 18
-- Source hash: `7bfcc89cc2d2fffb34ad8ac7b8050c35576265ba628c36caa1e4da4c6997cd03`
+- Source hash: `985a7d0a3a3a4cef706e47eda6f3e54efe3dd8f6cd2f65f677d5e607b179cfec`
 
 ## What This File Does
 

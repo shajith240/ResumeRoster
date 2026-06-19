@@ -4,9 +4,9 @@
 
 - Source path: `docs/frontend/README.md`
 - Kind: Documentation
-- Size: 1289 bytes
+- Size: 1244 bytes
 - Lines: 46
-- Source hash: `e27d07fe3a0c7aac4c654aeafdfaf9ceb547f1702c371f4653d5cc530ebf78b1`
+- Source hash: `ac28062346228584492810a76fe900128caf848d811686f205d68cb3fe53b5ff`
 
 ## What This File Does
 

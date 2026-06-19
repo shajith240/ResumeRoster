@@ -4,9 +4,9 @@
 
 - Source path: `public/push-sw.js`
 - Kind: Public browser asset
-- Size: 1867 bytes
+- Size: 1790 bytes
 - Lines: 78
-- Source hash: `40fecd54a932c5b3173aff4dbe97f1e24623968e2546cf38e5d7e3f00abde016`
+- Source hash: `699808c664a709abed1c9416d42b65fc431533ce22aabfac8ecfa5014ce0514d`
 
 ## What This File Does
 

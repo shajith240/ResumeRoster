@@ -4,9 +4,9 @@
 
 - Source path: `lib/supabase/client.ts`
 - Kind: Application library module
-- Size: 1698 bytes
+- Size: 1638 bytes
 - Lines: 61
-- Source hash: `4295ba782bf6ab17b023ea9f5ff93900d2125fe2cdb50be21bcdb77dc616b717`
+- Source hash: `a6f4ee87c231576432eac6e9e7c8b79f17c0d66271acd030b535d05ae88aa8c6`
 
 ## What This File Does
 

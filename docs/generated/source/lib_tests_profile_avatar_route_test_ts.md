@@ -4,9 +4,9 @@
 
 - Source path: `lib/__tests__/profile-avatar-route.test.ts`
 - Kind: Unit test
-- Size: 6017 bytes
+- Size: 5825 bytes
 - Lines: 193
-- Source hash: `5cfc7be4d06b8ae1b4b84854632ddc9cd01d5bd86f245763b71c83fa794dd747`
+- Source hash: `f946c679c2725353b8273a5ed63d7640b6c1220ee9c681b8e5d4033309b11f93`
 
 ## What This File Does
 

@@ -4,9 +4,9 @@
 
 - Source path: `supabase/migrations/20260618164031_add_missing_fk_indexes.sql`
 - Kind: Supabase migration
-- Size: 531 bytes
+- Size: 522 bytes
 - Lines: 10
-- Source hash: `449de79f12e051a4bb2c748931154ada061a6b843e5cca2cb5d55f3297d17467`
+- Source hash: `bfb3454f48d57506182981b0aa7829706d6a0b1f5d778d74a4335adff85d2e68`
 
 ## What This File Does
 

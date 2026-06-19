@@ -4,9 +4,9 @@
 
 - Source path: `lib/server/supabase-admin.ts`
 - Kind: Application library module
-- Size: 197 bytes
+- Size: 192 bytes
 - Lines: 6
-- Source hash: `df58bfeb9cc1866276bafb33a074307ceec7f98ff255279b7e2f60b8e69e3f55`
+- Source hash: `f42c1b1496013c98518cf03f6803103a3c90e77fd0b1bff2a7104f26169dd953`
 
 ## What This File Does
 

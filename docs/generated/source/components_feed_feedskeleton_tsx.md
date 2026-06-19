@@ -4,9 +4,9 @@
 
 - Source path: `components/feed/FeedSkeleton.tsx`
 - Kind: React component
-- Size: 831 bytes
+- Size: 803 bytes
 - Lines: 29
-- Source hash: `fc3dc5545f02572b7031e33a52107f2281700669975dfc332c852bc88b9c75b5`
+- Source hash: `984b2f82e06f6c5781b5a9742d5748b1b5d010c94069f97120573717783b7d02`
 
 ## What This File Does
 

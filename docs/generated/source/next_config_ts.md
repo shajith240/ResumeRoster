@@ -4,9 +4,9 @@
 
 - Source path: `next.config.ts`
 - Kind: Project configuration
-- Size: 2740 bytes
+- Size: 2657 bytes
 - Lines: 84
-- Source hash: `5b56ba1c20e23616450e9b63bb6c564002ffdf5e7afbb9acf61e4c11e7c628e7`
+- Source hash: `e5532153e82114fd0fb68e5f613a03e03f0cf2baf51cb25a427e4a953aa0da86`
 
 ## What This File Does
 
