@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
+import { getUserEmail, sendEmail } from "@/lib/email/send";
+import { refundIssued } from "@/lib/email/templates";
 import { issueRazorpayRefund, PREMIUM_AMOUNT_PAISE } from "@/lib/razorpay";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 
@@ -121,6 +123,13 @@ export async function POST(request: Request, context: RouteContext) {
 			amount_paise: PREMIUM_AMOUNT_PAISE,
 		},
 		reason: "User-requested refund — reviewer not yet assigned",
+	});
+
+	// Send refund confirmation email — fire-and-forget.
+	void getUserEmail(admin, user.id).then((email) => {
+		if (!email) return;
+		const tpl = refundIssued(resumeId);
+		void sendEmail({ to: email, ...tpl });
 	});
 
 	return NextResponse.json({ refunded: true });

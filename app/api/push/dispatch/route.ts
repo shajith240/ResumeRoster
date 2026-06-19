@@ -1,4 +1,6 @@
 import { createServiceSupabaseClient } from "@/lib/server-auth";
+import { getUserEmail, sendEmail } from "@/lib/email/send";
+import { deadlineReminder12h, deadlineReminder4h } from "@/lib/email/templates";
 import { sendPushForNotificationId } from "@/lib/server/push";
 
 export const runtime = "nodejs";
@@ -10,6 +12,14 @@ type DatabaseWebhookPayload = {
 	schema?: unknown;
 	table?: unknown;
 	type?: unknown;
+};
+
+type NotificationRecord = {
+	id?: string;
+	recipient_id?: string;
+	resume_id?: string | null;
+	dedupe_key?: string | null;
+	type?: string;
 };
 
 function getSecretFromRequest(request: Request) {
@@ -44,6 +54,31 @@ function getNotificationId(record: unknown) {
 	return typeof id === "string" ? id : "";
 }
 
+function getRecord(payload: DatabaseWebhookPayload): NotificationRecord | null {
+	const record = payload.record ?? payload;
+	if (!record || typeof record !== "object") return null;
+	return record as NotificationRecord;
+}
+
+// Send deadline reminder email for pg_cron-inserted notifications.
+async function maybeDeadlineEmail(
+	admin: ReturnType<typeof createServiceSupabaseClient>,
+	record: NotificationRecord,
+): Promise<void> {
+	const { recipient_id, resume_id, dedupe_key } = record;
+	if (!recipient_id || !resume_id || !dedupe_key) return;
+
+	const is12h = dedupe_key.startsWith("deadline_12h_");
+	const is4h = dedupe_key.startsWith("deadline_4h_");
+	if (!is12h && !is4h) return;
+
+	const email = await getUserEmail(admin, recipient_id);
+	if (!email) return;
+
+	const tpl = is12h ? deadlineReminder12h(resume_id) : deadlineReminder4h(resume_id);
+	await sendEmail({ to: email, ...tpl });
+}
+
 export async function POST(request: Request) {
 	if (!process.env.PUSH_WEBHOOK_SECRET) {
 		return Response.json(
@@ -75,6 +110,7 @@ export async function POST(request: Request) {
 		return Response.json({ ok: true, skipped: "Only inserts send push." });
 	}
 
+	const record = getRecord(payload);
 	const notificationId = getNotificationId(payload.record ?? payload);
 	if (!notificationId) {
 		return Response.json(
@@ -84,7 +120,13 @@ export async function POST(request: Request) {
 	}
 
 	const admin = createServiceSupabaseClient();
-	const result = await sendPushForNotificationId(admin, notificationId);
 
-	return Response.json({ ok: true, ...result });
+	// Run push and email dispatch concurrently.
+	const [pushResult] = await Promise.allSettled([
+		sendPushForNotificationId(admin, notificationId),
+		record ? maybeDeadlineEmail(admin, record) : Promise.resolve(),
+	]);
+
+	const pushValue = pushResult.status === "fulfilled" ? pushResult.value : {};
+	return Response.json({ ok: true, ...pushValue });
 }

@@ -93,16 +93,17 @@ Last updated: 2026-06-19
 
 ## 🟡 Medium — important features missing
 
-- [ ] **Email notifications system**
-  - Nothing sends email today — no welcome, no "your resume got reviewed", no refund confirmation
-  - Pick a provider: Resend or AWS SES (both work with Next.js)
-  - Emails needed:
-    - Welcome / onboarding complete
-    - "Your resume received a new review"
-    - Reviewer: "You've been assigned a priority resume — 24h clock started"
-    - Reviewer: "12h left to submit your review"
-    - Candidate: "Refund issued — reviewer missed deadline"
-    - Admin: daily digest of new reviewer applications
+- [x] **Email notifications system (Resend)**
+  - Provider: Resend (`resend` npm package). Requires `RESEND_API_KEY` + optional `EMAIL_FROM` env vars.
+  - Emails implemented (all fire-and-forget, non-blocking):
+    - Reviewer: "You've been assigned a priority resume" — wired in `POST /api/resumes/[id]/claim`
+    - Reviewer approved/rejected by admin — wired in `POST /api/admin/reviewers/[id]/action`
+    - Candidate: "Refund issued" — wired in both the user refund route and the cron auto-refund
+    - Candidate: "Priority review received" — wired in `POST /api/resumes/[id]/premium-review`
+    - Reviewer: "12h left" + "4h left" deadline reminders — sent in `/api/push/dispatch` webhook when pg_cron inserts deadline notification rows (detected by `dedupe_key` prefix)
+  - Files: `lib/email/client.ts`, `lib/email/send.ts`, `lib/email/templates.ts`
+  - ⚠️ Requires env vars: `RESEND_API_KEY`, `EMAIL_FROM` (default: `noreply@resumeroster.in`)
+  - ⚠️ Resend free tier uses `@resend.dev` domain — add and verify a custom domain before launch
 
 - [ ] **Reviewer payout / incentive tracking**
   - Verified reviewers do paid work (₹199 reviews) but earn nothing and there's no tracking
@@ -208,7 +209,7 @@ Last updated: 2026-06-19
 6. ~~In-app refund request UI~~ ✅ done
 7. ~~Structured premium review template~~ ✅ done
 8. ~~Reviewer deadline push notifications~~ ✅ done
-9. Email system (Resend)
+9. ~~Email system (Resend)~~ ✅ done
 10. Reviewer payout tracking
 11. Reviewer strike system
 12. Resume versioning

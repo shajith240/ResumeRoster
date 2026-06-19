@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
+import { getUserEmail, sendEmail } from "@/lib/email/send";
+import { reviewerAssigned } from "@/lib/email/templates";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
@@ -98,6 +100,13 @@ export async function POST(
 			{ status: 409 },
 		);
 	}
+
+	// Send "you've been assigned" email — fire-and-forget, non-blocking.
+	void getUserEmail(admin, user.id).then((email) => {
+		if (!email) return;
+		const tpl = reviewerAssigned(resumeId);
+		void sendEmail({ to: email, ...tpl });
+	});
 
 	return NextResponse.json({ claimed: true });
 }

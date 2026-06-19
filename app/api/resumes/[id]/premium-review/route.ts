@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
+import { getUserEmail, sendEmail } from "@/lib/email/send";
+import { premiumReviewPosted } from "@/lib/email/templates";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
@@ -236,6 +238,13 @@ export async function POST(request: Request, context: RouteContext) {
 		});
 		// Roast is already posted — not a critical failure.
 	}
+
+	// Notify the resume owner — fire-and-forget.
+	void getUserEmail(admin, resume.user_id).then((email) => {
+		if (!email) return;
+		const tpl = premiumReviewPosted(resumeId);
+		void sendEmail({ to: email, ...tpl });
+	});
 
 	return NextResponse.json({ roastId: roastResult.data.id });
 }

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
+import { getUserEmail, sendEmail } from "@/lib/email/send";
+import { refundIssued } from "@/lib/email/templates";
 import { createServiceSupabaseClient } from "@/lib/server-auth";
 import { issueRazorpayRefund, PREMIUM_AMOUNT_PAISE } from "@/lib/razorpay";
 
@@ -120,6 +122,21 @@ export async function GET(request: Request) {
 			});
 		}
 	});
+
+	// Send refund confirmation emails to candidates whose refunds succeeded.
+	void Promise.allSettled(
+		refundResults
+			.map((result, i) =>
+				result.status === "fulfilled" ? expired[i] : null,
+			)
+			.filter(Boolean)
+			.map(async (claim) => {
+				const email = await getUserEmail(admin, claim!.candidate_id);
+				if (!email) return;
+				const tpl = refundIssued(claim!.resume_id);
+				await sendEmail({ to: email, ...tpl });
+			}),
+	);
 
 	// Log all refund outcomes atomically — failures here don't affect the refunds already issued.
 	if (auditRows.length > 0) {
