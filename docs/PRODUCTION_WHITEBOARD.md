@@ -122,11 +122,12 @@ Last updated: 2026-06-19
   - `claim_premium_resume` RPC rejects with clear message if suspended; verified status unaffected
   - Migration: `20260619140000_reviewer_strike_system.sql`
 
-- [ ] **Resume versioning**
-  - Once a resume is submitted, it can't be updated
-  - Candidates iterate on resumes based on feedback — need to re-upload
-  - Options: (a) allow PDF re-upload on existing resume row, (b) create v2 as a new linked resume
-  - Simpler: add "Replace PDF" button on own resume detail → `PATCH /api/resumes/[id]/replace-pdf`
+- [x] **Resume versioning**
+  - "Replace PDF" button in owner view (shown only to resume owner on open resumes)
+  - Hidden `<input type="file">` triggers immediately on selection — no dialog
+  - `PATCH /api/resumes/[id]/replace-pdf` — validates, security-scans, redacts with existing privacy_mode, uploads to storage, updates `file_path`, removes old file (best-effort)
+  - Signed URL cleared after replace so the preview auto-reloads
+  - Files: `app/api/resumes/[id]/replace-pdf/route.ts`, `components/resume-detail/resume-preview-pane.tsx`
 
 - [ ] **Admin: premium controls panel**
   - Need a "Premium" tab in admin dashboard showing:
@@ -217,6 +218,6 @@ Last updated: 2026-06-19
 9. ~~Email system (Resend)~~ ✅ done
 10. ~~Reviewer payout tracking~~ ✅ done
 11. ~~Reviewer strike system~~ ✅ done
-12. Resume versioning
+12. ~~Resume versioning~~ ✅ done
 13. Admin premium controls panel
 14. Everything in 🔵 Low after the above

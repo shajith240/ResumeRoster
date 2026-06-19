@@ -103,6 +103,7 @@ export function useResumeDetailController(resumeId: string) {
 	const [refunding, setRefunding] = useState(false);
 	const [submittingPremiumReview, setSubmittingPremiumReview] = useState(false);
 	const [showRefundConfirm, setShowRefundConfirm] = useState(false);
+	const [replacingPdf, setReplacingPdf] = useState(false);
 	const [message, setMessage] = useState("");
 
 	const threadReviews = useMemo(
@@ -574,6 +575,46 @@ export function useResumeDetailController(resumeId: string) {
 		);
 		toast.success("Refund requested.", {
 			description: "Your ₹199 will be returned within 5–7 business days.",
+		});
+	}
+
+	async function handleReplacePdf(file: File) {
+		if (!user || !resume || !isOwner) return;
+
+		setReplacingPdf(true);
+		const session = await supabase.auth.getSession();
+		const accessToken = session.data.session?.access_token;
+		if (!accessToken) {
+			setReplacingPdf(false);
+			reportError("Your session expired. Sign in again.");
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append("file", file);
+
+		const response = await fetch(`/api/resumes/${resumeId}/replace-pdf`, {
+			method: "PATCH",
+			headers: { Authorization: `Bearer ${accessToken}` },
+			body: formData,
+		});
+
+		const result = (await response.json().catch(() => null)) as {
+			replaced?: boolean;
+			message?: string;
+		} | null;
+
+		setReplacingPdf(false);
+
+		if (!response.ok) {
+			reportError(result?.message ?? "Could not replace the PDF. Please try again.");
+			return;
+		}
+
+		// Reload the signed URL so the viewer shows the new file.
+		setSignedUrl("");
+		toast.success("PDF replaced.", {
+			description: "Your resume has been updated.",
 		});
 	}
 
@@ -1051,12 +1092,14 @@ export function useResumeDetailController(resumeId: string) {
 		guidedSuggestion,
 		claiming,
 		refunding,
+		replacingPdf,
 		submittingPremiumReview,
 		showRefundConfirm,
 		setShowRefundConfirm,
 		handleClaimResume,
 		handlePremiumReviewSubmit,
 		handleRefundRequest,
+		handleReplacePdf,
 		handleReplySubmit,
 		handleReviewSubmit,
 		isClosed,

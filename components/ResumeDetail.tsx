@@ -74,8 +74,10 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						onOpenFile={() => {
 							void controller.openResumeFile();
 						}}
+						onReplacePdf={(file) => { void controller.handleReplacePdf(file); }}
 						onRequestDelete={controller.requestDeleteResume}
 						onRequestStatusChange={controller.requestResumeStatusAction}
+						replacingPdf={controller.replacingPdf}
 						posterLabel={posterLabel}
 						resume={resume}
 						resumeActionBusy={controller.resumeActionBusy}

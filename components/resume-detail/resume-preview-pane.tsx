@@ -33,9 +33,11 @@ type ResumePreviewPaneProps = {
 	isOwner: boolean;
 	onLogin: () => void;
 	onOpenFile: () => void;
+	onReplacePdf: (file: File) => void;
 	onRequestDelete: () => void;
 	onRequestStatusChange: () => void;
 	posterLabel: string;
+	replacingPdf: boolean;
 	resume: ResumeSummary;
 	resumeActionBusy: boolean;
 	resumeAuthorProfile: ResumeAuthorProfile | null;
@@ -65,9 +67,11 @@ export function ResumePreviewPane({
 	isOwner,
 	onLogin,
 	onOpenFile,
+	onReplacePdf,
 	onRequestDelete,
 	onRequestStatusChange,
 	posterLabel,
+	replacingPdf,
 	resume,
 	resumeActionBusy,
 	resumeAuthorProfile,
@@ -125,6 +129,26 @@ export function ResumePreviewPane({
 							>
 								{isClosed ? "Reopen feedback" : "Close feedback"}
 							</Button>
+							<label className="replace-pdf-label">
+								<input
+									accept=".pdf,application/pdf"
+									className="sr-only"
+									disabled={replacingPdf || resumeActionBusy}
+									onChange={(e) => {
+										const file = e.target.files?.[0];
+										if (file) onReplacePdf(file);
+										e.target.value = "";
+									}}
+									type="file"
+								/>
+								<span
+									aria-disabled={replacingPdf || resumeActionBusy}
+									className={`btn-ghost replace-pdf-btn${replacingPdf ? " busy" : ""}`}
+									role="button"
+								>
+									{replacingPdf ? "Replacing…" : "Replace PDF"}
+								</span>
+							</label>
 							<Button
 								className="owner-delete-button"
 								disabled={resumeActionBusy}
