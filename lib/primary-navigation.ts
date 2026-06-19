@@ -48,21 +48,21 @@ export function getPrimaryNavigationItems({
 	if (communityEnabled) {
 		items.push({
 			id: "community",
-			href: "/feed",
-			label: "Home",
+			href: "/community",
+			label: "Community",
 			mobileLabel: "Home",
-			active: pathname === "/feed" || isWithinRoute(pathname, "/resume"),
+			active:
+				isWithinRoute(pathname, "/community") &&
+				!isCommunityComposeRoute(pathname),
 		});
 	}
 
 	items.push({
 		id: "feed",
-		href: "/community",
-		label: "Community",
-		mobileLabel: "Community",
-		active:
-			isWithinRoute(pathname, "/community") &&
-			!isCommunityComposeRoute(pathname),
+		href: "/feed",
+		label: "Resume Feed",
+		mobileLabel: "Resume",
+		active: pathname === "/feed" || isWithinRoute(pathname, "/resume"),
 	});
 
 	items.push({
