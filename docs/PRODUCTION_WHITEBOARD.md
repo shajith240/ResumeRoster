@@ -7,6 +7,7 @@ Last updated: 2026-06-19
 ---
 
 ## How to use this file
+
 - Work top to bottom within each priority tier
 - Update `[~]` when you start a task, `[x]` when merged and verified
 - Add notes under items as you go (keep them short — link PRs/commits)

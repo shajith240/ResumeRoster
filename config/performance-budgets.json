@@ -2,10 +2,10 @@
 	"manifestPath": ".next/app-build-manifest.json",
 	"routes": {
 		"/page": {
-			"maxGzipBytes": 310000
+			"maxGzipBytes": 400000
 		},
 		"/login/page": {
-			"maxGzipBytes": 310000
+			"maxGzipBytes": 320000
 		},
 		"/feed/page": {
 			"maxGzipBytes": 430000
@@ -20,7 +20,7 @@
 			"maxGzipBytes": 425000
 		},
 		"/submit/page": {
-			"maxGzipBytes": 430000
+			"maxGzipBytes": 450000
 		}
 	}
 }

@@ -4,9 +4,9 @@
 
 - Source path: `components/account/UserDropdown.tsx`
 - Kind: React component
-- Size: 11057 bytes
-- Lines: 427
-- Source hash: `87c65208ca3955fe5a792d40d39af97fce61805cb8daa53b46c73b949d0c8edd`
+- Size: 11045 bytes
+- Lines: 426
+- Source hash: `4a2bf7f9d2edec5a1671f016551c02df448cbee0e1b8b0221e99d49256047c1b`
 
 ## What This File Does
 
@@ -34,23 +34,23 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 142 | `UserDropdown` | React component | top-level | yes | `{ isAdmin = false, isOnline = false, user = { name: "Resume reviewer", userna...` | `import("react").JSX.Element` | Renders the UserDropdown UI component. |
-| 160 | `renderMenuItem` | Function | nested | no | `item`, `index` | `import("react").JSX.Element` | Implements the rendermenuitem helper. |
-| 198 | `renderMobilePanelTrigger` | Function | nested | no | `panel`, `PanelIcon`, `label`, `valueLabel` | `import("react").JSX.Element` | Implements the rendermobilepaneltrigger helper. |
-| 221 | `renderMobileDrilldown` | Function | nested | no | none | `import("react").JSX.Element` | Implements the rendermobiledrilldown helper. |
+| 141 | `UserDropdown` | React component | top-level | yes | `{ isAdmin = false, isOnline = false, user = { name: "Resume reviewer", userna...` | `import("react").JSX.Element` | Renders the UserDropdown UI component. |
+| 159 | `renderMenuItem` | Function | nested | no | `item`, `index` | `import("react").JSX.Element` | Implements the rendermenuitem helper. |
+| 197 | `renderMobilePanelTrigger` | Function | nested | no | `panel`, `PanelIcon`, `label`, `valueLabel` | `import("react").JSX.Element` | Implements the rendermobilepaneltrigger helper. |
+| 220 | `renderMobileDrilldown` | Function | nested | no | none | `import("react").JSX.Element` | Implements the rendermobiledrilldown helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 40 | `MenuAction` | type |
-| 49 | `AppTheme` | type |
-| 50 | `MobilePanel` | type |
-| 52 | `PhosphorIcon` | type |
-| 54 | `MenuItem` | type |
-| 66 | `ThemeItem` | type |
-| 72 | `UserDropdownUser` | type |
-| 79 | `UserDropdownProps` | type |
+| 39 | `MenuAction` | type |
+| 48 | `AppTheme` | type |
+| 49 | `MobilePanel` | type |
+| 51 | `PhosphorIcon` | type |
+| 53 | `MenuItem` | type |
+| 65 | `ThemeItem` | type |
+| 71 | `UserDropdownUser` | type |
+| 78 | `UserDropdownProps` | type |
 
 ## Related Tests
 

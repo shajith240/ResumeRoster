@@ -1122,7 +1122,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		}
 	}
 
-	function openCommentsShelf(
+	function _openCommentsShelf(
 		event?: ReactMouseEvent<HTMLAnchorElement | HTMLButtonElement>,
 	) {
 		if (!isMobileViewport()) return;
@@ -1132,7 +1132,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		setMobileCommentsSheetState("open");
 	}
 
-	function startMobilePostRevealGesture(
+	function _startMobilePostRevealGesture(
 		event: ReactPointerEvent<HTMLElement>,
 	) {
 		if (!isMobileViewport() || poll) {
@@ -1213,7 +1213,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		window.addEventListener("pointercancel", cleanup);
 	}
 
-	function handleMobilePostWheel(event: ReactWheelEvent<HTMLElement>) {
+	function _handleMobilePostWheel(event: ReactWheelEvent<HTMLElement>) {
 		if (
 			!isMobileViewport() ||
 			poll ||
@@ -1230,13 +1230,13 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 		setMobileCommentsSheetState("open");
 	}
 
-	function handleMobilePostSurfaceClick() {
+	function _handleMobilePostSurfaceClick() {
 		if (!isMobileViewport() || mobileCommentsSheetState !== "open") return;
 		setMobileCommentsSheetDrag(0);
 		setMobileCommentsSheetState("peek");
 	}
 
-	function startMobileCommentsSheetDrag(event: ReactPointerEvent<HTMLElement>) {
+	function _startMobileCommentsSheetDrag(event: ReactPointerEvent<HTMLElement>) {
 		if (!isMobileViewport()) return;
 		if (isMobileGestureBlocked(event.target)) return;
 
@@ -2292,7 +2292,7 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 			</form>
 		</div>
 	) : null;
-	const mobileCommentsSheetStyle = {
+	const _mobileCommentsSheetStyle = {
 		"--mobile-comments-sheet-drag": `${mobileCommentsSheetDrag}px`,
 		"--keyboard-inset": `${keyboardInset}px`,
 	} as CSSProperties;

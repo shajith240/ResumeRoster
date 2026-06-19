@@ -1,7 +1,6 @@
 "use client";
 
 import {
-	FileText,
 	Home,
 	ListChecks,
 	PencilLine,

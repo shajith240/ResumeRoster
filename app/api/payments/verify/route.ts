@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { SupabaseClient, User } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import {

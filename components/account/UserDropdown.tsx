@@ -15,7 +15,6 @@ import {
 	SignOut,
 	Sun,
 	UserCircle,
-	type Icon,
 	type IconProps,
 } from "@phosphor-icons/react";
 import type { ComponentType } from "react";

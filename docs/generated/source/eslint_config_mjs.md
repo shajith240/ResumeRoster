@@ -4,9 +4,9 @@
 
 - Source path: `eslint.config.mjs`
 - Kind: Project configuration
-- Size: 919 bytes
-- Lines: 40
-- Source hash: `84d2c78404bed592e799a23c32c78e17aa75cec27ed3c2f0d08ac4ec908c8144`
+- Size: 1091 bytes
+- Lines: 45
+- Source hash: `7e6accc602c0794d9531cd499f9bf2374e4e0a197eadf09d7bf19515f5b9fc05`
 
 ## What This File Does
 

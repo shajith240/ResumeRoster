@@ -4,9 +4,9 @@
 
 - Source path: `components/ui/solar-icons.tsx`
 - Kind: UI primitive
-- Size: 6397 bytes
+- Size: 6391 bytes
 - Lines: 124
-- Source hash: `1f975ef44ce88acc737a851bccf9bce9439c836297946a0ccce51b291849ebc7`
+- Source hash: `dfdc6a1454d92bdeaeda241bdfb4b11a68ef7c8a07a6198fae5df0fb149f4b94`
 
 ## What This File Does
 

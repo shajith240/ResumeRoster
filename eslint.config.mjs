@@ -24,6 +24,11 @@ export default [
       ...nextPlugin.configs["core-web-vitals"].rules,
       "@next/next/no-img-element": "off",
       "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": ["error", {
+        varsIgnorePattern: "^_",
+        argsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      }],
     },
   },
   {

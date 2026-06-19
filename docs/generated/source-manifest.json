@@ -360,11 +360,11 @@
       "exportCount": 3
     },
     {
-      "hash": "242d6857caf9aae301a11e285946980cdff2d49a679f24b5ba7d3ee6223fc9ed",
+      "hash": "b05aaa3c8dcf377f2f79a0b13e456e5f2570612b4a13e9e72483115ec0971938",
       "kind": "Next API route",
       "lineCount": 287,
       "relativePath": "app/api/payments/verify/route.ts",
-      "size": 8495,
+      "size": 8489,
       "functionCount": 6,
       "importCount": 10,
       "exportCount": 3
@@ -750,11 +750,11 @@
       "exportCount": 1
     },
     {
-      "hash": "87c65208ca3955fe5a792d40d39af97fce61805cb8daa53b46c73b949d0c8edd",
+      "hash": "4a2bf7f9d2edec5a1671f016551c02df448cbee0e1b8b0221e99d49256047c1b",
       "kind": "React component",
-      "lineCount": 427,
+      "lineCount": 426,
       "relativePath": "components/account/UserDropdown.tsx",
-      "size": 11057,
+      "size": 11045,
       "functionCount": 4,
       "importCount": 7,
       "exportCount": 1
@@ -1030,11 +1030,11 @@
       "exportCount": 2
     },
     {
-      "hash": "8a0afd005cd6471350deb4834edacbcb6b33b4b9f5d965903b6a08a3f41fb2a1",
+      "hash": "4b2751499f79b5e8ba2be81942cca6e46ad3fa8aa8e71f4229df08d514b7ec83",
       "kind": "React component",
       "lineCount": 2978,
       "relativePath": "components/community/CommunityPostDetail.tsx",
-      "size": 84508,
+      "size": 84514,
       "functionCount": 17,
       "importCount": 33,
       "exportCount": 2
@@ -1210,11 +1210,11 @@
       "exportCount": 2
     },
     {
-      "hash": "f86c6a75030b89e07ac984369cd81cdf71ae56b7f73e70978294eda4161a6247",
+      "hash": "ec3990642a128a4b141003bda1ebfea3e3ad0681d16752eeed5c26786e285a02",
       "kind": "React component",
-      "lineCount": 70,
+      "lineCount": 69,
       "relativePath": "components/navigation/primary-nav.ts",
-      "size": 1350,
+      "size": 1339,
       "functionCount": 1,
       "importCount": 2,
       "exportCount": 3
@@ -1710,12 +1710,12 @@
       "exportCount": 0
     },
     {
-      "hash": "a521279781cfd1178c87e6a969b608613a1380b05ae4884021bf90fed8f2f0d1",
+      "hash": "62e86a63095a1430b9591ef7c549f949230c49bd005e1cf3f2adb8c1afbd5e9d",
       "kind": "React component",
-      "lineCount": 308,
+      "lineCount": 307,
       "relativePath": "components/reviewer-hub/ReviewerHub.tsx",
-      "size": 8652,
-      "functionCount": 9,
+      "size": 8613,
+      "functionCount": 8,
       "importCount": 6,
       "exportCount": 1
     },
@@ -1970,11 +1970,11 @@
       "exportCount": 1
     },
     {
-      "hash": "1f975ef44ce88acc737a851bccf9bce9439c836297946a0ccce51b291849ebc7",
+      "hash": "dfdc6a1454d92bdeaeda241bdfb4b11a68ef7c8a07a6198fae5df0fb149f4b94",
       "kind": "UI primitive",
       "lineCount": 124,
       "relativePath": "components/ui/solar-icons.tsx",
-      "size": 6397,
+      "size": 6391,
       "functionCount": 1,
       "importCount": 3,
       "exportCount": 151
@@ -2300,11 +2300,11 @@
       "exportCount": 0
     },
     {
-      "hash": "e78bf68c7a0bd7c60ecaaebcf4e738780510dcf69cc7139e57e3286e7ec535ce",
+      "hash": "a5a811b2cc7e6ff2107316ff5f22d8e3d7c0612234a4c9931be75c86605b7b9d",
       "kind": "Documentation",
-      "lineCount": 381,
+      "lineCount": 417,
       "relativePath": "docs/premium-payment-edge-cases.md",
-      "size": 16216,
+      "size": 16306,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2320,11 +2320,11 @@
       "exportCount": 0
     },
     {
-      "hash": "f8afcbc3dc991fec2ded7e1d4523579e428018ca3c711ae0be46f3603b7aabb1",
+      "hash": "2b7a4524607e839693e4edaa77f84d05f35e5a19642e7321020f4870627ef537",
       "kind": "Documentation",
-      "lineCount": 209,
+      "lineCount": 210,
       "relativePath": "docs/PRODUCTION_WHITEBOARD.md",
-      "size": 9695,
+      "size": 9696,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -2400,11 +2400,11 @@
       "exportCount": 0
     },
     {
-      "hash": "84d2c78404bed592e799a23c32c78e17aa75cec27ed3c2f0d08ac4ec908c8144",
+      "hash": "7e6accc602c0794d9531cd499f9bf2374e4e0a197eadf09d7bf19515f5b9fc05",
       "kind": "Project configuration",
-      "lineCount": 40,
+      "lineCount": 45,
       "relativePath": "eslint.config.mjs",
-      "size": 919,
+      "size": 1091,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -5280,5 +5280,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "4fc33ad1187f48e11ae34268d895ddb7c152e8f4d82fdb16ae3ea3ede91c0089"
+  "manifestHash": "5f0a4295b2b6dc5b0c1a85cbdf4fdc0b0fdd90f03e276e288535479dd8b3235b"
 }

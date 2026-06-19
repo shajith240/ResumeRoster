@@ -13,6 +13,7 @@
 	"globs": [
 		"docs/**/*.md",
 		"supabase/MIGRATIONS.md",
-		"#docs/generated/source/**/*.md"
+		"!docs/design/**/*.md",
+		"!docs/generated/**/*.md"
 	]
 }

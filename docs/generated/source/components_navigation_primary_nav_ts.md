@@ -4,9 +4,9 @@
 
 - Source path: `components/navigation/primary-nav.ts`
 - Kind: React component
-- Size: 1350 bytes
-- Lines: 70
-- Source hash: `f86c6a75030b89e07ac984369cd81cdf71ae56b7f73e70978294eda4161a6247`
+- Size: 1339 bytes
+- Lines: 69
+- Source hash: `ec3990642a128a4b141003bda1ebfea3e3ad0681d16752eeed5c26786e285a02`
 
 ## What This File Does
 
@@ -31,14 +31,14 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 
 | Line | Name | Kind | Scope | Exported | Parameters | Return | Doc summary |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 62 | `getPrimaryNavigationItems` | Function | top-level | yes | `context` | `PrimaryNavigationItem[]` | Implements the getprimarynavigationitems helper. |
+| 61 | `getPrimaryNavigationItems` | Function | top-level | yes | `context` | `PrimaryNavigationItem[]` | Implements the getprimarynavigationitems helper. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
-| 23 | `PrimaryNavigationIcons` | type |
-| 28 | `PrimaryNavigationItem` | type |
+| 22 | `PrimaryNavigationIcons` | type |
+| 27 | `PrimaryNavigationItem` | type |
 
 ## Related Tests
 

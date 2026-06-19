@@ -32,18 +32,17 @@ function getClaimState(claim: ReviewerClaim): ClaimState {
 }
 
 function useCountdown(deadlineISO: string | null) {
-	const getSecondsLeft = () => {
+	const [seconds, setSeconds] = useState(() => {
 		if (!deadlineISO) return -1;
 		return Math.floor((new Date(deadlineISO).getTime() - Date.now()) / 1000);
-	};
-
-	const [seconds, setSeconds] = useState(getSecondsLeft);
+	});
 
 	useEffect(() => {
 		if (!deadlineISO) return;
-		const id = setInterval(() => setSeconds(getSecondsLeft()), 30_000);
+		const id = setInterval(() => {
+			setSeconds(Math.floor((new Date(deadlineISO).getTime() - Date.now()) / 1000));
+		}, 30_000);
 		return () => clearInterval(id);
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deadlineISO]);
 
 	if (seconds <= 0) return { expired: true, hours: 0, minutes: 0 };

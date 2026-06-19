@@ -4,9 +4,9 @@
 
 - Source path: `components/reviewer-hub/ReviewerHub.tsx`
 - Kind: React component
-- Size: 8652 bytes
-- Lines: 308
-- Source hash: `a521279781cfd1178c87e6a969b608613a1380b05ae4884021bf90fed8f2f0d1`
+- Size: 8613 bytes
+- Lines: 307
+- Source hash: `62e86a63095a1430b9591ef7c549f949230c49bd005e1cf3f2adb8c1afbd5e9d`
 
 ## What This File Does
 
@@ -37,18 +37,17 @@ Edit this when the UI behavior, component props, accessibility, or visual treatm
 | 22 | `getResumeTitle` | Function | top-level | no | `claim` | `string` | Implements the getresumetitle helper. |
 | 28 | `getClaimState` | Function | top-level | no | `claim` | `ClaimState` | Implements the getclaimstate helper. |
 | 34 | `useCountdown` | React hook | top-level | no | `deadlineISO` | `{ expired: boolean; hours: number; minutes: number; }` | Provides reusable usecountdown state and side effects. |
-| 35 | `getSecondsLeft` | Function | nested | no | none | `number` | Implements the getsecondsleft helper. |
-| 57 | `ClaimTimer` | React component | top-level | no | `{ deadline }` | `import("react").JSX.Element` | Renders the ClaimTimer UI component. |
-| 87 | `ClaimCard` | React component | top-level | no | `{ claim }` | `import("react").JSX.Element` | Renders the ClaimCard UI component. |
-| 128 | `SkeletonGroup` | React component | top-level | no | `{ rows = 2 }` | `import("react").JSX.Element` | Renders the SkeletonGroup UI component. |
-| 144 | `ReviewerHub` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the ReviewerHub UI component. |
+| 56 | `ClaimTimer` | React component | top-level | no | `{ deadline }` | `import("react").JSX.Element` | Renders the ClaimTimer UI component. |
+| 86 | `ClaimCard` | React component | top-level | no | `{ claim }` | `import("react").JSX.Element` | Renders the ClaimCard UI component. |
+| 127 | `SkeletonGroup` | React component | top-level | no | `{ rows = 2 }` | `import("react").JSX.Element` | Renders the SkeletonGroup UI component. |
+| 143 | `ReviewerHub` | React component | top-level | yes | none | `import("react").JSX.Element` | Renders the ReviewerHub UI component. |
 
 ## Types
 
 | Line | Name | Kind |
 | --- | --- | --- |
 | 26 | `ClaimState` | type |
-| 142 | `HubState` | type |
+| 141 | `HubState` | type |
 
 ## Related Tests
 

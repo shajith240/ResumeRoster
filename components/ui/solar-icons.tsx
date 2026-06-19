@@ -3,7 +3,7 @@
 "use client";
 
 import { Bookmark as PhosphorBookmark } from "@phosphor-icons/react";
-import type { Icon, IconProps } from "@phosphor-icons/react";
+import type { IconProps } from "@phosphor-icons/react";
 import type { ComponentType } from "react";
 
 export type LucideIcon = ComponentType<IconProps>;
