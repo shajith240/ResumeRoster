@@ -230,9 +230,16 @@ function checkReports(reports) {
 				return [`${relativePath} is missing`];
 			}
 			const current = fs.readFileSync(absolutePath, "utf8");
-			return normalize(current) === normalize(content)
-				? []
-				: [`${relativePath} is stale`];
+			if (normalize(current) === normalize(content)) return [];
+			// Emit first differing line so CI logs show exactly what changed.
+			const committedLines = normalize(current).split("\n");
+			const generatedLines = normalize(content).split("\n");
+			const diffIdx = committedLines.findIndex((l, i) => l !== generatedLines[i]);
+			const diffHint =
+				diffIdx === -1
+					? `lengths differ: committed=${committedLines.length} generated=${generatedLines.length}`
+					: `first diff at line ${diffIdx + 1}:\n  committed: ${JSON.stringify(committedLines[diffIdx])}\n  generated: ${JSON.stringify(generatedLines[diffIdx])}`;
+			return [`${relativePath} is stale\n  ${diffHint}`];
 		},
 	);
 	const expected = new Set(reports.keys());
