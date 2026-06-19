@@ -27,32 +27,70 @@ function stripAnsi(value) {
 }
 
 function normalizeToolOutput(value) {
-	const withNormalizedMeta = value
+	const normalized = value
 		.replace(/^time: .+$/gm, "time: deterministic")
 		.replace(/\\/g, "/")
 		.replace(/\r/g, "");
 
-	// jscpd traverses files in OS-dependent order (NTFS alphabetical on Windows,
-	// inode order on Linux), so "Clone found" blocks appear in different positions
-	// on different platforms. Sort them so committed reports are stable cross-platform.
-	const tableStart = withNormalizedMeta.indexOf("\n┌");
-	if (tableStart === -1) {
-		return withNormalizedMeta;
-	}
-	const cloneSection = withNormalizedMeta.slice(0, tableStart).trim();
-	const tableSection = withNormalizedMeta.slice(tableStart + 1);
+	// jscpd console output has two sources of platform-specific ordering:
+	//
+	// 1. "Clone found" blocks are emitted via CLONE_FOUND events as files are
+	//    processed — in file-traversal order (NTFS alphabetical on Windows,
+	//    inode order on Linux). Fix: sort blocks lexicographically.
+	//
+	// 2. The statistics table rows are built from Object.keys(statistic.formats),
+	//    whose insertion order also depends on which file type is first encountered
+	//    during traversal. Fix: sort table rows alphabetically, Total last.
+	const tableIdx = normalized.indexOf("\n┌");
+	if (tableIdx === -1) return normalized;
 
-	if (!cloneSection) {
-		return tableSection;
-	}
+	const cloneSection = normalized.slice(0, tableIdx).trim();
+	const tableAndRest = normalized.slice(tableIdx + 1);
 
-	const sortedBlocks = cloneSection
-		.split(/\n\n/)
-		.filter(Boolean)
-		.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
-		.join("\n\n");
+	const sortedClones = !cloneSection
+		? ""
+		: cloneSection
+				.split(/\n\n/)
+				.filter(Boolean)
+				.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
+				.join("\n\n");
 
-	return sortedBlocks + "\n\n" + tableSection;
+	return (sortedClones ? sortedClones + "\n\n" : "") + sortJscpdTable(tableAndRest);
+}
+
+// Sort the statistics table rows that jscpd outputs. Row insertion order
+// depends on file-traversal order (OS-dependent), so without sorting the
+// table the committed report would always be stale on a different platform.
+function sortJscpdTable(tableAndRest) {
+	const lines = tableAndRest.split("\n");
+	const bottomIdx = lines.findIndex((l) => l.startsWith("└"));
+	if (bottomIdx === -1 || !lines[0].startsWith("┌")) return tableAndRest;
+
+	const topBorder = lines[0];
+	const headerRow = lines[1];
+	const sep = lines.find((l) => l.startsWith("├")); // all ├ lines are identical
+	const bottomBorder = lines[bottomIdx];
+	const rest = lines.slice(bottomIdx + 1);
+
+	// Data rows are │ lines after the header, before the bottom border.
+	const dataRows = lines.slice(2, bottomIdx).filter((l) => l.startsWith("│"));
+	if (!sep || dataRows.length === 0) return tableAndRest;
+
+	// Keep the Total row last; sort everything else alphabetically.
+	const totalRow = dataRows[dataRows.length - 1];
+	const sorted = dataRows
+		.slice(0, -1)
+		.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+
+	return [
+		topBorder,
+		headerRow,
+		...sorted.flatMap((row) => [sep, row]),
+		sep,
+		totalRow,
+		bottomBorder,
+		...rest,
+	].join("\n");
 }
 
 function makeReport(title, command, result, notes = []) {
