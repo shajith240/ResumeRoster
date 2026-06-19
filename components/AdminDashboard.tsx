@@ -36,6 +36,7 @@ import {
 import { AdminSectionNav } from "./admin-dashboard/navigation";
 import { MetricCard, OverviewPage } from "./admin-dashboard/overview";
 import { PeoplePage } from "./admin-dashboard/people";
+import { PremiumPage, type AdminPayoutsData } from "./admin-dashboard/premium";
 import type {
 	ActiveAdminUser,
 	AdminDashboardView,
@@ -88,9 +89,9 @@ export default function AdminDashboard({
 			total: 0,
 		});
 	const [actions, setActions] = useState<ModerationAction[]>([]);
-	const [dataInventory, setDataInventory] = useState<AdminDataInventory | null>(
-		null,
-	);
+	const [dataInventory, setDataInventory] = useState<AdminDataInventory | null>(null);
+	const [payoutsData, setPayoutsData] = useState<AdminPayoutsData | null>(null);
+	const [payoutStatus, setPayoutStatus] = useState("pending");
 	const [reportStatus, setReportStatus] =
 		useState<ContentReportStatus>("pending");
 	const [feedbackStatus, setFeedbackStatus] = useState("open");
@@ -220,6 +221,11 @@ export default function AdminDashboard({
 					if (view === "data") {
 						return fetchJson<AdminDataInventory>("/api/admin/data");
 					}
+					if (view === "premium") {
+						return fetchJson<AdminPayoutsData>(
+							`/api/admin/payouts?status=${payoutStatus}&limit=200`,
+						);
+					}
 					return Promise.resolve(null);
 				})();
 
@@ -267,6 +273,9 @@ export default function AdminDashboard({
 				if (view === "data") {
 					setDataInventory(sectionData as AdminDataInventory | null);
 				}
+				if (view === "premium") {
+					setPayoutsData(sectionData as AdminPayoutsData | null);
+				}
 			} finally {
 				setPageLoading(false);
 			}
@@ -278,6 +287,7 @@ export default function AdminDashboard({
 			feedbackPriority,
 			feedbackStatus,
 			isAdmin,
+			payoutStatus,
 			peoplePage,
 			reportStatus,
 			reviewerStatus,
@@ -437,6 +447,24 @@ export default function AdminDashboard({
 			toast.error(error instanceof Error ? error.message : "Message failed.");
 		} finally {
 			setMessageSending(false);
+		}
+	}
+
+	async function runPayoutAction(payoutId: string, payoutRef: string) {
+		const actionKey = `payout:${payoutId}:mark_paid`;
+		setBusyAction(actionKey);
+		try {
+			await fetchJson(`/api/admin/payouts/${payoutId}`, {
+				body: JSON.stringify({ payoutRef }),
+				headers: { "Content-Type": "application/json" },
+				method: "POST",
+			});
+			toast.success("Payout marked as paid.");
+			await loadAdminData();
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "Action failed.");
+		} finally {
+			setBusyAction("");
 		}
 	}
 
@@ -646,6 +674,15 @@ export default function AdminDashboard({
 					{view === "content" ? <ContentPage overview={overview} /> : null}
 					{view === "audit" ? <AuditPage actions={actions} /> : null}
 					{view === "data" ? <DataPage inventory={dataInventory} /> : null}
+					{view === "premium" ? (
+						<PremiumPage
+							busyAction={busyAction}
+							onMarkPaid={runPayoutAction}
+							onStatusChange={(value) => setPayoutStatus(value)}
+							payoutsData={payoutsData}
+							status={payoutStatus}
+						/>
+					) : null}
 				</div>
 			</div>
 			<DeleteUserDialog

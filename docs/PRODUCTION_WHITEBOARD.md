@@ -105,11 +105,14 @@ Last updated: 2026-06-19
   - ⚠️ Requires env vars: `RESEND_API_KEY`, `EMAIL_FROM` (default: `noreply@resumeroster.in`)
   - ⚠️ Resend free tier uses `@resend.dev` domain — add and verify a custom domain before launch
 
-- [ ] **Reviewer payout / incentive tracking**
-  - Verified reviewers do paid work (₹199 reviews) but earn nothing and there's no tracking
-  - New table: `reviewer_payouts (id, reviewer_id, resume_id, amount, status, payout_ref, created_at)`
-  - Admin dashboard: show total owed per reviewer, mark as paid
-  - Decide payout model first (flat fee per review? percentage? store credit?)
+- [x] **Reviewer payout / incentive tracking**
+  - `reviewer_payouts` table: id, reviewer_id, resume_id, amount_paise, status (pending/paid), payout_ref, paid_by, paid_at
+  - Default payout: ₹99 per review (9900 paise) — auto-inserted when `POST /api/resumes/[id]/premium-review` succeeds
+  - Unique index on (resume_id, reviewer_id) prevents double-payouts
+  - `GET /api/admin/payouts?status=pending` — grouped by reviewer, sorted by amount owed
+  - `POST /api/admin/payouts/[id]` — atomically marks single payout paid with optional UPI ref
+  - Admin "Premium" tab at `/admin/premium` shows pending payout queue with inline "Mark paid" + ref field
+  - Migration: `20260619130000_reviewer_payouts.sql`
 
 - [ ] **Reviewer strike system**
   - Reviewers who claim and miss deadlines repeatedly should be flagged
@@ -210,7 +213,7 @@ Last updated: 2026-06-19
 7. ~~Structured premium review template~~ ✅ done
 8. ~~Reviewer deadline push notifications~~ ✅ done
 9. ~~Email system (Resend)~~ ✅ done
-10. Reviewer payout tracking
+10. ~~Reviewer payout tracking~~ ✅ done
 11. Reviewer strike system
 12. Resume versioning
 13. Admin premium controls panel

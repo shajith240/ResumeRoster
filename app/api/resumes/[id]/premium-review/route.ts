@@ -239,6 +239,12 @@ export async function POST(request: Request, context: RouteContext) {
 		// Roast is already posted — not a critical failure.
 	}
 
+	// Record payout owed to the reviewer — non-blocking, idempotent via unique index.
+	void admin.from("reviewer_payouts").insert({
+		reviewer_id: user.id,
+		resume_id: resumeId,
+	});
+
 	// Notify the resume owner — fire-and-forget.
 	void getUserEmail(admin, resume.user_id).then((email) => {
 		if (!email) return;

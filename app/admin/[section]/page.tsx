@@ -11,6 +11,7 @@ const adminViews = new Set<AdminDashboardView>([
 	"data",
 	"feedback",
 	"people",
+	"premium",
 	"reports",
 	"reviewers",
 ]);

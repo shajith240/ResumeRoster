@@ -6,6 +6,7 @@ import {
 	History,
 	Inbox,
 	LayoutDashboard,
+	Star,
 	UsersRound,
 } from "@/components/ui/solar-icons";
 import type { ContentReportStatus } from "@/lib/supabase/types";
@@ -85,6 +86,15 @@ export const adminSections: AdminSection[] = [
 		id: "data",
 		label: "Data",
 		title: "Data Control",
+	},
+	{
+		description: "Priority resumes, reviewer payouts, and manual overrides.",
+		group: "Operations",
+		href: "/admin/premium",
+		icon: Star,
+		id: "premium",
+		label: "Premium",
+		title: "Premium Controls",
 	},
 ];
 

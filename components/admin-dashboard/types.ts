@@ -12,6 +12,7 @@ export type AdminDashboardView =
 	| "feedback"
 	| "overview"
 	| "people"
+	| "premium"
 	| "reports"
 	| "reviewers";
 
