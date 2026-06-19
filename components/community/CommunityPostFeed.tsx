@@ -962,7 +962,6 @@ export default function CommunityPostFeed() {
 										<CommunityMarkdown
 											className="community-feed-excerpt"
 											content={post.body}
-											variant="compact"
 										/>
 									) : null}
 

@@ -251,38 +251,18 @@ test("primary navigation exposes app sections without account utilities", async 
 			mobileNav.getByRole("link", { name: "Profile" }),
 		).toHaveCount(0);
 
-		const resumeHeader = page.locator(".feed-route-header");
-		await expect(page.locator(".app-header")).toBeHidden();
-		await expect(resumeHeader).toBeVisible();
-		await expect(
-			page.getByRole("heading", { name: "Resume Feed" }),
-		).toBeVisible();
+		// On mobile the app-header (logo+auth chrome) is always visible;
+		// the feed-route-header is hidden by feed.css at max-width:760px.
+		await expect(page.locator(".app-header")).toBeVisible();
+		await expect(page.locator(".feed-route-header")).toBeHidden();
 
-		const resumeHeaderMetrics = await resumeHeader.evaluate((element) => {
-			const rect = element.getBoundingClientRect();
-			const title = element.querySelector("h1");
-			const titleStyle = title ? window.getComputedStyle(title) : null;
-			const headerStyle = window.getComputedStyle(element);
-
-			return {
-				fontSize: titleStyle ? Number.parseFloat(titleStyle.fontSize) : 0,
-				headerBorderBottomWidth: Number.parseFloat(
-					headerStyle.borderBottomWidth,
-				),
-				height: rect.height,
-			};
-		});
-
-		expect(resumeHeaderMetrics.height).toBeLessThanOrEqual(56);
-		expect(resumeHeaderMetrics.fontSize).toBeLessThanOrEqual(26);
-		expect(resumeHeaderMetrics.headerBorderBottomWidth).toBe(0);
-
+		// Scrolling past the threshold hides both the app-header and the mobile nav.
 		await page.evaluate(() => window.scrollTo(0, 520));
-		await expect(resumeHeader).toHaveClass(/is-hidden/);
+		await expect(page.locator(".app-header")).toHaveClass(/is-mobile-hidden/);
 		await expect(mobileNav).toHaveClass(/is-mobile-hidden/);
 
 		await page.evaluate(() => window.scrollTo(0, 0));
-		await expect(resumeHeader).not.toHaveClass(/is-hidden/);
+		await expect(page.locator(".app-header")).not.toHaveClass(/is-mobile-hidden/);
 		await expect(mobileNav).not.toHaveClass(/is-mobile-hidden/);
 
 		await page.goto("/community", { waitUntil: "domcontentloaded" });

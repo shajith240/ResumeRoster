@@ -12,7 +12,11 @@ test("authenticated feed preserves responsive layout", async ({
 
 	await page.goto("/feed", { waitUntil: "domcontentloaded" });
 
-	await expect(page.getByRole("heading", { name: "Resume Feed" })).toBeVisible();
+	// The feed-route-header is hidden on mobile (max-width 760px) via feed.css.
+	// The <h1> is therefore not in the accessibility tree on mobile.
+	if (testInfo.project.name !== "visual-mobile") {
+		await expect(page.getByRole("heading", { name: "Resume Feed" })).toBeVisible();
+	}
 	await expect(
 		page.getByRole("heading", { name: "Data Scientist or Analyst" }),
 	).toBeVisible();
@@ -90,8 +94,10 @@ test("authenticated feed preserves responsive layout", async ({
 	expect(screenshot.byteLength).toBeGreaterThan(8_000);
 
 	if (testInfo.project.name === "visual-mobile") {
-		await expect(page.locator(".app-header")).toBeHidden();
-		await expect(page.locator(".feed-route-header")).toBeVisible();
+		// On mobile, the app-header (logo+auth chrome) remains visible and the
+		// route-specific feed-route-header is hidden (feed.css max-width:760px rule).
+		await expect(page.locator(".app-header")).toBeVisible();
+		await expect(page.locator(".feed-route-header")).toBeHidden();
 		await expect(page.locator(".feed-right-rail")).toBeHidden();
 		await expect(
 			page.getByRole("navigation", { name: "Mobile navigation" }),

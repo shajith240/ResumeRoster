@@ -1040,11 +1040,11 @@
       "exportCount": 2
     },
     {
-      "hash": "27909327c397f207cd3074aaa8fc3141def963ed56eb7011be7cd9e3333a6b27",
+      "hash": "faf5ade8aecfd2a61dc78248fdce0bfcbf58ae50e4b0201e9d0429d657a0d48b",
       "kind": "React component",
-      "lineCount": 1237,
+      "lineCount": 1236,
       "relativePath": "components/community/CommunityPostFeed.tsx",
-      "size": 35626,
+      "size": 35597,
       "functionCount": 13,
       "importCount": 26,
       "exportCount": 2
@@ -5280,5 +5280,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "f0868d9108a780ffa4ffd4b83126b8b7c54f5081adddabb93004a70e1390f837"
+  "manifestHash": "6a234305939ea29ea183037a3bb14cfadcbeb89cede0d51f5b5e03ba7aa0bec7"
 }
