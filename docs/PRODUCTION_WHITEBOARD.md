@@ -114,11 +114,13 @@ Last updated: 2026-06-19
   - Admin "Premium" tab at `/admin/premium` shows pending payout queue with inline "Mark paid" + ref field
   - Migration: `20260619130000_reviewer_payouts.sql`
 
-- [ ] **Reviewer strike system**
-  - Reviewers who claim and miss deadlines repeatedly should be flagged
-  - Track: `profiles.reviewer_missed_count` — increment on each expired claim
-  - At 2 misses: warning email + admin alert
-  - At 3 misses: auto-suspend premium claiming ability (not full reviewer status)
+- [x] **Reviewer strike system**
+  - `profiles.reviewer_missed_count` (integer, default 0) + `reviewer_claim_suspended` (boolean, default false)
+  - Cron route increments `reviewer_missed_count` for each expired reviewer after auto-refund
+  - At count=2: sends "missed deadline warning" email (one more miss suspends)
+  - At count=3: sets `reviewer_claim_suspended=true` + sends suspension email
+  - `claim_premium_resume` RPC rejects with clear message if suspended; verified status unaffected
+  - Migration: `20260619140000_reviewer_strike_system.sql`
 
 - [ ] **Resume versioning**
   - Once a resume is submitted, it can't be updated
@@ -214,7 +216,7 @@ Last updated: 2026-06-19
 8. ~~Reviewer deadline push notifications~~ ✅ done
 9. ~~Email system (Resend)~~ ✅ done
 10. ~~Reviewer payout tracking~~ ✅ done
-11. Reviewer strike system
+11. ~~Reviewer strike system~~ ✅ done
 12. Resume versioning
 13. Admin premium controls panel
 14. Everything in 🔵 Low after the above

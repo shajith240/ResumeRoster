@@ -113,6 +113,36 @@ export function premiumReviewPosted(resumeId: string) {
 	};
 }
 
+export function reviewerMissedWarning(missedCount: number) {
+	const href = `${BASE_URL}/reviewer`;
+	return {
+		subject: `Warning: ${missedCount} missed review deadline${missedCount !== 1 ? "s" : ""} on your reviewer account`,
+		html: layout(
+			"Missed deadline warning",
+			h1(`${missedCount} missed deadline${missedCount !== 1 ? "s" : ""}`) +
+			p("You've missed a priority review deadline. The candidate received an automatic refund.") +
+			p("<strong style=\"color:#f5f5f5;\">One more missed deadline will suspend your ability to claim new priority reviews.</strong> Your verified reviewer status remains intact — only claiming is affected.") +
+			btn("View your reviewer hub", href) +
+			p("If you believe this was an error or had extenuating circumstances, reply to this email to appeal."),
+		),
+	};
+}
+
+export function reviewerClaimSuspended() {
+	const href = `${BASE_URL}/reviewer`;
+	return {
+		subject: "Your priority review claiming has been suspended",
+		html: layout(
+			"Claiming suspended",
+			h1("Claiming ability suspended") +
+			p("You've missed 3 priority review deadlines. Your ability to claim new priority reviews has been automatically suspended.") +
+			p("Your verified reviewer status and community standing are not affected — you can still post feedback on any public resume.") +
+			btn("View your reviewer hub", href) +
+			p("To appeal this suspension, reply to this email with context. Suspensions are reviewed within 48 hours."),
+		),
+	};
+}
+
 export function deadlineReminder12h(resumeId: string) {
 	const href = `${BASE_URL}/resumes/${resumeId}`;
 	return {

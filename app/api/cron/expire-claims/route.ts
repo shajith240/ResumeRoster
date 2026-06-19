@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { getUserEmail, sendEmail } from "@/lib/email/send";
-import { refundIssued } from "@/lib/email/templates";
+import { refundIssued, reviewerClaimSuspended, reviewerMissedWarning } from "@/lib/email/templates";
 import { createServiceSupabaseClient } from "@/lib/server-auth";
 import { issueRazorpayRefund, PREMIUM_AMOUNT_PAISE } from "@/lib/razorpay";
 
@@ -144,6 +144,46 @@ export async function GET(request: Request) {
 		if (auditError) {
 			capturePrivateError(auditError, { area: "cron", operation: "expire_claims_audit_log" });
 		}
+	}
+
+	// Increment missed_count for each expired reviewer; auto-suspend at 3.
+	// Fire-and-forget — strike tracking failures don't affect the refund response.
+	const reviewerIds = Array.from(
+		new Set(expired.map((c) => c.old_reviewer_id).filter(Boolean) as string[]),
+	);
+
+	if (reviewerIds.length > 0) {
+		void (async () => {
+			for (const reviewerId of reviewerIds) {
+				const { data: profile } = await admin
+					.from("profiles")
+					.select("reviewer_missed_count,reviewer_claim_suspended")
+					.eq("id", reviewerId)
+					.maybeSingle();
+
+				if (!profile) continue;
+
+				const newCount = (profile.reviewer_missed_count ?? 0) + 1;
+				const shouldSuspend = newCount >= 3 && !profile.reviewer_claim_suspended;
+
+				await admin
+					.from("profiles")
+					.update({
+						reviewer_missed_count: newCount,
+						...(shouldSuspend ? { reviewer_claim_suspended: true } : {}),
+					})
+					.eq("id", reviewerId);
+
+				const email = await getUserEmail(admin, reviewerId);
+				if (!email) continue;
+
+				if (shouldSuspend) {
+					void sendEmail({ to: email, ...reviewerClaimSuspended() });
+				} else if (newCount === 2) {
+					void sendEmail({ to: email, ...reviewerMissedWarning(newCount) });
+				}
+			}
+		})();
 	}
 
 	return NextResponse.json({
