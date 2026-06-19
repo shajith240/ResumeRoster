@@ -79,10 +79,11 @@ Last updated: 2026-06-19
   - Migration: `20260619120000_reviewer_deadline_reminders_cron.sql`
   - Runs inside Supabase Postgres — Vercel Hobby cron limit does not apply
 
-- [ ] **Stale push subscription pruning**
-  - `web_push_subscriptions` grows forever, stale endpoints cause silent failures
-  - Cron: delete subscriptions where `last_used_at < now() - interval '30 days'`
-  - Or: delete on 410 Gone response from push service
+- [x] **Stale push subscription pruning**
+  - pg_cron job `linted-prune-push-subscriptions` runs daily at 03:00 UTC
+  - Deletes subscriptions where `revoked_at IS NOT NULL` or `last_seen_at < now() - 30 days`
+  - Migration: `20260619150000_prune_stale_push_subscriptions.sql`
+  - Runs inside Supabase Postgres — Vercel Hobby cron limit does not apply
 
 - [ ] **IP-level rate limiting**
   - Current rate limits are per-user — bots can create accounts and spam
@@ -137,10 +138,13 @@ Last updated: 2026-06-19
   - Payouts panel: pending/paid tabs, per-reviewer grouping with "Mark paid" + UPI ref (built in Item 10)
   - API: `GET /api/admin/premium-resumes`, `POST /api/admin/premium-resumes/[id]` (force_refund / assign_reviewer)
 
-- [ ] **Leaderboard caching**
-  - Leaderboard query runs on every page load — no cache
-  - Cache with `next/cache` or Vercel KV with 1h TTL
-  - Invalidate on each helpful vote via `revalidateTag('leaderboard')`
+- [x] **Leaderboard caching**
+  - All DB queries moved to `GET /api/leaderboard?range=week|month|all` (server route)
+  - Route uses `unstable_cache` with 1h TTL and `leaderboard` tag (separate cache per range)
+  - Directory also cached with `leaderboard` tag — `revalidateTag('leaderboard')` clears both
+  - Client component calls the route, then overlays `applyOnlinePresence` client-side
+  - Realtime subscription still present for eventual consistency
+  - Files: `app/api/leaderboard/route.ts`, `components/Leaderboard.tsx`
 
 ---
 
