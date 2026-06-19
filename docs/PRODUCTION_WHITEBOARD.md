@@ -70,10 +70,14 @@ Last updated: 2026-06-19
   - Migration: `20260619110000_premium_review_structured_form.sql`
   - Files: `app/api/resumes/[id]/premium-review/route.ts`, `components/resume-detail/premium-review-composer.tsx`
 
-- [ ] **Reviewer deadline push notifications**
-  - At 12h and 20h before `review_deadline`, send a push notification to the assigned reviewer
-  - Need: Vercel Cron or pg_cron job every hour checking approaching deadlines
-  - Use existing web push infra (`web_push_subscriptions` + `/api/push/dispatch`)
+- [x] **Reviewer deadline push notifications**
+  - pg_cron job `linted-reviewer-deadline-reminders` runs every hour (top of hour)
+  - Two windows: 12h warning + 4h urgent warning before `review_deadline`
+  - `send_reviewer_deadline_reminders()` inserts into `notifications` (type=`reviewer_status`)
+  - Supabase DB webhook fires `/api/push/dispatch` on each INSERT → sends web push
+  - Dedup via `(recipient_id, dedupe_key)` unique index — no double-sends on overlap
+  - Migration: `20260619120000_reviewer_deadline_reminders_cron.sql`
+  - Runs inside Supabase Postgres — Vercel Hobby cron limit does not apply
 
 - [ ] **Stale push subscription pruning**
   - `web_push_subscriptions` grows forever, stale endpoints cause silent failures
@@ -203,7 +207,7 @@ Last updated: 2026-06-19
 5. ~~Community Markdown XSS fix~~ ✅ already safe (ReactMarkdown + hljs escape)
 6. ~~In-app refund request UI~~ ✅ done
 7. ~~Structured premium review template~~ ✅ done
-8. Reviewer deadline push notifications
+8. ~~Reviewer deadline push notifications~~ ✅ done
 9. Email system (Resend)
 10. Reviewer payout tracking
 11. Reviewer strike system
