@@ -105,6 +105,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					<DiscussionPanel
 						attachmentsById={controller.attachmentsById}
 						authorProfiles={controller.authorProfiles}
+						claiming={controller.claiming}
 						collapsedReviewIds={controller.collapsedReviewIds}
 						content={controller.content}
 						contentFormat={controller.contentFormat}
@@ -115,6 +116,8 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						guidedIssueType={controller.guidedIssueType}
 						guidedSuggestion={controller.guidedSuggestion}
 						isClosed={controller.isClosed}
+						isClaimable={controller.isClaimable}
+						isPremiumClaimed={Boolean(resume.is_premium && resume.assigned_reviewer_id)}
 						isOwner={controller.isOwner}
 						isWaiting={controller.isWaiting}
 						likedReviewIds={controller.likedReviewIds}
@@ -151,6 +154,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							controller.setReplyContentFormat("plain");
 							controller.setReplyAttachment(null);
 						}}
+						onClaim={() => { void controller.handleClaimResume(); }}
 						onRequireLogin={controller.goToLogin}
 						onReviewSubmit={controller.handleReviewSubmit}
 						onSelectedAttachmentChange={controller.setSelectedAttachment}

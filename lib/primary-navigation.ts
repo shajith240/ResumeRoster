@@ -6,6 +6,7 @@ export type PrimaryNavItemId =
 	| "submit"
 	| "community-new"
 	| "leaderboard"
+	| "reviewer"
 	| "admin";
 
 export type PrimaryNavigationItemBase = {
@@ -22,6 +23,8 @@ export type PrimaryNavigationContext = {
 	communityEnabled?: boolean;
 	includeAdmin?: boolean;
 	isAdmin?: boolean;
+	includeReviewer?: boolean;
+	isVerifiedReviewer?: boolean;
 };
 
 function isWithinRoute(pathname: string, route: string) {
@@ -37,6 +40,8 @@ export function getPrimaryNavigationItems({
 	communityEnabled = areCommunityPostsEnabled(),
 	includeAdmin = false,
 	isAdmin = false,
+	includeReviewer = false,
+	isVerifiedReviewer = false,
 }: PrimaryNavigationContext): PrimaryNavigationItemBase[] {
 	const items: PrimaryNavigationItemBase[] = [];
 
@@ -86,6 +91,16 @@ export function getPrimaryNavigationItems({
 		mobileLabel: "Leaders",
 		active: pathname === "/leaderboard",
 	});
+
+	if (includeReviewer && isVerifiedReviewer) {
+		items.push({
+			id: "reviewer",
+			href: "/reviewer",
+			label: "My queue",
+			mobileLabel: "Queue",
+			active: isWithinRoute(pathname, "/reviewer"),
+		});
+	}
 
 	if (includeAdmin && isAdmin) {
 		items.push({

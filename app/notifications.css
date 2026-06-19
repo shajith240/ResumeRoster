@@ -102,6 +102,11 @@
 	font-size: 12px;
 	font-weight: 720;
 	white-space: nowrap;
+	transition:
+		border-color 140ms var(--button-ease),
+		background-color 140ms var(--button-ease),
+		color 140ms var(--button-ease),
+		transform 100ms var(--button-ease);
 }
 
 .notification-mark-all:hover:not(:disabled),
@@ -109,6 +114,10 @@
 	border-color: color-mix(in srgb, var(--brand) 28%, var(--border-default));
 	color: var(--text-primary);
 	outline: none;
+}
+
+.notification-mark-all:active:not(:disabled) {
+	transform: scale(0.96);
 }
 
 .notification-mark-all:disabled {
@@ -133,6 +142,11 @@
 	color: var(--text-tertiary);
 	font-size: 12px;
 	font-weight: 760;
+	transition:
+		border-color 140ms var(--button-ease),
+		background-color 140ms var(--button-ease),
+		color 140ms var(--button-ease),
+		transform 100ms var(--button-ease);
 }
 
 .notification-tabs button:hover,
@@ -142,6 +156,10 @@
 	background: color-mix(in srgb, var(--bg-elevated) 82%, transparent);
 	color: var(--text-primary);
 	outline: none;
+}
+
+.notification-tabs button:active {
+	transform: scale(0.96);
 }
 
 .notification-list {
@@ -165,6 +183,10 @@
 	background: transparent;
 	color: var(--text-primary);
 	text-align: left;
+	transition:
+		border-color 140ms var(--button-ease),
+		background-color 140ms var(--button-ease),
+		transform 100ms var(--button-ease);
 }
 
 .notification-item:hover,
@@ -172,6 +194,10 @@
 	border-color: var(--border-subtle);
 	background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
 	outline: none;
+}
+
+.notification-item:active {
+	transform: scale(0.99);
 }
 
 .notification-item.is-unread {

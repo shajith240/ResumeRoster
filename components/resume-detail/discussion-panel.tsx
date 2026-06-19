@@ -20,15 +20,19 @@ import { ThreadReviewItem } from "./thread-review-item";
 import type { ThreadReviewControls } from "./types";
 
 type DiscussionPanelProps = ThreadReviewControls & {
+	claiming: boolean;
 	content: string;
 	contentFormat: CommentContentFormat;
 	guidedIssue: string;
 	guidedIssueType: GuidedReviewIssueType | "";
 	guidedSuggestion: string;
+	isClaimable: boolean;
+	isPremiumClaimed: boolean;
 	isOwner: boolean;
 	isWaiting: boolean;
 	message: string;
 	needsGuidedReviewCredit: boolean;
+	onClaim: () => void;
 	onContentChange: (value: string) => void;
 	onContentFormatChange: (format: CommentContentFormat) => void;
 	onGuidedIssueChange: (value: string) => void;
@@ -61,6 +65,7 @@ function getThreadMentionHandles(threadReviews: ThreadReviewNode[]) {
 export function DiscussionPanel({
 	attachmentsById,
 	authorProfiles,
+	claiming,
 	collapsedReviewIds,
 	content,
 	contentFormat,
@@ -71,12 +76,15 @@ export function DiscussionPanel({
 	deletingReviewId,
 	dislikedReviewIds,
 	isClosed,
+	isClaimable,
+	isPremiumClaimed,
 	isOwner,
 	isWaiting,
 	likedReviewIds,
 	mediaSchemaReady,
 	message,
 	needsGuidedReviewCredit,
+	onClaim,
 	onCancelReply,
 	onContentChange,
 	onContentFormatChange,
@@ -204,6 +212,33 @@ export function DiscussionPanel({
 			className="thread-discussion-panel resume-comments-panel mobile-thread-comments"
 			aria-label="Feedback discussion"
 		>
+			{isClaimable && (
+				<div className="premium-claim-banner">
+					<div className="premium-claim-info">
+						<span className="badge premium-badge">Priority review</span>
+						<p>This resume needs a verified reviewer. Claim it to get 24 hours to submit your review.</p>
+					</div>
+					<button
+						className="btn-primary premium-claim-btn"
+						disabled={claiming}
+						onClick={onClaim}
+						type="button"
+					>
+						{claiming ? (
+							<><span className="button-spinner" /> Claiming...</>
+						) : (
+							"Claim this review"
+						)}
+					</button>
+				</div>
+			)}
+
+			{isPremiumClaimed && !isClaimable && (
+				<div className="premium-claimed-banner">
+					A reviewer has been assigned and is working on this. Expect feedback within 24 hours.
+				</div>
+			)}
+
 			{feedbackLocked || isOwner ? (
 				<div className="closed-note">
 					<h2>

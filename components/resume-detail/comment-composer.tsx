@@ -118,7 +118,7 @@ export function CommentComposer({
 	onFormatChange,
 	onRequireLogin,
 	placeholder,
-	showFormatTools = true,
+	showFormatTools = false,
 	submitDisabled = false,
 	submitLabel,
 	value,

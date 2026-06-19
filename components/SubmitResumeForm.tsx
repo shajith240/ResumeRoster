@@ -41,9 +41,33 @@ import {
 	getSubmitIssue,
 } from "@/lib/submit-validation";
 import { supabase } from "@/lib/supabase/client";
+import {
+	PREMIUM_PRICE_RUPEES,
+	type RazorpayCheckoutInstance,
+	type RazorpayCheckoutOptions,
+	type RazorpayCheckoutResponse,
+} from "@/lib/premium-payments";
 import styles from "./SubmitResumeForm.module.css";
 
 const PDF_WORKER_SRC = "/assets/pdf.worker.min.mjs";
+
+type RazorpayWindow = Window & {
+	Razorpay?: new (options: RazorpayCheckoutOptions) => RazorpayCheckoutInstance;
+};
+
+function loadRazorpayScript(): Promise<void> {
+	return new Promise((resolve, reject) => {
+		if ((window as RazorpayWindow).Razorpay) {
+			resolve();
+			return;
+		}
+		const script = document.createElement("script");
+		script.src = "https://checkout.razorpay.com/v1/checkout.js";
+		script.onload = () => resolve();
+		script.onerror = () => reject(new Error("Failed to load Razorpay checkout."));
+		document.head.appendChild(script);
+	});
+}
 
 type SubmitProfile = {
 	full_name: string | null;
@@ -202,6 +226,8 @@ export default function SubmitResumeForm() {
 	const [message, setMessage] = useState("");
 	const [submitting, setSubmitting] = useState(false);
 	const [success, setSuccess] = useState(false);
+	const [reviewPlan, setReviewPlan] = useState<"community" | "priority">("community");
+	const [submitLabel, setSubmitLabel] = useState<string | null>(null);
 
 	useEffect(() => {
 		async function syncUser(activeUser: User | null) {
@@ -335,6 +361,129 @@ export default function SubmitResumeForm() {
 		toast.error(errorMessage);
 	}
 
+	async function handleVerifyPayment(
+		accessToken: string,
+		paymentResponse: RazorpayCheckoutResponse,
+	) {
+		setSubmitLabel("Uploading resume...");
+
+		const fd = new FormData();
+		fd.append("razorpay_payment_id", paymentResponse.razorpay_payment_id);
+		fd.append("razorpay_order_id", paymentResponse.razorpay_order_id);
+		fd.append("razorpay_signature", paymentResponse.razorpay_signature);
+		fd.append("file", file!);
+		fd.append("title", trimmedTitle);
+		fd.append("targetRole", targetRole);
+		fd.append("jobDescription", trimmedJobDescription);
+		fd.append("postDescription", trimmedPostDescription);
+		fd.append("privacyMode", privacyMode);
+
+		const response = await fetch("/api/payments/verify", {
+			method: "POST",
+			headers: { Authorization: `Bearer ${accessToken}` },
+			body: fd,
+		});
+
+		const result = (await response.json().catch(() => null)) as {
+			id?: string;
+			message?: string;
+		} | null;
+
+		setSubmitting(false);
+		setSubmitLabel(null);
+
+		if (!response.ok || !result?.id) {
+			showFormError(
+				result?.message ??
+					"Payment verified but submission failed. Contact support with your payment ID.",
+			);
+			return;
+		}
+
+		setSuccess(true);
+		toast.success("Priority review submitted.", {
+			description:
+				"Payment processing. Your resume will appear in the feed once confirmed.",
+		});
+		window.setTimeout(() => {
+			const resumeRoute = `/resume/${result.id}`;
+			announceRouteTransition(resumeRoute);
+			router.push(resumeRoute);
+		}, 500);
+	}
+
+	async function handlePriorityPayment(accessToken: string) {
+		setSubmitLabel("Preparing payment...");
+
+		const orderResponse = await fetch("/api/payments/create-order", {
+			method: "POST",
+			headers: { Authorization: `Bearer ${accessToken}` },
+		});
+
+		const orderData = (await orderResponse.json().catch(() => null)) as {
+			orderId?: string;
+			amount?: number;
+			currency?: string;
+			keyId?: string;
+			message?: string;
+		} | null;
+
+		if (!orderResponse.ok || !orderData?.orderId) {
+			setSubmitting(false);
+			setSubmitLabel(null);
+			showFormError(orderData?.message ?? "Could not create payment order. Please try again.");
+			return;
+		}
+
+		try {
+			await loadRazorpayScript();
+		} catch {
+			setSubmitting(false);
+			setSubmitLabel(null);
+			showFormError("Could not load payment service. Check your connection and try again.");
+			return;
+		}
+
+		const RazorpayCheckout = (window as RazorpayWindow).Razorpay;
+		if (!RazorpayCheckout) {
+			setSubmitting(false);
+			setSubmitLabel(null);
+			showFormError("Payment service failed to load. Refresh the page and try again.");
+			return;
+		}
+
+		const brandColor =
+			getComputedStyle(document.documentElement).getPropertyValue("--brand").trim() ||
+			"#6366f1";
+
+		setSubmitLabel("Complete payment in checkout...");
+
+		await new Promise<void>((resolve) => {
+			const rzp = new RazorpayCheckout({
+				key: orderData.keyId!,
+				amount: orderData.amount!,
+				currency: orderData.currency!,
+				order_id: orderData.orderId!,
+				name: "Resume Roster",
+				description: "Priority Review",
+				prefill: { email: user?.email ?? undefined },
+				theme: { color: brandColor },
+				modal: {
+					ondismiss: () => {
+						setSubmitting(false);
+						setSubmitLabel(null);
+						setMessage("Payment cancelled. Your resume was not submitted.");
+						resolve();
+					},
+				},
+				handler: (paymentResponse: RazorpayCheckoutResponse) => {
+					void handleVerifyPayment(accessToken, paymentResponse).then(resolve);
+				},
+			});
+			rzp.open();
+		});
+	}
+
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setMessage("");
@@ -376,6 +525,11 @@ export default function SubmitResumeForm() {
 		if (!accessToken) {
 			setSubmitting(false);
 			showFormError("Your session expired. Sign in again to continue.");
+			return;
+		}
+
+		if (reviewPlan === "priority") {
+			await handlePriorityPayment(accessToken);
 			return;
 		}
 
@@ -587,6 +741,56 @@ export default function SubmitResumeForm() {
 			</div>
 
 			<div className={styles.formActions}>
+				<fieldset className={styles.planPicker}>
+					<legend>Review plan</legend>
+					<div className={styles.planOptions}>
+						<label
+							className={[
+								styles.optionCard,
+								reviewPlan === "community" ? styles.optionCardSelected : "",
+							]
+								.filter(Boolean)
+								.join(" ")}
+						>
+							<input
+								checked={reviewPlan === "community"}
+								name="reviewPlan"
+								onChange={() => setReviewPlan("community")}
+								type="radio"
+							/>
+							<span className={styles.optionBody}>
+								<span className={styles.optionHeader}>
+									<strong>Community review</strong>
+									<span className={styles.planBadgeFree}>Free</span>
+								</span>
+								<small>Reviewed by community members. Typically within a few days.</small>
+							</span>
+						</label>
+						<label
+							className={[
+								styles.optionCard,
+								reviewPlan === "priority" ? styles.optionCardSelected : "",
+							]
+								.filter(Boolean)
+								.join(" ")}
+						>
+							<input
+								checked={reviewPlan === "priority"}
+								name="reviewPlan"
+								onChange={() => setReviewPlan("priority")}
+								type="radio"
+							/>
+							<span className={styles.optionBody}>
+								<span className={styles.optionHeader}>
+									<strong>Priority review</strong>
+									<span className={styles.planBadgePremium}>₹{PREMIUM_PRICE_RUPEES}</span>
+								</span>
+								<small>Assigned to a verified reviewer. Guaranteed response within 24 hours.</small>
+							</span>
+						</label>
+					</div>
+				</fieldset>
+
 				<fieldset className={styles.privacyPicker}>
 					<legend>Privacy mode</legend>
 					<div className={styles.privacyOptions}>
@@ -633,8 +837,10 @@ export default function SubmitResumeForm() {
 						) : submitting ? (
 							<>
 								<span className="button-spinner" />
-								Processing PDF...
+								{submitLabel ?? "Processing PDF..."}
 							</>
+						) : reviewPlan === "priority" ? (
+							`Pay ₹${PREMIUM_PRICE_RUPEES} & Submit`
 						) : (
 							"Submit for review"
 						)}

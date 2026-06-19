@@ -246,6 +246,73 @@
 	height: 15px;
 }
 
+.reviewerApplyRow {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 10px;
+	flex-wrap: wrap;
+}
+
+.reviewerApplyBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 14px;
+	border-radius: var(--button-radius);
+	border: 1px solid var(--border-default);
+	background: var(--bg-surface);
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: border-color 0.15s, background 0.15s;
+}
+
+.reviewerApplyBtn:hover {
+	border-color: var(--brand);
+	background: var(--brand-muted);
+	color: var(--brand);
+}
+
+.reviewerPendingBadge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 12px;
+	border-radius: var(--button-radius);
+	border: 1px solid rgba(99, 178, 71, 0.35);
+	background: rgba(99, 178, 71, 0.08);
+	color: #3a8a28;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.reviewerRejectedNote {
+	font-size: 12px;
+	color: var(--text-tertiary);
+}
+
+.applySelect,
+.applyInput {
+	display: block;
+	width: 100%;
+	padding: 8px 10px;
+	border-radius: 7px;
+	border: 1px solid var(--border-default);
+	background: var(--bg-surface);
+	color: var(--text-primary);
+	font-size: 14px;
+	font-family: inherit;
+	margin-top: 4px;
+}
+
+.applySelect:focus,
+.applyInput:focus {
+	outline: none;
+	border-color: var(--brand);
+}
+
 .profileGrid {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(300px, 0.85fr);

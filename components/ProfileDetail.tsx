@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { type FormEvent, useRef } from "react";
 import {
 	BriefcaseBusiness,
 	CalendarDays,
@@ -33,6 +34,9 @@ import { formatDate } from "./profile-detail/utils";
 export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 	const {
 		about,
+		applyDialogOpen,
+		applyMessage,
+		applySubmitting,
 		avatarPreview,
 		college,
 		collegeLocation,
@@ -40,6 +44,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		editOpen,
 		fullName,
 		handleAvatarChange,
+		handleReviewerApply,
 		isOnline,
 		isOwnProfile,
 		loading,
@@ -57,6 +62,7 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		saveProfile,
 		saving,
 		setAbout,
+		setApplyDialogOpen,
 		setCollege,
 		setCollegeLocation,
 		setCurrentPosition,
@@ -73,6 +79,8 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 		tagline,
 		username,
 	} = useProfileDetailController(profileId);
+
+	const applyFormRef = useRef<HTMLFormElement>(null);
 
 	if (loading) {
 		return <ProfileDetailSkeleton />;
@@ -226,6 +234,37 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								</Button>
 							) : null}
 						</div>
+
+						{isOwnProfile && profileView.reviewerStatus !== "verified" ? (
+							<div className={styles.reviewerApplyRow}>
+								{profileView.reviewerStatus === "pending" ? (
+									<span className={styles.reviewerPendingBadge}>
+										Reviewer application under review
+									</span>
+								) : profileView.reviewerStatus === "rejected" ? (
+									<>
+										<span className={styles.reviewerRejectedNote}>
+											Application not approved —
+										</span>
+										<button
+											className={styles.reviewerApplyBtn}
+											onClick={() => setApplyDialogOpen(true)}
+											type="button"
+										>
+											Reapply as Reviewer
+										</button>
+									</>
+								) : (
+									<button
+										className={styles.reviewerApplyBtn}
+										onClick={() => setApplyDialogOpen(true)}
+										type="button"
+									>
+										Become a Reviewer
+									</button>
+								)}
+							</div>
+						) : null}
 					</div>
 				</header>
 
@@ -352,6 +391,100 @@ export default function ProfileDetail({ profileId }: ProfileDetailProps) {
 								type="submit"
 							>
 								{profileReportSubmitting ? "Sending..." : "Send report"}
+							</Button>
+						</DialogFooter>
+					</form>
+				</DialogContent>
+			</Dialog>
+
+			<Dialog open={applyDialogOpen} onOpenChange={(open) => {
+				if (!open && !applySubmitting) setApplyDialogOpen(false);
+			}}>
+				<DialogContent className="report-dialog-content">
+					<DialogHeader>
+						<DialogTitle>Apply as a Reviewer</DialogTitle>
+						<DialogDescription>
+							Tell us a bit about yourself. An admin will review your application and grant your profile a verified reviewer badge.
+						</DialogDescription>
+					</DialogHeader>
+					<form
+						className="report-form"
+						ref={applyFormRef}
+						onSubmit={(event: FormEvent<HTMLFormElement>) => {
+							event.preventDefault();
+							const fd = new FormData(event.currentTarget);
+							void handleReviewerApply({
+								reviewer_type: fd.get("reviewer_type") as string,
+								headline: fd.get("headline") as string,
+								proof_url: (fd.get("proof_url") as string) ?? "",
+								note: (fd.get("note") as string) ?? "",
+							});
+						}}
+					>
+						<label className="report-details-field">
+							<span>Your background</span>
+							<select name="reviewer_type" className={styles.applySelect} required defaultValue="">
+								<option value="" disabled>Select one…</option>
+								<option value="student">Student</option>
+								<option value="placed_professional">Placed professional</option>
+								<option value="recruiter">Recruiter</option>
+								<option value="hiring_manager">Hiring manager</option>
+								<option value="engineer">Software engineer</option>
+								<option value="designer">Designer</option>
+								<option value="product_manager">Product manager</option>
+								<option value="career_coach">Career coach</option>
+								<option value="founder">Founder</option>
+								<option value="other">Other</option>
+							</select>
+						</label>
+						<label className="report-details-field">
+							<span>Your headline <small>(e.g. "Senior SDE at Razorpay")</small></span>
+							<input
+								className={styles.applyInput}
+								maxLength={90}
+								name="headline"
+								placeholder="Current role or what you do"
+								required
+								type="text"
+							/>
+						</label>
+						<label className="report-details-field">
+							<span>LinkedIn or portfolio URL <small>(optional)</small></span>
+							<input
+								className={styles.applyInput}
+								maxLength={240}
+								name="proof_url"
+								placeholder="https://linkedin.com/in/yourname"
+								type="url"
+							/>
+						</label>
+						<label className="report-details-field">
+							<span>Why do you want to review? <small>(optional)</small></span>
+							<textarea
+								maxLength={600}
+								name="note"
+								placeholder="Brief note for the admin — what makes you a good reviewer?"
+								rows={3}
+							/>
+						</label>
+						{applyMessage ? (
+							<p className="form-message">{applyMessage}</p>
+						) : null}
+						<DialogFooter>
+							<Button
+								disabled={applySubmitting}
+								onClick={() => setApplyDialogOpen(false)}
+								type="button"
+								variant="outline"
+							>
+								Cancel
+							</Button>
+							<Button
+								className="btn-brand"
+								disabled={applySubmitting}
+								type="submit"
+							>
+								{applySubmitting ? "Submitting…" : "Submit application"}
 							</Button>
 						</DialogFooter>
 					</form>

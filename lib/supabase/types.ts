@@ -1,6 +1,7 @@
 type ResumeStatus = "open" | "roasted" | "closed";
 type ResumePrivacyMode = "public" | "contact_hidden" | "anonymous";
 type ResumeQueueStatus = "waiting" | "active";
+export type PremiumPaymentStatus = "pending" | "paid" | "refunded" | "failed";
 export type AppStatus = "online" | "focus" | "offline";
 export type ContentReportStatus =
   | "pending"
@@ -116,6 +117,9 @@ export type ResumeSummary = {
   job_description: string | null;
   post_description: string | null;
   created_at: string;
+  is_premium?: boolean;
+  payment_status?: PremiumPaymentStatus | null;
+  assigned_reviewer_id?: string | null;
   author_profile?: ResumeAuthorProfile | null;
 };
 

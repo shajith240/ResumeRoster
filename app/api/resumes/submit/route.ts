@@ -16,6 +16,7 @@ import {
 } from "@/lib/submit-validation";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
+import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
@@ -97,8 +98,8 @@ async function removeUploadedFile(
 ) {
 	try {
 		await admin.storage.from(bucket).remove([filePath]);
-	} catch {
-		// The client still gets the original upload failure response.
+	} catch (error) {
+		capturePrivateError(error, { area: "uploads", operation: "cleanup_file_removal", bucket, filePath });
 	}
 }
 

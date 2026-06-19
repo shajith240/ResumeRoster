@@ -11,6 +11,7 @@ import {
 } from "@/components/navigation/primary-nav";
 import { useMobileScrollChrome } from "@/components/navigation/useMobileScrollChrome";
 import { useAdminAccess } from "@/lib/use-admin-access";
+import { useReviewerAccess } from "@/lib/use-reviewer-access";
 import { cn } from "@/lib/utils";
 
 const SIDEBAR_COLLAPSED_STORAGE_KEY = "linted.session-sidebar.collapsed";
@@ -51,6 +52,7 @@ type SessionNavBarProps = {
 export function SessionNavBar({ userId }: SessionNavBarProps) {
 	const pathname = usePathname();
 	const { isAdmin } = useAdminAccess();
+	const { isVerifiedReviewer } = useReviewerAccess();
 	const [isCollapsed, setIsCollapsed] = useState(false);
 	const [hasLoadedSidebarPreference, setHasLoadedSidebarPreference] =
 		useState(false);
@@ -63,9 +65,11 @@ export function SessionNavBar({ userId }: SessionNavBarProps) {
 			getPrimaryNavigationItems({
 				includeAdmin: true,
 				isAdmin,
+				includeReviewer: true,
+				isVerifiedReviewer,
 				pathname,
 			}),
-		[isAdmin, pathname],
+		[isAdmin, isVerifiedReviewer, pathname],
 	);
 
 	useEffect(() => {

@@ -514,19 +514,6 @@ body.main-app-dark .ch-type-announcement {
 .feed-sort-menu {
 	min-width: 176px;
 	padding: 6px;
-	transform-origin: top center;
-	animation: menuScaleIn 140ms var(--ease-out) both;
-}
-
-@keyframes menuScaleIn {
-	from {
-		opacity: 0;
-		transform: scale(0.93) translateY(-4px);
-	}
-	to {
-		opacity: 1;
-		transform: scale(1) translateY(0);
-	}
 }
 
 .feed-sort-menu-item {
@@ -580,7 +567,10 @@ body.main-app-dark .ch-type-announcement {
 	background: transparent;
 	box-shadow: none;
 	animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
-	transition: background-color 160ms var(--button-ease);
+	transition:
+		background-color 180ms var(--button-ease),
+		border-radius 180ms var(--button-ease),
+		box-shadow 180ms var(--button-ease);
 }
 
 .resume-card::after {
@@ -592,6 +582,7 @@ body.main-app-dark .ch-type-announcement {
 	background: var(--border-subtle);
 	content: "";
 	pointer-events: none;
+	transition: opacity 180ms var(--button-ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -599,8 +590,14 @@ body.main-app-dark .ch-type-announcement {
 	.resume-card:focus-within {
 		border-radius: 10px;
 		background: color-mix(in srgb, var(--bg-elevated) 42%, transparent);
-		box-shadow: none;
-		transform: none;
+		box-shadow:
+			0 2px 8px rgba(0, 0, 0, 0.06),
+			0 0 0 1px color-mix(in srgb, var(--border-subtle) 60%, transparent);
+	}
+
+	.resume-card:hover::after,
+	.resume-card:focus-within::after {
+		opacity: 0;
 	}
 }
 
@@ -1277,6 +1274,11 @@ body.main-app-dark .feed-thread-preview:hover {
 	color: var(--text-secondary);
 	font-size: 12px;
 	font-weight: 650;
+	touch-action: manipulation;
+	transition:
+		background-color 140ms var(--button-ease),
+		color 140ms var(--button-ease),
+		transform 100ms var(--button-ease);
 }
 
 .recent-posts-clear {
@@ -1296,6 +1298,11 @@ body.main-app-dark .feed-thread-preview:hover {
 .recent-posts-close:hover {
 	background: color-mix(in srgb, var(--bg-elevated) 74%, transparent);
 	color: var(--text-primary);
+}
+
+.recent-posts-clear:active,
+.recent-posts-close:active {
+	transform: scale(0.94);
 }
 
 .recent-post-list {
@@ -1565,6 +1572,49 @@ body.main-app-dark .feed-thread-preview:hover {
 
 .thread-context-panel {
 	min-width: 0;
+}
+
+.premium-claim-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin: 0 0 2px;
+	padding: 14px 18px;
+	border-radius: var(--radius-lg);
+	border: 1px solid color-mix(in srgb, #c99a14 38%, var(--border-subtle));
+	background: color-mix(in srgb, #c99a14 7%, var(--bg-elevated));
+}
+
+.premium-claim-info {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+
+.premium-claim-info p {
+	margin: 0;
+	color: var(--text-secondary);
+	font-size: 13px;
+	line-height: 1.45;
+}
+
+.premium-claim-btn {
+	flex-shrink: 0;
+	padding: 8px 18px;
+	font-size: 13px;
+}
+
+.premium-claimed-banner {
+	margin: 0 0 2px;
+	padding: 12px 18px;
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border-subtle);
+	background: var(--bg-elevated);
+	color: var(--text-secondary);
+	font-size: 13px;
+	line-height: 1.45;
 }
 
 .thread-viewer-card {
@@ -2976,12 +3026,26 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 	font-weight: 650;
 	line-height: 1;
 	box-shadow: var(--shadow-sm);
+	touch-action: manipulation;
+	transition:
+		border-color 140ms var(--button-ease),
+		background-color 140ms var(--button-ease),
+		color 140ms var(--button-ease),
+		transform 100ms var(--button-ease),
+		box-shadow 140ms var(--button-ease);
 }
 
 .comment-author-chip:hover {
 	border-color: rgba(232, 93, 38, 0.26);
 	background: var(--brand-muted);
 	color: var(--brand);
+	transform: translateY(-1px);
+	box-shadow: var(--shadow-md);
+}
+
+.comment-author-chip:active {
+	transform: translateY(0) scale(0.97);
+	box-shadow: var(--shadow-sm);
 }
 
 body.main-app-dark .comment-author-chip {
@@ -3744,13 +3808,18 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 		transform: translateZ(0);
 		transition:
 			background-color 160ms var(--button-ease),
-			color 160ms var(--button-ease);
+			color 160ms var(--button-ease),
+			transform 100ms var(--button-ease);
 	}
 
 	.session-sidebar-link:hover,
 	.session-sidebar-link:focus-visible {
 		background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
 		color: var(--text-primary);
+	}
+
+	.session-sidebar-link:active:not(.is-active) {
+		transform: scale(0.98) translateZ(0);
 	}
 
 	.session-sidebar-link:focus-visible {
@@ -5038,7 +5107,10 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	border: 0;
 	border-radius: 0;
 	padding: 16px 14px;
-	transition: background-color 160ms var(--button-ease);
+	transition:
+		background-color 180ms var(--button-ease),
+		border-radius 180ms var(--button-ease),
+		box-shadow 180ms var(--button-ease);
 }
 
 .community-feed-route .community-feed-row::after {
@@ -5050,6 +5122,7 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	background: var(--border-subtle);
 	content: "";
 	pointer-events: none;
+	transition: opacity 180ms var(--button-ease);
 }
 
 .community-feed-route .community-feed-row:last-child::after {
@@ -5061,13 +5134,22 @@ body.main-app::-webkit-scrollbar-thumb:hover {
 	.community-feed-route .community-feed-row:focus-within {
 		border-radius: 10px;
 		background: color-mix(in srgb, var(--bg-elevated) 42%, transparent);
+		box-shadow:
+			0 2px 8px rgba(0, 0, 0, 0.06),
+			0 0 0 1px color-mix(in srgb, var(--border-subtle) 60%, transparent);
 		outline: none;
+	}
+
+	.community-feed-route .community-feed-row:hover::after,
+	.community-feed-route .community-feed-row:focus-within::after {
+		opacity: 0;
 	}
 
 	.community-feed-route .community-feed-row[data-post-kind="poll"]:hover,
 	.community-feed-route .community-feed-row[data-post-kind="poll"]:focus-within {
 		border-radius: 0;
 		background: transparent;
+		box-shadow: none;
 	}
 }
 
