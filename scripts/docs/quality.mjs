@@ -27,9 +27,32 @@ function stripAnsi(value) {
 }
 
 function normalizeToolOutput(value) {
-	return value
+	const withNormalizedMeta = value
 		.replace(/^time: .+$/gm, "time: deterministic")
-		.replace(/\\/g, "/");
+		.replace(/\\/g, "/")
+		.replace(/\r/g, "");
+
+	// jscpd traverses files in OS-dependent order (NTFS alphabetical on Windows,
+	// inode order on Linux), so "Clone found" blocks appear in different positions
+	// on different platforms. Sort them so committed reports are stable cross-platform.
+	const tableStart = withNormalizedMeta.indexOf("\n┌");
+	if (tableStart === -1) {
+		return withNormalizedMeta;
+	}
+	const cloneSection = withNormalizedMeta.slice(0, tableStart).trim();
+	const tableSection = withNormalizedMeta.slice(tableStart + 1);
+
+	if (!cloneSection) {
+		return tableSection;
+	}
+
+	const sortedBlocks = cloneSection
+		.split(/\n\n/)
+		.filter(Boolean)
+		.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
+		.join("\n\n");
+
+	return sortedBlocks + "\n\n" + tableSection;
 }
 
 function makeReport(title, command, result, notes = []) {

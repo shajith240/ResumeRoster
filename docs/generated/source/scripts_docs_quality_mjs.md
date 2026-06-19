@@ -4,9 +4,9 @@
 
 - Source path: `scripts/docs/quality.mjs`
 - Kind: Repository automation
-- Size: 6680 bytes
-- Lines: 218
-- Source hash: `e2624a00d0a3684a29e6e315bd46308a3c390891bee1ccbb783f03406bbd2d42`
+- Size: 7451 bytes
+- Lines: 241
+- Source hash: `3f755f6b0f10f686985e1384a0cfb8204961af131f97b4c8e94feee4c063ffce`
 
 ## What This File Does
 
