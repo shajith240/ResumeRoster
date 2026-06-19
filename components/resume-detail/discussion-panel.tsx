@@ -29,10 +29,12 @@ type DiscussionPanelProps = ThreadReviewControls & {
 	isClaimable: boolean;
 	isPremiumClaimed: boolean;
 	isOwner: boolean;
+	isRefundable: boolean;
 	isWaiting: boolean;
 	message: string;
 	needsGuidedReviewCredit: boolean;
 	onClaim: () => void;
+	onRequestRefund: () => void;
 	onContentChange: (value: string) => void;
 	onContentFormatChange: (format: CommentContentFormat) => void;
 	onGuidedIssueChange: (value: string) => void;
@@ -79,12 +81,14 @@ export function DiscussionPanel({
 	isClaimable,
 	isPremiumClaimed,
 	isOwner,
+	isRefundable,
 	isWaiting,
 	likedReviewIds,
 	mediaSchemaReady,
 	message,
 	needsGuidedReviewCredit,
 	onClaim,
+	onRequestRefund,
 	onCancelReply,
 	onContentChange,
 	onContentFormatChange,
@@ -259,6 +263,15 @@ export function DiscussionPanel({
 									: "You own this resume. You can reply for clarification, but you cannot mark feedback helpful."
 								: "This thread is visible for learning, but no new feedback can be added."}
 					</p>
+					{isRefundable && (
+						<button
+							className="btn-ghost refund-request-btn"
+							onClick={onRequestRefund}
+							type="button"
+						>
+							Request refund
+						</button>
+					)}
 					{message ? <p className="form-message">{message}</p> : null}
 				</div>
 			) : needsGuidedReviewCredit ? (

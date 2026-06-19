@@ -99,6 +99,8 @@ export function useResumeDetailController(resumeId: string) {
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
 	const [claiming, setClaiming] = useState(false);
+	const [refunding, setRefunding] = useState(false);
+	const [showRefundConfirm, setShowRefundConfirm] = useState(false);
 	const [message, setMessage] = useState("");
 
 	const threadReviews = useMemo(
@@ -115,6 +117,13 @@ export function useResumeDetailController(resumeId: string) {
 			!resume.assigned_reviewer_id &&
 			resume.status === "open" &&
 			!isOwner,
+	);
+	const isRefundable = Boolean(
+		isOwner &&
+			resume?.is_premium &&
+			resume.payment_status === "paid" &&
+			!resume.assigned_reviewer_id &&
+			resume.status === "open",
 	);
 
 	function goToLogin() {
@@ -517,6 +526,44 @@ export function useResumeDetailController(resumeId: string) {
 		setResume((prev) =>
 			prev ? { ...prev, assigned_reviewer_id: user.id } : prev,
 		);
+	}
+
+	async function handleRefundRequest() {
+		if (!user || !resume) return;
+
+		setRefunding(true);
+		const session = await supabase.auth.getSession();
+		const accessToken = session.data.session?.access_token;
+		if (!accessToken) {
+			setRefunding(false);
+			reportError("Your session expired. Sign in again.");
+			return;
+		}
+
+		const response = await fetch(`/api/resumes/${resumeId}/refund-request`, {
+			method: "POST",
+			headers: { Authorization: `Bearer ${accessToken}` },
+		});
+
+		const result = (await response.json().catch(() => null)) as {
+			refunded?: boolean;
+			message?: string;
+		} | null;
+
+		setRefunding(false);
+		setShowRefundConfirm(false);
+
+		if (!response.ok) {
+			reportError(result?.message ?? "Refund request failed. Please try again.");
+			return;
+		}
+
+		setResume((prev) =>
+			prev ? { ...prev, payment_status: "refunded" as const } : prev,
+		);
+		toast.success("Refund requested.", {
+			description: "Your ₹199 will be returned within 5–7 business days.",
+		});
 	}
 
 	async function handleReviewSubmit(event: FormEvent<HTMLFormElement>) {
@@ -950,12 +997,17 @@ export function useResumeDetailController(resumeId: string) {
 		guidedIssueType,
 		guidedSuggestion,
 		claiming,
+		refunding,
+		showRefundConfirm,
+		setShowRefundConfirm,
 		handleClaimResume,
+		handleRefundRequest,
 		handleReplySubmit,
 		handleReviewSubmit,
 		isClosed,
 		isClaimable,
 		isOwner,
+		isRefundable,
 		isWaiting,
 		likedReviewIds,
 		loading,

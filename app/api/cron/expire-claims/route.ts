@@ -65,21 +65,69 @@ export async function GET(request: Request) {
 	let refunded = 0;
 	let failed = 0;
 
+	const auditRows: {
+		action: string;
+		admin_user_id: null;
+		target_type: string;
+		target_id: string;
+		metadata: Record<string, unknown>;
+		reason: string;
+	}[] = [];
+
 	refundResults.forEach((result, i) => {
+		const claim = expired[i];
 		if (result.status === "fulfilled") {
 			refunded++;
+			auditRows.push({
+				action: "premium_refund_issued",
+				admin_user_id: null,
+				target_type: "resume",
+				target_id: claim.resume_id,
+				metadata: {
+					refund_id: result.value.refundId,
+					payment_id: claim.payment_id,
+					candidate_id: claim.candidate_id,
+					reviewer_id: claim.old_reviewer_id,
+					trigger: "missed_deadline_cron",
+					amount_paise: PREMIUM_AMOUNT_PAISE,
+				},
+				reason: "Reviewer missed 24h deadline — auto-refund via cron",
+			});
 		} else {
 			failed++;
 			capturePrivateError(result.reason, {
 				area: "cron",
 				operation: "razorpay_refund",
-				resumeId: expired[i].resume_id,
-				paymentId: expired[i].payment_id ?? "missing",
-				candidateId: expired[i].candidate_id,
-				reviewerId: expired[i].old_reviewer_id ?? "unknown",
+				resumeId: claim.resume_id,
+				paymentId: claim.payment_id ?? "missing",
+				candidateId: claim.candidate_id,
+				reviewerId: claim.old_reviewer_id ?? "unknown",
+			});
+			auditRows.push({
+				action: "premium_refund_failed",
+				admin_user_id: null,
+				target_type: "resume",
+				target_id: claim.resume_id,
+				metadata: {
+					payment_id: claim.payment_id,
+					candidate_id: claim.candidate_id,
+					reviewer_id: claim.old_reviewer_id,
+					trigger: "missed_deadline_cron",
+					error:
+						result.reason instanceof Error ? result.reason.message : "Unknown refund error",
+				},
+				reason: "Auto-refund failed — manual recovery required",
 			});
 		}
 	});
+
+	// Log all refund outcomes atomically — failures here don't affect the refunds already issued.
+	if (auditRows.length > 0) {
+		const { error: auditError } = await admin.from("moderation_actions").insert(auditRows);
+		if (auditError) {
+			capturePrivateError(auditError, { area: "cron", operation: "expire_claims_audit_log" });
+		}
+	}
 
 	return NextResponse.json({
 		processed: expired.length,

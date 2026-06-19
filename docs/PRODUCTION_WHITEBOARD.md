@@ -18,44 +18,50 @@ Last updated: 2026-06-19
 
 - [x] **Auto-refund + reviewer deadline enforcement**
   - RPC `expire_claimed_premium_resumes()` — atomic CTE with FOR UPDATE SKIP LOCKED
-  - Vercel Cron every hour → `GET /api/cron/expire-claims` (protected by CRON_SECRET)
+  - Vercel Cron daily at midnight UTC → `GET /api/cron/expire-claims` (protected by CRON_SECRET)
+  - ⚠️ Changed from hourly to daily — Vercel Hobby plan max is once per day
   - Un-assigns reviewer, sets payment_status='refunded', then calls Razorpay refund API
   - Refund failures logged to Sentry individually for manual recovery
   - Migration: `20260619000000_expire_claimed_premium_resumes.sql`
   - ⚠️ Requires env var: CRON_SECRET (set in Vercel dashboard)
 
-- [ ] **Razorpay webhook reliability**
-  - `payment_status` stays `'pending'` until webhook fires — if it fails/delays, resume is stuck and no reviewer can claim it
-  - Need: webhook signature validation confirmed, idempotency on `payment_id`, retry logs
-  - Add a fallback: if `payment_status='pending'` for > 10 min after order creation, auto-poll Razorpay API to check status
-  - File: `app/api/webhooks/razorpay/route.ts`
+- [x] **Razorpay webhook reliability**
+  - Webhook HMAC (SHA-256, RAZORPAY_WEBHOOK_SECRET): ✅ already correct
+  - Idempotency on payment_id + order_id: ✅ unique constraints + WHERE guard
+  - Fixed stuck-pending: `create_premium_resume` now sets `payment_status='paid'` at insert time — HMAC in verify route proves capture. Webhook is now a no-op backup, not the sole path to claimability.
+  - Fixed timing-attack: both signature comparisons now use `timingSafeEqual` via `safeCompareHex`
+  - Migration: `20260619100000_fix_premium_resume_payment_status.sql`
 
-- [ ] **User account deletion endpoint**
+- [x] **User account deletion endpoint**
   - Indian IT Act requires this
-  - `DELETE /api/account/delete` — deletes auth user, anonymises all their content, removes PII from profiles
-  - Soft-delete pattern: set `profiles.deleted_at`, redact `full_name/email/avatar`, disable `auth.users`
-  - Also delete all their stored PDFs from storage bucket
+  - `DELETE /api/account/delete` — reuses existing `admin_delete_user_app_data` RPC
+  - Hard-deletes: resumes, roasts, votes, sessions, subscriptions, onboarding, notifications
+  - Storage cleanup: resumes/, avatars/, comment-media/, community-post-media/ buckets
+  - Permanently deletes auth.users record (cascades profile deletion)
+  - Idempotent: safe to retry; audit trail written to moderation_actions
+  - File: `app/api/account/delete/route.ts`
 
-- [ ] **Audit log table**
-  - No way to trace who deleted a user, removed a post, changed a reviewer status
-  - New table: `audit_log (id, actor_id, action, target_type, target_id, metadata jsonb, created_at)`
-  - Log: user suspension, deletion, reviewer approve/reject, premium refund, post removal
-  - Admin-only readable via service_role
+- [x] **Audit log table**
+  - `moderation_actions` already serves as the audit log (id, admin_user_id, action, target_type, target_id, metadata jsonb, created_at)
+  - Already covers: user deletion, reviewer approve/reject, content moderation, post removal
+  - Gap closed: cron-issued refunds now logged as `premium_refund_issued` / `premium_refund_failed` in moderation_actions
+  - Admin-only: table is service_role readable only, no public RLS policy
 
 ---
 
 ## 🟠 High — should fix before real traffic
 
-- [ ] **Community Markdown XSS**
-  - Posts and comments render Markdown but HTML is not sanitized
-  - Install `dompurify` or add a remark/rehype sanitize plugin to the post renderer
-  - Test: post `<script>alert(1)</script>` and confirm it's escaped
+- [x] **Community Markdown XSS**
+  - Already safe: ReactMarkdown without rehype-raw renders raw HTML as escaped text, not DOM
+  - `getSafeHref` blocks javascript: URLs on links; `getSafeImageSrc` only allows http/https/inline IDs
+  - `dangerouslySetInnerHTML` is only used for hljs.highlight() output, which escapes all HTML entities
+  - No dompurify needed — react-markdown's virtual DOM output cannot inject scripts
 
-- [ ] **In-app refund request flow**
-  - Users who want refunds currently have no UI — have to email
-  - Add "Request refund" button on resume detail (only visible to owner, only if `is_premium && payment_status='paid' && assigned_reviewer_id IS NULL`)
-  - Route: `POST /api/resumes/[id]/refund-request`
-  - Admin sees refund requests in dashboard and triggers Razorpay refund
+- [x] **In-app refund request flow**
+  - "Request refund" button in resume owner view: visible only when `is_premium && payment_status='paid' && assigned_reviewer_id IS NULL`
+  - Route: `POST /api/resumes/[id]/refund-request` — atomic DB update guards against race with claim, then issues Razorpay refund directly
+  - Failed Razorpay calls logged as `premium_refund_failed` in moderation_actions for manual recovery
+  - Files: `app/api/resumes/[id]/refund-request/route.ts`, `components/resume-detail/dialogs.tsx`, `components/resume-detail/discussion-panel.tsx`
 
 - [ ] **Structured premium review template**
   - Right now a ₹199 verified reviewer can post the same casual comment as a free user
@@ -194,11 +200,11 @@ Last updated: 2026-06-19
 ## Order of work (agreed sequence)
 
 1. ~~Auto-refund + deadline enforcement cron~~ ✅ done
-2. Razorpay webhook reliability audit
-3. User account deletion
-4. Audit log table
-5. Community Markdown XSS fix
-6. In-app refund request UI
+2. ~~Razorpay webhook reliability~~ ✅ done
+3. ~~User account deletion~~ ✅ done
+4. ~~Audit log table~~ ✅ done (moderation_actions already serves this)
+5. ~~Community Markdown XSS fix~~ ✅ already safe (ReactMarkdown + hljs escape)
+6. ~~In-app refund request UI~~ ✅ done
 7. Structured premium review template
 8. Reviewer deadline push notifications
 9. Email system (Resend)

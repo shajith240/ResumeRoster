@@ -157,6 +157,46 @@ export function ResumeOwnerActionDialog({
 	);
 }
 
+type RefundRequestDialogProps = {
+	busy: boolean;
+	onConfirm: () => void;
+	onOpenChange: (open: boolean) => void;
+	open: boolean;
+};
+
+export function RefundRequestDialog({
+	busy,
+	onConfirm,
+	onOpenChange,
+	open,
+}: RefundRequestDialogProps) {
+	return (
+		<AlertDialog open={open} onOpenChange={onOpenChange}>
+			<AlertDialogContent size="sm">
+				<AlertDialogHeader>
+					<AlertDialogTitle>Request refund?</AlertDialogTitle>
+					<AlertDialogDescription>
+						No reviewer has been assigned yet. Your ₹199 payment will be returned
+						within 5–7 business days. This cannot be undone.
+					</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
+					<AlertDialogAction
+						disabled={busy}
+						onClick={(event) => {
+							event.preventDefault();
+							onConfirm();
+						}}
+					>
+						{busy ? "Requesting..." : "Request refund"}
+					</AlertDialogAction>
+				</AlertDialogFooter>
+			</AlertDialogContent>
+		</AlertDialog>
+	);
+}
+
 type DeleteReviewDialogProps = {
 	busy: boolean;
 	isReply: boolean;

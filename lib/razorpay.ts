@@ -1,8 +1,19 @@
-import { createHmac } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import Razorpay from "razorpay";
 
 export const PREMIUM_AMOUNT_PAISE = 19900;
 export const PREMIUM_CURRENCY = "INR";
+
+function safeCompareHex(a: string, b: string): boolean {
+  try {
+    const bufA = Buffer.from(a, "hex");
+    const bufB = Buffer.from(b, "hex");
+    if (bufA.length === 0 || bufA.length !== bufB.length) return false;
+    return timingSafeEqual(bufA, bufB);
+  } catch {
+    return false;
+  }
+}
 
 export function getRazorpayClient(): Razorpay {
   const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
@@ -27,7 +38,7 @@ export function verifyRazorpayPaymentSignature(params: {
     .update(`${params.orderId}|${params.paymentId}`)
     .digest("hex");
 
-  return expected === params.signature;
+  return safeCompareHex(expected, params.signature);
 }
 
 export function verifyRazorpayWebhookSignature(params: {
@@ -41,7 +52,7 @@ export function verifyRazorpayWebhookSignature(params: {
     .update(params.rawBody)
     .digest("hex");
 
-  return expected === params.signature;
+  return safeCompareHex(expected, params.signature);
 }
 
 export async function issueRazorpayRefund(

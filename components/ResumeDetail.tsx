@@ -3,7 +3,7 @@
 import { getResumePosterLabel } from "@/lib/resume-display";
 import { REPORT_DETAILS_MAX_LENGTH } from "@/lib/report-validation";
 import { ResumeContextCard } from "./resume-detail/content";
-import { DeleteReviewDialog, ReportCommentDialog, ResumeOwnerActionDialog } from "./resume-detail/dialogs";
+import { DeleteReviewDialog, RefundRequestDialog, ReportCommentDialog, ResumeOwnerActionDialog } from "./resume-detail/dialogs";
 import { DiscussionPanel } from "./resume-detail/discussion-panel";
 import { ResumePreviewPane } from "./resume-detail/resume-preview-pane";
 import { ResumeDetailSkeleton } from "./resume-detail/ResumeDetailSkeleton";
@@ -119,6 +119,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						isClaimable={controller.isClaimable}
 						isPremiumClaimed={Boolean(resume.is_premium && resume.assigned_reviewer_id)}
 						isOwner={controller.isOwner}
+						isRefundable={controller.isRefundable}
 						isWaiting={controller.isWaiting}
 						likedReviewIds={controller.likedReviewIds}
 						mediaSchemaReady={controller.mediaSchemaReady}
@@ -155,6 +156,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							controller.setReplyAttachment(null);
 						}}
 						onClaim={() => { void controller.handleClaimResume(); }}
+						onRequestRefund={() => { controller.setShowRefundConfirm(true); }}
 						onRequireLogin={controller.goToLogin}
 						onReviewSubmit={controller.handleReviewSubmit}
 						onSelectedAttachmentChange={controller.setSelectedAttachment}
@@ -205,6 +207,16 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 					}
 				}}
 				pendingAction={controller.pendingResumeAction}
+			/>
+			<RefundRequestDialog
+				busy={controller.refunding}
+				onConfirm={() => { void controller.handleRefundRequest(); }}
+				onOpenChange={(open) => {
+					if (!open && !controller.refunding) {
+						controller.setShowRefundConfirm(false);
+					}
+				}}
+				open={controller.showRefundConfirm}
 			/>
 			<DeleteReviewDialog
 				busy={Boolean(controller.deletingReviewId)}
