@@ -1,0 +1,19 @@
+# Normalise line endings to LF in the repository for all text files.
+# This ensures SHA-256 hashes embedded in generated docs are identical
+# regardless of whether the file was read on Windows (CRLF) or Linux (LF).
+* text=auto eol=lf
+
+# Binary files — never touch line endings.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.pdf binary
+*.zip binary
+*.node binary
