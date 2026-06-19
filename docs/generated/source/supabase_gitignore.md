@@ -5,7 +5,7 @@
 - Source path: `supabase/.gitignore`
 - Kind: Project file
 - Size: 72 bytes
-- Lines: binary or not line-based
+- Lines: 9
 - Source hash: `507699eb91144818edf61d3a079212cacf31d8db520eae428e3b48fcf0d6919c`
 
 ## What This File Does

@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/linted/app-icon.svg`
 - Kind: Public visual asset
-- Size: 564 bytes
-- Lines: binary or not line-based
-- Source hash: `0a7610fe39510ec8f47939e142a50bd22cf2b3d47aeff1c8170ae95b7c817056`
+- Size: 556 bytes
+- Lines: 9
+- Source hash: `06adaa8ae8cf88bedd070b038978f257e480f5037cfdd3d74fc010411a2124c6`
 
 ## What This File Does
 

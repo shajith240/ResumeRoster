@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/linted/wordmark-symbol.svg`
 - Kind: Public visual asset
-- Size: 2453 bytes
-- Lines: binary or not line-based
-- Source hash: `8f798721eb81477ca5c5da269a6ca6da19d7fc5ed9b2d60bbf19921632ac9752`
+- Size: 2446 bytes
+- Lines: 8
+- Source hash: `474429338e68aaaed4d0bd868eb3c782feb66e4e34e722da6d28e72cc750cb6d`
 
 ## What This File Does
 

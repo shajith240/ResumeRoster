@@ -4,9 +4,9 @@
 
 - Source path: `public/assets/linted/wordmark-light.svg`
 - Kind: Public visual asset
-- Size: 2498 bytes
-- Lines: binary or not line-based
-- Source hash: `40f24686f5dfc522344dcafffc5f5f3fd347423762f43524829470e1df984ac8`
+- Size: 2492 bytes
+- Lines: 7
+- Source hash: `04a4d3cdc0eabaa3c3e14e8a06b6fa72fe1adde832c410e7353c97be6c7a5326`
 
 ## What This File Does
 

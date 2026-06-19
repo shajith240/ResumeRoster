@@ -10,11 +10,11 @@
   ],
   "files": [
     {
-      "hash": "8561d14a9c788ccfb644ee6a366c2e69f12b49d81c92ef259f385ae95e9a168f",
+      "hash": "96de418b048954e2c7d615864d3cf53c4cc4cbaf8432ae318d57f53d704f0f43",
       "kind": "Project file",
-      "lineCount": 0,
+      "lineCount": 34,
       "relativePath": ".env.example",
-      "size": 1080,
+      "size": 1047,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -30,11 +30,11 @@
       "exportCount": 0
     },
     {
-      "hash": "a0658d06a811f1c9b56522ff950ae28b5387b45d854f1d42958d09386355c89c",
+      "hash": "ca40894f39aa582d4553f819f694a2c465123ba3847a74473456c851d4942bac",
       "kind": "Project file",
-      "lineCount": 0,
+      "lineCount": 19,
       "relativePath": ".gitignore",
-      "size": 245,
+      "size": 227,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -3970,11 +3970,11 @@
       "exportCount": 0
     },
     {
-      "hash": "0a7610fe39510ec8f47939e142a50bd22cf2b3d47aeff1c8170ae95b7c817056",
+      "hash": "06adaa8ae8cf88bedd070b038978f257e480f5037cfdd3d74fc010411a2124c6",
       "kind": "Public visual asset",
-      "lineCount": 0,
+      "lineCount": 9,
       "relativePath": "public/assets/linted/app-icon.svg",
-      "size": 564,
+      "size": 556,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -4010,31 +4010,31 @@
       "exportCount": 0
     },
     {
-      "hash": "40f24686f5dfc522344dcafffc5f5f3fd347423762f43524829470e1df984ac8",
+      "hash": "04a4d3cdc0eabaa3c3e14e8a06b6fa72fe1adde832c410e7353c97be6c7a5326",
       "kind": "Public visual asset",
-      "lineCount": 0,
+      "lineCount": 7,
       "relativePath": "public/assets/linted/wordmark-light.svg",
-      "size": 2498,
+      "size": 2492,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "8f798721eb81477ca5c5da269a6ca6da19d7fc5ed9b2d60bbf19921632ac9752",
+      "hash": "474429338e68aaaed4d0bd868eb3c782feb66e4e34e722da6d28e72cc750cb6d",
       "kind": "Public visual asset",
-      "lineCount": 0,
+      "lineCount": 8,
       "relativePath": "public/assets/linted/wordmark-symbol.svg",
-      "size": 2453,
+      "size": 2446,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
     },
     {
-      "hash": "5464eb385056b5f846a9760e76c8a778069e7bf6b058b9ed4170895e7e049f52",
+      "hash": "0f82314303c0be062fc03a0bce15c5572c5e6efe7fd5adec977f8448a96eb2f4",
       "kind": "Public visual asset",
-      "lineCount": 0,
+      "lineCount": 7,
       "relativePath": "public/assets/linted/wordmark.svg",
-      "size": 2498,
+      "size": 2492,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -4330,11 +4330,11 @@
       "exportCount": 0
     },
     {
-      "hash": "e937df6823d58ff9b26bc08e002a1f8abd2b6d70a9431eaea0fbb2b6401fa832",
+      "hash": "fec710d7c0809017a10abbdce987b0fc0dbe85253daf9f55264717017e92bb58",
       "kind": "Repository automation",
-      "lineCount": 806,
+      "lineCount": 812,
       "relativePath": "scripts/docs/generate.mjs",
-      "size": 24581,
+      "size": 24741,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -4382,7 +4382,7 @@
     {
       "hash": "507699eb91144818edf61d3a079212cacf31d8db520eae428e3b48fcf0d6919c",
       "kind": "Project file",
-      "lineCount": 0,
+      "lineCount": 9,
       "relativePath": "supabase/.gitignore",
       "size": 72,
       "functionCount": 0,
@@ -5280,5 +5280,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "352ee39a29a8428b4fee1a10686b700a6b3e1e5da80346593995895bc46c2d47"
+  "manifestHash": "4fc33ad1187f48e11ae34268d895ddb7c152e8f4d82fdb16ae3ea3ede91c0089"
 }

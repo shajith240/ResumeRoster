@@ -4,9 +4,9 @@
 
 - Source path: `.gitignore`
 - Kind: Project file
-- Size: 245 bytes
-- Lines: binary or not line-based
-- Source hash: `a0658d06a811f1c9b56522ff950ae28b5387b45d854f1d42958d09386355c89c`
+- Size: 227 bytes
+- Lines: 19
+- Source hash: `ca40894f39aa582d4553f819f694a2c465123ba3847a74473456c851d4942bac`
 
 ## What This File Does
 

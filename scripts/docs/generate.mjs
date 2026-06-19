@@ -56,22 +56,28 @@ function sha256(buffer) {
 }
 
 function isProbablyText(buffer, ext) {
+	if (buffer.includes(0)) return false;
 	const textExts = new Set([
 		".css",
+		".example",
 		".html",
 		".js",
 		".json",
 		".md",
 		".mjs",
+		".sh",
 		".sql",
+		".svg",
 		".toml",
 		".ts",
 		".tsx",
 		".txt",
+		".xml",
 		".yml",
 		".yaml",
 	]);
-	return textExts.has(ext) && !buffer.includes(0);
+	// Known text extension, or no extension (dotfiles: .gitignore, .gitattributes, etc.)
+	return textExts.has(ext) || ext === "";
 }
 
 function readFile(relativePath) {
