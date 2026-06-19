@@ -573,8 +573,12 @@ test("primary navigation exposes app sections without account utilities", async 
 				};
 			});
 
-		expect(communityThreadScrollMetrics.overflowY).toBe("auto");
-		expect(communityThreadScrollMetrics.overscrollBehaviorY).toBe("contain");
+		// The new mobile page-scroll layout puts the comment list in normal
+		// document flow rather than a fixed-height scroll container.
+		// CSS: .community-thread-body > .community-comments-panel .roast-list
+		// explicitly sets overflow:visible / overscroll-behavior:auto (feed.css).
+		expect(communityThreadScrollMetrics.overflowY).toBe("visible");
+		expect(communityThreadScrollMetrics.overscrollBehaviorY).toBe("auto");
 
 		await page.goto(
 			"/resume/22222222-2222-4222-8222-222222222222#comments",
@@ -889,7 +893,9 @@ test("primary navigation exposes app sections without account utilities", async 
 				headerLeft: headerRect.left,
 				headerRight: headerRect.right,
 				logoLeft: logoRect?.left ?? 0,
-				viewportWidth: window.innerWidth,
+				// clientWidth excludes classic scrollbars (Linux CI); window.innerWidth
+				// includes them, causing fixed-element right edges to measure ~10px short.
+				viewportWidth: document.documentElement.clientWidth,
 			};
 		},
 	);
