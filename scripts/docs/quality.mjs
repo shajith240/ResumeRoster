@@ -56,7 +56,9 @@ function runJscpdJson(args) {
 	} finally {
 		try {
 			fs.rmSync(tmpDir, { recursive: true, force: true });
-		} catch {}
+		} catch (_e) {
+			// best-effort cleanup — ignore errors
+		}
 	}
 }
 

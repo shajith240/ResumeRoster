@@ -90,11 +90,11 @@ Clone found (typescript):
 
 bash: 1 files, 34 lines, 0 clones, 0 duplicated lines (0%)
 css: 13 files, 3579 lines, 0 clones, 0 duplicated lines (0%)
-javascript: 105 files, 11820 lines, 0 clones, 0 duplicated lines (0%)
+javascript: 105 files, 11822 lines, 0 clones, 0 duplicated lines (0%)
 markdown: 1 files, 140 lines, 0 clones, 0 duplicated lines (0%)
 toml: 1 files, 410 lines, 0 clones, 0 duplicated lines (0%)
 tsx: 114 files, 21508 lines, 5 clones, 92 duplicated lines (0.43%)
 typescript: 175 files, 22912 lines, 15 clones, 240 duplicated lines (1.05%)
-Total: 410 files, 60403 lines, 20 clones, 332 duplicated lines (0.55%)
+Total: 410 files, 60405 lines, 20 clones, 332 duplicated lines (0.55%)
 Found 20 clones.
 ```
