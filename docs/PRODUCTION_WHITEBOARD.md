@@ -129,12 +129,13 @@ Last updated: 2026-06-19
   - Signed URL cleared after replace so the preview auto-reloads
   - Files: `app/api/resumes/[id]/replace-pdf/route.ts`, `components/resume-detail/resume-preview-pane.tsx`
 
-- [ ] **Admin: premium controls panel**
-  - Need a "Premium" tab in admin dashboard showing:
-    - All premium resumes (status, payment_status, claimed/unclaimed, deadline)
-    - Manual refund trigger per resume
-    - Manual assign reviewer (override)
-    - Payout queue per reviewer
+- [x] **Admin: premium controls panel**
+  - `/admin/premium` — two sub-panels via segmented tabs: "Resumes" and "Payouts"
+  - Resumes panel: lists all premium resumes with candidate, reviewer, deadline, payment_status; filter by status
+    - "Force refund": updates DB + issues Razorpay refund + emails candidate + audit logs
+    - "Assign reviewer": UUID input + button, validates reviewer is verified, assigns with 24h deadline
+  - Payouts panel: pending/paid tabs, per-reviewer grouping with "Mark paid" + UPI ref (built in Item 10)
+  - API: `GET /api/admin/premium-resumes`, `POST /api/admin/premium-resumes/[id]` (force_refund / assign_reviewer)
 
 - [ ] **Leaderboard caching**
   - Leaderboard query runs on every page load — no cache
@@ -219,5 +220,5 @@ Last updated: 2026-06-19
 10. ~~Reviewer payout tracking~~ ✅ done
 11. ~~Reviewer strike system~~ ✅ done
 12. ~~Resume versioning~~ ✅ done
-13. Admin premium controls panel
+13. ~~Admin premium controls panel~~ ✅ done
 14. Everything in 🔵 Low after the above

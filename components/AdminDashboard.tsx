@@ -36,7 +36,7 @@ import {
 import { AdminSectionNav } from "./admin-dashboard/navigation";
 import { MetricCard, OverviewPage } from "./admin-dashboard/overview";
 import { PeoplePage } from "./admin-dashboard/people";
-import { PremiumPage, type AdminPayoutsData } from "./admin-dashboard/premium";
+import { PremiumPage, type AdminPayoutsData, type AdminPremiumResumesData } from "./admin-dashboard/premium";
 import type {
 	ActiveAdminUser,
 	AdminDashboardView,
@@ -92,6 +92,8 @@ export default function AdminDashboard({
 	const [dataInventory, setDataInventory] = useState<AdminDataInventory | null>(null);
 	const [payoutsData, setPayoutsData] = useState<AdminPayoutsData | null>(null);
 	const [payoutStatus, setPayoutStatus] = useState("pending");
+	const [premiumResumesData, setPremiumResumesData] = useState<AdminPremiumResumesData | null>(null);
+	const [resumeFilter, setResumeFilter] = useState("all");
 	const [reportStatus, setReportStatus] =
 		useState<ContentReportStatus>("pending");
 	const [feedbackStatus, setFeedbackStatus] = useState("open");
@@ -222,9 +224,12 @@ export default function AdminDashboard({
 						return fetchJson<AdminDataInventory>("/api/admin/data");
 					}
 					if (view === "premium") {
-						return fetchJson<AdminPayoutsData>(
-							`/api/admin/payouts?status=${payoutStatus}&limit=200`,
-						);
+						return Promise.all([
+							fetchJson<AdminPayoutsData>(`/api/admin/payouts?status=${payoutStatus}&limit=200`),
+							fetchJson<AdminPremiumResumesData>(
+								`/api/admin/premium-resumes?payment_status=${resumeFilter}&limit=100`,
+							),
+						]).then(([payoutsResult, resumesResult]) => ({ payoutsResult, resumesResult }));
 					}
 					return Promise.resolve(null);
 				})();
@@ -274,7 +279,9 @@ export default function AdminDashboard({
 					setDataInventory(sectionData as AdminDataInventory | null);
 				}
 				if (view === "premium") {
-					setPayoutsData(sectionData as AdminPayoutsData | null);
+					const premiumData = sectionData as { payoutsResult: AdminPayoutsData; resumesResult: AdminPremiumResumesData } | null;
+					setPayoutsData(premiumData?.payoutsResult ?? null);
+					setPremiumResumesData(premiumData?.resumesResult ?? null);
 				}
 			} finally {
 				setPageLoading(false);
@@ -290,6 +297,7 @@ export default function AdminDashboard({
 			payoutStatus,
 			peoplePage,
 			reportStatus,
+			resumeFilter,
 			reviewerStatus,
 			userQuery,
 			view,
@@ -460,6 +468,24 @@ export default function AdminDashboard({
 				method: "POST",
 			});
 			toast.success("Payout marked as paid.");
+			await loadAdminData();
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "Action failed.");
+		} finally {
+			setBusyAction("");
+		}
+	}
+
+	async function runPremiumResumeAction(resumeId: string, action: string, extra?: Record<string, string>) {
+		const actionKey = `premium:${resumeId}:${action}`;
+		setBusyAction(actionKey);
+		try {
+			await fetchJson(`/api/admin/premium-resumes/${resumeId}`, {
+				body: JSON.stringify({ action, ...extra }),
+				headers: { "Content-Type": "application/json" },
+				method: "POST",
+			});
+			toast.success(action === "force_refund" ? "Refund issued." : "Reviewer assigned.");
 			await loadAdminData();
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Action failed.");
@@ -678,9 +704,13 @@ export default function AdminDashboard({
 						<PremiumPage
 							busyAction={busyAction}
 							onMarkPaid={runPayoutAction}
-							onStatusChange={(value) => setPayoutStatus(value)}
+							onPayoutStatusChange={(value) => setPayoutStatus(value)}
+							onPremiumResumeAction={runPremiumResumeAction}
+							onResumeFilterChange={(value) => setResumeFilter(value)}
 							payoutsData={payoutsData}
-							status={payoutStatus}
+							payoutStatus={payoutStatus}
+							premiumResumesData={premiumResumesData}
+							resumeFilter={resumeFilter}
 						/>
 					) : null}
 				</div>
