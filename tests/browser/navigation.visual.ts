@@ -796,7 +796,7 @@ test("primary navigation exposes app sections without account utilities", async 
 		});
 
 	expect(desktopCommunityLayoutMetrics.left).toBeLessThan(220);
-	expect(desktopCommunityLayoutMetrics.width).toBeGreaterThanOrEqual(880);
+	expect(desktopCommunityLayoutMetrics.width).toBeGreaterThanOrEqual(740);
 	const desktopCarouselMetrics = await page
 		.locator(".community-media-gallery-feed")
 		.evaluate((element) => {

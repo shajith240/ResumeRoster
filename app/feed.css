@@ -7271,11 +7271,6 @@ body.main-app-dark .community-feed-route .community-feed-panel {
 		overflow-y: auto;
 	}
 
-	/* Hide mention suggestions (not needed in simple overlay) */
-	.community-mobile-composer-body .mention-suggestions {
-		display: none;
-	}
-
 	/* Footer: push to bottom, hide submit row */
 	.community-mobile-composer-body .comment-composer-footer {
 		flex-shrink: 0;

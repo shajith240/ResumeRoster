@@ -700,6 +700,59 @@ async function fulfillSupabase(
 	await fulfillJson(route, {});
 }
 
+const ALL_MENTION_ROWS = [
+	...REVIEW_AUTHOR_ROWS,
+	...COMMUNITY_AUTHOR_ROWS,
+];
+
+async function fulfillMentionUsers(route: Route) {
+	const method = route.request().method();
+	const url = new URL(route.request().url());
+
+	if (method === "GET") {
+		const query = (url.searchParams.get("query") ?? "").toLowerCase();
+		const suggestions = ALL_MENTION_ROWS
+			.filter(
+				(u) =>
+					!query ||
+					u.username?.toLowerCase().startsWith(query) ||
+					u.full_name?.toLowerCase().startsWith(query),
+			)
+			.map((u) => ({
+				avatarUrl: u.avatar_url ?? null,
+				displayName: u.full_name ?? u.username ?? "",
+				handle: u.username ?? "",
+				id: u.id,
+				subtitle: null,
+			}));
+		await fulfillJson(route, { suggestions });
+		return;
+	}
+
+	if (method === "POST") {
+		let handles: string[] = [];
+		try {
+			const body = await route.request().postDataJSON();
+			handles = Array.isArray(body?.handles) ? (body.handles as string[]) : [];
+		} catch {
+			// ignore parse errors
+		}
+		const suggestions = ALL_MENTION_ROWS
+			.filter((u) => !handles.length || handles.includes(u.username ?? ""))
+			.map((u) => ({
+				avatarUrl: u.avatar_url ?? null,
+				displayName: u.full_name ?? u.username ?? "",
+				handle: u.username ?? "",
+				id: u.id,
+				subtitle: null,
+			}));
+		await fulfillJson(route, { suggestions });
+		return;
+	}
+
+	await fulfillJson(route, { suggestions: [] });
+}
+
 export async function mockSupabaseForAuthenticatedPages(
 	page: Page,
 	options: SupabaseMockOptions = {},
@@ -710,6 +763,7 @@ export async function mockSupabaseForAuthenticatedPages(
 	await page.route("**/api/admin/me", (route) =>
 		fulfillJson(route, { email: TEST_USER_EMAIL, isAdmin: false }),
 	);
+	await page.route("**/api/mentions/users**", (route) => fulfillMentionUsers(route));
 }
 
 export async function seedAuthenticatedSession(page: Page) {
