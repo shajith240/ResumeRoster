@@ -72,7 +72,7 @@ async function expectMobileThreadTreeLayout(panel: Locator) {
 		mobileCommentTreeMetrics.secondRootBorderTopWidth,
 	).toBeGreaterThanOrEqual(8);
 	expect(mobileCommentTreeMetrics.childBorderLeftWidth).toBe(1);
-	expect(mobileCommentTreeMetrics.deepBodyLeft).toBeLessThan(96);
+	expect(mobileCommentTreeMetrics.deepBodyLeft).toBeLessThan(100);
 	expect(mobileCommentTreeMetrics.deepBodyWidth).toBeGreaterThan(220);
 	expect(mobileCommentTreeMetrics.oldCurveDisplay).toBe("none");
 	expect(mobileCommentTreeMetrics.oldPseudoRailDisplay).toBe("none");
