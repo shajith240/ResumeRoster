@@ -716,7 +716,6 @@ export async function seedAuthenticatedSession(page: Page) {
 	await page.addInitScript(
 		({ session, storageKeys }) => {
 			window.localStorage.setItem("linted-theme", "dark");
-			window.localStorage.setItem("linted.session-sidebar.collapsed", "1");
 			for (const storageKey of storageKeys) {
 				window.localStorage.setItem(storageKey, JSON.stringify(session));
 			}

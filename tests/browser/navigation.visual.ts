@@ -544,13 +544,24 @@ test("primary navigation exposes app sections without account utilities", async 
 		await expect(
 			mobileOwnComment.getByRole("button", { name: "Edit" }),
 		).toHaveCount(1);
+		// The mobile community comment flow replaced the embedded form with a
+		// portaled full-screen overlay. Tap the join pill (fixed to the viewport,
+		// outside the comments panel) to open the overlay, exercise the mention
+		// autocomplete there, then dismiss.
+		const mobileCommunityJoinPill = page.locator(".community-mobile-join-pill");
+		await expect(mobileCommunityJoinPill).toBeVisible();
+		await mobileCommunityJoinPill.click();
+		const mobileComposerOverlay = page.locator(".community-mobile-composer-overlay");
+		await expect(mobileComposerOverlay).toBeVisible();
 		await expectCommentComposerMentionAutocomplete({
-			composer: mobileCommentsPanel.locator(
-				".community-root-comment-form-mobile .community-root-comment-composer",
+			composer: mobileComposerOverlay.locator(
+				".community-mobile-composer-input-area",
 			),
 			expectedMention: "@community_member ",
 			query: "@comm",
 		});
+		await mobileComposerOverlay.getByRole("button", { name: "Cancel" }).click();
+		await expect(mobileComposerOverlay).toHaveCount(0);
 		const communityThreadScrollMetrics = await mobileCommentsPanel
 			.locator(".roast-list")
 			.evaluate((element) => {
@@ -627,6 +638,14 @@ test("primary navigation exposes app sections without account utilities", async 
 	await expectResumeDetailPostSurface(page);
 	await expectResumeCommentComposerPill(page);
 
+	// Collapse the sidebar before the community layout checks so
+	// .community-feed-center starts near the left edge (< 220px).
+	// The nav link assertions above run with the sidebar expanded, so
+	// the links are visible; this localStorage write only takes effect
+	// on the next page navigation.
+	await page.evaluate(() =>
+		window.localStorage.setItem("linted.session-sidebar.collapsed", "1"),
+	);
 	await page.goto("/community", { waitUntil: "domcontentloaded" });
 	await expect(page.locator(".community-feed-intro")).toBeVisible();
 	await expect(
