@@ -4350,11 +4350,11 @@
       "exportCount": 0
     },
     {
-      "hash": "62fe85d30dadb6f22c2870de78c174b945f6ba437016582c9d3488b597db64cb",
+      "hash": "36cd7dfb264483ff6d7306c2c465929f388d4d62a90d724c8a0dfea2ba77f0eb",
       "kind": "Repository automation",
-      "lineCount": 286,
+      "lineCount": 306,
       "relativePath": "scripts/docs/quality.mjs",
-      "size": 9514,
+      "size": 10451,
       "functionCount": 0,
       "importCount": 0,
       "exportCount": 0
@@ -5280,5 +5280,5 @@
       "exportCount": 0
     }
   ],
-  "manifestHash": "0e5853876283eacce36a4009f503b6e474fd66745882d9ce8b9fbf9c472ae329"
+  "manifestHash": "eac1bada6a481b0e90543f059c0de48cb5610b73c2bb11071cf1ecea4a77f89d"
 }

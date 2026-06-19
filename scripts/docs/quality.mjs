@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
@@ -7,6 +8,7 @@ import { generatedQualityDir, repoRoot } from "./docs-config.mjs";
 
 const checkMode = process.argv.includes("--check");
 
+// Used for knip (console output). jscpd uses runJscpdJson instead.
 function run(command, args) {
 	const result = spawnSync(command, args, {
 		cwd: repoRoot,
@@ -21,76 +23,102 @@ function run(command, args) {
 	};
 }
 
+// Run jscpd via its JSON reporter so the output is platform-independent.
+//
+// The console reporter embeds "token" counts that are actually character-position
+// differences (end.position - start.position). Files checked out with CRLF line
+// endings have one extra character per line vs LF, so the same clone block
+// reports 21 more "tokens" on Windows than on Linux. Switching to JSON avoids
+// this: the JSON reporter sets tokens=0 and we format the output ourselves using
+// only line numbers, which are identical on both platforms.
+function runJscpdJson(args) {
+	const tmpDir = path.join(os.tmpdir(), `jscpd-${process.pid}-${Date.now()}`);
+	const result = spawnSync(
+		process.execPath,
+		[
+			path.join(repoRoot, "node_modules/jscpd/bin/jscpd"),
+			...args,
+			"--reporters",
+			"json",
+			"--output",
+			tmpDir,
+		],
+		{ cwd: repoRoot, encoding: "utf8" },
+	);
+	const exitCode = result.status ?? 1;
+	try {
+		const jsonFile = path.join(tmpDir, "jscpd-report.json");
+		const json = JSON.parse(fs.readFileSync(jsonFile, "utf8"));
+		return { code: exitCode, output: formatJscpdJson(json) };
+	} catch {
+		const raw = stripAnsi(`${result.stdout ?? ""}${result.stderr ?? ""}`).trim();
+		return { code: exitCode, output: raw || "Failed to parse jscpd JSON output." };
+	} finally {
+		try {
+			fs.rmSync(tmpDir, { recursive: true, force: true });
+		} catch {}
+	}
+}
+
+function normalizePath(p) {
+	return String(p || "").replace(/\\/g, "/");
+}
+
+function formatJscpdJson({ duplicates = [], statistics = {} }) {
+	// Sort clones by first-file path then start line so output order is
+	// deterministic regardless of OS file-traversal order.
+	const sorted = [...duplicates].sort((a, b) => {
+		const ka = `${normalizePath(a.firstFile?.name)}:${String(a.firstFile?.start ?? 0).padStart(6, "0")}`;
+		const kb = `${normalizePath(b.firstFile?.name)}:${String(b.firstFile?.start ?? 0).padStart(6, "0")}`;
+		return ka < kb ? -1 : ka > kb ? 1 : 0;
+	});
+
+	const lines = [];
+
+	for (const clone of sorted) {
+		const { firstFile: fA, secondFile: fB, format } = clone;
+		const lineCount = (fA.end ?? 0) - (fA.start ?? 0);
+		lines.push(`Clone found (${format}):`);
+		lines.push(
+			` - ${normalizePath(fA.name)} [${fA.startLoc?.line ?? fA.start}:${fA.startLoc?.column ?? 0} - ${fA.endLoc?.line ?? fA.end}:${fA.endLoc?.column ?? 0}] (${lineCount} lines)`,
+		);
+		lines.push(
+			`   ${normalizePath(fB.name)} [${fB.startLoc?.line ?? fB.start}:${fB.startLoc?.column ?? 0} - ${fB.endLoc?.line ?? fB.end}:${fB.endLoc?.column ?? 0}]`,
+		);
+		lines.push("");
+	}
+
+	// Statistics sorted by format name. Token columns are omitted — token
+	// positions are character-offset-based and differ between CRLF and LF files.
+	const formats = Object.entries(statistics.formats ?? {})
+		.filter(([, s]) => s?.total?.sources)
+		.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+
+	for (const [fmt, { total: t }] of formats) {
+		lines.push(
+			`${fmt}: ${t.sources} files, ${t.lines} lines, ${t.clones} clones, ${t.duplicatedLines} duplicated lines (${t.percentage}%)`,
+		);
+	}
+
+	const tot = statistics.total ?? {};
+	lines.push(
+		`Total: ${tot.sources} files, ${tot.lines} lines, ${tot.clones} clones, ${tot.duplicatedLines} duplicated lines (${tot.percentage}%)`,
+	);
+	lines.push(`Found ${duplicates.length} clones.`);
+
+	return lines.join("\n");
+}
+
 function stripAnsi(value) {
 	const escape = String.fromCharCode(27);
 	return value.replace(new RegExp(`${escape}\\[[0-9;]*m`, "g"), "");
 }
 
 function normalizeToolOutput(value) {
-	const normalized = value
+	return value
 		.replace(/^time: .+$/gm, "time: deterministic")
 		.replace(/\\/g, "/")
 		.replace(/\r/g, "");
-
-	// jscpd console output has two sources of platform-specific ordering:
-	//
-	// 1. "Clone found" blocks are emitted via CLONE_FOUND events as files are
-	//    processed — in file-traversal order (NTFS alphabetical on Windows,
-	//    inode order on Linux). Fix: sort blocks lexicographically.
-	//
-	// 2. The statistics table rows are built from Object.keys(statistic.formats),
-	//    whose insertion order also depends on which file type is first encountered
-	//    during traversal. Fix: sort table rows alphabetically, Total last.
-	const tableIdx = normalized.indexOf("\n┌");
-	if (tableIdx === -1) return normalized;
-
-	const cloneSection = normalized.slice(0, tableIdx).trim();
-	const tableAndRest = normalized.slice(tableIdx + 1);
-
-	const sortedClones = !cloneSection
-		? ""
-		: cloneSection
-				.split(/\n\n/)
-				.filter(Boolean)
-				.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
-				.join("\n\n");
-
-	return (sortedClones ? sortedClones + "\n\n" : "") + sortJscpdTable(tableAndRest);
-}
-
-// Sort the statistics table rows that jscpd outputs. Row insertion order
-// depends on file-traversal order (OS-dependent), so without sorting the
-// table the committed report would always be stale on a different platform.
-function sortJscpdTable(tableAndRest) {
-	const lines = tableAndRest.split("\n");
-	const bottomIdx = lines.findIndex((l) => l.startsWith("└"));
-	if (bottomIdx === -1 || !lines[0].startsWith("┌")) return tableAndRest;
-
-	const topBorder = lines[0];
-	const headerRow = lines[1];
-	const sep = lines.find((l) => l.startsWith("├")); // all ├ lines are identical
-	const bottomBorder = lines[bottomIdx];
-	const rest = lines.slice(bottomIdx + 1);
-
-	// Data rows are │ lines after the header, before the bottom border.
-	const dataRows = lines.slice(2, bottomIdx).filter((l) => l.startsWith("│"));
-	if (!sep || dataRows.length === 0) return tableAndRest;
-
-	// Keep the Total row last; sort everything else alphabetically.
-	const totalRow = dataRows[dataRows.length - 1];
-	const sorted = dataRows
-		.slice(0, -1)
-		.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
-
-	return [
-		topBorder,
-		headerRow,
-		...sorted.flatMap((row) => [sep, row]),
-		sep,
-		totalRow,
-		bottomBorder,
-		...rest,
-	].join("\n");
 }
 
 function makeReport(title, command, result, notes = []) {
@@ -133,9 +161,8 @@ function buildReports() {
 	}
 
 	const jscpdCommand =
-		'npx jscpd app components lib scripts supabase --gitignore --ignore "supabase/migrations/**" --min-lines 8 --min-tokens 80 --reporters console --exitCode 0 --noTips';
-	const jscpd = run(process.execPath, [
-		path.join(repoRoot, "node_modules/jscpd/bin/jscpd"),
+		'npx jscpd app components lib scripts supabase --gitignore --ignore "supabase/migrations/**" --min-lines 8 --min-tokens 80 --reporters json --exitCode 0';
+	const jscpd = runJscpdJson([
 		"app",
 		"components",
 		"lib",
@@ -148,11 +175,8 @@ function buildReports() {
 		"8",
 		"--min-tokens",
 		"80",
-		"--reporters",
-		"console",
 		"--exitCode",
 		"0",
-		"--noTips",
 	]);
 	reports.set(
 		path.join(generatedQualityDir, "jscpd-report.md"),
@@ -166,20 +190,16 @@ function buildReports() {
 	}
 
 	const migrationJscpdCommand =
-		"npx jscpd supabase/migrations --gitignore --min-lines 8 --min-tokens 80 --reporters console --exitCode 0 --noTips";
-	const migrationJscpd = run(process.execPath, [
-		path.join(repoRoot, "node_modules/jscpd/bin/jscpd"),
+		"npx jscpd supabase/migrations --gitignore --min-lines 8 --min-tokens 80 --reporters json --exitCode 0";
+	const migrationJscpd = runJscpdJson([
 		"supabase/migrations",
 		"--gitignore",
 		"--min-lines",
 		"8",
 		"--min-tokens",
 		"80",
-		"--reporters",
-		"console",
 		"--exitCode",
 		"0",
-		"--noTips",
 	]);
 	reports.set(
 		path.join(generatedQualityDir, "migration-history-jscpd-report.md"),
@@ -198,16 +218,16 @@ function buildReports() {
 	}
 
 	const summary = [
-	"# Code Quality Reports",
-	"",
-	"These reports are generated artifacts. CI checks that they are fresh so dead-code and duplicate-code findings cannot drift silently.",
-	"",
-	"- [Knip dead-code report](knip-report.md)",
-	"- [jscpd duplicate-code report](jscpd-report.md) for active app/source drift",
-	"- [jscpd migration-history duplicate-code report](migration-history-jscpd-report.md) for informational Supabase migration audits",
-	"",
-	"Use these reports to decide what to clean in a separate maintenance pass. Do not rewrite applied migrations only to reduce duplicate-code percentages.",
-	"",
+		"# Code Quality Reports",
+		"",
+		"These reports are generated artifacts. CI checks that they are fresh so dead-code and duplicate-code findings cannot drift silently.",
+		"",
+		"- [Knip dead-code report](knip-report.md)",
+		"- [jscpd duplicate-code report](jscpd-report.md) for active app/source drift",
+		"- [jscpd migration-history duplicate-code report](migration-history-jscpd-report.md) for informational Supabase migration audits",
+		"",
+		"Use these reports to decide what to clean in a separate maintenance pass. Do not rewrite applied migrations only to reduce duplicate-code percentages.",
+		"",
 	].join("\n");
 	reports.set(path.join(generatedQualityDir, "README.md"), summary);
 	return { reports, toolFailures };
