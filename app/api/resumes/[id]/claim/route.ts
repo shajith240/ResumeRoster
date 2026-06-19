@@ -55,9 +55,16 @@ export async function POST(
 		profile.data?.community_role === "both";
 	const isVerified = profile.data?.reviewer_verification_status === "verified";
 
-	if (!isReviewer || !isVerified) {
+	if (!isReviewer) {
 		return NextResponse.json(
-			{ message: "Only verified reviewers can claim priority reviews." },
+			{ message: "You need to apply as a reviewer before claiming priority reviews." },
+			{ status: 403 },
+		);
+	}
+
+	if (!isVerified) {
+		return NextResponse.json(
+			{ message: "Your reviewer application is still pending admin approval." },
 			{ status: 403 },
 		);
 	}

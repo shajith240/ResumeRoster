@@ -43,3 +43,14 @@ export function verifyRazorpayWebhookSignature(params: {
 
   return expected === params.signature;
 }
+
+export async function issueRazorpayRefund(
+  paymentId: string,
+  amountPaise: number,
+): Promise<{ refundId: string }> {
+  const razorpay = getRazorpayClient();
+  const refund = await razorpay.payments.refund(paymentId, {
+    amount: amountPaise,
+  });
+  return { refundId: refund.id };
+}

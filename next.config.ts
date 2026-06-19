@@ -73,9 +73,11 @@ export default shouldUploadErrorMonitoringSourceMaps
 			org: process.env.ERROR_MONITORING_ORG,
 			project: process.env.ERROR_MONITORING_PROJECT,
 			authToken: process.env.ERROR_MONITORING_AUTH_TOKEN,
-			sentryUrl: process.env.ERROR_MONITORING_URL,
+			// sentryUrl is omitted — newer auth tokens embed the org URL automatically.
 			silent: !process.env.CI,
 			widenClientFileUpload: true,
-			disableLogger: true,
+			bundleSizeOptimizations: {
+				excludeDebugStatements: true,
+			},
 		})
 	: nextConfig;

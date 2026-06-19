@@ -67,6 +67,9 @@ export function useProfileDetailController(profileId: string) {
 	const [profileReportDetails, setProfileReportDetails] = useState("");
 	const [profileReportSubmitting, setProfileReportSubmitting] = useState(false);
 	const [profileReportSchemaReady, setProfileReportSchemaReady] = useState(true);
+	const [applyDialogOpen, setApplyDialogOpen] = useState(false);
+	const [applySubmitting, setApplySubmitting] = useState(false);
+	const [applyMessage, setApplyMessage] = useState("");
 
 	const isOwnProfile = Boolean(user && profile?.id === user.id);
 
@@ -329,6 +332,57 @@ export function useProfileDetailController(profileId: string) {
 		setProfileReportOpen(true);
 	}
 
+	async function handleReviewerApply(data: {
+		reviewer_type: string;
+		headline: string;
+		proof_url: string;
+		note: string;
+	}) {
+		setApplyMessage("");
+		setApplySubmitting(true);
+
+		try {
+			const session = await supabase.auth.getSession();
+			const accessToken = session.data.session?.access_token;
+			if (!accessToken) {
+				throw new Error("Your session expired. Please sign in again.");
+			}
+
+			const response = await fetch("/api/reviewer-application", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${accessToken}`,
+				},
+				body: JSON.stringify(data),
+			});
+
+			const result = (await response.json().catch(() => null)) as {
+				applied?: boolean;
+				message?: string;
+			} | null;
+
+			if (!response.ok || !result?.applied) {
+				throw new Error(result?.message ?? "Application submission failed.");
+			}
+
+			setProfile((current) =>
+				current ? { ...current, reviewer_verification_status: "pending" } : current,
+			);
+			setApplyDialogOpen(false);
+			toast.success("Application submitted.", {
+				description: "We will review it shortly and update your profile.",
+			});
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error ? error.message : "Application submission failed.";
+			setApplyMessage(errorMessage);
+			toast.error(errorMessage);
+		} finally {
+			setApplySubmitting(false);
+		}
+	}
+
 	async function submitProfileReport(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setSaveMessage("");
@@ -391,6 +445,9 @@ export function useProfileDetailController(profileId: string) {
 
 	return {
 		about,
+		applyDialogOpen,
+		applyMessage,
+		applySubmitting,
 		avatarPreview,
 		college,
 		collegeLocation,
@@ -398,6 +455,7 @@ export function useProfileDetailController(profileId: string) {
 		editOpen,
 		fullName,
 		handleAvatarChange,
+		handleReviewerApply,
 		isOnline,
 		isOwnProfile,
 		loading,
@@ -415,6 +473,7 @@ export function useProfileDetailController(profileId: string) {
 		saveProfile,
 		saving,
 		setAbout,
+		setApplyDialogOpen,
 		setCollege,
 		setCollegeLocation,
 		setCurrentPosition,

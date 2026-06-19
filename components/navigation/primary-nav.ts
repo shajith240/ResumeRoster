@@ -3,6 +3,7 @@
 import {
 	FileText,
 	Home,
+	ListChecks,
 	PencilLine,
 	Plus,
 	ShieldCheck,
@@ -31,6 +32,10 @@ const PRIMARY_NAV_ICONS: Record<PrimaryNavItemId, PrimaryNavigationIcons> = {
 	admin: {
 		dockIcon: ShieldCheck,
 		sidebarIcon: ShieldCheck,
+	},
+	reviewer: {
+		dockIcon: ListChecks,
+		sidebarIcon: ListChecks,
 	},
 	community: {
 		dockIcon: Home,

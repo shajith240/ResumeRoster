@@ -109,7 +109,7 @@ const DropdownMenuContent = React.forwardRef<
           ref={ref}
           sideOffset={sideOffset}
           className={cn(
-            "z-50 min-w-40 origin-[var(--radix-dropdown-menu-content-transform-origin)] overflow-hidden rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-lg shadow-black/5 duration-[180ms] ease-[cubic-bezier(0,0,0.2,1)] motion-reduce:animate-none motion-reduce:duration-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-[120ms] data-[state=closed]:ease-[cubic-bezier(0.4,0,1,1)] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-[0.97] data-[state=open]:zoom-in-[0.97]",
+            "z-50 min-w-40 origin-[var(--radix-dropdown-menu-content-transform-origin)] overflow-hidden rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-lg shadow-black/5 [animation-duration:180ms] [animation-timing-function:cubic-bezier(0,0,0.2,1)] motion-reduce:animate-none motion-reduce:[animation-duration:0ms] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:[animation-duration:120ms] data-[state=closed]:[animation-timing-function:cubic-bezier(0.4,0,1,1)] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-[0.97] data-[state=open]:zoom-in-[0.97]",
             className,
           )}
           onPointerDown={handlePointerDown}
