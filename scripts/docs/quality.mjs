@@ -27,7 +27,9 @@ function stripAnsi(value) {
 }
 
 function normalizeToolOutput(value) {
-	return value.replace(/^time: .+$/gm, "time: deterministic");
+	return value
+		.replace(/^time: .+$/gm, "time: deterministic")
+		.replace(/\\/g, "/");
 }
 
 function makeReport(title, command, result, notes = []) {
