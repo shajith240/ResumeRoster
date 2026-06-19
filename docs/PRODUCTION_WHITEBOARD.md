@@ -63,15 +63,12 @@ Last updated: 2026-06-19
   - Failed Razorpay calls logged as `premium_refund_failed` in moderation_actions for manual recovery
   - Files: `app/api/resumes/[id]/refund-request/route.ts`, `components/resume-detail/dialogs.tsx`, `components/resume-detail/discussion-panel.tsx`
 
-- [ ] **Structured premium review template**
-  - Right now a ₹199 verified reviewer can post the same casual comment as a free user
-  - When `resume.is_premium && resume.assigned_reviewer_id === currentUser.id`, show a 5-field structured form:
-    1. Overall impression (1–5 rating + text)
-    2. Clarity & formatting feedback
-    3. Impact statements — what's weak
-    4. Skills & keywords gap
-    5. Top 3 actionable changes
-  - Store as JSON in a new `premium_reviews` table (linked to roast_id)
+- [x] **Structured premium review template**
+  - When assigned reviewer views a premium resume: shows 5-field structured form instead of regular composer
+  - Fields: overall rating (1–5 stars) + 4 text sections (clarity, impact, skills gap, top changes)
+  - On submit: formats as Markdown + inserts roast (visible in thread) + stores raw data in `premium_reviews` table
+  - Migration: `20260619110000_premium_review_structured_form.sql`
+  - Files: `app/api/resumes/[id]/premium-review/route.ts`, `components/resume-detail/premium-review-composer.tsx`
 
 - [ ] **Reviewer deadline push notifications**
   - At 12h and 20h before `review_deadline`, send a push notification to the assigned reviewer
@@ -205,7 +202,7 @@ Last updated: 2026-06-19
 4. ~~Audit log table~~ ✅ done (moderation_actions already serves this)
 5. ~~Community Markdown XSS fix~~ ✅ already safe (ReactMarkdown + hljs escape)
 6. ~~In-app refund request UI~~ ✅ done
-7. Structured premium review template
+7. ~~Structured premium review template~~ ✅ done
 8. Reviewer deadline push notifications
 9. Email system (Resend)
 10. Reviewer payout tracking

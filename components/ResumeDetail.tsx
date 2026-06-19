@@ -119,6 +119,7 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 						isClaimable={controller.isClaimable}
 						isPremiumClaimed={Boolean(resume.is_premium && resume.assigned_reviewer_id)}
 						isOwner={controller.isOwner}
+						isPremiumReviewer={controller.isPremiumReviewer}
 						isRefundable={controller.isRefundable}
 						isWaiting={controller.isWaiting}
 						likedReviewIds={controller.likedReviewIds}
@@ -156,7 +157,9 @@ export default function ResumeDetail({ resumeId }: ResumeDetailProps) {
 							controller.setReplyAttachment(null);
 						}}
 						onClaim={() => { void controller.handleClaimResume(); }}
+						onPremiumReviewSubmit={(fields) => { void controller.handlePremiumReviewSubmit(fields); }}
 						onRequestRefund={() => { controller.setShowRefundConfirm(true); }}
+						submittingPremiumReview={controller.submittingPremiumReview}
 						onRequireLogin={controller.goToLogin}
 						onReviewSubmit={controller.handleReviewSubmit}
 						onSelectedAttachmentChange={controller.setSelectedAttachment}

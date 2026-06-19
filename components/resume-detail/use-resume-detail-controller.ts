@@ -39,6 +39,7 @@ import {
 	loadResumeThreadData,
 	recordResumeReadCount,
 } from "./data";
+import type { PremiumReviewFields } from "./premium-review-composer";
 import { useResumeOwnerActions } from "./use-owner-actions";
 import { useReviewReportActions } from "./use-review-report-actions";
 import { useReviewReactions } from "./use-review-reactions";
@@ -100,6 +101,7 @@ export function useResumeDetailController(resumeId: string) {
 	const [submitting, setSubmitting] = useState(false);
 	const [claiming, setClaiming] = useState(false);
 	const [refunding, setRefunding] = useState(false);
+	const [submittingPremiumReview, setSubmittingPremiumReview] = useState(false);
 	const [showRefundConfirm, setShowRefundConfirm] = useState(false);
 	const [message, setMessage] = useState("");
 
@@ -117,6 +119,15 @@ export function useResumeDetailController(resumeId: string) {
 			!resume.assigned_reviewer_id &&
 			resume.status === "open" &&
 			!isOwner,
+	);
+	const isPremiumReviewer = Boolean(
+		resume?.is_premium &&
+			resume.payment_status === "paid" &&
+			resume.assigned_reviewer_id &&
+			user?.id &&
+			resume.assigned_reviewer_id === user.id &&
+			!isOwner &&
+			resume.status === "open",
 	);
 	const isRefundable = Boolean(
 		isOwner &&
@@ -566,6 +577,48 @@ export function useResumeDetailController(resumeId: string) {
 		});
 	}
 
+	async function handlePremiumReviewSubmit(fields: PremiumReviewFields) {
+		if (!user || !resume || !isPremiumReviewer) return;
+
+		setSubmittingPremiumReview(true);
+		const session = await supabase.auth.getSession();
+		const accessToken = session.data.session?.access_token;
+		if (!accessToken) {
+			setSubmittingPremiumReview(false);
+			reportError("Your session expired. Sign in again.");
+			return;
+		}
+
+		const response = await fetch(`/api/resumes/${resumeId}/premium-review`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(fields),
+		});
+
+		const result = (await response.json().catch(() => null)) as {
+			roastId?: string;
+			message?: string;
+		} | null;
+
+		setSubmittingPremiumReview(false);
+
+		if (!response.ok) {
+			reportError(result?.message ?? "Could not submit your review. Please try again.");
+			return;
+		}
+
+		await refreshReviewThread(user);
+		setResume((prev) =>
+			prev ? { ...prev, roast_count: (prev.roast_count ?? 0) + 1 } : prev,
+		);
+		toast.success("Premium review submitted.", {
+			description: "Your structured review is now visible to the candidate.",
+		});
+	}
+
 	async function handleReviewSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setMessage("");
@@ -998,15 +1051,18 @@ export function useResumeDetailController(resumeId: string) {
 		guidedSuggestion,
 		claiming,
 		refunding,
+		submittingPremiumReview,
 		showRefundConfirm,
 		setShowRefundConfirm,
 		handleClaimResume,
+		handlePremiumReviewSubmit,
 		handleRefundRequest,
 		handleReplySubmit,
 		handleReviewSubmit,
 		isClosed,
 		isClaimable,
 		isOwner,
+		isPremiumReviewer,
 		isRefundable,
 		isWaiting,
 		likedReviewIds,

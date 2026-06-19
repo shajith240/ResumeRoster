@@ -15,6 +15,7 @@ import { supabase } from "@/lib/supabase/client";
 import type { CommentContentFormat } from "@/lib/supabase/types";
 import { CommentComposer } from "./comment-composer";
 import { GuidedReviewComposer } from "./guided-review-composer";
+import { PremiumReviewComposer, type PremiumReviewFields } from "./premium-review-composer";
 import { SUPABASE_MIGRATION_MESSAGE } from "./selectors";
 import { ThreadReviewItem } from "./thread-review-item";
 import type { ThreadReviewControls } from "./types";
@@ -29,12 +30,15 @@ type DiscussionPanelProps = ThreadReviewControls & {
 	isClaimable: boolean;
 	isPremiumClaimed: boolean;
 	isOwner: boolean;
+	isPremiumReviewer: boolean;
 	isRefundable: boolean;
 	isWaiting: boolean;
 	message: string;
 	needsGuidedReviewCredit: boolean;
 	onClaim: () => void;
+	onPremiumReviewSubmit: (fields: PremiumReviewFields) => void;
 	onRequestRefund: () => void;
+	submittingPremiumReview: boolean;
 	onContentChange: (value: string) => void;
 	onContentFormatChange: (format: CommentContentFormat) => void;
 	onGuidedIssueChange: (value: string) => void;
@@ -81,6 +85,7 @@ export function DiscussionPanel({
 	isClaimable,
 	isPremiumClaimed,
 	isOwner,
+	isPremiumReviewer,
 	isRefundable,
 	isWaiting,
 	likedReviewIds,
@@ -88,7 +93,9 @@ export function DiscussionPanel({
 	message,
 	needsGuidedReviewCredit,
 	onClaim,
+	onPremiumReviewSubmit,
 	onRequestRefund,
+	submittingPremiumReview,
 	onCancelReply,
 	onContentChange,
 	onContentFormatChange,
@@ -274,6 +281,14 @@ export function DiscussionPanel({
 					)}
 					{message ? <p className="form-message">{message}</p> : null}
 				</div>
+			) : isPremiumReviewer ? (
+				<>
+					<PremiumReviewComposer
+						onSubmit={onPremiumReviewSubmit}
+						submitting={submittingPremiumReview}
+					/>
+					{message ? <p className="form-message">{message}</p> : null}
+				</>
 			) : needsGuidedReviewCredit ? (
 				<form className="roast-form thread-roast-form" onSubmit={onReviewSubmit}>
 					<GuidedReviewComposer
