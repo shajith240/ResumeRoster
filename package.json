@@ -95,6 +95,13 @@
   },
   "optionalDependencies": {
     "@emnapi/core": "1.11.1",
-    "@emnapi/runtime": "1.11.1"
+    "@emnapi/runtime": "1.11.1",
+    "@img/sharp-linux-x64": "^0.34.5",
+    "@next/swc-linux-x64-gnu": "^15.5.18",
+    "@oxc-parser/binding-linux-x64-gnu": "^0.133.0",
+    "@oxc-resolver/binding-linux-x64-gnu": "^11.20.0",
+    "@rolldown/binding-linux-x64-gnu": "^1.0.3",
+    "@rollup/rollup-linux-x64-gnu": "^4.60.4",
+    "lightningcss-linux-x64-gnu": "^1.32.0"
   }
 }
