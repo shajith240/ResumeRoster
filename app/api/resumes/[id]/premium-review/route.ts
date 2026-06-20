@@ -246,11 +246,19 @@ export async function POST(request: Request, context: RouteContext) {
 		// Roast is already posted — not a critical failure.
 	}
 
-	// Record payout owed to the reviewer — non-blocking, idempotent via unique index.
-	void admin.from("reviewer_payouts").insert({
+	// Record payout owed to the reviewer — awaited because this is financial data.
+	const payoutResult = await admin.from("reviewer_payouts").insert({
 		reviewer_id: user.id,
 		resume_id: resumeId,
 	});
+	if (payoutResult.error) {
+		capturePrivateError(payoutResult.error, {
+			area: "payments",
+			operation: "premium_review_insert_payout",
+			resumeId,
+			userId: user.id,
+		});
+	}
 
 	// Notify the resume owner — fire-and-forget.
 	void getUserEmail(admin, resume.user_id).then((email) => {

@@ -102,6 +102,7 @@ export function useResumeDetailController(resumeId: string) {
 	const [claiming, setClaiming] = useState(false);
 	const [refunding, setRefunding] = useState(false);
 	const [submittingPremiumReview, setSubmittingPremiumReview] = useState(false);
+	const [hasPremiumReviewSubmitted, setHasPremiumReviewSubmitted] = useState(false);
 	const [showRefundConfirm, setShowRefundConfirm] = useState(false);
 	const [replacingPdf, setReplacingPdf] = useState(false);
 	const [message, setMessage] = useState("");
@@ -128,14 +129,16 @@ export function useResumeDetailController(resumeId: string) {
 			user?.id &&
 			resume.assigned_reviewer_id === user.id &&
 			!isOwner &&
-			resume.status === "open",
+			resume.status === "open" &&
+			!hasPremiumReviewSubmitted,
 	);
 	const isRefundable = Boolean(
 		isOwner &&
 			resume?.is_premium &&
 			resume.payment_status === "paid" &&
 			!resume.assigned_reviewer_id &&
-			resume.status === "open",
+			resume.status === "open" &&
+			new Date(resume.created_at) < new Date(Date.now() - 60 * 60 * 1000),
 	);
 
 	function goToLogin() {
@@ -418,6 +421,21 @@ export function useResumeDetailController(resumeId: string) {
 			if (activeUser) {
 				await openResumeFile(loadedResume);
 				void recordResumeRead(loadedResume, activeUser);
+
+				if (
+					loadedResume.is_premium &&
+					loadedResume.assigned_reviewer_id === activeUser.id
+				) {
+					const { data: existingPremiumReview } = await supabase
+						.from("premium_reviews")
+						.select("id")
+						.eq("resume_id", resumeId)
+						.eq("reviewer_id", activeUser.id)
+						.maybeSingle();
+					if (existingPremiumReview) {
+						setHasPremiumReviewSubmitted(true);
+					}
+				}
 			}
 
 			await refreshReviewThread(activeUser);
@@ -665,6 +683,7 @@ export function useResumeDetailController(resumeId: string) {
 		setResume((prev) =>
 			prev ? { ...prev, roast_count: (prev.roast_count ?? 0) + 1 } : prev,
 		);
+		setHasPremiumReviewSubmitted(true);
 		toast.success("Premium review submitted.", {
 			description: "Your structured review is now visible to the candidate.",
 		});

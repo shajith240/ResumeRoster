@@ -18,11 +18,11 @@ Living notebook. Update whenever a decision is made, a task is completed, or som
 
 ### ⚠️ P1 — Ops blockers (ship is dead without these)
 
-- [ ] **SENTRY DSN NOT CONFIGURED** — every `capturePrivateError` call is a no-op in production. Failed refunds, webhook failures, upload errors — completely silent. Steps: create Sentry project → set `SENTRY_DSN` env var in Vercel → run `npx @sentry/wizard@latest -i nextjs` to wire `sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`. Do this before launch or you're flying blind.
+- [x] **SENTRY DSN NOT CONFIGURED** — Resolved: Sentry project created, SENTRY_DSN set in Vercel. All capturePrivateError() calls now active in production.
 
 - [ ] **RESEND DOMAIN NOT VERIFIED** — `lib/email/templates.ts` sends from `resumeroster.in`. Without DNS verification in Resend, emails come from `@resend.dev`. Users see "resend.dev assigned your reviewer" — this looks like a phishing attempt and will hit spam. Add MX/DKIM records in Resend dashboard before any real traffic.
 
-- [ ] **RAZORPAY WEBHOOK NOT REGISTERED** — `/api/webhooks/razorpay` exists and is correct, but if it's not registered in the Razorpay dashboard (events: `payment.captured`, `payment.failed`, webhook secret: `RAZORPAY_WEBHOOK_SECRET`), it does nothing. The webhook is the safety net when a user closes the browser after payment but before the verify POST completes — without it, those payments are stuck `pending` forever with no resume row.
+- [x] **RAZORPAY WEBHOOK NOT REGISTERED** — Webhook registered at `https://linted.space/api/webhooks/razorpay`, Enabled, 12 events. RAZORPAY_WEBHOOK_SECRET set in Vercel. Also fixed: webhook now saves payment_id on payment.captured so browser-close payments are refundable.
 
 - [x] **CSP: VERIFY RAZORPAY CHECKOUT.JS LOADS WITH NONCE** — Verified correct. `loadRazorpayScript()` in `components/SubmitResumeForm.tsx` uses `document.createElement('script')` — dynamic scripts created by a nonce-trusted parent (the React bundle) inherit trust via `strict-dynamic`. Root layout calls `headers()` to stay dynamic so Next.js propagates the nonce. `frame-src` and `connect-src` cover the checkout iframe and API calls. No code change needed.
 
@@ -35,7 +35,7 @@ Living notebook. Update whenever a decision is made, a task is completed, or som
   - `EMAIL_FROM` (default: `Linted <noreply@linted.space>` — set to the verified Resend sender once DNS propagates)
   - `SENTRY_DSN`
 
-- [ ] **RUN FULL RAZORPAY SANDBOX E2E TEST** — with test keys, exercise the entire flow before switching to live keys: pay → verify creates resume → reviewer claims → reviewer submits review (check payout row) → user refund request → cron expire-claims with sandbox payment ID → admin force-refund. Document pass/fail per step.
+- [ ] **RUN FULL RAZORPAY SANDBOX E2E TEST** — with test keys, exercise the entire flow before switching to live keys: pay → verify creates resume → reviewer claims → reviewer submits review (check payout row) → user refund request → cron expire-claims with sandbox payment ID → admin force-refund. Document pass/fail per step. Steps 1 (payment) ✅ and 2 (webhook) ✅ passed. Steps 3–7 pending.
 
 ---
 
@@ -50,6 +50,8 @@ Living notebook. Update whenever a decision is made, a task is completed, or som
 - [x] **NO ADMIN UI FOR FAILED REFUNDS** — Added: `/api/admin/failed-refunds` endpoint queries `moderation_actions` where `action='premium_refund_failed'`. Admin premium panel now has a third "refunds" tab (`FailedRefundsPanel`) with per-row "Retry refund" button. Button calls new `retry_refund` action in `/api/admin/premium-resumes/[id]` which issues the Razorpay refund via `payment_id` on the resume without re-checking `payment_status`.
 
 - [x] **NO REVIEWER UNSUSPEND ACTION** — Added: `unsuspend_reviewer` action in `/api/admin/users/[id]/action` sets `reviewer_claim_suspended=false, reviewer_missed_count=0`. Admin reviewers page now shows a "Suspended Reviewers" section (fetched from `/api/admin/suspended-reviewers`) with per-row "Unsuspend" button calling `runUserAction(userId, 'unsuspend_reviewer')`.
+
+- [x] **REFUND BUTTON VISIBLE BEFORE ANY REVIEWER CLAIMED** — Fixed: `isRefundable` in `use-resume-detail-controller.ts` now requires `resume.created_at < now() - 1h`. Button is hidden immediately after payment; appears only after 1 hour with no reviewer claim, giving reviewers a fair window.
 
 ---
 
