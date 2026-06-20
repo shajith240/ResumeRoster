@@ -1,67 +1,125 @@
 # SCRATCHPAD
 
-Living notebook. Update this whenever a decision is made, a task is completed, or something is discovered. Not a dated report — this is the running state of the project.
+Living notebook. Update whenever a decision is made, a task is completed, or something is discovered.
 
 ---
 
 ## Active Issues
 
-Full audit details: `docs/maintenance/ui-audit-2026-06-20.md`
+### 🚨 P0 — Payment bugs (real money at risk)
 
-### Broken (unstyled/non-functional)
+- [ ] **ORPHAN PAYMENT** — `app/api/payments/verify/route.ts` verifies HMAC then runs mupdf redaction → storage upload → `create_premium_resume` RPC in sequence. Razorpay already captured ₹199 before we're called. If redaction throws (422) or storage upload fails (500), the user is charged with no resume row in DB and no way to self-refund (refund-request requires a resume row). Fix: if the RPC insert fails or file upload fails after a confirmed capture, immediately issue a Razorpay refund using the `razorpayPaymentId` already in scope before returning the error response. Add a `premium_refund_issued` audit log entry.
 
-- [x] **#1** — `components/admin-dashboard/premium.tsx`: 14 CSS classes added to `admin.css` (admin-card, admin-card-header, admin-card-meta, admin-card-list, admin-badge variants, admin-action-btn, admin-input-sm, admin-assign-reviewer, admin-row-actions, admin-summary-bar, payout-total).
-- [x] **#1a** — `premium.tsx:330`: `admin-table-wrapper` → `admin-table-wrap` typo fixed.
-- [x] **#2** — `components/resume-detail/premium-review-composer.tsx`: All 10 classes added to `globals.css` (form, header, desc, stars, star, is-active, star-label, field, label, textarea, submit). Includes dark mode overrides.
-- [x] **#2a** — `premium-review-composer.tsx:174`: `btn-primary` → `btn-brand` fixed.
-- [x] **#3** — `.replace-pdf-label`, `.replace-pdf-btn`, `.busy` added to `globals.css`.
+- [ ] **DEADLINE NOT CHECKED IN REVIEW SUBMISSION** — `app/api/resumes/[id]/premium-review/route.ts` checks `payment_status='paid'`, `assigned_reviewer_id`, and `status='open'` but **not** `review_deadline > now()`. A reviewer can submit 1–23 hours past their deadline (before the midnight cron fires). Result: review posts + payout inserted, then cron refunds the candidate. User gets review + full refund; reviewer gets no payout. Fix: add `if (resume.review_deadline && new Date(resume.review_deadline) < new Date())` → 409 before the roast insert.
 
-### Wrong behavior (design system violations)
+- [ ] **ADMIN ASSIGN_REVIEWER SENDS NO EMAIL** — `app/api/admin/premium-resumes/[id]/route.ts` action `assign_reviewer` writes to DB and audit log but never notifies the reviewer. They have a 24h clock running with zero awareness. Fix: send `reviewerAssigned(resumeId)` email after the DB update, mirroring what the user claim route does.
 
-- [x] **#4** — `.muted-text` → `var(--text-secondary)` in `globals.css`.
-- [x] **#5** — `.form-message` dark mode → `var(--danger)` in `globals.css`.
-- [x] **#6** — Timer colors → `var(--warning)` / `var(--danger)` in `ReviewerHub.module.css`.
-- [x] **#7** — `.admin-danger-action` → `var(--danger)` with `color-mix` hover in `admin.css`.
-- [x] **#8** — `.owner-delete-button` styles added at top level in `feed.css` (now applies at all widths).
-- [x] **#9** — `tagClass()` replaced with semantic `lb-tag-*` classes in `StackedList.tsx`; dark mode CSS added to `globals.css` using `body.main-app-dark`.
+---
 
-### Polish / minor
+### ⚠️ P1 — Ops blockers (ship is dead without these)
 
-- [x] **#10** — `StackedList.tsx:509`: `->` → `<ArrowRight />` icon with `flex items-center gap-1` on the link.
-- [x] **#11** — `ReviewerHub.module.css`: `.actionLink` hover/focus-visible added (brand color + underline).
-- [x] **#12** — `admin.css`: Active admin tab dark mode override added — uses `var(--brand)` bg instead of `var(--text-primary)`.
+- [ ] **SENTRY DSN NOT CONFIGURED** — every `capturePrivateError` call is a no-op in production. Failed refunds, webhook failures, upload errors — completely silent. Steps: create Sentry project → set `SENTRY_DSN` env var in Vercel → run `npx @sentry/wizard@latest -i nextjs` to wire `sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`. Do this before launch or you're flying blind.
+
+- [ ] **RESEND DOMAIN NOT VERIFIED** — `lib/email/templates.ts` sends from `resumeroster.in`. Without DNS verification in Resend, emails come from `@resend.dev`. Users see "resend.dev assigned your reviewer" — this looks like a phishing attempt and will hit spam. Add MX/DKIM records in Resend dashboard before any real traffic.
+
+- [ ] **RAZORPAY WEBHOOK NOT REGISTERED** — `/api/webhooks/razorpay` exists and is correct, but if it's not registered in the Razorpay dashboard (events: `payment.captured`, `payment.failed`, webhook secret: `RAZORPAY_WEBHOOK_SECRET`), it does nothing. The webhook is the safety net when a user closes the browser after payment but before the verify POST completes — without it, those payments are stuck `pending` forever with no resume row.
+
+- [ ] **CSP: VERIFY RAZORPAY CHECKOUT.JS LOADS WITH NONCE** — `script-src` uses `strict-dynamic` + nonce. `frame-src` and `connect-src` cover Razorpay ✅. But the initial `<script src="https://checkout.razorpay.com/v1/checkout.js">` tag must carry the page nonce or it will be blocked by CSP in production. Locate where checkout.js is loaded and confirm the nonce is threaded through. If it's missing, add `'nonce-${nonce}'` to the script tag.
+
+- [ ] **SET ALL ENV VARS IN VERCEL** — required before launch:
+  - `CRON_SECRET` (protects `/api/cron/expire-claims`)
+  - `RAZORPAY_KEY_SECRET`
+  - `RAZORPAY_WEBHOOK_SECRET`
+  - `NEXT_PUBLIC_RAZORPAY_KEY_ID`
+  - `RESEND_API_KEY`
+  - `EMAIL_FROM` (default: `noreply@resumeroster.in`)
+  - `SENTRY_DSN`
+
+- [ ] **RUN FULL RAZORPAY SANDBOX E2E TEST** — with test keys, exercise the entire flow before switching to live keys: pay → verify creates resume → reviewer claims → reviewer submits review (check payout row) → user refund request → cron expire-claims with sandbox payment ID → admin force-refund. Document pass/fail per step.
+
+---
+
+### 🟠 P2 — Functional correctness issues
+
+- [ ] **STRIKE COUNTER IS READ-MODIFY-WRITE** — `app/api/cron/expire-claims/route.ts` fire-and-forget block reads `reviewer_missed_count`, adds 1, writes back. Race condition if the same reviewer appears across two parallel processes (rare but wrong). Fix: replace with a single `UPDATE profiles SET reviewer_missed_count = reviewer_missed_count + 1 WHERE id = $reviewerId RETURNING reviewer_missed_count, reviewer_claim_suspended` — atomic, no fetch needed.
+
+- [ ] **VERIFY SELF-CLAIM GUARD IN `claim_premium_resume` RPC** — The user claim route (`app/api/resumes/[id]/claim/route.ts`) does not check `reviewer_id !== resume.user_id`. The admin assign_reviewer route does. Confirm the `claim_premium_resume` Postgres RPC has `WHERE resumes.user_id != p_reviewer_id` — if not, a verified reviewer can claim and review their own submission.
+
+- [ ] **CLAIM EXPIRY IS ONCE PER DAY (NOT HOURLY)** — `vercel.json` schedules `expire_claimed_premium_resumes` at `0 0 * * *` (midnight UTC, Hobby plan max). A reviewer who misses a 24h deadline can leave a candidate waiting up to 23 hours before the cron fires. Fix (free tier path): pg_cron inside Supabase runs hourly (like the deadline-reminder job already does). pg_cron cannot call Razorpay directly, so the split: (1) pg_cron atomically marks expired resumes as `payment_status='expiry_pending'` + un-assigns reviewer, (2) a Supabase DB webhook fires `/api/cron/expire-claims` for each `expiry_pending` row → Vercel route issues the Razorpay refund + sends emails + increments strike. The Vercel daily cron stays as a reconciliation safety net.
+
+- [ ] **NO ADMIN UI FOR FAILED REFUNDS** — `premium_refund_failed` entries are written to `moderation_actions` but the admin panel has no surface for them. Admin would need to query the DB directly and issue Razorpay refunds manually. Add a "Failed refunds" section to `/admin/premium` that lists `premium_refund_failed` rows with a "Retry refund" button wired to the admin force-refund action.
+
+- [ ] **NO REVIEWER UNSUSPEND ACTION** — Reviewers suspended after 3 misses (`reviewer_claim_suspended=true`) have no path back. Add an admin action (`unsuspend_reviewer`) in the reviewer management panel that sets `reviewer_claim_suspended=false` and resets `reviewer_missed_count`. Log to `moderation_actions`.
+
+---
+
+### 🟠 P3 — IP Rate Limiting (from whiteboard, still open)
+
+- [ ] **IP-LEVEL RATE LIMITING** — `/api/resumes/submit` and `/api/payments/create-order` are per-user only. A bot farm that creates accounts can flood the resume feed or generate abandoned Razorpay orders. Use **Upstash Redis free tier** (10k commands/day, no Vercel plan required — Vercel KV requires Pro, do not use it). Add sliding window counter at Edge Middleware by IP. Targets: submit ≤ 3/hour/IP, create-order ≤ 5/hour/IP. Fail open (don't block if Redis is unavailable).
+
+---
+
+### 🟡 P4 — UX gaps that will generate support tickets
+
+- [ ] **CANDIDATE DOESN'T SEE REVIEW DEADLINE** — After a reviewer claims, `review_deadline` is set but not shown to the candidate. They paid ₹199 and have no idea if they'll get a review in 2 hours or 20. Show the deadline on the resume detail page in the "claimed" state with a human-readable countdown.
+
+- [ ] **NO REVIEWER UNCLAIM PATH** — A verified reviewer who clicks "Claim" on the wrong resume is locked in for 24h or eats a strike. Add a 15-minute unclaim window: `POST /api/resumes/[id]/unclaim` with guard `premium_claimed_at > now() - interval '15 minutes'`. After 15 minutes, unclaiming costs a strike (reviewer accepted responsibility).
+
+- [ ] **`payment=()` IN PERMISSIONS-POLICY** — `Permissions-Policy: payment=()` disables the Payment Request API for all frames. Razorpay's iframe-based checkout may not need it, but this should be explicitly tested. If checkout breaks: change to `payment=(self "https://checkout.razorpay.com")`.
+
+---
+
+### 🟠 P4b — Free tier operational risks
+
+- [ ] **VERCEL SERVERLESS TIMEOUT (10s on Hobby)** — `app/api/payments/verify/route.ts` runs mupdf redaction + storage upload inside a single serverless invocation. A complex or large PDF could exceed the 10-second limit, returning a 504 to the client with no resume created (and payment already captured — this compounds the orphan-payment P0 bug). Measure actual redaction time in dev across various PDF sizes. If it's close to the limit, move redaction to a background job or stream the upload separately. Do not upgrade to Pro just for this — measure first.
+
+- [ ] **SUPABASE FREE TIER DB PAUSE (7 days inactivity)** — Supabase pauses the database after 7 days of no activity. If traffic is sparse post-launch, a paused DB adds a 5–10s cold start on the first request. The pg_cron jobs (deadline reminders, push pruning) keep the DB active as long as they run, but confirm this is sufficient. If not, add a trivial `SELECT 1` pg_cron job running daily as a keep-alive.
+
+- [ ] **RESEND FREE TIER CAP (100 emails/day)** — If a burst of claims, refunds, or reviewer assignments happens on a single day, you can hit the 100/day limit. Monitor after launch. The 3,000/month cap is unlikely to be hit early but the daily cap is real. If hit: Resend queues and drops — candidates won't get refund confirmations. No action needed now but watch the Resend dashboard.
+
+---
+
+### 🔵 P5 — Low / polish (from whiteboard)
+
+- [ ] User data export — `GET /api/account/export` (ZIP of PDFs + reviews + posts + profile JSON, async with email link)
+- [ ] Resume status notifications — push/email when first review posted, 5th review, resume closed
+- [ ] Mention notifications — @user in review or comment → notification bell with unread count
+- [ ] Candidate close-feedback UX — auto-generate summary card on close ("7 reviews received, focus areas: XYZ")
+- [ ] Community email digest — weekly top posts, opt-in, Resend batch send
 
 ---
 
 ## Decisions Made
 
-**Live globals.css is the real design system source of truth (2026-06-20)**
-`DESIGN.md` at the project root documents the actual live system as extracted from `app/globals.css`. The shadcn/Tailwind HSL layer is secondary. Any new tokens must go into `globals.css` first, then be documented in `DESIGN.md`.
+**Live `globals.css` is the real design system source of truth (2026-06-20)**
+`DESIGN.md` at the project root documents the live system. Any new tokens go into `globals.css` first, then `DESIGN.md`. Never recreate the deleted `linted_design_system/` or `fingerprint_design_system/` files.
 
 **Deleted `public/assets/linted_design_system/` and `public/assets/fingerprint_design_system/` (2026-06-20)**
-These were generated by an unapproved Codex experiment — `variables.css`, `theme.css`, `tokens.json`, `DESIGN.md` — and were not the real design direction. Four blockers prevented importing them anyway: missing dark mode block, `--font-display` collision, Tailwind v4 syntax mismatch, and 8,375 lines of existing CSS using different token names. Deleted entirely. Don't recreate.
+Generated by an unapproved Codex experiment. 4 blockers prevented importing: no dark mode block, `--font-display` collision, Tailwind v4 syntax mismatch, 8,375 lines of existing CSS on different token names. Gone. Do not recreate.
 
 **`--linted-*` token namespace is abandoned (2026-06-20)**
-The `fingerprint_design_system` and `linted_design_system` files proposed migrating to `--linted-brand`, `--linted-bg-base`, etc. This was rejected. The live tokens (`--brand`, `--bg-base`, etc.) stay as-is.
+Live tokens (`--brand`, `--bg-base`, etc.) stay as-is.
 
 ---
 
 ## Don't Do This
 
-**Don't import or recreate `variables.css` / `theme.css` from the deleted design system files.**
-They used `--linted-*` token names, Tailwind v4 `@theme` syntax, had no dark mode block, and conflicted with existing token names. The whole approach was an experiment that didn't ship. See decision above.
+**Don't use Tailwind's `dark:` prefix.** Dark mode is `body.main-app-dark`, not `prefers-color-scheme`. Use `:global(body.main-app-dark) .className` in CSS modules, or `body.main-app-dark .class` in global CSS.
 
-**Don't use Tailwind's `dark:` prefix for dark mode variants.**
-This app switches themes via the `body.main-app-dark` class, not `prefers-color-scheme`. Tailwind's `dark:` utilities will never fire. Use `:global(body.main-app-dark) .className` in CSS modules, or `body.main-app-dark .class` in global CSS.
+**Don't introduce new color hex values.** Map every new color to a `--*` token from `globals.css`. At least 9 existing places use hardcoded hex — don't add more.
 
-**Don't introduce new color hex values without checking the token list in DESIGN.md first.**
-At least 9 places in the codebase already use hardcoded hex instead of CSS variables — don't add more. Every new color should map to a `--*` token from `globals.css`.
+**Don't add CSS classes to any component without defining them in the corresponding CSS file first.** The premium.tsx incident (14 undefined classes shipped) happened because the CSS wasn't written first.
 
-**Don't add new CSS classes to `premium.tsx` or any admin component without also defining them in `admin.css`.**
-The premium controls component shipped with 14 undefined classes — this is how that happened. Write the CSS first, or at minimum in the same commit.
+**Don't import or recreate `variables.css` / `theme.css`.** They used `--linted-*` names, had no dark mode block, and conflicted with live tokens. The experiment didn't ship. Don't touch it.
 
 ---
 
 ## Current Focus
 
-All 12 issues from the 2026-06-20 UI audit are resolved. No active issues.
+Uncommitted UI changes in working tree:
+- `app/globals.css` — premium review form redesign (card-style fields, dissolved textarea)
+- `app/admin.css` — admin table padding + `.admin-panel` grid class
+- `components/navigation/primary-nav.ts` — icon swap: feed→Home, community→UsersRound
+- `lib/primary-navigation.ts` — nav reorder: Home first, Community second; label cleanup
+
+Next: commit the UI changes, then work down the P0 → P1 → P2 list above.
