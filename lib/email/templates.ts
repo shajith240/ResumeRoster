@@ -93,7 +93,7 @@ export function refundIssued(resumeId: string) {
 		html: layout(
 			"Refund processed",
 			h1("Your refund has been issued") +
-			p("We weren't able to complete your priority review — your ₹199 payment will be returned to your original payment method within 5–7 business days.") +
+			p("We weren't able to complete your priority review — your ₹399 payment will be returned to your original payment method within 5–7 business days.") +
 			btn("View your resume", href) +
 			p("Your resume is still open for community feedback. You can request a new priority review at any time."),
 		),

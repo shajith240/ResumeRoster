@@ -3,8 +3,8 @@
 
 export type PremiumPaymentStatus = "pending" | "paid" | "refunded" | "failed";
 
-export const PREMIUM_PRICE_RUPEES = 199;
-export const PREMIUM_PRICE_PAISE = 19900;
+export const PREMIUM_PRICE_RUPEES = 399;
+export const PREMIUM_PRICE_PAISE = 39900;
 export const PREMIUM_CURRENCY = "INR";
 
 // Razorpay checkout.js browser interface types.

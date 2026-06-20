@@ -176,7 +176,7 @@ export function RefundRequestDialog({
 				<AlertDialogHeader>
 					<AlertDialogTitle>Request refund?</AlertDialogTitle>
 					<AlertDialogDescription>
-						No reviewer has been assigned yet. Your ₹199 payment will be returned
+						No reviewer has been assigned yet. Your ₹399 payment will be returned
 						within 5–7 business days. This cannot be undone.
 					</AlertDialogDescription>
 				</AlertDialogHeader>

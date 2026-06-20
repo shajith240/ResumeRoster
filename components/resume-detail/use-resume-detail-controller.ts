@@ -592,7 +592,7 @@ export function useResumeDetailController(resumeId: string) {
 			prev ? { ...prev, payment_status: "refunded" as const } : prev,
 		);
 		toast.success("Refund requested.", {
-			description: "Your ₹199 will be returned within 5–7 business days.",
+			description: "Your ₹399 will be returned within 5–7 business days.",
 		});
 	}
 

@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import Razorpay from "razorpay";
 
-export const PREMIUM_AMOUNT_PAISE = 19900;
+export const PREMIUM_AMOUNT_PAISE = 39900;
 export const PREMIUM_CURRENCY = "INR";
 
 function safeCompareHex(a: string, b: string): boolean {
