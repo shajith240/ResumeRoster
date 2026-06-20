@@ -45,25 +45,25 @@ export function getPrimaryNavigationItems({
 }: PrimaryNavigationContext): PrimaryNavigationItemBase[] {
 	const items: PrimaryNavigationItemBase[] = [];
 
+	items.push({
+		id: "feed",
+		href: "/feed",
+		label: "Home",
+		mobileLabel: "Home",
+		active: pathname === "/feed" || isWithinRoute(pathname, "/resume"),
+	});
+
 	if (communityEnabled) {
 		items.push({
 			id: "community",
 			href: "/community",
 			label: "Community",
-			mobileLabel: "Home",
+			mobileLabel: "Community",
 			active:
 				isWithinRoute(pathname, "/community") &&
 				!isCommunityComposeRoute(pathname),
 		});
 	}
-
-	items.push({
-		id: "feed",
-		href: "/feed",
-		label: "Resume Feed",
-		mobileLabel: "Resume",
-		active: pathname === "/feed" || isWithinRoute(pathname, "/resume"),
-	});
 
 	items.push({
 		id: "submit",

@@ -402,6 +402,11 @@ button.admin-panel-button {
 	font-weight: 780;
 }
 
+.admin-panel {
+	display: grid;
+	gap: 16px;
+}
+
 .admin-panel-header {
 	display: flex;
 	align-items: center;
@@ -776,9 +781,10 @@ body.main-app-dark .admin-tabs button[aria-pressed="true"] {
 }
 
 .admin-table-wrap {
+	overflow: hidden;
 	overflow-x: auto;
 	border: 1px solid var(--admin-hairline);
-	border-radius: 8px;
+	border-radius: 10px;
 	background: color-mix(in srgb, var(--bg-base) 70%, transparent);
 }
 
@@ -812,6 +818,16 @@ body.main-app-dark .admin-tabs button[aria-pressed="true"] {
 	padding: 13px 12px;
 	color: var(--text-secondary);
 	vertical-align: top;
+}
+
+.admin-table th:first-child,
+.admin-table td:first-child {
+	padding-left: 18px;
+}
+
+.admin-table th:last-child,
+.admin-table td:last-child {
+	padding-right: 18px;
 }
 
 .admin-table tr:last-child td {

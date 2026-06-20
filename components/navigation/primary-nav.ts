@@ -37,16 +37,16 @@ const PRIMARY_NAV_ICONS: Record<PrimaryNavItemId, PrimaryNavigationIcons> = {
 		sidebarIcon: ListChecks,
 	},
 	community: {
-		dockIcon: Home,
-		sidebarIcon: Home,
+		dockIcon: UsersRound,
+		sidebarIcon: UsersRound,
 	},
 	"community-new": {
 		dockIcon: PencilLine,
 		sidebarIcon: PencilLine,
 	},
 	feed: {
-		dockIcon: UsersRound,
-		sidebarIcon: UsersRound,
+		dockIcon: Home,
+		sidebarIcon: Home,
 	},
 	leaderboard: {
 		dockIcon: Trophy,

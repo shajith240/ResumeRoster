@@ -8368,12 +8368,13 @@ body.main-app-dark .form-message {
 
 .premium-review-form {
 	display: grid;
-	gap: 20px;
+	gap: 10px;
 }
 
 .premium-review-header {
 	display: grid;
-	gap: 8px;
+	gap: 6px;
+	padding-bottom: 4px;
 }
 
 .premium-review-desc {
@@ -8383,39 +8384,62 @@ body.main-app-dark .form-message {
 	line-height: 1.55;
 }
 
+/* Each field is a card — border lives on the container, not the input */
+
 .premium-review-field {
 	display: grid;
-	gap: 8px;
+	gap: 5px;
+	border: 1px solid var(--border-default);
+	border-radius: 16px;
+	padding: 12px 14px;
+	background: var(--bg-surface);
+	transition: border-color 160ms ease;
+}
+
+.premium-review-field:focus-within {
+	border-color: color-mix(in srgb, var(--text-secondary) 62%, var(--border-default));
 }
 
 .premium-review-label {
-	color: var(--text-primary);
-	font-size: 13px;
-	font-weight: 760;
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--text-tertiary);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
 }
+
+/* Textarea dissolves into the card — no border, no bg, no outline */
 
 .premium-review-textarea {
 	width: 100%;
-	border: 1px solid var(--border-default);
-	border-radius: var(--radius-md);
-	padding: 10px 12px;
-	background: var(--bg-elevated);
+	min-height: 72px;
+	max-height: 240px;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	box-shadow: none;
 	color: var(--text-primary);
 	font-family: var(--font-body);
 	font-size: 14px;
-	line-height: 1.55;
-	resize: vertical;
-	outline: none;
-	transition: border-color 0.15s, box-shadow 0.15s;
+	line-height: 1.6;
+	resize: none;
+	outline: 0;
+	scrollbar-width: thin;
 }
 
 .premium-review-textarea:focus {
-	border-color: var(--brand);
-	box-shadow: var(--shadow-focus);
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+	outline: 0;
+}
+
+.premium-review-textarea::placeholder {
+	color: var(--text-tertiary);
 }
 
 .premium-review-textarea:disabled {
-	opacity: 0.6;
+	opacity: 0.55;
 	cursor: not-allowed;
 }
 
@@ -8424,21 +8448,21 @@ body.main-app-dark .form-message {
 .premium-review-stars {
 	display: flex;
 	align-items: center;
-	gap: 4px;
+	gap: 2px;
+	padding: 2px 0 4px;
 }
 
 .premium-review-star {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 36px;
-	height: 36px;
+	width: 32px;
+	height: 32px;
 	border: none;
-	border-radius: var(--radius-sm);
 	padding: 0;
 	background: transparent;
 	color: var(--border-strong);
-	font-size: 24px;
+	font-size: 22px;
 	line-height: 1;
 	cursor: pointer;
 	transition: color 0.1s, transform 0.1s;
@@ -8450,7 +8474,7 @@ body.main-app-dark .form-message {
 }
 
 .premium-review-star:hover:not(:disabled) {
-	transform: scale(1.12);
+	transform: scale(1.14);
 }
 
 .premium-review-star:disabled {
@@ -8458,7 +8482,7 @@ body.main-app-dark .form-message {
 }
 
 .premium-review-star-label {
-	margin-left: 6px;
+	margin-left: 8px;
 	color: var(--text-secondary);
 	font-size: 13px;
 }
@@ -8468,18 +8492,13 @@ body.main-app-dark .form-message {
 .premium-review-submit {
 	width: 100%;
 	justify-content: center;
+	margin-top: 4px;
 }
 
 /* Dark mode */
 
-body.main-app-dark .premium-review-textarea {
-	border-color: var(--border-default);
+body.main-app-dark .premium-review-field {
 	background: var(--bg-elevated);
-	color: var(--text-primary);
-}
-
-body.main-app-dark .premium-review-textarea:focus {
-	border-color: var(--brand);
 }
 
 /* ─── Replace PDF button ────────────────────────────────────────────────────── */
