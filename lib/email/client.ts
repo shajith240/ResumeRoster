@@ -12,4 +12,4 @@ export function getResendClient(): Resend {
 }
 
 export const FROM_ADDRESS =
-	process.env.EMAIL_FROM ?? "Resume Roster <noreply@resumeroster.in>";
+	process.env.EMAIL_FROM ?? "Linted <noreply@linted.space>";

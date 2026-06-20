@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://resumeroster.in";
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://linted.space";
 
 function layout(title: string, body: string): string {
 	return `<!DOCTYPE html>
