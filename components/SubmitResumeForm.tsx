@@ -464,8 +464,8 @@ export default function SubmitResumeForm() {
 				amount: orderData.amount!,
 				currency: orderData.currency!,
 				order_id: orderData.orderId!,
-				name: "Resume Roster",
-				description: "Priority Review",
+				name: "Linted",
+				description: "Priority Resume Review",
 				prefill: { email: user?.email ?? undefined },
 				theme: { color: brandColor },
 				modal: {
