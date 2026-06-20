@@ -2,7 +2,7 @@ import { adminErrorResponse, requireAdmin } from "@/lib/admin";
 import { internalErrorResponse } from "@/lib/api-errors";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { getUserEmail, sendEmail } from "@/lib/email/send";
-import { refundIssued } from "@/lib/email/templates";
+import { refundIssued, reviewerAssigned } from "@/lib/email/templates";
 import { issueRazorpayRefund, PREMIUM_AMOUNT_PAISE } from "@/lib/razorpay";
 
 export const runtime = "nodejs";
@@ -162,6 +162,12 @@ export async function POST(
 				target_id: resumeId,
 				metadata: { reviewer_id: reviewerId },
 				reason: "Admin manual reviewer assignment",
+			});
+
+			// Notify the reviewer — they have a 24h clock running from this moment.
+			void getUserEmail(admin, reviewerId).then((email) => {
+				if (!email) return;
+				void sendEmail({ to: email, ...reviewerAssigned(resumeId) });
 			});
 
 			return Response.json({ ok: true });

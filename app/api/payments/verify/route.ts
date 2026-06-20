@@ -16,7 +16,7 @@ import {
 	cleanResumeFileName,
 } from "@/lib/submit-validation";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
-import { verifyRazorpayPaymentSignature } from "@/lib/razorpay";
+import { verifyRazorpayPaymentSignature, issueRazorpayRefund, PREMIUM_AMOUNT_PAISE } from "@/lib/razorpay";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
@@ -82,6 +82,42 @@ async function removeOrphanedFile(admin: SupabaseClient, filePath: string) {
 			area: "payments",
 			operation: "cleanup_orphaned_premium_file",
 			filePath,
+		});
+	}
+}
+
+// Called when HMAC is verified (Razorpay has captured money) but resume creation fails.
+// Issues an immediate refund so the user is never charged for nothing.
+async function refundCapturedPayment(
+	admin: SupabaseClient,
+	paymentId: string,
+	userId: string,
+	reason: string,
+) {
+	try {
+		const { refundId } = await issueRazorpayRefund(paymentId, PREMIUM_AMOUNT_PAISE);
+		await admin.from("moderation_actions").insert({
+			action: "premium_refund_issued",
+			admin_user_id: null,
+			target_type: "payment",
+			target_id: paymentId,
+			metadata: { refund_id: refundId, payment_id: paymentId, candidate_id: userId, trigger: "orphan_payment_auto_refund", amount_paise: PREMIUM_AMOUNT_PAISE },
+			reason,
+		});
+	} catch (refundError) {
+		capturePrivateError(refundError, {
+			area: "payments",
+			operation: "orphan_payment_refund",
+			paymentId,
+			userId,
+		});
+		await admin.from("moderation_actions").insert({
+			action: "premium_refund_failed",
+			admin_user_id: null,
+			target_type: "payment",
+			target_id: paymentId,
+			metadata: { payment_id: paymentId, candidate_id: userId, trigger: "orphan_payment_auto_refund", error: refundError instanceof Error ? refundError.message : "Unknown" },
+			reason: "Orphan payment — resume creation failed and auto-refund also failed. Manual recovery required.",
 		});
 	}
 }
@@ -216,9 +252,15 @@ export async function POST(request: Request) {
 			}),
 		});
 	} catch (error) {
-		return badRequest(
-			error instanceof Error ? error.message : "Could not safely process this PDF.",
-			422,
+		// Payment captured but PDF processing failed — refund immediately.
+		void refundCapturedPayment(admin, razorpayPaymentId, user.id, "PDF redaction failed after payment capture");
+		return NextResponse.json(
+			{
+				message: error instanceof Error
+					? `${error.message} Your payment will be refunded automatically.`
+					: "Could not safely process this PDF. Your payment will be refunded automatically.",
+			},
+			{ status: 422 },
 		);
 	}
 
@@ -233,8 +275,10 @@ export async function POST(request: Request) {
 		});
 
 	if (upload.error) {
+		// Payment already captured — refund immediately so the user is never charged for nothing.
+		void refundCapturedPayment(admin, razorpayPaymentId, user.id, "Resume upload failed after payment capture");
 		return NextResponse.json(
-			{ message: "Resume upload failed. Please try again." },
+			{ message: "Resume upload failed. Your payment will be refunded automatically." },
 			{ status: 500 },
 		);
 	}
@@ -272,8 +316,11 @@ export async function POST(request: Request) {
 			orderId: razorpayOrderId,
 		});
 
+		// Payment captured but resume failed to persist — refund immediately.
+		void refundCapturedPayment(admin, razorpayPaymentId, user.id, "create_premium_resume RPC failed after payment capture");
+
 		return NextResponse.json(
-			{ message: "Payment verified but resume save failed. Contact support with your payment ID." },
+			{ message: "Payment verified but resume save failed. Your payment will be refunded automatically." },
 			{ status: 500 },
 		);
 	}

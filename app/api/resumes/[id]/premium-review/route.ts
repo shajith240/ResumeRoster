@@ -124,7 +124,7 @@ export async function POST(request: Request, context: RouteContext) {
 	// Verify the resume exists, is premium, and this user is the assigned reviewer.
 	const resumeResult = await admin
 		.from("resumes")
-		.select("id,is_premium,payment_status,assigned_reviewer_id,status,user_id")
+		.select("id,is_premium,payment_status,assigned_reviewer_id,status,user_id,review_deadline")
 		.eq("id", resumeId)
 		.maybeSingle();
 
@@ -161,6 +161,13 @@ export async function POST(request: Request, context: RouteContext) {
 	if (resume.status !== "open") {
 		return NextResponse.json(
 			{ message: "This resume is no longer accepting feedback." },
+			{ status: 409 },
+		);
+	}
+
+	if (resume.review_deadline && new Date(resume.review_deadline) < new Date()) {
+		return NextResponse.json(
+			{ message: "The review deadline for this resume has passed." },
 			{ status: 409 },
 		);
 	}
