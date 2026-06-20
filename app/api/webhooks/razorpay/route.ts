@@ -77,7 +77,7 @@ export async function POST(request: Request) {
 	if (event === "payment.captured") {
 		const update = await admin
 			.from("resumes")
-			.update({ payment_status: "paid" })
+			.update({ payment_status: "paid", payment_id: payment.id })
 			.eq("razorpay_order_id", payment.order_id)
 			.eq("payment_status", "pending");
 
