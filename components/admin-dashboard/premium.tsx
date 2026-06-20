@@ -63,10 +63,26 @@ export type AdminPremiumResumesData = {
 	resumes: AdminPremiumResume[];
 };
 
+// ─── Failed refund types ─────────────────────────────────────────────────────
+
+export type AdminFailedRefund = {
+	id: string;
+	target_id: string;
+	metadata: {
+		payment_id?: string | null;
+		candidate_id?: string | null;
+		error?: string | null;
+		trigger?: string | null;
+	} | null;
+	reason: string | null;
+	created_at: string;
+};
+
 // ─── Page props ─────────────────────────────────────────────────────────────
 
 type PremiumPageProps = {
 	busyAction: string;
+	failedRefunds: AdminFailedRefund[];
 	onMarkPaid: (payoutId: string, payoutRef: string) => Promise<void>;
 	onPremiumResumeAction: (resumeId: string, action: string, extra?: Record<string, string>) => Promise<void>;
 	onPayoutStatusChange: (status: string) => void;
@@ -283,10 +299,88 @@ function PremiumResumeRow({
 	);
 }
 
+// ─── Failed refunds panel ────────────────────────────────────────────────────
+
+function FailedRefundsPanel({
+	busyAction,
+	failedRefunds,
+	onRetry,
+}: {
+	busyAction: string;
+	failedRefunds: AdminFailedRefund[];
+	onRetry: (resumeId: string) => Promise<void>;
+}) {
+	if (failedRefunds.length === 0) {
+		return (
+			<EmptyPanel
+				description="No failed refunds. All Razorpay refunds completed successfully."
+				title="All clear"
+			/>
+		);
+	}
+
+	return (
+		<div className="admin-table-wrap">
+			<table className="admin-table">
+				<thead>
+					<tr>
+						<th>Resume</th>
+						<th>Payment ID</th>
+						<th>Error</th>
+						<th>Date</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{failedRefunds.map((row) => {
+						const resumeId = row.target_id;
+						const isBusy = busyAction === `premium:${resumeId}:retry_refund`;
+						return (
+							<tr key={row.id}>
+								<td>
+									<a href={`/resumes/${resumeId}`} rel="noreferrer" target="_blank">
+										{resumeId.slice(0, 8)}…
+									</a>
+								</td>
+								<td>
+									<span className="muted-text">
+										{row.metadata?.payment_id
+											? row.metadata.payment_id.slice(0, 12) + "…"
+											: "—"}
+									</span>
+								</td>
+								<td>
+									<span className="muted-text" title={row.metadata?.error ?? ""}>
+										{row.metadata?.error
+											? row.metadata.error.slice(0, 50) + (row.metadata.error.length > 50 ? "…" : "")
+											: "—"}
+									</span>
+								</td>
+								<td>{formatDate(row.created_at)}</td>
+								<td>
+									<button
+										className="admin-action-btn"
+										disabled={isBusy}
+										onClick={() => void onRetry(resumeId)}
+										type="button"
+									>
+										{isBusy ? "Retrying…" : "Retry refund"}
+									</button>
+								</td>
+							</tr>
+						);
+					})}
+				</tbody>
+			</table>
+		</div>
+	);
+}
+
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export function PremiumPage({
 	busyAction,
+	failedRefunds,
 	onMarkPaid,
 	onPremiumResumeAction,
 	onPayoutStatusChange,
@@ -296,7 +390,7 @@ export function PremiumPage({
 	payoutStatus,
 	resumeFilter,
 }: PremiumPageProps) {
-	const [activePanel, setActivePanel] = useState<"resumes" | "payouts">("resumes");
+	const [activePanel, setActivePanel] = useState<"resumes" | "payouts" | "refunds">("resumes");
 
 	return (
 		<div className="admin-panel">
@@ -306,8 +400,8 @@ export function PremiumPage({
 			>
 				<SegmentedTabs
 					active={activePanel}
-					onChange={(v) => setActivePanel(v as "resumes" | "payouts")}
-					values={["resumes", "payouts"]}
+					onChange={(v) => setActivePanel(v as "resumes" | "payouts" | "refunds")}
+					values={["resumes", "payouts", "refunds"]}
 				/>
 			</PanelHeader>
 
@@ -396,6 +490,13 @@ export function PremiumPage({
 					)}
 				</>
 			)}
+			{activePanel === "refunds" ? (
+				<FailedRefundsPanel
+					busyAction={busyAction}
+					failedRefunds={failedRefunds}
+					onRetry={(resumeId) => onPremiumResumeAction(resumeId, "retry_refund")}
+				/>
+			) : null}
 		</div>
 	);
 }

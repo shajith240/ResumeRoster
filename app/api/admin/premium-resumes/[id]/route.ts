@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-type Action = "force_refund" | "assign_reviewer";
+type Action = "force_refund" | "assign_reviewer" | "retry_refund";
 
 export async function POST(
 	request: Request,
@@ -168,6 +168,41 @@ export async function POST(
 			void getUserEmail(admin, reviewerId).then((email) => {
 				if (!email) return;
 				void sendEmail({ to: email, ...reviewerAssigned(resumeId) });
+			});
+
+			return Response.json({ ok: true });
+		}
+
+		if (action === "retry_refund") {
+			// For resumes where the Razorpay refund API call failed but the DB is already
+			// marked refunded — re-attempt the refund using the payment_id on the resume.
+			const { data: resume, error: fetchError } = await admin
+				.from("resumes")
+				.select("id,user_id,payment_id,payment_status,is_premium")
+				.eq("id", resumeId)
+				.maybeSingle();
+
+			if (fetchError) throw new Error(fetchError.message);
+			if (!resume) return Response.json({ message: "Resume not found." }, { status: 404 });
+			if (!resume.is_premium) return Response.json({ message: "Not a premium resume." }, { status: 400 });
+			if (!resume.payment_id) {
+				return Response.json({ message: "No payment ID on this resume — cannot retry." }, { status: 409 });
+			}
+
+			await issueRazorpayRefund(resume.payment_id, PREMIUM_AMOUNT_PAISE);
+
+			void admin.from("moderation_actions").insert({
+				action: "premium_refund_retry_issued",
+				admin_user_id: adminUser.id,
+				target_type: "resume",
+				target_id: resumeId,
+				metadata: {
+					candidate_id: resume.user_id,
+					payment_id: resume.payment_id,
+					trigger: "admin_retry_refund",
+					amount_paise: PREMIUM_AMOUNT_PAISE,
+				},
+				reason: "Admin retried failed Razorpay refund",
 			});
 
 			return Response.json({ ok: true });

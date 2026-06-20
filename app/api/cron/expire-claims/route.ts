@@ -146,7 +146,8 @@ export async function GET(request: Request) {
 		}
 	}
 
-	// Increment missed_count for each expired reviewer; auto-suspend at 3.
+	// Atomically increment missed_count for each expired reviewer; auto-suspend at 3.
+	// The RPC does the UPDATE + RETURNING in one statement — no read-modify-write race.
 	// Fire-and-forget — strike tracking failures don't affect the refund response.
 	const reviewerIds = Array.from(
 		new Set(expired.map((c) => c.old_reviewer_id).filter(Boolean) as string[]),
@@ -155,32 +156,24 @@ export async function GET(request: Request) {
 	if (reviewerIds.length > 0) {
 		void (async () => {
 			for (const reviewerId of reviewerIds) {
-				const { data: profile } = await admin
-					.from("profiles")
-					.select("reviewer_missed_count,reviewer_claim_suspended")
-					.eq("id", reviewerId)
+				const { data: strikeResult } = await admin
+					.rpc("increment_reviewer_missed_count", { p_reviewer_id: reviewerId })
 					.maybeSingle();
 
-				if (!profile) continue;
+				if (!strikeResult) continue;
 
-				const newCount = (profile.reviewer_missed_count ?? 0) + 1;
-				const shouldSuspend = newCount >= 3 && !profile.reviewer_claim_suspended;
-
-				await admin
-					.from("profiles")
-					.update({
-						reviewer_missed_count: newCount,
-						...(shouldSuspend ? { reviewer_claim_suspended: true } : {}),
-					})
-					.eq("id", reviewerId);
+				const { new_count, is_newly_suspended } = strikeResult as {
+					new_count: number;
+					is_newly_suspended: boolean;
+				};
 
 				const email = await getUserEmail(admin, reviewerId);
 				if (!email) continue;
 
-				if (shouldSuspend) {
+				if (is_newly_suspended) {
 					void sendEmail({ to: email, ...reviewerClaimSuspended() });
-				} else if (newCount === 2) {
-					void sendEmail({ to: email, ...reviewerMissedWarning(newCount) });
+				} else if (new_count === 2) {
+					void sendEmail({ to: email, ...reviewerMissedWarning(new_count) });
 				}
 			}
 		})();

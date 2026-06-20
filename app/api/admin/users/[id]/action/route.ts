@@ -9,7 +9,8 @@ type AdminUserAction =
 	| "delete_user_account"
 	| "reset_reviewer_trust"
 	| "clear_public_profile_text"
-	| "clear_reviewer_profile";
+	| "clear_reviewer_profile"
+	| "unsuspend_reviewer";
 
 type RouteContext = {
 	params: Promise<{ id: string }>;
@@ -47,6 +48,7 @@ const ACTIONS = new Set<AdminUserAction>([
 	"reset_reviewer_trust",
 	"clear_public_profile_text",
 	"clear_reviewer_profile",
+	"unsuspend_reviewer",
 ]);
 
 function badRequest(message: string, status = 400) {
@@ -430,6 +432,13 @@ export async function POST(request: Request, context: RouteContext) {
 				reviewer_verification_status: "none",
 				reviewer_verified_at: null,
 				reviewer_verified_by: null,
+			};
+		}
+
+		if (action === "unsuspend_reviewer") {
+			profilePatch = {
+				reviewer_claim_suspended: false,
+				reviewer_missed_count: 0,
 			};
 		}
 

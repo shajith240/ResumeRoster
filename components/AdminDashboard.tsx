@@ -36,7 +36,8 @@ import {
 import { AdminSectionNav } from "./admin-dashboard/navigation";
 import { MetricCard, OverviewPage } from "./admin-dashboard/overview";
 import { PeoplePage } from "./admin-dashboard/people";
-import { PremiumPage, type AdminPayoutsData, type AdminPremiumResumesData } from "./admin-dashboard/premium";
+import { PremiumPage, type AdminPayoutsData, type AdminPremiumResumesData, type AdminFailedRefund } from "./admin-dashboard/premium";
+import { type SuspendedReviewer } from "./admin-dashboard/moderation";
 import type {
 	ActiveAdminUser,
 	AdminDashboardView,
@@ -93,6 +94,8 @@ export default function AdminDashboard({
 	const [payoutsData, setPayoutsData] = useState<AdminPayoutsData | null>(null);
 	const [payoutStatus, setPayoutStatus] = useState("pending");
 	const [premiumResumesData, setPremiumResumesData] = useState<AdminPremiumResumesData | null>(null);
+	const [failedRefunds, setFailedRefunds] = useState<AdminFailedRefund[]>([]);
+	const [suspendedReviewers, setSuspendedReviewers] = useState<SuspendedReviewer[]>([]);
 	const [resumeFilter, setResumeFilter] = useState("all");
 	const [reportStatus, setReportStatus] =
 		useState<ContentReportStatus>("pending");
@@ -199,9 +202,12 @@ export default function AdminDashboard({
 						);
 					}
 					if (view === "reviewers") {
-						return fetchJson<{ applications: ReviewerApplicationPreview[] }>(
-							`/api/admin/reviewers?status=${reviewerStatus}&limit=100`,
-						);
+						return Promise.all([
+							fetchJson<{ applications: ReviewerApplicationPreview[] }>(
+								`/api/admin/reviewers?status=${reviewerStatus}&limit=100`,
+							),
+							fetchJson<{ reviewers: SuspendedReviewer[] }>("/api/admin/suspended-reviewers"),
+						]).then(([applicationsResult, suspendedResult]) => ({ applicationsResult, suspendedResult }));
 					}
 					if (view === "people") {
 						const params = new URLSearchParams({
@@ -229,7 +235,8 @@ export default function AdminDashboard({
 							fetchJson<AdminPremiumResumesData>(
 								`/api/admin/premium-resumes?payment_status=${resumeFilter}&limit=100`,
 							),
-						]).then(([payoutsResult, resumesResult]) => ({ payoutsResult, resumesResult }));
+							fetchJson<{ failed: AdminFailedRefund[] }>("/api/admin/failed-refunds"),
+						]).then(([payoutsResult, resumesResult, failedResult]) => ({ payoutsResult, resumesResult, failedResult }));
 					}
 					return Promise.resolve(null);
 				})();
@@ -252,13 +259,9 @@ export default function AdminDashboard({
 					setFeedbackStatusCounts(feedbackData?.statusCounts ?? {});
 				}
 				if (view === "reviewers") {
-					setReviewerApplications(
-						(
-							sectionData as {
-								applications: ReviewerApplicationPreview[];
-							} | null
-						)?.applications ?? [],
-					);
+					const reviewerData = sectionData as { applicationsResult: { applications: ReviewerApplicationPreview[] }; suspendedResult: { reviewers: SuspendedReviewer[] } } | null;
+					setReviewerApplications(reviewerData?.applicationsResult?.applications ?? []);
+					setSuspendedReviewers(reviewerData?.suspendedResult?.reviewers ?? []);
 				}
 				if (view === "people") {
 					const peopleData = sectionData as AdminUsersResponse | null;
@@ -279,9 +282,10 @@ export default function AdminDashboard({
 					setDataInventory(sectionData as AdminDataInventory | null);
 				}
 				if (view === "premium") {
-					const premiumData = sectionData as { payoutsResult: AdminPayoutsData; resumesResult: AdminPremiumResumesData } | null;
+					const premiumData = sectionData as { payoutsResult: AdminPayoutsData; resumesResult: AdminPremiumResumesData; failedResult: { failed: AdminFailedRefund[] } } | null;
 					setPayoutsData(premiumData?.payoutsResult ?? null);
 					setPremiumResumesData(premiumData?.resumesResult ?? null);
+					setFailedRefunds(premiumData?.failedResult?.failed ?? []);
 				}
 			} finally {
 				setPageLoading(false);
@@ -694,7 +698,9 @@ export default function AdminDashboard({
 							onStatusChange={(value) =>
 								setReviewerStatus(value as ReviewerApplicationStatus)
 							}
+							onUnsuspend={(userId) => runUserAction(userId, "unsuspend_reviewer")}
 							status={reviewerStatus}
+							suspendedReviewers={suspendedReviewers}
 						/>
 					) : null}
 					{view === "content" ? <ContentPage overview={overview} /> : null}
@@ -703,6 +709,7 @@ export default function AdminDashboard({
 					{view === "premium" ? (
 						<PremiumPage
 							busyAction={busyAction}
+							failedRefunds={failedRefunds}
 							onMarkPaid={runPayoutAction}
 							onPayoutStatusChange={(value) => setPayoutStatus(value)}
 							onPremiumResumeAction={runPremiumResumeAction}

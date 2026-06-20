@@ -8,11 +8,11 @@ Living notebook. Update whenever a decision is made, a task is completed, or som
 
 ### 🚨 P0 — Payment bugs (real money at risk)
 
-- [ ] **ORPHAN PAYMENT** — `app/api/payments/verify/route.ts` verifies HMAC then runs mupdf redaction → storage upload → `create_premium_resume` RPC in sequence. Razorpay already captured ₹199 before we're called. If redaction throws (422) or storage upload fails (500), the user is charged with no resume row in DB and no way to self-refund (refund-request requires a resume row). Fix: if the RPC insert fails or file upload fails after a confirmed capture, immediately issue a Razorpay refund using the `razorpayPaymentId` already in scope before returning the error response. Add a `premium_refund_issued` audit log entry.
+- [x] **ORPHAN PAYMENT** — `app/api/payments/verify/route.ts` verifies HMAC then runs mupdf redaction → storage upload → `create_premium_resume` RPC in sequence. Razorpay already captured ₹199 before we're called. If redaction throws (422) or storage upload fails (500), the user is charged with no resume row in DB and no way to self-refund (refund-request requires a resume row). Fix: if the RPC insert fails or file upload fails after a confirmed capture, immediately issue a Razorpay refund using the `razorpayPaymentId` already in scope before returning the error response. Add a `premium_refund_issued` audit log entry.
 
-- [ ] **DEADLINE NOT CHECKED IN REVIEW SUBMISSION** — `app/api/resumes/[id]/premium-review/route.ts` checks `payment_status='paid'`, `assigned_reviewer_id`, and `status='open'` but **not** `review_deadline > now()`. A reviewer can submit 1–23 hours past their deadline (before the midnight cron fires). Result: review posts + payout inserted, then cron refunds the candidate. User gets review + full refund; reviewer gets no payout. Fix: add `if (resume.review_deadline && new Date(resume.review_deadline) < new Date())` → 409 before the roast insert.
+- [x] **DEADLINE NOT CHECKED IN REVIEW SUBMISSION** — `app/api/resumes/[id]/premium-review/route.ts` checks `payment_status='paid'`, `assigned_reviewer_id`, and `status='open'` but **not** `review_deadline > now()`. A reviewer can submit 1–23 hours past their deadline (before the midnight cron fires). Result: review posts + payout inserted, then cron refunds the candidate. User gets review + full refund; reviewer gets no payout. Fix: add `if (resume.review_deadline && new Date(resume.review_deadline) < new Date())` → 409 before the roast insert.
 
-- [ ] **ADMIN ASSIGN_REVIEWER SENDS NO EMAIL** — `app/api/admin/premium-resumes/[id]/route.ts` action `assign_reviewer` writes to DB and audit log but never notifies the reviewer. They have a 24h clock running with zero awareness. Fix: send `reviewerAssigned(resumeId)` email after the DB update, mirroring what the user claim route does.
+- [x] **ADMIN ASSIGN_REVIEWER SENDS NO EMAIL** — `app/api/admin/premium-resumes/[id]/route.ts` action `assign_reviewer` writes to DB and audit log but never notifies the reviewer. They have a 24h clock running with zero awareness. Fix: send `reviewerAssigned(resumeId)` email after the DB update, mirroring what the user claim route does.
 
 ---
 
@@ -24,7 +24,7 @@ Living notebook. Update whenever a decision is made, a task is completed, or som
 
 - [ ] **RAZORPAY WEBHOOK NOT REGISTERED** — `/api/webhooks/razorpay` exists and is correct, but if it's not registered in the Razorpay dashboard (events: `payment.captured`, `payment.failed`, webhook secret: `RAZORPAY_WEBHOOK_SECRET`), it does nothing. The webhook is the safety net when a user closes the browser after payment but before the verify POST completes — without it, those payments are stuck `pending` forever with no resume row.
 
-- [ ] **CSP: VERIFY RAZORPAY CHECKOUT.JS LOADS WITH NONCE** — `script-src` uses `strict-dynamic` + nonce. `frame-src` and `connect-src` cover Razorpay ✅. But the initial `<script src="https://checkout.razorpay.com/v1/checkout.js">` tag must carry the page nonce or it will be blocked by CSP in production. Locate where checkout.js is loaded and confirm the nonce is threaded through. If it's missing, add `'nonce-${nonce}'` to the script tag.
+- [x] **CSP: VERIFY RAZORPAY CHECKOUT.JS LOADS WITH NONCE** — Verified correct. `loadRazorpayScript()` in `components/SubmitResumeForm.tsx` uses `document.createElement('script')` — dynamic scripts created by a nonce-trusted parent (the React bundle) inherit trust via `strict-dynamic`. Root layout calls `headers()` to stay dynamic so Next.js propagates the nonce. `frame-src` and `connect-src` cover the checkout iframe and API calls. No code change needed.
 
 - [ ] **SET ALL ENV VARS IN VERCEL** — required before launch:
   - `CRON_SECRET` (protects `/api/cron/expire-claims`)
@@ -32,7 +32,7 @@ Living notebook. Update whenever a decision is made, a task is completed, or som
   - `RAZORPAY_WEBHOOK_SECRET`
   - `NEXT_PUBLIC_RAZORPAY_KEY_ID`
   - `RESEND_API_KEY`
-  - `EMAIL_FROM` (default: `noreply@resumeroster.in`)
+  - `EMAIL_FROM` (default: `Linted <noreply@linted.space>` — set to the verified Resend sender once DNS propagates)
   - `SENTRY_DSN`
 
 - [ ] **RUN FULL RAZORPAY SANDBOX E2E TEST** — with test keys, exercise the entire flow before switching to live keys: pay → verify creates resume → reviewer claims → reviewer submits review (check payout row) → user refund request → cron expire-claims with sandbox payment ID → admin force-refund. Document pass/fail per step.
@@ -41,15 +41,15 @@ Living notebook. Update whenever a decision is made, a task is completed, or som
 
 ### 🟠 P2 — Functional correctness issues
 
-- [ ] **STRIKE COUNTER IS READ-MODIFY-WRITE** — `app/api/cron/expire-claims/route.ts` fire-and-forget block reads `reviewer_missed_count`, adds 1, writes back. Race condition if the same reviewer appears across two parallel processes (rare but wrong). Fix: replace with a single `UPDATE profiles SET reviewer_missed_count = reviewer_missed_count + 1 WHERE id = $reviewerId RETURNING reviewer_missed_count, reviewer_claim_suspended` — atomic, no fetch needed.
+- [x] **STRIKE COUNTER IS READ-MODIFY-WRITE** — Fixed: `increment_reviewer_missed_count(uuid)` RPC in migration `20260620000000` atomically increments + applies suspension in a single `UPDATE...RETURNING`. Cron route now calls `.rpc("increment_reviewer_missed_count", ...)` — no read-modify-write.
 
-- [ ] **VERIFY SELF-CLAIM GUARD IN `claim_premium_resume` RPC** — The user claim route (`app/api/resumes/[id]/claim/route.ts`) does not check `reviewer_id !== resume.user_id`. The admin assign_reviewer route does. Confirm the `claim_premium_resume` Postgres RPC has `WHERE resumes.user_id != p_reviewer_id` — if not, a verified reviewer can claim and review their own submission.
+- [x] **VERIFY SELF-CLAIM GUARD IN `claim_premium_resume` RPC** — Confirmed: `and user_id <> p_reviewer_id` at line 51 of migration `20260619140000_reviewer_strike_system.sql`. Guard exists; no code change needed.
 
 - [ ] **CLAIM EXPIRY IS ONCE PER DAY (NOT HOURLY)** — `vercel.json` schedules `expire_claimed_premium_resumes` at `0 0 * * *` (midnight UTC, Hobby plan max). A reviewer who misses a 24h deadline can leave a candidate waiting up to 23 hours before the cron fires. Fix (free tier path): pg_cron inside Supabase runs hourly (like the deadline-reminder job already does). pg_cron cannot call Razorpay directly, so the split: (1) pg_cron atomically marks expired resumes as `payment_status='expiry_pending'` + un-assigns reviewer, (2) a Supabase DB webhook fires `/api/cron/expire-claims` for each `expiry_pending` row → Vercel route issues the Razorpay refund + sends emails + increments strike. The Vercel daily cron stays as a reconciliation safety net.
 
-- [ ] **NO ADMIN UI FOR FAILED REFUNDS** — `premium_refund_failed` entries are written to `moderation_actions` but the admin panel has no surface for them. Admin would need to query the DB directly and issue Razorpay refunds manually. Add a "Failed refunds" section to `/admin/premium` that lists `premium_refund_failed` rows with a "Retry refund" button wired to the admin force-refund action.
+- [x] **NO ADMIN UI FOR FAILED REFUNDS** — Added: `/api/admin/failed-refunds` endpoint queries `moderation_actions` where `action='premium_refund_failed'`. Admin premium panel now has a third "refunds" tab (`FailedRefundsPanel`) with per-row "Retry refund" button. Button calls new `retry_refund` action in `/api/admin/premium-resumes/[id]` which issues the Razorpay refund via `payment_id` on the resume without re-checking `payment_status`.
 
-- [ ] **NO REVIEWER UNSUSPEND ACTION** — Reviewers suspended after 3 misses (`reviewer_claim_suspended=true`) have no path back. Add an admin action (`unsuspend_reviewer`) in the reviewer management panel that sets `reviewer_claim_suspended=false` and resets `reviewer_missed_count`. Log to `moderation_actions`.
+- [x] **NO REVIEWER UNSUSPEND ACTION** — Added: `unsuspend_reviewer` action in `/api/admin/users/[id]/action` sets `reviewer_claim_suspended=false, reviewer_missed_count=0`. Admin reviewers page now shows a "Suspended Reviewers" section (fetched from `/api/admin/suspended-reviewers`) with per-row "Unsuspend" button calling `runUserAction(userId, 'unsuspend_reviewer')`.
 
 ---
 

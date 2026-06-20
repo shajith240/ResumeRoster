@@ -13,12 +13,12 @@ function layout(title: string, body: string): string {
   <tr><td align="center">
     <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#1a1a1a;border-radius:12px;border:1px solid #2a2a2a;overflow:hidden;">
       <tr><td style="padding:32px 40px 0;">
-        <p style="margin:0 0 24px;font-size:13px;font-weight:600;letter-spacing:.08em;color:#888;text-transform:uppercase;">Resume Roster</p>
+        <p style="margin:0 0 24px;font-size:13px;font-weight:600;letter-spacing:.08em;color:#888;text-transform:uppercase;">Linted</p>
         ${body}
       </td></tr>
       <tr><td style="padding:24px 40px 32px;border-top:1px solid #2a2a2a;margin-top:32px;">
         <p style="margin:0;font-size:12px;color:#555;">
-          You're receiving this because of activity on your Resume Roster account.<br />
+          You're receiving this because of activity on your Linted account.<br />
           <a href="${BASE_URL}/settings" style="color:#888;text-decoration:underline;">Manage notification preferences</a>
         </p>
       </td></tr>

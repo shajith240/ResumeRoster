@@ -28,6 +28,15 @@ import {
 } from "./utils";
 import type { ModerationAction, ReportPreview, ReviewerApplicationPreview } from "./types";
 
+export type SuspendedReviewer = {
+	id: string;
+	username: string | null;
+	full_name: string | null;
+	avatar_url: string | null;
+	reviewer_missed_count: number;
+	reviewer_verified_at: string | null;
+};
+
 export function ReportsPage({
 	adminNotes,
 	busyAction,
@@ -96,58 +105,125 @@ export function ReviewersPage({
 	busyAction,
 	onAction,
 	onStatusChange,
+	onUnsuspend,
 	status,
+	suspendedReviewers,
 }: {
 	applications: ReviewerApplicationPreview[];
 	busyAction: string;
 	onAction: (applicationId: string, action: string) => Promise<void>;
 	onStatusChange: (value: string) => void;
+	onUnsuspend: (userId: string) => Promise<void>;
 	status: ReviewerApplicationStatus;
+	suspendedReviewers: SuspendedReviewer[];
 }) {
 	return (
-		<section className="admin-console-section">
-			<PanelHeader
-				description="Approve reviewer trust only when proof and profile match."
-				title="Reviewer Trust Queue"
-			>
-				<SegmentedTabs
-					active={status}
-					onChange={onStatusChange}
-					values={reviewerStatuses}
-				/>
-			</PanelHeader>
-			{applications.length ? (
-				<div className="admin-table-wrap">
-					<table className="admin-table">
-						<thead>
-							<tr>
-								<th>Applicant</th>
-								<th>Claim</th>
-								<th>Proof</th>
-								<th>Signal</th>
-								<th>Updated</th>
-								<th>Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							{applications.map((application) => (
-								<ReviewerRow
-									application={application}
-									busyAction={busyAction}
-									key={application.id}
-									onAction={onAction}
-								/>
-							))}
-						</tbody>
-					</table>
-				</div>
-			) : (
-				<EmptyPanel
-					description="Applications in this status will appear here."
-					title="No trust applications"
-				/>
-			)}
-		</section>
+		<>
+			<section className="admin-console-section">
+				<PanelHeader
+					description="Approve reviewer trust only when proof and profile match."
+					title="Reviewer Trust Queue"
+				>
+					<SegmentedTabs
+						active={status}
+						onChange={onStatusChange}
+						values={reviewerStatuses}
+					/>
+				</PanelHeader>
+				{applications.length ? (
+					<div className="admin-table-wrap">
+						<table className="admin-table">
+							<thead>
+								<tr>
+									<th>Applicant</th>
+									<th>Claim</th>
+									<th>Proof</th>
+									<th>Signal</th>
+									<th>Updated</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{applications.map((application) => (
+									<ReviewerRow
+										application={application}
+										busyAction={busyAction}
+										key={application.id}
+										onAction={onAction}
+									/>
+								))}
+							</tbody>
+						</table>
+					</div>
+				) : (
+					<EmptyPanel
+						description="Applications in this status will appear here."
+						title="No trust applications"
+					/>
+				)}
+			</section>
+
+			{suspendedReviewers.length > 0 ? (
+				<section className="admin-console-section">
+					<PanelHeader
+						description="Verified reviewers suspended from claiming due to missed deadlines. Unsuspend after reviewing their appeal."
+						title="Suspended Reviewers"
+					/>
+					<div className="admin-table-wrap">
+						<table className="admin-table">
+							<thead>
+								<tr>
+									<th>Reviewer</th>
+									<th>Missed deadlines</th>
+									<th>Verified</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								{suspendedReviewers.map((reviewer) => {
+									const displayName = reviewer.full_name ?? reviewer.username ?? reviewer.id.slice(0, 8) + "…";
+									const isBusy = busyAction === `user:${reviewer.id}:unsuspend_reviewer`;
+									return (
+										<tr key={reviewer.id}>
+											<td>
+												<a href={`/profile/${reviewer.id}`} rel="noreferrer" target="_blank">
+													{displayName}
+												</a>
+												{reviewer.username && reviewer.username !== displayName ? (
+													<small className="muted-text"> @{reviewer.username}</small>
+												) : null}
+											</td>
+											<td>
+												<span className="admin-badge admin-badge-danger">
+													{reviewer.reviewer_missed_count} missed
+												</span>
+											</td>
+											<td>
+												<span className="muted-text">
+													{reviewer.reviewer_verified_at
+														? formatDate(reviewer.reviewer_verified_at)
+														: "—"}
+												</span>
+											</td>
+											<td>
+												<button
+													className="admin-action-btn"
+													disabled={isBusy}
+													onClick={() => void onUnsuspend(reviewer.id)}
+													type="button"
+												>
+													{isBusy ? "Unsuspending…" : "Unsuspend"}
+												</button>
+											</td>
+										</tr>
+									);
+								})}
+							</tbody>
+						</table>
+					</div>
+				</section>
+			) : null}
+		</>
 	);
 }
 
