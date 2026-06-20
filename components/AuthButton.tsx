@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -16,7 +15,6 @@ import {
 } from "@/lib/anonymous-profile";
 import { PROFILE_CHANGE_EVENT } from "@/lib/app-presence";
 import { getAppHomeRoute } from "@/lib/app-routes";
-import { getLoginPath } from "@/lib/auth-redirect";
 import { PWA_INSTALL_OPEN_EVENT } from "@/lib/pwa-install";
 import { signOut, supabase } from "@/lib/supabase/client";
 import { useAdminAccess } from "@/lib/use-admin-access";
@@ -124,19 +122,7 @@ export default function AuthButton() {
 	}
 
 	if (!user) {
-		return (
-			<div className="auth-actions">
-				<Link
-					className="btn-primary btn-ghost nav-login"
-					href={getLoginPath(appHomeRoute)}
-				>
-					Log in
-				</Link>
-				<Link className="btn-primary btn-brand" href="/submit">
-					Post resume
-				</Link>
-			</div>
-		);
+		return null;
 	}
 
 	const anonymousUsername = getAnonymousProfileUsername(user.id);
