@@ -476,6 +476,12 @@ button.admin-panel-button {
 	color: var(--bg-base);
 }
 
+body.main-app-dark .admin-tabs button.active,
+body.main-app-dark .admin-tabs button[aria-pressed="true"] {
+	background: var(--brand);
+	color: var(--bg-base);
+}
+
 .admin-action-row {
 	display: flex;
 	flex-wrap: wrap;
@@ -525,14 +531,14 @@ button.admin-panel-button {
 
 .admin-action-row .admin-danger-action,
 .admin-danger-action {
-	color: #fca5a5;
+	color: var(--danger);
 }
 
 .admin-action-row .admin-danger-action:hover,
 .admin-danger-action:hover {
-	border-color: rgba(248, 113, 113, 0.35);
-	background: rgba(248, 113, 113, 0.1);
-	color: #fecaca;
+	border-color: color-mix(in srgb, var(--danger) 35%, transparent);
+	background: color-mix(in srgb, var(--danger) 10%, transparent);
+	color: var(--danger);
 }
 
 .admin-empty-panel {
@@ -1672,4 +1678,175 @@ button.admin-panel-button {
 	.admin-people-actions {
 		max-width: none;
 	}
+}
+
+/* ─── Premium controls: payout cards ───────────────────────────────────────── */
+
+.admin-card-list {
+	display: grid;
+	gap: 12px;
+}
+
+.admin-card {
+	display: grid;
+	gap: 0;
+	border: 1px solid var(--admin-hairline);
+	border-radius: 8px;
+	overflow: hidden;
+	background: color-mix(in srgb, var(--bg-base) 70%, transparent);
+}
+
+.admin-card-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	border-bottom: 1px solid var(--admin-hairline);
+	padding: 12px 14px;
+	background: color-mix(in srgb, var(--bg-elevated) 44%, transparent);
+}
+
+.admin-card-header strong {
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 820;
+}
+
+.admin-card-meta {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+}
+
+/* ─── Admin badges ──────────────────────────────────────────────────────────── */
+
+.admin-badge,
+.admin-badge-success,
+.admin-badge-muted,
+.admin-badge-danger {
+	display: inline-flex;
+	align-items: center;
+	border-radius: var(--radius-pill);
+	padding: 3px 8px;
+	font-size: 11px;
+	font-weight: 760;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.admin-badge {
+	background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
+	border: 1px solid var(--admin-hairline);
+	color: var(--text-secondary);
+}
+
+.admin-badge-success {
+	background: color-mix(in srgb, var(--success) 12%, transparent);
+	border: 1px solid color-mix(in srgb, var(--success) 28%, transparent);
+	color: var(--success);
+}
+
+.admin-badge-muted {
+	background: color-mix(in srgb, var(--bg-elevated) 60%, transparent);
+	border: 1px solid var(--admin-hairline);
+	color: var(--text-tertiary);
+}
+
+.admin-badge-danger {
+	background: color-mix(in srgb, var(--danger) 12%, transparent);
+	border: 1px solid color-mix(in srgb, var(--danger) 28%, transparent);
+	color: var(--danger);
+}
+
+/* ─── Payout total ──────────────────────────────────────────────────────────── */
+
+.payout-total {
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 820;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ─── Admin summary bar ─────────────────────────────────────────────────────── */
+
+.admin-summary-bar {
+	padding: 10px 14px;
+	border: 1px solid var(--admin-hairline);
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--brand) 9%, var(--admin-panel-bg));
+	color: var(--text-secondary);
+	font-size: 13px;
+}
+
+.admin-summary-bar strong {
+	color: var(--text-primary);
+}
+
+/* ─── Inline inputs and action buttons ─────────────────────────────────────── */
+
+.admin-input-sm {
+	height: 30px;
+	min-width: 0;
+	width: 100%;
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-sm);
+	padding: 0 8px;
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+	font-size: 12px;
+	outline: none;
+}
+
+.admin-input-sm:focus {
+	border-color: var(--brand);
+	box-shadow: var(--shadow-focus);
+}
+
+.admin-action-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 30px;
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-sm);
+	padding: 0 10px;
+	background: var(--admin-panel-strong-bg);
+	color: var(--text-primary);
+	font-size: 12px;
+	font-weight: 760;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.admin-action-btn:hover:not(:disabled) {
+	border-color: var(--brand);
+	background: color-mix(in srgb, var(--brand) 9%, var(--admin-panel-strong-bg));
+	color: var(--brand);
+}
+
+.admin-action-btn:disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+
+/* ─── Assign reviewer inline row ────────────────────────────────────────────── */
+
+.admin-assign-reviewer {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.admin-assign-reviewer .admin-input-sm {
+	width: 160px;
+}
+
+/* ─── Per-row action column ─────────────────────────────────────────────────── */
+
+.admin-row-actions {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
 }

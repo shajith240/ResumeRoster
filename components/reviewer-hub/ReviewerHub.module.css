@@ -125,11 +125,11 @@
 }
 
 .timerWarning {
-	color: #b45309;
+	color: var(--warning);
 }
 
 .timerUrgent {
-	color: #b91c1c;
+	color: var(--danger);
 }
 
 .timerDone {
@@ -154,6 +154,13 @@
 	color: var(--brand);
 	text-decoration: none;
 	white-space: nowrap;
+}
+
+.actionLink:hover,
+.actionLink:focus-visible {
+	color: var(--brand-hover, var(--brand));
+	text-decoration: underline;
+	outline: none;
 }
 
 .actionLink svg {

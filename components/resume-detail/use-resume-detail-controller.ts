@@ -601,6 +601,7 @@ export function useResumeDetailController(resumeId: string) {
 
 		const result = (await response.json().catch(() => null)) as {
 			replaced?: boolean;
+			filePath?: string;
 			message?: string;
 		} | null;
 
@@ -611,8 +612,17 @@ export function useResumeDetailController(resumeId: string) {
 			return;
 		}
 
-		// Reload the signed URL so the viewer shows the new file.
-		setSignedUrl("");
+		// Update resume state with the new file path, then re-fetch the signed URL.
+		const newFilePath = result?.filePath;
+		if (resume && newFilePath) {
+			const updatedResume = { ...resume, file_path: newFilePath };
+			setResume(updatedResume);
+			await openResumeFile(updatedResume);
+		} else {
+			// Fallback: clear URL so the viewer shows a retry button.
+			setSignedUrl("");
+		}
+
 		toast.success("PDF replaced.", {
 			description: "Your resume has been updated.",
 		});

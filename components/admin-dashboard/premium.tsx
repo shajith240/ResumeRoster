@@ -327,7 +327,7 @@ export function PremiumPage({
 							title="Nothing here"
 						/>
 					) : (
-						<div className="admin-table-wrapper">
+						<div className="admin-table-wrap">
 							<table className="admin-table">
 								<thead>
 									<tr>

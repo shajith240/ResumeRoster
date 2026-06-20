@@ -5586,9 +5586,12 @@ body.main-app-dark .dock-link.active .dock-label {
 
 .form-message,
 .muted-text {
-	color: #766e63;
 	font-size: 14px;
 	line-height: 1.6;
+}
+
+.muted-text {
+	color: var(--text-secondary);
 }
 
 .form-message {
@@ -5616,7 +5619,7 @@ body.main-app-dark .roast-form textarea:focus {
 }
 
 body.main-app-dark .form-message {
-	color: var(--brand);
+	color: var(--danger);
 }
 
 .auth-inline-error {
@@ -8359,6 +8362,208 @@ body.main-app-dark .form-message {
 	.footer-link-grid {
 		grid-template-columns: 1fr;
 	}
+}
+
+/* ─── Premium review composer ───────────────────────────────────────────────── */
+
+.premium-review-form {
+	display: grid;
+	gap: 20px;
+}
+
+.premium-review-header {
+	display: grid;
+	gap: 8px;
+}
+
+.premium-review-desc {
+	margin: 0;
+	color: var(--text-secondary);
+	font-size: 14px;
+	line-height: 1.55;
+}
+
+.premium-review-field {
+	display: grid;
+	gap: 8px;
+}
+
+.premium-review-label {
+	color: var(--text-primary);
+	font-size: 13px;
+	font-weight: 760;
+}
+
+.premium-review-textarea {
+	width: 100%;
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-md);
+	padding: 10px 12px;
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+	font-family: var(--font-body);
+	font-size: 14px;
+	line-height: 1.55;
+	resize: vertical;
+	outline: none;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.premium-review-textarea:focus {
+	border-color: var(--brand);
+	box-shadow: var(--shadow-focus);
+}
+
+.premium-review-textarea:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+/* Star rating */
+
+.premium-review-stars {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.premium-review-star {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border: none;
+	border-radius: var(--radius-sm);
+	padding: 0;
+	background: transparent;
+	color: var(--border-strong);
+	font-size: 24px;
+	line-height: 1;
+	cursor: pointer;
+	transition: color 0.1s, transform 0.1s;
+}
+
+.premium-review-star:hover:not(:disabled),
+.premium-review-star.is-active {
+	color: var(--brand);
+}
+
+.premium-review-star:hover:not(:disabled) {
+	transform: scale(1.12);
+}
+
+.premium-review-star:disabled {
+	cursor: not-allowed;
+}
+
+.premium-review-star-label {
+	margin-left: 6px;
+	color: var(--text-secondary);
+	font-size: 13px;
+}
+
+/* Submit button */
+
+.premium-review-submit {
+	width: 100%;
+	justify-content: center;
+}
+
+/* Dark mode */
+
+body.main-app-dark .premium-review-textarea {
+	border-color: var(--border-default);
+	background: var(--bg-elevated);
+	color: var(--text-primary);
+}
+
+body.main-app-dark .premium-review-textarea:focus {
+	border-color: var(--brand);
+}
+
+/* ─── Replace PDF button ────────────────────────────────────────────────────── */
+
+.replace-pdf-label {
+	display: contents;
+	cursor: pointer;
+}
+
+.replace-pdf-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	border-radius: var(--button-radius);
+	padding: 10px 20px;
+	font-family: var(--font-post-title);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	cursor: pointer;
+	user-select: none;
+}
+
+.replace-pdf-btn.busy {
+	opacity: 0.6;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+/* ─── Leaderboard role tags ─────────────────────────────────────────────────── */
+
+.lb-tag-reviewer {
+	border-color: rgba(255, 184, 95, 0.34);
+	background: var(--brand-muted);
+	color: var(--brand);
+}
+
+.lb-tag-student {
+	border-color: #D9D0FF;
+	background: #F1EDFF;
+	color: #5137B8;
+}
+
+body.main-app-dark .lb-tag-student {
+	border-color: rgba(169, 149, 255, 0.28);
+	background: rgba(169, 149, 255, 0.14);
+	color: #d7ceff;
+}
+
+.lb-tag-career {
+	border-color: #CBDCFF;
+	background: #EEF4FF;
+	color: #244EA8;
+}
+
+body.main-app-dark .lb-tag-career {
+	border-color: rgba(110, 165, 255, 0.28);
+	background: rgba(110, 165, 255, 0.14);
+	color: #b9d4ff;
+}
+
+.lb-tag-intern {
+	border-color: #CBE8DA;
+	background: #EEF9F3;
+	color: #1D6F45;
+}
+
+body.main-app-dark .lb-tag-intern {
+	border-color: rgba(103, 211, 145, 0.26);
+	background: rgba(103, 211, 145, 0.12);
+	color: #a9ecc0;
+}
+
+.lb-tag-seeker {
+	border-color: #F6D794;
+	background: #FFF3D8;
+	color: #8A5B11;
+}
+
+body.main-app-dark .lb-tag-seeker {
+	border-color: rgba(255, 184, 95, 0.28);
+	background: rgba(255, 184, 95, 0.14);
+	color: #ffd28a;
 }
 
 /* ── Motion safety: disable all transitions/animations for users who prefer reduced motion ── */

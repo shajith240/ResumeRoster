@@ -95,23 +95,11 @@ function roleTag(reviewer: LeaderboardReviewer) {
 }
 
 function tagClass(label: string) {
-	if (label === "Trusted reviewer") {
-		return "border-[rgba(255,184,95,0.34)] bg-[var(--brand-muted)] text-[var(--brand)]";
-	}
-
-	if (label === "Student") {
-		return "border-[#D9D0FF] bg-[#F1EDFF] text-[#5137B8] dark:border-[rgba(169,149,255,0.28)] dark:bg-[rgba(169,149,255,0.14)] dark:text-[#d7ceff]";
-	}
-
-	if (label === "Career Switcher") {
-		return "border-[#CBDCFF] bg-[#EEF4FF] text-[#244EA8] dark:border-[rgba(110,165,255,0.28)] dark:bg-[rgba(110,165,255,0.14)] dark:text-[#b9d4ff]";
-	}
-
-	if (label === "Intern") {
-		return "border-[#CBE8DA] bg-[#EEF9F3] text-[#1D6F45] dark:border-[rgba(103,211,145,0.26)] dark:bg-[rgba(103,211,145,0.12)] dark:text-[#a9ecc0]";
-	}
-
-	return "border-[#F6D794] bg-[#FFF3D8] text-[#8A5B11] dark:border-[rgba(255,184,95,0.28)] dark:bg-[rgba(255,184,95,0.14)] dark:text-[#ffd28a]";
+	if (label === "Trusted reviewer") return "lb-tag-reviewer";
+	if (label === "Student") return "lb-tag-student";
+	if (label === "Career Switcher") return "lb-tag-career";
+	if (label === "Intern") return "lb-tag-intern";
+	return "lb-tag-seeker";
 }
 
 function reviewerLintPoints(reviewer: LeaderboardReviewer) {
@@ -518,7 +506,7 @@ export function StackedList({
 					</span>
 					<strong>No matching reviewers</strong>
 					<p>Try another search or help someone lint a resume.</p>
-					<Link href="/feed">Open Resume Feed -&gt;</Link>
+					<Link href="/feed" className="flex items-center gap-1">Open Resume Feed <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
 				</div>
 			) : null}
 

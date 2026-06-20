@@ -172,7 +172,7 @@ export function PremiumReviewComposer({ onSubmit, submitting }: PremiumReviewCom
 			))}
 
 			<button
-				className="btn-primary premium-review-submit"
+				className="btn-primary btn-brand premium-review-submit"
 				disabled={!canSubmit}
 				type="submit"
 			>
