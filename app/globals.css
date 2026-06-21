@@ -1501,7 +1501,7 @@ html[data-app-theme="dark"] .full-page-loader {
 @media (max-width: 560px) {
 	.onboarding-route {
 		align-items: start;
-		padding: 12px;
+		padding: 0;
 	}
 
 	.onboarding-shell {

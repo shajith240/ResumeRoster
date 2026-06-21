@@ -118,6 +118,9 @@ Live tokens (`--brand`, `--bg-base`, etc.) stay as-is.
 
 ## Current Focus
 
+**Onboarding redesign complete (2026-06-21)** — Full split-panel redesign shipped in `components/OnboardingFlow.tsx` + `components/OnboardingFlow.module.css`. Character + speech bubble + typewriter system (same as submit wizard). Step 1 auto-advances 950ms after goal selection. Character fades/swaps on goal change. Per-goal gradient backgrounds with ambient orb. First-person copy throughout. `complete_onboarding` RPC call unchanged.
+- Assets currently using placeholder step1-4.png — swap for generated Arjun/Priya variants in `/assets/onboarding/` when ready.
+
 Uncommitted UI changes in working tree:
 - `app/globals.css` — premium review form redesign (card-style fields, dissolved textarea)
 - `app/admin.css` — admin table padding + `.admin-panel` grid class

@@ -1,0 +1,570 @@
+/* ─── Shell ──────────────────────────────────────────────────────────────── */
+
+.shell {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+	grid-template-rows: 2px 1fr;
+	width: min(1140px, 100%);
+	height: clamp(580px, 80vh, 780px);
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-xl);
+	overflow: hidden;
+	box-shadow: var(--shadow-lg);
+}
+
+/* ─── Progress bar (full-width, top of card) ─────────────────────────────── */
+
+.stepProgress {
+	grid-column: 1 / -1;
+	grid-row: 1;
+	position: relative;
+	height: 2px;
+	background: var(--border-subtle);
+}
+
+.stepProgressFill {
+	position: absolute;
+	inset: 0 auto 0 0;
+	background: var(--brand);
+	transition: width 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Left panel ─────────────────────────────────────────────────────────── */
+
+.left {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: clamp(24px, 3.5vh, 40px) clamp(24px, 3.5vw, 44px);
+	background: var(--bg-surface);
+	border-right: 1px solid var(--border-subtle);
+	overflow-y: auto;
+	grid-row: 2;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+}
+
+.stepLabel {
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: var(--brand);
+	font-family: var(--font-post-title);
+}
+
+/* ─── Choice cards ───────────────────────────────────────────────────────── */
+
+.cardGrid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 8px;
+	align-content: start;
+	flex: 1;
+	min-height: 0;
+}
+
+.card {
+	position: relative;
+	display: grid;
+	grid-template-columns: 38px 1fr;
+	grid-template-rows: auto auto;
+	column-gap: 12px;
+	row-gap: 3px;
+	align-items: start;
+	width: 100%;
+	padding: 11px 44px 11px 14px;
+	background: var(--bg-elevated);
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-lg);
+	cursor: pointer;
+	text-align: left;
+	font-family: var(--font-app-body);
+	transition: border-color 0.15s, background 0.15s;
+}
+
+.card:hover {
+	border-color: color-mix(in srgb, var(--brand) 28%, var(--border-default));
+	background: color-mix(in srgb, var(--bg-elevated) 92%, var(--brand) 8%);
+}
+
+.card[aria-pressed="true"] {
+	border-color: color-mix(in srgb, var(--brand) 54%, var(--border-default));
+	background: color-mix(in srgb, var(--brand) 10%, var(--bg-elevated));
+}
+
+.cardIcon {
+	grid-row: 1 / 3;
+	align-self: center;
+	display: grid;
+	place-items: center;
+	width: 38px;
+	height: 38px;
+	border-radius: var(--radius-md);
+	background: var(--bg-surface);
+	border: 1px solid var(--border-subtle);
+	color: var(--text-secondary);
+	flex-shrink: 0;
+}
+
+.cardLabel {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--text-primary);
+	font-family: var(--font-post-title);
+	line-height: 1.2;
+}
+
+.cardDesc {
+	font-size: 12.5px;
+	color: var(--text-secondary);
+	line-height: 1.4;
+}
+
+.cardCheck {
+	position: absolute;
+	right: 14px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: var(--brand);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.cardCheck::after {
+	content: "";
+	display: block;
+	width: 5px;
+	height: 9px;
+	border-right: 2.5px solid white;
+	border-bottom: 2.5px solid white;
+	transform: rotate(45deg) translate(-1px, -1px);
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+
+.hint {
+	font-size: 12px;
+	color: var(--text-tertiary);
+	font-family: var(--font-app-body);
+}
+
+.message {
+	font-size: 13px;
+	color: var(--danger);
+	font-family: var(--font-app-body);
+}
+
+.actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding-top: 10px;
+	border-top: 1px solid var(--border-subtle);
+	margin-top: auto;
+}
+
+/* ─── Right panel ────────────────────────────────────────────────────────── */
+
+.right {
+	position: relative;
+	overflow: hidden;
+	transition: background 0.55s ease;
+	grid-row: 2;
+}
+
+/* ─── Ambient orb ────────────────────────────────────────────────────────── */
+
+.orb {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+.orb::before,
+.orb::after {
+	content: "";
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(88px);
+	animation: orbFloat 8s ease-in-out infinite alternate;
+}
+
+.orb::before {
+	width: 380px;
+	height: 380px;
+	top: -90px;
+	right: -100px;
+	opacity: 0.32;
+	background: var(--orbA, #6366f1);
+}
+
+.orb::after {
+	width: 260px;
+	height: 260px;
+	bottom: 30px;
+	left: -60px;
+	animation-delay: -4s;
+	opacity: 0.22;
+	background: var(--orbB, #818cf8);
+}
+
+@keyframes orbFloat {
+	from { transform: translate(0, 0) scale(1); }
+	to   { transform: translate(16px, -24px) scale(1.08); }
+}
+
+/* ─── Character ──────────────────────────────────────────────────────────── */
+
+.character {
+	position: absolute;
+	bottom: -14%;
+	right: -8%;
+	height: 98%;
+	width: auto;
+	max-width: 98%;
+	object-fit: contain;
+	pointer-events: none;
+	user-select: none;
+	-webkit-mask-image: linear-gradient(to top, transparent 0%, black 10%);
+	mask-image: linear-gradient(to top, transparent 0%, black 10%);
+	transition: opacity 0.22s ease;
+	z-index: 1;
+}
+
+.characterHidden {
+	opacity: 0;
+}
+
+/* ─── Speech bubble ──────────────────────────────────────────────────────── */
+
+.bubble {
+	position: absolute;
+	z-index: 2;
+	top: 22px;
+	left: 18px;
+	max-width: 230px;
+	padding: 14px 16px 15px;
+	background: rgba(6, 6, 18, 0.88);
+	border: 1px solid rgba(255, 255, 255, 0.10);
+	border-radius: 16px;
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+}
+
+/* Tail — border layer */
+.bubble::before {
+	content: "";
+	position: absolute;
+	bottom: -13px;
+	right: 20px;
+	border: 12px solid transparent;
+	border-top-color: rgba(255, 255, 255, 0.10);
+	border-bottom: none;
+}
+
+/* Tail — fill layer */
+.bubble::after {
+	content: "";
+	position: absolute;
+	bottom: -11px;
+	right: 22px;
+	border: 10px solid transparent;
+	border-top-color: rgba(6, 6, 18, 0.88);
+	border-bottom: none;
+}
+
+.bubbleText {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.94);
+	font-family: var(--font-app-body);
+	font-size: clamp(13.5px, 1.3vw, 15.5px);
+	font-weight: 450;
+	line-height: 1.55;
+	min-height: 1.55em;
+}
+
+.cursor {
+	color: rgba(255, 255, 255, 0.4);
+	animation: blink 1s step-end infinite;
+}
+
+.cursorHidden {
+	opacity: 0;
+}
+
+@keyframes blink {
+	0%, 100% { opacity: 1; }
+	50%       { opacity: 0; }
+}
+
+/* ─── Step transition animations ─────────────────────────────────────────── */
+
+@keyframes enterForward {
+	from { opacity: 0; transform: translateX(18px); }
+	to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes enterBackward {
+	from { opacity: 0; transform: translateX(-18px); }
+	to   { opacity: 1; transform: translateX(0); }
+}
+
+.enterForward  { animation: enterForward  0.28s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.enterBackward { animation: enterBackward 0.28s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* ─── Step 2 form fields (username + about) ──────────────────────────────── */
+
+.step2Field {
+	display: grid;
+	gap: 6px;
+}
+
+.step2FieldHeader {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+}
+
+.step2Label {
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	color: var(--text-secondary);
+	font-family: var(--font-post-title);
+}
+
+.step2LabelOptional {
+	font-weight: 400;
+	color: var(--text-tertiary);
+	margin-left: 4px;
+}
+
+.step2Count {
+	font-size: 11px;
+	color: var(--text-tertiary);
+	font-family: var(--font-app-body);
+}
+
+.step2InputWrap {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.step2AtSign {
+	position: absolute;
+	left: 12px;
+	color: var(--text-tertiary);
+	font-family: var(--font-app-body);
+	font-size: 14px;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.step2Input {
+	width: 100%;
+	height: 40px;
+	padding: 0 12px 0 26px;
+	background: var(--bg-elevated);
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-lg);
+	color: var(--text-primary);
+	font-family: var(--font-app-body);
+	font-size: 14px;
+	font-weight: 500;
+	transition: border-color 0.15s;
+	outline: none;
+}
+
+.step2Input:focus {
+	border-color: color-mix(in srgb, var(--brand) 54%, var(--border-default));
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 12%, transparent);
+}
+
+.step2Textarea {
+	width: 100%;
+	padding: 10px 12px;
+	background: var(--bg-elevated);
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-lg);
+	color: var(--text-primary);
+	font-family: var(--font-app-body);
+	font-size: 13.5px;
+	line-height: 1.5;
+	resize: none;
+	transition: border-color 0.15s;
+	outline: none;
+}
+
+.step2Textarea:focus {
+	border-color: color-mix(in srgb, var(--brand) 54%, var(--border-default));
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 12%, transparent);
+}
+
+.step2FieldHint {
+	font-size: 12px;
+	color: var(--text-tertiary);
+	font-family: var(--font-app-body);
+}
+
+.step2FieldHintError {
+	color: var(--danger);
+}
+
+.step2FieldHintSuccess {
+	color: var(--success);
+}
+
+/* ─── Step 2 persona dropdown ────────────────────────────────────────────── */
+
+.personaSelectTrigger {
+	width: 100%;
+	height: 42px;
+	padding: 0 14px;
+	background: var(--bg-elevated);
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-lg);
+	color: var(--text-primary);
+	font-family: var(--font-app-body);
+	font-size: 14px;
+	font-weight: 500;
+	text-align: left;
+	box-shadow: none;
+	transition: border-color 0.15s, background 0.15s;
+}
+
+.personaSelectTrigger:hover {
+	background: color-mix(in srgb, var(--bg-elevated) 92%, var(--brand) 8%);
+	border-color: color-mix(in srgb, var(--brand) 28%, var(--border-default));
+}
+
+.personaSelectTrigger[data-state="open"] {
+	border-color: color-mix(in srgb, var(--brand) 54%, var(--border-default));
+}
+
+.personaSelectContent {
+	z-index: 260 !important;
+	background: var(--bg-elevated);
+	border: 1px solid var(--border-default);
+	border-radius: var(--radius-lg);
+	color: var(--text-primary);
+	box-shadow: var(--shadow-lg);
+}
+
+.personaSelectItem {
+	border-radius: var(--radius-md);
+	font-family: var(--font-app-body);
+	font-size: 13.5px;
+	font-weight: 500;
+	color: var(--text-primary);
+	cursor: pointer;
+}
+
+/* ─── Tablet portrait (≤ 860px) ─────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+	.shell {
+		grid-template-columns: 1fr;
+		/* Progress bar | character strip | scrollable content */
+		/* Taller strip so the character fits without overflow at the top */
+		grid-template-rows: 2px clamp(220px, 34svh, 290px) 1fr;
+		height: 100svh;
+		border-radius: var(--radius-lg);
+	}
+
+	.right {
+		grid-row: 2;
+		/* height is fully controlled by the grid-template-rows above */
+	}
+
+	.left {
+		grid-row: 3;
+		border-right: none;
+		border-top: 1px solid var(--border-subtle);
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+		padding-bottom: 0;
+	}
+
+	/* Footer sticks to the bottom of the visible scroll area */
+	.actions {
+		position: sticky;
+		bottom: 0;
+		margin-top: auto;
+		background: var(--bg-surface);
+		z-index: 2;
+		/* env(safe-area-inset-bottom) is 0 on non-notched devices, not undefined,
+		   so the fallback in env() won't fire — use calc with 0px fallback instead */
+		padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+	}
+
+	.character {
+		right: -5%;
+		/* 93% of strip height keeps the head ~7% below the top edge,
+		   while -10% bottom lets the feet naturally bleed off-screen */
+		height: 93%;
+		bottom: -10%;
+	}
+
+	.bubble {
+		top: 14px;
+		left: 14px;
+		max-width: min(52%, 172px);
+		padding: 10px 12px 11px;
+		border-radius: 12px;
+	}
+
+	.bubbleText {
+		font-size: 12.5px;
+		line-height: 1.45;
+	}
+}
+
+/* ─── Phone (≤ 560px) — full-bleed shell ─────────────────────────────────── */
+
+@media (max-width: 560px) {
+	.shell {
+		border-radius: 0;
+		border-left: none;
+		border-right: none;
+		border-bottom: none;
+		box-shadow: none;
+		grid-template-rows: 2px clamp(200px, 32svh, 260px) 1fr;
+	}
+
+	.left {
+		padding: 18px 20px 0;
+		gap: 12px;
+	}
+
+	.actions {
+		padding-top: 10px;
+		padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+	}
+
+	.bubble {
+		top: 10px;
+		left: 12px;
+		max-width: min(55%, 168px);
+		padding: 8px 10px 9px;
+		border-radius: 10px;
+	}
+
+	.bubbleText {
+		font-size: 12px;
+		line-height: 1.4;
+	}
+
+	/* Slightly smaller step 2 fields on phones */
+	.step2Textarea {
+		font-size: 13px;
+	}
+}

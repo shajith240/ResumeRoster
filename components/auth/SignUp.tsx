@@ -490,6 +490,9 @@ function SignUp() {
 						{mode === "signin" ? "Create one" : "Sign in"}
 					</button>
 				</div>
+				<div className={styles.cardBack}>
+					<Link href="/">← Back to home</Link>
+				</div>
 			</section>
 		</main>
 	);
