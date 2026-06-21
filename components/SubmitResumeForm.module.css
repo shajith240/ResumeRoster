@@ -1,15 +1,435 @@
-.formActions {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(184px, 220px);
-	align-items: start;
-	column-gap: clamp(22px, 3vw, 36px);
-	row-gap: 12px;
-	border-top: 1px solid var(--border-subtle);
-	padding-top: clamp(14px, 1.8vh, 18px);
+/* ─── Progress bar ───────────────────────────────────────────────────────── */
+
+.stepProgress {
+	position: relative;
+	grid-column: 1 / -1;
+	height: 2px;
+	background: var(--border-subtle);
+	border-radius: 0;
 }
 
+.stepProgressFill {
+	position: absolute;
+	inset: 0 auto 0 0;
+	background: var(--brand);
+	border-radius: 0;
+	transition: width 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Wizard layout ──────────────────────────────────────────────────────── */
+
+.wizardBody {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: 2px 1fr;
+	min-height: clamp(520px, 68vh, 680px);
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-xl);
+	overflow: hidden;
+	background: var(--bg-surface);
+	box-shadow: var(--shadow-md);
+}
+
+/* ─── Left panel ─────────────────────────────────────────────────────────── */
+
+.wizardLeft {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: clamp(28px, 3.8vh, 40px);
+	grid-row: 2;
+	padding: clamp(28px, 4vh, 44px) clamp(24px, 3.5vw, 40px);
+	border-right: 1px solid var(--border-subtle);
+}
+
+.stepFields {
+	display: grid;
+	gap: clamp(16px, 2.2vh, 24px);
+	align-content: start;
+}
+
+.stepIntro {
+	display: grid;
+	gap: 6px;
+}
+
+.stepTitle {
+	margin: 0;
+	color: var(--text-primary);
+	font-family: var(--font-display);
+	font-size: clamp(20px, 2vw, 26px);
+	font-weight: 600;
+	line-height: 1.1;
+}
+
+.stepSub {
+	margin: 0;
+	color: var(--text-secondary);
+	font-family: var(--font-app-body);
+	font-size: 13.5px;
+	line-height: 1.5;
+}
+
+/* ─── Step enter animations ──────────────────────────────────────────────── */
+
+@keyframes enterForward {
+	from { opacity: 0; transform: translateX(22px); }
+	to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes enterBackward {
+	from { opacity: 0; transform: translateX(-22px); }
+	to   { opacity: 1; transform: translateX(0); }
+}
+
+.enterForward {
+	animation: enterForward 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.enterBackward {
+	animation: enterBackward 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Textarea with character counter ────────────────────────────────────── */
+
+.textareaWrap {
+	position: relative;
+}
+
+.charCount {
+	position: absolute;
+	right: 10px;
+	bottom: 8px;
+	font-family: var(--font-app-body);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	color: var(--text-tertiary);
+	pointer-events: none;
+	transition: color 0.2s ease;
+	line-height: 1;
+}
+
+.charCountWarn {
+	color: var(--text-secondary);
+}
+
+.charCountDone {
+	color: var(--text-secondary);
+}
+
+/* ─── Inline field errors ────────────────────────────────────────────────── */
+
+.fieldError {
+	display: block;
+	margin-top: 4px;
+	font-family: var(--font-app-body);
+	font-size: 12.5px;
+	color: var(--danger);
+	line-height: 1.4;
+}
+
+.fieldHasError :global(textarea),
+.fieldHasError :global(input) {
+	border-color: var(--danger) !important;
+}
+
+.submitError {
+	margin: 0;
+	font-family: var(--font-app-body);
+	font-size: 12.5px;
+	color: var(--danger);
+	line-height: 1.4;
+}
+
+/* ─── Navigation ─────────────────────────────────────────────────────────── */
+
+.wizardNav {
+	padding-top: clamp(18px, 2.6vh, 26px);
+	border-top: 1px solid var(--border-subtle);
+}
+
+.wizardNavRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.nextButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-width: 130px;
+	min-height: 44px;
+	padding: 10px 22px;
+	border: none;
+	border-radius: var(--radius-lg);
+	background: var(--brand);
+	color: #fff;
+	font-family: var(--font-post-title);
+	font-size: 14.5px;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	cursor: pointer;
+	transition:
+		background 0.15s ease,
+		transform 0.1s ease;
+}
+
+.nextButton:hover:not(:disabled) {
+	background: var(--brand-dark);
+}
+
+.nextButton:active:not(:disabled) {
+	transform: scale(0.98);
+}
+
+.nextButton:disabled {
+	cursor: not-allowed;
+	opacity: 0.52;
+}
+
+.backButton {
+	min-height: 36px;
+	padding: 0;
+	background: transparent;
+	border: none;
+	color: var(--text-tertiary);
+	font-family: var(--font-post-title);
+	font-size: 13.5px;
+	font-weight: 500;
+	text-align: left;
+	cursor: pointer;
+	transition: color 0.15s ease;
+}
+
+.backButton:hover:not(:disabled) {
+	color: var(--text-secondary);
+}
+
+.backButton:disabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+/* ─── Right panel ────────────────────────────────────────────────────────── */
+
+.wizardRight {
+	grid-row: 2;
+	position: relative;
+	overflow: hidden;
+	min-height: 360px;
+}
+
+.sceneWrap {
+	position: absolute;
+	inset: 0;
+	transition: opacity 0.38s ease;
+}
+
+.sceneVisible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.sceneHidden {
+	opacity: 0;
+	pointer-events: none;
+}
+
+/* ─── Scene base ─────────────────────────────────────────────────────────── */
+
+.scene {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+}
+
+/* Per-scene gradient backgrounds */
+.scene[data-scene="role"]    { background: linear-gradient(158deg, #1e1b4b 0%, #2d2975 55%, #3730a3 100%); }
+.scene[data-scene="context"] { background: linear-gradient(158deg, #042f2e 0%, #0a3b37 55%, #134e4a 100%); }
+.scene[data-scene="privacy"] { background: linear-gradient(158deg, #2d1060 0%, #4a1c92 55%, #5b21b6 100%); }
+.scene[data-scene="plan"]    { background: linear-gradient(158deg, #022c22 0%, #054538 55%, #065f46 100%); }
+.scene[data-scene="upload"]  { background: linear-gradient(158deg, #0a1628 0%, #1a3356 55%, #1e4080 100%); }
+
+/* ambient orb */
+.sceneOrb {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+.sceneOrb::before,
+.sceneOrb::after {
+	content: "";
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(88px);
+	animation: orbFloat 8s ease-in-out infinite alternate;
+}
+
+.sceneOrb::before {
+	width: 380px;
+	height: 380px;
+	top: -90px;
+	right: -100px;
+	opacity: 0.32;
+}
+
+.sceneOrb::after {
+	width: 260px;
+	height: 260px;
+	bottom: 30px;
+	left: -60px;
+	animation-delay: -4s;
+	opacity: 0.22;
+}
+
+@keyframes orbFloat {
+	from { transform: translate(0, 0) scale(1); }
+	to   { transform: translate(16px, -24px) scale(1.08); }
+}
+
+/* per-scene orb colors */
+.scene[data-scene="role"]    .sceneOrb::before { background: #6366f1; }
+.scene[data-scene="role"]    .sceneOrb::after  { background: #818cf8; }
+.scene[data-scene="context"] .sceneOrb::before { background: #0d9488; }
+.scene[data-scene="context"] .sceneOrb::after  { background: #2dd4bf; }
+.scene[data-scene="privacy"] .sceneOrb::before { background: #a855f7; }
+.scene[data-scene="privacy"] .sceneOrb::after  { background: #c084fc; }
+.scene[data-scene="plan"]    .sceneOrb::before { background: #10b981; }
+.scene[data-scene="plan"]    .sceneOrb::after  { background: #34d399; }
+.scene[data-scene="upload"]  .sceneOrb::before { background: #3b82f6; }
+.scene[data-scene="upload"]  .sceneOrb::after  { background: #60a5fa; }
+
+/* ─── Character image ────────────────────────────────────────────────────── */
+
+.characterImg {
+	position: absolute;
+	bottom: 0;
+	height: 82%;
+	width: auto;
+	max-width: 95%;
+	object-fit: contain;
+	pointer-events: none;
+	user-select: none;
+	left: 50%;
+	transform: translateX(-50%);
+	-webkit-mask-image: linear-gradient(to top, transparent 0%, black 8%);
+	mask-image: linear-gradient(to top, transparent 0%, black 8%);
+}
+
+/* per-step character positioning */
+.scene[data-scene="role"]    .characterImg { left: auto; right: -14%; transform: none; height: 92%; bottom: -5%; }
+.scene[data-scene="context"] .characterImg { left: auto; right: -10%; transform: none; height: 92%; bottom: -10%; }
+.scene[data-scene="privacy"] .characterImg { left: -4%; transform: none; height: 88%; bottom: -4%; }
+.scene[data-scene="plan"]    .characterImg { left: auto; right: -12%; transform: none; height: 88%; bottom: -8%; }
+.scene[data-scene="upload"]  .characterImg { left: auto; right: -10%; transform: none; height: 86%; bottom: -5%; }
+
+/* ─── Speech bubble ──────────────────────────────────────────────────────── */
+
+.speechBubble {
+	position: absolute;
+	z-index: 2;
+	top: 22px;
+	left: 18px;
+	max-width: 220px;
+	padding: 14px 16px 15px;
+	background: rgba(6, 6, 18, 0.88);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 16px;
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+}
+
+/* Tail — border layer (default: bottom-right, toward right-side character) */
+.speechBubble::before {
+	content: "";
+	position: absolute;
+	bottom: -13px;
+	right: 20px;
+	border: 12px solid transparent;
+	border-top-color: rgba(255, 255, 255, 0.1);
+	border-bottom: none;
+}
+
+/* Tail — fill layer */
+.speechBubble::after {
+	content: "";
+	position: absolute;
+	bottom: -11px;
+	right: 22px;
+	border: 10px solid transparent;
+	border-top-color: rgba(6, 6, 18, 0.88);
+	border-bottom: none;
+}
+
+/* per-scene bubble positioning */
+.scene[data-scene="privacy"] .speechBubble {
+	left: auto;
+	right: 18px;
+}
+
+/* Privacy: tail bottom-left, pointing toward Priya who is left-aligned */
+.scene[data-scene="privacy"] .speechBubble::before { left: 20px; right: auto; }
+.scene[data-scene="privacy"] .speechBubble::after  { left: 22px; right: auto; }
+
+/* upload: bubble stays left since character is now right-aligned */
+
+/* ─── Bubble text ────────────────────────────────────────────────────────── */
+
+.sceneEyebrow {
+	margin: 0 0 8px;
+	color: rgba(255, 255, 255, 0.42);
+	font-family: var(--font-post-title);
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+}
+
+.sceneHeading {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.96);
+	font-family: var(--font-display);
+	font-size: clamp(14.5px, 1.4vw, 17px);
+	font-weight: 650;
+	line-height: 1.25;
+}
+
+.sceneBody {
+	margin: 10px 0 0;
+	color: rgba(255, 255, 255, 0.6);
+	font-family: var(--font-app-body);
+	font-size: 12.5px;
+	line-height: 1.55;
+	opacity: 0;
+	transform: translateY(5px);
+	transition: opacity 0.45s ease 0.1s, transform 0.45s ease 0.1s;
+}
+
+.sceneBodyVisible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* Blinking cursor */
+.typedCursor {
+	display: inline;
+	color: rgba(255, 255, 255, 0.48);
+	font-weight: 300;
+	animation: cursorBlink 0.75s step-end infinite;
+}
+
+@keyframes cursorBlink {
+	0%, 100% { opacity: 1; }
+	50%       { opacity: 0; }
+}
+
+/* ─── Plan picker (step 4 left panel) ───────────────────────────────────── */
+
 .planPicker {
-	grid-column: 1 / -1;
 	display: grid;
 	gap: 10px;
 	min-width: 0;
@@ -17,21 +437,10 @@
 	padding: 0;
 }
 
-.planPicker legend {
-	padding: 0;
-	color: var(--text-secondary);
-	font-family: var(--font-post-title);
-	font-size: 12px;
-	font-weight: 700;
-	letter-spacing: 0.06em;
-	margin-bottom: 10px;
-	text-transform: uppercase;
-}
-
 .planOptions {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 12px;
+	gap: 10px;
 }
 
 .planBadgeFree,
@@ -53,10 +462,12 @@
 }
 
 .planBadgePremium {
-	color: color-mix(in srgb, var(--brand) 20%, var(--text-primary));
-	background: color-mix(in srgb, var(--brand) 14%, var(--bg-elevated));
-	border: 1px solid color-mix(in srgb, var(--brand) 34%, transparent);
+	color: color-mix(in srgb, #059669 20%, var(--text-primary));
+	background: color-mix(in srgb, #059669 14%, var(--bg-elevated));
+	border: 1px solid color-mix(in srgb, #059669 34%, transparent);
 }
+
+/* ─── Privacy picker (step 3 left panel) ────────────────────────────────── */
 
 .privacyPicker {
 	display: grid;
@@ -81,62 +492,62 @@
 .privacyOptions {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 12px;
+	gap: 10px;
 }
+
+/* ─── Option cards (shared: plan + privacy) ──────────────────────────────── */
 
 .optionCard {
 	position: relative;
-	display: grid;
-	grid-template-columns: 17px minmax(0, 1fr);
-	align-items: start;
-	gap: 10px;
-	min-height: 82px;
-	border: 1px solid var(--border-subtle);
-	border-radius: 8px;
-	padding: 12px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 44px;
+	padding: 10px 42px 10px 14px;
+	border: 1.5px solid var(--border-subtle);
+	border-radius: 10px;
 	background: color-mix(in srgb, var(--bg-elevated) 68%, var(--bg-base));
 	cursor: pointer;
 	transition:
-		background-color 180ms var(--button-ease),
 		border-color 180ms var(--button-ease),
+		background 180ms var(--button-ease),
 		box-shadow 180ms var(--button-ease);
 }
 
-.optionCard::before {
+/* Checkmark indicator — replaces radio dot */
+.optionCard::after {
 	content: "";
-	display: block;
-	width: 16px;
-	height: 16px;
-	margin-top: 0;
-	border: 1.5px solid color-mix(in srgb, var(--text-tertiary) 72%, var(--border-strong));
-	border-radius: 999px;
-	background: color-mix(in srgb, var(--bg-base) 82%, transparent);
-	box-shadow: inset 0 0 0 5px transparent;
+	position: absolute;
+	top: 50%;
+	right: 12px;
+	transform: translateY(-50%);
+	width: 17px;
+	height: 17px;
+	border-radius: 50%;
+	border: 1.5px solid var(--border-default);
+	background: var(--bg-base);
 	transition:
-		background-color 180ms var(--button-ease),
-		border-color 180ms var(--button-ease),
-		box-shadow 180ms var(--button-ease);
+		border-color 180ms ease,
+		background 180ms ease;
 }
 
 .optionCard:hover {
-	border-color: color-mix(in srgb, var(--text-primary) 24%, var(--border-strong));
-	background: color-mix(in srgb, var(--bg-elevated) 84%, var(--bg-base));
+	border-color: color-mix(in srgb, var(--text-primary) 26%, var(--border-subtle));
 }
 
-.optionCard:hover::before {
-	border-color: color-mix(in srgb, var(--text-primary) 62%, var(--border-strong));
+.optionCard:hover::after {
+	border-color: color-mix(in srgb, var(--text-primary) 48%, var(--border-default));
 }
 
 .optionCardSelected {
-	border-color: color-mix(in srgb, var(--brand) 62%, var(--border-strong));
-	background: color-mix(in srgb, var(--brand) 10%, var(--bg-elevated));
-	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 32%, transparent);
+	border-color: var(--brand);
+	background: color-mix(in srgb, var(--brand) 8%, var(--bg-elevated));
+	box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 22%, transparent);
 }
 
-.optionCardSelected::before {
+.optionCardSelected::after {
 	border-color: var(--brand);
-	background: var(--brand);
-	box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--bg-base) 94%, transparent);
+	background: var(--brand) url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 8.5l3.5 3L12.5 5' stroke='%23fff' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 13px no-repeat;
 }
 
 .optionCard:has(input:focus-visible) {
@@ -151,105 +562,100 @@
 }
 
 .optionBody {
-	display: grid;
-	gap: 6px;
-	min-width: 0;
-}
-
-.optionHeader {
 	display: flex;
 	align-items: center;
-	gap: 6px;
+	gap: 8px;
 	min-width: 0;
 }
 
-.optionHeader strong {
+.optionBody strong {
 	color: var(--text-primary);
-	font-size: 13px;
-	font-weight: 780;
-	line-height: 1.1;
+	font-family: var(--font-post-title);
+	font-size: 13.5px;
+	font-weight: 640;
+	line-height: 1.2;
 }
 
-.optionBody small,
-.privacyHint,
-.submitActionHint {
-	margin: 0;
-	color: var(--text-secondary);
-	font-size: 11.25px;
-	line-height: 1.38;
+/* Tighter textarea heights — room for char counter at bottom */
+.wizardLeft :global(.submit-jd-textarea) {
+	min-height: clamp(96px, 13vh, 130px);
+	resize: none;
+	padding-bottom: 26px;
 }
 
-.privacyHint {
-	max-width: 74ch;
-	color: var(--text-tertiary);
+.wizardLeft :global(.submit-help-textarea) {
+	min-height: clamp(72px, 9vh, 96px);
+	resize: none;
+	padding-bottom: 26px;
 }
 
-.submitActionPanel {
-	display: grid;
-	align-self: start;
-	justify-self: stretch;
-	gap: 8px;
-	margin-top: 22px;
-}
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
 
-.submitButton {
-	min-height: 44px;
-	width: 100%;
-	padding-inline: 22px;
-	font-size: 15px;
-}
-
-.submitActionHint {
-	color: var(--text-tertiary);
-	text-align: center;
-}
-
-@media (min-width: 1025px) and (max-height: 820px) {
-	.formActions {
-		column-gap: 28px;
-		padding-top: 12px;
+@media (max-width: 860px) {
+	.wizardBody {
+		grid-template-columns: 1fr;
+		grid-template-rows: 2px auto auto;
+		min-height: unset;
 	}
 
-	.privacyPicker {
-		gap: 8px;
+	/* Character panel: compact storytelling strip at the top */
+	.wizardRight {
+		grid-row: 2;
+		min-height: 200px;
+		max-height: 240px;
 	}
 
-	.privacyPicker legend {
-		margin-bottom: 8px;
+	/* Form: below the character strip */
+	.wizardLeft {
+		grid-row: 3;
+		border-right: none;
+		border-top: 1px solid var(--border-subtle);
 	}
 
-	.privacyOptions {
-		gap: 8px;
+	/* Characters: consistent right-aligned on mobile, fill the strip */
+	.characterImg {
+		right: -5%;
+		left: auto;
+		transform: none;
+		height: 108%;
+		bottom: -6%;
 	}
 
-	.optionCard {
-		min-height: 72px;
-		padding: 10px 12px;
+	/* Priya stays left on mobile */
+	.scene[data-scene="privacy"] .characterImg {
+		left: -3%;
+		right: auto;
 	}
 
-	.optionBody {
-		gap: 4px;
+	/* Compact bubble for narrow viewport */
+	.speechBubble {
+		top: 14px;
+		left: 14px;
+		right: auto;
+		margin: 0;
+		width: auto;
+		max-width: min(52%, 172px);
+		padding: 10px 12px 11px;
+		border-radius: 12px;
 	}
 
-	.optionBody small,
-	.privacyHint,
-	.submitActionHint {
-		font-size: 11px;
+	.scene[data-scene="privacy"] .speechBubble {
+		left: auto;
+		right: 14px;
+	}
+
+	/* Compact type, hide secondary content */
+	.sceneEyebrow {
+		display: none;
+	}
+
+	.sceneHeading {
+		font-size: 12.5px;
 		line-height: 1.3;
 	}
 
-	.submitActionPanel {
-		margin-top: 19px;
-	}
-
-	.submitButton {
-		min-height: 42px;
-	}
-}
-
-@media (max-width: 1024px) {
-	.formActions {
-		grid-template-columns: 1fr;
+	.sceneBody {
+		display: none;
 	}
 
 	.planOptions {
@@ -257,46 +663,20 @@
 	}
 
 	.privacyOptions {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 540px) {
+	.privacyOptions {
 		grid-template-columns: 1fr;
 	}
 
-	.optionCard {
-		min-height: 82px;
+	.planOptions {
+		grid-template-columns: 1fr;
 	}
 
-	.submitActionPanel {
-		margin-top: 0;
-	}
-
-	.submitButton {
-		justify-self: stretch;
-	}
-
-	.submitActionHint {
-		text-align: left;
-	}
-}
-
-@media (min-width: 761px) and (max-width: 1024px) {
-	.privacyOptions {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
-
-	.optionCard {
-		min-height: 96px;
-		padding: 12px;
-	}
-}
-
-@media (max-width: 360px) {
-	.optionCard {
-		grid-template-columns: 16px minmax(0, 1fr);
-		gap: 9px;
-		padding: 12px;
-	}
-
-	.optionCard::before {
-		width: 15px;
-		height: 15px;
+	.speechBubble {
+		max-width: min(58%, 180px);
 	}
 }

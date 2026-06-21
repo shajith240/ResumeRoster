@@ -1,9 +1,15 @@
 export const TARGET_ROLES = [
 	"SDE Intern",
 	"Full-time SDE",
-	"MBA",
+	"Senior SDE",
+	"ML / AI Engineer",
+	"Data Scientist",
 	"Data Analyst",
 	"Product Manager",
+	"PM Intern",
+	"Business Analyst",
+	"Consultant",
+	"MBA",
 	"Other",
 ] as const;
 
