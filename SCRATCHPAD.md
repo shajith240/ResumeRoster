@@ -124,4 +124,70 @@ Uncommitted UI changes in working tree:
 - `components/navigation/primary-nav.ts` — icon swap: feed→Home, community→UsersRound
 - `lib/primary-navigation.ts` — nav reorder: Home first, Community second; label cleanup
 
-Next: commit the UI changes, then work down the P0 → P1 → P2 list above.
+**UI audit complete (2026-06-20)** — Full structured audit written to `docs/ui-audit/`. 14 page reports + `SUMMARY.md`. 70 total findings (17 Broken, 34 Inconsistent, 19 Polish).
+
+**Sprint 1 systemic fixes applied (2026-06-20):**
+- `--premium: #d4a538` (light) / `#ffd277` (dark) added to `:root` and `body.main-app-dark` in `globals.css`, documented in `DESIGN.md`. Fixes I-21, I-30, B-14 root cause.
+- Heading `font-weight: 400` → `600` across 8 locations: `.feed-route-header h1` (feed.css), `.community-feed-intro h1` (feed.css), `.legal-hero h1` (globals.css), `.onboarding-copy h1` (globals.css), `.header h1` (Leaderboard.module.css), `.identity h1` (ProfileDetail.module.css), `.panelHeader h2` + panel h2s (ProfileDetail.module.css), `.editTitle` (ProfileDetail.module.css). Sub-1 line-heights fixed to 1 alongside. Closes I-01, I-03, I-22, I-25, I-31, I-34.
+- `border-radius: 12px` → `var(--radius-lg)` across 12 panel surfaces: both card groups in ReviewerHub, all profile panels (.aboutPanel etc.), .trustStatusCard, highlight card, .skeletonName, .onboarding-choice-card, .onboarding-note (globals.css), .recent-posts-panel, empty-state panel (feed.css), .user-feedback-select-content (admin.css), notification item (notifications.css). Kept at 12px for nav tab items and input fields. Closes I-02, I-33 (partial).
+- Landing page headings (`.hero h1`, `.benefits h2`, `.faq-header h2` etc.) intentionally excluded — landing page is a separate audit.
+
+**Sprint 2 broken color semantics applied (2026-06-20):**
+- `--bg-muted: #e3e0d9` (light) / `#0a0c0e` (dark) added to globals.css; documented in DESIGN.md. Fixes B-08 (deleted comment background).
+- `.badge-open/closed/hot` + dark mode overrides → `var(--success)` / neutral / `var(--danger)` + `color-mix()`. Closes B-05.
+- `.feed-status-pill.closed` light → neutral tokens. Dark `.feed-status-pill.open` → `var(--success)`. Closes B-02 (partial).
+- `.field-validation.is-warning` → `var(--warning)`. `textarea[aria-invalid]` → `var(--danger)`. Closes B-06.
+- `.file-check`, `.privacy-check-clear` → `var(--success)`. Closes B-07.
+- Community type badges: question → `--success`, discussion → neutral, announcement → `--warning`, resource already tokenized. Dark mode overrides converted. Closes B-01.
+- `.guided-review-input:focus` restored `box-shadow: var(--shadow-focus)`. Closes B-10.
+- Online indicator + `.reviewerPendingBadge` → `var(--success)`. Closes B-12.
+- Leaderboard avatar border in StackedList.tsx → `color-mix(in_srgb,var(--premium)_52%,transparent)`. Closes B-14.
+- Leaderboard role tags: reviewer → `--premium`, student/career → neutral, intern → `--success`, seeker → `--warning`. Closes B-13.
+- ReviewerHub dark-mode timer → `var(--warning)` / `var(--danger)`. Closes B-15.
+- Admin live count → `var(--success)`. Admin urgent/confirm/aria-invalid → `var(--danger)`. Admin gold pill → `var(--premium)`. Closes B-16, B-17.
+- `--font-comment` documented in DESIGN.md. Closes I-20.
+
+**Sprint 3 off-token radii + consistency applied (2026-06-20):**
+- `.onboarding-shell` 18px → `var(--radius-xl)` (base + 16px responsive override → `var(--radius-lg)`). `.community-comment-composer` + `.community-comment-composer.is-reply` fixed. Closes I-32.
+- `.comment-composer` (feed.css base) 18px → `var(--radius-xl)`. `.comment-composer-reply` 16px → `var(--radius-lg)`. Responsive overrides for `.comment-composer` + `.guided-review-composer` 16px → `var(--radius-lg)`.
+- Mobile bottom sheet `border-radius: 18px 18px 0 0` → `var(--radius-xl) var(--radius-xl) 0 0`.
+- Mobile action chip `border-radius: 16px` (32px-tall pill element) → `var(--radius-pill)`.
+- Thread-panel `.community-root-comment-composer` + sidebar nav item: 9px → `var(--radius-md)`.
+- StackedList.tsx: two `rounded-[18px]` → `rounded-[var(--radius-xl)]`, one `rounded-[16px]` → `rounded-[var(--radius-lg)]`. Closes I-26 (partial).
+- `.legal-notice` / `.legal-disclaimer` 8px → `var(--radius-md)`. `.onboarding-choice-icon` 9px → `var(--radius-md)`. Closes P-18, P-19.
+- `.notification-panel` 16px → `var(--radius-lg)`.
+- Submit h1: added `font-family: var(--font-display); font-weight: 600; line-height: 1`. Login h1 (`SignUp.module.css`): same. Community compose h1: same. Closes I-14 (partial).
+- `color: white` → `var(--text-inverse)` on role-picker, submit button, profile avatar initial. `color: #fff` on submit button. Closes B-09 (partial).
+- Removed duplicate `.resume-detail-route` from feed.css (was strict subset of earlier rule). Closes P-07.
+- Removed `!important` from all three declarations in `.reviewerEditButton` (ProfileDetail.module.css). Closes I-24.
+
+**Sprint 4 UX and layout polish applied (2026-06-20):**
+- Mobile community feed intro: replaced `clip-path: inset(50%)` visually-hidden with compact `h1` at 22px/1.1 line-height; description paragraph hidden on mobile. Closes I-06, P-03.
+- Mobile rich-text toolbar (`CommunityPostComposer.module.css`): `flex-wrap: nowrap; overflow-x: auto; min-height: 44px` — single scrollable row instead of 82px wrap. `scrollbar-width: none`. Closes P-04.
+- Submit form column ratio: `minmax(310px, 0.86fr) minmax(440px, 1.14fr)` → `minmax(440px, 1.2fr) minmax(310px, 0.8fr)` — primary column now 60% on desktop. Closes I-16.
+- Dropzone: base border `2px dashed` → `1.5px solid`; dashed only on `.drag-over` (`border: 2px dashed var(--brand)`). Closes P-09.
+- Report button: added `.community-action-button.is-danger { color: var(--text-tertiary); }` — persistent rest-state de-emphasis vs Share/Reply at identical opacity. Closes P-07.
+- Submit form CTA on mobile (`SubmitResumeForm.module.css`): `.formActions` is `position: sticky; bottom: var(--mobile-dock-space); background: var(--bg-surface); z-index: 20;` — always reachable without scrolling. Closes P-10.
+- Leaderboard scrollable list (`StackedList.tsx`): `max-h-[min(62vh,720px)]` → `max-h-[min(calc(62vh_-_var(--mobile-dock-space,0px)),720px)]` — subtracts dock height on mobile. Closes P-13.
+
+All four systemic sprints complete. Next: page-specific fixes from docs/ui-audit/ reports.
+
+**Sprint 5 — full audit sweep applied (2026-06-20):**
+- B-04: toolbar buttons → `var(--text-secondary)` (`CommunityPostComposer.module.css`)
+- Feed-1: mobile nav label "Community" → "Forum" (`lib/primary-navigation.ts`)
+- P-15: `.cardTitle` 14px → 15px (`ReviewerHub.module.css`)
+- I-26: `.loadingBoard / .loadingDirectory` 18px → `var(--radius-xl)` (`Leaderboard.module.css`)
+- B-11, I-23, P-12: role tag purple hardcodes → neutral tokens; shadcn HSL inputs → semantic tokens; canvas mobile padding min raised (`ProfileDetail.module.css`)
+- P-17, I-28: OAuth button border → tokens; error/success banners → `color-mix()` (`SignUp.module.css`)
+- I-10: accessible label added for community post title input (`CommunityPostComposer.tsx`)
+- I-08, I-11, P-06, I-13: compose header gap, post detail h1 weight, comment body size, back-button margin (`globals.css`)
+- Comm-8/Feed-10, P-01, I-04, I-17, B-03, P-11, I-19, I-05, Comm-5, Comm-6, B-09: multiple feed/thread fixes (`feed.css`)
+- I-29: admin and PDF viewer scoped tokens documented (`DESIGN.md`)
+- Skipped structural changes: Feed-9 (community rail placement), P-05 (post type selector)
+
+**Submit page rebuilt as 4-step wizard (2026-06-21):**
+- Full rebuild of `components/SubmitResumeForm.tsx` — client-side step state (1–4), back/forward navigation with directional slide animations, per-step validation gate before Next.
+- Step 1: Target role picker. Step 2: JD + help textarea. Step 3: Title + plan + privacy. Step 4: File upload.
+- Right panel: per-step animated "scene" with ambient orb blobs (per-step color: indigo / teal / amber / brand), role chips, checklist, shield, file status — all pure CSS, no new dependencies.
+- Step indicator: numbered pills with checkmarks for completed steps, brand highlight on active.
+- `components/SubmitResumeForm.module.css` fully rewritten to support wizard layout (`.wizardBody`, `.wizardLeft`, `.wizardRight`, scene system).

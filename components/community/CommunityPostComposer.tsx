@@ -765,7 +765,11 @@ export default function CommunityPostComposer() {
 			</nav>
 
 			<div className="reddit-title-wrap">
+				<label className="sr-only" htmlFor="community-post-title">
+					Post title
+				</label>
 				<input
+					id="community-post-title"
 					aria-describedby="community-title-help"
 					aria-invalid={trimmedTitle.length > 0 && titleRemaining > 0}
 					maxLength={COMMUNITY_POST_TITLE_MAX_LENGTH}

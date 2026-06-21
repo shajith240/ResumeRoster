@@ -15,12 +15,13 @@ Alpha-based borders and semi-transparent chrome surfaces rely on these backgroun
 | `--bg-base` | `#f2efe9` | `#101114` |
 | `--bg-surface` | `#fafaf8` | `#17191d` |
 | `--bg-elevated` | `#ffffff` | `#202329` |
+| `--bg-muted` | `#e3e0d9` | `#0a0c0e` |
 | `--app-canvas-bg` | `#f2efe9` | `#101114` |
 | `--app-chrome-bg` | `rgba(242, 239, 233, 0.94)` | `rgba(16, 17, 20, 0.94)` |
 | `--app-chrome-solid` | `#f2efe9` | `#101114` |
 | `--bg-inverse` | `#1a1916` | `#f3ece1` |
 
-**Surface hierarchy:** `--bg-base` is the outer canvas (body, page). `--bg-surface` is for cards and panels that sit on the canvas. `--bg-elevated` is for inputs, modals, and surfaces that float above cards. `--app-chrome-bg` is used on the sticky header with `backdrop-filter` blur.
+**Surface hierarchy:** `--bg-base` is the outer canvas (body, page). `--bg-surface` is for cards and panels that sit on the canvas. `--bg-elevated` is for inputs, modals, and surfaces that float above cards. `--bg-muted` is a de-emphasis wash for deleted or inactive content (e.g., deleted comments) — use via `color-mix(in srgb, var(--bg-base) N%, var(--bg-muted))`. `--app-chrome-bg` is used on the sticky header with `backdrop-filter` blur.
 
 **Dark mode note:** The live dark palette is blue-grey (`#101114`, `#17191d`, `#202329`), not warm brown. Do not substitute warm-toned darks.
 
@@ -95,6 +96,7 @@ Three font families are in use. All are loaded at the top of `globals.css` — I
 | `--font-body` | `"Inter"` → `"Work Sans"` in `.main-app` | 400–900 (Inter), 400–700 (Work Sans) | `body` default; overridden to Work Sans for all app pages via `body.main-app { --font-body: var(--font-app-body) }` |
 | `--font-app-body` | `"Work Sans"` | 400–900 | App body text (the effective `--font-body` inside `.main-app`) |
 | `--font-post-title` | `"Reddit Sans"` | 400–700 | `h1`, `h2`, `.btn-primary`, `.badge`, `strong`, `b`, `[role="button"]`, `.font-medium/semibold/bold` inside `.main-app` — all emphasis UI text |
+| `--font-comment` | `var(--font-app-body), var(--font-emoji)` | — | Comment and review body text — Work Sans with emoji fallback. Use for any user-generated longform text. |
 
 **Font hierarchy in the app:**
 - Brand/display moments → Syne (`--font-display`)
@@ -112,6 +114,9 @@ Three font families are in use. All are loaded at the top of `globals.css` — I
 | `--success` | `#2d7a4f` | `#67d391` |
 | `--warning` | `#c47b1a` | `#efb25d` |
 | `--danger` | `#c4341a` | `#ff746c` |
+| `--premium` | `#d4a538` | `#ffd277` |
+
+**Usage:** `--success` for confirmed states (online, verified, accepted). `--warning` for at-risk states (deadline approaching, rate limit). `--danger` for destructive or failed states (errors, urgent, rejected). `--premium` for paid/trust indicators — reviewer trust badges, premium feature labels, gold avatar borders. Use `color-mix(in srgb, var(--premium) N%, transparent)` for tinted premium backgrounds.
 
 ---
 
@@ -132,3 +137,27 @@ Three font families are in use. All are loaded at the top of `globals.css` — I
 ## Shadcn / Tailwind HSL Tokens
 
 The project also carries a shadcn-compatible HSL token layer (`--background`, `--foreground`, `--primary`, etc.) used by Tailwind utility classes via `tailwind.config.ts`. These are defined in `:root` and `body.main-app-dark` alongside the above tokens but are secondary — prefer the semantic tokens above for all custom CSS. The Tailwind config also maps `rounded-lg/md/sm` to `--radius-lg/md/sm`.
+
+---
+
+## Scoped Component Tokens
+
+These are **not** `:root`-level tokens — they are CSS custom properties defined on a specific container and only valid within that subtree.
+
+### Admin panel (`app/admin.css` — scoped to `.admin-route`)
+
+| Variable | Value | Used for |
+|---|---|---|
+| `--admin-panel-bg` | `color-mix(in srgb, var(--bg-surface) 84%, var(--bg-base))` | Panel backgrounds — slightly darker than `--bg-surface` |
+| `--admin-panel-strong-bg` | `color-mix(in srgb, var(--bg-elevated) 72%, var(--bg-base))` | Hover/active state panels |
+| `--admin-hairline` | `color-mix(in srgb, var(--border-subtle) 78%, transparent)` | All admin dividers and card borders |
+
+### PDF viewer (`app/feed.css` — scoped to `.secure-resume-preview` / `.secure-resume-reader`)
+
+The PDF viewer chrome is intentionally **always dark** (dark toolbar + dark canvas to contrast white PDF pages). These tokens do not adapt to light/dark mode — they are permanently dark.
+
+| Variable | Value | Used for |
+|---|---|---|
+| `--_viewer-chrome` | `#1b1a18` | Top toolbar bar background |
+| `--_viewer-canvas` | `#242321` | Pages background, page loader |
+| `--_viewer-bg` | `#11110f` | Fullscreen reader background |

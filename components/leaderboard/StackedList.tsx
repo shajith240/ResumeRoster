@@ -172,7 +172,7 @@ function LeaderboardAvatar({
 
 	return (
 		<PresenceAvatar isOnline={reviewer.is_online} size="lg">
-			<span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full border border-[rgba(214,179,100,0.52)] bg-[var(--bg-elevated)]">
+			<span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full border border-[color-mix(in_srgb,var(--premium)_52%,transparent)] bg-[var(--bg-elevated)]">
 				<img
 					src={avatarUrl}
 					alt={`${name} profile photo`}
@@ -442,7 +442,7 @@ export function StackedList({
 	}
 
 	return (
-		<section className="relative min-h-[560px] w-full overflow-hidden rounded-[18px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] pb-24 font-[var(--font-app-body)] shadow-none">
+		<section className="relative min-h-[560px] w-full overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] pb-24 font-[var(--font-app-body)] shadow-none">
 			<div className="border-b border-[var(--border-subtle)] px-5 py-4 max-[760px]:px-4">
 				<label className="relative block max-w-[560px]">
 					<Search
@@ -484,7 +484,7 @@ export function StackedList({
 			{message ? <p className="form-message m-5">{message}</p> : null}
 
 			<motion.div
-				className="max-h-[min(62vh,720px)] overflow-y-auto [scrollbar-gutter:stable]"
+				className="max-h-[min(calc(62vh_-_var(--mobile-dock-space,0px)),720px)] overflow-y-auto [scrollbar-gutter:stable]"
 				layout={!reducedMotion}
 			>
 				<AnimatePresence initial={false}>
@@ -515,7 +515,7 @@ export function StackedList({
 					<motion.button
 						animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
 						aria-label="Open community directory"
-						className="absolute bottom-4 left-4 right-4 z-30 flex h-[76px] items-center justify-between gap-4 overflow-hidden rounded-[18px] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 text-left shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors hover:bg-[var(--bg-surface)] will-change-transform max-[760px]:bottom-3 max-[760px]:left-3 max-[760px]:right-3"
+						className="absolute bottom-4 left-4 right-4 z-30 flex h-[76px] items-center justify-between gap-4 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 text-left shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors hover:bg-[var(--bg-surface)] will-change-transform max-[760px]:bottom-3 max-[760px]:left-3 max-[760px]:right-3"
 						exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.992 }}
 						initial={reducedMotion ? false : { opacity: 0, y: 8, scale: 0.992 }}
 						key="directory-closed"
@@ -543,7 +543,7 @@ export function StackedList({
 					<motion.section
 						animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
 						aria-label="Community directory"
-						className="absolute inset-[10px] z-30 flex flex-col overflow-hidden rounded-[16px] border border-[var(--border-default)] bg-[var(--bg-elevated)] shadow-[0_18px_48px_rgba(0,0,0,0.22)] will-change-transform"
+						className="absolute inset-[10px] z-30 flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-default)] bg-[var(--bg-elevated)] shadow-[0_18px_48px_rgba(0,0,0,0.22)] will-change-transform"
 						exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.99 }}
 						initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.985 }}
 						key="directory-open"

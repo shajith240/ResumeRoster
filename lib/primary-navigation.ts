@@ -58,7 +58,7 @@ export function getPrimaryNavigationItems({
 			id: "community",
 			href: "/community",
 			label: "Community",
-			mobileLabel: "Community",
+			mobileLabel: "Forum",
 			active:
 				isWithinRoute(pathname, "/community") &&
 				!isCommunityComposeRoute(pathname),

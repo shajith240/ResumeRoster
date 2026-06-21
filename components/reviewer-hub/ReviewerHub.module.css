@@ -58,7 +58,7 @@
 .cardGroup {
 	background: var(--bg-surface);
 	border: 0.5px solid var(--border-default);
-	border-radius: 12px;
+	border-radius: var(--radius-lg);
 	overflow: hidden;
 }
 
@@ -84,7 +84,7 @@
 }
 
 .cardTitle {
-	font-size: 14px;
+	font-size: 15px;
 	font-weight: 500;
 	color: var(--text-primary);
 	line-height: 1.3;
@@ -236,7 +236,7 @@
 .skeletonGroup {
 	background: var(--bg-surface);
 	border: 0.5px solid var(--border-default);
-	border-radius: 12px;
+	border-radius: var(--radius-lg);
 	overflow: hidden;
 }
 
@@ -265,9 +265,9 @@
 
 /* ── Dark mode overrides ───────────────────────────────── */
 :global(body.main-app-dark) .timerWarning {
-	color: #f59e0b;
+	color: var(--warning);
 }
 
 :global(body.main-app-dark) .timerUrgent {
-	color: #ef4444;
+	color: var(--danger);
 }

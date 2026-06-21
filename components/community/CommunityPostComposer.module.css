@@ -4,7 +4,7 @@
 }
 
 .editorToolbar.editorToolbar > button {
-	color: color-mix(in srgb, #b8ddff 72%, var(--text-secondary));
+	color: var(--text-secondary);
 }
 
 .editorToolbar.editorToolbar > button > svg {
@@ -24,7 +24,7 @@
 	border-radius: 8px;
 	padding: 0 8px;
 	background: transparent;
-	color: color-mix(in srgb, #8bc9ff 58%, var(--text-secondary));
+	color: var(--text-secondary);
 	font-size: 12px;
 	font-weight: 700;
 	line-height: 1;
@@ -66,13 +66,13 @@
 
 @media (max-width: 640px) {
 	.editorToolbar.editorToolbar {
-		flex-wrap: wrap;
+		flex-wrap: nowrap;
 		gap: 4px;
-		overflow-x: visible;
-		min-height: 82px;
-		align-content: start;
-		padding: 8px 10px 6px;
-		scrollbar-width: auto;
+		overflow-x: auto;
+		min-height: 44px;
+		align-content: center;
+		padding: 4px 8px;
+		scrollbar-width: none;
 	}
 
 	.editorToolbar.editorToolbar > button {
