@@ -235,12 +235,17 @@
 	user-select: none;
 	-webkit-mask-image: linear-gradient(to top, transparent 0%, black 10%);
 	mask-image: linear-gradient(to top, transparent 0%, black 10%);
+	/* All characters start invisible; only the active one gets opacity:1.
+	   will-change promotes every image to its own GPU compositor layer on
+	   mount so transitions are pure GPU opacity blends — zero decode cost. */
+	opacity: 0;
+	will-change: opacity;
 	transition: opacity 0.22s ease;
 	z-index: 1;
 }
 
-.characterHidden {
-	opacity: 0;
+.characterActive {
+	opacity: 1;
 }
 
 /* ─── Speech bubble ──────────────────────────────────────────────────────── */

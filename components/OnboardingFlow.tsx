@@ -249,7 +249,6 @@ export default function OnboardingFlow() {
 	const [personaId, setPersonaId] = useState<OnboardingPersonaId | "">("");
 	const [message, setMessage] = useState("");
 	const [submitting, setSubmitting] = useState(false);
-	const [charVisible, setCharVisible] = useState(true);
 
 	// Step 2 profile fields
 	const [username, setUsername] = useState("");
@@ -314,20 +313,9 @@ export default function OnboardingFlow() {
 		return () => { cancelled = true; clearTimeout(timeout); };
 	}, [username, originalUsername]);
 
-	function swapCharacter(fn: () => void) {
-		setCharVisible(false);
-		setTimeout(() => {
-			fn();
-			// Double rAF: first frame lets React commit the new src to the DOM,
-			// second frame starts the fade-in after the browser has decoded the
-			// (already-cached) image — eliminates any flash of blank.
-			requestAnimationFrame(() => requestAnimationFrame(() => setCharVisible(true)));
-		}, 220);
-	}
-
 	function handleGoalSelect(id: OnboardingGoalId) {
 		setMessage("");
-		swapCharacter(() => setGoalId(id));
+		setGoalId(id);
 	}
 
 	async function goForward() {
@@ -347,14 +335,14 @@ export default function OnboardingFlow() {
 				setAboutMe(profile.about ?? "");
 			}
 		}
-		swapCharacter(() => setStep(2));
+		setStep(2);
 	}
 
 	function goBack() {
 		setMessage("");
 		setDirection("backward");
 		setPersonaId("");
-		swapCharacter(() => setStep(1));
+		setStep(1);
 	}
 
 	async function exitToHome() {
@@ -633,12 +621,18 @@ export default function OnboardingFlow() {
 						</p>
 					</div>
 
-					{/* eslint-disable-next-line @next/next/no-img-element */}
-					<img
-						alt=""
-						className={`${styles.character} ${!charVisible ? styles.characterHidden : ""}`}
-						src={characterSrc}
-					/>
+					{/* All characters live in the DOM at once — decoded and GPU-composited
+					    on mount. Active one gets opacity:1 via CSS, rest stay at 0.
+					    Transitions are pure GPU opacity blends: zero decode latency. */}
+					{ALL_CHARACTER_SRCS.map((src) => (
+						// eslint-disable-next-line @next/next/no-img-element
+						<img
+							key={src}
+							alt=""
+							className={`${styles.character} ${src === characterSrc ? styles.characterActive : ""}`}
+							src={src}
+						/>
+					))}
 				</div>
 			</section>
 		</main>
