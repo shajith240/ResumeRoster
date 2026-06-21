@@ -100,6 +100,15 @@ const STEP2_CHARACTER: Record<string, string> = {
 	default: "/assets/step1-arjun-welcoming.png",
 };
 
+// All unique character image paths, collected here so the preload effect can
+// reference them without re-deriving on every render.
+const ALL_CHARACTER_SRCS = Array.from(
+	new Set([
+		...Object.values(STEP1_SCENES).map((s) => s.character),
+		...Object.values(STEP2_CHARACTER),
+	]),
+);
+
 // ─── First-person copy ────────────────────────────────────────────────────────
 
 const GOAL_COPY: Record<OnboardingGoalId, { label: string; description: string }> = {
@@ -264,6 +273,16 @@ export default function OnboardingFlow() {
 
 	const { typed, done } = useTypewriter(bubbleText);
 
+	// Preload every character image the moment the component mounts.
+	// By the time the user picks a goal (even 1s later) all assets are in the
+	// browser's decoded image cache, so src-swaps appear instantaneous.
+	useEffect(() => {
+		ALL_CHARACTER_SRCS.forEach((src) => {
+			const img = new Image();
+			img.src = src;
+		});
+	}, []);
+
 	// Debounced username availability check
 	useEffect(() => {
 		const normalized = normalizeUsername(username);
@@ -299,7 +318,10 @@ export default function OnboardingFlow() {
 		setCharVisible(false);
 		setTimeout(() => {
 			fn();
-			setCharVisible(true);
+			// Double rAF: first frame lets React commit the new src to the DOM,
+			// second frame starts the fade-in after the browser has decoded the
+			// (already-cached) image — eliminates any flash of blank.
+			requestAnimationFrame(() => requestAnimationFrame(() => setCharVisible(true)));
 		}, 220);
 	}
 
