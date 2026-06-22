@@ -11,11 +11,13 @@ type QueueResumeRow = Pick<
 	ResumeSummary,
 	| "activation_reviews_completed"
 	| "activation_reviews_required"
+	| "id"
 	| "title"
 >;
 
 type QueueProgress = {
 	completed: number;
+	id: string;
 	ratio: number;
 	remaining: number;
 	required: number;
@@ -29,7 +31,7 @@ type ResumeQueueProgressProps = {
 };
 
 const QUEUE_PROGRESS_SELECT =
-	"title,activation_reviews_required,activation_reviews_completed";
+	"id,title,activation_reviews_required,activation_reviews_completed";
 const REVIEW_FEED_HREF = "/feed?sort=needs";
 const CELEBRATION_MS = 8000;
 
@@ -43,6 +45,7 @@ function toQueueProgress(row: QueueResumeRow): QueueProgress {
 
 	return {
 		completed,
+		id: row.id,
 		ratio: completed / required,
 		remaining,
 		required,
@@ -104,8 +107,8 @@ function writeCache(userId: string, p: QueueProgress | null) {
 	} catch {}
 }
 
-function makeDoneProgress(title: string, required = 2): QueueProgress {
-	return { completed: required, ratio: 1, remaining: 0, required, title };
+function makeDoneProgress(id: string, title: string, required = 2): QueueProgress {
+	return { completed: required, id, ratio: 1, remaining: 0, required, title };
 }
 
 export default function ResumeQueueProgress({
@@ -122,7 +125,8 @@ export default function ResumeQueueProgress({
 	// Guard: only trigger celebration after the first query has resolved.
 	// Without this, a stale cache entry would cause a spurious celebration on mount.
 	const hasInitialLoadedRef = useRef(false);
-	// Remember the last title/required for the celebration card after progress clears.
+	// Remember the last id/title/required for the celebration card after progress clears.
+	const lastIdRef = useRef(progress?.id ?? "");
 	const lastTitleRef = useRef(progress?.title ?? "");
 	const lastRequiredRef = useRef(progress?.required ?? 2);
 
@@ -163,6 +167,7 @@ export default function ResumeQueueProgress({
 			} else {
 				const next = toQueueProgress(waitingResume);
 				wasWaitingRef.current = true;
+				lastIdRef.current = next.id;
 				lastTitleRef.current = next.title;
 				lastRequiredRef.current = next.required;
 				setProgress(next);
@@ -208,6 +213,7 @@ export default function ResumeQueueProgress({
 							// Instant optimistic update — no extra round-trip
 							const next = toQueueProgress(row as unknown as QueueResumeRow);
 							wasWaitingRef.current = true;
+							lastIdRef.current = next.id;
 							lastTitleRef.current = next.title;
 							lastRequiredRef.current = next.required;
 							setProgress(next);
@@ -244,7 +250,7 @@ export default function ResumeQueueProgress({
 
 	// When celebrating, synthesise a "done" progress so the done card renders.
 	const displayProgress = celebrating
-		? makeDoneProgress(lastTitleRef.current, lastRequiredRef.current)
+		? makeDoneProgress(lastIdRef.current, lastTitleRef.current, lastRequiredRef.current)
 		: progress;
 
 	const progressStyle = useMemo(
@@ -256,6 +262,12 @@ export default function ResumeQueueProgress({
 	);
 
 	if (!displayProgress) return null;
+
+	// Waiting: open the resume so the user can review or delete it.
+	// Active/celebrating: open the live resume.
+	const resumeHref = displayProgress.id
+		? `/resume/${displayProgress.id}`
+		: REVIEW_FEED_HREF;
 
 	const remainingLabel =
 		displayProgress.remaining > 0
@@ -277,7 +289,7 @@ export default function ResumeQueueProgress({
 				<Link
 					aria-label={ariaLabel}
 					className={styles.desktopShell}
-					href={REVIEW_FEED_HREF}
+					href={resumeHref}
 					style={progressStyle}
 				>
 					<img
@@ -311,7 +323,7 @@ export default function ResumeQueueProgress({
 					styles.mobileShell,
 					mobileChromeHidden && styles.mobileShellHidden,
 				)}
-				href={REVIEW_FEED_HREF}
+				href={resumeHref}
 				style={progressStyle}
 			>
 				<img
