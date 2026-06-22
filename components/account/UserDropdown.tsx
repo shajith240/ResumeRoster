@@ -1,23 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { Question } from "@phosphor-icons/react";
+import type { ComponentType } from "react";
 import {
 	ArrowLeft,
 	ArrowRight,
 	Bookmark,
 	CheckCircle,
-	DeviceMobile,
 	EnvelopeOpen,
+	Logout,
 	Moon,
 	Palette,
-	Question,
 	ShieldCheck,
-	SignOut,
+	Smartphone,
 	Sun,
-	UserCircle,
-	type IconProps,
-} from "@phosphor-icons/react";
-import type { ComponentType } from "react";
+	UserRound,
+} from "@/components/ui/solar-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -48,7 +47,8 @@ type MenuAction =
 type AppTheme = "dark" | "light";
 type MobilePanel = "main" | "appearance";
 
-type PhosphorIcon = ComponentType<IconProps>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PhosphorIcon = ComponentType<any>;
 
 type MenuItem = {
 	icon: PhosphorIcon;
@@ -98,12 +98,12 @@ const MENU_ITEMS: {
 	],
 	profile: [
 		{
-			icon: UserCircle,
+			icon: UserRound,
 			label: "Your profile",
 			action: "profile",
 		},
 		{
-			icon: DeviceMobile,
+			icon: Smartphone,
 			label: "Install Linted",
 			action: "install",
 		},
@@ -134,7 +134,7 @@ const MENU_ITEMS: {
 		},
 	],
 	account: [
-		{ icon: SignOut, label: "Log out", action: "logout" },
+		{ icon: Logout, label: "Log out", action: "logout" },
 	],
 };
 

@@ -361,7 +361,7 @@ export default function NotificationCenter({ userId }: NotificationCenterProps) 
 					)}
 					type="button"
 				>
-					<Bell aria-hidden="true" size={19} strokeWidth={2.1} />
+					<Bell aria-hidden="true" size={19} />
 					{unreadCount ? (
 						<span className="notification-badge">
 							{unreadCount > 99 ? "99+" : unreadCount}

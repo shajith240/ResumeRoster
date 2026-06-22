@@ -2,7 +2,7 @@
 
 import { useState, type Dispatch, type SetStateAction } from "react";
 import Link from "next/link";
-import { List as Menu, X } from "@phosphor-icons/react";
+import { Menu, X } from "@/components/ui/solar-icons";
 import BrandMark from "@/components/BrandMark";
 import LandingCta from "@/components/LandingCta";
 import {

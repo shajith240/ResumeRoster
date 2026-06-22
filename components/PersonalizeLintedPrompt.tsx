@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { X } from "@phosphor-icons/react";
+import { X } from "@/components/ui/solar-icons";
 import { supabase } from "@/lib/supabase/client";
 import type { ProfileOnboarding } from "@/lib/supabase/types";
 

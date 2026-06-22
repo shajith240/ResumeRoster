@@ -16,7 +16,6 @@ import {
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { DotsThree as MoreHorizontal, X } from "@phosphor-icons/react";
 import {
 	ChevronLeft,
 	ChevronUp,
@@ -24,13 +23,15 @@ import {
 	Download,
 	Edit3,
 	Flag,
-	Forward,
 	Lock,
 	MessageCircle,
+	MoreHorizontal,
 	Share2,
 	Trash2,
 	Unlock,
+	X,
 } from "@/components/ui/solar-icons";
+import { SocialShareButton } from "@/components/ui/social-button";
 import { toast } from "sonner";
 import type { CommentAttachmentOption } from "@/components/CommentMediaToolbar";
 import CommunityMarkdown from "@/components/community/CommunityMarkdown";
@@ -2632,17 +2633,11 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 							</span>
 						</a>
 					)}
-					<button
-						aria-label="Share post"
-						className="post-action-button copy-button community-share-action"
-						onClick={() => {
-							void shareCurrentPost();
-						}}
-						type="button"
-					>
-						<Forward className="post-action-icon" size={16} aria-hidden="true" />
-						<span className="post-action-label">Share</span>
-					</button>
+					<SocialShareButton
+						href={`/community/${post.id}`}
+						title={post.title}
+						wrapperClassName="community-share-action"
+					/>
 					{post.status === "locked" ? (
 						<span className="post-action-button community-static-action">
 							<Lock aria-hidden="true" />

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DotsThree as MoreHorizontal } from "@phosphor-icons/react";
+import { MoreHorizontal } from "@/components/ui/solar-icons";
 import {
 	Loader2,
 	MessageCircle,

@@ -2,8 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { X } from "@phosphor-icons/react";
-import { Clock, Menu, MessageCircle } from "@/components/ui/solar-icons";
+import { Clock, Menu, MessageCircle, X } from "@/components/ui/solar-icons";
 import {
 	clearRecentPosts,
 	RECENT_POSTS_EVENT,

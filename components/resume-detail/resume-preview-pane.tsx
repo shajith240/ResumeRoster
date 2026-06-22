@@ -159,7 +159,6 @@ export function ResumePreviewPane({
 								<Trash
 									className="-ms-1 me-2 opacity-70"
 									size={16}
-									strokeWidth={2}
 									aria-hidden="true"
 								/>
 								Delete submission

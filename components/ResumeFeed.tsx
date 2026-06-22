@@ -17,7 +17,6 @@ import {
 	type SaveButtonPendingAction,
 } from "@/lib/saved-resumes";
 import { supabase } from "@/lib/supabase/client";
-import type { ResumeSummary } from "@/lib/supabase/types";
 import {
 	FeedEmptyState,
 	FeedSkeleton,
@@ -38,7 +37,6 @@ export default function ResumeFeed({
 	activeSort = "best",
 	savedOnly = false,
 }: ResumeFeedProps) {
-	const [copiedId, setCopiedId] = useState("");
 	// Optimistic overrides for save-toggle; falls back to server state once query refetches
 	const [savedOverrides, setSavedOverrides] = useState<Record<string, boolean>>({});
 	const [saveFeatureReady, setSaveFeatureReady] = useState(true);
@@ -86,26 +84,7 @@ export default function ResumeFeed({
 		[pages],
 	);
 
-	async function shareResume(resume: ResumeSummary) {
-		const url = `${window.location.origin}/resume/${resume.id}`;
-
-		if (navigator.share) {
-			await navigator.share({
-				title: resume.title,
-				text: "Lint this resume on Linted",
-				url,
-			});
-			toast.success("Share sheet opened.");
-			return;
-		}
-
-		await navigator.clipboard.writeText(url);
-		setCopiedId(resume.id);
-		toast.success("Link copied.");
-		window.setTimeout(() => setCopiedId(""), 1400);
-	}
-
-	function setResumeSaving(
+function setResumeSaving(
 		resumeId: string,
 		pendingAction: SaveButtonPendingAction | null,
 	) {
@@ -201,12 +180,8 @@ export default function ResumeFeed({
 			<FeedSortBar activeSort={activeSort} savedOnly={savedOnly} />
 			{allResumes.map((resume, index) => (
 				<ResumeFeedCard
-					copiedId={copiedId}
 					index={index}
 					key={resume.id}
-					onShare={(targetResume) => {
-						void shareResume(targetResume);
-					}}
 					onToggleSaved={(targetResume) => {
 						void toggleSavedResume(targetResume);
 					}}

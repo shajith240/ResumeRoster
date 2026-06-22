@@ -527,7 +527,7 @@ export default function AdminDashboard({
 		return (
 			<main className="admin-route page-enter">
 				<section className="admin-access-card">
-					<ShieldCheck size={28} strokeWidth={2} aria-hidden="true" />
+					<ShieldCheck size={28} aria-hidden="true" />
 					<h1>Admin access required</h1>
 					<p>This area is limited to emails listed in ADMIN_EMAILS.</p>
 					<Link className="btn-primary" href={DEFAULT_ADMIN_MESSAGE_LINK}>

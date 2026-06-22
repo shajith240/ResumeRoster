@@ -59,7 +59,7 @@ function ClaimTimer({ deadline }: { deadline: string | null }) {
 	if (expired) {
 		return (
 			<span className={`${styles.timer} ${styles.timerExpired}`}>
-				<X size={12} aria-hidden="true" weight="bold" />
+				<X size={12} aria-hidden="true" />
 				Window closed
 			</span>
 		);
@@ -100,12 +100,12 @@ function ClaimCard({ claim }: { claim: ReviewerClaim }) {
 					<ClaimTimer deadline={claim.review_deadline} />
 				) : state === "completed" ? (
 					<span className={`${styles.timer} ${styles.timerDone}`}>
-						<Check size={12} aria-hidden="true" weight="bold" />
+						<Check size={12} aria-hidden="true" />
 						Review posted
 					</span>
 				) : (
 					<span className={`${styles.timer} ${styles.timerExpired}`}>
-						<X size={12} aria-hidden="true" weight="bold" />
+						<X size={12} aria-hidden="true" />
 						Window closed
 					</span>
 				)}

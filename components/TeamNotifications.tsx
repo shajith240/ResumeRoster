@@ -1,6 +1,5 @@
 "use client";
 
-import { DotsThreeVertical as MoreVertical } from "@phosphor-icons/react";
 import {
 	Bell,
 	Check,
@@ -8,6 +7,7 @@ import {
 	ExternalLink,
 	MessageCircle,
 	MessageSquare,
+	MoreVertical,
 	ShieldCheck,
 	ThumbsUp,
 	UserCheck,
@@ -136,7 +136,7 @@ function NotificationEmpty({
 	return (
 		<div className="flex min-h-[128px] flex-col items-center justify-center gap-2.5 px-5 py-8 text-center text-[0.78rem] font-semibold text-muted-foreground">
 			<span className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-muted/45 text-muted-foreground">
-				<Bell aria-hidden="true" className="size-[18px]" strokeWidth={2} />
+				<Bell aria-hidden="true" className="size-[18px]" />
 			</span>
 			<span>{children}</span>
 		</div>

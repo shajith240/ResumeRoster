@@ -9,8 +9,8 @@ import {
 	ChevronDown,
 	Eye,
 	MessageCircle,
-	Share2,
 } from "@/components/ui/solar-icons";
+import { SocialShareButton } from "@/components/ui/social-button";
 import FeedResumePreview from "@/components/FeedResumePreview";
 import FeedSkeleton from "@/components/feed/FeedSkeleton";
 import RecentPostsPanel from "@/components/RecentPostsPanel";
@@ -53,9 +53,7 @@ type FeedEmptyStateProps = {
 };
 
 type ResumeFeedCardProps = {
-	copiedId: string;
 	index: number;
-	onShare: (resume: ResumeSummary) => void;
 	onToggleSaved: (resume: SavedResumeSummary) => void;
 	previewUrl?: string;
 	previewUrlsLoading: boolean;
@@ -168,9 +166,7 @@ function getResumeAuthorAvatar(
 }
 
 export function ResumeFeedCard({
-	copiedId,
 	index,
-	onShare,
 	onToggleSaved,
 	previewUrl,
 	previewUrlsLoading,
@@ -310,16 +306,10 @@ export function ResumeFeedCard({
 						) : null}
 						<span className="post-action-label">{threadActionLabel}</span>
 					</Link>
-					<button
-						className="post-action-button copy-button"
-						type="button"
-						onClick={() => onShare(resume)}
-						aria-label="Share resume"
-					>
-						<Share2 className="post-action-icon" size={16} aria-hidden="true" />
-						<span className="post-action-label">Share</span>
-						{copiedId === resume.id ? <em>Copied!</em> : null}
-					</button>
+					<SocialShareButton
+						href={`/resume/${resume.id}`}
+						title={resume.title}
+					/>
 					<button
 						aria-label={saveButtonState.ariaLabel}
 						aria-pressed={resume.is_saved}

@@ -6,8 +6,7 @@ import {
 	type FormEvent,
 	type KeyboardEvent,
 } from "react";
-import { X } from "@phosphor-icons/react";
-import { Camera, Plus, Search, Upload } from "@/components/ui/solar-icons";
+import { Camera, Plus, Search, Upload, X } from "@/components/ui/solar-icons";
 import { Button } from "@/components/ui/button";
 import {
 	DialogClose,
@@ -569,7 +568,7 @@ export function ProfileEditDialog({
 						className={styles.footerButton}
 						disabled={saving || usernameBlocksSave}
 					>
-						<Upload data-icon="inline-start" aria-hidden="true" />
+						<Upload size={16} aria-hidden="true" />
 						{saving ? "Saving..." : "Save profile"}
 					</Button>
 				</DialogFooter>

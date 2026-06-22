@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as React from "react";
-import { X } from "@phosphor-icons/react";
+import { X } from "@/components/ui/solar-icons";
 
 import { cn } from "@/lib/utils";
 
@@ -51,9 +51,7 @@ const DialogContent = React.forwardRef<
         data-slot="dialog-close"
       >
         <X
-          width={16}
-          height={16}
-          strokeWidth={2}
+          size={16}
           className="opacity-60 transition-opacity group-hover:opacity-100"
         />
         <span className="sr-only">Close</span>

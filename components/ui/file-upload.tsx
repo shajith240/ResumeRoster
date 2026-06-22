@@ -11,7 +11,6 @@ import {
 	type KeyboardEvent,
 	type ReactNode,
 } from "react";
-import { X } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import {
 	CircleAlert,
@@ -21,6 +20,7 @@ import {
 	Play,
 	Trash,
 	Upload,
+	X,
 } from "@/components/ui/solar-icons";
 
 import { Button } from "@/components/ui/button";

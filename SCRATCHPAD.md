@@ -118,6 +118,17 @@ Live tokens (`--brand`, `--bg-base`, etc.) stay as-is.
 
 ## Current Focus
 
+**Write Post page split-panel redesign (2026-06-21):**
+- `CommunityPostComposer.tsx` restructured: editor controls wrapped in `.reddit-composer-left`, live preview panel added as `.reddit-composer-right` (`<aside>`).
+- Moved `CommunityMarkdown` out of `.reddit-editor` into the right preview panel (uses `variant="default"` — no border-top/muted bg).
+- Preview panel shows: post type badge (`ch-type-badge`), title, topic pill, rendered markdown body, active image, poll options, or empty state.
+- CSS: `.reddit-composer` changed from single-column centered (820px max-width) to `grid-template-columns: minmax(0, 1fr) 400px; gap: 0 28px`.
+- `.community-compose-route` widened to `min(1240px, calc(100% - 40px))`.
+- Preview panel is `position: sticky; top: calc(--app-header-height + 20px)` with scrollable body.
+- Mobile ≤900px: single column, preview stacks below editor.
+
+**Previous Current Focus:**
+
 **Onboarding redesign complete (2026-06-21)** — Full split-panel redesign shipped in `components/OnboardingFlow.tsx` + `components/OnboardingFlow.module.css`. Character + speech bubble + typewriter system (same as submit wizard). Step 1 auto-advances 950ms after goal selection. Character fades/swaps on goal change. Per-goal gradient backgrounds with ambient orb. First-person copy throughout. `complete_onboarding` RPC call unchanged.
 - Assets currently using placeholder step1-4.png — swap for generated Arjun/Priya variants in `/assets/onboarding/` when ready.
 

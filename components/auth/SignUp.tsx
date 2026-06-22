@@ -407,7 +407,7 @@ function SignUp() {
 						<div className={styles.field}>
 							<Label htmlFor="auth-password">Password</Label>
 							<div className={styles.inputWrap}>
-								<Lock aria-hidden="true" size={16} strokeWidth={1.8} />
+								<Lock aria-hidden="true" size={16} />
 								<Input
 									autoComplete={
 										mode === "signin" ? "current-password" : "new-password"
@@ -467,7 +467,7 @@ function SignUp() {
 										? "Sign in"
 										: "Create account"}
 							</span>
-							<ArrowRight aria-hidden="true" size={16} strokeWidth={1.8} />
+							<ArrowRight aria-hidden="true" size={16} />
 						</Button>
 						<p className={styles.legalCopy}>
 							By continuing, you agree to{" "}

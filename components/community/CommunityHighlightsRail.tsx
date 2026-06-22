@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight, ArrowUp, ChatCircle } from "@phosphor-icons/react";
+import { ArrowRight, ArrowUp, MessageCircle as ChatCircle } from "@/components/ui/solar-icons";
 import { supabase } from "@/lib/supabase/client";
 
 type HighlightPost = {
@@ -201,7 +201,7 @@ export default function CommunityHighlightsRail({ hidden }: { hidden?: boolean }
 				<span className="ch-label">Community</span>
 				<Link className="ch-view-all" href="/community">
 					View all
-					<ArrowRight aria-hidden="true" weight="bold" />
+					<ArrowRight aria-hidden="true" />
 				</Link>
 			</div>
 			<div className="ch-scroll">

@@ -23,7 +23,6 @@ import {
 	CodeBlock      as ToolbarCodeBlock,
 	TextStrikethrough as ToolbarStrikethrough,
 	Table          as ToolbarTable,
-	X,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import CommunityMarkdown from "@/components/community/CommunityMarkdown";
@@ -36,6 +35,7 @@ import {
 	Plus,
 	Send,
 	Trash2,
+	X,
 } from "@/components/ui/solar-icons";
 import { announceRouteTransition } from "@/components/RouteTransitionLoader";
 import {
@@ -710,15 +710,9 @@ export default function CommunityPostComposer() {
 			noValidate
 			onSubmit={handleSubmit}
 		>
+		<div className="reddit-composer-left">
 			<header className="reddit-composer-header">
 				<h1>Create post</h1>
-				<button
-					className="reddit-drafts-button"
-					onClick={() => setDraftsOpen(true)}
-					type="button"
-				>
-					Drafts{drafts.length ? ` (${drafts.length})` : ""}
-				</button>
 				<div className="reddit-type-select">
 					<Select
 						value={postType}
@@ -747,6 +741,13 @@ export default function CommunityPostComposer() {
 						</SelectContent>
 					</Select>
 				</div>
+				<button
+					className="reddit-drafts-button"
+					onClick={() => setDraftsOpen(true)}
+					type="button"
+				>
+					Drafts{drafts.length ? ` (${drafts.length})` : ""}
+				</button>
 			</header>
 
 			<nav aria-label="Post format" className="reddit-composer-tabs">
@@ -946,13 +947,6 @@ export default function CommunityPostComposer() {
 						ref={bodyInputRef}
 						value={body}
 					/>
-					{trimmedBody ? (
-						<CommunityMarkdown
-							content={body}
-							inlineImageSources={inlineImageSources}
-							variant="composer"
-						/>
-					) : null}
 				</div>
 			) : null}
 
@@ -1186,6 +1180,69 @@ export default function CommunityPostComposer() {
 			</footer>
 
 			{message ? <p className="form-message">{message}</p> : null}
+		</div>
+
+		<aside className="reddit-composer-right" aria-label="Post preview">
+			<div className="reddit-preview-header">
+				<span className="reddit-preview-label">Preview</span>
+				<span className={`ch-type-badge ch-type-${postType}`}>
+					{COMMUNITY_POST_TYPE_LABELS[postType]}
+				</span>
+			</div>
+			<div className="reddit-preview-body">
+				{!title && !trimmedBody && !images.length && activeTab !== "poll" ? (
+						<div className="reddit-preview-empty">
+							<div className="reddit-preview-empty-icon">
+								<Pencil aria-hidden="true" />
+							</div>
+							<p>Start writing to see your post preview here.</p>
+						</div>
+					) : (
+						<div className="reddit-preview-content">
+							{title ? (
+								<h2 className="reddit-preview-title">{title}</h2>
+							) : (
+								<h2 className="reddit-preview-title reddit-preview-title-placeholder">
+									Untitled post
+								</h2>
+							)}
+							{topicId && topics.length ? (
+								<div className="reddit-preview-meta">
+									<span className="reddit-preview-topic-pill">
+										{topics.find((t) => t.id === topicId)?.name}
+									</span>
+								</div>
+							) : null}
+							{trimmedBody ? (
+								<div className="reddit-preview-markdown-wrap">
+									<CommunityMarkdown
+										content={body}
+										inlineImageSources={inlineImageSources}
+										variant="default"
+									/>
+								</div>
+							) : null}
+							{activeImage ? (
+								<div className="reddit-preview-image-wrap">
+									<img alt={activeImage.file.name} src={activeImage.previewUrl} />
+								</div>
+							) : null}
+							{activeTab === "poll" ? (
+								<div className="reddit-preview-poll">
+									{pollOptions.map((option, index) => (
+										<div
+											className={`reddit-preview-poll-option${!option.trim() ? " reddit-preview-poll-empty-option" : ""}`}
+											key={`preview-poll-${index}`}
+										>
+											{option.trim() || `Option ${index + 1}`}
+										</div>
+									))}
+								</div>
+							) : null}
+					</div>
+				)}
+			</div>
+		</aside>
 
 			{draftsOpen ? (
 				<div

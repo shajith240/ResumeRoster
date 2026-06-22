@@ -2,18 +2,18 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { DotsThree as MoreHorizontal } from "@phosphor-icons/react";
+import { MoreHorizontal } from "@/components/ui/solar-icons";
 import {
 	Check,
 	ChevronDown,
 	Edit3,
-	Forward,
 	Lock,
 	MessageCircle,
 	RefreshCw,
 	Trash2,
 	Unlock,
 } from "@/components/ui/solar-icons";
+import { SocialShareButton } from "@/components/ui/social-button";
 import { toast } from "sonner";
 import CommunityMarkdown from "@/components/community/CommunityMarkdown";
 import CommunityMediaGallery from "@/components/community/CommunityMediaGallery";
@@ -1087,21 +1087,11 @@ export default function CommunityPostFeed() {
 												<span className="sr-only">{commentLabel}</span>
 											</Link>
 										)}
-										<button
-											aria-label="Share post"
-											className="post-action-button copy-button community-share-action"
-											onClick={() => {
-												void sharePost(post);
-											}}
-											type="button"
-										>
-											<Forward
-												aria-hidden="true"
-												className="post-action-icon"
-												size={16}
-											/>
-											<span className="community-share-label">Share</span>
-										</button>
+										<SocialShareButton
+											href={`/community/${post.id}`}
+											title={post.title}
+											wrapperClassName="community-share-action"
+										/>
 										{post.status === "locked" ? (
 											<span className="post-action-button community-static-action">
 												<span className="post-action-label">Locked</span>

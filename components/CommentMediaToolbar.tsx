@@ -1,7 +1,6 @@
 "use client";
 
-import { X } from "@phosphor-icons/react";
-import { ImageIcon, Loader2, Type } from "@/components/ui/solar-icons";
+import { ImageIcon, Loader2, Type, X } from "@/components/ui/solar-icons";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import type {
@@ -138,9 +137,9 @@ export default function CommentMediaToolbar({
 					type="button"
 				>
 					{uploadingImage ? (
-						<Loader2 className="spin-icon" size={16} strokeWidth={2} aria-hidden="true" />
+						<Loader2 className="spin-icon" size={16} aria-hidden="true" />
 					) : (
-						<ImageIcon size={16} strokeWidth={2} aria-hidden="true" />
+						<ImageIcon size={16} aria-hidden="true" />
 					)}
 				</button>
 				<input
@@ -187,9 +186,9 @@ export default function CommentMediaToolbar({
 						type="button"
 					>
 						{deletingImage ? (
-							<Loader2 className="spin-icon" size={16} strokeWidth={2} aria-hidden="true" />
+							<Loader2 className="spin-icon" size={16} aria-hidden="true" />
 						) : (
-							<X size={16} strokeWidth={2} aria-hidden="true" />
+							<X size={16} aria-hidden="true" />
 						)}
 					</button>
 				</div>

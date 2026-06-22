@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { X } from "@phosphor-icons/react";
-import { Maximize2, Minus, Plus } from "@/components/ui/solar-icons";
+import { Maximize2, Minus, Plus, X } from "@/components/ui/solar-icons";
 import type {
 	PDFDocumentLoadingTask,
 	PDFDocumentProxy,
