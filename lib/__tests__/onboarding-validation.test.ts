@@ -48,10 +48,10 @@ describe("onboarding validation", () => {
 		expect(getPersonaProfileLabel("career_coach")).toBe("Career coach");
 	});
 
-	it("routes every onboarded user to the Community home feed first", () => {
-		expect(getOnboardingDestination("get_feedback")).toBe("/community");
-		expect(getOnboardingDestination("review_resumes")).toBe("/community");
-		expect(getOnboardingDestination("both")).toBe("/community");
+	it("routes onboarded users to their goal-appropriate page", () => {
+		expect(getOnboardingDestination("get_feedback")).toBe("/submit");
+		expect(getOnboardingDestination("review_resumes")).toBe("/feed");
+		expect(getOnboardingDestination("both")).toBe("/feed");
 	});
 
 	it("normalizes optional setup fields", () => {

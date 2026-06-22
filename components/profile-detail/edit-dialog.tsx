@@ -517,7 +517,7 @@ export function ProfileEditDialog({
 									)}
 								</div>
 								<div className={styles.skillSearch}>
-									<Search aria-hidden="true" />
+									<Search aria-hidden="true" className={styles.skillSearchIcon} size={15} />
 									<Input
 										id="profile-skills"
 										maxLength={PROFILE_FIELD_LIMITS.skill}

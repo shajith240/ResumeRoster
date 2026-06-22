@@ -824,7 +824,6 @@
 
 .avatarUploadButton:hover {
 	border-color: var(--border-strong);
-	transform: translateY(-1px);
 }
 
 .avatarUploadButton:active {
@@ -1101,7 +1100,6 @@
 .selectedSkillList button:hover,
 .skillSuggestions button:hover {
 	border-color: var(--border-strong);
-	transform: translateY(-1px);
 }
 
 .selectedSkillList button:active,
@@ -1120,15 +1118,22 @@
 	position: relative;
 }
 
-.skillSearch > svg {
+/* Search renders <div><svg/></div> via withParentHover, so target the wrapper div */
+.skillSearchIcon {
 	position: absolute;
 	top: 50%;
 	left: 12px;
 	z-index: 1;
+	transform: translateY(-50%);
+	pointer-events: none;
+	color: var(--text-tertiary);
+	line-height: 0;
+}
+
+.skillSearchIcon svg {
 	width: 15px;
 	height: 15px;
-	color: var(--text-tertiary);
-	transform: translateY(-50%);
+	display: block;
 }
 
 .skillSearch input {

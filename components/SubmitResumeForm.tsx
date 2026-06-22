@@ -295,11 +295,14 @@ function StepProgress({ current }: { current: number }) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
+type ExistingResume = { id: string; title: string; review_queue_status: string };
+
 export default function SubmitResumeForm() {
 	const router = useRouter();
 	const privacyScanRunRef = useRef(0);
 	const [user, setUser] = useState<User | null>(null);
 	const [profile, setProfile] = useState<SubmitProfile | null>(null);
+	const [existingResume, setExistingResume] = useState<ExistingResume | null | undefined>(undefined);
 
 	// form state
 	const [title, setTitle] = useState("");
@@ -330,6 +333,19 @@ export default function SubmitResumeForm() {
 		async function syncUser(activeUser: User | null) {
 			setUser(activeUser);
 			setProfile(await getSubmitProfile(activeUser));
+			if (activeUser) {
+				const { data } = await supabase
+					.from("resumes")
+					.select("id,title,review_queue_status")
+					.eq("user_id", activeUser.id)
+					.eq("status", "open")
+					.order("created_at", { ascending: false })
+					.limit(1)
+					.maybeSingle();
+				setExistingResume((data as ExistingResume | null) ?? null);
+			} else {
+				setExistingResume(null);
+			}
 		}
 		supabase.auth.getUser().then(({ data }) => { void syncUser(data.user); });
 		const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
@@ -527,6 +543,29 @@ export default function SubmitResumeForm() {
 		window.setTimeout(() => { const r = `/resume/${result.id}`; announceRouteTransition(r); router.push(r); }, 500);
 	}
 
+	// Still loading existing resume check — render nothing yet
+	if (existingResume === undefined) return null;
+
+	// User already has a live resume — block the form
+	if (existingResume !== null) {
+		const isWaiting = existingResume.review_queue_status === "waiting";
+		return (
+			<div className={styles.existingResumeBlock}>
+				<p className={styles.existingResumeTitle}>
+					You already have a resume submitted.
+				</p>
+				<p className={styles.existingResumeBody}>
+					{isWaiting
+						? "It's in the review queue. Give 2 guided reviews to activate it in the feed."
+						: "It's live in the feed. Delete it first if you want to submit a new one."}
+				</p>
+				<a href={`/resume/${existingResume.id}`} className={styles.existingResumeLink}>
+					View your resume →
+				</a>
+			</div>
+		);
+	}
+
 	return (
 		<form className="submit-form submit-form-wide" noValidate onSubmit={handleSubmit}>
 			<div className={styles.wizardBody}>
@@ -679,7 +718,7 @@ export default function SubmitResumeForm() {
 							<div className="field-block submit-upload-field">
 								<span>Resume PDF</span>
 								<FileUpload accept=".pdf,application/pdf" className="submit-file-upload" files={uploadFiles} maxCount={1} maxSize={5} onFileSelect={handleFileSelect} onFileSelectChange={handleFileSelectChange} onRemove={clearSelectedFile}>
-									<DropZone browseText="or click to browse" className="submit-pdf-dropzone" prompt="Drop your PDF here" />
+									{!file && <DropZone browseText="or click to browse" className="submit-pdf-dropzone" prompt="Drop your PDF here" />}
 									<FileError />
 									<FileList canRemove className="submit-file-list" onClear={clearSelectedFile} onRemove={clearSelectedFile} showHeader={false} />
 								</FileUpload>

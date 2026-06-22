@@ -148,9 +148,9 @@ export function parseOnboardingExpertise(value: string | string[]) {
 
 export function getOnboardingDestination(goalId: OnboardingGoalId) {
 	const destinations = {
-		both: "/community",
-		get_feedback: "/community",
-		review_resumes: "/community",
+		get_feedback: "/submit",
+		review_resumes: "/feed",
+		both: "/feed",
 	} satisfies Record<OnboardingGoalId, string>;
 
 	return destinations[goalId];
