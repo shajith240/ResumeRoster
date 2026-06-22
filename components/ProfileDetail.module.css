@@ -716,11 +716,18 @@
 	background: color-mix(in srgb, #d4a538 10%, var(--bg-surface));
 }
 
-.trustStatusCard > svg {
+.trustStatusCardIcon {
 	flex: 0 0 auto;
 	width: 20px;
 	height: 20px;
 	color: #d4a538;
+	line-height: 0;
+}
+
+.trustStatusCardIcon svg {
+	width: 20px;
+	height: 20px;
+	display: block;
 }
 
 .trustStatusCard strong,

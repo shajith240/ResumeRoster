@@ -94,25 +94,31 @@
 .rangeTrigger:hover {
 	border-color: var(--border-strong);
 	background: var(--bg-elevated);
-	transform: translateY(-1px);
 }
 
 .rangeTrigger:active {
 	transform: translateY(1px);
 }
 
+/* CalendarDays renders <div><svg/></div> via withParentHover.
+   Target the wrapper div directly; constrain inner svg explicitly. */
 .rangeIcon {
+	flex-shrink: 0;
 	width: 15px;
 	height: 15px;
 	color: var(--brand);
+	line-height: 0;
 }
 
-.rangeTrigger > svg:last-child {
-	width: 14px;
-	height: 14px;
-	margin-left: 2px;
-	opacity: 0.62;
+.rangeIcon svg {
+	width: 15px;
+	height: 15px;
+	display: block;
 }
+
+/* ChevronDown also renders <div><svg/></div> — > svg:last-child never matched.
+   Tailwind h-4 w-4 opacity-60 on the wrapper div handles sizing & opacity fine.
+   The auto margin-left comes from ml-auto on the chevron wrapper via Radix. */
 
 .rangeContent {
 	z-index: 120;

@@ -7,7 +7,7 @@
 	color: var(--text-secondary);
 }
 
-.editorToolbar.editorToolbar > button > svg {
+.editorToolbar.editorToolbar > button svg {
 	stroke-width: 2.15;
 }
 
@@ -45,7 +45,7 @@
 	white-space: nowrap;
 }
 
-.codeLanguageTrigger.codeLanguageTrigger > svg {
+.codeLanguageTrigger.codeLanguageTrigger svg {
 	width: 14px;
 	height: 14px;
 	flex: 0 0 auto;
@@ -80,7 +80,7 @@
 		height: 34px;
 	}
 
-	.editorToolbar.editorToolbar > button > svg {
+	.editorToolbar.editorToolbar > button svg {
 		width: 18px;
 		height: 18px;
 	}

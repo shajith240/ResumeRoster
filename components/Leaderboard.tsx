@@ -157,7 +157,7 @@ export default function Leaderboard() {
 							aria-label="Leaderboard time range"
 							className={styles.rangeTrigger}
 						>
-							<CalendarDays className={styles.rangeIcon} aria-hidden="true" />
+							<CalendarDays className={styles.rangeIcon} size={15} aria-hidden="true" />
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent className={styles.rangeContent}>
