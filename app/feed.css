@@ -3040,50 +3040,27 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 }
 
 .comment-author-chip {
+	display: inline;
 	min-width: 0;
-	height: 28px;
-	border: 1px solid var(--border-subtle);
-	border-radius: var(--button-radius);
-	padding: 0 10px;
-	background: var(--bg-elevated);
+	padding: 0;
+	border: none;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
 	color: var(--text-primary);
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: 650;
-	line-height: 1;
-	box-shadow: var(--shadow-sm);
-	touch-action: manipulation;
-	transition:
-		border-color 140ms var(--button-ease),
-		background-color 140ms var(--button-ease),
-		color 140ms var(--button-ease),
-		transform 100ms var(--button-ease),
-		box-shadow 140ms var(--button-ease);
+	line-height: 1.2;
+	text-decoration: none;
+	transition: color 140ms var(--button-ease);
 }
 
 .comment-author-chip:hover {
-	border-color: rgba(232, 93, 38, 0.26);
-	background: var(--brand-muted);
 	color: var(--brand);
-	transform: translateY(-1px);
-	box-shadow: var(--shadow-md);
 }
 
 .comment-author-chip:active {
-	transform: translateY(0) scale(0.97);
-	box-shadow: var(--shadow-sm);
-}
-
-body.main-app-dark .comment-author-chip {
-	border-color: var(--border-default);
-	background: var(--bg-elevated);
-	color: var(--text-primary);
-	box-shadow: none;
-}
-
-body.main-app-dark .comment-author-chip:hover {
-	border-color: rgba(255, 138, 77, 0.34);
-	background: var(--brand-muted);
-	color: var(--brand);
+	opacity: 0.7;
 }
 
 .thread-roast-body {
@@ -3547,7 +3524,6 @@ body.main-app-dark .comment-author-chip:hover {
 .report-reason-grid button:hover {
 	border-color: color-mix(in srgb, var(--accent) 36%, var(--border-subtle));
 	color: var(--text-primary);
-	transform: translateY(-1px);
 }
 
 .report-reason-grid button.is-selected {

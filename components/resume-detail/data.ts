@@ -213,13 +213,14 @@ async function loadReviewAttachmentMap(loadedReviews: Review[]) {
 	};
 }
 
-async function loadAuthorProfiles(loadedReviews: Review[]) {
+async function loadAuthorProfiles(loadedReviews: Review[], currentUserId?: string | null) {
 	const authorIds = Array.from(
-		new Set(
-			loadedReviews
+		new Set([
+			...(currentUserId ? [currentUserId] : []),
+			...loadedReviews
 				.filter((review) => !review.is_deleted)
 				.map((review) => review.author_id),
-		),
+		]),
 	);
 
 	if (!authorIds.length) return {};
@@ -382,7 +383,7 @@ export async function loadResumeThreadData(
 	);
 	const [attachmentResult, authorProfiles, votes] = await Promise.all([
 		loadReviewAttachmentMap(reviews),
-		loadAuthorProfiles(reviews),
+		loadAuthorProfiles(reviews, activeUser?.id),
 		loadReviewVotes(reviews, activeUser),
 	]);
 

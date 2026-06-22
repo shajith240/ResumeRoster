@@ -366,13 +366,33 @@ export function useResumeDetailController(resumeId: string) {
 			return;
 		}
 
-		setNeedsGuidedReviewCredit(
-			(data ?? []).some(
-				(row) =>
-					(row.activation_reviews_required ?? 0) >
-					(row.activation_reviews_completed ?? 0),
-			),
+		const needsCredits = (data ?? []).some(
+			(row) =>
+				(row.activation_reviews_required ?? 0) >
+				(row.activation_reviews_completed ?? 0),
 		);
+
+		if (!needsCredits) {
+			setNeedsGuidedReviewCredit(false);
+			return;
+		}
+
+		// One guided review per resume per user — check if already given one here.
+		const { data: existingGuided, error: guidedError } = await supabase
+			.from("roasts")
+			.select("id")
+			.eq("resume_id", resumeId)
+			.eq("author_id", activeUser.id)
+			.eq("is_guided_review", true)
+			.limit(1);
+
+		if (guidedError) {
+			// Column may not exist on older schemas — default to allowing guided review.
+			setNeedsGuidedReviewCredit(true);
+			return;
+		}
+
+		setNeedsGuidedReviewCredit((existingGuided?.length ?? 0) === 0);
 	}
 
 	useEffect(() => {
@@ -843,14 +863,18 @@ export function useResumeDetailController(resumeId: string) {
 				[selectedAttachment.id]: selectedAttachment,
 			}));
 		}
-		setAuthorProfiles((current) => ({
-			...current,
-			[user.id]: {
-				id: user.id,
-				username: getAnonymousProfileUsername(user.id),
-				full_name: null,
-			},
-		}));
+		setAuthorProfiles((current) =>
+			current[user.id]
+				? current
+				: {
+						...current,
+						[user.id]: {
+							id: user.id,
+							username: getAnonymousProfileUsername(user.id),
+							full_name: null,
+						},
+					},
+		);
 		setResume((current) =>
 			current ? { ...current, roast_count: current.roast_count + 1 } : current,
 		);
@@ -992,14 +1016,18 @@ export function useResumeDetailController(resumeId: string) {
 			next.delete(parentReview.id);
 			return next;
 		});
-		setAuthorProfiles((current) => ({
-			...current,
-			[user.id]: {
-				id: user.id,
-				username: getAnonymousProfileUsername(user.id),
-				full_name: null,
-			},
-		}));
+		setAuthorProfiles((current) =>
+			current[user.id]
+				? current
+				: {
+						...current,
+						[user.id]: {
+							id: user.id,
+							username: getAnonymousProfileUsername(user.id),
+							full_name: null,
+						},
+					},
+		);
 		setResume((current) =>
 			current ? { ...current, roast_count: current.roast_count + 1 } : current,
 		);

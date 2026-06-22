@@ -381,7 +381,6 @@ body.main-app
 .btn-primary:hover {
 	background: var(--bg-inverse);
 	box-shadow: var(--shadow-md);
-	transform: translateY(-1px);
 }
 
 .btn-primary:active {
@@ -405,7 +404,6 @@ body.main-app
 
 .btn-brand:hover {
 	background: var(--brand-dark);
-	transform: translateY(-1px);
 	box-shadow: var(--shadow-md);
 }
 
@@ -437,7 +435,6 @@ body.main-app-dark .avatar-skeleton {
 	border-color: var(--border-strong);
 	background: var(--bg-base);
 	color: var(--text-primary);
-	transform: translateY(-1px);
 }
 
 .btn-ghost:active {
@@ -1255,7 +1252,6 @@ html[data-app-theme="dark"] .full-page-loader {
 .onboarding-choice-card:hover {
 	border-color: color-mix(in srgb, var(--brand) 28%, var(--border-default));
 	background: color-mix(in srgb, var(--bg-elevated) 92%, var(--brand) 8%);
-	transform: translateY(-1px);
 }
 
 .onboarding-choice-card[aria-pressed="true"] {
@@ -5931,7 +5927,6 @@ body.main-app-dark .form-message {
 
 .landing-wordmark:hover {
 	color: #4a3528;
-	transform: translateY(-1px);
 }
 
 .nav-links {
@@ -5960,7 +5955,6 @@ body.main-app-dark .form-message {
 .nav-links a:hover {
 	background: rgba(23, 19, 15, 0.065);
 	color: #17130f;
-	transform: translateY(-1px);
 }
 
 .nav-actions {
@@ -5990,7 +5984,6 @@ body.main-app-dark .form-message {
 .nav-sign-in:hover {
 	background: rgba(23, 19, 15, 0.065);
 	color: #17130f;
-	transform: translateY(-1px);
 }
 
 .nav-button,
@@ -6038,7 +6031,6 @@ body.main-app-dark .form-message {
 .nav-menu-button:hover {
 	border-color: rgba(35, 31, 27, 0.2);
 	background: rgba(255, 253, 248, 0.96);
-	transform: translateY(-1px);
 }
 
 .nav-menu-button svg {
@@ -6050,7 +6042,6 @@ body.main-app-dark .form-message {
 .nav-button:hover {
 	background: #2a251f;
 	color: #fff;
-	transform: translateY(-1px);
 	box-shadow: 0 12px 26px rgba(17, 17, 17, 0.16);
 }
 
@@ -6154,7 +6145,6 @@ body.main-app-dark .form-message {
 }
 
 .hero-btn:hover {
-	transform: translateY(-2px);
 }
 
 .trust-section {
@@ -7947,7 +7937,6 @@ body.main-app-dark .form-message {
 .footer-brand:hover {
 	color: #fffdf8;
 	opacity: 0.86;
-	transform: translateY(-1px);
 }
 
 .footer-brand-lockup p {

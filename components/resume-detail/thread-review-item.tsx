@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/solar-icons";
 import { toast } from "sonner";
 import ReactionIcon from "@/components/reactions/ReactionIcon";
-import { Button } from "@/components/ui/button";
 import { PresenceAvatar } from "@/components/user-presence/PresenceAvatar";
 import type { MentionSuggestion } from "@/lib/comment-mentions";
 import {
@@ -227,11 +226,9 @@ export function ThreadReviewItem({
 								{isDeleted ? (
 									<span className="deleted-author-chip">Deleted reviewer</span>
 								) : (
-									<Button asChild className="comment-author-chip" size="sm">
-										<Link href={`/profile/${review.author_id}`}>
-											{authorHandle}
-										</Link>
-									</Button>
+									<Link className="comment-author-chip" href={`/profile/${review.author_id}`}>
+										{authorHandle}
+									</Link>
 								)}
 								<time dateTime={review.created_at}>
 									&middot; {formatDate(review.created_at)}

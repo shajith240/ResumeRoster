@@ -1868,11 +1868,9 @@ export default function CommunityPostDetail({ postId }: CommunityPostDetailProps
 									{isUnavailable ? (
 										<span className="deleted-author-chip">Moderated comment</span>
 									) : (
-										<Button asChild className="comment-author-chip" size="sm">
-											<Link href={`/profile/${node.author_id}`}>
-												{authorHandle}
-											</Link>
-										</Button>
+										<Link className="comment-author-chip" href={`/profile/${node.author_id}`}>
+											{authorHandle}
+										</Link>
 									)}
 									<time dateTime={node.created_at}>
 										&middot; {formatDate(node.created_at)}

@@ -39,6 +39,16 @@ Living notebook. Update whenever a decision is made, a task is completed, or som
 
 ---
 
+### 🟠 P2 — Queue bugs (fixed 2026-06-22)
+
+- [x] **DELETE-AND-REUPLOAD BYPASSES GUIDED REVIEW QUEUE** — `create_resume_with_review_queue` RPC called `recalculate_guided_review_queue` unconditionally on every upload. Earned credits from previous resumes (still in `roasts`) were re-applied to the new resume → immediately active. Fixed in migration `20260622_fix_queue_credit_bypass.sql`: check `has_viable_resumes` (waiting resumes that this user hasn't yet guided-reviewed) before deciding status. If viable resumes exist → hold new resume in 'waiting'. If none → promote to 'active'.
+
+- [x] **PRIYA WIDGET CELEBRATION STATE MISSING** — Widget returned `null` when `review_queue_status` changed to 'active' (no more 'waiting' resume to track). Fixed in `ResumeQueueProgress.tsx`: added `celebrating` state + `wasWaitingRef` / `hasInitialLoadedRef` to detect the 'waiting'→'active' transition via both realtime payload and DB query diff. Celebration auto-dismisses after 8s.
+
+- [x] **WIDGET NOT UPDATING LIVE** — 120ms debounce + round-trip query introduced noticeable lag. Fixed: realtime handler now parses `payload.new` directly and calls `setProgress` immediately (instant optimistic update). Background refresh still runs after 80ms to confirm server state. Realtime also detects `review_queue_status = 'active'` in the payload to trigger celebration without waiting for the query.
+
+---
+
 ### 🟠 P2 — Functional correctness issues
 
 - [x] **STRIKE COUNTER IS READ-MODIFY-WRITE** — Fixed: `increment_reviewer_missed_count(uuid)` RPC in migration `20260620000000` atomically increments + applies suspension in a single `UPDATE...RETURNING`. Cron route now calls `.rpc("increment_reviewer_missed_count", ...)` — no read-modify-write.
