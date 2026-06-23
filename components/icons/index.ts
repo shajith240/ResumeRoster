@@ -29,6 +29,7 @@ export * from "./eye-off";
 export * from "./file-pen-line";
 export * from "./file-text";
 export * from "./graduation-cap";
+export * from "./id-card";
 export * from "./history";
 export * from "./home";
 export * from "./italic";

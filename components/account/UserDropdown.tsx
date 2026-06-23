@@ -10,12 +10,12 @@ import {
 	CircleHelp,
 	Contrast,
 	Download,
+	IdCard,
 	Logout,
 	Mailbox,
 	Moon,
 	ShieldCheck,
 	Sun,
-	UserRound,
 } from "@/components/ui/solar-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -98,7 +98,7 @@ const MENU_ITEMS: {
 	],
 	profile: [
 		{
-			icon: UserRound,
+			icon: IdCard,
 			label: "Your profile",
 			action: "profile",
 		},
