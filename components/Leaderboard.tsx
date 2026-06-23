@@ -28,11 +28,6 @@ const rangeLabels: Record<TimeRange, string> = {
 	all: "All Time",
 };
 
-async function applyOnlinePresence<T extends { id: string }>(profiles: T[]) {
-	if (!profiles.length) return profiles;
-	const onlineProfileIds = await loadOnlineProfileIds(profiles.map((p) => p.id));
-	return profiles.map((p) => ({ ...p, is_online: onlineProfileIds.has(p.id) }));
-}
 
 async function fetchLeaderboardFromApi(range: TimeRange): Promise<{
 	leaderboard: { message: string; reviewers: LeaderboardReviewer[] };
@@ -76,10 +71,18 @@ export default function Leaderboard() {
 			setMessage("");
 
 			const data = await fetchLeaderboardFromApi(range);
-			const [rankedReviewers, rankedDirectory] = await Promise.all([
-				applyOnlinePresence(data.leaderboard.reviewers),
-				applyOnlinePresence(data.directory.reviewers),
-			]);
+			// Single presence lookup covering both lists — avoids two Supabase RPC calls
+			const allProfiles = [
+				...data.leaderboard.reviewers,
+				...data.directory.reviewers,
+			];
+			const onlineIds = allProfiles.length
+				? await loadOnlineProfileIds(allProfiles.map((p) => p.id))
+				: new Set<string>();
+			const withOnline = (profiles: LeaderboardReviewer[]) =>
+				profiles.map((p) => ({ ...p, is_online: onlineIds.has(p.id) }));
+			const rankedReviewers = withOnline(data.leaderboard.reviewers);
+			const rankedDirectory = withOnline(data.directory.reviewers);
 
 			if (!active) return;
 
@@ -108,7 +111,7 @@ export default function Leaderboard() {
 
 			refreshTimer = window.setTimeout(() => {
 				void loadLeaderboard(true);
-			}, 220);
+			}, 800);
 		}
 
 		void loadLeaderboard();
@@ -118,11 +121,6 @@ export default function Leaderboard() {
 			.on(
 				"postgres_changes",
 				{ event: "*", schema: "public", table: "roasts" },
-				scheduleRefresh,
-			)
-			.on(
-				"postgres_changes",
-				{ event: "*", schema: "public", table: "profiles" },
 				scheduleRefresh,
 			)
 			.subscribe();

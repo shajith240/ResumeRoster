@@ -483,7 +483,8 @@
 }
 
 .planBadgeFree,
-.planBadgePremium {
+.planBadgePremium,
+.planBadgeComingSoon {
 	display: inline-flex;
 	align-items: center;
 	padding: 2px 7px;
@@ -507,15 +508,16 @@
 }
 
 .planBadgeComingSoon {
-	color: color-mix(in srgb, #7c3aed 70%, var(--text-primary));
-	background: color-mix(in srgb, #7c3aed 10%, var(--bg-elevated));
-	border: 1px solid color-mix(in srgb, #7c3aed 30%, transparent);
-	font-style: italic;
-	letter-spacing: 0.01em;
+	color: color-mix(in srgb, var(--premium) 80%, var(--text-primary));
+	background: color-mix(in srgb, var(--premium) 10%, var(--bg-elevated));
+	border: 1px solid color-mix(in srgb, var(--premium) 28%, transparent);
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
 }
 
 .optionCardDisabled {
-	opacity: 0.6;
+	opacity: 0.72;
 	cursor: not-allowed;
 	pointer-events: none;
 }

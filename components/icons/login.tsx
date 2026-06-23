@@ -1,11 +1,8 @@
 "use client";
 
-import type { Variants } from "motion/react";
 import { motion, useAnimation } from "motion/react";
 import type { HTMLAttributes } from "react";
-import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
-
-import { cn } from "@/lib/utils";
+import { forwardRef, useImperativeHandle } from "react";
 
 export interface LogInIconHandle {
   startAnimation: () => void;
@@ -16,59 +13,17 @@ interface LogInIconProps extends HTMLAttributes<HTMLDivElement> {
   size?: number;
 }
 
-const PATH_VARIANTS: Variants = {
-  animate: {
-    x: -2,
-    translateX: [0, 3, 0],
-    transition: {
-      duration: 0.4,
-    },
-  },
-};
-
 const LogInIcon = forwardRef<LogInIconHandle, LogInIconProps>(
-  ({ onMouseEnter, onMouseLeave, className, size = 28, ...props }, ref) => {
+  ({ className, size = 28, ...props }, ref) => {
     const controls = useAnimation();
-    const isControlledRef = useRef(false);
 
-    useImperativeHandle(ref, () => {
-      isControlledRef.current = true;
-
-      return {
-        startAnimation: () => controls.start("animate"),
-        stopAnimation: () => controls.start("normal"),
-      };
-    });
-
-    const handleMouseEnter = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        if (isControlledRef.current) {
-          onMouseEnter?.(e);
-        } else {
-          controls.start("animate");
-        }
-      },
-      [controls, onMouseEnter]
-    );
-
-    const handleMouseLeave = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        if (isControlledRef.current) {
-          onMouseLeave?.(e);
-        } else {
-          controls.start("normal");
-        }
-      },
-      [controls, onMouseLeave]
-    );
+    useImperativeHandle(ref, () => ({
+      startAnimation: () => controls.start("animate"),
+      stopAnimation: () => controls.start("normal"),
+    }));
 
     return (
-      <div
-        className={cn(className)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        {...props}
-      >
+      <div className={className} {...props}>
         <svg
           fill="none"
           height={size}
@@ -78,22 +33,18 @@ const LogInIcon = forwardRef<LogInIconHandle, LogInIconProps>(
           strokeWidth="2"
           viewBox="0 0 24 24"
           width={size}
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-          <motion.polyline
+          <motion.g
             animate={controls}
-            points="10 17 15 12 10 7"
-            variants={PATH_VARIANTS}
-          />
-          <motion.line
-            animate={controls}
-            variants={PATH_VARIANTS}
-            x1="3"
-            x2="15"
-            y1="12"
-            y2="12"
-          />
+            variants={{
+              normal: { x: 0 },
+              animate: { x: [0, 3, 0], transition: { duration: 0.4, ease: "easeInOut" } },
+            }}
+          >
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="3" x2="15" y1="12" y2="12" />
+          </motion.g>
         </svg>
       </div>
     );
@@ -101,5 +52,4 @@ const LogInIcon = forwardRef<LogInIconHandle, LogInIconProps>(
 );
 
 LogInIcon.displayName = "LogInIcon";
-
 export { LogInIcon };

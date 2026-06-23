@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -483,9 +483,8 @@ export function StackedList({
 
 			{message ? <p className="form-message m-5">{message}</p> : null}
 
-			<motion.div
+			<div
 				className="max-h-[min(calc(62vh_-_var(--mobile-dock-space,0px)),720px)] overflow-y-auto [scrollbar-gutter:stable]"
-				layout={!reducedMotion}
 			>
 				<AnimatePresence initial={false}>
 					{filteredReviewers.map(({ rank, reviewer }) => (
@@ -497,7 +496,7 @@ export function StackedList({
 						/>
 					))}
 				</AnimatePresence>
-			</motion.div>
+			</div>
 
 			{!filteredReviewers.length && !message ? (
 				<div className="leaderboard-empty">
@@ -515,7 +514,7 @@ export function StackedList({
 					<motion.button
 						animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
 						aria-label="Open community directory"
-						className="absolute bottom-4 left-4 right-4 z-30 flex h-[76px] items-center justify-between gap-4 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 text-left shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors hover:bg-[var(--bg-surface)] will-change-transform max-[760px]:bottom-3 max-[760px]:left-3 max-[760px]:right-3"
+						className="absolute bottom-4 left-4 right-4 z-30 flex h-[76px] items-center justify-between gap-4 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 text-left shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors hover:border-[var(--border-strong)] hover:bg-[color-mix(in_srgb,var(--bg-elevated),white_5%)] will-change-transform max-[760px]:bottom-3 max-[760px]:left-3 max-[760px]:right-3"
 						exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.992 }}
 						initial={reducedMotion ? false : { opacity: 0, y: 8, scale: 0.992 }}
 						key="directory-closed"
@@ -620,3 +619,5 @@ export function StackedList({
 		</section>
 	);
 }
+
+
