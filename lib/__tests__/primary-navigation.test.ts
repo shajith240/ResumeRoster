@@ -12,8 +12,8 @@ describe("primary navigation", () => {
 		expect(
 			getPrimaryNavigationItems({ pathname: "/feed" }).map((item) => item.id),
 		).toEqual([
-			"community",
 			"feed",
+			"community",
 			"submit",
 			"community-new",
 			"leaderboard",
@@ -22,8 +22,8 @@ describe("primary navigation", () => {
 
 	it("exposes community routes in the primary mobile dock when enabled", () => {
 		expect(getIds("/feed")).toEqual([
-			"community",
 			"feed",
+			"community",
 			"submit",
 			"community-new",
 			"leaderboard",
@@ -67,13 +67,13 @@ describe("primary navigation", () => {
 
 		expect(resumeFeedItems.find((item) => item.id === "feed")).toMatchObject({
 			active: true,
-			label: "Resume Feed",
-			mobileLabel: "Resume",
+			label: "Home",
+			mobileLabel: "Home",
 		});
 		expect(resumeFeedItems.find((item) => item.id === "community")).toMatchObject(
 			{
 				label: "Community",
-				mobileLabel: "Home",
+				mobileLabel: "Forum",
 			},
 		);
 		expect(detailItems.find((item) => item.id === "community")?.active).toBe(

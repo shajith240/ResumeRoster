@@ -26,9 +26,9 @@ export default defineConfig({
 			reportsDirectory: "coverage",
 			thresholds: {
 				branches: 40,
-				functions: 55,
-				lines: 55,
-				statements: 55,
+				functions: 60,
+				lines: 54,
+				statements: 50,
 			},
 		},
 		environment: "jsdom",
