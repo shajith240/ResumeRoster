@@ -20,7 +20,6 @@ import FileUpload, {
 	FileList,
 	type FileInfo,
 } from "@/components/ui/file-upload";
-import { getAnonymousProfileUsername } from "@/lib/anonymous-profile";
 import {
 	assessResumePrivacyText,
 	MAX_PRIVACY_SCAN_PAGES,
@@ -45,7 +44,6 @@ import {
 	type RazorpayCheckoutInstance,
 	type RazorpayCheckoutOptions,
 	type RazorpayCheckoutResponse,
-	PREMIUM_REVIEW_ENABLED,
 } from "@/lib/premium-payments";
 import styles from "./SubmitResumeForm.module.css";
 
@@ -67,29 +65,12 @@ function loadRazorpayScript(): Promise<void> {
 	});
 }
 
-type SubmitProfile = {
-	full_name: string | null;
-	username: string | null;
-	college?: string | null;
-	target_role?: string | null;
-	current_position?: string | null;
-};
-
 type PrivacyScanState =
 	| { status: "idle"; findings: PrivacyFinding[]; message: string }
 	| { status: "checking"; findings: PrivacyFinding[]; message: string }
 	| { status: "clear"; findings: PrivacyFinding[]; message: string; pageCount: number; scannedPageCount: number }
 	| { status: "warning"; findings: PrivacyFinding[]; message: string; pageCount: number; scannedPageCount: number }
 	| { status: "error"; findings: PrivacyFinding[]; message: string };
-
-function profileDisplayName(profile: SubmitProfile | null, user: User | null) {
-	return (
-		profile?.full_name?.trim() ||
-		profile?.username?.trim().replace(/^@+/, "") ||
-		(user ? getAnonymousProfileUsername(user.id) : "") ||
-		"your profile"
-	);
-}
 
 function isTextItem(item: TextItem | TextMarkedContent): item is TextItem {
 	return "str" in item;
@@ -138,22 +119,6 @@ async function scanPdfPrivacy(file: File): Promise<PrivacyScanState> {
 	}
 }
 
-async function getSubmitProfile(activeUser: User | null) {
-	if (!activeUser) return null;
-	const primaryResult = await supabase
-		.from("profiles")
-		.select("full_name,username,college,target_role,current_position")
-		.eq("id", activeUser.id)
-		.maybeSingle();
-	if (primaryResult.error && /current_position|schema cache|column/i.test(primaryResult.error.message)) {
-		const fallbackResult = await supabase.from("profiles").select("full_name,username,college,target_role").eq("id", activeUser.id).maybeSingle();
-		if (fallbackResult.error) return null;
-		return fallbackResult.data as SubmitProfile | null;
-	}
-	if (primaryResult.error) return null;
-	return primaryResult.data as SubmitProfile | null;
-}
-
 // ─── Typewriter hook ──────────────────────────────────────────────────────────
 
 function useTypewriter(text: string, active: boolean, speed = 22) {
@@ -176,7 +141,6 @@ function useTypewriter(text: string, active: boolean, speed = 22) {
 			clearTimeout(delayId);
 			if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
 		};
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [active]);
 
 	return { typed: text.slice(0, count), done: count >= text.length };
@@ -302,7 +266,6 @@ export default function SubmitResumeForm() {
 	const router = useRouter();
 	const privacyScanRunRef = useRef(0);
 	const [user, setUser] = useState<User | null>(null);
-	const [profile, setProfile] = useState<SubmitProfile | null>(null);
 	const [existingResume, setExistingResume] = useState<ExistingResume | null | undefined>(undefined);
 
 	// form state
@@ -333,7 +296,6 @@ export default function SubmitResumeForm() {
 	useEffect(() => {
 		async function syncUser(activeUser: User | null) {
 			setUser(activeUser);
-			setProfile(await getSubmitProfile(activeUser));
 			if (activeUser) {
 				const { data } = await supabase
 					.from("resumes")
@@ -429,8 +391,6 @@ export default function SubmitResumeForm() {
 	function handleBack() {
 		if (currentStep > 1) goToStep(currentStep - 1, "backward");
 	}
-
-	const publicProfileName = profileDisplayName(profile, user);
 
 	const trimmedTitle = title.trim();
 	const trimmedJD = jobDescription.trim();

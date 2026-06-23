@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-type Action = "force_refund" | "assign_reviewer" | "retry_refund";
+type _Action = "force_refund" | "assign_reviewer" | "retry_refund";
 
 export async function POST(
 	request: Request,

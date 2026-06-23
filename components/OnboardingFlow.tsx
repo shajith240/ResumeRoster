@@ -433,7 +433,6 @@ export default function OnboardingFlow() {
 
 	return (
 		<main className="onboarding-route page-enter">
-			{/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
 			<section className={styles.shell} role="main" aria-label="Onboarding">
 				{/* ── Full-width progress bar ── */}
 				<div
@@ -625,7 +624,6 @@ export default function OnboardingFlow() {
 					    on mount. Active one gets opacity:1 via CSS, rest stay at 0.
 					    Transitions are pure GPU opacity blends: zero decode latency. */}
 					{ALL_CHARACTER_SRCS.map((src) => (
-						// eslint-disable-next-line @next/next/no-img-element
 						<img
 							key={src}
 							alt=""

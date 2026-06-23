@@ -85,7 +85,6 @@ import { ShieldCheckIcon       } from "@/components/icons";
 import { SmartphoneNfcIcon     } from "@/components/icons";
 import { SparklesIcon          } from "@/components/icons";
 import { SquarePenIcon         } from "@/components/icons";
-import { SquareStackIcon       } from "@/components/icons";
 import { SunIcon               } from "@/components/icons";
 import { SwitchCameraIcon      } from "@/components/icons";
 import { TerminalIcon          } from "@/components/icons";

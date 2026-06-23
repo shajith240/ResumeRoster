@@ -51,7 +51,6 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { getFreshAuthSession } from "@/lib/auth-session";
 import {
 	buildMentionSuggestions,

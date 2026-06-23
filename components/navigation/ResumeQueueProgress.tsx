@@ -104,7 +104,7 @@ function writeCache(userId: string, p: QueueProgress | null) {
 		} else {
 			sessionStorage.removeItem(PROGRESS_CACHE_PREFIX + userId);
 		}
-	} catch {}
+	} catch { /* sessionStorage unavailable (private browsing / SSR) */ }
 }
 
 function makeDoneProgress(id: string, title: string, required = 2): QueueProgress {

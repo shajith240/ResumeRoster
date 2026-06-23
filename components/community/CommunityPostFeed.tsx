@@ -740,7 +740,7 @@ export default function CommunityPostFeed() {
 		}
 	}
 
-	async function sharePost(post: CommunityPostFeedItem) {
+	async function _sharePost(post: CommunityPostFeedItem) {
 		const shareUrl = new URL(`/community/${post.id}`, window.location.origin).toString();
 
 		try {

@@ -31,7 +31,6 @@ import {
 	getSaveButtonState,
 	type SaveButtonPendingAction,
 } from "@/lib/saved-resumes";
-import type { ResumeSummary } from "@/lib/supabase/types";
 import {
 	formatDate,
 	getReviewSignal,

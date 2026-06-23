@@ -15,7 +15,7 @@ import { POST } from "@/app/api/payments/verify/route";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { verifyRazorpayPaymentSignature, issueRazorpayRefund } from "@/lib/razorpay";
 import { enforceUploadSecurity } from "@/lib/server/upload-security";
-import { redactResumePdf, buildRedactionProfileFromUser } from "@/lib/pdf-redaction";
+import { redactResumePdf } from "@/lib/pdf-redaction";
 import { requireSignedInUser } from "@/lib/server-auth";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 

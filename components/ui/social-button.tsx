@@ -90,7 +90,7 @@ export function SocialShareButton({
 			await navigator.clipboard.writeText(getFullUrl());
 			setCopied(true);
 			window.setTimeout(() => setCopied(false), 2000);
-		} catch {}
+		} catch { /* clipboard API unavailable — silently skip copy */ }
 		setOpen(false);
 	}
 
