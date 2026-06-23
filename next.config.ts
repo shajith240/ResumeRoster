@@ -25,10 +25,12 @@ const nextConfig: NextConfig = {
 		ignoreDuringBuilds: true,
 	},
 	images: {
-		// Allow Next.js <Image> to serve optimised (WebP/AVIF) avatars from Supabase Storage.
-		remotePatterns: supabaseHostname
-			? [{ protocol: "https", hostname: supabaseHostname }]
-			: [],
+		// Allow Next.js <Image> to serve optimised (WebP/AVIF) avatars from Supabase Storage,
+		// and serve dicebear initials SVGs (fallback avatars) through the same pipeline.
+		remotePatterns: [
+			...(supabaseHostname ? [{ protocol: "https" as const, hostname: supabaseHostname }] : []),
+			{ protocol: "https" as const, hostname: "api.dicebear.com" },
+		],
 		// Generate AVIF first (smaller), then WebP as fallback.
 		formats: ["image/avif", "image/webp"],
 	},

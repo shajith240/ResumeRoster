@@ -1,3 +1,4 @@
+﻿import Image from "next/image";
 import Link from "next/link";
 import { MoreHorizontal } from "@/components/ui/solar-icons";
 import {
@@ -6,6 +7,7 @@ import {
 	Share2,
 	Trash2,
 } from "@/components/ui/solar-icons";
+import { BadgeCheck } from "@/components/ui/solar-icons";
 import { toast } from "sonner";
 import ReactionIcon from "@/components/reactions/ReactionIcon";
 import { PresenceAvatar } from "@/components/user-presence/PresenceAvatar";
@@ -15,6 +17,7 @@ import {
 	getReplyBlockReason,
 	type ThreadReviewNode,
 } from "@/lib/resume-thread";
+import { isTrustedReviewer } from "@/lib/reviewer-validation";
 import { CommentComposer } from "./comment-composer";
 import {
 	FormattedReviewContent,
@@ -208,13 +211,13 @@ export function ThreadReviewItem({
 						<span className="thread-roast-avatar is-deleted">D</span>
 					) : (
 						<PresenceAvatar isOnline={authorProfile?.is_online} size="md">
-							<img
+							<Image
 								className="thread-roast-avatar"
 								src={getAuthorAvatar(review.author_id, authorProfile)}
 								alt=""
 								width={32}
 								height={32}
-								aria-hidden="true"
+								aria-hidden={true}
 							/>
 						</PresenceAvatar>
 					)}
@@ -230,6 +233,14 @@ export function ThreadReviewItem({
 										{authorHandle}
 									</Link>
 								)}
+								{!isDeleted && isTrustedReviewer(authorProfile?.reviewer_verification_status) ? (
+									<BadgeCheck
+										className="comment-author-verified-tick"
+										size={14}
+										weight="fill"
+										aria-label="Trusted reviewer"
+									/>
+								) : null}
 								<time dateTime={review.created_at}>
 									&middot; {formatDate(review.created_at)}
 								</time>

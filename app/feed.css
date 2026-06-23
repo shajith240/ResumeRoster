@@ -2849,13 +2849,20 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 	display: flex;
 	align-items: flex-start;
 	gap: var(--thread-roast-gap, 12px);
-	border-bottom: 1px solid var(--border-subtle);
 	padding: var(--thread-item-padding-y, 16px) 0;
 	isolation: isolate;
 }
 
-.thread-roast.is-reply {
-	border-bottom: 0;
+/* Separator starts after the avatar+gap so it never crosses the vertical rail line */
+.thread-roast:not(.is-reply)::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: calc(var(--thread-avatar-size, 32px) + var(--thread-roast-gap, 12px));
+	right: 0;
+	height: 1px;
+	background: var(--border-subtle);
+	pointer-events: none;
 }
 
 .thread-roast-avatar-cell {
@@ -3037,6 +3044,11 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 	font-size: 12px;
 	line-height: 1.2;
 	white-space: nowrap;
+}
+
+.comment-author-verified-tick {
+	flex: 0 0 auto;
+	color: #1d9bf0;
 }
 
 .comment-author-chip {

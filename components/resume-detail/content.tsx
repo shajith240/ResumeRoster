@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import {
 	canShowReviewerProfile,
-	getReviewerDisplayLabel,
+	getReviewerTypeLabel,
 	isTrustedReviewer,
 } from "@/lib/reviewer-validation";
 import type { CommentAttachmentOption } from "@/components/CommentMediaToolbar";
@@ -37,7 +37,7 @@ export function ReviewerTrustChip({ profile }: { profile?: AuthorProfile }) {
 					: "Self-described reviewer role"
 			}
 		>
-			{getReviewerDisplayLabel(profile ?? {})}
+			{getReviewerTypeLabel(profile?.reviewer_type)}
 		</span>
 	);
 }

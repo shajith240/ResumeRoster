@@ -19,6 +19,9 @@ export function getAuthorHandle(authorId: string, profile?: AuthorProfile) {
 }
 
 export function getAuthorAvatar(authorId: string, profile?: AuthorProfile) {
+	if (profile?.avatar_url?.trim()) {
+		return profile.avatar_url.trim();
+	}
 	const seed = profile?.full_name || profile?.username || authorId;
 	return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}`;
 }
