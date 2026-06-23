@@ -575,7 +575,6 @@ export default function SubmitResumeForm() {
 										maxLength={JOB_DESCRIPTION_MAX_LENGTH}
 										placeholder="Paste the JD, responsibilities, requirements, and keywords."
 										aria-invalid={jdError}
-										autoFocus
 									/>
 									<span className={[styles.charCount, trimmedJD.length >= JOB_DESCRIPTION_MIN_LENGTH ? styles.charCountDone : trimmedJD.length > 0 ? styles.charCountWarn : ""].filter(Boolean).join(" ")}>
 										{trimmedJD.length}/{JOB_DESCRIPTION_MIN_LENGTH}
@@ -620,7 +619,6 @@ export default function SubmitResumeForm() {
 									maxLength={120}
 									placeholder="Backend internship resume"
 									aria-invalid={titleError}
-									autoFocus
 								/>
 								{titleError && <span className={styles.fieldError}>Give your resume a title.</span>}
 							</div>

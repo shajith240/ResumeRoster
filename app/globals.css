@@ -267,6 +267,20 @@ html {
 	scrollbar-gutter: stable;
 }
 
+/* The html element IS the viewport — it shows through the route-transition-loader
+   while it fades in (opacity 0→1 over 180ms) and through any gap where body
+   classes are temporarily absent during page navigation. Setting background here
+   (not just on body) is the only reliable way to eliminate the white flash.
+   color-scheme is intentionally NOT set here — setting it on html changes the
+   native scrollbar width (classic↔overlay) mid-session, causing a layout shift. */
+html[data-app-theme="dark"] {
+	background: #101114;
+}
+
+html:not([data-app-theme="dark"]) {
+	background: #f2efe9;
+}
+
 html,
 body {
 	min-height: 100%;

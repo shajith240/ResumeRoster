@@ -17,6 +17,7 @@ export {
   BookmarkCheckIcon,    type BookmarkCheckIconHandle,
   BookmarkPlusIcon,     type BookmarkPlusIconHandle,
   BriefcaseBusinessIcon,type BriefcaseBusinessIconHandle,
+  CctvIcon,
   CalendarDaysIcon,     type CalendarDaysIconHandle,
   CheckIcon,            type CheckIconHandle,
   CheckCheckIcon,       type CheckCheckIconHandle,

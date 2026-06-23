@@ -2726,8 +2726,7 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 	--thread-item-padding-y: 16px;
 	--thread-rail-hit-width: 32px;
 	--thread-rail-mask-width: 9px;
-	--thread-rail-width: 1.5px;
-	--thread-curve-stroke-width: 1.7px;
+	--thread-rail-width: 1px;
 	--thread-roast-gap: 12px;
 	--thread-toggle-size: 17px;
 	--thread-mask-color: var(--app-canvas-bg);
@@ -2755,12 +2754,10 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 	position: absolute;
 	top: var(--thread-item-padding-y, 16px);
 	bottom: 0;
-	left: calc(
-		(var(--thread-avatar-size, 32px) / 2) -
-			(var(--thread-rail-width, 1.5px) / 2)
-	);
+	left: calc(var(--thread-avatar-size, 32px) / 2);
 	z-index: 0;
 	width: var(--thread-rail-width, 1.5px);
+	transform: translateX(-50%);
 	border-radius: var(--radius-pill);
 	background: var(--thread-line-color);
 	content: "";
@@ -2799,7 +2796,7 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 .thread-branch-curve path {
 	fill: none;
 	stroke: currentColor;
-	stroke-linecap: butt;
+	stroke-linecap: round;
 	stroke-linejoin: round;
 	stroke-width: var(
 		--thread-curve-stroke-width,
@@ -2853,8 +2850,9 @@ body.main-app-dark .comment-composer .comment-composer-input:focus {
 	isolation: isolate;
 }
 
-/* Separator starts after the avatar+gap so it never crosses the vertical rail line */
-.thread-roast:not(.is-reply)::after {
+/* Separator starts after the avatar+gap so it never crosses the vertical rail line.
+   Applies to both top-level comments and nested replies. */
+.thread-roast::after {
 	content: "";
 	position: absolute;
 	bottom: 0;

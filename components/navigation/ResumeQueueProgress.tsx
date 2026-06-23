@@ -80,10 +80,16 @@ function getPriyaDialogue(completed: number, remaining: number, required: number
 		: `${remaining} more to go, you got this!`;
 }
 
+const PRIYA_IMAGES = [
+	"/assets/priya-state1-forsidebar.png",
+	"/assets/priya-state2-forsidebar.png",
+	"/assets/priya-state3-forsidebar.png",
+] as const;
+
 function getPriyaImageSrc(completed: number, remaining: number): string {
-	if (remaining === 0) return "/assets/priya-state3-forsidebar.png";
-	if (completed > 0) return "/assets/priya-state2-forsidebar.png";
-	return "/assets/priya-state1-forsidebar.png";
+	if (remaining === 0) return PRIYA_IMAGES[2];
+	if (completed > 0) return PRIYA_IMAGES[1];
+	return PRIYA_IMAGES[0];
 }
 
 const PROGRESS_CACHE_PREFIX = "rr_qp_";
@@ -129,6 +135,10 @@ export default function ResumeQueueProgress({
 	const lastIdRef = useRef(progress?.id ?? "");
 	const lastTitleRef = useRef(progress?.title ?? "");
 	const lastRequiredRef = useRef(progress?.required ?? 2);
+
+	useEffect(() => {
+		PRIYA_IMAGES.forEach((src) => { new Image().src = src; });
+	}, []);
 
 	// Auto-dismiss celebration after CELEBRATION_MS
 	useEffect(() => {

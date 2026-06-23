@@ -23,7 +23,7 @@ export function getAuthorAvatar(authorId: string, profile?: AuthorProfile) {
 		return profile.avatar_url.trim();
 	}
 	const seed = profile?.full_name || profile?.username || authorId;
-	return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}`;
+	return `https://api.dicebear.com/9.x/initials/png?seed=${encodeURIComponent(seed)}&size=64`;
 }
 
 export function isMissingColumnError(error: { message?: string } | null, column: string) {

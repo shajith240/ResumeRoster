@@ -165,8 +165,6 @@ function SignUp() {
 			window.removeEventListener(APP_THEME_CHANGE_EVENT, handleThemeChange);
 			document.body.classList.remove("main-app");
 			document.body.classList.remove("main-app-dark");
-			document.documentElement.classList.remove("dark");
-			delete document.documentElement.dataset.appTheme;
 		};
 	}, []);
 
