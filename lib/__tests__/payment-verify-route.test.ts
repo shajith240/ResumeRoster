@@ -333,7 +333,7 @@ describe("POST /api/payments/verify", () => {
 
 	it("issues an immediate refund and returns 500 when the storage upload fails", async () => {
 		const { upload } = mockHappyPathAdmin();
-		upload.mockResolvedValue({ error: { message: "storage bucket full" } });
+		upload.mockResolvedValue({ error: { message: "storage bucket full" } } as never);
 
 		const response = await POST(makeRequest());
 
@@ -349,7 +349,7 @@ describe("POST /api/payments/verify", () => {
 		rpc.mockResolvedValue({
 			data: null,
 			error: { message: "insert failed", code: "50000" },
-		});
+		} as never);
 
 		const response = await POST(makeRequest());
 
@@ -365,7 +365,7 @@ describe("POST /api/payments/verify", () => {
 		rpc.mockResolvedValue({
 			data: null,
 			error: { message: "duplicate key value", code: "23505" },
-		});
+		} as never);
 
 		const response = await POST(makeRequest());
 
@@ -376,7 +376,7 @@ describe("POST /api/payments/verify", () => {
 
 	it("records a failed-refund audit entry when Razorpay refund itself throws", async () => {
 		const { rpc, admin } = mockHappyPathAdmin();
-		rpc.mockResolvedValue({ data: null, error: { message: "rpc error", code: "50000" } });
+		rpc.mockResolvedValue({ data: null, error: { message: "rpc error", code: "50000" } } as never);
 		vi.mocked(issueRazorpayRefund).mockRejectedValue(new Error("Razorpay unreachable"));
 
 		// Capture the existing mockImplementation BEFORE replacing it so we can

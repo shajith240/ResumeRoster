@@ -14,6 +14,8 @@
 		"docs/**/*.md",
 		"supabase/MIGRATIONS.md",
 		"!docs/design/**/*.md",
-		"!docs/generated/**/*.md"
+		"!docs/generated/**/*.md",
+		"!docs/ui-audit/**/*.md",
+		"!docs/maintenance/**/*.md"
 	]
 }
