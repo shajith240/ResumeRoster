@@ -506,6 +506,18 @@
 	border: 1px solid color-mix(in srgb, #059669 34%, transparent);
 }
 
+.planBadgeComingSoon {
+	color: var(--text-secondary);
+	background: var(--bg-subtle);
+	border: 1px solid var(--border-subtle);
+}
+
+.optionCardDisabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
 /* ─── Privacy picker (step 3 left panel) ────────────────────────────────── */
 
 .privacyPicker {

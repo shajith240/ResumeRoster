@@ -45,6 +45,7 @@ import {
 	type RazorpayCheckoutInstance,
 	type RazorpayCheckoutOptions,
 	type RazorpayCheckoutResponse,
+	PREMIUM_REVIEW_ENABLED,
 } from "@/lib/premium-payments";
 import styles from "./SubmitResumeForm.module.css";
 
@@ -696,11 +697,11 @@ export default function SubmitResumeForm() {
 											<span className={styles.planBadgeFree}>Free</span>
 										</span>
 									</label>
-									<label className={[styles.optionCard, reviewPlan === "priority" ? styles.optionCardSelected : ""].filter(Boolean).join(" ")}>
-										<input checked={reviewPlan === "priority"} name="reviewPlan" onChange={() => setReviewPlan("priority")} type="radio" />
+									<label className={[styles.optionCard, styles.optionCardDisabled].filter(Boolean).join(" ")}>
+										<input disabled name="reviewPlan" type="radio" value="priority" />
 										<span className={styles.optionBody}>
 											<strong>Priority review</strong>
-											<span className={styles.planBadgePremium}>₹{PREMIUM_PRICE_RUPEES}</span>
+											<span className={styles.planBadgeComingSoon}>Coming soon</span>
 										</span>
 									</label>
 								</div>

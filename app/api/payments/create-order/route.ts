@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { capturePrivateError } from "@/lib/monitoring/capture-errors";
 import { getRazorpayClient, PREMIUM_AMOUNT_PAISE, PREMIUM_CURRENCY } from "@/lib/razorpay";
+import { PREMIUM_REVIEW_ENABLED } from "@/lib/premium-payments";
 import { enforceApiRateLimit } from "@/lib/server/rate-limit";
 import { requireSignedInUser, serverAuthErrorResponse } from "@/lib/server-auth";
 
@@ -8,6 +9,13 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+	if (!PREMIUM_REVIEW_ENABLED) {
+		return NextResponse.json(
+			{ message: "Priority reviews are not available yet. Stay tuned!" },
+			{ status: 503 },
+		);
+	}
+
 	let signedIn: Awaited<ReturnType<typeof requireSignedInUser>>;
 	try {
 		signedIn = await requireSignedInUser(request, {

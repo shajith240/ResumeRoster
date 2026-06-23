@@ -39,6 +39,7 @@ import {
 	loadResumeThreadData,
 	recordResumeReadCount,
 } from "./data";
+import { PREMIUM_REVIEW_ENABLED } from "@/lib/premium-payments";
 import type { PremiumReviewFields } from "./premium-review-composer";
 import { useResumeOwnerActions } from "./use-owner-actions";
 import { useReviewReportActions } from "./use-review-report-actions";
@@ -116,14 +117,16 @@ export function useResumeDetailController(resumeId: string) {
 	const isWaiting = resume?.review_queue_status === "waiting";
 	const shouldUseGuidedReview = needsGuidedReviewCredit && !isOwner;
 	const isClaimable = Boolean(
-		resume?.is_premium &&
+		PREMIUM_REVIEW_ENABLED &&
+			resume?.is_premium &&
 			resume.payment_status === "paid" &&
 			!resume.assigned_reviewer_id &&
 			resume.status === "open" &&
 			!isOwner,
 	);
 	const isPremiumReviewer = Boolean(
-		resume?.is_premium &&
+		PREMIUM_REVIEW_ENABLED &&
+			resume?.is_premium &&
 			resume.payment_status === "paid" &&
 			resume.assigned_reviewer_id &&
 			user?.id &&

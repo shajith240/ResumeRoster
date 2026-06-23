@@ -3,6 +3,8 @@
 
 export type PremiumPaymentStatus = "pending" | "paid" | "refunded" | "failed";
 
+export const PREMIUM_REVIEW_ENABLED = false;
+
 export const PREMIUM_PRICE_RUPEES = 399;
 export const PREMIUM_PRICE_PAISE = 39900;
 export const PREMIUM_CURRENCY = "INR";
