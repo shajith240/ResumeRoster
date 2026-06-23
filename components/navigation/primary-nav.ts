@@ -1,13 +1,13 @@
 "use client";
 
 import {
+	Crown,
 	Home,
 	ListChecks,
 	PencilLine,
 	Plus,
 	ShieldCheck,
-	Trophy,
-	UsersRound,
+	Users,
 	type SolarIconComponent,
 } from "@/components/ui/solar-icons";
 import {
@@ -37,8 +37,8 @@ const PRIMARY_NAV_ICONS: Record<PrimaryNavItemId, PrimaryNavigationIcons> = {
 		sidebarIcon: ListChecks,
 	},
 	community: {
-		dockIcon: UsersRound,
-		sidebarIcon: UsersRound,
+		dockIcon: Users,
+		sidebarIcon: Users,
 	},
 	"community-new": {
 		dockIcon: PencilLine,
@@ -49,8 +49,8 @@ const PRIMARY_NAV_ICONS: Record<PrimaryNavItemId, PrimaryNavigationIcons> = {
 		sidebarIcon: Home,
 	},
 	leaderboard: {
-		dockIcon: Trophy,
-		sidebarIcon: Trophy,
+		dockIcon: Crown,
+		sidebarIcon: Crown,
 	},
 	submit: {
 		dockIcon: Plus,

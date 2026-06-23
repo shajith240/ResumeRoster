@@ -1,19 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Question } from "@phosphor-icons/react";
 import type { ComponentType } from "react";
 import {
 	ArrowLeft,
 	ArrowRight,
 	Bookmark,
 	CheckCircle,
-	EnvelopeOpen,
+	CircleHelp,
+	Contrast,
+	Download,
 	Logout,
+	Mailbox,
 	Moon,
-	Palette,
 	ShieldCheck,
-	Smartphone,
 	Sun,
 	UserRound,
 } from "@/components/ui/solar-icons";
@@ -103,7 +103,7 @@ const MENU_ITEMS: {
 			action: "profile",
 		},
 		{
-			icon: Smartphone,
+			icon: Download,
 			label: "Install Linted",
 			action: "install",
 		},
@@ -122,12 +122,12 @@ const MENU_ITEMS: {
 			action: "saved",
 		},
 		{
-			icon: Question,
+			icon: CircleHelp,
 			label: "Get help",
 			action: "help",
 		},
 		{
-			icon: EnvelopeOpen,
+			icon: Mailbox,
 			label: "Send feedback",
 			action: "feedback",
 			rightIcon: ArrowRight,
@@ -344,7 +344,7 @@ export function UserDropdown({
 							<DropdownMenuSub>
 								<DropdownMenuSubTrigger className="cursor-pointer rounded-lg p-2">
 									<span className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
-										<Palette
+										<Contrast
 											aria-hidden="true"
 											className="size-5 text-[var(--text-tertiary)]"
 										/>
@@ -392,7 +392,7 @@ export function UserDropdown({
 						</div>
 						{renderMobilePanelTrigger(
 							"appearance",
-							Palette,
+							Contrast,
 							"Appearance",
 							selectedThemeItem.label,
 						)}
