@@ -244,8 +244,18 @@ body {
 	font-family: var(--font-body);
 }
 
-body:not(.main-app):not(.main-app-dark) {
+/* Only apply the light-page background when the app is NOT in dark mode.
+   The bootstrap script sets data-app-theme on <html> synchronously before
+   React hydrates, so this prevents the white flash that occurs when body
+   classes are temporarily absent during client-side page transitions. */
+html:not([data-app-theme="dark"]) body:not(.main-app):not(.main-app-dark) {
 	background: #f7f5f2;
+}
+
+/* Ensure the dark canvas is applied immediately from the bootstrap script,
+   before React hydrates and adds body.main-app-dark. */
+html[data-app-theme="dark"] body {
+	background: #101114;
 }
 
 html {

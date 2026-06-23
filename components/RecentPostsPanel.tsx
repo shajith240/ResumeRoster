@@ -209,7 +209,7 @@ export default function RecentPostsPanel({
 				</header>
 				{items.length ? (
 					<div className="recent-post-list">
-						{items.map((item) => (
+						{items.slice(0, 5).map((item) => (
 							<RecentPostPreview item={item} key={item.id} />
 						))}
 					</div>
