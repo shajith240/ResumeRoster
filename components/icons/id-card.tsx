@@ -16,33 +16,19 @@ interface IdCardIconProps extends HTMLAttributes<HTMLDivElement> {
   size?: number;
 }
 
-const RECT_VARIANT: Variants = {
-  normal: { pathLength: 1, opacity: 1, pathOffset: 0 },
-  animate: {
+const VARIANTS: Variants = {
+  normal: {
+    pathLength: 1,
+    opacity: 1,
+  },
+  animate: (custom: number) => ({
     pathLength: [0, 1],
     opacity: [0, 1],
-    pathOffset: [1, 0],
-    transition: { duration: 0.4 },
-  },
-};
-
-const CIRCLE_VARIANT: Variants = {
-  normal: { scale: 1, opacity: 1 },
-  animate: {
-    scale: [0, 1],
-    opacity: [0, 1],
-    transition: { delay: 0.2, duration: 0.3, type: "spring", stiffness: 300 },
-  },
-};
-
-const LINE_VARIANT: Variants = {
-  normal: { pathLength: 1, opacity: 1, pathOffset: 0 },
-  animate: {
-    pathLength: [0, 1],
-    opacity: [0, 1],
-    pathOffset: [1, 0],
-    transition: { delay: 0.3, duration: 0.3 },
-  },
+    transition: {
+      duration: 0.3,
+      delay: custom * 0.1,
+    },
+  }),
 };
 
 const IdCardIcon = forwardRef<IdCardIconHandle, IdCardIconProps>(
@@ -52,6 +38,7 @@ const IdCardIcon = forwardRef<IdCardIconHandle, IdCardIconProps>(
 
     useImperativeHandle(ref, () => {
       isControlledRef.current = true;
+
       return {
         startAnimation: () => controls.start("animate"),
         stopAnimation: () => controls.start("normal"),
@@ -98,21 +85,33 @@ const IdCardIcon = forwardRef<IdCardIconHandle, IdCardIconProps>(
           width={size}
           xmlns="http://www.w3.org/2000/svg"
         >
-          <motion.rect
+          <motion.path
             animate={controls}
-            variants={RECT_VARIANT}
-            x="2" y="5" width="20" height="14" rx="2"
-          />
-          <motion.circle
-            animate={controls}
-            variants={CIRCLE_VARIANT}
-            cx="8" cy="12" r="2"
+            custom={2}
+            d="M16 10h2"
+            variants={VARIANTS}
           />
           <motion.path
             animate={controls}
-            variants={LINE_VARIANT}
-            d="M14 9h4M14 12h2M14 15h4"
+            custom={2}
+            d="M16 14h2"
+            variants={VARIANTS}
           />
+          <motion.path
+            animate={controls}
+            custom={0}
+            d="M6.17 15a3 3 0 0 1 5.66 0"
+            variants={VARIANTS}
+          />
+          <motion.circle
+            animate={controls}
+            custom={1}
+            cx="9"
+            cy="11"
+            r="2"
+            variants={VARIANTS}
+          />
+          <rect height="14" rx="2" width="20" x="2" y="5" />
         </svg>
       </div>
     );
